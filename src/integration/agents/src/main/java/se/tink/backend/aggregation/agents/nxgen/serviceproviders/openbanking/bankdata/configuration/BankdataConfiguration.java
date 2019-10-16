@@ -4,16 +4,18 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class BankdataConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String redirectUrl;
-    private String apiKey;
-    private String baseUrl;
-    private String baseAuthUrl;
+    @Secret private String clientId;
+    @Secret private String redirectUrl;
+    @SensitiveSecret private String apiKey;
+    @Secret private String baseUrl;
+    @Secret private String baseAuthUrl;
 
     public String getBaseUrl() {
         Preconditions.checkNotNull(

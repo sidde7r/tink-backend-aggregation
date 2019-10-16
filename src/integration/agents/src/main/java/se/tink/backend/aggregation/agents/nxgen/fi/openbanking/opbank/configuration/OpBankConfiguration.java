@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class OpBankConfiguration implements ClientConfiguration {
+
     @JsonProperty @Secret private String clientId;
     @JsonProperty @SensitiveSecret private String clientSecret;
     @JsonProperty @Secret private String redirectUrl;

@@ -1,19 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class BnpParibasConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
-    private String redirectUrl;
-    private String eidasQwac;
-    private String keyId;
-    private String authorizeUrl;
-    private String tokenUrl;
-    private String baseUrl;
+    @Secret private String clientId;
+    @SensitiveSecret private String clientSecret;
+    @Secret private String redirectUrl;
+    @Secret private String eidasQwac;
+    @Secret private String keyId;
+    @Secret private String authorizeUrl;
+    @Secret private String tokenUrl;
+    @Secret private String baseUrl;
 
     public String getClientId() {
         return clientId;

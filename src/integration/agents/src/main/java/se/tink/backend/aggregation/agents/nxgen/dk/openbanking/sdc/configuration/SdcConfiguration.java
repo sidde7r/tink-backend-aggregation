@@ -4,17 +4,19 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sdc.SdcConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class SdcConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
-    private String redirectUrl;
-    private String clientKeyStorePath;
-    private String clientKeyStorePassword;
-    private String ocpApimSubscriptionKey;
+    @Secret private String clientId;
+    @SensitiveSecret private String clientSecret;
+    @Secret private String redirectUrl;
+    @Secret private String clientKeyStorePath;
+    @SensitiveSecret private String clientKeyStorePassword;
+    @SensitiveSecret private String ocpApimSubscriptionKey;
 
     public String getClientId() {
         Preconditions.checkNotNull(

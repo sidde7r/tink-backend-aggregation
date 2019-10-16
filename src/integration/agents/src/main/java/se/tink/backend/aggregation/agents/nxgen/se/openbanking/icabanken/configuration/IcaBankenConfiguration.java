@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.Environment;
 
@@ -11,7 +12,7 @@ import se.tink.backend.aggregation.configuration.Environment;
 public class IcaBankenConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String clientId;
-    @JsonProperty private String clientSecret;
+    @JsonProperty @SensitiveSecret private String clientSecret;
     @JsonProperty @Secret private String redirectUrl;
     @JsonProperty private String environment = "PRODUCTION";
 

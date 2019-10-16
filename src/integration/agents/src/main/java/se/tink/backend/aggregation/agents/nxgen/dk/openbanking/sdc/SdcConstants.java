@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sdc;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -53,7 +53,7 @@ public final class SdcConstants {
     }
 
     public static class StorageKeys {
-        public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
+        public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
     }
 
     public static class QueryKeys {

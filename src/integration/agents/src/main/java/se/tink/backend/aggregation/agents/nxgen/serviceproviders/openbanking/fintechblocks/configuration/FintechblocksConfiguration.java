@@ -5,15 +5,16 @@ import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class FintechblocksConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String redirectUrl;
-    private String clientSigningKeyPath;
-    private String baseUrl;
+    @Secret private String clientId;
+    @Secret private String redirectUrl;
+    @Secret private String clientSigningKeyPath;
+    @Secret private String baseUrl;
 
     public String getClientId() {
         Preconditions.checkNotNull(

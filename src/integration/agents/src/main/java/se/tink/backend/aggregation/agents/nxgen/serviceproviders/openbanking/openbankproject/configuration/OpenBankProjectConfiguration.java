@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.libraries.pair.Pair;
 
@@ -23,11 +25,11 @@ public class OpenBankProjectConfiguration implements ClientConfiguration {
     @JsonIgnore
     private static final LogTag MISSING_CONFIG = LogTag.from("OpenBankProject_MISSING_CONFIG");
 
-    @JsonProperty private String clientId;
-    @JsonProperty private String clientSecret;
-    @JsonProperty private String redirectUrl;
-    @JsonProperty private String baseUrl;
-    @JsonProperty private String bankId;
+    @JsonProperty @Secret private String clientId;
+    @JsonProperty @SensitiveSecret private String clientSecret;
+    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @Secret private String baseUrl;
+    @JsonProperty @Secret private String bankId;
 
     public String getClientId() {
         return clientId;

@@ -4,18 +4,20 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class BnpParibasFortisConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
-    private String redirectUrl;
-    private String authBaseUrl;
-    private String apiBaseUrl;
-    private String organisationId;
-    private String openbankStetVersion;
+    @Secret private String clientId;
+    @SensitiveSecret private String clientSecret;
+    @Secret private String redirectUrl;
+    @Secret private String authBaseUrl;
+    @Secret private String apiBaseUrl;
+    @Secret private String organisationId;
+    @Secret private String openbankStetVersion;
 
     public String getClientId() {
         Preconditions.checkNotNull(

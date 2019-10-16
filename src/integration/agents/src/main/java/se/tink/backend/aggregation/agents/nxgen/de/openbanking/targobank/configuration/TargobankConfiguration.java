@@ -4,18 +4,20 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.Environment;
 
 @JsonObject
 public class TargobankConfiguration implements ClientConfiguration {
 
-    private String redirectUrl;
-    private String apiKey;
+    @Secret private String redirectUrl;
+    @SensitiveSecret private String apiKey;
     private String psuIpAddress;
-    private String clientKeyStorePath;
-    private String clientKeyStorePassword;
-    private String scaPassword;
+    @Secret private String clientKeyStorePath;
+    @SensitiveSecret private String clientKeyStorePassword;
+    @SensitiveSecret private String scaPassword;
     private String environment;
 
     public String getRedirectUrl() {

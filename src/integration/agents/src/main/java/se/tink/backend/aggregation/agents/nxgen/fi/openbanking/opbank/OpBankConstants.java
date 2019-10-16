@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
@@ -38,7 +38,7 @@ public final class OpBankConstants {
     }
 
     public static class StorageKeys {
-        public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
+        public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String ACCOUNT_ID = "accountId";
     }
 

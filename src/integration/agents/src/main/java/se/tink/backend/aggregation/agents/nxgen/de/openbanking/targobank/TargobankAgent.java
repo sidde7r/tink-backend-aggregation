@@ -59,23 +59,7 @@ public final class TargobankAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
-        targobankConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                TargobankConstants.INTEGRATION_NAME,
-                                clientName,
-                                TargobankConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
         apiClient.setConfiguration(getClientConfiguration());
-
-        //      if (targobankConfiguration.getEnvironment() == Environment.PRODUCTION) {
-        //          TODO: Set EidasProxy here
-        //      }
     }
 
     protected TargobankConfiguration getClientConfiguration() {

@@ -4,15 +4,16 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class BecConfiguration implements ClientConfiguration {
 
-    private String eidasQwac;
-    private String qSealc;
-    private String keyId;
-    private String redirectUrl;
+    @Secret private String eidasQwac;
+    @Secret private String qSealc;
+    @Secret private String keyId;
+    @Secret private String redirectUrl;
 
     public String getEidasQwac() {
         Preconditions.checkNotNull(

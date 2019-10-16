@@ -2,13 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.confi
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class RaiffeisenConfiguration implements ClientConfiguration {
-    @JsonProperty private String clientId;
-    @JsonProperty private String clientSecret;
-    @JsonProperty private String redirectUrl;
+    @Secret @JsonProperty private String clientId;
+    @SensitiveSecret @JsonProperty private String clientSecret;
+    @Secret @JsonProperty private String redirectUrl;
 
     public String getClientId() {
         return clientId;

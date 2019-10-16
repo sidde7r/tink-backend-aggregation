@@ -4,13 +4,15 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.CreditAgricoleConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class CreditAgricoleConfiguration implements ClientConfiguration {
 
-    private String token;
-    private String redirectUrl;
+    @SensitiveSecret private String token;
+    @Secret private String redirectUrl;
 
     public String getToken() {
         Preconditions.checkNotNull(
