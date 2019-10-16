@@ -147,7 +147,6 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
@@ -1360,27 +1359,6 @@ public class LansforsakringarAgent extends AbstractAgent
 
     private List<AccountEntity> fetchAccountEntities() throws HttpStatusCodeErrorException {
         return createGetRequest(OVERVIEW_URL, OverviewEntity.class).getAccountEntities();
-    }
-
-    // This could be moved into abstract agent when we have support for different data types in
-    // result
-    protected Map<String, Object> requestSupplementalInformation(
-            Credentials credentials, List<Field> fields) {
-
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
-
-        String supplementalInformation =
-                supplementalRequester.requestSupplementalInformation(credentials, true);
-
-        log.info("Supplemental Information response is: " + supplementalInformation);
-
-        if (Strings.isNullOrEmpty(supplementalInformation)) {
-            log.warn("Supplemental information is empty/null");
-            return null;
-        }
-
-        return SerializationUtils.deserializeFromString(supplementalInformation, TYPE_MAP_REF);
     }
 
     @Override
