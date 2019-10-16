@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -65,8 +65,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
                         newToken.toTinkToken(),
                         OpBankConstants.RefreshTokenFormKeys.DEFAULT_TOKEN_LIFETIME,
                         OpBankConstants.RefreshTokenFormKeys.DEFAULT_TOKEN_LIFETIME_UNIT));
-        persistentStorage.put(
-                OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, newToken.toTinkToken());
+        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, newToken.toTinkToken());
         // Tell the authenticator which access token it can use.
         useAccessToken(newToken.toTinkToken());
 
