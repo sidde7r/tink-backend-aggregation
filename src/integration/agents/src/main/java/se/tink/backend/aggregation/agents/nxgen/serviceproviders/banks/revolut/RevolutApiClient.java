@@ -2,12 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut;
 
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.Preconditions;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.ConfirmSignInRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.ConfirmSignInResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.ResendCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.SignInRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.UserExistResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.investment.rpc.InvestmentAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.investment.rpc.StockInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.investment.rpc.StockPriceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.rpc.WalletResponse;
@@ -85,6 +90,27 @@ public class RevolutApiClient {
                 .queryParam(RevolutConstants.Params.COUNT, Integer.toString(count))
                 .queryParam(RevolutConstants.Params.TO, toDateMillis)
                 .get(TransactionsResponse.class);
+    }
+
+    public InvestmentAccountResponse fetchInvestmentAccounts() {
+        return getUserAuthorizedRequest(RevolutConstants.Urls.PORTFOLIO)
+                .get(InvestmentAccountResponse.class);
+    }
+
+    public StockInfoResponse fetchStockInfo() {
+        return getUserAuthorizedRequest(RevolutConstants.Urls.STOCK_INFO)
+                .get(StockInfoResponse.class);
+    }
+
+    public StockPriceResponse fetchCurrentStockPrice(List<String> stocks) {
+        String request =
+                stocks.stream()
+                        .map(s -> String.format("\"%s\"", s))
+                        .collect(Collectors.toList())
+                        .toString();
+
+        return getUserAuthorizedRequest(RevolutConstants.Urls.STOCK_PRICE_OVERVIEW)
+                .post(StockPriceResponse.class, request);
     }
 
     private RequestBuilder getAppAuthorizedRequest(URL url) {
