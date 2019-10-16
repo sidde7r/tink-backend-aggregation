@@ -60,7 +60,7 @@ public final class OpBankApiClient {
             EidasIdentity eidasIdentity) {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
-        client.setEidasProxy(eidasProxyConfiguration, configuration.getEidasQwac());
+        client.setEidasProxy(eidasProxyConfiguration, null);
         this.eidasIdentity = eidasIdentity;
     }
 

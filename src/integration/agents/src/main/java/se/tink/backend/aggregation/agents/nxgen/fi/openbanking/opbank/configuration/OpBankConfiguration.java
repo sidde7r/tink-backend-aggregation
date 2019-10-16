@@ -10,12 +10,11 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class OpBankConfiguration implements ClientConfiguration {
-
+    
     @JsonProperty @Secret private String clientId;
     @JsonProperty @Secret private String clientSecret;
     @JsonProperty @Secret private String redirectUrl;
     @JsonProperty @Secret private String apiKey;
-    @JsonProperty @Secret private String eidasQwac;
     @JsonProperty @Secret private String eidasQsealc;
 
     public String getClientId() {
@@ -48,14 +47,6 @@ public class OpBankConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "API key"));
 
         return apiKey;
-    }
-
-    public String getEidasQwac() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasQwac),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "eIDAS QWAC"));
-
-        return eidasQwac;
     }
 
     public String getEidasQsealc() {
