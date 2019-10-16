@@ -42,20 +42,10 @@ public final class AktiaAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
         final AktiaConfiguration aktiaConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                AktiaConstants.Market.INTEGRATION_NAME,
-                                request.getProvider().getPayload(),
-                                AktiaConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                AktiaConstants.ErrorMessages
-                                                        .MISSING_CONFIGURATION));
+                getAgentConfigurationController().getAgentConfiguration(AktiaConfiguration.class);
         apiClient.setConfiguration(aktiaConfiguration);
+        this.client.setEidasProxy(configuration.getEidasProxy(), null);
     }
 
     @Override

@@ -26,6 +26,8 @@ public class AktiaAgentTest {
                 new AgentIntegrationTest.Builder("fi", "fi-aktia-oauth2")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("aktia")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
