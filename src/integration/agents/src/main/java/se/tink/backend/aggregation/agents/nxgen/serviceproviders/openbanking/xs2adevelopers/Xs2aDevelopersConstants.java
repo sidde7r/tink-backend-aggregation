@@ -33,7 +33,7 @@ public final class Xs2aDevelopersConstants {
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
             TypeMapper.<PaymentStatus>builder()
                     .put(PaymentStatus.PENDING, "RCVD")
-                    .put(PaymentStatus.SIGNED, "ACSC")
+                    .put(PaymentStatus.SIGNED, "ACSC", "ACTC")
                     .build();
 
     private Xs2aDevelopersConstants() {

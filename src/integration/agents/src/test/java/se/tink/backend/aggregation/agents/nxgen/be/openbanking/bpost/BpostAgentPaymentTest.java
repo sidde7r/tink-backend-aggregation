@@ -6,9 +6,6 @@ import static org.mockito.Mockito.mock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -31,6 +28,8 @@ public class BpostAgentPaymentTest {
                 new AgentIntegrationTest.Builder("be", "be-bpost-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("bpost")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
@@ -43,14 +42,14 @@ public class BpostAgentPaymentTest {
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.BE).toString()).when(creditor).getAccountNumber();
-            doReturn("Creditor name").when(creditor).getName();
+            doReturn("BE97377100580549").when(creditor).getAccountNumber();
+            doReturn("Wouter").when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.BE).toString()).when(debtor).getAccountNumber();
+            doReturn("BE92000450043523").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inSEK(new Random().nextInt(50000));
+            Amount amount = Amount.inEUR(1);
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
 
