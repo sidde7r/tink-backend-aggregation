@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities;
 
 import com.google.common.base.Strings;
+import java.util.Collection;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConfiguration;
@@ -69,11 +70,14 @@ public class CrossKeyAccount {
     }
 
     public boolean isKnownPortfolioType() {
-        return CrossKeyConstants.PORTFOLIO_TYPES.containsKey(accountType);
+        Collection<Portfolio.Type> knownTypes = CrossKeyConstants.PORTFOLIO_TYPES.getMappedTypes();
+        return CrossKeyConstants.PORTFOLIO_TYPES.isOneOf(accountType, knownTypes);
     }
 
     public Portfolio.Type getPortfolioType() {
-        return CrossKeyConstants.PORTFOLIO_TYPES.getOrDefault(accountType, Portfolio.Type.OTHER);
+        return CrossKeyConstants.PORTFOLIO_TYPES
+                .translate(accountType)
+                .orElse(Portfolio.Type.OTHER);
     }
 
     public boolean isLoan() {
@@ -81,11 +85,12 @@ public class CrossKeyAccount {
     }
 
     public boolean isKnownLoanType() {
-        return CrossKeyConstants.LOAN_TYPES.containsKey(accountType);
+        Collection<LoanDetails.Type> knownTypes = CrossKeyConstants.LOAN_TYPES.getMappedTypes();
+        return CrossKeyConstants.LOAN_TYPES.isOneOf(accountType, knownTypes);
     }
 
     public LoanDetails.Type getLoanType() {
-        return CrossKeyConstants.LOAN_TYPES.getOrDefault(accountType, LoanDetails.Type.OTHER);
+        return CrossKeyConstants.LOAN_TYPES.translate(accountType).orElse(LoanDetails.Type.OTHER);
     }
 
     public LoanAccount toLoanAccount(
