@@ -240,8 +240,8 @@ public class EncapMessageUtils {
         byte[] randKeyBytes = RandomUtils.secureRandom(32);
         byte[] hmacDataBytes = Base64.getDecoder().decode(Soap.MAC_B64);
         byte[] aesKeyDataBytes = Base64.getDecoder().decode(Soap.ENC_B64);
-        byte[] hmacKeyBytes = Hash.sha256(randKeyBytes, hmacDataBytes);
-        byte[] aesKeyBytes = Hash.sha256(randKeyBytes, aesKeyDataBytes);
+        byte[] hmacKeyBytes = Hash.hmacSha256(randKeyBytes, hmacDataBytes);
+        byte[] aesKeyBytes = Hash.hmacSha256(randKeyBytes, aesKeyDataBytes);
 
         EncryptedSoapRequestBody body =
                 getSoapCryptoRequestBody(randKeyBytes, aesKeyBytes, hmacKeyBytes, soapMessage);
