@@ -166,6 +166,9 @@ public class AvanzaConstants {
 
     public static class StorageKeys {
         public static final String HOLDER_NAME = "holder_name";
+        public static final String AUTH_SESSION_FORMAT = "auth_session:%s";
+        public static final String SECURITY_TOKEN_FORMAT = "security_token:%s";
+        public static final String BANKID_TRANSACTION_ID = "bankid_transaction_id";
     }
 
     public static class QueryKeys {}

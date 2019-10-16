@@ -72,7 +72,8 @@ public final class AvanzaAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
-                new AvanzaBankIdAuthenticator(apiClient, authSessionStorage, temporaryStorage),
+                new AvanzaBankIdAuthenticator(
+                        apiClient, authSessionStorage, temporaryStorage, sessionStorage),
                 persistentStorage,
                 credentials);
     }

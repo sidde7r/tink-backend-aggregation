@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInitResponse> {
@@ -31,14 +32,17 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
     private final AvanzaApiClient apiClient;
     private final AvanzaAuthSessionStorage authSessionStorage;
     private final TemporaryStorage temporaryStorage;
+    private final SessionStorage sessionStorage;
 
     public AvanzaBankIdAuthenticator(
             AvanzaApiClient apiClient,
             AvanzaAuthSessionStorage authSessionStorage,
-            TemporaryStorage temporaryStorage) {
+            TemporaryStorage temporaryStorage,
+            SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.authSessionStorage = authSessionStorage;
         this.temporaryStorage = temporaryStorage;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -71,6 +75,8 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
     public BankIdStatus collect(BankIdInitResponse reference)
             throws AuthenticationException, AuthorizationException {
         final String transactionId = reference.getTransactionId();
+        // mask transaction ID from logging
+        sessionStorage.put(StorageKeys.BANKID_TRANSACTION_ID, reference.getTransactionId());
 
         BankIdCollectResponse bankIdResponse;
         try {
@@ -139,10 +145,21 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         BankIdCompleteResponse bankIdCompleteResponse =
                 apiClient.completeBankId(transactionId, loginEntity.getCustomerId());
 
+        maskAuthCredentialsFromLogging(bankIdCompleteResponse);
         putAuthCredentialsInAuthSessionStorage(bankIdCompleteResponse);
     }
 
     private void putAuthCredentialsInAuthSessionStorage(BankIdCompleteResponse response) {
         authSessionStorage.put(response.getAuthenticationSession(), response.getSecurityToken());
+    }
+
+    private void maskAuthCredentialsFromLogging(BankIdCompleteResponse response) {
+        sessionStorage.put(
+                String.format(StorageKeys.AUTH_SESSION_FORMAT, response.getAuthenticationSession()),
+                response.getAuthenticationSession());
+        sessionStorage.put(
+                String.format(
+                        StorageKeys.SECURITY_TOKEN_FORMAT, response.getAuthenticationSession()),
+                response.getSecurityToken());
     }
 }
