@@ -14,8 +14,8 @@ public class BankdataConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @Secret private String redirectUrl;
     @SensitiveSecret private String apiKey;
-    private String baseUrl;
-    private String baseAuthUrl;
+    @Secret private String baseUrl;
+    @Secret private String baseAuthUrl;
 
     public String getBaseUrl() {
         Preconditions.checkNotNull(

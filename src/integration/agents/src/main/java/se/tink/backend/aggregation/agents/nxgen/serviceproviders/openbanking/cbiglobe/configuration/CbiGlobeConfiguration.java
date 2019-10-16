@@ -16,9 +16,10 @@ public class CbiGlobeConfiguration implements ClientConfiguration {
     @Secret private String redirectUrl;
     @Secret private String keystorePath;
     @SensitiveSecret private String keystorePassword;
-    private String aspspCode;
-    private String aspspProductCode;
+    @Secret private String aspspCode;
+    @Secret private String aspspProductCode;
     @Secret private String eidasQwac;
+
     private String environment;
 
     public String getClientId() {

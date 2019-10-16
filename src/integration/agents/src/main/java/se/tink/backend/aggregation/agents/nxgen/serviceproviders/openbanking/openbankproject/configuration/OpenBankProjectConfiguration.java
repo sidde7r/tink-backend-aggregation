@@ -28,8 +28,8 @@ public class OpenBankProjectConfiguration implements ClientConfiguration {
     @JsonProperty @Secret private String clientId;
     @JsonProperty @SensitiveSecret private String clientSecret;
     @JsonProperty @Secret private String redirectUrl;
-    @JsonProperty private String baseUrl;
-    @JsonProperty private String bankId;
+    @JsonProperty @Secret private String baseUrl;
+    @JsonProperty @Secret private String bankId;
 
     public String getClientId() {
         return clientId;

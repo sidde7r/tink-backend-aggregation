@@ -14,7 +14,8 @@ public class SebConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
     @Secret private String redirectUrl;
-    private String baseUrl;
+    @Secret private String baseUrl;
+
     private String psuIpAddress;
 
     public String getClientId() {

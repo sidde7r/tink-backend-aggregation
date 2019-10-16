@@ -17,9 +17,10 @@ public class FidorConfiguration implements ClientConfiguration {
     @Secret private String clientCertificatePath;
     @Secret private String clientKeyStorePath;
     @SensitiveSecret private String clinetKeyStorePassword;
-    private String baseUrl;
-    private String certificateId;
+    @Secret private String baseUrl;
     @Secret private String redirectUrl;
+
+    private String certificateId;
 
     public String getClientKeyStorePath() {
         Preconditions.checkNotNull(

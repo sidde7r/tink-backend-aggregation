@@ -14,10 +14,10 @@ public class BnpParibasFortisConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
     @Secret private String redirectUrl;
-    private String authBaseUrl;
-    private String apiBaseUrl;
-    private String organisationId;
-    private String openbankStetVersion;
+    @Secret private String authBaseUrl;
+    @Secret private String apiBaseUrl;
+    @Secret private String organisationId;
+    @Secret private String openbankStetVersion;
 
     public String getClientId() {
         Preconditions.checkNotNull(

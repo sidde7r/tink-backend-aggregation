@@ -14,7 +14,7 @@ public class FintechblocksConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @Secret private String redirectUrl;
     @Secret private String clientSigningKeyPath;
-    private String baseUrl;
+    @Secret private String baseUrl;
 
     public String getClientId() {
         Preconditions.checkNotNull(

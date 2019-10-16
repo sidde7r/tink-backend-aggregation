@@ -13,9 +13,9 @@ public class BnpParibasConfiguration implements ClientConfiguration {
     @Secret private String redirectUrl;
     @Secret private String eidasQwac;
     @Secret private String keyId;
-    private String authorizeUrl;
-    private String tokenUrl;
-    private String baseUrl;
+    @Secret private String authorizeUrl;
+    @Secret private String tokenUrl;
+    @Secret private String baseUrl;
 
     public String getClientId() {
         return clientId;
