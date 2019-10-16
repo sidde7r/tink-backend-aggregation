@@ -10457,6 +10457,21 @@
       "type": "BANK"
     },
     {
+      "className": "nxgen.de.openbanking.unicredit.UnicreditAgent",
+      "credentialsType": "PASSWORD",
+      "displayName": "HypoVereinsbank",
+      "fields": [
+      ],
+      "groupDisplayName": "HypoVereinsbank",
+      "multiFactor": false,
+      "name": "de-unicredit-ob",
+      "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
+      "popular": false,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
       "className": "nxgen.de.banks.fints.FinTsAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Hüttenberger Bank",
