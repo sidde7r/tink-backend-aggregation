@@ -187,7 +187,8 @@ public class DanskeBankV2Agent extends AbstractAgent
                         CommonHeaders.DEFAULT_USER_AGENT,
                         bankIdResourceHelper,
                         providerCountry,
-                        sessionLanguage);
+                        sessionLanguage,
+                        credentials);
         catalog = context.getCatalog();
         transferMessageFormatter =
                 new TransferMessageFormatter(
@@ -712,7 +713,7 @@ public class DanskeBankV2Agent extends AbstractAgent
         String orderReference = initBankIdResponse.getOrderReference();
         verifyBankId(BankIdServiceType.VERIFYAUTH, orderReference);
 
-        sessionResponse = apiClient.createAuthenticatedSession(credentials);
+        sessionResponse = apiClient.createAuthenticatedSession();
     }
 
     private void verifyBankId(BankIdServiceType bankIdServiceType, String orderReference)
@@ -745,7 +746,7 @@ public class DanskeBankV2Agent extends AbstractAgent
     }
 
     private boolean loginWithPassword() throws AuthenticationException, AuthorizationException {
-        sessionResponse = apiClient.initAndCreateSession(credentials);
+        sessionResponse = apiClient.initAndCreateSession();
 
         LoginResponse loginResponse = apiClient.loginWithPassword(createLoginRequest());
         String generalLoginErrorMessage = catalog.getString("Could not login, please try again.");
