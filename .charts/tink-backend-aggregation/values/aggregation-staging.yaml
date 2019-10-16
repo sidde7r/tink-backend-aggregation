@@ -33,11 +33,6 @@ agents:
     cgd:
       redirectUrl: https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback
       certificateId: cgd
-  belfius:
-    tink:
-      baseUrl: https://psd2.b2b.belfius.be:8443
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      certificateId: Tink
   finecobank:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
