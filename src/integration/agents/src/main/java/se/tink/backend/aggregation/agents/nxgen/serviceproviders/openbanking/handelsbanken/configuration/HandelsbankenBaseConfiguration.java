@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class HandelsbankenBaseConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String clientId;
-    @JsonProperty @Secret private String psuIpAddress;
     @JsonProperty @Secret private String redirectUrl;
 
     public String getClientId() {
@@ -18,9 +17,5 @@ public class HandelsbankenBaseConfiguration implements ClientConfiguration {
 
     public String getRedirectUrl() {
         return redirectUrl;
-    }
-
-    public String getPsuIpAddress() {
-        return psuIpAddress;
     }
 }

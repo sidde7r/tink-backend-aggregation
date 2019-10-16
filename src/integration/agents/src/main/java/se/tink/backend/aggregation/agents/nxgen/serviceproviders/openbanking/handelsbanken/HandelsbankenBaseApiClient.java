@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Psu;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.UrlParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Urls;
@@ -74,7 +75,7 @@ public class HandelsbankenBaseApiClient {
                 .addBearerToken(getOauthToken())
                 .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, Psu.IP_ADDRESS)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON);
     }
@@ -207,7 +208,7 @@ public class HandelsbankenBaseApiClient {
                 .header(
                         HeaderKeys.AUTHORIZATION,
                         HandelsbankenBaseConstants.HeaderKeys.BEARER + accessToken)
-                .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, Psu.IP_ADDRESS)
                 .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -222,7 +223,7 @@ public class HandelsbankenBaseApiClient {
                         new SessionRequest(
                                 configuration.getClientId(),
                                 BodyValues.AIS_SCOPE + ":" + consentId,
-                                configuration.getPsuIpAddress(),
+                                Psu.IP_ADDRESS,
                                 ssn,
                                 BodyValues.PERSONAL_ID_TP))
                 .accept(MediaType.APPLICATION_JSON_TYPE)
