@@ -167,6 +167,7 @@ public class NordeaSEConstants {
         public static final String DEVICE_PRIVATE_KEY = "devicePrivateKey";
         public static final String DEVICE_PUBLIC_KEY = "devicePublicKey";
         public static final String PERSONAL_CODE_VALID_UNTIL = "personalCodeValidUntil";
+        public static final String DEVICE_AUTH_TOKEN = "deviceAuthToken";
     }
 
     public static final class NordeaBankIdStatus {
