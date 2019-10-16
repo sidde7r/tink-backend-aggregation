@@ -38,6 +38,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -1299,6 +1300,7 @@ public class LansforsakringarAgent extends AbstractAgent
         Preconditions.checkNotNull(loginResponse);
 
         ticket = loginResponse.getTicket();
+        credentials.setSensitivePayload(Key.ACCESS_TOKEN, ticket);
 
         return true;
     }
