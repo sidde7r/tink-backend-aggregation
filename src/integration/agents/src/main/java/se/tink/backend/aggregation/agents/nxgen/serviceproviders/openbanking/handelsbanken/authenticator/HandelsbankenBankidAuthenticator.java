@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<SessionResponse> {
 
@@ -38,14 +37,11 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
             LoggerFactory.getLogger(HandelsbankenBankidAuthenticator.class);
 
     private final HandelsbankenBaseApiClient apiClient;
-    private final SessionStorage sessionStorage;
 
     private OAuth2Token token;
     private String autoStartToken;
 
-    public HandelsbankenBankidAuthenticator(
-            HandelsbankenBaseApiClient apiClient, SessionStorage sessionStorage) {
-        this.sessionStorage = sessionStorage;
+    public HandelsbankenBankidAuthenticator(HandelsbankenBaseApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
