@@ -17,6 +17,7 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/ing
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/raiffeisen
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/volksbank
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/argenta
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/axa
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/belfius
@@ -46,7 +47,6 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/amex/v62
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/ics
   //src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/controllers/authentication/password/dk/nemid
-  //src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/creditcards/amex
   -//deb:all
   -//third_party:all
 
