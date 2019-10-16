@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -32,14 +31,6 @@ public class AuthenticateResponse extends BaseResponse {
         String statusCode = getCode();
 
         if (!Strings.isNullOrEmpty(statusCode)) {
-            LOGGER.info(
-                    String.format(
-                            "BankID authentication failed with response: %s",
-                            MoreObjects.toStringHelper(this)
-                                    .add("result", authenticateResult)
-                                    .add("code", statusCode)
-                                    .add("message", getMessage())
-                                    .add("errors", getErrors())));
             switch (statusCode) {
                 case HandelsbankenSEConstants.BankIdAuthentication.UNKNOWN_BANKID:
                     throw BankIdError.BLOCKED.exception();
