@@ -62,7 +62,8 @@ public class NordnetAgent extends AbstractAgent
                 new NordnetApiClient(
                         clientFactory.createClientWithRedirectHandler(
                                 context.getLogOutputStream(), NordnetApiClient.REDIRECT_STRATEGY),
-                        CommonHeaders.DEFAULT_USER_AGENT);
+                        CommonHeaders.DEFAULT_USER_AGENT,
+                        credentials);
     }
 
     /**
