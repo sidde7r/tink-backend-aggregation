@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
@@ -67,7 +68,11 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
                         metricContext.getMetricRegistry(),
                         context.getLogOutputStream(),
                         signatureKeyPair,
-                        request.getProvider());
+                        request.getProvider(),
+                        new LogMasker(
+                                credentials,
+                                context.getAgentConfigurationController().getSecretValues()),
+                        LogMasker.shouldLog(request.getProvider()));
         // When Java trusted certificates are updated this is probably no longer necessary:
         this.client.loadTrustMaterial(loadCustomTrustStore(), null);
         this.client.addMessageReader(

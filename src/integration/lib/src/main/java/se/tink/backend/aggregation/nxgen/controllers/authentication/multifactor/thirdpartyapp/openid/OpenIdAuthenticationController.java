@@ -59,7 +59,7 @@ public class OpenIdAuthenticationController
     private final String nonce;
 
     private final String callbackUri;
-    private OAuth2Token clientAccessToken;
+    private OAuth2Token clientOAuth2Token;
     private final URL appToAppRedirectURL;
 
     public OpenIdAuthenticationController(
@@ -126,7 +126,7 @@ public class OpenIdAuthenticationController
                             return SessionError.SESSION_EXPIRED.exception();
                         });
 
-        OAuth2Token accessToken =
+        OAuth2Token oAuth2Token =
                 persistentStorage
                         .get(
                                 OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
@@ -138,8 +138,8 @@ public class OpenIdAuthenticationController
                                     return SessionError.SESSION_EXPIRED.exception();
                                 });
 
-        if (accessToken.hasAccessExpired()) {
-            if (!accessToken.canRefresh()) {
+        if (oAuth2Token.hasAccessExpired()) {
+            if (!oAuth2Token.canRefresh()) {
                 logger.info("Access and refresh token expired.");
                 throw SessionError.SESSION_EXPIRED.exception();
             }
@@ -147,23 +147,23 @@ public class OpenIdAuthenticationController
             logger.info(
                     String.format(
                             "Trying to refresh access token. Issued: [%s] Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
-                            new Date(accessToken.getIssuedAt() * 1000),
-                            new Date(accessToken.getAccessExpireEpoch() * 1000),
-                            !accessToken.isRefreshNullOrEmpty(),
-                            accessToken.hasRefreshExpire()
-                                    ? new Date(accessToken.getRefreshExpireEpoch() * 1000)
+                            new Date(oAuth2Token.getIssuedAt() * 1000),
+                            new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
+                            !oAuth2Token.isRefreshNullOrEmpty(),
+                            oAuth2Token.hasRefreshExpire()
+                                    ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
                                     : "N/A"));
 
             // Refresh token is not always present, if it's absent we fall back to the manual
             // authentication again.
             String refreshToken =
-                    accessToken
+                    oAuth2Token
                             .getRefreshToken()
                             .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
             try {
 
-                accessToken =
+                oAuth2Token =
                         apiClient.refreshAccessToken(
                                 refreshToken, authenticator.getClientCredentialScope());
             } catch (HttpResponseException e) {
@@ -175,34 +175,34 @@ public class OpenIdAuthenticationController
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            if (!accessToken.isValid()) {
+            if (!oAuth2Token.isValid()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
             logger.info(
                     String.format(
                             "Refresh success. New token: Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
-                            new Date(accessToken.getAccessExpireEpoch() * 1000),
-                            !accessToken.isRefreshNullOrEmpty(),
-                            accessToken.hasRefreshExpire()
-                                    ? new Date(accessToken.getRefreshExpireEpoch() * 1000)
+                            new Date(oAuth2Token.getAccessExpireEpoch() * 1000),
+                            !oAuth2Token.isRefreshNullOrEmpty(),
+                            oAuth2Token.hasRefreshExpire()
+                                    ? new Date(oAuth2Token.getRefreshExpireEpoch() * 1000)
                                     : "N/A"));
 
             // Store the new accessToken on the persistent storage again.
-            saveAccessToken(accessToken);
+            saveAccessToken(oAuth2Token);
 
             // fall through.
         }
 
         // as AutoAuthenticate will only happen in case of Ais so need to instantiate Ais filter
-        apiClient.instantiateAisAuthFilter(accessToken);
+        apiClient.instantiateAisAuthFilter(oAuth2Token);
     }
 
     @Override
     public ThirdPartyAppResponse<String> init() {
-        clientAccessToken =
+        clientOAuth2Token =
                 apiClient.requestClientCredentials(authenticator.getClientCredentialScope());
-        if (!clientAccessToken.isValid()) {
+        if (!clientOAuth2Token.isValid()) {
             throw new IllegalStateException("Client access token is not valid.");
         }
 
@@ -220,7 +220,7 @@ public class OpenIdAuthenticationController
                         callbackUri,
                         appToAppRedirectURL);
 
-        instantiateAuthFilter(clientAccessToken);
+        instantiateAuthFilter(clientOAuth2Token);
 
         // Let the agent add to or change the URL before we send it to the front-end.
         authorizeUrl =
@@ -277,33 +277,34 @@ public class OpenIdAuthenticationController
         //                .orElseThrow(() -> new IllegalStateException("callbackData did not contain
         // id_token."));
 
-        OAuth2Token accessToken =
+        OAuth2Token oAuth2Token =
                 apiClient.exchangeAccessCode(code, authenticator.getClientCredentialScope());
 
-        if (!accessToken.isValid()) {
+        if (!oAuth2Token.isValid()) {
             throw new IllegalStateException("Invalid access token.");
         }
 
-        if (!accessToken.isBearer()) {
+        if (!oAuth2Token.isBearer()) {
             throw new IllegalStateException(
-                    String.format("Unknown token type '%s'.", accessToken.getTokenType()));
+                    String.format("Unknown token type '%s'.", oAuth2Token.getTokenType()));
         }
 
         credentials.setSessionExpiryDate(
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
-                        accessToken, tokenLifetime, tokenLifetimeUnit));
+                        oAuth2Token, tokenLifetime, tokenLifetimeUnit));
 
-        saveAccessToken(accessToken);
+        saveAccessToken(oAuth2Token);
 
-        instantiateAuthFilter(accessToken);
+        instantiateAuthFilter(oAuth2Token);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
-    private void saveAccessToken(OAuth2Token accessToken) {
+    private void saveAccessToken(OAuth2Token oAuth2Token) {
         // only need to save the AIS toke in storage as we dont use pis token after payment is done.
         if (authenticator.getClientCredentialScope().equals(ClientMode.ACCOUNTS)) {
-            persistentStorage.put(PersistentStorageKeys.AIS_ACCESS_TOKEN, accessToken);
+            persistentStorage.rotateStorageValue(
+                    PersistentStorageKeys.AIS_ACCESS_TOKEN, oAuth2Token);
         }
     }
 

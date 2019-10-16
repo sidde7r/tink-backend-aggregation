@@ -68,6 +68,8 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -92,6 +94,9 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         implements TinkHttpClient {
+
+    private final LogMasker logMasker;
+    private final LoggingMode loggingMode;
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -107,7 +112,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
 
-    private LoggingFilter debugOutputLoggingFilter = new LoggingFilter(new PrintStream(System.out));
+    private LoggingFilter debugOutputLoggingFilter;
     private boolean debugOutput = false;
 
     private final ByteArrayOutputStream logOutputStream;
@@ -200,12 +205,23 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         }
     }
 
+    /**
+     * Takes a logMasker that masks sensitive values from logs, the loggingMode parameter should
+     * only be passed with the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the
+     * logMasker handles the sensitive values in the provider. use {@link
+     * se.tink.backend.aggregation.log.LogMasker#shouldLog(Provider)} if you can.
+     *
+     * @param logMasker Masks values from logs.
+     * @param loggingMode determines if logs should be outputted at all.
+     */
     public LegacyTinkHttpClient(
             @Nullable AggregatorInfo aggregatorInfo,
             @Nullable MetricRegistry metricRegistry,
             @Nullable ByteArrayOutputStream logOutPutStream,
             @Nullable SignatureKeyPair signatureKeyPair,
-            @Nullable Provider provider) {
+            @Nullable Provider provider,
+            @Nullable LogMasker logMasker,
+            LoggingMode loggingMode) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
@@ -226,6 +242,10 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
                         : AggregatorInfo.getAggregatorForTesting();
         this.metricRegistry = metricRegistry;
         this.provider = provider;
+        this.logMasker = logMasker;
+        this.loggingMode = loggingMode;
+        this.debugOutputLoggingFilter =
+                new LoggingFilter(new PrintStream(System.out), this.logMasker, this.loggingMode);
 
         // Add an initial redirect handler to fix any illegal location paths
         addRedirectHandler(new FixRedirectHandler());
@@ -245,7 +265,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     }
 
     public LegacyTinkHttpClient() {
-        this(null, null, null, null, null);
+        this(null, null, null, null, null, null, LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS);
     }
 
     public void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler) {
@@ -335,9 +355,12 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
 
         // Add agent debug `LoggingFilter`, todo: move this into nxgen
         try {
-            if (this.logOutputStream != null) {
+            if (this.logOutputStream != null && this.logMasker != null) {
                 this.internalClient.addFilter(
-                        new LoggingFilter(new PrintStream(logOutputStream, true, "UTF-8")));
+                        new LoggingFilter(
+                                new PrintStream(logOutputStream, true, "UTF-8"),
+                                logMasker,
+                                loggingMode));
             }
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);
@@ -616,7 +639,11 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
 
     public void setCensorSensitiveHeaders(final boolean censorSensitiveHeadersEnabled) {
         debugOutputLoggingFilter =
-                new LoggingFilter(new PrintStream(System.out), censorSensitiveHeadersEnabled);
+                new LoggingFilter(
+                        new PrintStream(System.out),
+                        logMasker,
+                        censorSensitiveHeadersEnabled,
+                        loggingMode);
     }
 
     // --- Configuration ---

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.sun.jersey.api.client.ClientHandlerException;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -13,9 +14,12 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -35,22 +39,79 @@ public class RestIoLoggingFilter extends Filter {
 
     private static final ImmutableList<String> SENSITIVE_HEADERS =
             ImmutableList.of("cookie", "set-cookie", "authorization");
+    private static final Set<String> NON_SENSITIVE_HEADERS =
+            ImmutableSet.of(
+                    "accept",
+                    "accept-charset",
+                    "accept-datetime",
+                    "accept-encoding",
+                    "accept-language",
+                    "accept-ranges",
+                    "access-control-allow-origin",
+                    "age",
+                    "allow",
+                    "cache-control",
+                    "connection",
+                    "content-encoding",
+                    "content-language",
+                    "content-length",
+                    "content-type",
+                    "date",
+                    "expires",
+                    "forwarded",
+                    "if-modified-since",
+                    "if-unmodified-since",
+                    "host",
+                    "language",
+                    "last-modified",
+                    "pragma",
+                    "proxy-connection",
+                    "referer",
+                    "server",
+                    "status",
+                    "transfer-encoding",
+                    "user-agent",
+                    "vary",
+                    "via",
+                    "x-forwarded-for",
+                    "x-forwarded-host",
+                    "x-powered-by");
 
     private final PrintStream loggingStream;
+    private final LogMasker logMasker;
+    private final LoggingMode loggingMode;
 
     private long _id = 0;
 
     // Max size that we log is 0,5MB
     private static final int MAX_SIZE = 500 * 1024;
-    private boolean censorSensitiveHeaders = true; // Default
+    private boolean censorSensitiveHeaders;
 
-    public RestIoLoggingFilter(PrintStream loggingStream) {
-        this(loggingStream, false);
+    public RestIoLoggingFilter(
+            PrintStream loggingStream, LogMasker logMasker, LoggingMode loggingMode) {
+        this(loggingStream, logMasker, true, loggingMode);
     }
 
-    public RestIoLoggingFilter(PrintStream loggingStream, boolean censorSensitiveHeaders) {
+    /**
+     * Takes a logMasker that masks sensitive values from logs, the loggingMode parameter should *
+     * only be passed with the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the
+     * * logMasker handles the sensitive values in the provider. use {@link *
+     * se.tink.backend.aggregation.log.LogMasker#shouldLog(Provider)} if you can.
+     *
+     * @param loggingStream
+     * @param logMasker Masks values from logs.
+     * @param censorSensitiveHeaders
+     * @param loggingMode determines if logs should be outputted at all.
+     */
+    public RestIoLoggingFilter(
+            PrintStream loggingStream,
+            LogMasker logMasker,
+            boolean censorSensitiveHeaders,
+            LoggingMode loggingMode) {
         this.censorSensitiveHeaders = censorSensitiveHeaders;
         this.loggingStream = loggingStream;
+        this.logMasker = logMasker;
+        this.loggingMode = loggingMode;
     }
 
     public void setCensorSensitiveHeaders(boolean censorSensitiveHeaders) {
@@ -72,16 +133,15 @@ public class RestIoLoggingFilter extends Filter {
     }
 
     private void log(StringBuilder b) {
-        loggingStream.print(b);
+        if (LoggingMode.LOGGING_MASKER_COVERS_SECRETS.equals(loggingMode)) {
+            loggingStream.print(logMasker.mask(b.toString()));
+        }
     }
 
     private static String censorHeaderValue(String key, String value) {
         // do not output sensitive information in our logs
-        for (String sensitiveHeader : SENSITIVE_HEADERS) {
-            // http header keys are case insensitive
-            if (key.toLowerCase().equals(sensitiveHeader)) {
-                return "***";
-            }
+        if (NON_SENSITIVE_HEADERS.contains(key.toLowerCase())) {
+            return "*** MASKED ***";
         }
         return value;
     }
@@ -94,13 +154,13 @@ public class RestIoLoggingFilter extends Filter {
     private void logRequest(long id, HttpRequest request) {
         StringBuilder b = new StringBuilder();
 
-        printRequestLine(b, id, request);
-        printRequestHeaders(b, id, request.getHeaders());
-        printRequestBody(b, id, request.getBody());
+        appendRequestLine(b, id, request);
+        appendRequestHeaders(b, id, request.getHeaders());
+        appendRequestBody(b, id, request.getBody());
         log(b);
     }
 
-    private void printRequestBody(StringBuilder b, long id, Object body) {
+    private void appendRequestBody(StringBuilder b, long id, Object body) {
         if (body == null) {
             return;
         }
@@ -118,7 +178,7 @@ public class RestIoLoggingFilter extends Filter {
         }
     }
 
-    private void printRequestLine(StringBuilder b, long id, HttpRequest request) {
+    private void appendRequestLine(StringBuilder b, long id, HttpRequest request) {
         prefixId(b, id).append(NOTIFICATION_PREFIX).append("Client out-bound request").append("\n");
         prefixId(b, id)
                 .append(NOTIFICATION_PREFIX)
@@ -132,7 +192,7 @@ public class RestIoLoggingFilter extends Filter {
                 .append("\n");
     }
 
-    private void printRequestHeaders(
+    private void appendRequestHeaders(
             StringBuilder b, long id, MultivaluedMap<String, Object> headers) {
         for (Map.Entry<String, List<Object>> e : headers.entrySet()) {
             List<Object> val = e.getValue();
@@ -166,8 +226,8 @@ public class RestIoLoggingFilter extends Filter {
     private void logResponse(long id, HttpResponse response) {
         StringBuilder b = new StringBuilder();
 
-        printResponseLine(b, id, response);
-        printResponseHeaders(b, id, response.getHeaders());
+        appendResponseLine(b, id, response);
+        appendResponseHeaders(b, id, response.getHeaders());
 
         InputStream stream = response.getBodyInputStream();
         try {
@@ -199,7 +259,7 @@ public class RestIoLoggingFilter extends Filter {
         log(b);
     }
 
-    private void printResponseLine(StringBuilder b, long id, HttpResponse response) {
+    private void appendResponseLine(StringBuilder b, long id, HttpResponse response) {
         prefixId(b, id).append(NOTIFICATION_PREFIX).append("Client in-bound response").append("\n");
         prefixId(b, id)
                 .append(NOTIFICATION_PREFIX)
@@ -208,7 +268,7 @@ public class RestIoLoggingFilter extends Filter {
         prefixId(b, id).append(RESPONSE_PREFIX).append(response.getStatus()).append("\n");
     }
 
-    private void printResponseHeaders(
+    private void appendResponseHeaders(
             StringBuilder b, long id, MultivaluedMap<String, String> headers) {
         for (Map.Entry<String, List<String>> e : headers.entrySet()) {
             String header = e.getKey();

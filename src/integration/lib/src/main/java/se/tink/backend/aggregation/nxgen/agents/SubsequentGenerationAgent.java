@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
@@ -82,9 +83,13 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         MarketCode.valueOf(request.getProvider().getMarket()),
                         request.getProvider().getCurrency(),
                         request.getUser());
+        LogMasker logMasker =
+                new LogMasker(
+                        credentials, context.getAgentConfigurationController().getSecretValues());
         if (useNextGenClient) {
             this.client =
-                    NextGenTinkHttpClient.builder()
+                    NextGenTinkHttpClient.builder(
+                                    logMasker, LogMasker.shouldLog(request.getProvider()))
                             .setAggregatorInfo(context.getAggregatorInfo())
                             .setMetricRegistry(metricContext.getMetricRegistry())
                             .setLogOutputStream(context.getLogOutputStream())
@@ -98,7 +103,9 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                             metricContext.getMetricRegistry(),
                             context.getLogOutputStream(),
                             signatureKeyPair,
-                            request.getProvider());
+                            request.getProvider(),
+                            logMasker,
+                            LogMasker.shouldLog(request.getProvider()));
         }
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();

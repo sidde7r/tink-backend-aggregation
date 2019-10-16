@@ -68,6 +68,8 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -95,6 +97,9 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         implements TinkHttpClient {
+
+    private final LogMasker logMasker;
+    private final LoggingMode loggingMode;
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -197,7 +202,18 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         }
     }
 
-    private NextGenTinkHttpClient(final Builder builder) {
+    /**
+     * Takes a logMasker that masks sensitive values from logs, the shouldLog parameter should only
+     * * be passed with the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the *
+     * logMasker handles the sensitive values in the provider. use {@link *
+     * se.tink.backend.aggregation.log.LogMasker#shouldLog(Provider)} if you can.
+     *
+     * @param builder the builder.
+     * @param logMasker Masks values from logs.
+     * @param loggingMode determines if logs should be outputted at all.
+     */
+    private NextGenTinkHttpClient(
+            final Builder builder, LogMasker logMasker, LoggingMode loggingMode) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(builder.getSignatureKeyPair());
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
@@ -238,25 +254,46 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
         registerJacksonModule(new VavrModule());
         responseStatusHandler = new DefaultResponseStatusHandler();
-        debugOutputLoggingFilter = new RestIoLoggingFilter(printStream);
+        this.logMasker = logMasker;
+        this.loggingMode = loggingMode;
+        debugOutputLoggingFilter =
+                new RestIoLoggingFilter(printStream, this.logMasker, this.loggingMode);
         addFilter(new SendRequestFilter());
     }
 
-    public static NextGenTinkHttpClient.Builder builder() {
-        return new Builder();
+    /**
+     * Takes a logMasker that masks sensitive values from logs, the loggingMode parameter should
+     * only be passed with the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the
+     * logMasker handles the sensitive values in the provider. use {@link
+     * se.tink.backend.aggregation.log.LogMasker#shouldLog(Provider)} if you can.
+     *
+     * @param logMasker Masks values from logs.
+     * @param loggingMode determines if logs should be outputted at all.
+     * @return the builder.
+     */
+    public static NextGenTinkHttpClient.Builder builder(
+            LogMasker logMasker, LoggingMode loggingMode) {
+        return new Builder(logMasker, loggingMode);
     }
 
     public static final class Builder {
 
+        private final LoggingMode loggingMode;
         private AggregatorInfo aggregatorInfo;
         private MetricRegistry metricRegistry;
         private ByteArrayOutputStream logOutputStream;
         private SignatureKeyPair signatureKeyPair;
         private Provider provider;
         private PrintStream printStream;
+        private LogMasker logMasker;
+
+        public Builder(LogMasker logMasker, LoggingMode loggingMode) {
+            this.logMasker = logMasker;
+            this.loggingMode = loggingMode;
+        }
 
         public NextGenTinkHttpClient build() {
-            return new NextGenTinkHttpClient(this);
+            return new NextGenTinkHttpClient(this, logMasker, loggingMode);
         }
 
         public AggregatorInfo getAggregatorInfo() {
@@ -403,7 +440,10 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         try {
             if (this.logOutputStream != null) {
                 this.internalClient.addFilter(
-                        new LoggingFilter(new PrintStream(logOutputStream, true, "UTF-8")));
+                        new LoggingFilter(
+                                new PrintStream(logOutputStream, true, "UTF-8"),
+                                logMasker,
+                                loggingMode));
             }
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);

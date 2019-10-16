@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -29,8 +30,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.aggregation.utils.CredentialsStringMasker;
-import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
@@ -64,22 +63,15 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     private static ClientFilterFactory createHttpLoggingFilterFactory(
             String logTag,
             Class<? extends HttpLoggableExecutor> agentClass,
-            Credentials credentials) {
-        Iterable<StringMasker> stringMaskers = createHttpLogMaskers(credentials);
-        return new HttpLoggingFilterFactory(log, logTag, stringMaskers, agentClass);
-    }
-
-    private static Iterable<StringMasker> createHttpLogMaskers(Credentials credentials) {
-        StringMasker stringMasker =
-                new CredentialsStringMasker(
-                        credentials,
-                        ImmutableList.of(
-                                CredentialsStringMasker.CredentialsProperty.PASSWORD,
-                                CredentialsStringMasker.CredentialsProperty.SECRET_KEY,
-                                CredentialsStringMasker.CredentialsProperty.SENSITIVE_PAYLOAD,
-                                CredentialsStringMasker.CredentialsProperty.USERNAME));
-
-        return ImmutableList.of(stringMasker);
+            Credentials credentials,
+            Collection<String> sensitiveValuesToMask,
+            boolean shouldLog) {
+        return new HttpLoggingFilterFactory(
+                log,
+                logTag,
+                new LogMasker(credentials, sensitiveValuesToMask),
+                agentClass,
+                shouldLog);
     }
 
     private static String getLogTagTransfer(Transfer transfer) {
@@ -115,7 +107,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         HttpLoggableExecutor httpLoggableExecutor = (HttpLoggableExecutor) agent;
         ClientFilterFactory loggingFilterFactory =
                 createHttpLoggingFilterFactory(
-                        getLogTagTransfer(transfer), httpLoggableExecutor.getClass(), credentials);
+                        getLogTagTransfer(transfer),
+                        httpLoggableExecutor.getClass(),
+                        credentials,
+                        context.getAgentConfigurationController().getSecretValues(),
+                        transferRequest.getProvider().isOpenBanking());
 
         Optional<String> operationStatusMessage = Optional.empty();
         try {

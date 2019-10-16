@@ -164,4 +164,9 @@ public class Provider implements Cloneable {
     public String getMetricTypeName() {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_UNDERSCORE, getType().name());
     }
+
+    @JsonIgnore
+    public boolean isOpenBanking() {
+        return accessType == AccessType.OPEN_BANKING;
+    }
 }

@@ -2,8 +2,9 @@ package se.tink.backend.aggregation.configuration.integrations.abnamro;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
+import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
-public class AbnAmroConfiguration {
+public class AbnAmroConfiguration implements ClientConfiguration {
     @JsonProperty @Deprecated private boolean downForMaintenance;
     @JsonProperty private ImmutableMap<Integer, Integer> rateLimitPermits;
     @JsonProperty private boolean ignoreCreditCardErrors = false;

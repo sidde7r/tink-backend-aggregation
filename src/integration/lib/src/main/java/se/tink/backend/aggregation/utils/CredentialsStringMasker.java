@@ -12,8 +12,6 @@ import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
 
 public class CredentialsStringMasker implements StringMasker {
-    private static final String MASK = "***MASKED***";
-
     private final Credentials credentials;
     private final Iterable<CredentialsProperty> maskedProperties;
 

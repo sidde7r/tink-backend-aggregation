@@ -13,6 +13,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -33,7 +34,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     private DebugAgentWorkerCommandState state;
     private AgentWorkerCommandContext context;
     private AgentDebugStorageHandler agentDebugStorage;
-    private int debugLogFrequencyPercent;
+    private final LogMasker logMasker;
 
     public DebugAgentWorkerCommand(
             AgentWorkerCommandContext context,
@@ -42,6 +43,10 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         this.context = context;
         this.state = state;
         this.agentDebugStorage = agentDebugStorage;
+        this.logMasker =
+                new LogMasker(
+                        context.getRequest().getCredentials(),
+                        context.getAgentConfigurationController().getSecretValues());
     }
 
     @Override
@@ -91,15 +96,20 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             User user = context.getRequest().getUser();
 
             // Debug output for non-transfers such as refresh commands and delete.
-            if (credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR
-                    || credentials.getStatus() == CredentialsStatus.TEMPORARY_ERROR
-                    || credentials.getStatus() == CredentialsStatus.UNCHANGED
-                    || credentials.isDebug()
-                    || user.isDebug()
-                    || shouldPrintDebugLogRegardless()) {
+            if (shouldPrintDebugLog(credentials, user)
+                    && context.getRequest().getProvider().isOpenBanking()) {
                 writeToDebugFile(credentials, null);
             }
         }
+    }
+
+    private boolean shouldPrintDebugLog(Credentials credentials, User user) {
+        return credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR
+                || credentials.getStatus() == CredentialsStatus.TEMPORARY_ERROR
+                || credentials.getStatus() == CredentialsStatus.UNCHANGED
+                || credentials.isDebug()
+                || user.isDebug()
+                || shouldPrintDebugLogRegardless();
     }
 
     private String maskSensitiveOutputLog(String logContent, Credentials credentials) {
@@ -113,7 +123,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             }
         }
 
-        return logContent;
+        return logMasker.mask(logContent);
     }
 
     private static String getFormattedSize(String str) {

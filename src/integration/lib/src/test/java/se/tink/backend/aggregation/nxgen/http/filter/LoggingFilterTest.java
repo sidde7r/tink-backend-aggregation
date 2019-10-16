@@ -4,9 +4,13 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -20,7 +24,12 @@ public class LoggingFilterTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(outputStream);
 
-        TinkHttpClient client = NextGenTinkHttpClient.builder().setPrintStream(printStream).build();
+        TinkHttpClient client =
+                NextGenTinkHttpClient.builder(
+                                new LogMasker(new Credentials(), Collections.emptyList()),
+                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                        .setPrintStream(printStream)
+                        .build();
 
         client.setDebugOutput(true);
 

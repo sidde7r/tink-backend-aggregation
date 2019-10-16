@@ -2,8 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
+import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
-public interface AmericanExpressV62Configuration {
+public interface AmericanExpressV62Configuration extends ClientConfiguration {
 
     String getLocale();
 

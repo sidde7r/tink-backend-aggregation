@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
+import java.util.Collections;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
@@ -12,6 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -68,7 +72,11 @@ public final class VolksbankApiClientTest {
     }
 
     private static TinkHttpClient createHttpClient() {
-        TinkHttpClient tinkHttpClient = NextGenTinkHttpClient.builder().build();
+        TinkHttpClient tinkHttpClient =
+                NextGenTinkHttpClient.builder(
+                                new LogMasker(new Credentials(), Collections.emptyList()),
+                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                        .build();
         EidasProxyConfiguration proxyConfiguration =
                 EidasProxyConfiguration.createLocal(
                         "https://eidas-proxy.staging.aggregation.tink.network");

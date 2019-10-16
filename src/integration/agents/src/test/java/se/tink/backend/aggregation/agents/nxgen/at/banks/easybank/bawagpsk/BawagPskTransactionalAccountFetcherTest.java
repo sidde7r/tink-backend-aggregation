@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -67,7 +69,12 @@ public final class BawagPskTransactionalAccountFetcherTest {
                                 context.getMetricRegistry(),
                                 context.getLogOutputStream(),
                                 null,
-                                null),
+                                null,
+                                new LogMasker(
+                                        credentials,
+                                        context.getAgentConfigurationController()
+                                                .getSecretValues()),
+                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS),
                         new SessionStorage(),
                         new PersistentStorage(),
                         provider);
