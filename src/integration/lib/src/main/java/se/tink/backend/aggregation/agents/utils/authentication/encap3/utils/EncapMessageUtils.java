@@ -237,14 +237,14 @@ public class EncapMessageUtils {
     }
 
     public String encryptSoapAndSend(URL url, String soapMessage) {
-        byte[] randKey = RandomUtils.secureRandom(32);
-        byte[] hmacKeyData = Base64.getDecoder().decode(Soap.MAC_B64);
-        byte[] aesKeyData = Base64.getDecoder().decode(Soap.ENC_B64);
-        byte[] hmacKey = Hash.sha256(randKey, hmacKeyData);
-        byte[] aesKey = Hash.sha256(randKey, aesKeyData);
+        byte[] randKeyBytes = RandomUtils.secureRandom(32);
+        byte[] hmacDataBytes = Base64.getDecoder().decode(Soap.MAC_B64);
+        byte[] aesKeyDataBytes = Base64.getDecoder().decode(Soap.ENC_B64);
+        byte[] hmacKeyBytes = Hash.hmacSha256(randKeyBytes, hmacDataBytes);
+        byte[] aesKeyBytes = Hash.hmacSha256(randKeyBytes, aesKeyDataBytes);
 
         EncryptedSoapRequestBody body =
-                getSoapCryptoRequestBody(randKey, aesKey, hmacKey, soapMessage);
+                getSoapCryptoRequestBody(randKeyBytes, aesKeyBytes, hmacKeyBytes, soapMessage);
 
         EncryptedSoapResponse response =
                 httpClient
@@ -262,18 +262,18 @@ public class EncapMessageUtils {
         String hmacData = response.getHeaders() + response.getPayload() + response.getIv();
         String calculatedMac =
                 EncapCryptoUtils.computeMAC(
-                        Arrays.copyOfRange(hmacKey, 0, 16),
-                        Arrays.copyOfRange(hmacKey, 16, 32),
+                        Arrays.copyOfRange(hmacKeyBytes, 0, 16),
+                        Arrays.copyOfRange(hmacKeyBytes, 16, 32),
                         hmacData.getBytes());
 
         if (!calculatedMac.equals(response.getMac())) {
             throw new IllegalStateException("MAC authentication failed");
         }
 
-        byte[] aesIv = Base64.getDecoder().decode(response.getIv());
+        byte[] aesIvBytes = Base64.getDecoder().decode(response.getIv());
 
         return EncapCryptoUtils.decryptPayloadResponse(
-                aesKey, Arrays.copyOfRange(aesIv, 0, 16), response.getPayload());
+                aesKeyBytes, Arrays.copyOfRange(aesIvBytes, 0, 16), response.getPayload());
     }
 
     public <T> T encryptAndSend(String plainTextMessage, Class<T> responseType) {
