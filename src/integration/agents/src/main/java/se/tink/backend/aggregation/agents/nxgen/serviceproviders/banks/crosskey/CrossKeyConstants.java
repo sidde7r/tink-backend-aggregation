@@ -4,7 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
@@ -75,6 +76,7 @@ public class CrossKeyConstants {
     public static final class Storage {
         public static final String DEVICE_ID = "deviceId";
         public static final String DEVICE_TOKEN = "deviceToken";
+        public static final String JSESSION_ID = "jsessionId";
     }
 
     public static final class Query {
@@ -93,12 +95,6 @@ public class CrossKeyConstants {
     }
 
     public static final class Fetcher {
-        public static final LogTag LOAN_LOGGING = LogTag.from("#loan_crosskey");
-        public static final LogTag INVESTMENT_PORTFOLIO_LOGGING =
-                LogTag.from("#investment_portfolio_crosskey");
-        public static final LogTag INVESTMENT_INSTRUMENT_LOGGING =
-                LogTag.from("#investment_instrument_crosskey");
-
         public static final class Account {
             public static final String CHECK = "check";
             public static final String INVESTMENT = "portfolio";
@@ -111,22 +107,24 @@ public class CrossKeyConstants {
         }
     }
 
-    public static final ImmutableMap<Integer, Portfolio.Type> PORTFOLIO_TYPES =
-            ImmutableMap.<Integer, Portfolio.Type>builder().put(849, Portfolio.Type.DEPOT).build();
-
-    public static final ImmutableMap<Integer, LoanDetails.Type> LOAN_TYPES =
-            ImmutableMap.<Integer, LoanDetails.Type>builder()
-                    .put(505, LoanDetails.Type.BLANCO)
-                    .put(510, LoanDetails.Type.OTHER)
-                    .put(512, LoanDetails.Type.OTHER)
-                    .put(532, LoanDetails.Type.STUDENT)
-                    .put(536, LoanDetails.Type.OTHER)
-                    .put(539, LoanDetails.Type.OTHER)
+    public static final GenericTypeMapper<Portfolio.Type, Integer> PORTFOLIO_TYPES =
+            GenericTypeMapper.<Portfolio.Type, Integer>genericBuilder()
+                    .put(Portfolio.Type.DEPOT, 849)
                     .build();
 
-    public static final ImmutableMap<String, Instrument.Type> INSTRUMENT_TYPES =
-            ImmutableMap.<String, Instrument.Type>builder()
-                    .put(Fetcher.Instrument.STOCK.toLowerCase(), Instrument.Type.STOCK)
+    public static final GenericTypeMapper<LoanDetails.Type, Integer> LOAN_TYPES =
+            GenericTypeMapper.<LoanDetails.Type, Integer>genericBuilder()
+                    .put(LoanDetails.Type.BLANCO, 505)
+                    .put(LoanDetails.Type.OTHER, 510)
+                    .put(LoanDetails.Type.OTHER, 512)
+                    .put(LoanDetails.Type.STUDENT, 532)
+                    .put(LoanDetails.Type.OTHER, 536)
+                    .put(LoanDetails.Type.OTHER, 539)
+                    .build();
+
+    public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPES =
+            TypeMapper.<Instrument.Type>builder()
+                    .put(Instrument.Type.STOCK, Fetcher.Instrument.STOCK.toLowerCase())
                     .build();
 
     public enum EndUserMessage implements LocalizableEnum {

@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CrossKeyCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
@@ -38,10 +37,6 @@ public class CrossKeyCreditCardFetcher
         try {
             String deviceId = persistentStorage.getDeviceId();
             CardsResponse cardsResponse = client.fetchCards(new CardsRequest(deviceId));
-            if (hasCreditCardData(cardsResponse)) {
-                LOG.info("User has some kind of card ");
-                LOG.info(SerializationUtils.serializeToString(cardsResponse));
-            }
             return cardsResponse.getCards().stream()
                     .filter(CrossKeyCard::isCreditCard)
                     .map(CrossKeyCard::toCreditCardAccount)
@@ -63,10 +58,5 @@ public class CrossKeyCreditCardFetcher
                         .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(transactions);
-    }
-
-    private boolean hasCreditCardData(CardsResponse cardsResponse) {
-        return cardsResponse != null
-                && (cardsResponse.getCards().size() > 0 || cardsResponse.hasData());
     }
 }
