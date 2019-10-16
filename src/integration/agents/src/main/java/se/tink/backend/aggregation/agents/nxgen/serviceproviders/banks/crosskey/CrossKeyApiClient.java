@@ -221,13 +221,6 @@ public class CrossKeyApiClient {
                 PortfolioRequest.withAccountId(accountId));
     }
 
-    public String fetchPortfolioAsString(String accountId) {
-        return post(
-                buildRequest(CrossKeyConstants.Url.FETCH_PORTFOLIO),
-                String.class,
-                PortfolioRequest.withAccountId(accountId));
-    }
-
     public InstrumentDetailsResponse fetchInstrumentDetails(String isinCode, String marketPlace) {
         return post(
                 buildRequest(CrossKeyConstants.Url.FETCH_INSTRUMENT_DETAILS),

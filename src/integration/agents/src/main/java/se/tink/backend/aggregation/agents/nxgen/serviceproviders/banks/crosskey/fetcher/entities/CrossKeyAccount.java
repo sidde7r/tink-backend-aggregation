@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities;
 
 import com.google.common.base.Strings;
-import java.util.Collection;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConfiguration;
@@ -69,11 +68,6 @@ public class CrossKeyAccount {
         return agentConfiguration.parseInvestmentAccount(this, portfolio);
     }
 
-    public boolean isKnownPortfolioType() {
-        Collection<Portfolio.Type> knownTypes = CrossKeyConstants.PORTFOLIO_TYPES.getMappedTypes();
-        return CrossKeyConstants.PORTFOLIO_TYPES.isOneOf(accountType, knownTypes);
-    }
-
     public Portfolio.Type getPortfolioType() {
         return CrossKeyConstants.PORTFOLIO_TYPES
                 .translate(accountType)
@@ -82,11 +76,6 @@ public class CrossKeyAccount {
 
     public boolean isLoan() {
         return CrossKeyConstants.Fetcher.Account.LOAN.equalsIgnoreCase(accountGroup);
-    }
-
-    public boolean isKnownLoanType() {
-        Collection<LoanDetails.Type> knownTypes = CrossKeyConstants.LOAN_TYPES.getMappedTypes();
-        return CrossKeyConstants.LOAN_TYPES.isOneOf(accountType, knownTypes);
     }
 
     public LoanDetails.Type getLoanType() {

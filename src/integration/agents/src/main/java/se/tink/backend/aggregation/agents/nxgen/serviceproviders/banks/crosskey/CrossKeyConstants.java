@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -96,12 +95,6 @@ public class CrossKeyConstants {
     }
 
     public static final class Fetcher {
-        public static final LogTag LOAN_LOGGING = LogTag.from("#loan_crosskey");
-        public static final LogTag INVESTMENT_PORTFOLIO_LOGGING =
-                LogTag.from("#investment_portfolio_crosskey");
-        public static final LogTag INVESTMENT_INSTRUMENT_LOGGING =
-                LogTag.from("#investment_instrument_crosskey");
-
         public static final class Account {
             public static final String CHECK = "check";
             public static final String INVESTMENT = "portfolio";
