@@ -5,7 +5,6 @@ import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_TRA
 import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_ACCOUNTS;
 import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_TRANSACTIONS;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
@@ -1874,16 +1873,11 @@ public class LansforsakringarAgent extends AbstractAgent
                                     if (instrumentDetails == null) {
                                         return;
                                     }
-                                    log.info(
-                                            "#lf - bond details: "
-                                                    + MAPPER.writeValueAsString(instrumentDetails));
                                 } catch (HttpStatusCodeErrorException e) {
                                     // If the user don't have an fund depot this request will get a
                                     // response with status code 400.
                                     // Just return and don't do anything.
                                     return;
-                                } catch (JsonProcessingException e) {
-                                    // Just continue
                                 }
                                 bondEntity.toInstrument().ifPresent(instruments::add);
                             });
@@ -2037,16 +2031,11 @@ public class LansforsakringarAgent extends AbstractAgent
                                 if (instrumentDetails == null) {
                                     return;
                                 }
-                                log.info(
-                                        "#lf - stockdepot - bond details: "
-                                                + MAPPER.writeValueAsString(instrumentDetails));
                             } catch (HttpStatusCodeErrorException e) {
                                 // If the user don't have an fund depot this request will get a
                                 // response with status code 400.
                                 // Just return and don't do anything.
                                 return;
-                            } catch (JsonProcessingException e) {
-                                // Just continue
                             }
                             bondEntity.toInstrument().ifPresent(instruments::add);
                         });
