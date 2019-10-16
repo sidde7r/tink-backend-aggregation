@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
@@ -232,6 +233,8 @@ public class SBABAgent extends AbstractAgent
         String token = authenticationClient.getBearerToken();
         userDataClient.setBearerToken(token);
         transferClient.setBearerToken(token);
+        // store token in the sensitive payload so that it will be masked
+        credentials.setSensitivePayload(Key.ACCESS_TOKEN, token);
     }
 
     private List<Transaction> fetchTransactions(Account account) throws Exception {
