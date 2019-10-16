@@ -48,18 +48,6 @@ steps:
       queue: v4
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
-  - command: .buildkite/check-json-style.sh
-    plugins:
-      docker-compose#v3.0.3:
-        run: app
-        config: docker/docker-compose.bazel.yml
-    branches: '!master'
-    name: ':json: Check JSON style'
-    timeout_in_minutes: 5
-    agents:
-      queue: v4
-    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
-
   - wait
 
   - name: ':docker: tink-backend-aggregation'
