@@ -40,41 +40,41 @@ public class RestIoLoggingFilter extends Filter {
             ImmutableList.of("cookie", "set-cookie", "authorization");
     private static final Set<String> NON_SENSITIVE_HEADERS =
             ImmutableSet.of(
-                    "Accept",
-                    "Accept-Charset",
-                    "Accept-Datetime",
-                    "Accept-Encoding",
-                    "Accept-Language",
-                    "Accept-Ranges",
-                    "Access-Control-Allow-Origin",
-                    "Age",
-                    "Allow",
-                    "Cache-Control",
-                    "Connection",
-                    "Content-Encoding",
-                    "Content-Language",
-                    "Content-Length",
-                    "Content-Type",
-                    "Date",
-                    "Expires",
-                    "Forwarded",
-                    "If-Modified-Since",
-                    "If-Unmodified-Since",
-                    "Host",
-                    "Language",
-                    "Last-Modified",
-                    "Pragma",
-                    "Proxy-Connection",
-                    "Referer",
-                    "Server",
-                    "Status",
-                    "Transfer-Encoding",
-                    "User-Agent",
-                    "Vary",
-                    "Via",
-                    "X-Forwarded-For",
-                    "X-Forwarded-Host",
-                    "X-Powered-By");
+                    "accept",
+                    "accept-charset",
+                    "accept-datetime",
+                    "accept-encoding",
+                    "accept-language",
+                    "accept-ranges",
+                    "access-control-allow-origin",
+                    "age",
+                    "allow",
+                    "cache-control",
+                    "connection",
+                    "content-encoding",
+                    "content-language",
+                    "content-length",
+                    "content-type",
+                    "date",
+                    "expires",
+                    "forwarded",
+                    "if-modified-since",
+                    "if-unmodified-since",
+                    "host",
+                    "language",
+                    "last-modified",
+                    "pragma",
+                    "proxy-connection",
+                    "referer",
+                    "server",
+                    "status",
+                    "transfer-encoding",
+                    "user-agent",
+                    "vary",
+                    "via",
+                    "x-forwarded-for",
+                    "x-forwarded-host",
+                    "x-powered-by");
 
     private final PrintStream loggingStream;
     private final LogMasker logMasker;
@@ -127,11 +127,8 @@ public class RestIoLoggingFilter extends Filter {
 
     private static String censorHeaderValue(String key, String value) {
         // do not output sensitive information in our logs
-        for (String sensitiveHeader : NON_SENSITIVE_HEADERS) {
-            // http header keys are case insensitive
-            if (!key.equalsIgnoreCase(sensitiveHeader)) {
-                return "*** MASKED ***";
-            }
+        if (NON_SENSITIVE_HEADERS.contains(key.toLowerCase())) {
+            return "*** MASKED ***";
         }
         return value;
     }
