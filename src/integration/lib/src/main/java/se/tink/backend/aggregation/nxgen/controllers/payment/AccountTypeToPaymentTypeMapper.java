@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
 import java.time.LocalDate;
+import java.util.Optional;
+
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.account.AccountIdentifier;
@@ -12,7 +14,7 @@ public class AccountTypeToPaymentTypeMapper {
 
     private static GenericTypeMapper<
                     PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
-            mapper_se =
+            AccountTypeToPaymentTypeMapperSE =
                     GenericTypeMapper
                             .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
                                     genericBuilder()
@@ -33,7 +35,7 @@ public class AccountTypeToPaymentTypeMapper {
 
     private static GenericTypeMapper<
                     PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
-            mapper_gb =
+            AccountTypeToPaymentTypeMapperGB =
                     GenericTypeMapper
                             .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
                                     genericBuilder()
@@ -53,21 +55,18 @@ public class AccountTypeToPaymentTypeMapper {
                             .build();
 
     public static PaymentType getType(Payment payment, String marketCode) {
-        GenericTypeMapper<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
-                mapper =
-                        GenericTypeMapper
-                                .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
-                                        genericBuilder()
-                                .build();
+
+        Optional<PaymentType> maybePaymentType = Optional.empty();
 
         if (String.valueOf(MarketCode.SE).equals(marketCode)) {
-            mapper = mapper_se;
+            maybePaymentType = AccountTypeToPaymentTypeMapperSE.translate(payment.getCreditorAndDebtorAccountType());
         }
         if (String.valueOf(MarketCode.GB).equals(marketCode)) {
-            mapper = mapper_gb;
+            maybePaymentType = AccountTypeToPaymentTypeMapperGB.translate(payment.getCreditorAndDebtorAccountType());
         }
+
         PaymentType paymentType =
-                mapper.translate(payment.getCreditorAndDebtorAccountType())
+                maybePaymentType
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(

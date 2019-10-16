@@ -82,7 +82,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void testGetPaymentProductTypeForIbanToIbanSEisDomesticFuture() {
+    public void testGetPaymentProductTypeForIbanToIbanSEisDomestic() {
 
         Payment payment =
                 new Payment.Builder()
