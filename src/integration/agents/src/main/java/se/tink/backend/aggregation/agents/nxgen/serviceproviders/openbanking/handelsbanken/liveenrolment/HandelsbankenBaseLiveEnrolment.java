@@ -5,6 +5,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.EnrolmentValue;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.configuration.HandelsbankenBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolment.entity.AppEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolment.entity.SubscriptionProductEntity;
@@ -63,9 +64,8 @@ public class HandelsbankenBaseLiveEnrolment {
                 new SubscriptionProductEntity(BodyValues.PRODUCT_ACCOUNTS);
         AppEntity app =
                 new AppEntity(
-                        configuration.getAppName(), configuration.getAppDesc(), oauthRedirectURI);
-        SubscriptionRequest subscriptionRequest = new SubscriptionRequest(app, product);
-        return subscriptionRequest;
+                        EnrolmentValue.APP_NAME, EnrolmentValue.APP_DESCRIPTION, oauthRedirectURI);
+        return new SubscriptionRequest(app, product);
     }
 
     public AdditionalRequest getAdditionalRequest(String clientId, String subscription) {
@@ -110,7 +110,7 @@ public class HandelsbankenBaseLiveEnrolment {
 
     public void enrolAndSubscribeNewApp() {
         ThirdPartiesResponse thirdPartiesResponse = getThirdPartiesId();
-        TokenResponse tokenResponse = getBearerToken(configuration.getTppId());
+        TokenResponse tokenResponse = getBearerToken(EnrolmentValue.TPP_ID);
         SubscriptionResponse subscriptionResponse =
                 getSubscription(
                         thirdPartiesResponse.getClientId(),

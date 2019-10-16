@@ -80,6 +80,16 @@ public final class HandelsbankenBaseConstants {
         public static final String PSU_ID_TYPE = "psu_id_type";
     }
 
+    public static class EnrolmentValue {
+        public static final String APP_NAME = "Tink";
+        public static final String APP_DESCRIPTION = "Tink app";
+        public static final String TPP_ID = "SE-FINA-44059";
+    }
+
+    public static class Psu {
+        public static final String IP_ADDRESS = "0.0.0.0";
+    }
+
     public static class Market {
         public static final String COUNTRY = "SE";
     }

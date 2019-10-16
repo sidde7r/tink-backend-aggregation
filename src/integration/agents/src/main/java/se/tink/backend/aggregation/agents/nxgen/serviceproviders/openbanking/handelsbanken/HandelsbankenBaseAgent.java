@@ -21,7 +21,6 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     protected HandelsbankenBaseApiClient apiClient;
-    private final String clientName;
     private HandelsbankenBaseConfiguration handelsbankenBaseConfiguration;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -29,7 +28,6 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new HandelsbankenBaseApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
 
         setMaxPeriodTransactions();
     }
