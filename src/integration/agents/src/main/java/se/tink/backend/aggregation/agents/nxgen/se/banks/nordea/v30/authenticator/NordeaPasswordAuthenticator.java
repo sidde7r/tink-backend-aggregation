@@ -139,6 +139,8 @@ public class NordeaPasswordAuthenticator implements TypedAuthenticator, AutoAuth
         String codeVerifier = EncodingUtils.encodeAsBase64UrlSafe(RandomUtils.secureRandom(64));
         // authenticate device
         String deviceToken = authenticateDevice(codeVerifier);
+        sessionStorage.put(StorageKeys.DEVICE_AUTH_TOKEN, deviceToken);
+
         VerifyPersonalCodeRequest verifyRequest =
                 VerifyPersonalCodeRequest.create(password, deviceToken);
         // verify personal code
