@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataPinAuthenticator;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -43,7 +44,7 @@ public class BankdataTransactionFetcherTest {
                         new LogMasker(
                                 credentials,
                                 context.getAgentConfigurationController().getSecretValues()),
-                        true);
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();
         provider.setPayload(bankNo);

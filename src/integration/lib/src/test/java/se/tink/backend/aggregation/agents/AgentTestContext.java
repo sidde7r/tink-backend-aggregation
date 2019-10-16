@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -55,7 +56,8 @@ public class AgentTestContext extends AgentContext {
     public AgentTestContext(Credentials credentials) {
         supplementalClient =
                 NextGenTinkHttpClient.builder(
-                                new LogMasker(new Credentials(), Collections.emptyList()), true)
+                                new LogMasker(new Credentials(), Collections.emptyList()),
+                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
         log = LoggerFactory.getLogger(AgentTestContext.class);
         mapper = new ObjectMapper();

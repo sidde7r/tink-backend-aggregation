@@ -140,7 +140,7 @@ public class NorwegianAgent extends AbstractAgent
                         new LogMasker(
                                 request.getCredentials(),
                                 context.getAgentConfigurationController().getSecretValues()),
-                        request.getProvider().isOpenBanking());
+                        LogMasker.shouldLog(request.getProvider()));
     }
 
     @Override

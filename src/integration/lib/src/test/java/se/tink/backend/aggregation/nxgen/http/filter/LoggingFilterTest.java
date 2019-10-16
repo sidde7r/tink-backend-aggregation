@@ -10,6 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -25,7 +26,8 @@ public class LoggingFilterTest {
 
         TinkHttpClient client =
                 NextGenTinkHttpClient.builder(
-                                new LogMasker(new Credentials(), Collections.emptyList()), true)
+                                new LogMasker(new Credentials(), Collections.emptyList()),
+                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .setPrintStream(printStream)
                         .build();
 

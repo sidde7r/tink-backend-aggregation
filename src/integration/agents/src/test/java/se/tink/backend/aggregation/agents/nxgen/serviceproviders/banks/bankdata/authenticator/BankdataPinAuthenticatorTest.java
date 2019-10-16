@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataTestConfig;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -38,7 +39,7 @@ public class BankdataPinAuthenticatorTest {
                         new LogMasker(
                                 credentials,
                                 context.getAgentConfigurationController().getSecretValues()),
-                        true);
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();
         provider.setPayload(bankNo);

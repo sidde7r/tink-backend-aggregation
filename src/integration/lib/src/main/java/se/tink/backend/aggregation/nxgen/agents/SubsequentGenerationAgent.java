@@ -88,7 +88,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         credentials, context.getAgentConfigurationController().getSecretValues());
         if (useNextGenClient) {
             this.client =
-                    NextGenTinkHttpClient.builder(logMasker, request.getProvider().isOpenBanking())
+                    NextGenTinkHttpClient.builder(
+                                    logMasker, LogMasker.shouldLog(request.getProvider()))
                             .setAggregatorInfo(context.getAggregatorInfo())
                             .setMetricRegistry(metricContext.getMetricRegistry())
                             .setLogOutputStream(context.getLogOutputStream())
@@ -104,7 +105,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                             signatureKeyPair,
                             request.getProvider(),
                             logMasker,
-                            request.getProvider().isOpenBanking());
+                            LogMasker.shouldLog(request.getProvider()));
         }
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();

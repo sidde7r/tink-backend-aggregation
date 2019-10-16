@@ -19,6 +19,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -78,7 +79,7 @@ public class RestIoLoggingFilter extends Filter {
 
     private final PrintStream loggingStream;
     private final LogMasker logMasker;
-    private final boolean shouldLog;
+    private final LoggingMode loggingMode;
 
     private long _id = 0;
 
@@ -86,19 +87,31 @@ public class RestIoLoggingFilter extends Filter {
     private static final int MAX_SIZE = 500 * 1024;
     private boolean censorSensitiveHeaders;
 
-    public RestIoLoggingFilter(PrintStream loggingStream, LogMasker logMasker, boolean shouldLog) {
-        this(loggingStream, logMasker, true, shouldLog);
+    public RestIoLoggingFilter(
+            PrintStream loggingStream, LogMasker logMasker, LoggingMode loggingMode) {
+        this(loggingStream, logMasker, true, loggingMode);
     }
 
+    /**
+     * Takes a logMasker that masks sensitive values from logs, the loggingMode parameter should *
+     * only be passed with the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the
+     * * logMasker handles the sensitive values in the provider. use {@link *
+     * se.tink.backend.aggregation.log.LogMasker#shouldLog(Provider)} if you can.
+     *
+     * @param loggingStream
+     * @param logMasker Masks values from logs.
+     * @param censorSensitiveHeaders
+     * @param loggingMode determines if logs should be outputted at all.
+     */
     public RestIoLoggingFilter(
             PrintStream loggingStream,
             LogMasker logMasker,
             boolean censorSensitiveHeaders,
-            boolean shouldLog) {
+            LoggingMode loggingMode) {
         this.censorSensitiveHeaders = censorSensitiveHeaders;
         this.loggingStream = loggingStream;
         this.logMasker = logMasker;
-        this.shouldLog = shouldLog;
+        this.loggingMode = loggingMode;
     }
 
     public void setCensorSensitiveHeaders(boolean censorSensitiveHeaders) {
@@ -120,7 +133,7 @@ public class RestIoLoggingFilter extends Filter {
     }
 
     private void log(StringBuilder b) {
-        if (shouldLog) {
+        if (LoggingMode.LOGGING_MASKER_COVERS_SECRETS.equals(loggingMode)) {
             loggingStream.print(logMasker.mask(b.toString()));
         }
     }

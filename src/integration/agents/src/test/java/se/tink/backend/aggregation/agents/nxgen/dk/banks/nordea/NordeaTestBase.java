@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaNemIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.rpc.filter.NordeaDkFilter;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemidPasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -45,7 +46,7 @@ public class NordeaTestBase {
                                         credentials,
                                         context.getAgentConfigurationController()
                                                 .getSecretValues()),
-                                true));
+                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS));
         tinkHttpClient.setDebugOutput(TestConfig.CLIENT_DEBUG_OUTPUT);
         tinkHttpClient.addFilter(new NordeaDkFilter());
 

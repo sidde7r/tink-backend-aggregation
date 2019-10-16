@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.mocks.ResultCaptor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
@@ -53,7 +54,7 @@ public class OpBankSessionHandlerTest {
                                         credentials,
                                         context.getAgentConfigurationController()
                                                 .getSecretValues()),
-                                true));
+                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS));
         sessionStorage = new SessionStorage();
         OpBankPersistentStorage persistentStorage =
                 new OpBankPersistentStorage(credentials, new PersistentStorage());

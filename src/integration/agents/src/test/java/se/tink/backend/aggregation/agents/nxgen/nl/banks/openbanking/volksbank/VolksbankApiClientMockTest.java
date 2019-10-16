@@ -7,10 +7,14 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import java.util.Collections;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -20,7 +24,11 @@ public final class VolksbankApiClientMockTest {
     @Rule public WireMockRule rule = new WireMockRule(wireMockConfig().httpsPort(8888));
 
     private static TinkHttpClient createWiremockHttpClient() {
-        TinkHttpClient tinkHttpClient = NextGenTinkHttpClient.builder().build();
+        TinkHttpClient tinkHttpClient =
+                NextGenTinkHttpClient.builder(
+                                new LogMasker(new Credentials(), Collections.emptyList()),
+                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                        .build();
         tinkHttpClient.setDebugOutput(true);
         tinkHttpClient.setCensorSensitiveHeaders(false);
         tinkHttpClient.disableSslVerification();

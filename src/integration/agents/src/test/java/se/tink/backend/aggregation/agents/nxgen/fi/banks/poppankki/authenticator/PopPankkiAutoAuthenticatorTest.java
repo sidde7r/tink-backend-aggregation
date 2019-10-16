@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.a
 import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -60,7 +61,7 @@ public class PopPankkiAutoAuthenticatorTest extends NextGenerationAgentTest {
                         new LogMasker(
                                 credentials,
                                 context.getAgentConfigurationController().getSecretValues()),
-                        true);
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
         client.setDebugOutput(true);
         SamlinkSessionStorage sessionStorage = new SamlinkSessionStorage(new SessionStorage());
         SamlinkApiClient bankClient =
