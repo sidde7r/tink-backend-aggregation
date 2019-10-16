@@ -6,15 +6,15 @@ import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class OpBankConfiguration implements ClientConfiguration {
-    
     @JsonProperty @Secret private String clientId;
-    @JsonProperty @Secret private String clientSecret;
+    @JsonProperty @SensitiveSecret private String clientSecret;
     @JsonProperty @Secret private String redirectUrl;
-    @JsonProperty @Secret private String apiKey;
+    @JsonProperty @SensitiveSecret private String apiKey;
     @JsonProperty @Secret private String eidasQsealc;
 
     public String getClientId() {
