@@ -78,31 +78,38 @@ public class LogMaskerTest {
         TestClassWithPropertyChangeSupport testClassWithPropertyChangeSupport =
                 new TestClassWithPropertyChangeSupport();
 
-        LogMasker logMasker = new LogMasker(credentials, Sets.newHashSet("1111", "1234"));
+        LogMasker logMasker = new LogMasker(credentials, null);
         testClassWithPropertyChangeSupport.addPropertyChangeListener(logMasker);
 
         String maskedString1 = logMasker.mask("abcd1111abcd1234abcd5678");
 
         Assert.assertEquals(
-                "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd5678",
-                maskedString1);
+                "String not masked as expected.", "abcd1111abcd1234abcd5678", maskedString1);
 
-        testClassWithPropertyChangeSupport.simulateNewValue(Sets.newHashSet("5678"));
+        testClassWithPropertyChangeSupport.simulateNewValue(Sets.newHashSet("1111", "1234"));
 
         String maskedString2 = logMasker.mask("abcd1111abcd1234abcd5678");
 
         Assert.assertEquals(
                 "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd***MASKED***",
+                "abcd***MASKED***abcd***MASKED***abcd5678",
                 maskedString2);
 
-        String maskedString3 = logMasker.mask("abcd1111abcd2020abcd1010");
+        testClassWithPropertyChangeSupport.simulateNewValue(Sets.newHashSet("5678"));
+
+        String maskedString3 = logMasker.mask("abcd1111abcd1234abcd5678");
 
         Assert.assertEquals(
                 "String not masked as expected.",
                 "abcd***MASKED***abcd***MASKED***abcd***MASKED***",
                 maskedString3);
+
+        String maskedString4 = logMasker.mask("abcd1111abcd2020abcd1010");
+
+        Assert.assertEquals(
+                "String not masked as expected.",
+                "abcd***MASKED***abcd***MASKED***abcd***MASKED***",
+                maskedString4);
     }
 
     @Test
