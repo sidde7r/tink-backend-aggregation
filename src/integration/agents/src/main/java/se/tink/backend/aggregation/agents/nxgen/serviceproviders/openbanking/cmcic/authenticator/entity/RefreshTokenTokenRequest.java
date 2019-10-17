@@ -7,7 +7,7 @@ public class RefreshTokenTokenRequest extends AbstractForm {
 
     public RefreshTokenTokenRequest(String clientId, String refreshToken, String grantType) {
         put(FormKeys.CLIENT_ID, clientId);
-        put(FormKeys.REFRESH_TOKEN, grantType);
+        put(FormKeys.GRANT_TYPE, grantType);
         put(FormKeys.REFRESH_TOKEN, refreshToken);
     }
 }
