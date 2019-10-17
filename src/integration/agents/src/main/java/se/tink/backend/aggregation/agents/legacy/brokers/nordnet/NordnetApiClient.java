@@ -26,6 +26,8 @@ import org.apache.http.client.RedirectStrategy;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
 import org.eclipse.jetty.http.HttpStatus;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountInfoEntity;
@@ -104,9 +106,13 @@ public class NordnetApiClient {
     /** A concatenated string of account's bank-id (seems to be a simple client specific index) */
     private String accountBankIds;
 
-    public NordnetApiClient(TinkApacheHttpClient4 client, String aggregator) {
+    private Credentials credentials;
+
+    public NordnetApiClient(
+            TinkApacheHttpClient4 client, String aggregator, Credentials credentials) {
         this.aggregator = aggregator;
         this.client = client;
+        this.credentials = credentials;
     }
 
     private Optional<String> getReferrer() {
@@ -123,7 +129,8 @@ public class NordnetApiClient {
 
     private void setAccessToken(String accessToken) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(accessToken), "No accessToken provided");
-
+        // Store tokens in sensitive payload, so it will be masked from logs
+        credentials.setSensitivePayload(Key.ACCESS_TOKEN, accessToken);
         this.accessToken = accessToken;
     }
 
