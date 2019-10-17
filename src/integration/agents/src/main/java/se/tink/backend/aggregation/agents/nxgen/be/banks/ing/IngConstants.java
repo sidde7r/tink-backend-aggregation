@@ -102,6 +102,7 @@ public class IngConstants {
         public static final String MAC_ADDRESS = "macAddress";
         public static final String DEVICE_NAME = "deviceName";
         public static final String PROFILE_NAME = "profileName";
+        public static final String NOT_AVAILABLE = "N/A";
 
         public enum ValuePairs {
             USER_LANG_CODE("userLanguageCode", "EN"),

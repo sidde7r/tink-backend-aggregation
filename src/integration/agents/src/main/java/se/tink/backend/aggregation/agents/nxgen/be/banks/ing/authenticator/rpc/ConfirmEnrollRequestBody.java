@@ -27,7 +27,7 @@ public class ConfirmEnrollRequestBody extends MultivaluedMapImpl {
                 IngConstants.Session.ValuePairs.FLAG_SIGN_BY_TWO.getKey(),
                 IngConstants.Session.ValuePairs.FLAG_SIGN_BY_TWO.getValue());
         add(IngConstants.Session.PROFILE_NAME, aggregator);
-        add(IngConstants.Session.DEVICE_NAME, aggregator);
+        add(IngConstants.Session.DEVICE_NAME, IngConstants.Session.NOT_AVAILABLE);
         add(
                 IngConstants.Session.ValuePairs.PROFILE_RENEWAL.getKey(),
                 IngConstants.Session.ValuePairs.PROFILE_RENEWAL.getValue());
