@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.log;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.regex.Pattern;
@@ -9,7 +11,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.utils.StringMaskerBuilder;
 
-public class LogMasker {
+public class LogMasker implements PropertyChangeListener {
 
     public static final Comparator<String> SENSITIVE_VALUES_SORTING_COMPARATOR =
             Comparator.comparing(String::length)
@@ -48,7 +50,6 @@ public class LogMasker {
     private final StringMasker masker;
 
     private LogMasker(Builder builder) {
-
         masker = new StringMasker(builder.getStringMaskerBuilders(), this::isWhiteListed);
     }
 
@@ -60,6 +61,9 @@ public class LogMasker {
     public String mask(String dataToMask) {
         return masker.getMasked(dataToMask);
     }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent newSecretValues) {}
 
     public static LoggingMode shouldLog(Provider provider) {
         // Temporary disable of http traffic logging for RE agents.

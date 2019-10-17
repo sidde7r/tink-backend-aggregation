@@ -2,13 +2,13 @@ package se.tink.backend.aggregation.nxgen.controllers.configuration;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,13 +46,14 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
             Assert.fail("Error when serializing test configuration.");
         }
 
-        List<String> extractedSensitiveValues =
+        Set<String> extractedSensitiveValues =
                 agentConfigurationController.extractSensitiveValues(serializedConfigurationAsMap);
 
-        Assert.assertEquals(
+        Assert.assertTrue(
                 "Extracted values are not what was expected.",
-                Arrays.asList("stringLevel1", "1", "stringLevel2", "2", "stringLevel3", "3"),
-                extractedSensitiveValues);
+                extractedSensitiveValues.containsAll(
+                        Sets.newHashSet(
+                                "stringLevel1", "1", "stringLevel2", "2", "stringLevel3", "3")));
     }
 
     @Test
@@ -100,11 +101,11 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
     @Test
     public void testNotifySecretValues() {
         class TestPropertyChangeListener implements PropertyChangeListener {
-            public List<String> sensitiveValues = Collections.emptyList();
+            public Set<String> sensitiveValues = Collections.emptySet();
 
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                sensitiveValues = (List<String>) evt.getNewValue();
+                sensitiveValues = (Set<String>) evt.getNewValue();
             }
         }
 
@@ -126,10 +127,10 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
 
         agentConfigurationController.extractSensitiveValues(serializedConfigurationAsMap);
 
-        Assert.assertEquals(
+        Assert.assertTrue(
                 "Extracted values are not what was expected.",
-                Arrays.asList("stringLevel1", "1", "stringLevel2", "2"),
-                testPropertyChangeListener.sensitiveValues);
+                testPropertyChangeListener.sensitiveValues.containsAll(
+                        Sets.newHashSet("stringLevel1", "1", "stringLevel2", "2")));
 
         NestedConfigurationLevel2 nestedConfigurationLevel2 =
                 new NestedConfigurationLevel2("stringLevel3", 3);
@@ -145,9 +146,10 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
 
         agentConfigurationController.extractSensitiveValues(serializedConfigurationAsMap);
 
-        Assert.assertEquals(
+        Assert.assertTrue(
                 "Extracted values are not what was expected.",
-                Arrays.asList("stringLevel1", "1", "stringLevel2", "2", "stringLevel3", "3"),
-                testPropertyChangeListener.sensitiveValues);
+                testPropertyChangeListener.sensitiveValues.containsAll(
+                        Sets.newHashSet(
+                                "stringLevel1", "1", "stringLevel2", "2", "stringLevel3", "3")));
     }
 }

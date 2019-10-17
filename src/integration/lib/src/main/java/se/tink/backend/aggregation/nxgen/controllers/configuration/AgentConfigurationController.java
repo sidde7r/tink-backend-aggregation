@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -13,14 +14,14 @@ import io.grpc.StatusRuntimeException;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -51,7 +52,7 @@ public final class AgentConfigurationController {
     private final PropertyChangeSupport observablePropertyChangeSupport =
             new PropertyChangeSupport(this);
     private Map<String, String> allSecrets;
-    private Collection<String> secretValues = Collections.emptyList();
+    private Set<String> secretValues = Collections.emptySet();
 
     // Package private for testing purposes.
     AgentConfigurationController() {
@@ -204,17 +205,12 @@ public final class AgentConfigurationController {
         observablePropertyChangeSupport.addPropertyChangeListener(observer);
     }
 
-    public void notifySecretValues(Collection<String> newSecretValues) {
-        List<String> oldSecretValues = ImmutableList.copyOf(secretValues);
+    public void notifySecretValues(Set<String> newSecretValues) {
+        Set<String> oldSecretValues = ImmutableSet.copyOf(secretValues);
         if (!newSecretValues.equals(oldSecretValues)) {
-            List<String> oldValuesWithoutDuplicates =
-                    oldSecretValues.stream()
-                            .filter(oldSecretValue -> !newSecretValues.contains(oldSecretValue))
-                            .collect(Collectors.toList());
-
             this.secretValues =
-                    ImmutableList.<String>builder()
-                            .addAll(oldValuesWithoutDuplicates)
+                    ImmutableSet.<String>builder()
+                            .addAll(oldSecretValues)
                             .addAll(newSecretValues)
                             .build();
 
@@ -293,7 +289,7 @@ public final class AgentConfigurationController {
         // classes. Declaring a member 'redirectUrls' for example.
         allSecrets.remove(REDIRECT_URLS_KEY);
 
-        notifySecretValues(allSecrets.values());
+        notifySecretValues(Sets.newHashSet(allSecrets.values()));
 
         return true;
     }
@@ -324,10 +320,10 @@ public final class AgentConfigurationController {
         return OBJECT_MAPPER.convertValue(clientConfigurationAsObject, clientConfigClass);
     }
 
-    <T extends ClientConfiguration> List<String> extractSensitiveValues(
+    <T extends ClientConfiguration> Set<String> extractSensitiveValues(
             Object clientConfigurationAsObject) {
 
-        List<String> extractedSensitiveValues = new ArrayList<>();
+        Set<String> extractedSensitiveValues = new HashSet<>();
 
         extractSensitiveValuesRec(clientConfigurationAsObject, extractedSensitiveValues, 0);
 
@@ -338,7 +334,7 @@ public final class AgentConfigurationController {
 
     private void extractSensitiveValuesRec(
             Object clientConfigurationAsObject,
-            List<String> extractedSensitiveValues,
+            Set<String> extractedSensitiveValues,
             int recursionLevel) {
 
         if (recursionLevel >= MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES) {
