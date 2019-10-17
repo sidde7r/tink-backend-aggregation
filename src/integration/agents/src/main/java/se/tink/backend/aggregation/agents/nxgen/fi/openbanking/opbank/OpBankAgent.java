@@ -41,18 +41,21 @@ public final class OpBankAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final OpBankConfiguration opBankConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(OpBankConfiguration.class);
+        final OpBankConfiguration opBankConfiguration = getClientConfiguration();
         apiClient.setConfiguration(
                 opBankConfiguration, configuration.getEidasProxy(), getEidasIdentity());
     }
 
     protected OpBankConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        OpBankConstants.INTEGRATION_NAME, clientName, OpBankConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        OpBankConfiguration opBankConfiguration = null;
+        try {
+            opBankConfiguration =
+                    getAgentConfigurationController()
+                            .getAgentConfiguration(OpBankConfiguration.class);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION);
+        }
+        return opBankConfiguration;
     }
 
     @Override
