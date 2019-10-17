@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Base64;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.eidas.Signer;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.register.nl.rabobank.entities.PayloadEntity;
 import se.tink.backend.aggregation.register.nl.rabobank.entities.ProtectedEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -20,7 +20,7 @@ public final class JwsRequest {
     @JsonIgnore
     public static JwsRequest create(
             final String qsealB64,
-            final Signer jwsSigner,
+            final QsealcSigner jwsSigner,
             final int exp,
             final String email,
             final String organization) {
@@ -52,7 +52,7 @@ public final class JwsRequest {
     }
 
     private static String createSignature(
-            final String protectedB64Url, final String payloadB64Url, final Signer signer) {
+            final String protectedB64Url, final String payloadB64Url, final QsealcSigner signer) {
         final String signingString = protectedB64Url + "." + payloadB64Url;
         final byte[] signingBytes = signingString.getBytes();
         final byte[] signatureBytes = signer.getSignature(signingBytes);
