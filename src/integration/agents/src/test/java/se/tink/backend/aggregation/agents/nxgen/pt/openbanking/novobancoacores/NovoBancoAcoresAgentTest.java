@@ -14,6 +14,8 @@ public class NovoBancoAcoresAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-novobancoacores-oauth2")
+                        .setFinancialInstitutionId("novobancoacores")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

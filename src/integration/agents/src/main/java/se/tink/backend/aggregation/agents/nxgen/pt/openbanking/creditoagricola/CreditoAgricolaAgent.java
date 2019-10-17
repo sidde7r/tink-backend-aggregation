@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.creditoagricola;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsProgressiveBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -20,10 +19,5 @@ public class CreditoAgricolaAgent extends SibsProgressiveBaseAgent {
     @Override
     protected String getIntegrationName() {
         return INTEGRATION_NAME;
-    }
-
-    @Override
-    protected SibsConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(SibsConfiguration.class);
     }
 }
