@@ -79,6 +79,7 @@ public class IberCajaConstants {
         public static final String USERNAME = "USER";
         public static final String FULL_NAME = "FULL_NAME";
         public static final String DOCUMENT_NUMBER = "DOCUMENT_NUMBER";
+        public static final String NICI = "NICI";
     }
 
     public static class Log {

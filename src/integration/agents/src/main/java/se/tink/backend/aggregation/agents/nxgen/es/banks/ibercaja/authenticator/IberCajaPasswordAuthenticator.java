@@ -41,6 +41,23 @@ public class IberCajaPasswordAuthenticator implements PasswordAuthenticator {
                                 IberCajaConstants.DefaultRequestParams.CARD,
                                 IberCajaConstants.DefaultRequestParams.LAST_ACCESS));
 
+        iberCajaSessionStorage.saveTicket(sessionResponse.getTicket());
+        iberCajaSessionStorage.saveFullName(sessionResponse.getName());
+
+        if (Strings.isNullOrEmpty(sessionResponse.getNif())) {
+            // Logging whole session response in case NIF value isn't present. Expecting to find
+            // a field called NIE or something else in that case. But we'll have to log the whole
+            // session response to find out.
+            LOGGER.infoExtraLong(
+                SerializationUtils.serializeToString(sessionResponse),
+                IberCajaConstants.Log.NIF_NOT_PRESENT);
+        } else {
+            iberCajaSessionStorage.saveDocumentNumber(sessionResponse.getNif());
+        }
+        // store NICI in the session storage to be masked in the logs
+        // remove this if the NICI should not be considered as sensitive ifo
+        iberCajaSessionStorage.saveNici(sessionResponse.getNici());
+
         LoginResponse loginResponse =
                 bankClient.login(
                         new LoginRequest(sessionResponse.getNici()),
@@ -50,18 +67,5 @@ public class IberCajaPasswordAuthenticator implements PasswordAuthenticator {
         iberCajaSessionStorage.saveLoginResponse(
                 loginResponse.getAccessToken(), loginResponse.getRefreshToken());
         iberCajaSessionStorage.saveUsername(username);
-        iberCajaSessionStorage.saveTicket(sessionResponse.getTicket());
-        iberCajaSessionStorage.saveFullName(sessionResponse.getName());
-
-        if (Strings.isNullOrEmpty(sessionResponse.getNif())) {
-            // Logging whole session response in case NIF value isn't present. Expecting to find
-            // a field called NIE or something else in that case. But we'll have to log the whole
-            // session response to find out.
-            LOGGER.infoExtraLong(
-                    SerializationUtils.serializeToString(sessionResponse),
-                    IberCajaConstants.Log.NIF_NOT_PRESENT);
-        } else {
-            iberCajaSessionStorage.saveDocumentNumber(sessionResponse.getNif());
-        }
     }
 }
