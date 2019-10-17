@@ -12,7 +12,7 @@ public class CreditCardInfoResponse {
     private HashMap<String, String> amountToPayFormatted;
     private boolean isApp;
     private String myPageUrl;
-    private int region;
+    private String region;
     private String selectedPeriod;
     private boolean showAccountList;
     private boolean showCurrencyAmount;
@@ -46,7 +46,7 @@ public class CreditCardInfoResponse {
         return myPageUrl;
     }
 
-    public int getRegion() {
+    public String getRegion() {
         return region;
     }
 
