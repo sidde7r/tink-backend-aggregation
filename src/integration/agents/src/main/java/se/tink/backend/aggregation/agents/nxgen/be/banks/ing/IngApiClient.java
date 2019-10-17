@@ -93,7 +93,7 @@ public class IngApiClient {
     public HttpResponse initEnroll(
             String url, String username, String cardNumber, String deviceId) {
         InitEnrollRequestBody initEnrollRequestBody =
-                new InitEnrollRequestBody(username, cardNumber, deviceId, aggregator);
+                new InitEnrollRequestBody(username, cardNumber, deviceId);
         URL initEnrollUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
         return this.client.request(initEnrollUrl).post(HttpResponse.class, initEnrollRequestBody);
