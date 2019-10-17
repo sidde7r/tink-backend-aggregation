@@ -327,17 +327,8 @@ public class AccountDetailsResponse {
                         .withType(MAPPERS.getLoanType(accountType).orElse(LoanDetails.Type.OTHER))
                         .withBalance(getBalance())
                         .withInterestRate(getInterestRate());
-        if (!Objects.isNull(totalBalanceDue)) {
-            builder.setInitialBalance(new ExactCurrencyAmount(totalBalanceDue, Currencies.SEK));
-        }
-        if (!Objects.isNull(nextPaymentPrognosis)) {
-            builder.setMonthlyAmortization(
-                    new ExactCurrencyAmount(nextPaymentPrognosis, Currencies.SEK));
-        }
-        if (!Objects.isNull(totalBalanceDue) && !Objects.isNull(remainingLoan)) {
-            builder.setAmortized(
-                    new ExactCurrencyAmount(
-                            totalBalanceDue.subtract(remainingLoan), Currencies.SEK));
+        if (!Objects.isNull(remainingLoan)) {
+            builder.setAmortized(new ExactCurrencyAmount(remainingLoan, Currencies.SEK));
         }
 
         return builder.build();
@@ -347,8 +338,8 @@ public class AccountDetailsResponse {
     private ExactCurrencyAmount getBalance() {
         if (!Objects.isNull(ownCapital)) {
             return new ExactCurrencyAmount(ownCapital, Currencies.SEK);
-        } else if (!Objects.isNull(remainingLoan)) {
-            return new ExactCurrencyAmount(remainingLoan, Currencies.SEK);
+        } else if (!Objects.isNull(totalBalanceDue)) {
+            return new ExactCurrencyAmount(totalBalanceDue, Currencies.SEK);
         } else {
             throw new IllegalStateException("Could not parse balance!");
         }
