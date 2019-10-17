@@ -151,6 +151,7 @@ public class SkandiaBankenConstants {
         public static final String BEARER_TOKEN = "bearer_token";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CODE_VERIFIER = "code_verifier";
+        public static final String REQUEST_VER_TOKEN = "requestVerificationToken";
     }
 
     public static class Fetcher {
