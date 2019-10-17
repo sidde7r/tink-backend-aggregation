@@ -14,7 +14,9 @@ public final class OPBankRegisterConstants {
         public static final String KEY_ID = "PSDSE-FINA-44059";
         public static final String TPP_ID = "SE-FINA-44059";
         public static final String ORGANIZATION_NAME = "Tink AB";
-        public static final String CERTIFICATE_ID = "Tink";
+        public static final String CERTIFICATE_ID = "c";
+        public static final String CLUSTER_ID = "l";
+        public static final String APP_ID = "a";
         public static final String SOFTWARE_CLIENT_NAME = "Tink Aggregation";
         public static final String CLIENT_URI = "https://www.tink.se";
         public static final String[] SOFTWARE_ROLES = {"AIS", "PIS"};

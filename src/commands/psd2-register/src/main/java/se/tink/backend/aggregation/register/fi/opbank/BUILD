@@ -7,7 +7,7 @@ java_binary(
         "//src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register:psd2-register",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidas",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
@@ -15,5 +15,6 @@ java_binary(
         "//third_party:com_google_code_gson_gson",
         "//third_party:com_nimbusds_nimbus_jose_jwt",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:org_apache_commons_commons_cli",
     ],
 )
