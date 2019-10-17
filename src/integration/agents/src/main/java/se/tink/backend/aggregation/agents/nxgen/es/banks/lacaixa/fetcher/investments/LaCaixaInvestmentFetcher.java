@@ -44,10 +44,6 @@ public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccoun
         investments.addAll(getStockInvestments(userDataResponse, engagements));
         investments.addAll(getFundInvestments(userDataResponse, engagements));
 
-        if (investments.size() > 0) {
-            LOG.info("Investments found");
-        }
-
         return investments;
     }
 
