@@ -134,7 +134,6 @@ junit_test(
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
