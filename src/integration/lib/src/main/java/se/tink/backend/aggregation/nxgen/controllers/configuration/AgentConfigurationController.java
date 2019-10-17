@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -34,6 +38,7 @@ public final class AgentConfigurationController {
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     // Package private for testing purposes.
     static final int MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES = 100;
+    private static final String SECRET_VALUES_PROPERTY_NAME = "secret-values-property-name";
     private final TppSecretsServiceClient tppSecretsServiceClient;
     private final IntegrationsConfiguration integrationsConfiguration;
     private final boolean tppSecretsServiceEnabled;
@@ -43,7 +48,10 @@ public final class AgentConfigurationController {
     private final String redirectUrl;
     private final boolean isOpenBankingAgent;
     private final boolean isTestProvider;
+    private final PropertyChangeSupport observablePropertyChangeSupport =
+            new PropertyChangeSupport(this);
     private Map<String, String> allSecrets;
+    private Collection<String> secretValues = Collections.emptyList();
 
     // Package private for testing purposes.
     AgentConfigurationController() {
@@ -161,6 +169,60 @@ public final class AgentConfigurationController {
         return true;
     }
 
+    public <T extends ClientConfiguration> T getAgentConfiguration(
+            final Class<T> clientConfigClass) {
+
+        // For local development we can use the development.yml file.
+        if (!tppSecretsServiceEnabled) {
+            return getAgentConfigurationDev(clientConfigClass);
+        }
+
+        Preconditions.checkNotNull(
+                allSecrets,
+                "Secrets were not fetched. Try to init() the AgentConfigurationController.");
+
+        T clientConfig = OBJECT_MAPPER.convertValue(allSecrets, clientConfigClass);
+
+        return Optional.ofNullable(clientConfig)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Agent configuration for agent: "
+                                                + clientConfigClass.toString()
+                                                + " is missing"
+                                                + getSecretsServiceParamsString()));
+    }
+
+    public Collection<String> getSecretValues() {
+        if (Objects.isNull(allSecrets)) {
+            return Collections.emptyList();
+        }
+        return allSecrets.values();
+    }
+
+    public void addObserver(PropertyChangeListener observer) {
+        observablePropertyChangeSupport.addPropertyChangeListener(observer);
+    }
+
+    public void notifySecretValues(Collection<String> newSecretValues) {
+        List<String> oldSecretValues = ImmutableList.copyOf(secretValues);
+        if (!newSecretValues.equals(oldSecretValues)) {
+            List<String> oldValuesWithoutDuplicates =
+                    oldSecretValues.stream()
+                            .filter(oldSecretValue -> !newSecretValues.contains(oldSecretValue))
+                            .collect(Collectors.toList());
+
+            this.secretValues =
+                    ImmutableList.<String>builder()
+                            .addAll(oldValuesWithoutDuplicates)
+                            .addAll(newSecretValues)
+                            .build();
+
+            this.observablePropertyChangeSupport.firePropertyChange(
+                    SECRET_VALUES_PROPERTY_NAME, oldSecretValues, secretValues);
+        }
+    }
+
     private String getSecretsServiceParamsString() {
         return " for financialInstitutionId: "
                 + financialInstitutionId
@@ -231,31 +293,9 @@ public final class AgentConfigurationController {
         // classes. Declaring a member 'redirectUrls' for example.
         allSecrets.remove(REDIRECT_URLS_KEY);
 
+        notifySecretValues(allSecrets.values());
+
         return true;
-    }
-
-    public <T extends ClientConfiguration> T getAgentConfiguration(
-            final Class<T> clientConfigClass) {
-
-        // For local development we can use the development.yml file.
-        if (!tppSecretsServiceEnabled) {
-            return getAgentConfigurationDev(clientConfigClass);
-        }
-
-        Preconditions.checkNotNull(
-                allSecrets,
-                "Secrets were not fetched. Try to init() the AgentConfigurationController.");
-
-        T clientConfig = OBJECT_MAPPER.convertValue(allSecrets, clientConfigClass);
-
-        return Optional.ofNullable(clientConfig)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Agent configuration for agent: "
-                                                + clientConfigClass.toString()
-                                                + " is missing"
-                                                + getSecretsServiceParamsString()));
     }
 
     private <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
@@ -279,8 +319,7 @@ public final class AgentConfigurationController {
                                                         + " not found in k8s secrets of cluster: "
                                                         + clusterId));
 
-        Collection<String> additionalSensitiveValues =
-                extractSensitiveValues(clientConfigurationAsObject);
+        extractSensitiveValues(clientConfigurationAsObject);
 
         return OBJECT_MAPPER.convertValue(clientConfigurationAsObject, clientConfigClass);
     }
@@ -291,6 +330,8 @@ public final class AgentConfigurationController {
         List<String> extractedSensitiveValues = new ArrayList<>();
 
         extractSensitiveValuesRec(clientConfigurationAsObject, extractedSensitiveValues, 0);
+
+        notifySecretValues(extractedSensitiveValues);
 
         return extractedSensitiveValues;
     }
@@ -330,9 +371,9 @@ public final class AgentConfigurationController {
                         + "uploaded the configuration to Secrets Service in staging and/or "
                         + "production.");
 
-        T clientConfig =
+        Object clientConfigurationAsObject =
                 integrationsConfiguration
-                        .getClientConfiguration(financialInstitutionId, appId, clientConfigClass)
+                        .getClientConfigurationAsObject(financialInstitutionId, appId)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
@@ -342,13 +383,8 @@ public final class AgentConfigurationController {
                                                         + getSecretsServiceParamsString()
                                                         + ". In the development.yml file."));
 
-        return clientConfig;
-    }
+        extractSensitiveValues(clientConfigurationAsObject);
 
-    public Collection<String> getSecretValues() {
-        if (Objects.isNull(allSecrets)) {
-            return Collections.emptyList();
-        }
-        return allSecrets.values();
+        return OBJECT_MAPPER.convertValue(clientConfigurationAsObject, clientConfigClass);
     }
 }
