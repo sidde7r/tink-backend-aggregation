@@ -6,18 +6,39 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.Objects;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CredentialsStringMaskerTest {
 
     public static final String PASSWORD = "abc123";
     public static final String USER_ID = "ööö";
     public static final String USERNAME = "user@test.se";
+    public static final ImmutableMap<String, String> persistentStorage =
+            ImmutableMap.<String, String>builder()
+                    .put("secret1", "qweqweqwe")
+                    .put("secret2", "asdasdasd")
+                    .build();
+    public static final ImmutableMap<String, String> sessionStorage =
+            ImmutableMap.<String, String>builder()
+                    .put("secret1", "sessionsecret1")
+                    .put("secret2", "sessionsecret2")
+                    .build();
     public static final ImmutableMap<String, String> SENSITIVE_PAYLOAD =
             ImmutableMap.<String, String>builder()
                     .put("key1", "value1")
                     .put("key2", "value2")
+                    .put(
+                            Key.PERSISTENT_STORAGE.getFieldKey(),
+                            Objects.requireNonNull(
+                                    SerializationUtils.serializeToString(persistentStorage)))
+                    .put(
+                            Key.SESSION_STORAGE.getFieldKey(),
+                            Objects.requireNonNull(
+                                    SerializationUtils.serializeToString(sessionStorage)))
                     .build();
 
     @Test
@@ -59,7 +80,8 @@ public class CredentialsStringMaskerTest {
                         + ", password: "
                         + PASSWORD
                         + ", sensitive: "
-                        + SENSITIVE_PAYLOAD.toString();
+                        + "value1asdasdvalue2"
+                        + "qweqweqwe asdasdasdaoeiraoefjioaejaoifjsessionsecret1asodjaojefojioaefojasessionsecret2";
 
         String masked = stringMasker.getMasked(unmasked);
         assertThat(masked).contains(USER_ID);
@@ -67,6 +89,14 @@ public class CredentialsStringMaskerTest {
         assertThat(masked).doesNotContain(PASSWORD);
         for (String value : SENSITIVE_PAYLOAD.values()) {
             assertThat(masked).doesNotContain(value);
+        }
+
+        for (String secret : persistentStorage.values()) {
+            assertThat(masked).doesNotContain(secret);
+        }
+
+        for (String secret : sessionStorage.values()) {
+            assertThat(masked).doesNotContain(secret);
         }
     }
 
