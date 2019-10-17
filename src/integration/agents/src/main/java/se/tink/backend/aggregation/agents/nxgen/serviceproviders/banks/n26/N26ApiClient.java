@@ -40,20 +40,23 @@ import se.tink.libraries.identitydata.IdentityData;
 public class N26ApiClient implements IdentityDataFetcher {
 
     private final TinkHttpClient client;
-    private final SessionStorage storage;
+    private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     Logger logger = LoggerFactory.getLogger(N26ApiClient.class);
 
     public N26ApiClient(
-            TinkHttpClient client, SessionStorage storage, PersistentStorage persistentStorage) {
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage) {
         this.client = client;
-        this.storage = storage;
+        this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
     }
 
     private TokenEntity getToken() {
         TokenEntity token =
-                storage.get(N26Constants.Storage.TOKEN_ENTITY, TokenEntity.class)
+                sessionStorage
+                        .get(N26Constants.Storage.TOKEN_ENTITY, TokenEntity.class)
                         .orElseThrow(() -> new NoSuchElementException("Token missing"));
 
         validateToken(token);
@@ -112,7 +115,7 @@ public class N26ApiClient implements IdentityDataFetcher {
                         .get()
                         .fold(l -> l.getMfaToken(), r -> r.getMfaToken());
 
-        storage.put(N26Constants.Storage.MFA_TOKEN, mfaToken);
+        sessionStorage.put(N26Constants.Storage.MFA_TOKEN, mfaToken);
     }
 
     public AccountResponse fetchAccounts() {
@@ -181,7 +184,7 @@ public class N26ApiClient implements IdentityDataFetcher {
         HttpResponse result =
                 getRequest(N26Constants.URLS.LOGOUT, MediaType.APPLICATION_JSON_TYPE, bearer)
                         .get(HttpResponse.class);
-        storage.clear();
+        sessionStorage.clear();
         return result;
     }
 
@@ -216,7 +219,8 @@ public class N26ApiClient implements IdentityDataFetcher {
 
     public <T> T initiate2fa(String secondFactor, Class<T> className) {
         String mfaToken =
-                N26Utils.getFromStorage(storage, N26Constants.Storage.MFA_TOKEN, String.class);
+                N26Utils.getFromStorage(
+                        sessionStorage, N26Constants.Storage.MFA_TOKEN, String.class);
         String deviceToken =
                 N26Utils.getFromStorage(
                         persistentStorage, N26Constants.Storage.DEVICE_TOKEN, String.class);
@@ -231,7 +235,8 @@ public class N26ApiClient implements IdentityDataFetcher {
 
     public Either<ErrorResponse, AuthenticationResponse> pollAppStatus() {
         String mfaToken =
-                N26Utils.getFromStorage(storage, N26Constants.Storage.MFA_TOKEN, String.class);
+                N26Utils.getFromStorage(
+                        sessionStorage, N26Constants.Storage.MFA_TOKEN, String.class);
         String deviceToken =
                 N26Utils.getFromStorage(
                         persistentStorage, N26Constants.Storage.DEVICE_TOKEN, String.class);
@@ -258,7 +263,8 @@ public class N26ApiClient implements IdentityDataFetcher {
 
     public Either<ErrorResponse, AuthenticationResponse> loginWithOtp(String otp) {
         String mfaToken =
-                N26Utils.getFromStorage(storage, N26Constants.Storage.MFA_TOKEN, String.class);
+                N26Utils.getFromStorage(
+                        sessionStorage, N26Constants.Storage.MFA_TOKEN, String.class);
         String deviceToken =
                 N26Utils.getFromStorage(
                         persistentStorage, N26Constants.Storage.DEVICE_TOKEN, String.class);

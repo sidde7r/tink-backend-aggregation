@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class N26AccountFetcher implements AccountFetcher<TransactionalAccount> {
 
-    private final N26ApiClient n26ApiClient;
     private static final AggregationLogger LOGGER = new AggregationLogger(N26AccountFetcher.class);
+    private final N26ApiClient n26ApiClient;
 
     public N26AccountFetcher(N26ApiClient n26ApiClient) {
         this.n26ApiClient = n26ApiClient;

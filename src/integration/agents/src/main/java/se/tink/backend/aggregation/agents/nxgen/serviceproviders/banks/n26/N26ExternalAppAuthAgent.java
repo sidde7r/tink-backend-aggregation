@@ -17,7 +17,8 @@ public class N26ExternalAppAuthAgent extends N26Agent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        N26AppAuthenticator authenticator = new N26AppAuthenticator(n26APiClient, sessionStorage);
+        N26AppAuthenticator authenticator =
+                new N26AppAuthenticator(n26APiClient, sessionStorage, persistentStorage);
         N26PasswordAuthenticator passwordAuthenticator = new N26PasswordAuthenticator(n26APiClient);
         return new PasswordExternalAppAuthenticationController(
                 passwordAuthenticator, authenticator, supplementalInformationHelper);
