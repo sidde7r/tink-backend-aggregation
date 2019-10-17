@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.OpBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.transactionalaccount.OpBankTransactionalAccountFetcher;
@@ -47,14 +46,6 @@ public final class OpBankAgent extends NextGenerationAgent
                 opBankConfiguration, configuration.getEidasProxy(), getEidasIdentity());
     }
 
-    protected OpBankConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        OpBankConstants.INTEGRATION_NAME, clientName, OpBankConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
     @Override
     protected Authenticator constructAuthenticator() {
         final OAuth2AuthenticationController controller =
@@ -65,7 +56,8 @@ public final class OpBankAgent extends NextGenerationAgent
                                 apiClient,
                                 persistentStorage,
                                 credentials,
-                                getClientConfiguration()),
+                                getAgentConfigurationController()
+                                        .getAgentConfiguration(OpBankConfiguration.class)),
                         credentials,
                         strongAuthenticationState);
 
