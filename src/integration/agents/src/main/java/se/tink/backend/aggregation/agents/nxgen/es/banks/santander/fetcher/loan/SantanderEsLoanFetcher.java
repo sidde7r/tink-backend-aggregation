@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsSessionStorage;
@@ -19,12 +17,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.Santand
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final AggregationLogger LOG =
             new AggregationLogger(SantanderEsLoanFetcher.class);
-    private static final Logger LOGGER = LoggerFactory.getLogger(SantanderEsLoanFetcher.class);
 
     private final SantanderEsApiClient apiClient;
     private final SantanderEsSessionStorage santanderEsSessionStorage;
@@ -60,23 +56,13 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
 
     private Optional<LoanAccount> toTinkLoanOptional(LoanEntity loanEntity, String userDataXml) {
         try {
-            LOGGER.debug(
-                    SerializationUtils.serializeToString(loanEntity),
-                    SantanderEsConstants.Tags.LOAN_ACCOUNT);
-
             // This request is necessary to get details in later stage
             // We do not use this data for now as it's not supported in our model
             LoanMovementEntity loanMovementsResponse =
                     apiClient.fetchLoanMovements(userDataXml, loanEntity);
-            LOGGER.debug(
-                    "Loans movement list: "
-                            + SerializationUtils.serializeToString(loanMovementsResponse));
 
             LoanDetailsEntity loanDetailsResponse =
                     apiClient.fetchLoanDetails(userDataXml, loanEntity);
-            LOG.infoExtraLong(
-                    SerializationUtils.serializeToString(loanDetailsResponse),
-                    SantanderEsConstants.Tags.LOAN_ACCOUNT);
 
             return Optional.of(
                     new LoanDetailsAggregate(loanEntity, loanDetailsResponse).toTinkLoanAccount());
