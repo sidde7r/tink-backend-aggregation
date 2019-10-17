@@ -10,6 +10,7 @@ import com.google.gson.JsonSyntaxException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.Provider.AccessType;
 import se.tink.backend.agents.rpc.ProviderTypes;
@@ -30,6 +32,8 @@ public final class AgentConfigurationController {
     private static final Logger log = LoggerFactory.getLogger(AgentConfigurationController.class);
     private static final ObjectMapper OBJECT_MAPPER =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    // Package private for testing purposes.
+    static final int MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES = 100;
     private final TppSecretsServiceClient tppSecretsServiceClient;
     private final IntegrationsConfiguration integrationsConfiguration;
     private final boolean tppSecretsServiceEnabled;
@@ -41,13 +45,28 @@ public final class AgentConfigurationController {
     private final boolean isTestProvider;
     private Map<String, String> allSecrets;
 
+    // Package private for testing purposes.
+    AgentConfigurationController() {
+        isOpenBankingAgent = false;
+        isTestProvider = false;
+        redirectUrl = null;
+        clusterId = null;
+        appId = null;
+        financialInstitutionId = null;
+        tppSecretsServiceEnabled = false;
+        integrationsConfiguration = null;
+        tppSecretsServiceClient = null;
+    }
+
     public AgentConfigurationController(
             TppSecretsServiceClient tppSecretsServiceClient,
             IntegrationsConfiguration integrationsConfiguration,
             Provider provider,
+            Credentials credentials,
             String appId,
             String clusterId,
             String redirectUrl) {
+
         Preconditions.checkNotNull(
                 tppSecretsServiceClient, "tppSecretsServiceClient cannot be null.");
         Preconditions.checkNotNull(provider, "provider cannot be null.");
@@ -58,6 +77,7 @@ public final class AgentConfigurationController {
                 provider.getAccessType(), "provider.getAccessType() cannot be null.");
         Preconditions.checkNotNull(provider.getType(), "provider.getType() cannot be null.");
         Preconditions.checkNotNull(provider.getName(), "provider.getName() cannot be null.");
+        Preconditions.checkNotNull(credentials, "credentials cannot be null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
 
@@ -238,6 +258,70 @@ public final class AgentConfigurationController {
                                                 + getSecretsServiceParamsString()));
     }
 
+    private <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
+            String integrationName, String clientName, Class<T> clientConfigClass) {
+
+        if (isOpenBankingAgent) {
+            log.warn(
+                    "Trying to read information from k8s for an OB agent: "
+                            + clientConfigClass.toString()
+                            + ". Consider uploading the configuration to ESS instead.");
+        }
+
+        Object clientConfigurationAsObject =
+                integrationsConfiguration
+                        .getClientConfigurationAsObject(integrationName, clientName)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Agent configuration for agent: "
+                                                        + clientConfigClass.toString()
+                                                        + " not found in k8s secrets of cluster: "
+                                                        + clusterId));
+
+        Collection<String> additionalSensitiveValues =
+                extractSensitiveValues(clientConfigurationAsObject);
+
+        return OBJECT_MAPPER.convertValue(clientConfigurationAsObject, clientConfigClass);
+    }
+
+    <T extends ClientConfiguration> List<String> extractSensitiveValues(
+            Object clientConfigurationAsObject) {
+
+        List<String> extractedSensitiveValues = new ArrayList<>();
+
+        extractSensitiveValuesRec(clientConfigurationAsObject, extractedSensitiveValues, 0);
+
+        return extractedSensitiveValues;
+    }
+
+    private void extractSensitiveValuesRec(
+            Object clientConfigurationAsObject,
+            List<String> extractedSensitiveValues,
+            int recursionLevel) {
+
+        if (recursionLevel >= MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES) {
+            throw new IllegalStateException(
+                    "Reached maximum recursion depth when trying to extract sensitive configuration values.");
+        }
+
+        if (clientConfigurationAsObject instanceof Map) {
+            Map<String, Object> clientConfigurationAsMap =
+                    (Map<String, Object>) clientConfigurationAsObject;
+
+            clientConfigurationAsMap
+                    .values()
+                    .forEach(
+                            value ->
+                                    extractSensitiveValuesRec(
+                                            value, extractedSensitiveValues, recursionLevel + 1));
+        } else {
+            if (clientConfigurationAsObject != null) {
+                extractedSensitiveValues.add(clientConfigurationAsObject.toString());
+            }
+        }
+    }
+
     // Used to read agent configuration from development.yml instead of Secrets Service
     private <T extends ClientConfiguration> T getAgentConfigurationDev(
             final Class<T> clientConfigClass) {
@@ -246,16 +330,19 @@ public final class AgentConfigurationController {
                         + "uploaded the configuration to Secrets Service in staging and/or "
                         + "production.");
 
-        return integrationsConfiguration
-                .getClientConfiguration(financialInstitutionId, appId, clientConfigClass)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Agent configuration for agent: "
-                                                + clientConfigClass.toString()
-                                                + " is missing"
-                                                + getSecretsServiceParamsString()
-                                                + ". In the development.yml file."));
+        T clientConfig =
+                integrationsConfiguration
+                        .getClientConfiguration(financialInstitutionId, appId, clientConfigClass)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Agent configuration for agent: "
+                                                        + clientConfigClass.toString()
+                                                        + " is missing"
+                                                        + getSecretsServiceParamsString()
+                                                        + ". In the development.yml file."));
+
+        return clientConfig;
     }
 
     public Collection<String> getSecretValues() {
