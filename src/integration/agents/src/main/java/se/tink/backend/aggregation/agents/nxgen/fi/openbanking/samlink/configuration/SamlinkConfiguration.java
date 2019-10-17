@@ -5,11 +5,11 @@ import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 
 @JsonObject
 public class SamlinkConfiguration extends BerlinGroupConfiguration {
-
-    private String subscriptionKey;
+    @Secret private String subscriptionKey;
 
     public String getSubscriptionKey() {
         Preconditions.checkNotNull(
