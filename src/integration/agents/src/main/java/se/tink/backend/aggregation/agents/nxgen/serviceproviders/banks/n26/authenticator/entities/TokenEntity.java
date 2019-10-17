@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TokenEntity {
     private String accessToken;
+    // TODO: Figure out the use case of refresh token
     private String refreshToken;
     private long expireDate;
 
