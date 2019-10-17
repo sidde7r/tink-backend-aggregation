@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.OpBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.transactionalaccount.OpBankTransactionalAccountFetcher;
@@ -40,10 +41,21 @@ public final class OpBankAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final OpBankConfiguration opBankConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(OpBankConfiguration.class);
+        final OpBankConfiguration opBankConfiguration = getClientConfiguration();
         apiClient.setConfiguration(
                 opBankConfiguration, configuration.getEidasProxy(), getEidasIdentity());
+    }
+
+    protected OpBankConfiguration getClientConfiguration() {
+        OpBankConfiguration opBankConfiguration = null;
+        try {
+            opBankConfiguration =
+                    getAgentConfigurationController()
+                            .getAgentConfiguration(OpBankConfiguration.class);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION);
+        }
+        return opBankConfiguration;
     }
 
     @Override
@@ -56,8 +68,7 @@ public final class OpBankAgent extends NextGenerationAgent
                                 apiClient,
                                 persistentStorage,
                                 credentials,
-                                getAgentConfigurationController()
-                                        .getAgentConfiguration(OpBankConfiguration.class)),
+                                getClientConfiguration()),
                         credentials,
                         strongAuthenticationState);
 
