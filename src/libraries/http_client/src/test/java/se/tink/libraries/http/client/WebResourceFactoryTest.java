@@ -102,7 +102,7 @@ public class WebResourceFactoryTest {
 
     @Test
     public void noHeaderWhenRequestIdNotPresent() {
-        assertNull(RequestTracer.getRequestId());
+        assertNull(RequestTracer.getRequestId().isPresent());
         WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource)
                 .endpoint("requestBody");
 
