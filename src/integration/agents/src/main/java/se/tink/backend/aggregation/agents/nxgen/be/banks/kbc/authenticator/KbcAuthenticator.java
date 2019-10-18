@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator;
 
 import com.google.common.base.Strings;
 import java.util.Arrays;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -194,12 +195,16 @@ public class KbcAuthenticator implements AutoAuthenticator, ProgressiveTypedAuth
 
     @Override
     public void autoAuthenticate() throws SessionException {
-        KbcDevice device =
-                persistentStorage
-                        .get(KbcConstants.Storage.DEVICE_KEY, KbcDevice.class)
-                        .orElseThrow(() -> new IllegalStateException("Device data not found"));
+        Optional<KbcDevice> device =
+                persistentStorage.get(KbcConstants.Storage.DEVICE_KEY, KbcDevice.class);
+
+        if (!device.isPresent()) {
+            logger.warn("Device data not found during auto authentication");
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
         try {
-            login(device);
+            login(device.get());
         } catch (AuthenticationException | AuthorizationException e) {
             throw SessionError.SESSION_EXPIRED.exception(e);
         }
