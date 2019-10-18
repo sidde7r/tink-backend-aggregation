@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 
 public class LogMaskerTest {
 
@@ -71,7 +72,9 @@ public class LogMaskerTest {
 
             public void simulateNewValue(Collection<String> newSecretValues) {
                 this.propertyChangeSupport.firePropertyChange(
-                        "test-property-name", secretValues, newSecretValues);
+                        AgentConfigurationController.SECRET_VALUES_PROPERTY_NAME,
+                        secretValues,
+                        newSecretValues);
                 this.secretValues = newSecretValues;
             }
         }
@@ -105,6 +108,77 @@ public class LogMaskerTest {
                 maskedString3);
 
         String maskedString4 = logMasker.mask("abcd1111abcd2020abcd1010");
+
+        Assert.assertEquals(
+                "String not masked as expected.",
+                "abcd***MASKED***abcd***MASKED***abcd***MASKED***",
+                maskedString4);
+    }
+
+    @Test
+    public void testMaskingWithUpdatedCredentialsStringMasker() {
+        class TestClassWithPropertyChangeSupport {
+            private final PropertyChangeSupport propertyChangeSupport =
+                    new PropertyChangeSupport(this);
+            private Credentials credentials;
+
+            public void addPropertyChangeListener(PropertyChangeListener listener) {
+                this.propertyChangeSupport.addPropertyChangeListener(listener);
+            }
+
+            public void simulateNewValue(Credentials newCredentials) {
+                this.propertyChangeSupport.firePropertyChange(
+                        AgentConfigurationController.CREDENTIALS_PROPERTY_NAME,
+                        credentials,
+                        newCredentials);
+                this.credentials = newCredentials;
+            }
+        }
+        TestClassWithPropertyChangeSupport testClassWithPropertyChangeSupport =
+                new TestClassWithPropertyChangeSupport();
+
+        LogMasker logMasker = new LogMasker();
+        testClassWithPropertyChangeSupport.addPropertyChangeListener(logMasker);
+
+        String maskedString1 = logMasker.mask("abcd1111abcd1234abcd5678");
+
+        Assert.assertEquals(
+                "String not masked as expected.", "abcd1111abcd1234abcd5678", maskedString1);
+
+        testClassWithPropertyChangeSupport.simulateNewValue(credentials);
+
+        String maskedString2 = logMasker.mask("abcd1010abcd2020abcd5678");
+
+        Assert.assertEquals(
+                "String not masked as expected.",
+                "abcd***MASKED***abcd***MASKED***abcd5678",
+                maskedString2);
+
+        Credentials credentials1 = mock(Credentials.class);
+        when(credentials1.getSensitivePayload())
+                .thenReturn(
+                        ImmutableMap.<String, String>builder()
+                                .put("test-sensitive-key-3", "3030")
+                                .build());
+        testClassWithPropertyChangeSupport.simulateNewValue(credentials1);
+
+        String maskedString3 = logMasker.mask("abcd1010abcd2020abcd3030");
+
+        Assert.assertEquals(
+                "String not masked as expected.",
+                "abcd***MASKED***abcd***MASKED***abcd***MASKED***",
+                maskedString3);
+
+        Credentials credentials2 = mock(Credentials.class);
+        when(credentials2.getSensitivePayload())
+                .thenReturn(
+                        ImmutableMap.<String, String>builder()
+                                .put("test-sensitive-key-4", "4040")
+                                .put("test-sensitive-key-1", "1010")
+                                .build());
+        testClassWithPropertyChangeSupport.simulateNewValue(credentials2);
+
+        String maskedString4 = logMasker.mask("abcd1010abcd3030abcd4040");
 
         Assert.assertEquals(
                 "String not masked as expected.",

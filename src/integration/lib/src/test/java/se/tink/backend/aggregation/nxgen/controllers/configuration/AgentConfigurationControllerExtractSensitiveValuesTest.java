@@ -105,6 +105,12 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
 
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
+                Assert.assertTrue(
+                        "Unexpected property name received: " + evt.getPropertyName(),
+                        AgentConfigurationController.SECRET_VALUES_PROPERTY_NAME.equals(
+                                        evt.getPropertyName())
+                                || AgentConfigurationController.CREDENTIALS_PROPERTY_NAME.equals(
+                                        evt.getPropertyName()));
                 sensitiveValues = (Set<String>) evt.getNewValue();
             }
         }

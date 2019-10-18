@@ -33,13 +33,15 @@ import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
 
 public final class AgentConfigurationController {
+    public static final String SECRET_VALUES_PROPERTY_NAME = "secret-values-property-name";
+    public static final String CREDENTIALS_PROPERTY_NAME = "credentials-property-name";
+
+    // Package private for testing purposes.
+    static final int MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES = 100;
 
     private static final Logger log = LoggerFactory.getLogger(AgentConfigurationController.class);
     private static final ObjectMapper OBJECT_MAPPER =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    // Package private for testing purposes.
-    static final int MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES = 100;
-    private static final String SECRET_VALUES_PROPERTY_NAME = "secret-values-property-name";
     private final TppSecretsServiceClient tppSecretsServiceClient;
     private final IntegrationsConfiguration integrationsConfiguration;
     private final boolean tppSecretsServiceEnabled;
@@ -51,6 +53,7 @@ public final class AgentConfigurationController {
     private final boolean isTestProvider;
     private final PropertyChangeSupport observablePropertyChangeSupport =
             new PropertyChangeSupport(this);
+    private final Credentials credentials;
     private Map<String, String> allSecrets;
     private Set<String> secretValues = Collections.emptySet();
 
@@ -65,6 +68,7 @@ public final class AgentConfigurationController {
         tppSecretsServiceEnabled = false;
         integrationsConfiguration = null;
         tppSecretsServiceClient = null;
+        credentials = null;
     }
 
     public AgentConfigurationController(
@@ -111,6 +115,7 @@ public final class AgentConfigurationController {
         this.redirectUrl = redirectUrl;
         this.isOpenBankingAgent = AccessType.OPEN_BANKING == provider.getAccessType();
         this.isTestProvider = ProviderTypes.TEST == provider.getType();
+        this.credentials = credentials;
 
         if (isTestProvider) {
             log.info(
@@ -203,20 +208,30 @@ public final class AgentConfigurationController {
 
     public void addObserver(PropertyChangeListener observer) {
         observablePropertyChangeSupport.addPropertyChangeListener(observer);
+        notifyCredentials();
+        notifySecretValuesUponSubscription();
     }
 
-    public void notifySecretValues(Set<String> newSecretValues) {
-        Set<String> oldSecretValues = ImmutableSet.copyOf(secretValues);
-        if (!newSecretValues.equals(oldSecretValues)) {
-            this.secretValues =
-                    ImmutableSet.<String>builder()
-                            .addAll(oldSecretValues)
-                            .addAll(newSecretValues)
-                            .build();
+    private void notifySecretValuesUponSubscription() {
+        this.observablePropertyChangeSupport.firePropertyChange(
+                SECRET_VALUES_PROPERTY_NAME, null, secretValues);
+    }
 
-            this.observablePropertyChangeSupport.firePropertyChange(
-                    SECRET_VALUES_PROPERTY_NAME, oldSecretValues, secretValues);
-        }
+    private void notifySecretValues(Set<String> newSecretValues) {
+        Set<String> oldSecretValues = ImmutableSet.copyOf(secretValues);
+        this.secretValues =
+                ImmutableSet.<String>builder()
+                        .addAll(oldSecretValues)
+                        .addAll(newSecretValues)
+                        .build();
+
+        this.observablePropertyChangeSupport.firePropertyChange(
+                SECRET_VALUES_PROPERTY_NAME, oldSecretValues, secretValues);
+    }
+
+    private void notifyCredentials() {
+        this.observablePropertyChangeSupport.firePropertyChange(
+                CREDENTIALS_PROPERTY_NAME, null, credentials);
     }
 
     private String getSecretsServiceParamsString() {
