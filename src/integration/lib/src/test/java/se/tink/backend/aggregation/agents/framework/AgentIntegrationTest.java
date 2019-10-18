@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
@@ -539,6 +540,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         try {
             login(agent, credentialsRequest);
             refresh(agent);
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -553,6 +557,23 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return context;
     }
 
+    private void printMaskedDebugLog(Agent agent) {
+        if (agent instanceof PersistentLogin) {
+            final PersistentLogin persistentLoginAgent = (PersistentLogin) agent;
+            persistentLoginAgent.persistLoginSession();
+        }
+
+        final LogMasker logMasker =
+                new LogMasker(
+                        credential, context.getAgentConfigurationController().getSecretValues());
+        final String maskedLog = logMasker.mask(context.getLogOutputStream().toString());
+
+        System.out.println("");
+        System.out.println("===== MASKED DEBUG LOG =====");
+        System.out.println(maskedLog);
+        System.out.println("");
+    }
+
     private void testBankTransfer(Transfer transfer, boolean isUpdate) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
@@ -560,6 +581,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         try {
             login(agent, credentialsRequest);
             doBankTransfer(agent, transfer, isUpdate);
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -592,6 +616,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
             }
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -614,6 +641,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
+            }
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
             }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
