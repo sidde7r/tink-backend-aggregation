@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -37,14 +38,17 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
     private final DanskeBankSEConfiguration configuration;
     private String dynamicBankIdJavascript;
     private String finalizePackage;
+    private final Credentials credentials;
 
     public DanskeBankBankIdAuthenticator(
             DanskeBankSEApiClient apiClient,
             String deviceId,
-            DanskeBankConfiguration configuration) {
+            DanskeBankConfiguration configuration,
+            Credentials credentials) {
         this.apiClient = apiClient;
         this.deviceId = deviceId;
         this.configuration = (DanskeBankSEConfiguration) configuration;
+        this.credentials = credentials;
     }
 
     @Override
@@ -55,8 +59,16 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
                         configuration.getSecuritySystem(), configuration.getBrand());
 
         // Add the authorization header from the response
+        final String persistentAuth =
+                getResponse
+                        .getHeaders()
+                        .getFirst(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH);
+        // Store tokens in sensitive payload, so it will be masked from logs
+        credentials.setSensitivePayload(
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
+
         apiClient.addPersistentHeader(
-                "Authorization", getResponse.getHeaders().getFirst("Persistent-Auth"));
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
 
         // Add method to return device information string
         dynamicBankIdJavascript =

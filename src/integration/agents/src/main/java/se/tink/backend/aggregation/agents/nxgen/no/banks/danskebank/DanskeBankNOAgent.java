@@ -26,6 +26,7 @@ public class DanskeBankNOAgent extends DanskeBankAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new DanskeBankPasswordAuthenticator(apiClient, deviceId, configuration));
+                new DanskeBankPasswordAuthenticator(
+                        apiClient, deviceId, configuration, credentials));
     }
 }
