@@ -33,7 +33,6 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
     protected final String clientName;
     protected CbiGlobeApiClient apiClient;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private AutoAuthenticationController autoAuthenticationController;
 
     public CbiGlobeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
