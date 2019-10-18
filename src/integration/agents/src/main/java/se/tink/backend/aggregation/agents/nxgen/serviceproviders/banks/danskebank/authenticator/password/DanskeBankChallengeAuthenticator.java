@@ -114,6 +114,8 @@ public class DanskeBankChallengeAuthenticator
         // Determine if we should do KeyCard Authentication or CodeApp Authentication.
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
+        credentials.setSensitivePayload(Field.Key.USERNAME, username);
+        credentials.setSensitivePayload(Field.Key.PASSWORD, password);
 
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
@@ -422,8 +424,15 @@ public class DanskeBankChallengeAuthenticator
                         this.configuration.getSecuritySystem(), this.configuration.getBrand());
 
         // Add the authorization header from the response
+        final String persistentAuth =
+                getResponse
+                        .getHeaders()
+                        .getFirst(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH);
+        // Store tokens in sensitive payload, so it will be masked from logs
+        credentials.setSensitivePayload(
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
         this.apiClient.addPersistentHeader(
-                "Authorization", getResponse.getHeaders().getFirst("Persistent-Auth"));
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
 
         // Create Javascript that will return device information
         String deviceInfoJavascript =

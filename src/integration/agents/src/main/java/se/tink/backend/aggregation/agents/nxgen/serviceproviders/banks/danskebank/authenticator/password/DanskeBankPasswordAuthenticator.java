@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -24,12 +25,17 @@ public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {
     private final DanskeBankConfiguration configuration;
     private String dynamicLogonJavascript;
     private String finalizePackage;
+    private final Credentials credentials;
 
     public DanskeBankPasswordAuthenticator(
-            DanskeBankApiClient apiClient, String deviceId, DanskeBankConfiguration configuration) {
+            DanskeBankApiClient apiClient,
+            String deviceId,
+            DanskeBankConfiguration configuration,
+            Credentials credentials) {
         this.apiClient = apiClient;
         this.deviceId = deviceId;
         this.configuration = configuration;
+        this.credentials = credentials;
     }
 
     @Override
@@ -42,8 +48,15 @@ public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {
                         this.configuration.getBrand());
 
         // Add the authorization header from the response
+        final String persistentAuth =
+                getResponse
+                        .getHeaders()
+                        .getFirst(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH);
+        // Store tokens in sensitive payload, so it will be masked from logs
+        credentials.setSensitivePayload(
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
         this.apiClient.addPersistentHeader(
-                "Authorization", getResponse.getHeaders().getFirst("Persistent-Auth"));
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
 
         // Add method to return device information string
         this.dynamicLogonJavascript =
