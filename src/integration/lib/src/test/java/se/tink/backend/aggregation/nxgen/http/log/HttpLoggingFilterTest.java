@@ -7,7 +7,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.google.common.collect.ImmutableList;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.util.Arrays;
-import java.util.Collections;
 import javax.ws.rs.core.MediaType;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -26,9 +24,6 @@ import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 @Ignore
 public class HttpLoggingFilterTest {
@@ -263,22 +258,7 @@ public class HttpLoggingFilterTest {
     }
 
     private static LogMasker createMaskStub() {
-        return LogMasker.builder()
-                .addStringMaskerBuilder(
-                        new CredentialsStringMaskerBuilder(
-                                new Credentials(),
-                                ImmutableList.of(
-                                        CredentialsStringMaskerBuilder.CredentialsProperty.PASSWORD,
-                                        CredentialsStringMaskerBuilder.CredentialsProperty
-                                                .SECRET_KEY,
-                                        CredentialsStringMaskerBuilder.CredentialsProperty
-                                                .SENSITIVE_PAYLOAD,
-                                        CredentialsStringMaskerBuilder.CredentialsProperty
-                                                .USERNAME)))
-                .addStringMaskerBuilder(
-                        new ClientConfigurationStringMaskerBuilder(Collections.emptyList()))
-                .addStringMaskerBuilder(new Base64Masker(Collections.emptyList()))
-                .build();
+        return new LogMasker(new Credentials());
     }
 
     private static int findFreePort() {

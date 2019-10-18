@@ -108,9 +108,7 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
                 Assert.assertTrue(
                         "Unexpected property name received: " + evt.getPropertyName(),
                         AgentConfigurationController.SECRET_VALUES_PROPERTY_NAME.equals(
-                                        evt.getPropertyName())
-                                || AgentConfigurationController.CREDENTIALS_PROPERTY_NAME.equals(
-                                        evt.getPropertyName()));
+                                evt.getPropertyName()));
                 sensitiveValues = (Set<String>) evt.getNewValue();
             }
         }

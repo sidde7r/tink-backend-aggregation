@@ -14,17 +14,14 @@ import io.grpc.StatusRuntimeException;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.Provider.AccessType;
 import se.tink.backend.agents.rpc.ProviderTypes;
@@ -34,7 +31,6 @@ import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceC
 
 public final class AgentConfigurationController {
     public static final String SECRET_VALUES_PROPERTY_NAME = "secret-values-property-name";
-    public static final String CREDENTIALS_PROPERTY_NAME = "credentials-property-name";
 
     // Package private for testing purposes.
     static final int MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES = 100;
@@ -53,7 +49,6 @@ public final class AgentConfigurationController {
     private final boolean isTestProvider;
     private final PropertyChangeSupport observablePropertyChangeSupport =
             new PropertyChangeSupport(this);
-    private final Credentials credentials;
     private Map<String, String> allSecrets;
     private Set<String> secretValues = Collections.emptySet();
 
@@ -68,14 +63,12 @@ public final class AgentConfigurationController {
         tppSecretsServiceEnabled = false;
         integrationsConfiguration = null;
         tppSecretsServiceClient = null;
-        credentials = null;
     }
 
     public AgentConfigurationController(
             TppSecretsServiceClient tppSecretsServiceClient,
             IntegrationsConfiguration integrationsConfiguration,
             Provider provider,
-            Credentials credentials,
             String appId,
             String clusterId,
             String redirectUrl) {
@@ -90,7 +83,6 @@ public final class AgentConfigurationController {
                 provider.getAccessType(), "provider.getAccessType() cannot be null.");
         Preconditions.checkNotNull(provider.getType(), "provider.getType() cannot be null.");
         Preconditions.checkNotNull(provider.getName(), "provider.getName() cannot be null.");
-        Preconditions.checkNotNull(credentials, "credentials cannot be null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clusterId), "clusterId cannot be empty/null.");
 
@@ -115,7 +107,6 @@ public final class AgentConfigurationController {
         this.redirectUrl = redirectUrl;
         this.isOpenBankingAgent = AccessType.OPEN_BANKING == provider.getAccessType();
         this.isTestProvider = ProviderTypes.TEST == provider.getType();
-        this.credentials = credentials;
 
         if (isTestProvider) {
             log.info(
@@ -199,16 +190,8 @@ public final class AgentConfigurationController {
                                                 + getSecretsServiceParamsString()));
     }
 
-    public Collection<String> getSecretValues() {
-        if (Objects.isNull(allSecrets)) {
-            return Collections.emptyList();
-        }
-        return allSecrets.values();
-    }
-
     public void addObserver(PropertyChangeListener observer) {
         observablePropertyChangeSupport.addPropertyChangeListener(observer);
-        notifyCredentials();
         notifySecretValuesUponSubscription();
     }
 
@@ -227,11 +210,6 @@ public final class AgentConfigurationController {
 
         this.observablePropertyChangeSupport.firePropertyChange(
                 SECRET_VALUES_PROPERTY_NAME, oldSecretValues, secretValues);
-    }
-
-    private void notifyCredentials() {
-        this.observablePropertyChangeSupport.firePropertyChange(
-                CREDENTIALS_PROPERTY_NAME, null, credentials);
     }
 
     private String getSecretsServiceParamsString() {

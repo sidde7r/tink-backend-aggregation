@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.other;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,9 +34,6 @@ import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.readers.CharacterEncodedMessageBodyReader;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -73,29 +69,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
                         context.getLogOutputStream(),
                         signatureKeyPair,
                         request.getProvider(),
-                        LogMasker.builder()
-                                .addStringMaskerBuilder(
-                                        new CredentialsStringMaskerBuilder(
-                                                credentials,
-                                                ImmutableList.of(
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.PASSWORD,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.SECRET_KEY,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty
-                                                                .SENSITIVE_PAYLOAD,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.USERNAME)))
-                                .addStringMaskerBuilder(
-                                        new ClientConfigurationStringMaskerBuilder(
-                                                context.getAgentConfigurationController()
-                                                        .getSecretValues()))
-                                .addStringMaskerBuilder(
-                                        new Base64Masker(
-                                                context.getAgentConfigurationController()
-                                                        .getSecretValues()))
-                                .build(),
+                        context.getLogMasker(),
                         LogMasker.shouldLog(request.getProvider()));
         // When Java trusted certificates are updated this is probably no longer necessary:
         this.client.loadTrustMaterial(loadCustomTrustStore(), null);

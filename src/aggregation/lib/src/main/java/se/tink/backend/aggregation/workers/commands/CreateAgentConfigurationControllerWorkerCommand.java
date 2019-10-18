@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorkerCommand {
 
@@ -15,7 +14,6 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
             new AggregationLogger(CreateAgentConfigurationControllerWorkerCommand.class);
 
     private final AgentsServiceConfiguration agentsServiceConfiguration;
-    private final CredentialsRequest credentialsRequest;
     private final AgentWorkerCommandContext agentWorkerCommandContext;
     private final TppSecretsServiceClient tppSecretsServiceClient;
 
@@ -23,7 +21,6 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
             AgentWorkerCommandContext agentWorkerCommandContext,
             TppSecretsServiceClient tppSecretsServiceClient) {
         this.agentsServiceConfiguration = agentWorkerCommandContext.getAgentsServiceConfiguration();
-        this.credentialsRequest = agentWorkerCommandContext.getRequest();
         this.agentWorkerCommandContext = agentWorkerCommandContext;
         this.tppSecretsServiceClient = tppSecretsServiceClient;
     }
@@ -35,7 +32,6 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
                         tppSecretsServiceClient,
                         agentsServiceConfiguration.getIntegrations(),
                         agentWorkerCommandContext.getRequest().getProvider(),
-                        agentWorkerCommandContext.getRequest().getCredentials(),
                         agentWorkerCommandContext.getAppId(),
                         agentWorkerCommandContext.getClusterId(),
                         agentWorkerCommandContext.getRequest().getCallbackUri());

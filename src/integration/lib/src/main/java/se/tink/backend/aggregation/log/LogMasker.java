@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.utils.StringMaskerBuilder;
 
@@ -63,7 +64,18 @@ public class LogMasker implements PropertyChangeListener {
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent newSecretValues) {}
+    public void propertyChange(PropertyChangeEvent newSecretValues) {
+            switch (newSecretValues.getPropertyName()) {
+                case AgentConfigurationController.SECRET_VALUES_PROPERTY_NAME:
+                    break;
+
+                default:
+                    throw new IllegalStateException(
+                        "Unrecognized property name received: "
+                            + newSecretValues.getPropertyName());
+            }
+        }
+    }
 
     public static LoggingMode shouldLog(Provider provider) {
         // Temporary disable of http traffic logging for RE agents.

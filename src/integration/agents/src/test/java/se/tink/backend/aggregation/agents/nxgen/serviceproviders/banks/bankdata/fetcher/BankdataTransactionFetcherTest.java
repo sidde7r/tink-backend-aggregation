@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,16 +10,12 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataPinAuthenticator;
-import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public class BankdataTransactionFetcherTest {
     private boolean debugOutput;
@@ -45,29 +40,7 @@ public class BankdataTransactionFetcherTest {
                         context.getLogOutputStream(),
                         null,
                         null,
-                        LogMasker.builder()
-                                .addStringMaskerBuilder(
-                                        new CredentialsStringMaskerBuilder(
-                                                credentials,
-                                                ImmutableList.of(
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.PASSWORD,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.SECRET_KEY,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty
-                                                                .SENSITIVE_PAYLOAD,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.USERNAME)))
-                                .addStringMaskerBuilder(
-                                        new ClientConfigurationStringMaskerBuilder(
-                                                context.getAgentConfigurationController()
-                                                        .getSecretValues()))
-                                .addStringMaskerBuilder(
-                                        new Base64Masker(
-                                                context.getAgentConfigurationController()
-                                                        .getSecretValues()))
-                                .build(),
+                        context.getLogMasker(),
                         LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();

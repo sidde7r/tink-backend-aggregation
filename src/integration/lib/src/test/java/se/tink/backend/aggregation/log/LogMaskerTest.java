@@ -7,7 +7,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Arrays;
 import java.util.Collection;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +26,7 @@ public class LogMaskerTest {
 
     @Test
     public void testMaskingWithoughClientConfigurationStringMasker() {
-        LogMasker logMasker = new LogMasker(credentials, null);
+        LogMasker logMasker = new LogMasker(credentials);
 
         String maskedString1 = logMasker.mask("abcd1111abcd1234abcd");
 
@@ -37,21 +36,9 @@ public class LogMaskerTest {
 
     @Test
     public void testBasicCredentialsMasking() {
-        LogMasker logMasker = new LogMasker(credentials, null);
+        LogMasker logMasker = new LogMasker(credentials);
 
         String maskedString1 = logMasker.mask("abcd1010abcd2020abcd");
-
-        Assert.assertEquals(
-                "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd",
-                maskedString1);
-    }
-
-    @Test
-    public void testBasicClientConfigurationMasking() {
-        LogMasker logMasker = new LogMasker(credentials, Arrays.asList("1111", "1234"));
-
-        String maskedString1 = logMasker.mask("abcd1111abcd1234abcd");
 
         Assert.assertEquals(
                 "String not masked as expected.",
@@ -81,7 +68,7 @@ public class LogMaskerTest {
         TestClassWithPropertyChangeSupport testClassWithPropertyChangeSupport =
                 new TestClassWithPropertyChangeSupport();
 
-        LogMasker logMasker = new LogMasker(credentials, null);
+        LogMasker logMasker = new LogMasker(credentials);
         testClassWithPropertyChangeSupport.addPropertyChangeListener(logMasker);
 
         String maskedString1 = logMasker.mask("abcd1111abcd1234abcd5678");

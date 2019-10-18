@@ -7,8 +7,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.google.common.collect.ImmutableList;
-import java.util.Collections;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Rule;
@@ -19,9 +17,6 @@ import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public final class VolksbankApiClientMockTest {
 
@@ -30,29 +25,7 @@ public final class VolksbankApiClientMockTest {
     private static TinkHttpClient createWiremockHttpClient() {
         TinkHttpClient tinkHttpClient =
                 NextGenTinkHttpClient.builder(
-                                LogMasker.builder()
-                                        .addStringMaskerBuilder(
-                                                new CredentialsStringMaskerBuilder(
-                                                        new Credentials(),
-                                                        ImmutableList.of(
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .PASSWORD,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .SECRET_KEY,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .SENSITIVE_PAYLOAD,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .USERNAME)))
-                                        .addStringMaskerBuilder(
-                                                new ClientConfigurationStringMaskerBuilder(
-                                                        Collections.emptyList()))
-                                        .addStringMaskerBuilder(
-                                                new Base64Masker(Collections.emptyList()))
-                                        .build(),
+                                new LogMasker(new Credentials()),
                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
         tinkHttpClient.setDebugOutput(true);

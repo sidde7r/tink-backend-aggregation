@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap2;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
@@ -21,8 +20,6 @@ import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -47,25 +44,7 @@ public class EncapClient {
                         context.getLogOutputStream(),
                         signatureKeyPair,
                         request.getProvider(),
-                        LogMasker.builder()
-                                .addStringMaskerBuilder(
-                                        new CredentialsStringMaskerBuilder(
-                                                request.getCredentials(),
-                                                ImmutableList.of(
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.PASSWORD,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.SECRET_KEY,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty
-                                                                .SENSITIVE_PAYLOAD,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.USERNAME)))
-                                .addStringMaskerBuilder(
-                                        new ClientConfigurationStringMaskerBuilder(
-                                                context.getAgentConfigurationController()
-                                                        .getSecretValues()))
-                                .build(),
+                        context.getLogMasker(),
                         LogMasker.shouldLog(request.getProvider()));
 
         // Encap does not like it when we send our signature header.

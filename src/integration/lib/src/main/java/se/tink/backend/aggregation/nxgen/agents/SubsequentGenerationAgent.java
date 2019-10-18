@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.agents;
 
-import com.google.common.collect.ImmutableList;
 import java.security.Security;
 import java.util.Optional;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -31,9 +30,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -87,29 +83,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         MarketCode.valueOf(request.getProvider().getMarket()),
                         request.getProvider().getCurrency(),
                         request.getUser());
-        LogMasker logMasker =
-                LogMasker.builder()
-                        .addStringMaskerBuilder(
-                                new CredentialsStringMaskerBuilder(
-                                        credentials,
-                                        ImmutableList.of(
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .PASSWORD,
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .SECRET_KEY,
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .SENSITIVE_PAYLOAD,
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .USERNAME)))
-                        .addStringMaskerBuilder(
-                                new ClientConfigurationStringMaskerBuilder(
-                                        context.getAgentConfigurationController()
-                                                .getSecretValues()))
-                        .addStringMaskerBuilder(
-                                new Base64Masker(
-                                        context.getAgentConfigurationController()
-                                                .getSecretValues()))
-                        .build();
+        LogMasker logMasker = context.getLogMasker();
         if (useNextGenClient) {
             this.client =
                     NextGenTinkHttpClient.builder(

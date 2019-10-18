@@ -178,7 +178,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             tppSecretsServiceClient,
                             configuration.getIntegrations(),
                             provider,
-                            credential,
                             context.getAppId(),
                             clusterIdForSecretsService,
                             credentialsRequest.getCallbackUri());
@@ -186,8 +185,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 throw new IllegalStateException(
                         "Error when initializing AgentConfigurationController.");
             }
+            agentConfigurationController.addObserver(context.getLogMasker());
             context.setAgentConfigurationController(agentConfigurationController);
-
             AgentFactory factory = new AgentFactory(configuration);
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
