@@ -353,9 +353,9 @@ public final class AgentConfigurationController {
                                     extractSensitiveValuesRec(
                                             value, extractedSensitiveValues, recursionLevel + 1));
         } else {
-            if (clientConfigurationAsObject != null) {
-                extractedSensitiveValues.add(clientConfigurationAsObject.toString());
-            }
+            Optional.ofNullable(clientConfigurationAsObject)
+                    .ifPresent(
+                            clientConfig -> extractedSensitiveValues.add(clientConfig.toString()));
         }
     }
 
