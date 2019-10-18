@@ -290,7 +290,7 @@ public class DanskeBankChallengeAuthenticator
             HttpResponse response = e.getResponse();
             if (response.getStatus() != 401) {
                 log.warnExtraLong(
-                        "Could not auto authenticate user: " + response.getBody(String.class),
+                        "Could not auto authenticate user, status " + response.getStatus(),
                         DanskeBankConstants.LogTags.AUTHENTICATION_AUTO,
                         e);
                 throw e;
@@ -341,7 +341,9 @@ public class DanskeBankChallengeAuthenticator
                     driver.findElement(By.tagName("body")).getAttribute("trustedChallengeInfo");
             // if no challengeInfo available, force a new device pinning
             if (Strings.isNullOrEmpty(challengeInfo)) {
-                log.infoExtraLong(driver.getPageSource(), LogTag.from("danskebank_autherror"));
+                log.infoExtraLong(
+                        "Attribute 'trustedChallengeInfo' not found",
+                        LogTag.from("danskebank_autherror"));
                 throw SessionError.SESSION_EXPIRED.exception();
             }
             KeyCardEntity keyCardEntity =

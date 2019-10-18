@@ -9,10 +9,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount> {
+
+    private static final AggregationLogger log =
+            new AggregationLogger(DanskeBankAccountLoanFetcher.class);
 
     private final Credentials credentials;
     private final DanskeBankApiClient apiClient;
@@ -51,6 +55,6 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
                         DanskeBankPredicates.knownLoanAccountProducts(
                                         configuration.getLoanAccountTypes())
                                 .negate())
-                .forEach(AccountEntity::logLoanAccount);
+                .forEach(a -> log.info("Unknown loan account type: " + a.getAccountType()));
     }
 }

@@ -56,11 +56,7 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                         DanskeBankPredicates.knownSavingsAccountProducts(
                                         configuration.getSavingsAccountTypes())
                                 .negate())
-                .map(
-                        accountEntity -> {
-                            accountEntity.logTransactionalAccount();
-                            return accountEntity.toCheckingAccount();
-                        })
+                .map(accountEntity -> accountEntity.toCheckingAccount())
                 .collect(Collectors.toList());
     }
 }

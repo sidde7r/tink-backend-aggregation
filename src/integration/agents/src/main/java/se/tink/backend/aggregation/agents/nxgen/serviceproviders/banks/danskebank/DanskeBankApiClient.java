@@ -223,10 +223,7 @@ public class DanskeBankApiClient {
         CheckDeviceResponse checkDeviceResponse =
                 DanskeBankDeserializer.convertStringToObject(response, CheckDeviceResponse.class);
         if (checkDeviceResponse.getError() != null) {
-            log.info(
-                    String.format(
-                            "DanskeBank - Found non null error in check device response - response: [%s]",
-                            response));
+            log.info("DanskeBank - Found non null error in check device response");
         }
 
         return checkDeviceResponse;
