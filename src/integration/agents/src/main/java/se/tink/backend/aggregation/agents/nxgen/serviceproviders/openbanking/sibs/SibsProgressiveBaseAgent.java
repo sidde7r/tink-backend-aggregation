@@ -51,7 +51,7 @@ public abstract class SibsProgressiveBaseAgent
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
 
-    private final String clientName;
+    protected final String clientName;
     protected final SibsBaseApiClient apiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
