@@ -138,7 +138,8 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "accessType": "OPEN_BANKING"
         },
         {
             "capabilities": [

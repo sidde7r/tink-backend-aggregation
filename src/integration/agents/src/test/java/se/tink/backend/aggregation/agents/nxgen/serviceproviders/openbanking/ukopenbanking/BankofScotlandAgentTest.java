@@ -25,6 +25,8 @@ public class BankofScotlandAgentTest {
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-bankofscotland-oauth2")
                 .loadCredentialsBefore(false)
+                .setFinancialInstitutionId("bankofscotland")
+                .setAppId("tink")
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .build()

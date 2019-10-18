@@ -546,6 +546,22 @@ agentsServiceConfiguration:
         transportKeyPassword: ""
         signingKeyPassword: ""
         rootCAPassword: ""
+    bankofscotland:
+      tink:
+        organizationId: ""
+        clientId: ""
+        signingKey: ""
+        signingKeyId: ""
+        softwareStatementAssertion: ""
+        redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
+        softwareId: ""
+        transportKey: ""
+        transportKeyId: ""
+        rootCAData: ""
+        clientSecret: ""
+        transportKeyPassword: ""
+        signingKeyPassword: ""
+        rootCAPassword: ""
     demoFinancialInstitution:
       mobilebanking:
         baseUrl: "http://localhost:9271/mobilebanking"
