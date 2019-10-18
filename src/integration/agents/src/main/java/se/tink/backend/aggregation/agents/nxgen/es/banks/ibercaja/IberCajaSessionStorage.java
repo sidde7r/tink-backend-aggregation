@@ -47,4 +47,8 @@ public class IberCajaSessionStorage {
     public String getDocumentNumber() {
         return sessionStorage.get(IberCajaConstants.Storage.DOCUMENT_NUMBER);
     }
+
+    public void saveNici(int nici) {
+        sessionStorage.put(IberCajaConstants.Storage.NICI, nici);
+    }
 }
