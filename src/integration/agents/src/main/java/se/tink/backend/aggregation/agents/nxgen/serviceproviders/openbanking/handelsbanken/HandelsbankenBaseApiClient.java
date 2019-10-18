@@ -112,7 +112,7 @@ public class HandelsbankenBaseApiClient {
         }
     }
 
-    public TokenResponse getRefreshToken(String refreshToken) {
+    public TokenResponse refreshAccessToken(String refreshToken) {
 
         final Form params =
                 Form.builder()
