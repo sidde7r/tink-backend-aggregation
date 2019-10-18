@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class SubPlacementEntity {
@@ -85,10 +84,7 @@ public class SubPlacementEntity {
                     holding.toTinkFundInstrument(isinCode).ifPresent(instruments::add);
                     break;
                 default:
-                    log.warn(
-                            "Previously unknown subplacement type:[{}] - serializedResponse: {}",
-                            type,
-                            SerializationUtils.serializeToString(this));
+                    log.warn("Previously unknown subplacement type:[{}]", type);
             }
         }
 

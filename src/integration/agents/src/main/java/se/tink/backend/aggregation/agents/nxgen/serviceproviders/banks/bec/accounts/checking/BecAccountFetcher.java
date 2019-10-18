@@ -32,10 +32,9 @@ public class BecAccountFetcher implements AccountFetcher<TransactionalAccount> {
                 // log unknown type
                 LOGGER.infoExtraLong(
                         String.format(
-                                "Unknown type: %s\nAccount: %s\nDetails: %s",
+                                "Unknown type: %s\nAccount: %s",
                                 details.getAccountType(),
-                                SerializationUtils.serializeToString(account),
-                                SerializationUtils.serializeToString(details)),
+                                SerializationUtils.serializeToString(account)),
                         BecConstants.Log.UNKOWN_ACCOUNT_TYPE);
             }
 

@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAssetEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataDepositEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataPoolAccountEntity;
@@ -18,7 +17,6 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BankdataInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static final AggregationLogger log =
@@ -53,9 +51,6 @@ public class BankdataInvestmentFetcher implements AccountFetcher<InvestmentAccou
                             DepositsContentListResponse depositContents =
                                     this.bankClient.fetchDepositContents(
                                             deposit.getRegNo(), deposit.getDepositNo());
-
-                            // log unknown deposits
-                            logUnknownDeposits(depositContents);
 
                             // One deposit maps to one Portfolio
                             Portfolio portfolio = deposit.toTinkPortfolio();
@@ -99,26 +94,5 @@ public class BankdataInvestmentFetcher implements AccountFetcher<InvestmentAccou
                             return instrument.toTinkInstrument(assetDetails);
                         })
                 .collect(Collectors.toList());
-    }
-
-    private void logUnknownDeposits(DepositsContentListResponse depositContents) {
-        logDepositContents("ExtractedBonds", depositContents.getExtractedBonds());
-        logDepositContents(
-                "DanishMiscellaneousAssets", depositContents.getDanishMiscellaneousAssets());
-        logDepositContents(
-                "ForeignMiscellaneousAssets", depositContents.getForeignMiscellaneousAssets());
-        logDepositContents("DanishPrizeBonds", depositContents.getDanishPrizeBonds());
-        logDepositContents("ForeignPrizeBonds", depositContents.getForeignPrizeBonds());
-    }
-
-    private void logDepositContents(String type, List<Object> unknownContent) {
-        unknownContent.stream()
-                .map(SerializationUtils::serializeToString)
-                .forEach(
-                        s -> {
-                            log.infoExtraLong(
-                                    String.format("%s: %s", type, s),
-                                    BankdataConstants.Log.INVESTMENT_UNKNOWN_DEPOSITS_LOG_TAG);
-                        });
     }
 }

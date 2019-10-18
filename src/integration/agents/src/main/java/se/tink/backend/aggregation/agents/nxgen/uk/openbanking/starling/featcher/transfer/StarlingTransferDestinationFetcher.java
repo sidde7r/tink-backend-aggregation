@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class StarlingTransferDestinationFetcher implements TransferDestinationFetcher {
     private static final Logger LOGGER =
@@ -76,8 +75,6 @@ public class StarlingTransferDestinationFetcher implements TransferDestinationFe
 
     private static List<? extends GeneralAccountEntity> getSourceAccounts(
             Collection<Account> accounts) {
-        LOGGER.info(
-                "Getting source accounts from " + SerializationUtils.serializeToString(accounts));
         return accounts.stream()
                 .map(GeneralAccountEntityImpl::createFromCoreAccount)
                 .filter(Optional::isPresent)
