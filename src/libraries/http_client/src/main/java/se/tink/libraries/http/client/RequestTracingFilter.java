@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import se.tink.libraries.requesttracing.RequestTracer;
 
 public class RequestTracingFilter implements ContainerRequestFilter, ContainerResponseFilter {
-    public static final String REQUEST_ID_HEADER = "X-Request-ID";
+    static final String REQUEST_ID_HEADER = "X-Request-ID";
 
     @Override
     public ContainerRequest filter(ContainerRequest request) {
@@ -20,6 +20,8 @@ public class RequestTracingFilter implements ContainerRequestFilter, ContainerRe
 
     @Override
     public ContainerResponse filter(ContainerRequest request, ContainerResponse response) {
+        RequestTracer.getRequestId()
+                .ifPresent(v -> response.getHttpHeaders().putSingle(REQUEST_ID_HEADER, v));
         RequestTracer.stopTracing();
         return response;
     }
