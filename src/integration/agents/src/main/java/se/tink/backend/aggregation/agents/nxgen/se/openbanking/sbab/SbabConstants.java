@@ -115,5 +115,6 @@ public final class SbabConstants {
 
     public static class Errors {
         public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
+        public static final String KYC_QUESTIONS_NOT_COMPLETED = "kyc_questions_not_completed";
     }
 }
