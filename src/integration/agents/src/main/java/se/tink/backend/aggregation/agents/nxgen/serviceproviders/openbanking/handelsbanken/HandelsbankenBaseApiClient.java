@@ -284,7 +284,7 @@ public class HandelsbankenBaseApiClient {
                         refreshToken,
                         response.getExpiresIn());
 
-        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
+        persistentStorage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
     }
 
     private void verifyIsTokenNotActiveErrorOrThrow(HttpResponseException hre) {
