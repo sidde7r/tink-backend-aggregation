@@ -59,11 +59,12 @@ data:
         {{- if .Values.debugLogFrequencyPercent }}
           debugLogFrequencyPercent: {{ .Values.debugLogFrequencyPercent }}
         {{- end }}
-        {{- if $agentsConfig.collectorSubscriptionKey }}
-          collectorSubscriptionKey: COLLECTOR_SUBSCRIPTION_KEY
-        {{- end }}
 
       integrations:
+        {{- if $agentsConfig.collectorSubscriptionKey }}
+        collector:
+          collectorSubscriptionKey: COLLECTOR_SUBSCRIPTION_KEY
+        {{- end }}
 
         {{- if $agentsConfig.proxyUri }}
         proxyUri: "{{ $agentsConfig.proxyUri }}"
