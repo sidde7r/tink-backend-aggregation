@@ -317,6 +317,26 @@ public final class AgentConfigurationController {
         return OBJECT_MAPPER.convertValue(clientConfigurationAsObject, clientConfigClass);
     }
 
+    public <T extends ClientConfiguration> Optional<T> getAgentConfigurationFromK8sAsOptional(
+        String integrationName, Class<T> clientConfigClass) {
+        if (isOpenBankingAgent) {
+            log.warn(
+                "Trying to read information from k8s for an OB agent: "
+                    + clientConfigClass.toString()
+                    + ". Consider uploading the configuration to ESS instead.");
+        }
+
+        Optional<Object> clientConfigurationAsObject =
+            integrationsConfiguration.getIntegration(integrationName);
+
+        clientConfigurationAsObject.ifPresent(
+            clientConfiguration -> extractSensitiveValues(clientConfiguration));
+
+        return clientConfigurationAsObject.map(
+            clientConfiguration ->
+                OBJECT_MAPPER.convertValue(clientConfiguration, clientConfigClass));
+    }
+
     <T extends ClientConfiguration> Set<String> extractSensitiveValues(
             Object clientConfigurationAsObject) {
 
