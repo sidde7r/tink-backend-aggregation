@@ -6,7 +6,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -102,7 +102,7 @@ public class WebResourceFactoryTest {
 
     @Test
     public void noHeaderWhenRequestIdNotPresent() {
-        assertNull(RequestTracer.getRequestId().isPresent());
+        assertFalse(RequestTracer.getRequestId().isPresent());
         WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource)
                 .endpoint("requestBody");
 
