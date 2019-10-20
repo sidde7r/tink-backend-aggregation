@@ -21,7 +21,7 @@ public class IntegrationsConfiguration {
 
     @JsonProperty private ImmutableList<String> proxyUris;
 
-    private Optional<Object> getIntegration(String integrationName) {
+    public Optional<Object> getIntegration(String integrationName) {
         return Optional.ofNullable(integrations.get(integrationName));
     }
 

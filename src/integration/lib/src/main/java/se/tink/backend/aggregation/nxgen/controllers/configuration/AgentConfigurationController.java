@@ -266,7 +266,7 @@ public final class AgentConfigurationController {
         allSecrets.remove(REDIRECT_URLS_KEY);
     }
 
-    private <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
+    public <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
             String integrationName, String clientName, Class<T> clientConfigClass) {
 
         if (isOpenBankingAgent) {
@@ -286,6 +286,31 @@ public final class AgentConfigurationController {
                                                         + clientConfigClass.toString()
                                                         + " not found in k8s secrets of cluster: "
                                                         + clusterId));
+
+        extractSensitiveValues(clientConfigurationAsObject);
+
+        return OBJECT_MAPPER.convertValue(clientConfigurationAsObject, clientConfigClass);
+    }
+
+    public <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
+        String integrationName, Class<T> clientConfigClass) {
+        if (isOpenBankingAgent) {
+            log.warn(
+                "Trying to read information from k8s for an OB agent: "
+                    + clientConfigClass.toString()
+                    + ". Consider uploading the configuration to ESS instead.");
+        }
+
+        Object clientConfigurationAsObject =
+            integrationsConfiguration
+                .getIntegration(integrationName)
+                .orElseThrow(
+                    () ->
+                        new IllegalStateException(
+                            "Agent configuration for agent: "
+                                + clientConfigClass.toString()
+                                + " not found in k8s secrets of cluster: "
+                                + clusterId));
 
         extractSensitiveValues(clientConfigurationAsObject);
 

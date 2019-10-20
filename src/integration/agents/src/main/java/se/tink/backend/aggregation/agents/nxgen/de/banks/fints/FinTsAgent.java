@@ -61,15 +61,10 @@ public class FinTsAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         FinTsIntegrationConfiguration finTsIntegrationConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getIntegration(
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(
                                 FinTsConstants.INTEGRATION_NAME,
-                                FinTsIntegrationConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format("FinTs integration not configured")));
+                                FinTsIntegrationConfiguration.class);
 
         this.persistentStorage.put(
                 FinTsConstants.Storage.REG_NUMBER, finTsIntegrationConfiguration.getRegNumber());
