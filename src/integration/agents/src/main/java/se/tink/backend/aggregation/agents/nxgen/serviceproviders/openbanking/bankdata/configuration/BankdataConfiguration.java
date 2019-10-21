@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.ErrorMessages;
@@ -11,11 +12,11 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class BankdataConfiguration implements ClientConfiguration {
 
-    @Secret private String clientId;
-    @Secret private String redirectUrl;
-    @SensitiveSecret private String apiKey;
-    @Secret private String baseUrl;
-    @Secret private String baseAuthUrl;
+    @JsonProperty @Secret private String clientId;
+    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @SensitiveSecret private String apiKey;
+    @JsonProperty @Secret private String baseUrl;
+    @JsonProperty @Secret private String baseAuthUrl;
 
     public String getBaseUrl() {
         Preconditions.checkNotNull(

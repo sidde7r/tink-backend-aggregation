@@ -1,19 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class BecConfiguration implements ClientConfiguration {
 
-    @Secret private String eidasQwac;
-    @Secret private String qSealc;
-    @Secret private String keyId;
-    @Secret private String redirectUrl;
+    @JsonProperty @Secret private String eidasQwac;
+    @JsonProperty @SensitiveSecret private String qSealc;
+    @JsonProperty @SensitiveSecret private String keyId;
+    @JsonProperty @Secret private String redirectUrl;
 
     public String getEidasQwac() {
         Preconditions.checkNotNull(
