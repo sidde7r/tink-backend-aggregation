@@ -657,6 +657,10 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         requestExecutor.setEidasIdentity(eidasIdentity);
     }
 
+    public void setEidasProxy(EidasProxyConfiguration conf) {
+        this.setEidasProxy(conf, "");
+    }
+
     public void setEidasProxy(EidasProxyConfiguration conf, String legacyCertId) {
 
         try {

@@ -579,6 +579,10 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         requestExecutor.setEidasIdentity(eidasIdentity);
     }
 
+    public void setEidasProxy(EidasProxyConfiguration conf) {
+        this.setEidasProxy(conf, "");
+    }
+
     public void setEidasProxy(EidasProxyConfiguration conf, String legacyCertId) {
 
         try {

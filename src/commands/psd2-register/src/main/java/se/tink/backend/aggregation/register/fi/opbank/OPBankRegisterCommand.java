@@ -43,7 +43,8 @@ public class OPBankRegisterCommand {
         Security.addProvider(BouncyCastleProviderSingleton.getInstance());
 
         client.setDebugOutput(true);
-        client.setEidasProxy(PSD2Utils.eidasProxyConf, certificateId);
+
+        client.setEidasProxy(PSD2Utils.eidasProxyConf);
 
         final String signJwt = PSD2Utils.generateSignedSSAJwt(certificateId, clusterId, appId);
 
