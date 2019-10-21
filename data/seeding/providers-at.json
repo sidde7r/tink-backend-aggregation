@@ -61,6 +61,7 @@
             "status": "ENABLED",
             "transactional": "true",
             "tutorialUrl": null,
+            "accessType": "OTHER",
             "type": "BANK"
         },
         {
