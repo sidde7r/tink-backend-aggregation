@@ -27,14 +27,14 @@ public class ErsteBankPasswordAuthenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        EncryptionValuesEntity encryptionValuesEntity =
+        final EncryptionValuesEntity encryptionValuesEntity =
                 ersteBankApiClient.getEncryptionValues(username);
-        String rsa = getRsa(encryptionValuesEntity, password);
+        final String rsa = getRsa(encryptionValuesEntity, password);
         credentials.setSensitivePayload(PAYLOAD.RSA, rsa);
-        HttpResponse response = ersteBankApiClient.sendPassword(rsa);
+        final HttpResponse response = ersteBankApiClient.sendPassword(rsa);
 
         if (containsToken(response)) {
-            TokenEntity tokenEntity = ErsteBankCryptoUtil.getTokenFromResponse(response);
+            final TokenEntity tokenEntity = ErsteBankCryptoUtil.getTokenFromResponse(response);
             ersteBankApiClient.saveToken(tokenEntity);
         } else {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
