@@ -20,7 +20,7 @@ public class ICSConfiguration implements ClientConfiguration {
     @SensitiveSecret private String clientSecret;
     @Secret private String clientSSLCertificate;
     @Secret private String rootCACertificate;
-    @SensitiveSecret private String rootCAPassword;
+    @Secret private String rootCAPassword;
 
     @JsonIgnore
     private static final Logger logger = LoggerFactory.getLogger(ICSConfiguration.class);
