@@ -58,6 +58,7 @@ public class BankAustriaConstants {
     }
 
     public static final class LoginForm {
+        public static final String USER_ID = "userId";
         public static final String PASSWORD = "password";
         public static final String OTML_SECURE_ENCLAVE_PARAMS = "otml_secure_enclave_params";
         public static final String USE_LOGIN_VIA_FINGERPRINT = "useLoginViaFingerprint";
