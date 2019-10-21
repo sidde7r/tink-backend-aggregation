@@ -56,7 +56,7 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
                                 "stringLevel1", "1", "stringLevel2", "2", "stringLevel3", "3")));
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testExtractSensitiveValuesMaximumRecursionLevelReached() {
         NestedConfigurationLevel2 nestedConfigurationLevel2 =
                 new NestedConfigurationLevel2("stringLevel3", 3);
@@ -84,18 +84,7 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
             Assert.fail("Error when serializing test configuration.");
         }
 
-        try {
-            agentConfigurationController.extractSensitiveValues(serializedConfigurationAsMap);
-        } catch (IllegalStateException e) {
-            Assert.assertEquals(
-                    "Unexpected error message or IllegalStateException when trying to test maximum recursion level to extract sensitive values.",
-                    "Reached maximum recursion depth when trying to extract sensitive configuration values.",
-                    e.getMessage());
-        } catch (Exception e) {
-            Assert.fail(
-                    "Unexpected Exception when trying to test maximum recursion level to extract sensitive values : "
-                            + e);
-        }
+        agentConfigurationController.extractSensitiveValues(serializedConfigurationAsMap);
     }
 
     @Test
