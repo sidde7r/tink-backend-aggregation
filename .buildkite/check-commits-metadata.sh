@@ -6,14 +6,14 @@ set -u
 # thing.
 set -e
 echo "Running self-test:"
-.buildkite/test-check-commit-message.sh
+.buildkite/test-check-commit-metadata.sh
 echo "Done running self-test."
 set +e
 
 # Run the actual tests.
 FAILED=0
-for commit in $(.buildkite/print-commits.py);do
-  if ! .buildkite/check-commit-message.sh "$commit";then
+for commit in $(git log --format=format:%H origin/master..HEAD);do
+  if ! .buildkite/check-commit-metadata.sh "$commit";then
     FAILED=1
   fi
 done
