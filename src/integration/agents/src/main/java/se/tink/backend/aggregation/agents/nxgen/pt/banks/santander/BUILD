@@ -10,6 +10,7 @@ java_library(
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
+        "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_google_guava_guava",

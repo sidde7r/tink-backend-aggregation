@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.RESPONSE_CODES;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.STORAGE;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.ApiResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -17,6 +18,11 @@ public class SantanderApiClient {
         this.tinkHttpClient = tinkHttpClient;
         this.persistentStorage = persistentStorage;
         this.parser = new Parser();
+    }
+
+    public boolean isAlive() {
+        ApiResponse apiResponse = fetchAccounts();
+        return !RESPONSE_CODES.SESSION_EXPIRED.equals(apiResponse.getCode());
     }
 
     public ApiResponse fetchAuthToken(String login, String password) {
