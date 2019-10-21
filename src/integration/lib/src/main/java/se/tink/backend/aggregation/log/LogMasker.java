@@ -65,9 +65,9 @@ public class LogMasker implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent newSecretValues) {
-            switch (newSecretValues.getPropertyName()) {
-                case AgentConfigurationController.SECRET_VALUES_PROPERTY_NAME:
-                    break;
+        switch (newSecretValues.getPropertyName()) {
+            case AgentConfigurationController.SECRET_VALUES_PROPERTY_NAME:
+                break;
 
                 default:
                     throw new IllegalStateException(
@@ -75,7 +75,6 @@ public class LogMasker implements PropertyChangeListener {
                             + newSecretValues.getPropertyName());
             }
         }
-    }
 
     public static LoggingMode shouldLog(Provider provider) {
         // Temporary disable of http traffic logging for RE agents.
