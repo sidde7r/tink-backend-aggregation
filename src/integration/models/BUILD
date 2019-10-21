@@ -10,6 +10,6 @@ java_library(
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
-        "@maven//:com_fasterxml_uuid_java_uuid_generator",
+        "@java_uuid_generator//:com_fasterxml_uuid_java_uuid_generator",
     ],
 )

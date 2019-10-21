@@ -2492,7 +2492,7 @@ http_archive(
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 
 maven_install(
-    name = "maven",
+    name = "java_uuid_generator",
     artifacts = [
         "com.fasterxml.uuid:java-uuid-generator:3.2.0",
     ],
@@ -2503,6 +2503,6 @@ maven_install(
     ],
 )
 
-load("@maven//:defs.bzl", "pinned_maven_install")
+load("@java_uuid_generator//:defs.bzl", "pinned_maven_install")
 
 pinned_maven_install()
