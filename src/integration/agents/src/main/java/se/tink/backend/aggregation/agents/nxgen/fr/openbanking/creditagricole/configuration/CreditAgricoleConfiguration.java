@@ -11,8 +11,20 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @JsonObject
 public class CreditAgricoleConfiguration implements ClientConfiguration {
 
-    @SensitiveSecret private String token;
-    @Secret private String redirectUrl;
+    @SensitiveSecret
+    private String token;
+
+    @Secret
+    private String redirectUrl;
+
+    @Secret
+    private String clientId;
+
+    @Secret
+    private String certificateId;
+
+    @Secret
+    private String clientSigningCertificateSerialNumber;
 
     public String getToken() {
         Preconditions.checkNotNull(
@@ -27,4 +39,26 @@ public class CreditAgricoleConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect url"));
         return redirectUrl;
     }
+
+    public String getClientId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client id"));
+        return clientId;
+    }
+
+    public String getCertificateId() {
+        Preconditions.checkNotNull(
+            Strings.emptyToNull(certificateId),
+            String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate id"));
+        return certificateId;
+    }
+
+    public String getClientSigningCertificateSerialNumber() {
+        Preconditions.checkNotNull(
+            Strings.emptyToNull(clientSigningCertificateSerialNumber),
+            String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate serial"));
+        return clientSigningCertificateSerialNumber;
+    }
+
 }

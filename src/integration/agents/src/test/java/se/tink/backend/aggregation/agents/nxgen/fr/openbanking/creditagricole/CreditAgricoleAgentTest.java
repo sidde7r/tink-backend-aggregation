@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
+//@Ignore
 public class CreditAgricoleAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -13,7 +12,7 @@ public class CreditAgricoleAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("fr", "fr-creditagricole-oauth2")
+                new AgentIntegrationTest.Builder("fr", "fr-creditagricole-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
