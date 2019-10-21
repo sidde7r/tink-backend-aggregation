@@ -70,12 +70,10 @@ public class VolksbankAgent
                 new ConsentFetcher(
                         volksbankApiClient, persistentStorage, isSandbox, redirectUrl, clientId);
 
-        final String certificateId = volksbankConfiguration.getCertificateId();
-
         final EidasProxyConfiguration eidasProxyConfiguration =
                 agentsServiceConfiguration.getEidasProxy();
 
-        client.setEidasProxy(eidasProxyConfiguration, certificateId);
+        client.setEidasProxy(eidasProxyConfiguration);
 
         // Prevent read timeouts
         client.setTimeout(HttpClient.READ_TIMEOUT_MILLISECONDS);
