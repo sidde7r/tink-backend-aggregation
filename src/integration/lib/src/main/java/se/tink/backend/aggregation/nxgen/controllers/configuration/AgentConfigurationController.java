@@ -331,6 +331,12 @@ public final class AgentConfigurationController {
                             value ->
                                     extractSensitiveValuesRec(
                                             value, extractedSensitiveValues, recursionLevel + 1));
+        } else if (clientConfigurationAsObject instanceof List) {
+            List<Object> clientConfigurationAsList = (List<Object>) clientConfigurationAsObject;
+            clientConfigurationAsList.forEach(
+                    value ->
+                            extractSensitiveValuesRec(
+                                    value, extractedSensitiveValues, recursionLevel + 1));
         } else {
             Optional.ofNullable(clientConfigurationAsObject)
                     .ifPresent(
