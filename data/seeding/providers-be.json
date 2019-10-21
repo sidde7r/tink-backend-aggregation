@@ -547,6 +547,24 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "name": "be-ing-ob",
+            "displayName": "ING",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "THIRD_PARTY_APP",
+            "multiFactor": false,
+            "className": "nxgen.be.openbanking.ing.IngAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink",
+            "financialInstitutionId": "0df5af8e4bf84df686a9b4a07fc205bf",
+            "financialInstitutionName": "Ing"
+        },
+        {
             "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS"
