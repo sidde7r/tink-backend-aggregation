@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator;
 
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.banks.crosskey.utils.CrossKeyUtils;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -51,6 +52,9 @@ public class CrossKeyKeyCardAuthenticator implements KeyCardAuthenticator {
 
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
+
+        credentials.setSensitivePayload(Field.Key.OTP_INPUT, code);
+
         ConfirmTanCodeResponse confirmation =
                 apiClient.confirmTanCode(new ConfirmTanCodeRequest().setTan(code));
 
@@ -59,10 +63,11 @@ public class CrossKeyKeyCardAuthenticator implements KeyCardAuthenticator {
                         new UnexpectedFailureException(
                                 confirmation, "Failure on confirming tan code"));
 
+        final String userId = credentials.getUserId();
+        credentials.setSensitivePayload(Field.Key.USERNAME, userId);
         AddDeviceResponse addDevice =
                 apiClient.addDevice(
-                        new AddDeviceRequest()
-                                .setUdId(CrossKeyUtils.generateUdIdFor(credentials.getUserId())));
+                        new AddDeviceRequest().setUdId(CrossKeyUtils.generateUdIdFor(userId)));
 
         addDevice.validate(
                 () -> new UnexpectedFailureException(addDevice, "Failure on adding of new device"));
