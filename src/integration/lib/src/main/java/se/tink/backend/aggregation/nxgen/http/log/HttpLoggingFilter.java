@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.utils.MapValueMasker;
 import se.tink.backend.aggregation.utils.MapValueMaskerImpl;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -39,7 +40,7 @@ public class HttpLoggingFilter extends ClientFilter {
     private final MapValueMasker headerMasker;
     private static final String LOG_FORMAT = "HTTP(%s) %s@{%d:%d}=%s";
     private final LogMasker logMasker;
-    private final boolean shouldLog;
+    private final LoggingMode loggingMode;
     private long requestCount;
     private static final LogTag GENERIC_HTTP_LOGGER = LogTag.from("http_logging_filter");
 
@@ -86,26 +87,26 @@ public class HttpLoggingFilter extends ClientFilter {
             String logTag,
             LogMasker logMasker,
             Class<? extends HttpLoggableExecutor> agentClass,
-            boolean shouldLog) {
+            LoggingMode loggingMode) {
         this.log = log;
         this.logTag = logTag;
         this.logMasker = logMasker;
         this.headerMasker = new MapValueMaskerImpl(Optional.of(NON_SENSITIVE_HEADER_FIELDS));
         this.agentClass = agentClass;
         this.requestCount = 0;
-        this.shouldLog = shouldLog;
+        this.loggingMode = loggingMode;
     }
 
     @Override
     public ClientResponse handle(ClientRequest clientRequest) throws ClientHandlerException {
         requestCount++;
 
-        if (shouldLog) {
+        if (LoggingMode.LOGGING_MASKER_COVERS_SECRETS.equals(loggingMode)) {
             log(requestCount, createRequestLogEntry(clientRequest));
         }
 
         ClientResponse clientResponse = getNext().handle(clientRequest);
-        if (shouldLog) {
+        if (LoggingMode.LOGGING_MASKER_COVERS_SECRETS.equals(loggingMode)) {
             log(requestCount, createResponseLogEntry(clientResponse));
         }
 

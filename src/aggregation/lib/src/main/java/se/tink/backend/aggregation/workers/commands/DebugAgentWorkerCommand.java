@@ -14,6 +14,7 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -57,11 +58,9 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     @Override
     public void postProcess() {
 
-        // Disable all logging until we have looked over how sensitive information is masked in
-        // logs.
-        final boolean HARD_DISABLE = true;
-
-        if (HARD_DISABLE) {
+        // Disable logging depending on this.
+        if (LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS.equals(
+                LogMasker.shouldLog(context.getRequest().getProvider()))) {
             return;
         }
 
