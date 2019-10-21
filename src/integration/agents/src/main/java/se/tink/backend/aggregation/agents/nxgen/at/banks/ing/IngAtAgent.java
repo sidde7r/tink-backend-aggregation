@@ -54,7 +54,7 @@ public class IngAtAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new IngAtPasswordAuthenticator(apiClient, ingAtSessionStorage));
+                new IngAtPasswordAuthenticator(credentials, apiClient, ingAtSessionStorage));
     }
 
     @Override

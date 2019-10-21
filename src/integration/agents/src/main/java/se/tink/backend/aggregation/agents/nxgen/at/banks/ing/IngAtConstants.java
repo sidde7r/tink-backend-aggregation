@@ -33,6 +33,10 @@ public class IngAtConstants {
                 "Mozilla/5.0 (X11; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0";
     }
 
+    public static final class SensitivePayload {
+        public static final String loginResponse = "loginResponse";
+    }
+
     public enum Storage {
         ACCOUNT_INDEX,
         CURRENT_URL,
