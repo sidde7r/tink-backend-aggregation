@@ -5,12 +5,12 @@ import java.util.List;
 public class ApiResponse<T> {
 
     private final List<T> businessData;
-    private final String controlData;
+    private final String code;
     private final String message;
 
-    public ApiResponse(List<T> businessData, String controlData, String message) {
+    public ApiResponse(List<T> businessData, String code, String message) {
         this.businessData = businessData;
-        this.controlData = controlData;
+        this.code = code;
         this.message = message;
     }
 
@@ -18,8 +18,8 @@ public class ApiResponse<T> {
         return businessData;
     }
 
-    public String getControlData() {
-        return controlData;
+    public String getCode() {
+        return code;
     }
 
     public String getMessage() {

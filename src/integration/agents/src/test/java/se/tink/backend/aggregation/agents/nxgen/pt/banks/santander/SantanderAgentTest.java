@@ -34,10 +34,9 @@ public class SantanderAgentTest {
                                 Field.Key.USERNAME, manager.get(SantanderAgentTest.Arg.USERNAME))
                         .addCredentialField(
                                 Field.Key.PASSWORD, manager.get(SantanderAgentTest.Arg.PASSWORD))
-                        .loadCredentialsBefore(false)
+                        .expectLoggedIn(true)
                         .saveCredentialsAfter(false)
-                        .expectLoggedIn(false)
-                        .doLogout(true);
+                        .loadCredentialsBefore(false);
     }
 
     @Test

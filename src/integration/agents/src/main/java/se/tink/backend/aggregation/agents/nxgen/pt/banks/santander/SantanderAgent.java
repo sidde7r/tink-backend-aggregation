@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderCheckingAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderCheckingTransactionFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SantanderAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
@@ -51,7 +51,7 @@ public class SantanderAgent extends NextGenerationAgent implements RefreshChecki
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        throw new NotImplementedException("session handler not implemented ");
+        return new SantanderSessionHandler(apiClient, sessionStorage);
     }
 
     @Override
