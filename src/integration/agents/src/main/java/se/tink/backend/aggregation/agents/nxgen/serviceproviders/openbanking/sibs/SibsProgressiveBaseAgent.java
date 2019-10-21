@@ -73,6 +73,8 @@ public abstract class SibsProgressiveBaseAgent
                         new EidasIdentity(
                                 context.getClusterId(), context.getAppId(), this.getAgentClass())));
         applyFilters(client);
+        client.setEidasProxy(
+                configuration.getEidasProxy(), getClientConfiguration().getCertificateId());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         authenticator = constructProgressiveAuthenticator();
     }
