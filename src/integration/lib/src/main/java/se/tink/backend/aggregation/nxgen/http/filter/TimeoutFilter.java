@@ -1,0 +1,39 @@
+package se.tink.backend.aggregation.nxgen.http.filter;
+
+import com.google.common.collect.ImmutableList;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+
+/**
+ * Utility filter to throw a Tink {@link BankServiceError} when we don't get a response from the
+ * bank's API.
+ */
+public class TimeoutFilter extends Filter {
+
+    private static final ImmutableList<String> BANK_SIDE_FAILURES =
+            ImmutableList.of(
+                    "connection reset", "connect timed out", "read timed out", "failed to respond");
+
+    @Override
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
+
+        try {
+            return nextFilter(httpRequest);
+        } catch (HttpClientException e) {
+
+            BANK_SIDE_FAILURES.stream()
+                    .filter((failure -> failure.contains(e.getMessage().toLowerCase())))
+                    .findAny()
+                    .ifPresent(
+                            f -> {
+                                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
+                            });
+
+            throw e;
+        }
+    }
+}
