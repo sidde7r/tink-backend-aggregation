@@ -23,7 +23,9 @@ public class NationwideAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-nationwide-oauth2")
-                .loadCredentialsBefore(true)
+                .setFinancialInstitutionId("nationwide")
+                .setAppId("tink")
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .build()
