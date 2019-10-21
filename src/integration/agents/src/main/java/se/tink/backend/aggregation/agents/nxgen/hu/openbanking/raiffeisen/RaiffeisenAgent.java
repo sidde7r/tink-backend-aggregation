@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.CredentialKeys;
-import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.authenticator.RaiffeisenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.configuration.RaiffeisenConfiguration;
@@ -44,16 +43,12 @@ public final class RaiffeisenAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         final RaiffeisenConfiguration raiffeisenConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(
                                 Market.INTEGRATION_NAME,
                                 request.getProvider().getPayload(),
-                                RaiffeisenConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+                                RaiffeisenConfiguration.class);
+
         apiClient.setConfiguration(raiffeisenConfiguration);
     }
 

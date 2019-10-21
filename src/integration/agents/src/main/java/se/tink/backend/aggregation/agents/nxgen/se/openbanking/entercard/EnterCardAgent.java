@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.CredentialKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.authenticator.EnterCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.configuration.EnterCardConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.fetcher.creditcardaccount.CreditCardAccountFetcher;
@@ -62,13 +61,11 @@ public final class EnterCardAgent extends NextGenerationAgent
     }
 
     protected EnterCardConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
+        return getAgentConfigurationController()
+                .getAgentConfigurationFromK8s(
                         EnterCardConstants.INTEGRATION_NAME,
                         clientName,
-                        EnterCardConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                        EnterCardConfiguration.class);
     }
 
     @Override

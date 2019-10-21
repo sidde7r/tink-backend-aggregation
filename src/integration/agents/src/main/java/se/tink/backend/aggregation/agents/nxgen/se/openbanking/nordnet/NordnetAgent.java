@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authenticator.NordnetAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.configuration.NordnetConfiguration;
@@ -40,16 +39,11 @@ public final class NordnetAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         final NordnetConfiguration nordnetConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(
                                 Market.INTEGRATION_NAME,
                                 request.getProvider().getPayload(),
-                                NordnetConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+                                NordnetConfiguration.class);
 
         apiClient.setConfiguration(nordnetConfiguration);
     }

@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.authenticator.VolksbankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.authenticator.VolksbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.configuration.VolksbankConfiguration;
@@ -48,13 +47,11 @@ public final class VolksbankAgent extends NextGenerationAgent
     }
 
     protected VolksbankConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
+        return getAgentConfigurationController()
+                .getAgentConfigurationFromK8s(
                         VolksbankConstants.INTEGRATION_NAME,
                         clientName,
-                        VolksbankConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                        VolksbankConfiguration.class);
     }
 
     @Override
