@@ -1,25 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class UkOpenBankingESSConfiguration implements ClientConfiguration {
-    private String organizationId;
-    private String clientId;
-    private String signingKey;
-    private String signingKeyId;
-    private String softwareStatementAssertion;
-    private String redirectUrl;
-    private String softwareId;
-    private String transportKey;
-    private String transportKeyId;
-    private String rootCAData;
-    private String clientSecret;
-    private String transportKeyPassword;
-    private String signingKeyPassword;
-    private String rootCAPassword;
+
+    @JsonProperty @Secret private String organizationId;
+    @JsonProperty @SensitiveSecret private String clientId;
+    @JsonProperty @Secret private String signingKey;
+    @JsonProperty @Secret private String signingKeyId;
+    @JsonProperty @Secret private String softwareStatementAssertion;
+    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @Secret private String softwareId;
+    @JsonProperty @Secret private String transportKey;
+    @JsonProperty @Secret private String transportKeyId;
+    @JsonProperty @Secret private String rootCAData;
+    @JsonProperty @SensitiveSecret private String clientSecret;
+    @JsonProperty @SensitiveSecret private String transportKeyPassword;
+    @JsonProperty @SensitiveSecret private String signingKeyPassword;
+    @JsonProperty @SensitiveSecret private String rootCAPassword;
 
     public String getOrganizationId() {
         return organizationId;
