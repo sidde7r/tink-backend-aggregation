@@ -57,7 +57,7 @@ public class FetchPaymentResponse {
         return new PaymentResponse(tinkPayment);
     }
 
-    public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+    private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
         return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }

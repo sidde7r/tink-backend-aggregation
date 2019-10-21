@@ -14,7 +14,7 @@ public class CreatePaymentRequest {
     private AmountEntity instructedAmount;
     private String creditorName;
 
-    public CreatePaymentRequest(Builder builder) {
+    private CreatePaymentRequest(Builder builder) {
         this.debtorAccount = builder.debtorAccount;
         this.creditorAccount = builder.creditorAccount;
         this.instructedAmount = builder.instructedAmount;

@@ -4,9 +4,6 @@ import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -15,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class UnicreditPaymentController extends PaymentController {
@@ -36,13 +33,6 @@ public class UnicreditPaymentController extends PaymentController {
         this.state = OAuthUtils.generateNonce();
     }
 
-    public ThirdPartyAppResponse<String> collect() {
-        this.supplementalInformationHelper.waitForSupplementalInformation(
-                this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
-
-        return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
-    }
-
     private void openThirdPartyApp(URL authorizeUrl) {
         ThirdPartyAppAuthenticationPayload payload =
                 ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
@@ -58,7 +48,9 @@ public class UnicreditPaymentController extends PaymentController {
         String id = paymentResponse.getPayment().getUniqueId();
         URL authorizeUrl = getAuthorizeUrlFromStorage(id);
         openThirdPartyApp(authorizeUrl);
-        collect();
+
+        this.supplementalInformationHelper.waitForSupplementalInformation(
+                this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         return paymentResponse;
     }
