@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entit
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
 
@@ -221,16 +222,24 @@ public class AccountEntity {
     }
 
     public TransactionalAccount toTinkAccount(LoginResponseEntity loginResponse) {
-        return TransactionalAccount.builder(
-                        getTinkAccountType(),
-                        ibanNumber,
-                        Amount.inEUR(IngHelper.parseAmountStringToDouble(balance)))
-                .setAccountNumber(ibanNumber)
-                .setName(type)
-                .setBankIdentifier(bbanNumber)
-                .addIdentifier(new SepaEurIdentifier(ibanNumber))
-                .setHolderName(getHolderName(loginResponse))
-                .build();
+        AccountTypes accountType = getTinkAccountType();
+
+        TransactionalAccount.Builder builder =
+                TransactionalAccount.builder(
+                                accountType,
+                                ibanNumber,
+                                Amount.inEUR(IngHelper.parseAmountStringToDouble(balance)))
+                        .setAccountNumber(ibanNumber)
+                        .setName(type)
+                        .setBankIdentifier(bbanNumber)
+                        .addIdentifier(new SepaEurIdentifier(ibanNumber))
+                        .setHolderName(getHolderName(loginResponse));
+
+        if (accountType == AccountTypes.CHECKING) {
+            builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        }
+
+        return builder.build();
     }
 
     private HolderName getHolderName(final LoginResponseEntity loginResponse) {
