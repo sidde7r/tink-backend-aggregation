@@ -46,7 +46,7 @@ public class ErsteBankPasswordAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new ErsteBankPasswordAuthenticator(ersteBankApiClient));
+                new ErsteBankPasswordAuthenticator(credentials, ersteBankApiClient));
     }
 
     @Override

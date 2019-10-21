@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants.PAYLOAD;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.entity.TokenEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.sidentity.authenticator.rpc.PollResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -32,6 +33,7 @@ public class ErstebankSidentityAuthenticator implements Authenticator {
             throws AuthenticationException, AuthorizationException {
         String username = credentials.getUsername();
         String verificationCode = ersteBankApiClient.getSidentityVerificationCode(username);
+        credentials.setSensitivePayload(PAYLOAD.VERIFICATION_CODE, verificationCode);
         supplementalInformationHelper.waitAndShowLoginDescription(verificationCode);
         poll();
         TokenEntity token = ersteBankApiClient.getSidentityToken();

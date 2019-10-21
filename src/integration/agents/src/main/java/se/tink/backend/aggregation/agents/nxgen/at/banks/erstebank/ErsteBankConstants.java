@@ -115,4 +115,9 @@ public class ErsteBankConstants {
         public static final String POLL_WAITING = "PENDING";
         public static final String POLL_DONE = "DONE";
     }
+
+    public static class PAYLOAD {
+        public static final String VERIFICATION_CODE = "VERIFICATION_CODE";
+        public static final String RSA = "RSA";
+    }
 }
