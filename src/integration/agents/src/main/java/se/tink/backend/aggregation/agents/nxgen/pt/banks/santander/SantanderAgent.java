@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SantanderAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
@@ -50,7 +51,7 @@ public class SantanderAgent extends NextGenerationAgent implements RefreshChecki
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail(); // todo
+        throw new NotImplementedException("session handler not implemented ");
     }
 
     @Override

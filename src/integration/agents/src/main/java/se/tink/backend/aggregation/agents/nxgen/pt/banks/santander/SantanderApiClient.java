@@ -82,7 +82,7 @@ public class SantanderApiClient {
         return parser.parseResponse(rawResponse);
     }
 
-    private String escapeString(String argValue) { // todo check if thats safe escape
+    private String escapeString(String argValue) {
         return argValue.replace("|", "||");
     }
 }
