@@ -8,4 +8,8 @@ public class TransactionAccountEntity {
     private String iban;
     private String bban;
     private String bin;
+
+    public String getIban() {
+        return iban;
+    }
 }

@@ -41,6 +41,17 @@ public class TransactionEntity {
 
     private Transaction toTinkTransaction(boolean isPending) {
 
+        String description =
+                Stream.of(remittanceInformationUnstructured, creditorName, debtorName)
+                        .filter(Objects::nonNull)
+                        .findFirst()
+                        .orElse(
+                                Stream.of(creditorAccount, debtorAccount)
+                                        .filter(Objects::nonNull)
+                                        .findFirst()
+                                        .map(TransactionAccountEntity::getIban)
+                                        .orElse(""));
+
         Date date =
                 Stream.of(bookingDate, executionDateTime, valueDate)
                         .filter(Objects::nonNull)
@@ -49,7 +60,7 @@ public class TransactionEntity {
 
         return Transaction.builder()
                 .setPending(isPending)
-                .setDescription(remittanceInformationUnstructured)
+                .setDescription(description)
                 .setAmount(transactionAmount.toAmount())
                 .setDate(date)
                 .build();
