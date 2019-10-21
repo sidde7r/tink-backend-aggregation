@@ -30,9 +30,10 @@ public class PortfolioResultEntity {
 
     public double totalValue() {
         return investmentResultEntities.stream()
-                .map(InvestmentResultEntity::getTotalValue)
-                .collect(Collectors.summarizingDouble(Double::doubleValue))
-                .getSum();
+                        .map(InvestmentResultEntity::getTotalValue)
+                        .collect(Collectors.summarizingDouble(Double::doubleValue))
+                        .getSum()
+                + availableFunds();
     }
 
     public List<InvestmentResultEntity> getInvestmentResultEntities() {
