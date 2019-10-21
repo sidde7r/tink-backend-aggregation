@@ -325,7 +325,7 @@ public class AccountDetailsResponse {
         LoanModuleBuildStep builder =
                 LoanModule.builder()
                         .withType(MAPPERS.getLoanType(accountType).orElse(LoanDetails.Type.OTHER))
-                        .withBalance(getBalance())
+                        .withBalance(getBalance().negate())
                         .withInterestRate(getInterestRate());
         if (!Objects.isNull(remainingLoan)) {
             builder.setAmortized(new ExactCurrencyAmount(remainingLoan, Currencies.SEK));
