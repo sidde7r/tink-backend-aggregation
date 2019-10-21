@@ -38,11 +38,6 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
 
         agentWorkerCommandContext.setAgentConfigurationController(agentConfigurationController);
 
-        if (!agentConfigurationController.init()) {
-            log.warn("AgentConfigurationController could not be initialized.");
-            return AgentWorkerCommandResult.ABORT;
-        }
-
         return AgentWorkerCommandResult.CONTINUE;
     }
 

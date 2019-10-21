@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.libraries.account.AccountIdentifier;
@@ -82,6 +83,8 @@ public final class NewAgentTestContext extends AgentContext {
         this.setClusterId(MoreObjects.firstNonNull(clusterId, TEST_CLUSTERID));
         this.setAppId(MoreObjects.firstNonNull(appId, TEST_APPID));
         agentTestServerClient = AgentTestServerClient.getInstance();
+        LogMasker logMasker = new LogMasker(new Credentials());
+        setLogMasker(logMasker);
 
         setTestContext(true);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());

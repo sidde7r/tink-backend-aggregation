@@ -116,13 +116,15 @@ public final class AgentConfigurationController {
                             + getSecretsServiceParamsString()
                             + ", will not try to read agent configuration from SS.");
         }
+
+        initSecrets();
     }
 
     public boolean isOpenBankingAgent() {
         return isOpenBankingAgent;
     }
 
-    public boolean init() {
+    private void initSecrets() {
         if (tppSecretsServiceEnabled && isOpenBankingAgent && !isTestProvider) {
             try {
                 Optional<Map<String, String>> allSecretsOpt =
@@ -133,37 +135,26 @@ public final class AgentConfigurationController {
                 if (!allSecretsOpt.isPresent()) {
                     log.warn(
                             "Could not fetch secrets due to null or empty appId/financialInstitutionId");
-                    return true;
                 }
 
                 allSecrets = allSecretsOpt.get();
-            } catch (RuntimeException e) {
-                if (e instanceof StatusRuntimeException) {
-                    StatusRuntimeException statusRuntimeException = (StatusRuntimeException) e;
-                    Preconditions.checkNotNull(
-                            statusRuntimeException.getStatus(),
-                            "Cannot be null Status for StatusRuntimeException: "
-                                    + statusRuntimeException);
-                    if (statusRuntimeException.getStatus().getCode()
-                            == Status.NOT_FOUND.getCode()) {
-                        log.info("Could not find secrets" + getSecretsServiceParamsString());
-                        return true;
-                    } else {
-                        log.error(
-                                "StatusRuntimeException when trying to retrieve secrets"
-                                        + getSecretsServiceParamsString()
-                                        + "with Status: "
-                                        + statusRuntimeException.getStatus(),
-                                statusRuntimeException);
-                    }
+            } catch (StatusRuntimeException e) {
+                Preconditions.checkNotNull(
+                        e.getStatus(), "Status cannot be null for StatusRuntimeException: " + e);
+                if (e.getStatus().getCode() == Status.NOT_FOUND.getCode()) {
+                    log.info("Could not find secrets" + getSecretsServiceParamsString());
                 } else {
-                    log.error("Error when retrieving secrets from Secrets Service.", e);
+                    log.error(
+                            "StatusRuntimeException when trying to retrieve secrets"
+                                    + getSecretsServiceParamsString()
+                                    + "with Status: "
+                                    + e.getStatus(),
+                            e);
+                    throw e;
                 }
-                return false;
             }
-            return initRedirectUrl();
+            initRedirectUrl();
         }
-        return true;
     }
 
     public <T extends ClientConfiguration> T getAgentConfiguration(
@@ -222,21 +213,18 @@ public final class AgentConfigurationController {
                 + " ";
     }
 
-    private boolean initRedirectUrl() {
-        if (allSecrets == null) {
-            log.error(
-                    "allSecrets is null, make sure you fetched the secrets before you called initRedirectUrl.");
-            return false;
-        }
+    private void initRedirectUrl() {
+        Preconditions.checkNotNull(
+                allSecrets,
+                "allSecrets is null, make sure you fetched the secrets before you called initRedirectUrl.");
 
         final String REDIRECT_URLS_KEY = "redirectUrls";
         final String CHOSEN_REDIRECT_URL_KEY = "redirectUrl";
 
         if (!allSecrets.containsKey(REDIRECT_URLS_KEY)) {
             // We end up here when the secrets do not contain redirectUrls key.
-            log.error("Could not find redirectUrls in secrets " + getSecretsServiceParamsString());
-
-            return false;
+            throw new IllegalStateException(
+                    "Could not find redirectUrls in secrets " + getSecretsServiceParamsString());
         }
 
         Type listType = new TypeToken<List<String>>() {}.getType();
@@ -245,19 +233,18 @@ public final class AgentConfigurationController {
         try {
             redirectUrls = new Gson().fromJson(allSecrets.get(REDIRECT_URLS_KEY), listType);
         } catch (JsonSyntaxException e) {
-            log.error(
+            throw new IllegalStateException(
                     "Could not parse redirectUrls secret : "
                             + allSecrets.get(REDIRECT_URLS_KEY)
                             + getSecretsServiceParamsString(),
                     e);
-            return false;
         }
 
         if (redirectUrls.isEmpty()) {
             // We end up here when the secrets do contain redirectUrls key but it is an empty list.
             log.info("Empty redirectUrls list in secrets" + getSecretsServiceParamsString());
 
-            return true;
+            return;
         }
 
         if (Strings.isNullOrEmpty(redirectUrl)) {
@@ -267,12 +254,11 @@ public final class AgentConfigurationController {
         } else if (!redirectUrls.contains(redirectUrl)) {
             // The redirectUrl provided in the CredentialsRequest is not among those
             // registered.
-            log.error(
+            throw new IllegalArgumentException(
                     "Requested redirectUrl : "
                             + redirectUrl
                             + " is not registered"
                             + getSecretsServiceParamsString());
-            return false;
         } else {
             // The redirectUrl provided in the CredentialsRequest is among those registered.
             allSecrets.put(CHOSEN_REDIRECT_URL_KEY, redirectUrl);
@@ -283,8 +269,6 @@ public final class AgentConfigurationController {
         allSecrets.remove(REDIRECT_URLS_KEY);
 
         notifySecretValues(Sets.newHashSet(allSecrets.values()));
-
-        return true;
     }
 
     private <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
