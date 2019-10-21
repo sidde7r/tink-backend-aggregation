@@ -145,19 +145,19 @@ GRPC_JAVA_NANO_VERSION = "1.21.1"
 
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
-    sha256 = "9b2091268704422f9648827a0b729c4287abcfe81ee3a67bb31978e2075c8a04",
+    sha256 = "b3823d7bca0c3513d48ef43de63f6a48410040f5f7b16d5eceea0adb98d07f42",
     urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-linux-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
 
 http_file(
     name = "protoc_gen_grpc_java_macosx",
-    sha256 = "fd01cffceedf6f3b8ebc3679ad22efeeb3e3b8c3b31495f698137297a0bc5fa6",
+    sha256 = "e5e514c76264f3cd8f26c19628a6fc5db2c355b1d285d252aa9b91c136b0f025",
     urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-osx-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
 
 http_file(
     name = "protoc_gen_grpc_java_windows_x86_64",
-    sha256 = "9e2534ab1df91e6d52b0811dae406fbe96371c0b552a8f4c618688d83e7bee0b",
+    sha256 = "8e8b2b3a0b5b083cf5fc0268da7dd6b305762e591ec4a468e5e688f77c32e63f",
     urls = ["https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-windows-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
 
@@ -2026,67 +2026,67 @@ maven_jar(
 maven_jar(
     name = "io_grpc_grpc_protobuf",
     artifact = "io.grpc:grpc-protobuf:%s" % GRPC_JAVA_VERSION,
-    sha1 = "425bc5c92125afb951e7418b269d9600014fb69e",
+    sha1 = "01428515d3aca8964dfdc4d4ba912d0fda0f41f2",
 )
 
 maven_jar(
     name = "io_grpc_grpc_auth",
     artifact = "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
-    sha1 = "84d6760cc890d2980ff64ee225a3e24d084c7ba7",
+    sha1 = "19d71f19653d2cc786498819557431312d0dbf2d",
 )
 
 maven_jar(
     name = "io_grpc_grpc_context",
     artifact = "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
-    sha1 = "1a074f9cf6f367b99c25e70dc68589f142f82d11",
+    sha1 = "94aedfbfeebc5a32bdfe6984289bb18abf93cf20",
 )
 
 maven_jar(
     name = "io_grpc_grpc_protobuf_lite",
     artifact = "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
-    sha1 = "db8ab67d6142aa6a80ac1c61c8843e5833f8bb99",
+    sha1 = "c030daf2f8c4185ee003e206c38e28987fe2684d",
 )
 
 maven_jar(
     name = "io_grpc_grpc_protobuf_nano",
     artifact = "io.grpc:grpc-protobuf-nano:%s" % GRPC_JAVA_NANO_VERSION,
-    sha1 = "be9ff6c1f004fde5b67ce164ba81f80b0ef64e87",
+    sha1 = "9fce4ff1563fd0176aaefb0a083b9d66a0346bd7",
 )
 
 maven_jar(
     name = "io_grpc_grpc_stub",
     artifact = "io.grpc:grpc-stub:%s" % GRPC_JAVA_VERSION,
-    sha1 = "910550293aab760b706827c5f71c80551e5490f3",
+    sha1 = "2e9e6890a7e8402a9b715ce1fad0d1827e733e49",
 )
 
 maven_jar(
     name = "io_grpc_grpc_core",
     artifact = "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
-    sha1 = "f8b6f872b7f069aaff1c3380b2ba7f91f06e4da1",
+    sha1 = "82d0c88d65acf92fb3d66a0ee800b5da85258c39",
 )
 
 maven_jar(
     name = "io_grpc_grpc_api",
     artifact = "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
-    sha1 = "77311e5735c4097c5cce57f0f4d0847c51db63bb",
+    sha1 = "903f250bc1d01299480e526a25cd974088699a48",
 )
 
 maven_jar(
     name = "io_grpc_grpc_netty",
     artifact = "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
-    sha1 = "6447e7b4aa13b2de695da02ab840e25413e48908",
+    sha1 = "a166b3e2abb4b47810434ee6883435b6d789b2a6",
 )
 
 maven_jar(
     name = "io_grpc_grpc_testing",
     artifact = "io.grpc:grpc-testing:%s" % GRPC_JAVA_VERSION,
-    sha1 = "7b939ca9a56265589c1c9a72cef3c55fb92e990e",
+    sha1 = "9397894991efc626d8b95c74691285a4468f55af",
 )
 
 maven_jar(
     name = "io_grpc_grpc_services",
     artifact = "io.grpc:grpc-services:%s" % GRPC_JAVA_VERSION,
-    sha1 = "92a305d6cc80761e00c7fb5bb3344cf5cb0c1839",
+    sha1 = "fc18ad19c48b58df090ad9f07646bc68780c3b8d",
 )
 
 maven_jar(
