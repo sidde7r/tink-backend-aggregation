@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +25,7 @@ public class SantanderCheckingTransactionFetcher
         implements TransactionDatePaginator<TransactionalAccount> {
 
     private static final Pattern TRANSACTION_AMOUNT_PATTERN = Pattern.compile("^-?\\d+,?\\d*");
-    private static final int PAGE_SIZE = 100;
+    private static final int PAGE_SIZE = 1000;
 
     private final SantanderApiClient apiClient;
 
@@ -36,28 +37,46 @@ public class SantanderCheckingTransactionFetcher
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
 
+        LocalDate requestFromDate = convert(fromDate);
+        LocalDate requestToDate = convert(toDate);
+        boolean canFetchMore = true;
+
+        if (requestFromDate.getYear() < 2019) { // API returns errors for transactions before 2019
+            requestFromDate = LocalDate.of(2019, 1, 1);
+            canFetchMore = false;
+        }
+
+        List<Transaction> transactions = fetchAllForPeriod(account, requestFromDate, requestToDate);
+        return PaginatorResponseImpl.create(transactions, canFetchMore);
+    }
+
+    private List<Transaction> fetchAllForPeriod(
+            TransactionalAccount account, LocalDate fromDate, LocalDate toDate) {
+
         List<Transaction> allTransactions = new ArrayList<>();
-        String currencyCode = account.getFromTemporaryStorage(STORAGE.CURRENCY_CODE);
-        String branchCode = account.getFromTemporaryStorage(STORAGE.BRANCH_CODE);
+
         List<Transaction> transactionPage;
         int currentPage = 1;
         do {
-
             ApiResponse<Map<String, String>> apiResponse =
                     apiClient.fetchTransactions(
                             account.getAccountNumber(),
-                            branchCode,
+                            account.getFromTemporaryStorage(STORAGE.BRANCH_CODE),
                             fromDate,
                             toDate,
                             currentPage,
                             PAGE_SIZE);
 
-            transactionPage = deserializeTransactions(apiResponse.getBusinessData(), currencyCode);
+            transactionPage =
+                    deserializeTransactions(
+                            apiResponse.getBusinessData(),
+                            account.getFromTemporaryStorage(STORAGE.CURRENCY_CODE));
+
             allTransactions.addAll(transactionPage);
             currentPage++;
         } while (!transactionPage.isEmpty());
 
-        return PaginatorResponseImpl.create(allTransactions);
+        return allTransactions;
     }
 
     private List<Transaction> deserializeTransactions(
@@ -90,5 +109,9 @@ public class SantanderCheckingTransactionFetcher
         Matcher matcher = TRANSACTION_AMOUNT_PATTERN.matcher(amountString);
         matcher.find();
         return matcher.group().replace(",", ".");
+    }
+
+    private LocalDate convert(Date date) {
+        return date.toInstant().atZone(ZoneId.of(SantanderConstants.TIMEZONE_ID)).toLocalDate();
     }
 }

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.RESPONSE_CODES;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.STORAGE;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.ApiResponse;
@@ -59,13 +59,13 @@ public class SantanderApiClient {
     public ApiResponse fetchTransactions(
             String accountNumber,
             String branchCode,
-            Date dateFrom,
-            Date dateTo,
+            LocalDate dateFrom,
+            LocalDate dateTo,
             int pageNumber,
             int pageSize) {
 
-        SimpleDateFormat requestDateFormat = new SimpleDateFormat(SantanderConstants.DATE_FORMAT);
-
+        DateTimeFormatter requestDateFormat =
+                DateTimeFormatter.ofPattern(SantanderConstants.DATE_FORMAT);
         String rawResponse =
                 tinkHttpClient
                         .request(SantanderConstants.API_URL)
