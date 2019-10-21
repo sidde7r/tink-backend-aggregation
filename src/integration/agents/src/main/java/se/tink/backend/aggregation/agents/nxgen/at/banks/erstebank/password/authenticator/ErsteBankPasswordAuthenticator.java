@@ -36,7 +36,6 @@ public class ErsteBankPasswordAuthenticator implements PasswordAuthenticator {
         if (containsToken(response)) {
             TokenEntity tokenEntity = ErsteBankCryptoUtil.getTokenFromResponse(response);
             ersteBankApiClient.saveToken(tokenEntity);
-            return;
         } else {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
