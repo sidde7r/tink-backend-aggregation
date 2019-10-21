@@ -2,15 +2,12 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
@@ -18,7 +15,6 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -26,8 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
@@ -40,13 +34,11 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.uuid.UUIDUtils;
 
 public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerCommand
         implements MetricsCommand {
     private static final AggregationLogger log =
             new AggregationLogger(TransferAgentWorkerCommand.class);
-    private static final String LOG_TAG_TRANSFER = "EXECUTE_TRANSFER";
 
     private final TransferRequest transferRequest;
     private final AgentWorkerCommandMetricState metrics;
@@ -58,24 +50,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         super(context, transferRequest.getCredentials(), transferRequest.getSignableOperation());
         this.transferRequest = transferRequest;
         this.metrics = metrics.init(this);
-    }
-
-    private static ClientFilterFactory createHttpLoggingFilterFactory(
-            String logTag,
-            Class<? extends HttpLoggableExecutor> agentClass,
-            Credentials credentials,
-            Collection<String> sensitiveValuesToMask,
-            boolean shouldLog) {
-        return new HttpLoggingFilterFactory(
-                log,
-                logTag,
-                new LogMasker(credentials, sensitiveValuesToMask),
-                agentClass,
-                shouldLog);
-    }
-
-    private static String getLogTagTransfer(Transfer transfer) {
-        return LOG_TAG_TRANSFER + ":" + UUIDUtils.toTinkUUID(transfer.getId());
     }
 
     @Override
@@ -103,21 +77,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                                         transferRequest.isUpdate()
                                                 ? MetricName.UPDATE_TRANSFER
                                                 : MetricName.EXECUTE_TRANSFER));
-
-        HttpLoggableExecutor httpLoggableExecutor = (HttpLoggableExecutor) agent;
-        ClientFilterFactory loggingFilterFactory =
-                createHttpLoggingFilterFactory(
-                        getLogTagTransfer(transfer),
-                        httpLoggableExecutor.getClass(),
-                        credentials,
-                        context.getAgentConfigurationController().getSecretValues(),
-                        transferRequest.getProvider().isOpenBanking());
-
         Optional<String> operationStatusMessage = Optional.empty();
         try {
-            // TODO: DISABLED UNTIL SECRET MASKING HAS BEEN FIXED
-            // We want to explicitly log everything that has to do with transfers.
-            //            httpLoggableExecutor.attachHttpFilters(loggingFilterFactory);
             log.info(transfer, getTransferExecuteLogInfo(transfer, transferRequest.isUpdate()));
 
             if (agent instanceof TransferExecutor) {
@@ -232,8 +193,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             return AgentWorkerCommandResult.ABORT;
         } finally {
-            // Disable the logging filter when we're done with the transfer execute command.
-            loggingFilterFactory.removeClientFilters();
             resetCredentialsStatus();
         }
     }

@@ -24,6 +24,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 
 @Ignore
 public class HttpLoggingFilterTest {
@@ -46,7 +47,7 @@ public class HttpLoggingFilterTest {
                         createLogTag(),
                         createMaskStub(),
                         createLoggedClass(),
-                        true);
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the
@@ -101,7 +102,7 @@ public class HttpLoggingFilterTest {
                         createLogTag(),
                         createMaskStub(),
                         createLoggedClass(),
-                        true);
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the
@@ -130,7 +131,7 @@ public class HttpLoggingFilterTest {
                         createLogTag(),
                         createMaskStub(),
                         createLoggedClass(),
-                        true);
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the
@@ -158,7 +159,7 @@ public class HttpLoggingFilterTest {
                         createLogTag(),
                         createMaskStub(),
                         createLoggedClass(),
-                        true);
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the

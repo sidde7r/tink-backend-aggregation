@@ -58,22 +58,21 @@ public class LogMasker {
     }
 
     public static LoggingMode shouldLog(Provider provider) {
-        // Temprorary disable of logging of http traffic for all providers.
-        // Leave until openbanking secrets are moved to ESS.
-        if (true) {
-            return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
-        }
-
-        // Temporary disable of UK openbanking providers logging.
-        // Leave until all UKOB providers secrets are moved to ESS.
-        if ("UK".equalsIgnoreCase(provider.getMarket())
-                || "GB".equalsIgnoreCase(provider.getMarket())) {
-            return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
-        }
         // Temporary disable of http traffic logging for RE agents.
         // Leave until all RE agents logging has been evaluted and secrets moved to appropriate
         // format to be handled by logging masker.
         if (!provider.isOpenBanking()) {
+            return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
+        }
+
+        if (
+        /*!"FI".equalsIgnoreCase(provider.getMarket())
+        && !"NO".equalsIgnoreCase(provider.getMarket())
+        && !"DE".equalsIgnoreCase(provider.getMarket())
+        && !"FR".equalsIgnoreCase(provider.getMarket())
+        && !"IT".equalsIgnoreCase(provider.getMarket())
+        &&*/ !"SE".equalsIgnoreCase(provider.getMarket())
+                && !"ES".equalsIgnoreCase(provider.getMarket())) {
             return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
         }
         return LoggingMode.LOGGING_MASKER_COVERS_SECRETS;

@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
@@ -653,6 +654,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                 "TRANSFER",
                 new LogMasker(new Credentials(), Collections.emptyList()),
                 transferExecutor.getClass(),
-                true);
+                LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
     }
 }
