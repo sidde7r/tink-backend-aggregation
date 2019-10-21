@@ -309,6 +309,8 @@ public final class AgentConfigurationController {
         return extractedSensitiveValues;
     }
 
+    // Structure of configuration object is unknown so we need to explore it recursively to get to
+    // the leaf nodes.
     private void extractSensitiveValuesRec(
             Object clientConfigurationAsObject,
             Set<String> extractedSensitiveValues,
