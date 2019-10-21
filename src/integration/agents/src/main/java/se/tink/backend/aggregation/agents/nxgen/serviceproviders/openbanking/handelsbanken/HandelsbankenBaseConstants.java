@@ -143,6 +143,7 @@ public final class HandelsbankenBaseConstants {
         public static final String NOT_SHB_ACTIVATED = "mbid_not_shb_activated";
         public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
         public static final String MBID_MAX_POLLING = "mbid_max_polling";
+        public static final String TOKEN_NOT_ACTIVE = "Token is not active";
     }
 
     public static class Status {

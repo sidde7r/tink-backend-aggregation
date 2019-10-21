@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -20,5 +21,10 @@ public class HandelsbankenErrorResponse {
                         httpMessage,
                         moreInformation),
                 cause);
+    }
+
+    @JsonIgnore
+    public boolean isTokenNotActiveError() {
+        return Errors.TOKEN_NOT_ACTIVE.equalsIgnoreCase(moreInformation);
     }
 }

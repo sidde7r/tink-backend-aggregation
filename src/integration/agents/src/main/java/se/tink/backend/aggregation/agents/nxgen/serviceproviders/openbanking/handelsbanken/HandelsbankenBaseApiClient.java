@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 
 import java.util.Date;
 import java.util.UUID;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -32,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
@@ -81,21 +83,28 @@ public class HandelsbankenBaseApiClient {
     }
 
     public AccountsResponse getAccountList() {
-        return createRequest(Urls.ACCOUNTS).get(AccountsResponse.class);
+        return requestRefreshableGet(createRequest(Urls.ACCOUNTS), AccountsResponse.class);
     }
 
     public BalanceAccountResponse getAccountDetails(String accountId) {
-        return createRequest(Urls.ACCOUNT_DETAILS.parameter(UrlParams.ACCOUNT_ID, accountId))
-                .queryParam(QueryKeys.WITH_BALANCE, Boolean.TRUE.toString())
-                .get(BalanceAccountResponse.class);
+        RequestBuilder request =
+                createRequest(Urls.ACCOUNT_DETAILS.parameter(UrlParams.ACCOUNT_ID, accountId))
+                        .queryParam(QueryKeys.WITH_BALANCE, Boolean.TRUE.toString());
+
+        return requestRefreshableGet(request, BalanceAccountResponse.class);
     }
 
     public TransactionResponse getTransactions(String accountId, Date dateFrom, Date dateTo) {
-        return createRequest(Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParams.ACCOUNT_ID, accountId))
-                .queryParam(
-                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom))
-                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(dateTo))
-                .get(TransactionResponse.class);
+        RequestBuilder request =
+                createRequest(Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParams.ACCOUNT_ID, accountId))
+                        .queryParam(
+                                QueryKeys.DATE_FROM,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom))
+                        .queryParam(
+                                QueryKeys.DATE_TO,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(dateTo));
+
+        return requestRefreshableGet(request, TransactionResponse.class);
     }
 
     public DecoupledResponse getDecoupled(URL href) {
@@ -112,7 +121,7 @@ public class HandelsbankenBaseApiClient {
         }
     }
 
-    public TokenResponse getRefreshToken(String refreshToken) {
+    public TokenResponse refreshAccessToken(String refreshToken) {
 
         final Form params =
                 Form.builder()
@@ -229,5 +238,69 @@ public class HandelsbankenBaseApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON)
                 .post(SessionResponse.class);
+    }
+
+    /**
+     * The SHB access token lives for 24 hours on the millisecond. In some cases the access token is
+     * still active during the authentication, but expires directly after later. This method will
+     * refresh the access token if it's expired, and will then retry the request with the new token.
+     */
+    private <T> T requestRefreshableGet(RequestBuilder request, Class<T> responseType) {
+        try {
+            return request.get(responseType);
+
+        } catch (HttpResponseException hre) {
+            verifyIsTokenNotActiveErrorOrThrow(hre);
+
+            refreshAndStoreOauthToken();
+
+            request.overrideHeader(HttpHeaders.AUTHORIZATION, getOauthToken().toAuthorizeHeader());
+        }
+
+        // retry request with new token
+        return request.get(responseType);
+    }
+
+    /**
+     * Refresh access token and update stored OAuth token. Usually handled by the authentication
+     * controller, but in some edge cases the access token expires between login and refresh. Then
+     * it needs to be refreshed by the agent directly.
+     */
+    private void refreshAndStoreOauthToken() {
+        String refreshToken =
+                getOauthToken()
+                        .getRefreshToken()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find refresh token to refresh."));
+
+        TokenResponse response = refreshAccessToken(refreshToken);
+
+        OAuth2Token oAuth2Token =
+                OAuth2Token.create(
+                        QueryKeys.BEARER,
+                        response.getAccessToken(),
+                        refreshToken,
+                        response.getExpiresIn());
+
+        persistentStorage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
+    }
+
+    private void verifyIsTokenNotActiveErrorOrThrow(HttpResponseException hre) {
+        HttpResponse response = hre.getResponse();
+
+        if (!(response.getStatus() == HttpStatus.SC_UNAUTHORIZED)) {
+            // Unexpected exception, throw it.
+            throw hre;
+        }
+
+        HandelsbankenErrorResponse errorResponse =
+                response.getBody(HandelsbankenErrorResponse.class);
+
+        if (!errorResponse.isTokenNotActiveError()) {
+            // Unexpected error message, throw original exception.
+            throw hre;
+        }
     }
 }
