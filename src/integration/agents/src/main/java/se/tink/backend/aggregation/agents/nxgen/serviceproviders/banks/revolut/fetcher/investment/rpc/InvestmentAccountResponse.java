@@ -59,7 +59,7 @@ public class InvestmentAccountResponse {
         return String.format("Revolut %s Investments", getHoldingsInfo().getCurrency());
     }
 
-    public int getBalance() {
+    public long getBalance() {
         return balanceEntity.getAmount();
     }
 

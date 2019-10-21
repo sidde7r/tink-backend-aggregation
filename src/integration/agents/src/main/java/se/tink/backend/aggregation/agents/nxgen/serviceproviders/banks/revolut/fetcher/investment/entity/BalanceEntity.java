@@ -13,7 +13,7 @@ public class BalanceEntity {
     private String type;
 
     @JsonProperty("amount")
-    private int amount;
+    private long amount;
 
     @JsonProperty("currency")
     private String currency;
@@ -26,7 +26,7 @@ public class BalanceEntity {
         return type;
     }
 
-    public int getAmount() {
+    public long getAmount() {
         return amount;
     }
 

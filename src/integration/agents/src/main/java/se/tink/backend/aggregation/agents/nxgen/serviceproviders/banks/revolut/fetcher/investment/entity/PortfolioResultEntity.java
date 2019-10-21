@@ -8,11 +8,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class PortfolioResultEntity {
 
-    private final int balance;
+    private final long balance;
     private final List<InvestmentResultEntity> investmentResultEntities;
 
     public PortfolioResultEntity(
-            int balance, List<InvestmentResultEntity> investmentResultEntities) {
+            long balance, List<InvestmentResultEntity> investmentResultEntities) {
         this.balance = balance;
         this.investmentResultEntities = investmentResultEntities;
     }

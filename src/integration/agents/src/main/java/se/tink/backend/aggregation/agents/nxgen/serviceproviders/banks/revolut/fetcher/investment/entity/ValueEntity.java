@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ValueEntity {
 
     @JsonProperty("amount")
-    private int amount;
+    private long amount;
 
     @JsonProperty("currency")
     private String currency;
