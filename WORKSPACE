@@ -2497,7 +2497,7 @@ maven_install(
         "com.fasterxml.uuid:java-uuid-generator:3.2.0",
     ],
     fetch_sources = True,
-    maven_install_json = "//third_party:maven_install.json",
+    maven_install_json = "//third_party:java_uuid_generator.json",
     repositories = [
         "https://repo.maven.apache.org/maven2/",
     ],
