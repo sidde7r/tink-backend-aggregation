@@ -137,7 +137,7 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
                     "Device token is null or empty");
 
             String deviceToken = registerDeviceResponse.getDeviceToken();
-            credentials.setSensitivePayload("device-token", deviceToken);
+            credentials.setSensitivePayload(Storage.DEVICE_TOKEN, deviceToken);
             persistentStorage.put(OmaspConstants.Storage.DEVICE_TOKEN, deviceToken);
 
         } catch (HttpResponseException e) {

@@ -47,7 +47,7 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
 
         credentials.setSensitivePayload(Field.Key.USERNAME, username);
         credentials.setSensitivePayload(Field.Key.PASSWORD, password);
-        credentials.setSensitivePayload("device-token", deviceToken);
+        credentials.setSensitivePayload(Storage.DEVICE_TOKEN, deviceToken);
 
         if (Strings.isNullOrEmpty(username)
                 || Strings.isNullOrEmpty(password)
