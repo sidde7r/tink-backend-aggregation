@@ -1,25 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sdc;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SdcConstants {
 
-    public static final String INTEGRATION_NAME = "sdc";
-
     private SdcConstants() {
         throw new AssertionError();
     }
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "some_string1_the_integratee_uses")
-                    .put(AccountTypes.SAVINGS, "some_string2_the_integratee_uses")
-                    .put(AccountTypes.CREDIT_CARD, "some_string3_the_integratee_uses")
-                    .ignoreKeys("some_string4_the_integratee_uses")
-                    .build();
 
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
