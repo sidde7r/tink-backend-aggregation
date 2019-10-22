@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher;
 
+import static se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType.CHECKING;
+import static se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType.SAVINGS;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderCons
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Account;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.util.CurrencyMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -18,14 +22,19 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class SantanderCheckingAccountFetcher implements AccountFetcher<TransactionalAccount> {
+public class SantanderTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
-    private static final int CHECKING_ACCOUNTS_INDEX = 2;
+    private static final int TRANSACTIONAL_ACCOUNTS_INDEX = 2;
+    private static TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<TransactionalAccountType>builder()
+                    .put(CHECKING, "MN")
+                    .put(SAVINGS, "CR")
+                    .build();
 
     private final SantanderApiClient apiClient;
     private final CurrencyMapper currencyMapper;
 
-    public SantanderCheckingAccountFetcher(SantanderApiClient apiClient) {
+    public SantanderTransactionalAccountFetcher(SantanderApiClient apiClient) {
         this.apiClient = apiClient;
         this.currencyMapper = new CurrencyMapper();
     }
@@ -38,7 +47,7 @@ public class SantanderCheckingAccountFetcher implements AccountFetcher<Transacti
 
     private List<TransactionalAccount> deserializeAccounts(
             List<List<Map<String, String>>> accounts) {
-        List<Map<String, String>> checkingAccounts = accounts.get(CHECKING_ACCOUNTS_INDEX);
+        List<Map<String, String>> checkingAccounts = accounts.get(TRANSACTIONAL_ACCOUNTS_INDEX);
 
         return checkingAccounts.stream()
                 .map(this::toTinkAccount)
@@ -56,7 +65,11 @@ public class SantanderCheckingAccountFetcher implements AccountFetcher<Transacti
                         .getCurrencyCode();
 
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
+                .withType(
+                        ACCOUNT_TYPE_MAPPER
+                                .translate(obj.get(Account.ACCOUNT_TYPE))
+                                .orElseThrow(
+                                        () -> new IllegalArgumentException("Unknown account type")))
                 .withInferredAccountFlags()
                 .withBalance(
                         BalanceModule.of(

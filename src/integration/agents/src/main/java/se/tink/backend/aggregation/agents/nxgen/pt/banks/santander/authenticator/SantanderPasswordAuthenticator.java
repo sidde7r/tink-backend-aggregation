@@ -28,21 +28,35 @@ public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        ApiResponse<Map<String, String>> sessionResponse =
+        ApiResponse<Map<String, Object>> sessionResponse =
                 apiClient.fetchAuthToken(username, password);
 
         if (!sessionResponse.getCode().equals(RESPONSE_CODES.OK)) {
             handleErrorResponse(sessionResponse);
         }
 
-        String sessionToken = sessionResponse.getBusinessData().get(0).get(Session.SESSION_TOKEN);
+        handleSessionToken(sessionResponse);
+        handleIdentityData(sessionResponse);
+    }
+
+    private void handleSessionToken(ApiResponse<Map<String, Object>> sessionResponse) {
+        String sessionToken =
+                (String) sessionResponse.getBusinessData().get(0).get(Session.SESSION_TOKEN);
         sessionStorage.put(STORAGE.SESSION_TOKEN, sessionToken);
     }
 
-    private void handleErrorResponse(ApiResponse<Map<String, String>> response)
+    private void handleIdentityData(ApiResponse<Map<String, Object>> sessionResponse) {
+        Map<String, String> variables =
+                (Map<String, String>)
+                        sessionResponse.getBusinessData().get(0).get(Session.VARIABLES);
+
+        sessionStorage.put(STORAGE.CUSTOMER_NAME, variables.get(Session.CUSTOMER_NAME));
+    }
+
+    private void handleErrorResponse(ApiResponse<Map<String, Object>> response)
             throws LoginException {
 
-        if (response.getCode().equals(RESPONSE_CODES.INCORRECT_CREDENTIALS)) {
+        if (response.getCode().equals(RESPONSE_CODES.ERROR)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception(
                     new LocalizableKey(
                             String.format(

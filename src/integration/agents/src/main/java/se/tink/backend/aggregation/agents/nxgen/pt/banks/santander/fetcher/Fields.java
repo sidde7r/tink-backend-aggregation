@@ -19,6 +19,7 @@ public class Fields {
         static final String CURRENCY_NUMERIC_CODE = "currency";
         static final String PRODUCT_NAME = "number";
         static final String BRANCH_CODE = "branchCode";
+        static final String ACCOUNT_TYPE = "FAMILIA";
     }
 
     static class Transaction {
@@ -29,5 +30,7 @@ public class Fields {
 
     public static class Session {
         public static final String SESSION_TOKEN = "id";
+        public static final String CUSTOMER_NAME = "userName";
+        public static final String VARIABLES = "variables";
     }
 }

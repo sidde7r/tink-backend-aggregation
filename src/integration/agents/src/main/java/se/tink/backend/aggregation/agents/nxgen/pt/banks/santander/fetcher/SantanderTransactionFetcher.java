@@ -8,11 +8,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.RESPONSE_CODES;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.STORAGE;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -21,15 +23,14 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class SantanderCheckingTransactionFetcher
-        implements TransactionDatePaginator<TransactionalAccount> {
+public class SantanderTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
 
     private static final Pattern TRANSACTION_AMOUNT_PATTERN = Pattern.compile("^-?\\d+,?\\d*");
     private static final int PAGE_SIZE = 1000;
 
     private final SantanderApiClient apiClient;
 
-    public SantanderCheckingTransactionFetcher(SantanderApiClient apiClient) {
+    public SantanderTransactionFetcher(SantanderApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -68,15 +69,26 @@ public class SantanderCheckingTransactionFetcher
                             PAGE_SIZE);
 
             transactionPage =
-                    deserializeTransactions(
-                            apiResponse.getBusinessData(),
-                            account.getFromTemporaryStorage(STORAGE.CURRENCY_CODE));
+                    extractTransactionsFromResponse(
+                                    apiResponse,
+                                    account.getFromTemporaryStorage(STORAGE.CURRENCY_CODE))
+                            .orElse(Collections.emptyList());
 
             allTransactions.addAll(transactionPage);
             currentPage++;
         } while (!transactionPage.isEmpty());
 
         return allTransactions;
+    }
+
+    private Optional<List<Transaction>> extractTransactionsFromResponse(
+            ApiResponse<Map<String, String>> response, String currencyCode) {
+
+        if (response.getCode().equals(RESPONSE_CODES.ERROR)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(deserializeTransactions(response.getBusinessData(), currencyCode));
+        }
     }
 
     private List<Transaction> deserializeTransactions(
