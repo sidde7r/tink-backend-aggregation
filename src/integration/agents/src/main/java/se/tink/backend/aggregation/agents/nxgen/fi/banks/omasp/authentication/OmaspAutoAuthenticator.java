@@ -45,6 +45,10 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
         String deviceId = persistentStorage.get(Storage.DEVICE_ID);
         String deviceToken = persistentStorage.get(Storage.DEVICE_TOKEN);
 
+        credentials.setSensitivePayload(Field.Key.USERNAME, username);
+        credentials.setSensitivePayload(Field.Key.PASSWORD, password);
+        credentials.setSensitivePayload("device-token", deviceToken);
+
         if (Strings.isNullOrEmpty(username)
                 || Strings.isNullOrEmpty(password)
                 || Strings.isNullOrEmpty(deviceId)) {
