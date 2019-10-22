@@ -14,7 +14,7 @@ public class SantanderConstants {
 
     public static class RESPONSE_CODES {
         public static final String OK = "0";
-        public static final String INCORRECT_CREDENTIALS = "1";
+        public static final String ERROR = "1";
         public static final String SESSION_EXPIRED = "5";
     }
 }

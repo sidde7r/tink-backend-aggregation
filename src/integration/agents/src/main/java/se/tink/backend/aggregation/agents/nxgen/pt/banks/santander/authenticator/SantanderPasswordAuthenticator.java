@@ -42,7 +42,7 @@ public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
     private void handleErrorResponse(ApiResponse<Map<String, String>> response)
             throws LoginException {
 
-        if (response.getCode().equals(RESPONSE_CODES.INCORRECT_CREDENTIALS)) {
+        if (response.getCode().equals(RESPONSE_CODES.ERROR)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception(
                     new LocalizableKey(
                             String.format(
