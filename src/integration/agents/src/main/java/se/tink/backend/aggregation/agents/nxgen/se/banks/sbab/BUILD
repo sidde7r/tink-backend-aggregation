@@ -1,0 +1,22 @@
+java_library(
+    name = "sbab",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/amount",
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/identity_data",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/account_identifier",
+        "//src/libraries/date",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:io_vavr",
+    ],
+)
