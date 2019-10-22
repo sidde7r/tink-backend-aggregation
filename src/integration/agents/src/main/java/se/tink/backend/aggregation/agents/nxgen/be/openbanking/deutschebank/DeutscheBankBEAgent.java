@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.configuration.DeutscheBankBEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
@@ -31,7 +30,7 @@ public class DeutscheBankBEAgent extends DeutscheBankAgent {
         super(request, context, configuration);
         deutscheBankBEConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(DeutscheBankBEConfiguration.class);
+                        .getAgentConfiguration(DeutscheBankConfiguration.class);
         apiClient =
                 new DeutscheBankBEApiClient(client, sessionStorage, deutscheBankBEConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();

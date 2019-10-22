@@ -34,8 +34,7 @@ public final class PostbankAgent extends DeutscheBankAgent {
 
         apiClient = new PostbankApiClient(client, sessionStorage, postbankConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        client.setEidasProxy(
-                configuration.getEidasProxy(), postbankConfiguration.getCertificateId());
+        client.setEidasProxy(configuration.getEidasProxy(), null);
     }
 
     @Override

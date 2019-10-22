@@ -7,6 +7,7 @@ import se.tink.libraries.account.enums.AccountFlag;
 
 public final class DeutscheBankConstants {
 
+    public static final String DEFAULT_IP = "0.0.0.0";
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
                     .put(

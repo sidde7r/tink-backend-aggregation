@@ -24,7 +24,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class DeutscheBankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     protected final DeutscheBankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private DeutscheBankConfiguration deutscheBankConfiguration;
@@ -35,8 +34,6 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration.getSignatureKeyPair());
 
-        clientName = request.getProvider().getPayload();
-
         deutscheBankConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(DeutscheBankConfiguration.class);
@@ -44,8 +41,7 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
         apiClient = new DeutscheBankApiClient(client, sessionStorage, deutscheBankConfiguration);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        client.setEidasProxy(
-                configuration.getEidasProxy(), deutscheBankConfiguration.getCertificateId());
+        client.setEidasProxy(configuration.getEidasProxy(), null);
     }
 
     @Override
