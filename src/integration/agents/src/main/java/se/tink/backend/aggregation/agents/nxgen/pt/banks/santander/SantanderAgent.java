@@ -30,7 +30,7 @@ public class SantanderAgent extends NextGenerationAgent
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final SantanderApiClient apiClient;
-    private SantanderPasswordAuthenticator authenticator;
+    private final SantanderPasswordAuthenticator authenticator;
 
     public SantanderAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {

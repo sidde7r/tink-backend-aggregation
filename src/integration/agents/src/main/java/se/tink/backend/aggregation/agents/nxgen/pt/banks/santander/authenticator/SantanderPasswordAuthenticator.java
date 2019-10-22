@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Field
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.identitydata.IdentityData;
 
 public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
 
@@ -51,12 +50,7 @@ public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
                 (Map<String, String>)
                         sessionResponse.getBusinessData().get(0).get(Session.VARIABLES);
 
-        sessionStorage.put(
-                STORAGE.CUSTOMER_NAME,
-                IdentityData.builder()
-                        .setFullName(variables.get(Session.CUSTOMER_NAME))
-                        .setDateOfBirth(null)
-                        .build());
+        sessionStorage.put(STORAGE.CUSTOMER_NAME, variables.get(Session.CUSTOMER_NAME));
     }
 
     private void handleErrorResponse(ApiResponse<Map<String, Object>> response)
