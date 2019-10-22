@@ -35,6 +35,7 @@ public class RevolutConstants {
 
     public static final class Tags {
         public static final String AUTHORIZATION_ERROR = "uk_revolut_authorization_error";
+        public static final String PORTFOLIO_FETCHING_ERROR = "portfolio_fetching_error";
     }
 
     public static final class Headers {
