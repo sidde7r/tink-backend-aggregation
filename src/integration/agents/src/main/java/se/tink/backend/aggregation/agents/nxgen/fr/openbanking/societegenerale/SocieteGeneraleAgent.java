@@ -67,8 +67,7 @@ public class SocieteGeneraleAgent extends NextGenerationAgent
                         .getAgentConfiguration(SocieteGeneraleConfiguration.class);
 
         apiClient.setConfiguration(societeGeneraleConfiguration);
-        this.client.setEidasProxy(
-                configuration.getEidasProxy());
+        this.client.setEidasProxy(configuration.getEidasProxy());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

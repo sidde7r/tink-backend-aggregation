@@ -60,8 +60,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
                                         new IllegalStateException(
                                                 ErrorMessages.MISSING_CONFIGURATION));
 
-        client.setEidasProxy(
-                configuration.getEidasProxy());
+        client.setEidasProxy(configuration.getEidasProxy());
         apiClient.setConfiguration(lansforsakringarConfiguration);
     }
 

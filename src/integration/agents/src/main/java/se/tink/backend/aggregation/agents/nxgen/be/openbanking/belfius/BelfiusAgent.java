@@ -48,8 +48,7 @@ public final class BelfiusAgent extends NextGenerationAgent
         this.apiClient = new BelfiusApiClient(client, this.belfiusConfiguration);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
-        this.client.setEidasProxy(
-                agentsServiceConfiguration.getEidasProxy());
+        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 
     @Override
