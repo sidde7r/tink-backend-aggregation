@@ -2,9 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut;
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class RevolutConstants {
+
+    public static final double REVOLUT_AMOUNT_DIVIDER = 100.0;
 
     public static final class Urls {
         public static final String HOST = "https://api.revolut.com";
@@ -18,6 +21,9 @@ public class RevolutConstants {
         public static final URL WALLET = new URL(HOST + "/user/current/wallet");
         public static final URL TOPUP_ACCOUNTS = new URL(HOST + "/topup/accounts");
         public static final URL TRANSACTIONS = new URL(HOST + "/user/current/transactions/last");
+        public static final URL PORTFOLIO = new URL(HOST + "/user/current/portfolio");
+        public static final URL STOCK_INFO = new URL(HOST + "/config/wealth/STOCK");
+        public static final URL STOCK_PRICE_OVERVIEW = new URL(HOST + "/instruments/priceOverview");
     }
 
     public static final class Storage {
@@ -86,6 +92,13 @@ public class RevolutConstants {
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.OTHER, "SAVINGS") // Revolut's Vault is not a bank account
                     .put(AccountTypes.CHECKING, "CURRENT")
+                    .build();
+
+    public static final TypeMapper<InstrumentModule.InstrumentType> INVESTMENT_TYPE_MAPPER =
+            TypeMapper.<InstrumentModule.InstrumentType>builder()
+                    .put(InstrumentModule.InstrumentType.STOCK, "STOCK")
+                    .put(InstrumentModule.InstrumentType.FUND, "FUND")
+                    .ignoreKeys("CASH")
                     .build();
 
     public static class Pagination {
