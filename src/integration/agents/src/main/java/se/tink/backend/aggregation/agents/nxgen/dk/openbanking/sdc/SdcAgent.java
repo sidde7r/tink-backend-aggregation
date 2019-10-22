@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sdc.SdcConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sdc.authenticator.SdcAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sdc.authenticator.SdcAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sdc.configuration.SdcConfiguration;
@@ -26,7 +25,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class SdcAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final SdcApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -35,8 +33,6 @@ public final class SdcAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         apiClient = new SdcApiClient(client, persistentStorage, request.getCredentials());
-        clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -47,11 +43,7 @@ public final class SdcAgent extends NextGenerationAgent
     }
 
     protected SdcConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        SdcConstants.INTEGRATION_NAME, clientName, SdcConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return getAgentConfigurationController().getAgentConfiguration(SdcConfiguration.class);
     }
 
     @Override
