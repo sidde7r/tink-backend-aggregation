@@ -30,5 +30,7 @@ public class Fields {
 
     public static class Session {
         public static final String SESSION_TOKEN = "id";
+        public static final String CUSTOMER_NAME = "userName";
+        public static final String VARIABLES = "variables";
     }
 }

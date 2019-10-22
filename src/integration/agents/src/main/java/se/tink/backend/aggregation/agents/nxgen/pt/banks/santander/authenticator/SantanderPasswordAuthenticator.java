@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Field
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.identitydata.IdentityData;
 
 public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
 
@@ -28,18 +29,37 @@ public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        ApiResponse<Map<String, String>> sessionResponse =
+        ApiResponse<Map<String, Object>> sessionResponse =
                 apiClient.fetchAuthToken(username, password);
 
         if (!sessionResponse.getCode().equals(RESPONSE_CODES.OK)) {
             handleErrorResponse(sessionResponse);
         }
 
-        String sessionToken = sessionResponse.getBusinessData().get(0).get(Session.SESSION_TOKEN);
+        handleSessionToken(sessionResponse);
+        handleIdentityData(sessionResponse);
+    }
+
+    private void handleSessionToken(ApiResponse<Map<String, Object>> sessionResponse) {
+        String sessionToken =
+                (String) sessionResponse.getBusinessData().get(0).get(Session.SESSION_TOKEN);
         sessionStorage.put(STORAGE.SESSION_TOKEN, sessionToken);
     }
 
-    private void handleErrorResponse(ApiResponse<Map<String, String>> response)
+    private void handleIdentityData(ApiResponse<Map<String, Object>> sessionResponse) {
+        Map<String, String> variables =
+                (Map<String, String>)
+                        sessionResponse.getBusinessData().get(0).get(Session.VARIABLES);
+
+        sessionStorage.put(
+                STORAGE.CUSTOMER_NAME,
+                IdentityData.builder()
+                        .setFullName(variables.get(Session.CUSTOMER_NAME))
+                        .setDateOfBirth(null)
+                        .build());
+    }
+
+    private void handleErrorResponse(ApiResponse<Map<String, Object>> response)
             throws LoginException {
 
         if (response.getCode().equals(RESPONSE_CODES.ERROR)) {

@@ -15,6 +15,7 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/santander",
         "//src/integration/api",
+        "//src/integration/credentials:service",
         "//src/integration/lib:lib_test",
     ],
 )
