@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander;
 public class SantanderConstants {
 
     public static final String DATE_FORMAT = "yyyyMMdd";
+    public static final String TIMEZONE_ID = "Portugal";
     static final String API_URL = "https://m.santandertotta.pt/gatewayios/Gateway.aspx";
 
     public static class STORAGE {
