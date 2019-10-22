@@ -41,12 +41,17 @@ public class ClientConfigurationTemplateBuilder {
 
     private final Supplier<IllegalArgumentException> noConfigurationClassFoundExceptionSupplier;
     private final Provider provider;
+    private final boolean includeDescriptions;
+    private final boolean includeExamples;
     private final String financialInstitutionId;
     private final Function<Field, String> fieldToFieldName =
             field -> specialFieldsMapper.getOrDefault(field.getName(), field.getName());
 
-    public ClientConfigurationTemplateBuilder(Provider provider) {
+    public ClientConfigurationTemplateBuilder(
+            Provider provider, boolean includeDescriptions, boolean includeExamples) {
         this.provider = provider;
+        this.includeDescriptions = includeDescriptions;
+        this.includeExamples = includeExamples;
         this.financialInstitutionId = provider.getFinancialInstitutionId();
         this.noConfigurationClassFoundExceptionSupplier =
                 () ->
