@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.authenticator;
 
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiApiClient;
@@ -17,14 +19,17 @@ public class SpankkiKeyCardAuthenticator implements KeyCardAuthenticator {
     private final SpankkiApiClient apiClient;
     private final SpankkiPersistentStorage persistentStorage;
     private final SpankkiSessionStorage sessionStorage;
+    private final Credentials credentials;
 
     public SpankkiKeyCardAuthenticator(
             SpankkiApiClient apiClient,
             SpankkiPersistentStorage persistentStorage,
-            SpankkiSessionStorage sessionStorage) {
+            SpankkiSessionStorage sessionStorage,
+            Credentials credentials) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
+        this.credentials = credentials;
     }
 
     @Override
@@ -42,13 +47,13 @@ public class SpankkiKeyCardAuthenticator implements KeyCardAuthenticator {
 
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
+        credentials.setSensitivePayload(Field.Key.OTP_INPUT, code);
         PinLoginResponse loginResponse = this.apiClient.loginPin(code);
-
         AddDeviceResponse addDeviceResponse = this.apiClient.addDevice();
-
-        sessionStorage.putCustomerId(loginResponse.getCustomer().getCustomerId());
+        final String customerId = loginResponse.getCustomer().getCustomerId();
+        credentials.setSensitivePayload("customer-id", customerId);
+        sessionStorage.putCustomerId(customerId);
         sessionStorage.putCustomerEntity(loginResponse.getCustomer());
-
         persistentStorage.putDeviceId(addDeviceResponse.getDeviceId());
         persistentStorage.putDeviceToken(addDeviceResponse.getLoginToken());
     }

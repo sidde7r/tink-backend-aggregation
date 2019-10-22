@@ -192,6 +192,7 @@ public class OpBankConstants {
         public static final String MAX_FUTURE_VALUE = "0";
         public static final String MAX_PAST_VALUE = "30";
         public static final String ENCRYPTED_TRX_ID = "encryptedTransactionId";
+        public static final String AUTH_TOKEN = "authToken";
     }
 
     public static final class Fetcher {

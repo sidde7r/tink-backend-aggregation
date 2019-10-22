@@ -63,7 +63,8 @@ public class HandelsbankenFICardDeviceAuthenticator implements TypedAuthenticato
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         LibTFA tfa = new LibTFA();
-
+        final String username = credentials.getField(Field.Key.USERNAME);
+        credentials.setSensitivePayload(Field.Key.USERNAME, username);
         EntryPointResponse entryPoint = client.fetchEntryPoint();
 
         InitNewProfileResponse initNewProfile =
@@ -75,7 +76,7 @@ public class HandelsbankenFICardDeviceAuthenticator implements TypedAuthenticato
                         EncryptedUserCredentialsRequest.create(
                                 initNewProfile,
                                 UserCredentialsRequest.create(
-                                        credentials.getField(Field.Key.USERNAME),
+                                        username,
                                         credentials.getField(
                                                 HandelsbankenFIConstants.DeviceAuthentication
                                                         .SIGNUP_PASSWORD)),

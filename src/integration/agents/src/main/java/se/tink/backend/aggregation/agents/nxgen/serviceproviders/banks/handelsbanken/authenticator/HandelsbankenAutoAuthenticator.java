@@ -48,6 +48,11 @@ public class HandelsbankenAutoAuthenticator implements AutoAuthenticator {
     @Override
     public void autoAuthenticate() throws SessionException {
         LibTFA tfa = persistentStorage.getTfa(credentials);
+        final String username = credentials.getField(Field.Key.USERNAME);
+        final String password = credentials.getField(Field.Key.PASSWORD);
+
+        credentials.setSensitivePayload(Field.Key.USERNAME, username);
+        credentials.setSensitivePayload(Field.Key.PASSWORD, password);
 
         EntryPointResponse entrypoint = client.fetchEntryPoint();
 
@@ -65,9 +70,7 @@ public class HandelsbankenAutoAuthenticator implements AutoAuthenticator {
                                 .setEncUserCredentials(
                                         tfa.generateEncUserCredentials(
                                                 handshake,
-                                                UserCredentialsRequest.create(
-                                                        credentials.getField(Field.Key.USERNAME),
-                                                        credentials.getField(Field.Key.PASSWORD))))
+                                                UserCredentialsRequest.create(username, password)))
                                 .setProfileId(persistentStorage.getProfileId()));
 
         new ServerProfileValidator(serverProfile).validate();

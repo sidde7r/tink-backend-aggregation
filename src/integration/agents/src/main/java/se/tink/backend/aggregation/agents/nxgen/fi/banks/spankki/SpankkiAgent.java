@@ -84,7 +84,8 @@ public class SpankkiAgent extends NextGenerationAgent
                         new SpankkiKeyCardAuthenticator(
                                 this.apiClient,
                                 this.spankkiPersistentStorage,
-                                this.spankkiSessionStorage),
+                                this.spankkiSessionStorage,
+                                this.credentials),
                         SpankkiConstants.Authentication.KEY_CARD_VALUE_LENGTH);
 
         return new AutoAuthenticationController(
