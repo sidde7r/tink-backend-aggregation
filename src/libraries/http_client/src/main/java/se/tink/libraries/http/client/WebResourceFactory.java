@@ -62,7 +62,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.DefaultValue;
@@ -148,7 +147,7 @@ public final class WebResourceFactory implements InvocationHandler {
     }
 
     private MultivaluedMap<String, String> requestIdHeaders() {
-        return Optional.ofNullable(RequestTracer.getRequestId())
+        return RequestTracer.getRequestId()
                 .map(
                         id -> {
                             MultivaluedMap<String, String> newHeaders = new MultivaluedMapImpl();
