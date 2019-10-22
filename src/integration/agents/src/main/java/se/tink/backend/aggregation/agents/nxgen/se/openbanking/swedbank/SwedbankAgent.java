@@ -50,7 +50,7 @@ public final class SwedbankAgent extends NextGenerationAgent
 
         apiClient.setConfiguration(getClientConfiguration());
         client.setFollowRedirects(false);
-        client.setEidasProxy(configuration.getEidasProxy(), null);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     private SwedbankConfiguration getClientConfiguration() {

@@ -50,7 +50,7 @@ public final class RaiffeisenAgent extends NextGenerationAgent
 
         RaiffeisenConfiguration raiffeisenConfiguration = getClientConfiguration();
         apiClient.setConfiguration(raiffeisenConfiguration);
-        client.setEidasProxy(configuration.getEidasProxy(), raiffeisenConfiguration.getEidasQwac());
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     private RaiffeisenConfiguration getClientConfiguration() {

@@ -56,9 +56,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
         this.apiClient =
                 new FinecoBankApiClient(client, persistentStorage, this.finecoBankConfiguration);
 
-        this.client.setEidasProxy(
-                agentsServiceConfiguration.getEidasProxy(),
-                this.finecoBankConfiguration.getCertificateId());
+        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 

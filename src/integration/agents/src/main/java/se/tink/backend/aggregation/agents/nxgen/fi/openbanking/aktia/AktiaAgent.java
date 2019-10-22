@@ -45,7 +45,7 @@ public final class AktiaAgent extends NextGenerationAgent
         final AktiaConfiguration aktiaConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(AktiaConfiguration.class);
         apiClient.setConfiguration(aktiaConfiguration);
-        this.client.setEidasProxy(configuration.getEidasProxy(), null);
+        this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override

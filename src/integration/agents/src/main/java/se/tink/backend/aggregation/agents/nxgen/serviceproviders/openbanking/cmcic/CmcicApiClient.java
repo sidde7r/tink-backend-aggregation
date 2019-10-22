@@ -71,7 +71,7 @@ public final class CmcicApiClient {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
-        client.setEidasProxy(eidasProxyConfiguration, configuration.getCertificateId());
+        client.setEidasProxy(eidasProxyConfiguration);
     }
 
     private RequestBuilder createRequest(URL url) {
