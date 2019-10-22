@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,8 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.serialization.utils.JsonFlattener;
 
 public class CredentialsStringMasker implements StringMasker {
     private final Credentials credentials;
@@ -104,7 +105,14 @@ public class CredentialsStringMasker implements StringMasker {
         if (Strings.isNullOrEmpty(s)) {
             return Collections.emptyList();
         }
-        Map<String, String> map = SerializationUtils.deserializeFromString(s, Storage.class);
+        Map<String, String> map;
+        try {
+            map =
+                    JsonFlattener.flattenJsonToMap(
+                            JsonFlattener.ROOT_PATH, new ObjectMapper().readTree(s));
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not deserialize storage.", e);
+        }
         return map.values().stream()
                 .filter(string -> !Strings.isNullOrEmpty(string))
                 .collect(Collectors.toList());

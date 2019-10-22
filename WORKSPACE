@@ -1968,9 +1968,9 @@ maven_jar(
 )
 
 maven_jar(
-     name = "net_bytebuddy_byte_buddy",
-     artifact = "net.bytebuddy:byte-buddy:1.10.1",
-     sha1 = "11fe565e2b8b857c9dcee66e4170b97abb92530b",
+    name = "net_bytebuddy_byte_buddy",
+    artifact = "net.bytebuddy:byte-buddy:1.10.1",
+    sha1 = "11fe565e2b8b857c9dcee66e4170b97abb92530b",
 )
 
 maven_jar(

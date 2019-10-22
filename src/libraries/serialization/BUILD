@@ -13,5 +13,8 @@ java_library(
 
         # Codec
         "//third_party:commons_codec_commons_codec",
+
+        # Apache commons lang3
+        "//third_party:org_apache_commons_commons_lang3",
     ],
 )
