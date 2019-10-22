@@ -48,7 +48,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
-        client.setEidasProxy(eidasProxyConfiguration, null);
+        client.setEidasProxy(eidasProxyConfiguration);
     }
 
     public RequestBuilder getAccountsRequestBuilder(final String url) {

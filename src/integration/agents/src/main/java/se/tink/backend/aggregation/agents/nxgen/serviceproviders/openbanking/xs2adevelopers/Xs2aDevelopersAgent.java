@@ -70,7 +70,7 @@ public abstract class Xs2aDevelopersAgent extends NextGenerationAgent
         Xs2aDevelopersConfiguration xs2aDevelopersConfiguration = getClientConfiguration();
         apiClient.setConfiguration(xs2aDevelopersConfiguration);
         this.client.setEidasProxy(
-                configuration.getEidasProxy(), xs2aDevelopersConfiguration.getCertificateId());
+                configuration.getEidasProxy());
     }
 
     protected abstract String getIntegrationName();

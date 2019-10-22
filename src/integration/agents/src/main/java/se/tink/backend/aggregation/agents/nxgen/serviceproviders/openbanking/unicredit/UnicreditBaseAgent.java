@@ -52,7 +52,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
 
         apiClient.setConfiguration(unicreditConfiguration);
 
-        client.setEidasProxy(configuration.getEidasProxy(), unicreditConfiguration.getEidasQwac());
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override

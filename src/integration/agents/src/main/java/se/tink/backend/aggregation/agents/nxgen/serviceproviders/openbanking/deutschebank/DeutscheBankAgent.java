@@ -41,7 +41,7 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
         apiClient = new DeutscheBankApiClient(client, sessionStorage, deutscheBankConfiguration);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        client.setEidasProxy(configuration.getEidasProxy(), null);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override

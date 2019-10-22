@@ -318,7 +318,7 @@ public final class BankdataApiClient {
             BankdataConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.client.setEidasProxy(eidasProxyConfiguration, "Tink");
+        this.client.setEidasProxy(eidasProxyConfiguration);
     }
 
     private OAuth2Token getTokenFromSession() {

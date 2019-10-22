@@ -49,7 +49,7 @@ public class AbnAmroAgent extends NextGenerationAgent
         apiClient.setConfiguration(abnAmroConfiguration);
 
         this.client.setEidasProxy(
-                configuration.getEidasProxy(), abnAmroConfiguration.getCertificateId());
+                configuration.getEidasProxy());
     }
 
     @Override

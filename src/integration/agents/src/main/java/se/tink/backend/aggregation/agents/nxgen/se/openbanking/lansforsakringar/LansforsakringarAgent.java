@@ -61,7 +61,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
                                                 ErrorMessages.MISSING_CONFIGURATION));
 
         client.setEidasProxy(
-                configuration.getEidasProxy(), lansforsakringarConfiguration.getEidasQwac());
+                configuration.getEidasProxy());
         apiClient.setConfiguration(lansforsakringarConfiguration);
     }
 

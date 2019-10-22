@@ -57,7 +57,7 @@ public final class FidorAgent extends NextGenerationAgent
         apiClient.setConfiguration(fidorConfiguration);
         final String certificateId = fidorConfiguration.getCertificateId();
         final EidasProxyConfiguration eidasProxyConfiguration = configuration.getEidasProxy();
-        client.setEidasProxy(eidasProxyConfiguration, certificateId);
+        client.setEidasProxy(eidasProxyConfiguration);
     }
 
     protected FidorConfiguration getClientConfiguration() {

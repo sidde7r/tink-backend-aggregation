@@ -58,7 +58,7 @@ public final class EnterCardAgent extends NextGenerationAgent
 
         EnterCardConfiguration enterCardConfiguration = getClientConfiguration();
         apiClient.setConfiguration(enterCardConfiguration);
-        this.client.setEidasProxy(configuration.getEidasProxy(), "Tink");
+        this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
     protected EnterCardConfiguration getClientConfiguration() {

@@ -57,7 +57,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
         this.client.setDebugOutput(true);
         if (clientConfiguration.getEnvironment() == Environment.PRODUCTION) {
             this.client.setEidasProxy(
-                    configuration.getEidasProxy(), clientConfiguration.getEidasQwac());
+                    configuration.getEidasProxy());
         } else {
             client.setSslClientCertificate(
                     CbiGlobeUtils.readFile(clientConfiguration.getKeystorePath()),
