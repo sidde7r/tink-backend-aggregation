@@ -6,6 +6,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.google.common.collect.ImmutableList;
 import java.util.Collections;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,6 +15,8 @@ import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public class VolksbankHttpTest {
 
@@ -31,7 +34,27 @@ public class VolksbankHttpTest {
 
         TinkHttpClient client =
                 NextGenTinkHttpClient.builder(
-                                new LogMasker(new Credentials(), Collections.emptyList()),
+                                LogMasker.builder()
+                                        .addStringMaskerBuilder(
+                                                new CredentialsStringMaskerBuilder(
+                                                        new Credentials(),
+                                                        ImmutableList.of(
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .PASSWORD,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .SECRET_KEY,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .SENSITIVE_PAYLOAD,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .USERNAME)))
+                                        .addStringMaskerBuilder(
+                                                new ClientConfigurationStringMaskerBuilder(
+                                                        Collections.emptyList()))
+                                        .build(),
                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
 

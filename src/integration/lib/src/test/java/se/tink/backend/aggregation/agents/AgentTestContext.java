@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.text.SimpleDateFormat;
@@ -30,6 +31,8 @@ import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -56,7 +59,27 @@ public class AgentTestContext extends AgentContext {
     public AgentTestContext(Credentials credentials) {
         supplementalClient =
                 NextGenTinkHttpClient.builder(
-                                new LogMasker(new Credentials(), Collections.emptyList()),
+                                LogMasker.builder()
+                                        .addStringMaskerBuilder(
+                                                new CredentialsStringMaskerBuilder(
+                                                        new Credentials(),
+                                                        ImmutableList.of(
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .PASSWORD,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .SECRET_KEY,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .SENSITIVE_PAYLOAD,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .USERNAME)))
+                                        .addStringMaskerBuilder(
+                                                new ClientConfigurationStringMaskerBuilder(
+                                                        Collections.emptyList()))
+                                        .build(),
                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
         log = LoggerFactory.getLogger(AgentTestContext.class);

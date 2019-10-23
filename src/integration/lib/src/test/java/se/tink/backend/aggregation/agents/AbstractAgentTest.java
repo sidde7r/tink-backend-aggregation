@@ -25,7 +25,9 @@ import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CookieContainer;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -652,7 +654,22 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         return new HttpLoggingFilterFactory(
                 log,
                 "TRANSFER",
-                new LogMasker(new Credentials(), Collections.emptyList()),
+                LogMasker.builder()
+                        .addStringMaskerBuilder(
+                                new CredentialsStringMaskerBuilder(
+                                        new Credentials(),
+                                        ImmutableList.of(
+                                                CredentialsStringMaskerBuilder.CredentialsProperty
+                                                        .PASSWORD,
+                                                CredentialsStringMaskerBuilder.CredentialsProperty
+                                                        .SECRET_KEY,
+                                                CredentialsStringMaskerBuilder.CredentialsProperty
+                                                        .SENSITIVE_PAYLOAD,
+                                                CredentialsStringMaskerBuilder.CredentialsProperty
+                                                        .USERNAME)))
+                        .addStringMaskerBuilder(
+                                new ClientConfigurationStringMaskerBuilder(Collections.emptyList()))
+                        .build(),
                 transferExecutor.getClass(),
                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
     }

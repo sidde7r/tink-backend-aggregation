@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -43,6 +44,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class UkOpenBankingESSBaseAgent extends NextGenerationAgent
@@ -95,9 +98,25 @@ public abstract class UkOpenBankingESSBaseAgent extends NextGenerationAgent
                         context.getLogOutputStream(),
                         signatureKeyPair,
                         request.getProvider(),
-                        new LogMasker(
-                                request.getCredentials(),
-                                getAgentConfigurationController().getSecretValues()),
+                        LogMasker.builder()
+                                .addStringMaskerBuilder(
+                                        new CredentialsStringMaskerBuilder(
+                                                request.getCredentials(),
+                                                ImmutableList.of(
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.PASSWORD,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.SECRET_KEY,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty
+                                                                .SENSITIVE_PAYLOAD,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.USERNAME)))
+                                .addStringMaskerBuilder(
+                                        new ClientConfigurationStringMaskerBuilder(
+                                                context.getAgentConfigurationController()
+                                                        .getSecretValues()))
+                                .build(),
                         LogMasker.shouldLog(request.getProvider()));
         tinkProvider = request.getProvider();
         this.wellKnownURL = aisConfig.getWellKnownURL();

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -16,28 +17,24 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 
-public class CredentialsStringMasker implements StringMasker {
+public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
     private final Credentials credentials;
     private final Iterable<CredentialsProperty> maskedProperties;
+    private final ImmutableList<String> propertyValuesToMask;
 
-    public CredentialsStringMasker(
+    public CredentialsStringMaskerBuilder(
             Credentials credentials, Iterable<CredentialsProperty> maskedProperties) {
         this.credentials = credentials;
         this.maskedProperties = maskedProperties;
+        this.propertyValuesToMask = getNonEmptyPropertyValuesToMask();
     }
 
     @Override
-    public String getMasked(String string) {
-        Set<String> propertyValuesToMask = getNonEmptyPropertyValuesToMask();
-
-        for (String value : propertyValuesToMask) {
-            string = string.replace(value, MASK);
-        }
-
-        return string;
+    public ImmutableList<String> getValuesToMask() {
+        return ImmutableList.copyOf(propertyValuesToMask);
     }
 
-    private Set<String> getNonEmptyPropertyValuesToMask() {
+    private ImmutableList<String> getNonEmptyPropertyValuesToMask() {
         Set<String> valuesToMask = Sets.newHashSet();
 
         for (CredentialsProperty property : maskedProperties) {
@@ -54,7 +51,11 @@ public class CredentialsStringMasker implements StringMasker {
             }
         }
 
-        return valuesToMask;
+        return ImmutableList.sortedCopyOf(
+                Comparator.comparing(String::length)
+                        .reversed()
+                        .thenComparing(Comparator.naturalOrder()),
+                valuesToMask);
     }
 
     private Optional<String> getNonEmptyPropertyValue(CredentialsProperty property) {
@@ -66,6 +67,10 @@ public class CredentialsStringMasker implements StringMasker {
                 break;
             case USERNAME:
                 value = credentials.getUsername();
+                break;
+            case SENSITIVE_PAYLOAD:
+                break;
+            case SECRET_KEY:
                 break;
             default:
                 break;

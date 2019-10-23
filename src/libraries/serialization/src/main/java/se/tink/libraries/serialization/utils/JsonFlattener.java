@@ -1,6 +1,5 @@
 package se.tink.libraries.serialization.utils;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,19 +40,26 @@ public class JsonFlattener {
                 map.putAll(flattenJsonToMap(currentPath + "[" + i + "]", arrayNode.get(i)));
             }
         } else if (jsonNode.isValueNode()) {
+            // This is empirically tested. When we have some nested json objects serialized as a
+            // String, depending on how many levels the object has the unescaping of characters
+            // might make it not work. These conditions checking the lenght of the escaped/unescaped
+            // again serialized String make it work.
             ValueNode valueNode = (ValueNode) jsonNode;
-            try {
-                JsonNode tryIfJsonNodeIsJsonObject =
-                        OBJECT_MAPPER.readTree(StringEscapeUtils.unescapeJson(valueNode.asText()));
-                if (tryIfJsonNodeIsJsonObject.isObject()) {
-                    map.putAll(flattenJsonToMap(currentPath, tryIfJsonNodeIsJsonObject));
-                } else {
-                    map.put(currentPath, valueNode.asText());
-                }
-            } catch (JsonParseException e) {
-                LOG.debug(
-                        "Got an expected JsonParseException, assuming we found a real leaf node.");
+            String unescaped = StringEscapeUtils.unescapeJson(valueNode.asText());
+            int lengthUnescaped = unescaped.length();
+            int lengthEscaped = valueNode.asText().length();
+            int lengthEscapedAgain = StringEscapeUtils.escapeJson(unescaped).length();
+            if (lengthEscaped == lengthUnescaped && lengthEscaped == lengthEscapedAgain) {
                 map.put(currentPath, valueNode.asText());
+            } else {
+                final String treeString;
+                if (lengthUnescaped < lengthEscaped && lengthEscaped < lengthEscapedAgain) {
+                    treeString = valueNode.asText();
+                } else {
+                    treeString = unescaped;
+                }
+                JsonNode tryIfJsonNodeIsJsonObject = OBJECT_MAPPER.readTree(treeString);
+                map.putAll(flattenJsonToMap(currentPath, tryIfJsonNodeIsJsonObject));
             }
         }
         return map;
