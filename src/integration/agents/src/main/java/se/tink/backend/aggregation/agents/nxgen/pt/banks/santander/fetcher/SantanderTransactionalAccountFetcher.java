@@ -61,7 +61,7 @@ public class SantanderTransactionalAccountFetcher implements AccountFetcher<Tran
     private Optional<TransactionalAccount> toTinkAccount(Map<String, String> obj) {
         String currencyCode =
                 currencyMapper
-                        .convertToCode(Integer.parseInt(obj.get(Account.CURRENCY_NUMERIC_CODE)))
+                        .get(Integer.parseInt(obj.get(Account.CURRENCY_NUMERIC_CODE)))
                         .getCurrencyCode();
 
         return TransactionalAccount.nxBuilder()
@@ -83,7 +83,7 @@ public class SantanderTransactionalAccountFetcher implements AccountFetcher<Tran
                                 .addIdentifier(
                                         new IbanIdentifier(
                                                 obj.get(Account.BIC), obj.get(Account.IBAN)))
-                                .setProductName(obj.get(Account.PRODUCT_NAME))
+                                .setProductName(obj.get(Account.PRODUCT_NAME).trim())
                                 .build())
                 .putInTemporaryStorage(STORAGE.CURRENCY_CODE, currencyCode)
                 .putInTemporaryStorage(STORAGE.BRANCH_CODE, obj.get(Account.BRANCH_CODE))

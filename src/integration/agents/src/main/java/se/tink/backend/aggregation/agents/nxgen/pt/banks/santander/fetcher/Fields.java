@@ -33,4 +33,18 @@ public class Fields {
         public static final String CUSTOMER_NAME = "userName";
         public static final String VARIABLES = "variables";
     }
+
+    public static class Investment {
+        static final String AVAILABLE_BALANCE = "availableBalance";
+        static final String CURRENCY_NUMERIC_CODE = "currency";
+        static final String FULL_ACCOUNT_NUMBER = "account";
+        static final String PRODUCT_NAME = "number";
+    }
+
+    public static class Assets {
+        static final String RETIREMENT_INVESTMENTS = "PR";
+        static final String INVESTMENT_ACCOUNTS = "FU";
+        static final String CREDIT_CARDS = "CR";
+        static final String LOANS = "EP";
+    }
 }

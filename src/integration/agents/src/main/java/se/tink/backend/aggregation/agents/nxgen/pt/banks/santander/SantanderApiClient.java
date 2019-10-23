@@ -88,6 +88,23 @@ public class SantanderApiClient {
         return parser.parseResponse(rawResponse);
     }
 
+    public ApiResponse fetchAssets() {
+        String rawResponse =
+                tinkHttpClient
+                        .request(SantanderConstants.API_URL)
+                        .header(
+                                "MORE-Control",
+                                String.format(
+                                        "|1process|1service|1%s|1session|1executeFlow|1method|51|1execute|1|1callId|D5",
+                                        persistentStorage.get(STORAGE.SESSION_TOKEN)))
+                        .body(
+                                "|1x26bf0e990|1flow|420191022142453892|1time|L0|1analytics|0|1kernel|D4|0|D0|L1|30|L4")
+                        .post(String.class);
+
+        return parser.parseResponse(rawResponse);
+    }
+
+
     private String escapeString(String argValue) {
         return argValue.replace("|", "||");
     }
