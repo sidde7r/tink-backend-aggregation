@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator;
 
 import java.util.Objects;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants.Payload;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationOtpResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
@@ -20,16 +23,20 @@ public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
     private final AktiaApiClient apiClient;
     private final EncapClient encapClient;
     private final AktiaAuthenticationFlow aktiaAuthenticationFlow;
-
+    private final Credentials credentials;
     private String username;
     private OAuth2Token registrationToken;
 
     public AktiaKeyCardAuthenticator(
-            AktiaApiClient apiClient, EncapClient encapClient, final Storage instanceStorage) {
+            AktiaApiClient apiClient,
+            EncapClient encapClient,
+            final Storage instanceStorage,
+            Credentials credentials) {
         this.apiClient = apiClient;
         this.encapClient = encapClient;
         this.aktiaAuthenticationFlow =
                 new AktiaAuthenticationFlow(apiClient, encapClient, instanceStorage);
+        this.credentials = credentials;
     }
 
     @Override
@@ -47,6 +54,9 @@ public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
 
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
+        credentials.setSensitivePayload(Field.Key.OTP_INPUT, code);
+        credentials.setSensitivePayload(Payload.TOKEN, registrationToken.getAccessToken());
+
         RegistrationOtpResponse otpResponse =
                 apiClient.registrationOtpChallengeResponse(registrationToken, code);
         if (!otpResponse.isSuccess() || Objects.isNull(otpResponse.getDeviceActivationCode())) {
@@ -54,6 +64,7 @@ public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
         }
 
         String activationCode = otpResponse.getDeviceActivationCode();
+
         try {
             DeviceRegistrationResponse registrationResponse =
                     encapClient.registerDevice(username, activationCode);
