@@ -53,7 +53,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String RESOLVED_APPID_PLACE_HOLDER = "RESOLVEDAPPIDPLACEHOLDER";
     private static final Logger log = LoggerFactory.getLogger(TinkApacheHttpRequestExecutor.class);
     private static final String SIGNATURE_HEADER_KEY = "X-Signature";
-    private static final String EIDAS_CERTIFICATE_ID_HEADER = "X-Tink-Eidas-Proxy-Certificate-Id";
     private static final String EIDAS_CLUSTER_ID_HEADER = "X-Tink-QWAC-ClusterId";
     private static final String EIDAS_APPID_HEADER = "X-Tink-QWAC-AppId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
@@ -208,7 +207,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private String proxyPassword;
 
     private boolean shouldUseEidasProxy = false;
-    private String legacyCertId;
     private EidasIdentity eidasIdentity;
     private EidasProxyConfiguration eidasProxyConfiguration;
 
@@ -236,9 +234,8 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         this.proxyPassword = password;
     }
 
-    public void setLegacyCertId(String legacyCertId) {
+    public void shouldUseEidasProxy() {
         this.shouldUseEidasProxy = true;
-        this.legacyCertId = legacyCertId;
     }
 
     @Override
@@ -253,7 +250,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         if (isHttpProxyRequest(request) && (!shouldUseEidasProxy)) {
             addProxyAuthorizationHeader(request);
         } else if (shouldUseEidasProxy) {
-            request.addHeader(EIDAS_CERTIFICATE_ID_HEADER, legacyCertId);
             request.addHeader(EIDAS_CLUSTER_ID_HEADER, eidasIdentity.getClusterId());
             request.addHeader(EIDAS_APPID_HEADER, eidasIdentity.getAppId());
             request.addHeader(EIDAS_PROXY_REQUESTER, eidasIdentity.getRequester());
