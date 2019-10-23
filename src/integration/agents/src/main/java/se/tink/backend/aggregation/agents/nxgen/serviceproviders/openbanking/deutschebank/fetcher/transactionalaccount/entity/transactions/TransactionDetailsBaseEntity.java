@@ -31,6 +31,7 @@ public abstract class TransactionDetailsBaseEntity {
         return Stream.of(debtorName, creditorName, remittanceInformationUnstructured)
                 .filter(StringUtils::isNotBlank)
                 .findFirst()
+                .map(description -> description.replace("\r\n", " "))
                 .orElse("");
     }
 }

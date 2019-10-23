@@ -26,9 +26,9 @@ public class DeutscheBankBEAgentTest {
                         .addCredentialField(CredentialKeys.PSU_ID, manager.get(Arg.PSU_ID))
                         .setFinancialInstitutionId("deutschebank-be")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
                         .expectLoggedIn(false)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
     }
 
     @Test
@@ -39,5 +39,7 @@ public class DeutscheBankBEAgentTest {
     private enum Arg {
         IBAN,
         PSU_ID,
+        LOAD_BEFORE,
+        SAVE_AFTER,
     }
 }
