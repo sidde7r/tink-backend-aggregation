@@ -24,6 +24,8 @@ public class NatWestAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-natwest-oauth2")
+                .setFinancialInstitutionId("natwest")
+                .setAppId("tink")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
@@ -35,6 +37,8 @@ public class NatWestAgentTest {
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("uk", "uk-natwest-oauth2")
+                        .setFinancialInstitutionId("natwest")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
