@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import java.util.Objects;
 import java.util.UUID;
 import org.apache.http.HttpStatus;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -30,15 +32,17 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
 
     private final OmaspApiClient apiClient;
     private final PersistentStorage persistentStorage;
-
+    private final Credentials credentials;
     private SessionStorage sessionStorage;
 
     public OmaspKeyCardAuthenticator(
             OmaspApiClient apiClient,
             PersistentStorage persistentStorage,
+            Credentials credentials,
             SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
+        this.credentials = credentials;
         this.sessionStorage = sessionStorage;
     }
 
@@ -113,6 +117,7 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
 
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
+        credentials.setSensitivePayload(Field.Key.OTP_INPUT, code);
         try {
             String deviceId = persistentStorage.get(Storage.DEVICE_ID);
 
@@ -129,8 +134,10 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
                     !Strings.isNullOrEmpty(registerDeviceResponse.getDeviceToken()),
                     "Device token is null or empty");
 
-            persistentStorage.put(
-                    OmaspConstants.Storage.DEVICE_TOKEN, registerDeviceResponse.getDeviceToken());
+            String deviceToken = registerDeviceResponse.getDeviceToken();
+            credentials.setSensitivePayload(Storage.DEVICE_TOKEN, deviceToken);
+            persistentStorage.put(OmaspConstants.Storage.DEVICE_TOKEN, deviceToken);
+
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() != 403) {
                 throw e;

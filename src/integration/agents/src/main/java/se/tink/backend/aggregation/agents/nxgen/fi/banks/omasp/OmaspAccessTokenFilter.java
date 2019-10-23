@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp;
 
 import java.util.Objects;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.rpc.OmaspBaseResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
@@ -14,9 +15,11 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 // it to the next request.
 public class OmaspAccessTokenFilter extends Filter {
     private final SessionStorage sessionStorage;
+    private final Credentials credentials;
 
-    public OmaspAccessTokenFilter(SessionStorage sessionStorage) {
+    public OmaspAccessTokenFilter(SessionStorage sessionStorage, Credentials credentials) {
         this.sessionStorage = sessionStorage;
+        this.credentials = credentials;
     }
 
     @Override

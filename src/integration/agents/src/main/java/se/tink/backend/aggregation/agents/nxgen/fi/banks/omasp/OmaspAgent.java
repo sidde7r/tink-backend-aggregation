@@ -62,7 +62,7 @@ public class OmaspAgent extends NextGenerationAgent
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(OmaspConstants.USER_AGENT);
-        client.addFilter(new OmaspAccessTokenFilter(sessionStorage));
+        client.addFilter(new OmaspAccessTokenFilter(sessionStorage, credentials));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class OmaspAgent extends NextGenerationAgent
                         catalog,
                         supplementalInformationHelper,
                         new OmaspKeyCardAuthenticator(
-                                apiClient, persistentStorage, sessionStorage)),
+                                apiClient, persistentStorage, credentials, sessionStorage)),
                 new OmaspAutoAuthenticator(
                         apiClient, persistentStorage, credentials, sessionStorage));
     }
