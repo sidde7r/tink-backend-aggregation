@@ -325,7 +325,7 @@ public class AccountDetailsResponse {
         LoanModuleBuildStep builder =
                 LoanModule.builder()
                         .withType(MAPPERS.getLoanType(accountType).orElse(LoanDetails.Type.OTHER))
-                        .withBalance(getBalance().negate())
+                        .withBalance(getLoanBalance())
                         .withInterestRate(getInterestRate());
         if (!Objects.isNull(remainingLoan)) {
             builder.setAmortized(new ExactCurrencyAmount(remainingLoan, Currencies.SEK));
@@ -335,14 +335,25 @@ public class AccountDetailsResponse {
     }
 
     @JsonIgnore
+    private ExactCurrencyAmount getLoanBalance() {
+        ExactCurrencyAmount result = getBalance();
+        if (result.getExactValue().signum() != -1) {
+            result = result.negate();
+        }
+        return result;
+    }
+
+    @JsonIgnore
     private ExactCurrencyAmount getBalance() {
+        final ExactCurrencyAmount result;
         if (!Objects.isNull(ownCapital)) {
-            return new ExactCurrencyAmount(ownCapital, Currencies.SEK);
+            result = new ExactCurrencyAmount(ownCapital, Currencies.SEK);
         } else if (!Objects.isNull(totalBalanceDue)) {
-            return new ExactCurrencyAmount(totalBalanceDue, Currencies.SEK);
+            result = new ExactCurrencyAmount(totalBalanceDue, Currencies.SEK);
         } else {
             throw new IllegalStateException("Could not parse balance!");
         }
+        return result;
     }
 
     @JsonIgnore
