@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,6 +13,11 @@ public class ErrorResponse {
     private static final Logger log = LoggerFactory.getLogger(ErrorResponse.class);
 
     @JsonProperty private String error;
+    @JsonIgnore private boolean proxyError;
+
+    public boolean isProxyError() {
+        return proxyError;
+    }
 
     @JsonIgnore
     public void handleErrors() {

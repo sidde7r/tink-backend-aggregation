@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstant
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.DecoupledResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
