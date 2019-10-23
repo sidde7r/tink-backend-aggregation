@@ -770,6 +770,12 @@ maven_jar(
 )
 
 maven_jar(
+    name = "com_fasterxml_uuid_java_uuid_generator",
+    artifact = "com.fasterxml.uuid:java-uuid-generator:3.1.5",
+    sha1 = "8784df945176ab4e8e268fd24508cf882d3378de",
+)
+
+maven_jar(
     name = "com_fasterxml_jackson_datatype_jackson_datatype_guava",
     artifact = "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9",
     sha1 = "8ed2f11606b6f37c087a090e333b19273f6f48cb",
@@ -2477,32 +2483,3 @@ http_archive(
 load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
 
 grpc_java_repositories(omit_com_google_protobuf = True)
-
-RULES_JVM_EXTERNAL_TAG = "2.8"
-
-RULES_JVM_EXTERNAL_SHA = "79c9850690d7614ecdb72d68394f994fef7534b292c4867ce5e7dec0aa7bdfad"
-
-http_archive(
-    name = "rules_jvm_external",
-    sha256 = RULES_JVM_EXTERNAL_SHA,
-    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
-    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
-)
-
-load("@rules_jvm_external//:defs.bzl", "maven_install")
-
-maven_install(
-    name = "java_uuid_generator",
-    artifacts = [
-        "com.fasterxml.uuid:java-uuid-generator:3.2.0",
-    ],
-    fetch_sources = True,
-    maven_install_json = "//third_party:java_uuid_generator.json",
-    repositories = [
-        "https://repo.maven.apache.org/maven2/",
-    ],
-)
-
-load("@java_uuid_generator//:defs.bzl", "pinned_maven_install")
-
-pinned_maven_install()
