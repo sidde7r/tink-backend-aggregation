@@ -8,16 +8,22 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configur
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class StarlingConfiguration implements ClientConfiguration {
 
-    @JsonProperty private ClientConfigurationEntity aisConfiguration;
-    @JsonProperty private ClientConfigurationEntity pisConfiguration;
-    @JsonProperty private String keyUid;
-    @JsonProperty private String signingKey;
-    @JsonProperty private String redirectUrl;
+    @JsonProperty @Secret private String aisClientId;
+    @JsonProperty @Secret private String pisClientId;
+
+    @JsonProperty @SensitiveSecret private String aisClientSecret;
+    @JsonProperty @SensitiveSecret private String pisClientSecret;
+
+    @JsonProperty @Secret private String keyUid;
+    @JsonProperty @Secret private String signingKey;
+    @JsonProperty @Secret private String redirectUrl;
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
@@ -26,15 +32,16 @@ public class StarlingConfiguration implements ClientConfiguration {
     }
 
     public ClientConfigurationEntity getAisConfiguration() {
-
-        Preconditions.checkNotNull(aisConfiguration, "Starling AIS configuration could not load.");
-        return aisConfiguration;
+        Preconditions.checkNotNull(aisClientId, "Starling AIS configuration could not load.");
+        Preconditions.checkNotNull(aisClientSecret, "Starling AIS configuration could not load.");
+        return new ClientConfigurationEntity(aisClientId, aisClientSecret, redirectUrl);
     }
 
     public ClientConfigurationEntity getPisConfiguration() {
 
-        Preconditions.checkNotNull(pisConfiguration, "Starling PIS configuration could not load.");
-        return pisConfiguration;
+        Preconditions.checkNotNull(pisClientId, "Starling PIS configuration could not load.");
+        Preconditions.checkNotNull(pisClientSecret, "Starling PIS configuration could not load.");
+        return new ClientConfigurationEntity(pisClientId, pisClientSecret, redirectUrl);
     }
 
     public String getKeyUid() {

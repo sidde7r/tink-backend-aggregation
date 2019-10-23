@@ -67,18 +67,8 @@ public class StarlingAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         StarlingConfiguration starlingConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                StarlingConstants.INTEGRATION_NAME,
-                                clientName,
-                                StarlingConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format(
-                                                        "No Starling client configured for name: %s",
-                                                        clientName)));
+                getAgentConfigurationController()
+                        .getAgentConfiguration(StarlingConfiguration.class);
 
         aisConfiguration = starlingConfiguration.getAisConfiguration();
         pisConfiguration = starlingConfiguration.getPisConfiguration();
