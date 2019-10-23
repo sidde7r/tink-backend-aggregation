@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -50,8 +50,8 @@ public class BuddybankCreatePaymentResponse implements CreatePaymentResponse {
         return new PaymentResponse(
                 new Payment.Builder()
                         .withUniqueId(paymentId)
-                        .withCreditor(new Creditor(new SwedishIdentifier(creditorAccountNumber)))
-                        .withDebtor(new Debtor(new SwedishIdentifier(debtorAccountNumber)))
+                        .withCreditor(new Creditor(new IbanIdentifier(creditorAccountNumber)))
+                        .withDebtor(new Debtor(new IbanIdentifier(debtorAccountNumber)))
                         .withStatus(
                                 UnicreditPaymentStatus.fromString(transactionStatus)
                                         .getPaymentStatus())
