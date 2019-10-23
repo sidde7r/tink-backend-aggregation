@@ -15,6 +15,8 @@ public class BeoBankAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("be", "be-beobank-ob")
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("beobank")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
