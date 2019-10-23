@@ -29,7 +29,7 @@ public class LogMasker {
     }
 
     private ImmutableList<String> mergeSensitiveValuesToMask(
-            LinkedHashSet<StringMaskerBuilder> stringMaskerBuilders) {
+            ImmutableList<StringMaskerBuilder> stringMaskerBuilders) {
         ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
         stringMaskerBuilders.forEach(
@@ -79,7 +79,7 @@ public class LogMasker {
     }
 
     public static final class Builder {
-        private LinkedHashSet<StringMaskerBuilder> stringMaskerBuilders;
+        private LinkedHashSet<StringMaskerBuilder> stringMaskerBuilders = new LinkedHashSet<>();
 
         private Builder() {}
 
@@ -88,8 +88,8 @@ public class LogMasker {
             return this;
         }
 
-        private LinkedHashSet<StringMaskerBuilder> getStringMaskerBuilders() {
-            return stringMaskerBuilders;
+        private ImmutableList<StringMaskerBuilder> getStringMaskerBuilders() {
+            return ImmutableList.copyOf(stringMaskerBuilders);
         }
 
         public LogMasker build() {
