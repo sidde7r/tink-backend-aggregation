@@ -48,6 +48,11 @@ public final class DeutscheBankConstants {
         public static final String ACCOUNTS = "/v1/accounts";
         public static final String BALANCES = "/v1/accounts/%s/balances";
         public static final String TRANSACTIONS = "/v1/accounts/%s/transactions";
+        public static final String MYBANK_BELGIUM = "https://www.deutschebank.be/mybank/index.html";
+        public static final String MYBANK_BELGIUM_IOS =
+                "https://apps.apple.com/be/app/mybank-belgium/id1082668633";
+        public static final String MYBANK_BELGIUM_ANDRORID =
+                "https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.db.pbc.mybankbelgium&ddl=1&pcampaignid=web_ddl_1";
     }
 
     public static class IdTags {

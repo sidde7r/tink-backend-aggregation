@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator, AutoAuthenticator {
@@ -28,18 +29,22 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
     private final String iban;
     private final String psuId;
     private final StrongAuthenticationState strongAuthenticationState;
+    private final DeutscheBankRedirectHandler deutscheBankRedirectHandler;
 
     public DeutscheBankMultifactorAuthenticator(
             DeutscheBankApiClient apiClient,
             SessionStorage sessionStorage,
             String iban,
             String psuId,
-            StrongAuthenticationState strongAuthenticationState) {
+            StrongAuthenticationState strongAuthenticationState,
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
         this.iban = iban;
         this.psuId = psuId;
         this.strongAuthenticationState = strongAuthenticationState;
+        this.deutscheBankRedirectHandler =
+                new DeutscheBankRedirectHandler(supplementalInformationHelper);
     }
 
     @Override
@@ -47,6 +52,7 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
             throws AuthenticationException, AuthorizationException {
         try {
             ConsentBaseResponse consent = getConsent(strongAuthenticationState.getState());
+            deutscheBankRedirectHandler.handleRedirect();
             poll(consent);
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -55,7 +61,7 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
 
     @Override
     public CredentialsTypes getType() {
-        return null;
+        return CredentialsTypes.THIRD_PARTY_APP;
     }
 
     public ConsentBaseResponse getConsent(String state) throws MalformedURLException {
