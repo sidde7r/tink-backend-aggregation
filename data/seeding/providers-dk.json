@@ -365,7 +365,8 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "accessType": "OTHER"
         },
         {
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",

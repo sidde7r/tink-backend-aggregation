@@ -47,7 +47,7 @@ public class DanskeBankInvestmentFetcher implements AccountFetcher<InvestmentAcc
     // There is only one portfolio for each account
     private List<Portfolio> createPortfolio(
             GroupAccountEntity custodyAccount, ListSecuritiesResponse listSecurities) {
-        Portfolio portfolio = custodyAccount.toTinkPortfolio(listSecurities.getMarketValue());
+        Portfolio portfolio = custodyAccount.toTinkPortfolio(listSecurities);
 
         List<Instrument> instruments = Lists.newArrayList();
         portfolio.setInstruments(instruments);

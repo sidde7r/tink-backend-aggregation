@@ -10,6 +10,8 @@ import se.tink.libraries.amount.Amount;
 public class ListSecuritiesResponse extends AbstractResponse {
     private double marketValue;
     private String marketValueCurrency;
+    private double performance;
+    private double performancePct;
     private List<SecurityEntity> securities;
 
     public double getMarketValue() {
@@ -18,6 +20,22 @@ public class ListSecuritiesResponse extends AbstractResponse {
 
     public String getMarketValueCurrency() {
         return marketValueCurrency;
+    }
+
+    public double getPerformance() {
+        return performance;
+    }
+
+    public void setPerformance(double performance) {
+        this.performance = performance;
+    }
+
+    public double getPerformancePct() {
+        return performancePct;
+    }
+
+    public void setPerformancePct(double performancePct) {
+        this.performancePct = performancePct;
     }
 
     public List<SecurityEntity> getSecurities() {

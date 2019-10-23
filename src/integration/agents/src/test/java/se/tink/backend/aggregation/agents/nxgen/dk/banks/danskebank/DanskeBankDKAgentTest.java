@@ -1,30 +1,42 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-@Ignore
 public class DanskeBankDKAgentTest {
-    private static final String USERNAME = "";
-    private static final String PASSWORD = "";
+    private enum Arg {
+        USERNAME,
+        PASSWORD
+    }
+
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setUp() throws Exception {
-        builder =
-                new AgentIntegrationTest.Builder("dk", "dk-danskebank-servicecode")
-                        .addCredentialField(Field.Key.USERNAME, USERNAME)
-                        .addCredentialField(Field.Key.PASSWORD, PASSWORD)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(true);
+        manager.before();
     }
 
     @Test
     public void testRefresh() throws Exception {
-        builder.build().testRefresh();
+        new AgentIntegrationTest.Builder("dk", "dk-danskebank-servicecode")
+                .setFinancialInstitutionId("dsjdnjn")
+                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(true)
+                .expectLoggedIn(false)
+                .build()
+                .testRefresh();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 }

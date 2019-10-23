@@ -50,13 +50,14 @@ public class GroupAccountEntity {
                 .build();
     }
 
-    public Portfolio toTinkPortfolio(double marketValue) {
+    public Portfolio toTinkPortfolio(ListSecuritiesResponse response) {
         Portfolio portfolio = new Portfolio();
 
-        portfolio.setTotalValue(marketValue);
+        portfolio.setTotalValue(response.getMarketValue());
         portfolio.setRawType(type);
         portfolio.setType(getTinkPortfolioType());
         portfolio.setUniqueIdentifier(accountIdentifier);
+        portfolio.setTotalProfit(response.getPerformance());
 
         return portfolio;
     }
