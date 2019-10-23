@@ -17,9 +17,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class BankAustriaTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
-
-    private BankAustriaApiClient apiClient;
-    private OtmlResponseConverter otmlResponseConverter;
+    private final BankAustriaApiClient apiClient;
+    private final OtmlResponseConverter otmlResponseConverter;
 
     public BankAustriaTransactionalAccountFetcher(
             BankAustriaApiClient apiClient, OtmlResponseConverter otmlResponseConverter) {
@@ -38,7 +37,7 @@ public class BankAustriaTransactionalAccountFetcher
         if (accountsFromSettings.isEmpty()) {
             otmlResponseConverter
                     .anyRtaMessageToAccept(apiClient.getAccountsFromSettings().getDataSources())
-                    .ifPresent(rtaMessage -> acceptRtaMessage(rtaMessage));
+                    .ifPresent(this::acceptRtaMessage);
 
             accountsFromSettings =
                     otmlResponseConverter.getAccountsFromSettings(
@@ -46,15 +45,15 @@ public class BankAustriaTransactionalAccountFetcher
         }
 
         return accountsFromSettings.stream()
-                .map(
-                        account ->
-                                otmlResponseConverter.fillAccountInformation(
-                                        apiClient
-                                                .getAccountInformationFromAccountMovement(account)
-                                                .getDataSources(),
-                                        account))
+                .map(this::getTransactionalAccountDetails)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    private TransactionalAccount getTransactionalAccountDetails(TransactionalAccount account) {
+        return otmlResponseConverter.fillAccountInformation(
+                apiClient.getAccountInformationFromAccountMovement(account).getDataSources(),
+                account);
     }
 
     private void acceptRtaMessage(RtaMessage rtaMessage) {

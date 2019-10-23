@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.authentica
 import java.util.Optional;
 import org.w3c.dom.Node;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -38,8 +39,9 @@ public class BankAustriaAuthenticator implements PasswordAuthenticator {
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
         bankAustriaSessionStorage.setXOtmlManifest(apiClient.getMD5OfUpdatePage());
-
-        OtmlResponse response = apiClient.login(removeDotsNotUsedByApp(username), password);
+        final String sanitizedUsername = removeDotsNotUsedByApp(username);
+        credentials.setSensitivePayload(Key.USERNAME, sanitizedUsername);
+        final OtmlResponse response = apiClient.login(sanitizedUsername, password);
 
         if (successful(response)) {
             return;
