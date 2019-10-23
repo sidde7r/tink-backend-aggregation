@@ -45,17 +45,19 @@ public class ICSApiClient {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final String redirectUri;
-    private ICSConfiguration configuration;
+    private final ICSConfiguration configuration;
 
     public ICSApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage,
-            String redirectUri) {
+            final TinkHttpClient client,
+            final SessionStorage sessionStorage,
+            final PersistentStorage persistentStorage,
+            final String redirectUri,
+            final ICSConfiguration configuration) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
+        this.configuration = configuration;
 
         this.client.addFilter(new BankServiceInternalErrorFilter());
     }
@@ -63,10 +65,6 @@ public class ICSApiClient {
     public ICSConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    public void setConfiguration(ICSConfiguration configuration) {
-        this.configuration = configuration;
     }
 
     private RequestBuilder createRequest(String url) {

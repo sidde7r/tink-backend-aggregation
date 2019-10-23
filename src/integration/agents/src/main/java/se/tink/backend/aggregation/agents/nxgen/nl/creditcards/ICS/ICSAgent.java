@@ -37,9 +37,6 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         clientName = request.getProvider().getPayload().split(" ")[0];
         redirectUri = request.getProvider().getPayload().split(" ")[1];
-        apiClient = new ICSApiClient(client, sessionStorage, persistentStorage, redirectUri);
-
-        creditCardRefreshController = constructCreditCardRefreshController();
 
         final ICSConfiguration icsConfiguration =
                 agentsServiceConfiguration
@@ -57,7 +54,20 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
                 EncodingUtils.decodeBase64String(icsConfiguration.getRootCACertificate()),
                 icsConfiguration.getRootCAPassword());
 
-        apiClient.setConfiguration(icsConfiguration);
+        apiClient =
+                new ICSApiClient(
+                        client, sessionStorage, persistentStorage, redirectUri, icsConfiguration);
+
+        creditCardRefreshController =
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new ICSAccountFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        new ICSCreditCardFetcher(apiClient), 0),
+                                null));
     }
 
     @Override
@@ -86,18 +96,6 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
-    }
-
-    private CreditCardRefreshController constructCreditCardRefreshController() {
-        return new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                new ICSAccountFetcher(apiClient),
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(
-                                new ICSCreditCardFetcher(apiClient), 0),
-                        null));
     }
 
     @Override
