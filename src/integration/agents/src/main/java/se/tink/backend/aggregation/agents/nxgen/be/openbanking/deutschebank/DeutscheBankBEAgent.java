@@ -44,7 +44,8 @@ public class DeutscheBankBEAgent extends DeutscheBankAgent {
                         sessionStorage,
                         credentials.getField(DeutscheBankConstants.CredentialKeys.IBAN),
                         credentials.getField(DeutscheBankConstants.CredentialKeys.PSU_ID),
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        supplementalInformationHelper);
 
         return new AutoAuthenticationController(
                 request,
