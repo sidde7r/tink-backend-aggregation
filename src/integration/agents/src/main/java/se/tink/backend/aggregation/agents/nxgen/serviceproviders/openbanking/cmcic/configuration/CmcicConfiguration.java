@@ -17,7 +17,6 @@ public class CmcicConfiguration implements ClientConfiguration {
     @Secret private String redirectUrl;
     @Secret private String clientId;
     @SensitiveSecret private String keyId;
-    private String certificateId;
 
     public String getKeyId() {
         Preconditions.checkNotNull(
@@ -65,13 +64,5 @@ public class CmcicConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Auth Base URL"));
 
         return authBaseUrl;
-    }
-
-    public String getCertificateId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(certificateId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
-
-        return certificateId;
     }
 }
