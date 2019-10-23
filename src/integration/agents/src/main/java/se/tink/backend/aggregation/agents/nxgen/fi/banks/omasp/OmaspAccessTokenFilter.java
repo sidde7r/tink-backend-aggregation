@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp;
 
 import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.rpc.OmaspBaseResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
@@ -38,9 +37,9 @@ public class OmaspAccessTokenFilter extends Filter {
         if (response.getStatus() >= 200 && response.getStatus() < 400) {
             OmaspBaseResponse baseResponse = response.getBody(OmaspBaseResponse.class);
             if (!Objects.isNull(baseResponse.getToken())) {
-                String accessToken = baseResponse.getToken().getAccessToken();
-                credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, accessToken);
-                sessionStorage.put(OmaspConstants.Storage.ACCESS_TOKEN, accessToken);
+                sessionStorage.put(
+                        OmaspConstants.Storage.ACCESS_TOKEN,
+                        baseResponse.getToken().getAccessToken());
             }
         }
 

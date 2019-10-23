@@ -49,8 +49,6 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
     @Override
     public KeyCardInitValues init(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        credentials.setSensitivePayload(Field.Key.USERNAME, username);
-        credentials.setSensitivePayload(Field.Key.PASSWORD, password);
         try {
             LoginResponse loginResponse = apiClient.login(username, password);
 
