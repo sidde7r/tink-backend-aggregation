@@ -15,8 +15,8 @@ public class ClientConfigurationStringMaskerBuilder implements StringMaskerBuild
         this.sensitiveValuesToMask =
                 ImmutableList.sortedCopyOf(
                         Comparator.comparing(String::length)
-                                .thenComparing(Comparator.naturalOrder())
-                                .reversed(),
+                                .reversed()
+                                .thenComparing(Comparator.naturalOrder()),
                         sensitiveValuesToMaskWithoutDuplicates);
     }
 

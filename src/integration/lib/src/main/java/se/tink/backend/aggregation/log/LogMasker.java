@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.log;
 
-import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import se.tink.backend.agents.rpc.Provider;
@@ -21,21 +22,26 @@ public class LogMasker {
 
     public static final String MASK = "***MASKED***";
 
-    private final ImmutableSortedSet<String> sensitiveValuesToMask;
+    private final ImmutableList<String> sensitiveValuesToMask;
 
     private LogMasker(Builder builder) {
-        sensitiveValuesToMask = createUniqueStringMasker(builder.getStringMaskerBuilders());
+        sensitiveValuesToMask = mergeSensitiveValuesToMask(builder.getStringMaskerBuilders());
     }
 
-    private ImmutableSortedSet<String> createUniqueStringMasker(
+    private ImmutableList<String> mergeSensitiveValuesToMask(
             LinkedHashSet<StringMaskerBuilder> stringMaskerBuilders) {
-        ImmutableSortedSet.Builder<String> builder =
-                ImmutableSortedSet.orderedBy(Comparator.comparing(String::length).reversed());
+        ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
         stringMaskerBuilders.forEach(
                 stringMaskerBuilder -> builder.addAll(stringMaskerBuilder.getValuesToMask()));
 
-        return builder.build();
+        ImmutableSet<String> sensitiveValuesToMaskWithoutDuplicates = builder.build();
+
+        return ImmutableList.sortedCopyOf(
+                Comparator.comparing(String::length)
+                        .reversed()
+                        .thenComparing(Comparator.naturalOrder()),
+                sensitiveValuesToMaskWithoutDuplicates);
     }
 
     public String mask(String dataToMask) {
