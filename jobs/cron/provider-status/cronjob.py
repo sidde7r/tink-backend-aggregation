@@ -5,6 +5,7 @@ import json
 import logging
 import sys
 import os
+import re
 import time
 from collections import defaultdict
 
@@ -293,13 +294,14 @@ def main():
 
         for component_name, component_info in components.items():
             provider_metric_value = None
-            if component_name[-18:] == " (bank is failing)":
-                # suffix is used by us to create a separate time series for errors not with Tink
-                logins = provider_logins.get(component_name[:-18], None)
-                # If there haven't been any logins at all, status won't be updated
+            # The "bank is failing" suffix is used by us on Statuspage to indicate that errors aren't with Tink, but an
+            # integration still isn't in a usable state. In Prometheus this is reflected as two different 'outcomes' on
+            # the agent_login time series - 'failed' for Tink problems, 'unavailable' for bank problems. Since both are
+            # on the same time series they use the same key and the suffix has to be removed before looking up values.
+            if re.search(r"\(bank is failing\)$", component_name):
+                logins = provider_logins.get(component_name[:-18], None)  # Remove suffix
                 if logins is not None and logins > 0.0:
                     provider_metric_value = provider_unavailable_logins.get(component_name[:-18], 0)
-                    # ...but the component is still processed, so we get something in the logs?
                 process_component(component_name, component_info, provider_metric_value)
             else:
                 logins = provider_logins.get(component_name, None)
