@@ -100,4 +100,8 @@ public class AktiaConstants {
     public class InstanceStorage {
         public static final String USER_ACCOUNT_INFO = "userAccountInfo";
     }
+
+    public static class Payload {
+        public static final String TOKEN = "TOKEN";
+    }
 }
