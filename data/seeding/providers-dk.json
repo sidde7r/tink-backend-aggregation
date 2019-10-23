@@ -190,6 +190,22 @@
             "type": "BANK"
         },
         {
+            "name": "dk-banknordik-ob",
+            "accessType": "OPEN_BANKING",
+            "authenticationFlow": "REDIRECT",
+            "displayName": "BankNordik",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "THIRD_PARTY_APP",
+            "multiFactor": true,
+            "className": "nxgen.dk.openbanking.sdc.SdcAgent",
+            "passwordHelpText": null,
+            "transactional": true,
+            "tutorialUrl": null,
+            "fields": []
+        },
+        {
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Basisbank",

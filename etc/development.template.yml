@@ -530,6 +530,12 @@ agentsServiceConfiguration:
         clientId: "app.bbva.bbvatestapp"
         clientSecret: "9$YyzM4UTAI9$xlH5faHRybL$lJJVYBcIhYvaVFJWE1HJGwyfOz8WTAlAtDDcxb7"
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    sdc:
+      tink:
+        clientId: ""
+        clientSecret: ""
+        redirectUrl: "https://api.tink.com/api/v1/credentials/third-party/callback"
+        ocpApimSubscriptionKey: ""
     aib:
       tink:
         organizationId: ""
