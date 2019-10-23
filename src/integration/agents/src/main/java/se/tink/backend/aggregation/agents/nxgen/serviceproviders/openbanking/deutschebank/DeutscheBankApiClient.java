@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank;
 
-import java.util.Date;
+import com.google.common.base.Strings;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.HeaderKeys;
@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class DeutscheBankApiClient {
 
@@ -100,19 +99,16 @@ public class DeutscheBankApiClient {
     }
 
     public TransactionKeyPaginatorResponse<String> fetchTransactionsForAccount(
-            TransactionalAccount account, Date fromDate, Date toDate) {
+            TransactionalAccount account, String key) {
 
-        return createRequestInSession(
-                        new URL(
-                                configuration
-                                        .getBaseUrl()
-                                        .concat(
-                                                String.format(
-                                                        Urls.TRANSACTIONS,
-                                                        account.getApiIdentifier()))))
-                .queryParam(
-                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+        if (Strings.isNullOrEmpty(key)) {
+            key =
+                    configuration
+                            .getBaseUrl()
+                            .concat(String.format(Urls.TRANSACTIONS, account.getApiIdentifier()));
+        }
+
+        return createRequestInSession(new URL(key))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKING_STATUS)
                 .queryParam(QueryKeys.DELTA_LIST, QueryValues.DELTA_LIST)
                 .get(TransactionsKeyPaginatorBaseResponse.class);
