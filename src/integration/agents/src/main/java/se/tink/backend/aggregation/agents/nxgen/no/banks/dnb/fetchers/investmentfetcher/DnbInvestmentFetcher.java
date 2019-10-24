@@ -7,6 +7,7 @@ import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbConstants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investmentfetcher.entities.MyFundEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investmentfetcher.entities.PensionDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investmentfetcher.rpc.FetchFundsResponse;
@@ -103,10 +104,12 @@ public class DnbInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
             String[] tokenPair = token.split("=");
             if (Objects.equals(tokenPair[0], DnbConstants.Header.OAUTH_TOKEN_KEY)) {
                 this.oauth_token = tokenPair[1];
+                credentials.setSensitivePayload(Storage.OAUTH_TOKEN, this.oauth_token);
                 continue;
             }
             if (Objects.equals(tokenPair[0], DnbConstants.OAuth.OAUTH_TOKEN_SECRET_KEY)) {
                 this.oauth_secret = tokenPair[1];
+                credentials.setSensitivePayload(Storage.OAUTH_SECRET, this.oauth_secret);
             }
         }
     }
