@@ -1,14 +1,18 @@
 package se.tink.backend.aggregation.log;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Collection;
-import se.tink.backend.agents.rpc.Credentials;
+import com.google.common.collect.ImmutableSet;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMasker;
-import se.tink.backend.aggregation.utils.CredentialsStringMasker;
-import se.tink.backend.aggregation.utils.StringMasker;
+import se.tink.backend.aggregation.utils.StringMaskerBuilder;
 
 public class LogMasker {
+
+    public static final Comparator<String> SENSITIVE_VALUES_SORTING_COMPARATOR =
+            Comparator.comparing(String::length)
+                    .reversed()
+                    .thenComparing(Comparator.naturalOrder());
 
     /**
      * This enumeration decides if logging should be done or not. NOTE: Only pass
@@ -21,40 +25,30 @@ public class LogMasker {
         UNSURE_IF_MASKER_COVERS_SECRETS
     }
 
-    private final Iterable<StringMasker> stringMaskers;
+    public static final String MASK = "***MASKED***";
 
-    public LogMasker(Credentials credentials, Collection<String> sensitiveValuesToMask) {
-        stringMaskers = createLogMaskers(credentials, sensitiveValuesToMask);
+    private final ImmutableList<String> sensitiveValuesToMask;
+
+    private LogMasker(Builder builder) {
+        sensitiveValuesToMask = mergeSensitiveValuesToMask(builder.getStringMaskerBuilders());
+    }
+
+    private ImmutableList<String> mergeSensitiveValuesToMask(
+            ImmutableList<StringMaskerBuilder> stringMaskerBuilders) {
+        ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+
+        stringMaskerBuilders.forEach(
+                stringMaskerBuilder -> builder.addAll(stringMaskerBuilder.getValuesToMask()));
+
+        ImmutableSet<String> sensitiveValuesToMaskWithoutDuplicates = builder.build();
+
+        return ImmutableList.sortedCopyOf(
+                SENSITIVE_VALUES_SORTING_COMPARATOR, sensitiveValuesToMaskWithoutDuplicates);
     }
 
     public String mask(String dataToMask) {
-        if (dataToMask == null) {
-            return null;
-        }
-
-        String masked = dataToMask;
-
-        for (StringMasker masker : stringMaskers) {
-            masked = masker.getMasked(masked);
-        }
-
-        return masked;
-    }
-
-    private Iterable<StringMasker> createLogMaskers(
-            Credentials credentials, Collection<String> sensitiveValuesToMask) {
-        StringMasker credentialsStringMasker =
-                new CredentialsStringMasker(
-                        credentials,
-                        ImmutableList.of(
-                                CredentialsStringMasker.CredentialsProperty.PASSWORD,
-                                CredentialsStringMasker.CredentialsProperty.SECRET_KEY,
-                                CredentialsStringMasker.CredentialsProperty.SENSITIVE_PAYLOAD,
-                                CredentialsStringMasker.CredentialsProperty.USERNAME));
-        StringMasker clientConfigurationStringMasker =
-                new ClientConfigurationStringMasker(sensitiveValuesToMask);
-
-        return ImmutableList.of(credentialsStringMasker, clientConfigurationStringMasker);
+        return sensitiveValuesToMask.stream()
+                .reduce(dataToMask, (s1, value) -> s1.replace(value, MASK));
     }
 
     public static LoggingMode shouldLog(Provider provider) {
@@ -80,5 +74,28 @@ public class LogMasker {
             return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
         }
         return LoggingMode.LOGGING_MASKER_COVERS_SECRETS;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private LinkedHashSet<StringMaskerBuilder> stringMaskerBuilders = new LinkedHashSet<>();
+
+        private Builder() {}
+
+        public Builder addStringMaskerBuilder(StringMaskerBuilder stringMaskerBuilder) {
+            stringMaskerBuilders.add(stringMaskerBuilder);
+            return this;
+        }
+
+        private ImmutableList<StringMaskerBuilder> getStringMaskerBuilders() {
+            return ImmutableList.copyOf(stringMaskerBuilders);
+        }
+
+        public LogMasker build() {
+            return new LogMasker(this);
+        }
     }
 }

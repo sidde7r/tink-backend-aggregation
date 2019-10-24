@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 
+import com.google.common.collect.ImmutableList;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Urls;
@@ -18,6 +19,8 @@ import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -37,10 +40,28 @@ public class EncapClient {
 
         this.httpClient =
                 NextGenTinkHttpClient.builder(
-                                new LogMasker(
-                                        request.getCredentials(),
-                                        context.getAgentConfigurationController()
-                                                .getSecretValues()),
+                                LogMasker.builder()
+                                        .addStringMaskerBuilder(
+                                                new CredentialsStringMaskerBuilder(
+                                                        request.getCredentials(),
+                                                        ImmutableList.of(
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .PASSWORD,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .SECRET_KEY,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .SENSITIVE_PAYLOAD,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .USERNAME)))
+                                        .addStringMaskerBuilder(
+                                                new ClientConfigurationStringMaskerBuilder(
+                                                        context.getAgentConfigurationController()
+                                                                .getSecretValues()))
+                                        .build(),
                                 LogMasker.shouldLog(request.getProvider()))
                         .setAggregatorInfo(context.getAggregatorInfo())
                         .setMetricRegistry(context.getMetricRegistry())

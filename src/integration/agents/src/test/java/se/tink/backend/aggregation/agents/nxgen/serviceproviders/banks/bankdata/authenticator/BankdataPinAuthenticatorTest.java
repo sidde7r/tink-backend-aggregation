@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
@@ -12,6 +13,8 @@ import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public class BankdataPinAuthenticatorTest {
     private boolean debugOutput;
@@ -36,9 +39,25 @@ public class BankdataPinAuthenticatorTest {
                         context.getLogOutputStream(),
                         null,
                         null,
-                        new LogMasker(
-                                credentials,
-                                context.getAgentConfigurationController().getSecretValues()),
+                        LogMasker.builder()
+                                .addStringMaskerBuilder(
+                                        new CredentialsStringMaskerBuilder(
+                                                credentials,
+                                                ImmutableList.of(
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.PASSWORD,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.SECRET_KEY,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty
+                                                                .SENSITIVE_PAYLOAD,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.USERNAME)))
+                                .addStringMaskerBuilder(
+                                        new ClientConfigurationStringMaskerBuilder(
+                                                context.getAgentConfigurationController()
+                                                        .getSecretValues()))
+                                .build(),
                         LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();

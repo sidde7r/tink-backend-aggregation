@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.norwegian;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.net.UrlEscapers;
@@ -66,6 +67,8 @@ import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -137,9 +140,25 @@ public class NorwegianAgent extends AbstractAgent
                         context.getLogOutputStream(),
                         signatureKeyPair,
                         request.getProvider(),
-                        new LogMasker(
-                                request.getCredentials(),
-                                context.getAgentConfigurationController().getSecretValues()),
+                        LogMasker.builder()
+                                .addStringMaskerBuilder(
+                                        new CredentialsStringMaskerBuilder(
+                                                request.getCredentials(),
+                                                ImmutableList.of(
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.PASSWORD,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.SECRET_KEY,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty
+                                                                .SENSITIVE_PAYLOAD,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.USERNAME)))
+                                .addStringMaskerBuilder(
+                                        new ClientConfigurationStringMaskerBuilder(
+                                                context.getAgentConfigurationController()
+                                                        .getSecretValues()))
+                                .build(),
                         LogMasker.shouldLog(request.getProvider()));
     }
 

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentTestContext;
@@ -10,6 +11,8 @@ import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public class BancoPopularTestBase {
 
@@ -35,9 +38,25 @@ public class BancoPopularTestBase {
                         context.getLogOutputStream(),
                         null,
                         null,
-                        new LogMasker(
-                                credentials,
-                                context.getAgentConfigurationController().getSecretValues()),
+                        LogMasker.builder()
+                                .addStringMaskerBuilder(
+                                        new CredentialsStringMaskerBuilder(
+                                                credentials,
+                                                ImmutableList.of(
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.PASSWORD,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.SECRET_KEY,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty
+                                                                .SENSITIVE_PAYLOAD,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.USERNAME)))
+                                .addStringMaskerBuilder(
+                                        new ClientConfigurationStringMaskerBuilder(
+                                                context.getAgentConfigurationController()
+                                                        .getSecretValues()))
+                                .build(),
                         LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
         client.setDebugOutput(true);
 

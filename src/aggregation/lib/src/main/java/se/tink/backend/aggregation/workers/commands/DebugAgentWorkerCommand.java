@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -17,6 +18,8 @@ import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -49,9 +52,24 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     @Override
     public AgentWorkerCommandResult execute() {
         this.logMasker =
-                new LogMasker(
-                        context.getRequest().getCredentials(),
-                        context.getAgentConfigurationController().getSecretValues());
+                LogMasker.builder()
+                        .addStringMaskerBuilder(
+                                new CredentialsStringMaskerBuilder(
+                                        context.getRequest().getCredentials(),
+                                        ImmutableList.of(
+                                                CredentialsStringMaskerBuilder.CredentialsProperty
+                                                        .PASSWORD,
+                                                CredentialsStringMaskerBuilder.CredentialsProperty
+                                                        .SECRET_KEY,
+                                                CredentialsStringMaskerBuilder.CredentialsProperty
+                                                        .SENSITIVE_PAYLOAD,
+                                                CredentialsStringMaskerBuilder.CredentialsProperty
+                                                        .USERNAME)))
+                        .addStringMaskerBuilder(
+                                new ClientConfigurationStringMaskerBuilder(
+                                        context.getAgentConfigurationController()
+                                                .getSecretValues()))
+                        .build();
         return AgentWorkerCommandResult.CONTINUE;
     }
 

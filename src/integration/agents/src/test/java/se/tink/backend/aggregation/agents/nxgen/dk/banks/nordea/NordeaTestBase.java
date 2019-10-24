@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
 import static org.mockito.Mockito.spy;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentTestContext;
@@ -13,6 +14,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public class NordeaTestBase {
     protected String username;
@@ -42,10 +45,28 @@ public class NordeaTestBase {
                                 context.getLogOutputStream(),
                                 null,
                                 null,
-                                new LogMasker(
-                                        credentials,
-                                        context.getAgentConfigurationController()
-                                                .getSecretValues()),
+                                LogMasker.builder()
+                                        .addStringMaskerBuilder(
+                                                new CredentialsStringMaskerBuilder(
+                                                        credentials,
+                                                        ImmutableList.of(
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .PASSWORD,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .SECRET_KEY,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .SENSITIVE_PAYLOAD,
+                                                                CredentialsStringMaskerBuilder
+                                                                        .CredentialsProperty
+                                                                        .USERNAME)))
+                                        .addStringMaskerBuilder(
+                                                new ClientConfigurationStringMaskerBuilder(
+                                                        context.getAgentConfigurationController()
+                                                                .getSecretValues()))
+                                        .build(),
                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS));
         tinkHttpClient.setDebugOutput(TestConfig.CLIENT_DEBUG_OUTPUT);
         tinkHttpClient.addFilter(new NordeaDkFilter());

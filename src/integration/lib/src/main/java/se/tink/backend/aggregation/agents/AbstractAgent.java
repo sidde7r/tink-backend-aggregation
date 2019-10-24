@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,9 @@ import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CookieContainer;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.net.TinkApacheHttpClient4;
@@ -34,9 +37,25 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
         this.financialDataCacher = context;
         this.clientFactory =
                 new JerseyClientFactory(
-                        new LogMasker(
-                                request.getCredentials(),
-                                context.getAgentConfigurationController().getSecretValues()),
+                        LogMasker.builder()
+                                .addStringMaskerBuilder(
+                                        new CredentialsStringMaskerBuilder(
+                                                request.getCredentials(),
+                                                ImmutableList.of(
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.PASSWORD,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.SECRET_KEY,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty
+                                                                .SENSITIVE_PAYLOAD,
+                                                        CredentialsStringMaskerBuilder
+                                                                .CredentialsProperty.USERNAME)))
+                                .addStringMaskerBuilder(
+                                        new ClientConfigurationStringMaskerBuilder(
+                                                context.getAgentConfigurationController()
+                                                        .getSecretValues()))
+                                .build(),
                         LogMasker.shouldLog(request.getProvider()));
 
         this.log = new AggregationLogger(getAgentClass());
