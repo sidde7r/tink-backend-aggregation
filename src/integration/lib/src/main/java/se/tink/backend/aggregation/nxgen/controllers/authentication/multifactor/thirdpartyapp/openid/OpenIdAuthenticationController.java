@@ -163,19 +163,22 @@ public class OpenIdAuthenticationController
 
             try {
 
-                oAuth2Token =
+                OAuth2Token refreshedOAuth2Token =
                         apiClient.refreshAccessToken(
                                 refreshToken, authenticator.getClientCredentialScope());
+
+                if (!refreshedOAuth2Token.isValid()) {
+                    throw SessionError.SESSION_EXPIRED.exception();
+                }
+
+                oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
+
             } catch (HttpResponseException e) {
 
                 logger.info(
                         String.format("Refresh failed: %s", e.getResponse().getBody(String.class)));
                 // This will "fix" the invalid_grant error temporarily while waiting for more log
                 // data. It might also filter some other errors.
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-
-            if (!oAuth2Token.isValid()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 

@@ -97,10 +97,11 @@ public class OAuth2AuthenticationProgressiveController
                             .getRefreshToken()
                             .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-            oAuth2Token = authenticator.refreshAccessToken(refreshToken);
-            if (!oAuth2Token.isValid()) {
+            OAuth2Token refreshedOAuth2Token = authenticator.refreshAccessToken(refreshToken);
+            if (!refreshedOAuth2Token.isValid()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
+            oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
 
             // Store the new access token on the persistent storage again.
             persistentStorage.rotateStorageValue(

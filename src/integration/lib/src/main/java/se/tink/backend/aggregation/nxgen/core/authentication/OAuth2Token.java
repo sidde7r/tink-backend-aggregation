@@ -132,6 +132,18 @@ public class OAuth2Token {
                 accessToken);
     }
 
+    @JsonIgnore
+    public OAuth2Token updateTokenWithOldToken(OAuth2Token oldOAuth2Token) {
+        if (!this.getRefreshToken().isPresent()) {
+            this.refreshToken = oldOAuth2Token.getRefreshToken().get();
+            this.refreshExpiresInSeconds =
+                    oldOAuth2Token.hasRefreshExpire()
+                            ? oldOAuth2Token.getRefreshExpireEpoch() - this.issuedAt
+                            : 0;
+        }
+        return this;
+    }
+
     // TODO: Remove when logging is not needed
     public long getIssuedAt() {
         return issuedAt;
