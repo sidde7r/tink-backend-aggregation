@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.utils.Base64Masker;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -84,6 +85,10 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                                                         .USERNAME)))
                         .addStringMaskerBuilder(
                                 new ClientConfigurationStringMaskerBuilder(
+                                        context.getAgentConfigurationController()
+                                                .getSecretValues()))
+                        .addStringMaskerBuilder(
+                                new Base64Masker(
                                         context.getAgentConfigurationController()
                                                 .getSecretValues()))
                         .build();
