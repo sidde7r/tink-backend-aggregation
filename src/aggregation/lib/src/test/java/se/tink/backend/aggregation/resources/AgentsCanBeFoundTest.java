@@ -22,4 +22,9 @@ public final class AgentsCanBeFoundTest {
     public void testIsolatedAgentClassIsFound() throws ClassNotFoundException {
         AgentClassFactory.getAgentClass("nxgen.be.banks.axa.AxaAgent");
     }
+
+    @Test
+    public void testIsolatedThirdpartiesAgentClassIsFound() throws ClassNotFoundException {
+        AgentClassFactory.getAgentClass("nxgen.fi.openbanking.opbank.OpBankAgent");
+    }
 }
