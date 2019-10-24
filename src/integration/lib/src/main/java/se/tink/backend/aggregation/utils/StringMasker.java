@@ -4,18 +4,17 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Comparator;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 public class StringMasker {
 
     public static final String MASK = "***MASKED***";
-    private static final Predicate<String> NONE_WHITELISTED = (s -> false);
+    private static final Predicate<Pattern> NONE_WHITELISTED = (p -> false);
 
-    private static final Comparator<String> SENSITIVE_VALUES_SORTING_COMPARATOR =
-            Comparator.comparing(String::length)
-                    .reversed()
-                    .thenComparing(Comparator.naturalOrder());
+    private static final Comparator<Pattern> SENSITIVE_VALUES_SORTING_COMPARATOR =
+            Comparator.comparingInt(p -> p.toString().length());
 
-    private final ImmutableList<String> sensitiveValuesToMask;
+    private final ImmutableList<Pattern> sensitiveValuesToMask;
 
     /**
      * Compose a StringMasker from the given builders which can the be used to censor strings.
@@ -34,19 +33,19 @@ public class StringMasker {
      *     true for these.
      */
     public StringMasker(
-            Iterable<StringMaskerBuilder> builders, Predicate<String> isWhiteListedPredicate) {
+            Iterable<StringMaskerBuilder> builders, Predicate<Pattern> isWhiteListedPredicate) {
 
-        ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        ImmutableSet.Builder<Pattern> builder = ImmutableSet.builder();
 
         builders.forEach(
                 stringMaskerBuilder -> builder.addAll(stringMaskerBuilder.getValuesToMask()));
 
-        ImmutableSet<String> sensitiveValuesWithoutDuplicates = builder.build();
+        ImmutableSet<Pattern> sensitiveValuesWithoutDuplicates = builder.build();
 
         sensitiveValuesToMask =
                 sensitiveValuesWithoutDuplicates.stream()
                         .filter(isWhiteListedPredicate.negate())
-                        .sorted(SENSITIVE_VALUES_SORTING_COMPARATOR)
+                        .sorted(SENSITIVE_VALUES_SORTING_COMPARATOR.reversed())
                         .collect(ImmutableList.toImmutableList());
     }
 
@@ -55,7 +54,12 @@ public class StringMasker {
      * @return A new String with any values this masker deems sensitive masked.
      */
     public String getMasked(final String string) {
-        return sensitiveValuesToMask.stream()
-                .reduce(string, (s1, value) -> s1.replaceAll(value, MASK));
+
+        String result = string;
+        for (Pattern p : sensitiveValuesToMask) {
+            result = p.matcher(result).replaceAll(MASK);
+        }
+
+        return result;
     }
 }

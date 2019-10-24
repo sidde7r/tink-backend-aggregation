@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
+import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.utils.StringMaskerBuilder;
@@ -35,9 +36,9 @@ public class LogMasker {
         masker = new StringMasker(builder.getStringMaskerBuilders(), this::isWhiteListed);
     }
 
-    private boolean isWhiteListed(String sensitiveValue) {
-        return sensitiveValue.length() <= 3
-                || WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue);
+    private boolean isWhiteListed(Pattern sensitiveValue) {
+        return sensitiveValue.toString().length() <= 3
+                || WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue.toString());
     }
 
     public String mask(String dataToMask) {
