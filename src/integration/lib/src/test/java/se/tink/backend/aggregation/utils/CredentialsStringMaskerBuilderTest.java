@@ -9,11 +9,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
@@ -95,22 +97,8 @@ public class CredentialsStringMaskerBuilderTest {
                                 CredentialsStringMaskerBuilder.CredentialsProperty.values()));
 
         try {
-            String sensitivePayloadAsString = OBJECT_MAPPER.writeValueAsString(SENSITIVE_PAYLOAD);
-            Map<String, String> sensitiveValuesOriginalMap =
-                    JsonFlattener.flattenJsonToMap(
-                            JsonFlattener.ROOT_PATH,
-                            OBJECT_MAPPER.readTree(sensitivePayloadAsString));
-            List<String> sensitiveValuesToCompare =
-                    new ArrayList<>(sensitiveValuesOriginalMap.values());
-            sensitiveValuesToCompare.add(PASSWORD);
-            sensitiveValuesToCompare.add(USERNAME);
             List<String> sensitiveValuesToCompareSorted =
-                    sensitiveValuesToCompare.stream()
-                            .sorted(
-                                    Comparator.comparing(String::length)
-                                            .reversed()
-                                            .thenComparing(Comparator.naturalOrder()))
-                            .collect(Collectors.toList());
+                    getSensitiveValuesToCompareSorted(SENSITIVE_PAYLOAD, PASSWORD, USERNAME);
             assertThat(credentialsStringMaskerBuilder.getValuesToMask())
                     .containsExactly(
                             sensitiveValuesToCompareSorted.toArray(
@@ -130,20 +118,8 @@ public class CredentialsStringMaskerBuilderTest {
                                         .SENSITIVE_PAYLOAD));
 
         try {
-            String sensitivePayloadAsString = OBJECT_MAPPER.writeValueAsString(SENSITIVE_PAYLOAD);
-            Map<String, String> sensitiveValuesOriginalMap =
-                    JsonFlattener.flattenJsonToMap(
-                            JsonFlattener.ROOT_PATH,
-                            OBJECT_MAPPER.readTree(sensitivePayloadAsString));
-            List<String> sensitiveValuesToCompare =
-                    new ArrayList<>(sensitiveValuesOriginalMap.values());
             List<String> sensitiveValuesToCompareSorted =
-                    sensitiveValuesToCompare.stream()
-                            .sorted(
-                                    Comparator.comparing(String::length)
-                                            .reversed()
-                                            .thenComparing(Comparator.naturalOrder()))
-                            .collect(Collectors.toList());
+                    getSensitiveValuesToCompareSorted(SENSITIVE_PAYLOAD);
             assertThat(credentialsStringMaskerBuilder.getValuesToMask())
                     .containsExactly(
                             sensitiveValuesToCompareSorted.toArray(
@@ -151,6 +127,92 @@ public class CredentialsStringMaskerBuilderTest {
         } catch (IOException e) {
             Assert.fail(e.toString());
         }
+    }
+
+    @Test
+    public void testApplyWithNestedSensitivePayload() {
+        ImmutableMap<String, String> nestedSensitivePayload = assembleNestedSensitivePayload();
+
+        Credentials nestedMockCredentials = mock(Credentials.class);
+        when(nestedMockCredentials.getSensitivePayload()).thenReturn(nestedSensitivePayload);
+
+        CredentialsStringMaskerBuilder credentialsStringMaskerBuilder =
+                new CredentialsStringMaskerBuilder(
+                        nestedMockCredentials,
+                        ImmutableList.of(
+                                CredentialsStringMaskerBuilder.CredentialsProperty
+                                        .SENSITIVE_PAYLOAD));
+
+        try {
+            List<String> sensitiveValuesToCompareSorted =
+                    getSensitiveValuesToCompareSorted(nestedSensitivePayload);
+            assertThat(credentialsStringMaskerBuilder.getValuesToMask())
+                    .containsExactly(
+                            sensitiveValuesToCompareSorted.toArray(
+                                    new String[sensitiveValuesToCompareSorted.size()]));
+        } catch (IOException e) {
+            Assert.fail(e.toString());
+        }
+    }
+
+    private ImmutableMap<String, String> assembleNestedSensitivePayload() {
+        PersistentStorage persistentStorage = new PersistentStorage();
+        final ImmutableMap<String, String> sessionStorage =
+                ImmutableMap.<String, String>builder()
+                        .put("secret1", "sessionsecret1")
+                        .put("secret2", "sessionsecret2")
+                        .build();
+        ImmutableMap<String, String> nestedSensitivePayload;
+
+        PersistentStorage nestedPersistentStorage = new PersistentStorage();
+        nestedPersistentStorage.put("secret3", "bebebebe");
+        nestedPersistentStorage.put(
+                "nestedToken",
+                OAuth2Token.create(
+                        "nestedTestType",
+                        "nestedTestAccessToken",
+                        "nestedTestRefreshToken",
+                        9000,
+                        12345));
+
+        persistentStorage.put("secret1", "qweqweqwe");
+        persistentStorage.put("secret2", "asdasdasd");
+        persistentStorage.put(
+                "token",
+                OAuth2Token.create("testType", "testAccessToken", "testRefreshToken", 900, 1234));
+        persistentStorage.put("nestedPeristentStorage", nestedPersistentStorage);
+        nestedSensitivePayload =
+                ImmutableMap.<String, String>builder()
+                        .put("key1", "value1")
+                        .put("key2", "value2")
+                        .put("key3", "value3")
+                        .put(
+                                Key.PERSISTENT_STORAGE.getFieldKey(),
+                                Objects.requireNonNull(
+                                        SerializationUtils.serializeToString(persistentStorage)))
+                        .put(
+                                Key.SESSION_STORAGE.getFieldKey(),
+                                Objects.requireNonNull(
+                                        SerializationUtils.serializeToString(sessionStorage)))
+                        .build();
+        return nestedSensitivePayload;
+    }
+
+    private List<String> getSensitiveValuesToCompareSorted(
+            ImmutableMap<String, String> sensitivePayload, String... extraValues)
+            throws IOException {
+        String sensitivePayloadAsString = OBJECT_MAPPER.writeValueAsString(sensitivePayload);
+        Map<String, String> sensitiveValuesOriginalMap =
+                JsonFlattener.flattenJsonToMap(
+                        JsonFlattener.ROOT_PATH, OBJECT_MAPPER.readTree(sensitivePayloadAsString));
+        Set<String> sensitiveValuesToCompare = new HashSet<>(sensitiveValuesOriginalMap.values());
+        Arrays.stream(extraValues).forEach(sensitiveValuesToCompare::add);
+        return sensitiveValuesToCompare.stream()
+                .sorted(
+                        Comparator.comparing(String::length)
+                                .reversed()
+                                .thenComparing(Comparator.naturalOrder()))
+                .collect(Collectors.toList());
     }
 
     private static Credentials mockCredentials() {
