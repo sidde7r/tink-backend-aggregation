@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
+import se.tink.backend.aggregation.utils.Base64Masker;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
@@ -669,6 +670,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                                                         .USERNAME)))
                         .addStringMaskerBuilder(
                                 new ClientConfigurationStringMaskerBuilder(Collections.emptyList()))
+                        .addStringMaskerBuilder(new Base64Masker(Collections.emptyList()))
                         .build(),
                 transferExecutor.getClass(),
                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS);

@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.utils.Base64Masker;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
@@ -60,6 +61,10 @@ public class BankdataTransactionFetcherTest {
                                                                 .CredentialsProperty.USERNAME)))
                                 .addStringMaskerBuilder(
                                         new ClientConfigurationStringMaskerBuilder(
+                                                context.getAgentConfigurationController()
+                                                        .getSecretValues()))
+                                .addStringMaskerBuilder(
+                                        new Base64Masker(
                                                 context.getAgentConfigurationController()
                                                         .getSecretValues()))
                                 .build(),

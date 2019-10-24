@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.utils.Base64Masker;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -92,6 +93,10 @@ public final class BawagPskTransactionalAccountFetcherTest {
                                                                         .USERNAME)))
                                         .addStringMaskerBuilder(
                                                 new ClientConfigurationStringMaskerBuilder(
+                                                        context.getAgentConfigurationController()
+                                                                .getSecretValues()))
+                                        .addStringMaskerBuilder(
+                                                new Base64Masker(
                                                         context.getAgentConfigurationController()
                                                                 .getSecretValues()))
                                         .build(),

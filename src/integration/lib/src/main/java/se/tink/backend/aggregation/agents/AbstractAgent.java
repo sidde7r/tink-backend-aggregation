@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.utils.Base64Masker;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
@@ -53,6 +54,10 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
                                                                 .CredentialsProperty.USERNAME)))
                                 .addStringMaskerBuilder(
                                         new ClientConfigurationStringMaskerBuilder(
+                                                context.getAgentConfigurationController()
+                                                        .getSecretValues()))
+                                .addStringMaskerBuilder(
+                                        new Base64Masker(
                                                 context.getAgentConfigurationController()
                                                         .getSecretValues()))
                                 .build(),

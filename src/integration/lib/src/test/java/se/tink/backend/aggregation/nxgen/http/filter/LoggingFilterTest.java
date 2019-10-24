@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.utils.Base64Masker;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
@@ -49,6 +50,8 @@ public class LoggingFilterTest {
                                         .addStringMaskerBuilder(
                                                 new ClientConfigurationStringMaskerBuilder(
                                                         Collections.emptyList()))
+                                        .addStringMaskerBuilder(
+                                                new Base64Masker(Collections.emptyList()))
                                         .build(),
                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .setPrintStream(printStream)
