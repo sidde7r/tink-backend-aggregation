@@ -17,9 +17,11 @@ public class StarlingAgentTest {
     @Test
     public void testLogin() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-starling-oauth2")
-                .loadCredentialsBefore(true)
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("starling")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }
@@ -41,6 +43,8 @@ public class StarlingAgentTest {
                 .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("starling")
+                .setAppId("tink")
                 .build()
                 .testBankTransfer(transfer);
     }
