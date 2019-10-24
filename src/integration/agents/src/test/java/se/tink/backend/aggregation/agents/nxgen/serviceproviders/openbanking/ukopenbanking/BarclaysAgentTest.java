@@ -27,6 +27,8 @@ public class BarclaysAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setAppId("tink")
+                .setFinancialInstitutionId("barclays")
                 .build()
                 .testRefresh();
     }
@@ -37,7 +39,9 @@ public class BarclaysAgentTest {
                 new AgentIntegrationTest.Builder("uk", "uk-barclays-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("barclays");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }
