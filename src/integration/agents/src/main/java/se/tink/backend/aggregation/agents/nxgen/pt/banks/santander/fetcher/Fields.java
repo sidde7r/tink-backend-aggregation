@@ -24,8 +24,11 @@ public class Fields {
 
     static class Transaction {
         static final String AMOUNT = "amount";
-        static final String OPERATION_DATE = "rawOperationDate";
+        static final String RAW_OPERATION_DATE = "rawOperationDate";
         static final String DESCRIPTION = "description";
+        public static final String CURRENCY = "CTRCMOEA";
+        public static final String NUMBER_OF_UNITS = "nUPs";
+        public static final String OPERATION_DATE = "operationDate";
     }
 
     public static class Session {
@@ -37,7 +40,7 @@ public class Fields {
     public static class Investment {
         static final String AVAILABLE_BALANCE = "availableBalance";
         static final String CURRENCY_NUMERIC_CODE = "currency";
-        static final String FULL_ACCOUNT_NUMBER = "account";
+        static final String ACCOUNT_NUMBER = "accountNumber";
         static final String PRODUCT_NAME = "number";
     }
 

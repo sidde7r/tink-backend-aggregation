@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderCons
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderInvestmentAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderInvestmentTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -52,7 +53,8 @@ public class SantanderAgent extends NextGenerationAgent
                 new InvestmentRefreshController(
                         metricRefreshController,
                         updateController,
-                        new SantanderInvestmentAccountFetcher(apiClient));
+                        new SantanderInvestmentAccountFetcher(apiClient),
+                        new SantanderInvestmentTransactionFetcher(apiClient));
     }
 
     @Override
