@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
+import java.util.regex.Pattern;
 import se.tink.backend.aggregation.log.LogMasker;
 
 public class ClientConfigurationStringMaskerBuilder implements StringMaskerBuilder {
@@ -19,7 +20,9 @@ public class ClientConfigurationStringMaskerBuilder implements StringMaskerBuild
     }
 
     @Override
-    public ImmutableList<String> getValuesToMask() {
-        return ImmutableList.copyOf(sensitiveValuesToMask);
+    public ImmutableList<Pattern> getValuesToMask() {
+        return sensitiveValuesToMask.stream()
+                .map(s -> Pattern.compile(s, Pattern.LITERAL))
+                .collect(ImmutableList.toImmutableList());
     }
 }

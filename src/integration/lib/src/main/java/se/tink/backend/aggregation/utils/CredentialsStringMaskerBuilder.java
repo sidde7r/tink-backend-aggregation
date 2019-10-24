@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -30,8 +31,10 @@ public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
     }
 
     @Override
-    public ImmutableList<String> getValuesToMask() {
-        return ImmutableList.copyOf(propertyValuesToMask);
+    public ImmutableList<Pattern> getValuesToMask() {
+        return propertyValuesToMask.stream()
+                .map(s -> Pattern.compile(s, Pattern.LITERAL))
+                .collect(ImmutableList.toImmutableList());
     }
 
     private ImmutableList<String> getNonEmptyPropertyValuesToMask() {

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
@@ -74,7 +75,11 @@ public class CredentialsStringMaskerBuilderTest {
                         ImmutableList.of(
                                 CredentialsStringMaskerBuilder.CredentialsProperty.PASSWORD));
 
-        assertThat(stringMasker.getValuesToMask()).containsExactly(PASSWORD);
+        assertThat(
+                        stringMasker.getValuesToMask().stream()
+                                .map(Pattern::toString)
+                                .collect(ImmutableList.toImmutableList()))
+                .containsExactly(PASSWORD);
     }
 
     @Test
@@ -85,7 +90,11 @@ public class CredentialsStringMaskerBuilderTest {
                         ImmutableList.of(
                                 CredentialsStringMaskerBuilder.CredentialsProperty.USERNAME));
 
-        assertThat(stringMasker.getValuesToMask()).containsExactly(USERNAME);
+        assertThat(
+                        stringMasker.getValuesToMask().stream()
+                                .map(Pattern::toString)
+                                .collect(ImmutableList.toImmutableList()))
+                .containsExactly(USERNAME);
     }
 
     @Test
@@ -99,7 +108,11 @@ public class CredentialsStringMaskerBuilderTest {
         try {
             List<String> sensitiveValuesToCompareSorted =
                     getSensitiveValuesToCompareSorted(SENSITIVE_PAYLOAD, PASSWORD, USERNAME);
-            assertThat(credentialsStringMaskerBuilder.getValuesToMask())
+
+            assertThat(
+                            credentialsStringMaskerBuilder.getValuesToMask().stream()
+                                    .map(Pattern::toString)
+                                    .collect(ImmutableList.toImmutableList()))
                     .containsExactly(
                             sensitiveValuesToCompareSorted.toArray(
                                     new String[sensitiveValuesToCompareSorted.size()]));
@@ -120,7 +133,10 @@ public class CredentialsStringMaskerBuilderTest {
         try {
             List<String> sensitiveValuesToCompareSorted =
                     getSensitiveValuesToCompareSorted(SENSITIVE_PAYLOAD);
-            assertThat(credentialsStringMaskerBuilder.getValuesToMask())
+            assertThat(
+                            credentialsStringMaskerBuilder.getValuesToMask().stream()
+                                    .map(Pattern::toString)
+                                    .collect(ImmutableList.toImmutableList()))
                     .containsExactly(
                             sensitiveValuesToCompareSorted.toArray(
                                     new String[sensitiveValuesToCompareSorted.size()]));
@@ -146,7 +162,10 @@ public class CredentialsStringMaskerBuilderTest {
         try {
             List<String> sensitiveValuesToCompareSorted =
                     getSensitiveValuesToCompareSorted(nestedSensitivePayload);
-            assertThat(credentialsStringMaskerBuilder.getValuesToMask())
+            assertThat(
+                            credentialsStringMaskerBuilder.getValuesToMask().stream()
+                                    .map(Pattern::toString)
+                                    .collect(ImmutableList.toImmutableList()))
                     .containsExactly(
                             sensitiveValuesToCompareSorted.toArray(
                                     new String[sensitiveValuesToCompareSorted.size()]));

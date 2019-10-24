@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.utils;
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
@@ -114,7 +116,11 @@ public class Base64MaskerTest {
 
         Base64Masker maskerBuilder = new Base64Masker(Collections.singletonList("1234"));
 
-        Assert.assertTrue(maskerBuilder.getValuesToMask().contains(".*"));
+        Assert.assertTrue(
+                maskerBuilder.getValuesToMask().stream()
+                        .map(Pattern::toString)
+                        .collect(Collectors.toList())
+                        .contains(".*"));
     }
 
     // If any digits are found in the string we are leaking whole or part of secret.
