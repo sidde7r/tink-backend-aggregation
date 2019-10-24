@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class CredentialsStringMaskerBuilderTest {
 
     public static final String PASSWORD = "abc123";
