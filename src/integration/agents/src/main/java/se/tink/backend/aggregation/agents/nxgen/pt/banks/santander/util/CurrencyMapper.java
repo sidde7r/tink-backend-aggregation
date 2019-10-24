@@ -14,7 +14,7 @@ public class CurrencyMapper {
                 .forEach(currency -> currencies.put(currency.getNumericCode(), currency));
     }
 
-    public Currency convertToCode(Integer iso4217Code) {
+    public Currency get(Integer iso4217Code) {
         return Optional.ofNullable(currencies.get(iso4217Code))
                 .orElseThrow(
                         () ->

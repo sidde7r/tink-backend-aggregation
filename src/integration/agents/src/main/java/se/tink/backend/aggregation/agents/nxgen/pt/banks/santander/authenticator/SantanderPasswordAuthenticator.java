@@ -35,22 +35,9 @@ public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
             handleErrorResponse(sessionResponse);
         }
 
-        handleSessionToken(sessionResponse);
-        handleIdentityData(sessionResponse);
-    }
-
-    private void handleSessionToken(ApiResponse<Map<String, Object>> sessionResponse) {
         String sessionToken =
                 (String) sessionResponse.getBusinessData().get(0).get(Session.SESSION_TOKEN);
         sessionStorage.put(STORAGE.SESSION_TOKEN, sessionToken);
-    }
-
-    private void handleIdentityData(ApiResponse<Map<String, Object>> sessionResponse) {
-        Map<String, String> variables =
-                (Map<String, String>)
-                        sessionResponse.getBusinessData().get(0).get(Session.VARIABLES);
-
-        sessionStorage.put(STORAGE.CUSTOMER_NAME, variables.get(Session.CUSTOMER_NAME));
     }
 
     private void handleErrorResponse(ApiResponse<Map<String, Object>> response)

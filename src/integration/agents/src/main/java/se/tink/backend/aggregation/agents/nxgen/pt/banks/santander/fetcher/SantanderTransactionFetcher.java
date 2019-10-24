@@ -82,39 +82,40 @@ public class SantanderTransactionFetcher implements TransactionDatePaginator<Tra
     }
 
     private Optional<List<Transaction>> extractTransactionsFromResponse(
-            ApiResponse<Map<String, String>> response, String currencyCode) {
+            ApiResponse<Map<String, String>> response, String accountCurrencyCode) {
 
         if (response.getCode().equals(RESPONSE_CODES.ERROR)) {
             return Optional.empty();
         } else {
-            return Optional.of(deserializeTransactions(response.getBusinessData(), currencyCode));
+            return Optional.of(
+                    deserializeTransactions(response.getBusinessData(), accountCurrencyCode));
         }
     }
 
     private List<Transaction> deserializeTransactions(
             List<Map<String, String>> transactions, String currencyCode) {
 
-        DateTimeFormatter dateTimeFormatter =
-                DateTimeFormatter.ofPattern(SantanderConstants.DATE_FORMAT);
-
         return transactions.stream()
-                .map(
-                        obj ->
-                                Transaction.builder()
-                                        .setAmount(
-                                                ExactCurrencyAmount.of(
-                                                        parseAmount(
-                                                                obj.get(Fields.Transaction.AMOUNT)),
-                                                        currencyCode))
-                                        .setDate(
-                                                LocalDate.parse(
-                                                        obj.get(Fields.Transaction.OPERATION_DATE),
-                                                        dateTimeFormatter))
-                                        .setDescription(obj.get(Fields.Transaction.DESCRIPTION))
-                                        .build())
+                .map(obj -> toTinkTransaction(obj, currencyCode))
                 .collect(
                         Collectors.collectingAndThen(
                                 Collectors.toList(), Collections::unmodifiableList));
+    }
+
+    private Transaction toTinkTransaction(Map<String, String> obj, String accountCurrencyCode) {
+        DateTimeFormatter dateTimeFormatter =
+                DateTimeFormatter.ofPattern(SantanderConstants.DATE_FORMAT);
+
+        return Transaction.builder()
+                .setAmount(
+                        ExactCurrencyAmount.of(
+                                parseAmount(obj.get(Fields.Transaction.AMOUNT)),
+                                accountCurrencyCode))
+                .setDate(
+                        LocalDate.parse(
+                                obj.get(Fields.Transaction.RAW_OPERATION_DATE), dateTimeFormatter))
+                .setDescription(obj.get(Fields.Transaction.DESCRIPTION))
+                .build();
     }
 
     private String parseAmount(String amountString) {
