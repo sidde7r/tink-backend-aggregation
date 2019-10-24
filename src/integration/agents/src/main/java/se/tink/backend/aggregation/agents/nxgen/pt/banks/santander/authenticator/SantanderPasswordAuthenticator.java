@@ -36,7 +36,7 @@ public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
         }
 
         String sessionToken =
-            (String) sessionResponse.getBusinessData().get(0).get(Session.SESSION_TOKEN);
+                (String) sessionResponse.getBusinessData().get(0).get(Session.SESSION_TOKEN);
         sessionStorage.put(STORAGE.SESSION_TOKEN, sessionToken);
     }
 

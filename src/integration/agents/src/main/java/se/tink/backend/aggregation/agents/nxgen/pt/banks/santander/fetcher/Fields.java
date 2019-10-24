@@ -41,6 +41,7 @@ public class Fields {
         static final String AVAILABLE_BALANCE = "availableBalance";
         static final String CURRENCY_NUMERIC_CODE = "currency";
         static final String ACCOUNT_NUMBER = "accountNumber";
+        static final String FULL_ACCOUNT_NUMBER = "account";
         static final String PRODUCT_NAME = "number";
     }
 
@@ -51,8 +52,20 @@ public class Fields {
         static final String LOANS = "EP";
     }
 
-    public static class Identity{
+    public static class Identity {
         public static final String USER_NAME = "userName";
         public static final String BIRTH_DATE = "birthDate";
+    }
+
+    public static class Card {
+        public static final String TYPE_CREDIT = "credit";
+        public static final String PRODUCT_CARD_TYPE = "productCardType";
+        public static final String CURRENCY = "currency";
+        public static final String MASKED_NUMBER = "partialNumber";
+        public static final String AUTHORIZED_BALANCE = "authorizedBalance";
+        public static final String AVAILABLE = "available";
+        public static final String ALIAS = "numAlias";
+        public static final String ACCOUNT_NUMBER = "accountNumber";
+        public static final String PRODUCT_NAME = "cardType";
     }
 }

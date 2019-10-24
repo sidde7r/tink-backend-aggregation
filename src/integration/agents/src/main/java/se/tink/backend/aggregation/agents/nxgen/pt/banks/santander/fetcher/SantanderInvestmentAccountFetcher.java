@@ -57,7 +57,7 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
                                         .getCurrencyCode()))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(obj.get(Investment.ACCOUNT_NUMBER))
+                                .withUniqueIdentifier(obj.get(Investment.FULL_ACCOUNT_NUMBER))
                                 .withAccountNumber(obj.get(Investment.ACCOUNT_NUMBER))
                                 .withAccountName(obj.get(Investment.PRODUCT_NAME).trim())
                                 .addIdentifier(

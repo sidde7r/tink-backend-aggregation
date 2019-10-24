@@ -75,6 +75,12 @@ public class SantanderApiClient {
         return executeRequest(body);
     }
 
+    public ApiResponse fetchCards() {
+        String body =
+                "|420191024110845561|1time|1e8e78d88a8|1flow|0|1kernel|D3|0|1u9ad4d0557|1analyticsFlow|0|1filter|1false|1onlyDebitAndCredit|1true|1showFictional|D4|L1|30|L4";
+        return executeRequest(body);
+    }
+
     public ApiResponse fetchAssets() {
         return executeRequest(
                 "|1x26bf0e990|1flow|420191022142453892|1time|L0|1analytics|0|1kernel|D4|0|D0|L1|30|L4");
