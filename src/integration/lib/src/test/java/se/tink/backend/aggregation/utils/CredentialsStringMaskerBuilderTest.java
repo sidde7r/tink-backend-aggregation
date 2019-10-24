@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -28,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@Ignore
 public class CredentialsStringMaskerBuilderTest {
 
     public static final String PASSWORD = "abc123";
@@ -56,7 +54,7 @@ public class CredentialsStringMaskerBuilderTest {
                 ImmutableMap.<String, String>builder()
                         .put("key1", "value1")
                         .put("key2", "value2")
-                        .put("key3", "value3")
+                        .put("key3", "https://www.swedbank.se")
                         .put(
                                 Key.PERSISTENT_STORAGE.getFieldKey(),
                                 Objects.requireNonNull(
@@ -187,7 +185,10 @@ public class CredentialsStringMaskerBuilderTest {
                 ImmutableMap.<String, String>builder()
                         .put("key1", "value1")
                         .put("key2", "value2")
-                        .put("key3", "value3")
+                        .put("key3", "https://www.swedbank.se")
+                        .put(
+                                "key4",
+                                "AmexSession type=\"AmexSession\",value=\"eyJzZWN1cml0eXNlc3Npb25kYXRhIjpbeyJibHVlYm94dmFsdWVzIjoiZjUzMjRmYzEtNWRlNDdkMjYtOWQyYjE3OTktZmY1ZTJmMWYifSx7InRlbXBzZXNzaW9uIjoiIn0seyJhbWV4c2Vzc2lvbmNvb2tpZSI6IiJ9LHsiVXNlcklEIjoidmluaGtoYTE0In1dLCJleHBlY3RlZCI6WyJTZWNvbmRhcnlBdXRoZW50aWNhdGlvbkNvb2tpZSIsInNhYyJdLCJhZGRpdGlvbmFsc2Vzc2lvbmRhdGEiOlt7ImdhdGVrZWVwZXIiOiIwMjYxN0Q4NzBBNTNFRDdCNjFBMzYzOTQwMTczNTkwNTIzM0FDNDZFNjAyRDlENEM4NTJCNDE0MTYyOEM5OUIyMjgwNDU1Qjc3NTA1NTAzNkFGRDI5REZGRUQ5QTJFQUVFQjYxRUFDODBBNj\"")
                         .put(
                                 Key.PERSISTENT_STORAGE.getFieldKey(),
                                 Objects.requireNonNull(
