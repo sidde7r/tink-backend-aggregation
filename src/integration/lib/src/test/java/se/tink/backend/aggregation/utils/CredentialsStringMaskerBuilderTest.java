@@ -180,7 +180,7 @@ public class CredentialsStringMaskerBuilderTest {
         persistentStorage.put(
                 "token",
                 OAuth2Token.create("testType", "testAccessToken", "testRefreshToken", 900, 1234));
-        persistentStorage.put("nestedPeristentStorage", nestedPersistentStorage);
+        persistentStorage.put("nestedPersistentStorage", nestedPersistentStorage);
         nestedSensitivePayload =
                 ImmutableMap.<String, String>builder()
                         .put("key1", "value1")

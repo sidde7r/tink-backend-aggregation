@@ -13,6 +13,8 @@ public class LogMasker {
             Comparator.comparing(String::length)
                     .reversed()
                     .thenComparing(Comparator.naturalOrder());
+    private static final ImmutableSet<String> WHITELISTED_SENSITIVE_VALUES =
+            ImmutableSet.<String>builder().add("true").add("false").build();
 
     /**
      * This enumeration decides if logging should be done or not. NOTE: Only pass
@@ -40,10 +42,22 @@ public class LogMasker {
         stringMaskerBuilders.forEach(
                 stringMaskerBuilder -> builder.addAll(stringMaskerBuilder.getValuesToMask()));
 
-        ImmutableSet<String> sensitiveValuesToMaskWithoutDuplicates = builder.build();
+        ImmutableSet<String> sensitiveValuesWithoutDuplicates = builder.build();
 
-        return ImmutableList.sortedCopyOf(
-                SENSITIVE_VALUES_SORTING_COMPARATOR, sensitiveValuesToMaskWithoutDuplicates);
+        ImmutableList<String> sensitiveValuesToMaskWithoutDuplicates =
+                sensitiveValuesWithoutDuplicates.stream()
+                        .filter(this::shouldSensitiveValueBeMasked)
+                        .sorted(SENSITIVE_VALUES_SORTING_COMPARATOR)
+                        .collect(ImmutableList.toImmutableList());
+
+        return sensitiveValuesToMaskWithoutDuplicates;
+    }
+
+    private boolean shouldSensitiveValueBeMasked(String sensitiveValue) {
+        if (sensitiveValue.length() <= 3 || WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue)) {
+            return false;
+        }
+        return true;
     }
 
     public String mask(String dataToMask) {

@@ -51,6 +51,23 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public AgentWorkerCommandResult execute() {
+
+        return AgentWorkerCommandResult.CONTINUE;
+    }
+
+    @Override
+    public void postProcess() {
+
+        // Disable logging depending on this.
+        if (LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS.equals(
+                LogMasker.shouldLog(context.getRequest().getProvider()))) {
+            return;
+        }
+
+        if (!agentDebugStorage.isEnabled()) {
+            return;
+        }
+
         this.logMasker =
                 LogMasker.builder()
                         .addStringMaskerBuilder(
@@ -70,21 +87,6 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                                         context.getAgentConfigurationController()
                                                 .getSecretValues()))
                         .build();
-        return AgentWorkerCommandResult.CONTINUE;
-    }
-
-    @Override
-    public void postProcess() {
-
-        // Disable logging depending on this.
-        if (LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS.equals(
-                LogMasker.shouldLog(context.getRequest().getProvider()))) {
-            return;
-        }
-
-        if (!agentDebugStorage.isEnabled()) {
-            return;
-        }
 
         String clusterId = context.getClusterId();
         List<String> excludedDebugClusters =
