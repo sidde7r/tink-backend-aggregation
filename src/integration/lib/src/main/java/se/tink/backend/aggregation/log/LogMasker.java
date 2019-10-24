@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.utils.StringMaskerBuilder;
 
 public class LogMasker {
@@ -27,42 +28,20 @@ public class LogMasker {
         UNSURE_IF_MASKER_COVERS_SECRETS
     }
 
-    public static final String MASK = "***MASKED***";
-
-    private final ImmutableList<String> sensitiveValuesToMask;
+    private final StringMasker masker;
 
     private LogMasker(Builder builder) {
-        sensitiveValuesToMask = mergeSensitiveValuesToMask(builder.getStringMaskerBuilders());
+
+        masker = new StringMasker(builder.getStringMaskerBuilders(), this::isWhiteListed);
     }
 
-    private ImmutableList<String> mergeSensitiveValuesToMask(
-            ImmutableList<StringMaskerBuilder> stringMaskerBuilders) {
-        ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-
-        stringMaskerBuilders.forEach(
-                stringMaskerBuilder -> builder.addAll(stringMaskerBuilder.getValuesToMask()));
-
-        ImmutableSet<String> sensitiveValuesWithoutDuplicates = builder.build();
-
-        ImmutableList<String> sensitiveValuesToMaskWithoutDuplicates =
-                sensitiveValuesWithoutDuplicates.stream()
-                        .filter(this::shouldSensitiveValueBeMasked)
-                        .sorted(SENSITIVE_VALUES_SORTING_COMPARATOR)
-                        .collect(ImmutableList.toImmutableList());
-
-        return sensitiveValuesToMaskWithoutDuplicates;
-    }
-
-    private boolean shouldSensitiveValueBeMasked(String sensitiveValue) {
-        if (sensitiveValue.length() <= 3 || WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue)) {
-            return false;
-        }
-        return true;
+    private boolean isWhiteListed(String sensitiveValue) {
+        return sensitiveValue.length() <= 3
+                || WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue);
     }
 
     public String mask(String dataToMask) {
-        return sensitiveValuesToMask.stream()
-                .reduce(dataToMask, (s1, value) -> s1.replace(value, MASK));
+        return masker.getMasked(dataToMask);
     }
 
     public static LoggingMode shouldLog(Provider provider) {
