@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authent
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
@@ -29,6 +30,7 @@ public class SparebankenSorAutoAuthenticator implements AutoAuthenticator {
         // cookie for later use in the first login request
 
         String evryToken = encapClient.authenticateUser();
+        sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
         executeLogin(evryToken);
     }
 
