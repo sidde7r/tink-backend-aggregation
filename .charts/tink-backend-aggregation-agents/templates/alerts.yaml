@@ -623,37 +623,37 @@ spec:
 
   - alert: BankServerUnavailableForLogin
     expr: |
-       # Unavailable outcome above 10%
+       # Unavailable outcome above 50%
        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable"}[30m])) by (action,className)
-           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 0.05)
+           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 0.50)
        # At least this many attempts.
-       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 2
+       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 5
     for: 5m
     labels:
         severity: ping
         who: integration
     annotations:
-        description: Login unavailable rate is above 10% ( <{ $value }> ) for the last 30 minutes.
+        description: Login unavailable rate is above 50% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Login unavailable rate is above 10% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
   - alert: BankServerUnavailableForRefresh
     expr: |
-        # Unavailable outcome above 10%
+        # Unavailable outcome above 50%
         (sum(increase(tink_agent_refresh_total{outcome=~"unavailable"}[30m])) by (className)
-            / sum(increase(tink_agent_refresh_total[30m])) by (className) > 0.05)
+            / sum(increase(tink_agent_refresh_total[30m])) by (className) > 0.50)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total[30m])) by (className) > 1
+        and sum(increase(tink_agent_refresh_total[30m])) by (className) > 5
     for: 5m
     labels:
         severity: ping
         who: integration
     annotations:
-        description: Refresh unavailable rate is above 10% ( <{ $value }> ) for the last 30 minutes.
+        description: Refresh unavailable rate is above 50% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Refresh unavailable rate is above 10% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
