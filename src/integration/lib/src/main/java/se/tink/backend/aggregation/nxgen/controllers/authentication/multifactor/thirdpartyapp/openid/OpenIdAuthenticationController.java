@@ -171,6 +171,12 @@ public class OpenIdAuthenticationController
                     throw SessionError.SESSION_EXPIRED.exception();
                 }
 
+                if (refreshedOAuth2Token.hasRefreshExpire()) {
+                    credentials.setSessionExpiryDate(
+                            OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                                    refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));
+                }
+
                 oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
 
             } catch (HttpResponseException e) {

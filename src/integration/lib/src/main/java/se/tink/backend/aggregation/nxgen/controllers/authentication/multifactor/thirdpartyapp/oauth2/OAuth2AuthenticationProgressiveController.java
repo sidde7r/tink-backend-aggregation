@@ -101,6 +101,13 @@ public class OAuth2AuthenticationProgressiveController
             if (!refreshedOAuth2Token.isValid()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
+
+            if (refreshedOAuth2Token.hasRefreshExpire()) {
+                credentials.setSessionExpiryDate(
+                        OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                                refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));
+            }
+
             oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
 
             // Store the new access token on the persistent storage again.
