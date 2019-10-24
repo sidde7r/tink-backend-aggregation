@@ -55,6 +55,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
+import se.tink.backend.aggregation.utils.Base64Masker;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
@@ -582,6 +583,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                                         .USERNAME)))
                         .addStringMaskerBuilder(
                                 new ClientConfigurationStringMaskerBuilder(
+                                        context.getAgentConfigurationController()
+                                                .getSecretValues()))
+                        .addStringMaskerBuilder(
+                                new Base64Masker(
                                         context.getAgentConfigurationController()
                                                 .getSecretValues()))
                         .build();

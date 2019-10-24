@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.utils.Base64Masker;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
@@ -96,6 +97,10 @@ public class OpBankAuthenticatorTest {
                                                                 .CredentialsProperty.USERNAME)))
                                 .addStringMaskerBuilder(
                                         new ClientConfigurationStringMaskerBuilder(
+                                                context.getAgentConfigurationController()
+                                                        .getSecretValues()))
+                                .addStringMaskerBuilder(
+                                        new Base64Masker(
                                                 context.getAgentConfigurationController()
                                                         .getSecretValues()))
                                 .build(),
@@ -251,6 +256,10 @@ public class OpBankAuthenticatorTest {
                                                                                 .USERNAME)))
                                                 .addStringMaskerBuilder(
                                                         new ClientConfigurationStringMaskerBuilder(
+                                                                context.getAgentConfigurationController()
+                                                                        .getSecretValues()))
+                                                .addStringMaskerBuilder(
+                                                        new Base64Masker(
                                                                 context.getAgentConfigurationController()
                                                                         .getSecretValues()))
                                                 .build(),

@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.utils.Base64Masker;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
@@ -55,6 +56,10 @@ public class BankdataPinAuthenticatorTest {
                                                                 .CredentialsProperty.USERNAME)))
                                 .addStringMaskerBuilder(
                                         new ClientConfigurationStringMaskerBuilder(
+                                                context.getAgentConfigurationController()
+                                                        .getSecretValues()))
+                                .addStringMaskerBuilder(
+                                        new Base64Masker(
                                                 context.getAgentConfigurationController()
                                                         .getSecretValues()))
                                 .build(),
