@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander;
 
+import java.time.LocalDate;
+import java.util.Map;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -9,9 +11,9 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.STORAGE;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Identity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderInvestmentTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderTransactionFetcher;
@@ -100,10 +102,11 @@ public class SantanderAgent extends NextGenerationAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
+        Map<String, String> obj = (Map<String, String>) apiClient.fetchIdentityData().getBusinessData().get(0);
         return new FetchIdentityDataResponse(
                 IdentityData.builder()
-                        .setFullName(sessionStorage.get(STORAGE.CUSTOMER_NAME))
-                        .setDateOfBirth(null)
+                        .setFullName(obj.get(Identity.USER_NAME))
+                        .setDateOfBirth(LocalDate.parse(obj.get(Identity.BIRTH_DATE)))
                         .build());
     }
 

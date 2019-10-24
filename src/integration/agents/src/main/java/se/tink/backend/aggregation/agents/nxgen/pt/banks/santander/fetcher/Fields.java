@@ -50,4 +50,9 @@ public class Fields {
         static final String CREDIT_CARDS = "CR";
         static final String LOANS = "EP";
     }
+
+    public static class Identity{
+        public static final String USER_NAME = "userName";
+        public static final String BIRTH_DATE = "birthDate";
+    }
 }
