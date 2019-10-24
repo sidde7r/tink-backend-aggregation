@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.utils.StringMaskerBuilder;
 
 public class LogMasker {
 
-    public static Comparator<String> SENSITIVE_VALUES_SORTING_COMPARATOR =
+    public static final Comparator<String> SENSITIVE_VALUES_SORTING_COMPARATOR =
             Comparator.comparing(String::length)
                     .reversed()
                     .thenComparing(Comparator.naturalOrder());
