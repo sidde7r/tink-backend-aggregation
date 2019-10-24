@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -31,9 +33,13 @@ public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
             LoggerFactory.getLogger(RaiffeisenPasswordAuthenticator.class);
     private final RaiffeisenWebApiClient apiClient;
     private final RaiffeisenSessionStorage sessionStorage;
+    private final Credentials credentials;
 
     public RaiffeisenPasswordAuthenticator(
-            final RaiffeisenWebApiClient apiClient, final RaiffeisenSessionStorage sessionStorage) {
+            final Credentials credentials,
+            final RaiffeisenWebApiClient apiClient,
+            final RaiffeisenSessionStorage sessionStorage) {
+        this.credentials = credentials;
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -140,6 +146,7 @@ public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
         checkUsername(username);
         checkPassword(password);
         final String encryptedPassword = getEncryptedPassword(password);
+        credentials.setSensitivePayload(Key.PASSWORD, encryptedPassword);
         final HttpResponse homeResponse = apiClient.getHomePage();
         final HttpResponse refreshRegionResponse = apiClient.RefreshRegion(homeResponse);
         final HttpResponse usernameResponse =

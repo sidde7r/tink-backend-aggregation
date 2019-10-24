@@ -40,7 +40,8 @@ public class RaiffeisenAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new RaiffeisenPasswordAuthenticator(apiClient, raiffeisenSessionStorage));
+                new RaiffeisenPasswordAuthenticator(
+                        credentials, apiClient, raiffeisenSessionStorage));
     }
 
     @Override
