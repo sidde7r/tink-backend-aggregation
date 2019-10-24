@@ -45,8 +45,7 @@ public class LogMasker {
         ImmutableSet<String> sensitiveValuesWithoutDuplicates = builder.build();
 
         ImmutableList<String> sensitiveValuesToMaskWithoutDuplicates =
-                sensitiveValuesWithoutDuplicates
-                        .parallelStream()
+                sensitiveValuesWithoutDuplicates.stream()
                         .filter(this::shouldSensitiveValueBeMasked)
                         .sorted(SENSITIVE_VALUES_SORTING_COMPARATOR)
                         .collect(ImmutableList.toImmutableList());
