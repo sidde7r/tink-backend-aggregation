@@ -23,9 +23,8 @@ public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
         if (agentWorkerCommandContext.getAgentConfigurationController() == null) {
-            log.error(
-                    "No AgentConfigurationController found in CreatLogMaskerWorkerCommand, make sure to put the commands in the right order, this should come after the CreateAgentConfigurationControllerWorkerCommand.");
-            return AgentWorkerCommandResult.ABORT;
+            throw new IllegalStateException(
+                    "No AgentConfigurationController found in CreateLogMaskerWorkerCommand, make sure to put the commands in the right order, this should come after the CreateAgentConfigurationControllerWorkerCommand.");
         }
 
         LogMasker logMasker = new LogMasker(credentials);
