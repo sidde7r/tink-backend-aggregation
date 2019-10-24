@@ -1,5 +1,6 @@
 package se.tink.libraries.serialization.utils;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,8 +13,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsonFlattener {
+    private static final Logger LOG = LoggerFactory.getLogger(JsonFlattener.class);
+
     public static final String ROOT_PATH = "";
 
     private static final ObjectMapper OBJECT_MAPPER =
@@ -42,21 +47,28 @@ public class JsonFlattener {
             // might make it not work. These conditions checking the lenght of the escaped/unescaped
             // again serialized String make it work.
             ValueNode valueNode = (ValueNode) jsonNode;
-            String unescaped = StringEscapeUtils.unescapeJson(valueNode.asText());
+            String escaped = valueNode.asText();
+            String unescaped = StringEscapeUtils.unescapeJava(valueNode.asText());
+            String escapedAgain = StringEscapeUtils.escapeJava(unescaped);
             int lengthUnescaped = unescaped.length();
             int lengthEscaped = valueNode.asText().length();
-            int lengthEscapedAgain = StringEscapeUtils.escapeJson(unescaped).length();
+            int lengthEscapedAgain = escapedAgain.length();
             if (lengthEscaped == lengthUnescaped && lengthEscaped == lengthEscapedAgain) {
-                map.put(currentPath, valueNode.asText());
+                map.put(currentPath, escaped);
             } else {
                 final String treeString;
                 if (lengthUnescaped < lengthEscaped && lengthEscaped < lengthEscapedAgain) {
-                    treeString = valueNode.asText();
+                    treeString = escaped;
                 } else {
                     treeString = unescaped;
                 }
-                JsonNode tryIfJsonNodeIsJsonObject = OBJECT_MAPPER.readTree(treeString);
-                map.putAll(flattenJsonToMap(currentPath, tryIfJsonNodeIsJsonObject));
+                try {
+                    JsonNode tryIfJsonNodeIsJsonObject = OBJECT_MAPPER.readTree(treeString);
+                    map.putAll(flattenJsonToMap(currentPath, tryIfJsonNodeIsJsonObject));
+                } catch (JsonParseException e) {
+                    LOG.warn("Tried to parse as Json what could probably be a normal String.");
+                    map.put(currentPath, escaped);
+                }
             }
         }
         return map;

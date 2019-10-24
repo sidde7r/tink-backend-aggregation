@@ -46,6 +46,8 @@ public class JsonFlattenerTest {
                     + "           [                         \n"
                     + "               {\n"
                     + "                   \"@name\": \"connectionTimeout\",\n"
+                    + "                   \"UrL\": \"https://www.swedbank.se\",\n"
+                    + "                   \"StringWithQuotes\": \"ab\\\"c\\\"d\",\n"
                     + "                   \"$\": \"20000\"\n"
                     + "               }\n"
                     + "           ]\n"
