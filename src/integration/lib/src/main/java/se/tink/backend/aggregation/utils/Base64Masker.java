@@ -4,13 +4,17 @@ import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Searches through strings after base64 encoded sensitive strings, masking them in the string if
  * found.
  */
 public class Base64Masker implements StringMaskerBuilder {
+    Logger logger = LoggerFactory.getLogger(Base64Masker.class);
 
     private final ImmutableList<String> b64ValuesToMask;
 
@@ -35,7 +39,9 @@ public class Base64Masker implements StringMaskerBuilder {
 
         // If target length is < 5 we will end up with cases with no "perfect" b64 substring.
         if (target.length() < 5) {
-            throw new IllegalArgumentException("Length of target string must be >= 5.");
+            logger.warn(
+                    "Secret must be length > 5 to be masked by Base64Masker. A shorter string will cause the masker to mask everything.");
+            return Collections.singletonList(".*");
         }
 
         // Find all perfect b64 substrings by padding the target string and removing the incomplete

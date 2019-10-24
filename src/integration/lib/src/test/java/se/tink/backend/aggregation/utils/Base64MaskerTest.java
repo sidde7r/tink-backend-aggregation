@@ -109,9 +109,12 @@ public class Base64MaskerTest {
                         new String(Base64.decodeBase64(reconstructPaddingAfter(splitBlob[0])))));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void ensure_shortSecret_throwsException() {
-        new Base64Masker(Collections.singletonList("1234"));
+    @Test
+    public void ensure_shortSecret_matchesEverything() {
+
+        Base64Masker maskerBuilder = new Base64Masker(Collections.singletonList("1234"));
+
+        Assert.assertTrue(maskerBuilder.getValuesToMask().contains(".*"));
     }
 
     // If any digits are found in the string we are leaking whole or part of secret.
