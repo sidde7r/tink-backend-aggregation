@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 
 public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
@@ -52,10 +52,7 @@ public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
         }
 
         return ImmutableList.sortedCopyOf(
-                Comparator.comparing(String::length)
-                        .reversed()
-                        .thenComparing(Comparator.naturalOrder()),
-                valuesToMask);
+                LogMasker.SENSITIVE_VALUES_SORTING_COMPARATOR, valuesToMask);
     }
 
     private Optional<String> getNonEmptyPropertyValue(CredentialsProperty property) {

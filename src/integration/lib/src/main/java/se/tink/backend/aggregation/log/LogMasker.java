@@ -9,6 +9,11 @@ import se.tink.backend.aggregation.utils.StringMaskerBuilder;
 
 public class LogMasker {
 
+    public static Comparator<String> SENSITIVE_VALUES_SORTING_COMPARATOR =
+            Comparator.comparing(String::length)
+                    .reversed()
+                    .thenComparing(Comparator.naturalOrder());
+
     /**
      * This enumeration decides if logging should be done or not. NOTE: Only pass
      * LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the masker will handle your
@@ -38,10 +43,7 @@ public class LogMasker {
         ImmutableSet<String> sensitiveValuesToMaskWithoutDuplicates = builder.build();
 
         return ImmutableList.sortedCopyOf(
-                Comparator.comparing(String::length)
-                        .reversed()
-                        .thenComparing(Comparator.naturalOrder()),
-                sensitiveValuesToMaskWithoutDuplicates);
+                SENSITIVE_VALUES_SORTING_COMPARATOR, sensitiveValuesToMaskWithoutDuplicates);
     }
 
     public String mask(String dataToMask) {

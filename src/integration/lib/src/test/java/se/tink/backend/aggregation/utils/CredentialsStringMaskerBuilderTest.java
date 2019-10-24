@@ -10,7 +10,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.JsonFlattener;
@@ -208,10 +208,7 @@ public class CredentialsStringMaskerBuilderTest {
         Set<String> sensitiveValuesToCompare = new HashSet<>(sensitiveValuesOriginalMap.values());
         Arrays.stream(extraValues).forEach(sensitiveValuesToCompare::add);
         return sensitiveValuesToCompare.stream()
-                .sorted(
-                        Comparator.comparing(String::length)
-                                .reversed()
-                                .thenComparing(Comparator.naturalOrder()))
+                .sorted(LogMasker.SENSITIVE_VALUES_SORTING_COMPARATOR)
                 .collect(Collectors.toList());
     }
 

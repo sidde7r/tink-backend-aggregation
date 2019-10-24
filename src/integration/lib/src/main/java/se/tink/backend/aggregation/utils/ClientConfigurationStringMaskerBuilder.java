@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
-import java.util.Comparator;
+import se.tink.backend.aggregation.log.LogMasker;
 
 public class ClientConfigurationStringMaskerBuilder implements StringMaskerBuilder {
 
@@ -14,9 +14,7 @@ public class ClientConfigurationStringMaskerBuilder implements StringMaskerBuild
                 ImmutableSet.copyOf(sensitiveValuesToMask);
         this.sensitiveValuesToMask =
                 ImmutableList.sortedCopyOf(
-                        Comparator.comparing(String::length)
-                                .reversed()
-                                .thenComparing(Comparator.naturalOrder()),
+                        LogMasker.SENSITIVE_VALUES_SORTING_COMPARATOR,
                         sensitiveValuesToMaskWithoutDuplicates);
     }
 
