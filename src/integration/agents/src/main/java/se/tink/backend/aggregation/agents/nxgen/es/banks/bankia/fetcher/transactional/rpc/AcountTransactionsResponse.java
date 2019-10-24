@@ -5,21 +5,26 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.PaginationDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.TransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class AcountTransactionsResponse implements PaginatorResponse {
+public class AcountTransactionsResponse
+        implements TransactionKeyPaginatorResponse<PaginationDataEntity> {
     @JsonProperty("indicadorPaginacion")
-    private boolean paginacionIndicator;
+    private boolean paginationIndicator;
 
     @JsonProperty("movimientos")
     private List<TransactionEntity> transactions;
 
     @JsonProperty("indicadorMasRegistros")
     private boolean moreRecordsIndicator;
+
+    @JsonProperty("datosRellamada")
+    private PaginationDataEntity paginationData;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
@@ -30,11 +35,11 @@ public class AcountTransactionsResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        // We cannot trust/use `moreRecordsIndicator` or `paginacionIndicator`.
-        // `paginacionIndicator` is always True.
-        // `moreRecordsIndicator` is always False.
-        // If we paginate too far back we get a temporary error.
-        // Let the pagination controller decide when to stop by returning Optional.empty().
-        return Optional.empty();
+        return Optional.of(moreRecordsIndicator);
+    }
+
+    @Override
+    public PaginationDataEntity nextKey() {
+        return paginationData;
     }
 }
