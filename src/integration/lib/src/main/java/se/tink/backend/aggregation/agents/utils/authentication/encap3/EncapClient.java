@@ -121,8 +121,7 @@ public class EncapClient {
         String activateDeviceBody =
                 soapUtils.buildActivationCreateRequest(
                         username, activationSessionId, samlObjectB64);
-        soapResponse =
-                messageUtils.encryptSoapAndSend(Urls.SOAP_AUTHENTICATION, activateDeviceBody);
+        soapResponse = messageUtils.encryptSoapAndSend(Urls.SOAP_ACTIVATION, activateDeviceBody);
 
         return createDeviceRegistrationResponse(soapResponse);
     }
