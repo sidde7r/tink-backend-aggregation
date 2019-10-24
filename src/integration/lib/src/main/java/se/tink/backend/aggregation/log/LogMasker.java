@@ -46,9 +46,9 @@ public class LogMasker {
 
     public static LoggingMode shouldLog(Provider provider) {
         // Disable logging for now.
-        if (true) {
-            return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
-        }
+        //        if (true) {
+        //            return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
+        //        }
         // Temporary disable of http traffic logging for RE agents.
         // Leave until all RE agents logging has been evaluted and secrets moved to appropriate
         // format to be handled by logging masker.
