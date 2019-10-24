@@ -17,9 +17,11 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConst
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.HttpHeaders;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Soap;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapStorage;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.ActivatedMethodEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.IdentificationEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.RegistrationResultEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.enums.AuthenticationMethod;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.ActivatedMethodsRequest;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.EncryptedSoapRequestBody;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.EncryptedSoapResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.RequestBody;
@@ -78,20 +80,25 @@ public class EncapMessageUtils {
                 EncapCryptoUtils.computeB64ChallengeResponse(
                         storage.getAuthenticationKeyWithoutPin(), otpChallenge);
 
-        String activatedAuthMethods =
-                "[{\"authMethod\":\"DEVICE\",\"authenticationKey\":"
-                        + storage.getAuthenticationKeyWithoutPin()
-                        + ",\"challengeResponse\":"
-                        + b64challengeResponseWithoutPin
-                        + "},{\"authMethod\":\"DEVICE:PIN\",\"authenticationKey\":"
-                        + storage.getAuthenticationKey()
-                        + ",\"challengeResponse\":"
-                        + b64challengeResponse
-                        + "}]";
+        ActivatedMethodEntity methodWithoutPin =
+                new ActivatedMethodEntity(
+                        "DEVICE",
+                        storage.getAuthenticationKeyWithoutPin(),
+                        b64challengeResponseWithoutPin);
+
+        ActivatedMethodEntity methodWithPin =
+                new ActivatedMethodEntity(
+                        "DEVICE:PIN", storage.getAuthenticationKey(), b64challengeResponse);
+
+        ActivatedMethodsRequest activatedMethods = new ActivatedMethodsRequest();
+        activatedMethods.add(methodWithoutPin);
+        activatedMethods.add(methodWithPin);
+
+        String activatedMethodsRequest = SerializationUtils.serializeToString(activatedMethods);
 
         Map<String, String> queryPairs = new HashMap<>();
 
-        queryPairs.put("activatedAuthMethods", activatedAuthMethods);
+        queryPairs.put("activatedAuthMethods", activatedMethodsRequest);
         populateDeviceInformation(queryPairs);
         populateMetaInformation(queryPairs);
         queryPairs.put("operation", EncapConstants.Message.OPERATION_ACTIVATE);
