@@ -17,6 +17,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-aib-oauth2",
@@ -44,6 +45,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-firsttrust-oauth2",
@@ -101,6 +103,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-bankofireland-oauth2",
@@ -147,6 +150,7 @@
             ],
             "className": "nxgen.uk.openbanking.barclays.BarclaysV31Agent",
             "credentialsType": "PASSWORD",
+            "accessType": "OPEN_BANKING",
             "displayName": "Barclays",
             "fields": [
                 {
@@ -184,6 +188,7 @@
                     "immutable": true
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "payload": "tink:danskebank",
             "groupDisplayName": "",
             "multiFactor": false,
@@ -207,6 +212,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-firstdirect-oauth2",
@@ -259,6 +265,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-hsbc-oauth2",
@@ -287,6 +294,7 @@
                     "immutable": true
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "payload": "tink:lloyds",
             "groupDisplayName": "",
             "multiFactor": false,
@@ -310,6 +318,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-markandspencer-oauth2",
@@ -326,6 +335,7 @@
             "capabilities": [
                 "TRANSFERS"
             ],
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.uk.openbanking.modelo.ModeloAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Modelo test",
@@ -354,6 +364,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "Monzo",
             "multiFactor": false,
             "name": "uk-monzo-oauth2",
@@ -404,6 +415,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-natwest-oauth2",
@@ -431,6 +443,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-rbs-oauth2",
@@ -455,6 +468,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-revolut-oauth2",
@@ -482,6 +496,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-santander-oauth2",
@@ -496,6 +511,7 @@
         },
         {
             "className": "nxgen.uk.openbanking.starling.StarlingAgent",
+            "accessType": "OPEN_BANKING",
             "credentialsType": "PASSWORD",
             "displayName": "Starling",
             "fields": [
@@ -578,6 +594,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-ulster-oauth2",
@@ -602,6 +619,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-tesco-oauth2",
@@ -626,6 +644,7 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "accessType": "OPEN_BANKING",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-nationwide-oauth2",

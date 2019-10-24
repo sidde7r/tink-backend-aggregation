@@ -12,6 +12,8 @@ public class HSBCAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("hsbc")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }

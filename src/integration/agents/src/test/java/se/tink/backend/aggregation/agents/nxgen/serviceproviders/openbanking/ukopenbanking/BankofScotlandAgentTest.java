@@ -25,10 +25,10 @@ public class BankofScotlandAgentTest {
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-bankofscotland-oauth2")
                 .loadCredentialsBefore(false)
-                .setFinancialInstitutionId("bankofscotland")
-                .setAppId("tink")
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("bankofscotland")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }
@@ -39,7 +39,9 @@ public class BankofScotlandAgentTest {
                 new AgentIntegrationTest.Builder("uk", "uk-bankofscotland-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("bankofscotland")
+                        .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

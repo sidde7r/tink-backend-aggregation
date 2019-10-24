@@ -25,8 +25,10 @@ public class DanskebankAgentTest {
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-danskebank-oauth2")
                 .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
+                .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("danskebank")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }
@@ -37,7 +39,9 @@ public class DanskebankAgentTest {
                 new AgentIntegrationTest.Builder("uk", "uk-danskebank-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("danskebank")
+                        .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

@@ -9,11 +9,11 @@ public class FirstTrustAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-firsttrust-oauth2")
-                .setFinancialInstitutionId("firsttrust")
-                .setAppId("tink")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("firsttrust")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }

@@ -24,11 +24,11 @@ public class UlsterAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-ulster-oauth2")
-                .setFinancialInstitutionId("ulster")
-                .setAppId("tink")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("ulster")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }
@@ -37,11 +37,11 @@ public class UlsterAgentTest {
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("uk", "uk-ulster-oauth2")
-                        .setFinancialInstitutionId("ulster")
-                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("ulster")
+                        .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }
