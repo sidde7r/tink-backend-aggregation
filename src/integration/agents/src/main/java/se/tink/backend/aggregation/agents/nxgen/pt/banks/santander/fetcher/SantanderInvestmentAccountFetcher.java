@@ -44,7 +44,6 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
                                 Collectors.toList(), Collections::unmodifiableList));
     }
 
-    // todo: rozdzielenie na typy konta retirement i zwykly - portfolios
     private InvestmentAccount toTinkAccount(Map<String, String> obj) {
         return InvestmentAccount.nxBuilder()
                 .withoutPortfolios()

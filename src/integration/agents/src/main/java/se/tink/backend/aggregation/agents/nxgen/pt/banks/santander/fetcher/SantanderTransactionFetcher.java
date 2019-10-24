@@ -87,7 +87,8 @@ public class SantanderTransactionFetcher implements TransactionDatePaginator<Tra
         if (response.getCode().equals(RESPONSE_CODES.ERROR)) {
             return Optional.empty();
         } else {
-            return Optional.of(deserializeTransactions(response.getBusinessData(), accountCurrencyCode));
+            return Optional.of(
+                    deserializeTransactions(response.getBusinessData(), accountCurrencyCode));
         }
     }
 
@@ -108,7 +109,8 @@ public class SantanderTransactionFetcher implements TransactionDatePaginator<Tra
         return Transaction.builder()
                 .setAmount(
                         ExactCurrencyAmount.of(
-                                parseAmount(obj.get(Fields.Transaction.AMOUNT)), accountCurrencyCode))
+                                parseAmount(obj.get(Fields.Transaction.AMOUNT)),
+                                accountCurrencyCode))
                 .setDate(
                         LocalDate.parse(
                                 obj.get(Fields.Transaction.RAW_OPERATION_DATE), dateTimeFormatter))

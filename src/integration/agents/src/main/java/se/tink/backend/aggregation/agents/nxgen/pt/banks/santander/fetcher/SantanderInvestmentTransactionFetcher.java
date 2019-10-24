@@ -55,7 +55,9 @@ public class SantanderInvestmentTransactionFetcher
 
         return Transaction.builder()
                 .setDescription(obj.get(Fields.Transaction.DESCRIPTION))
-                .setDate(LocalDate.parse(obj.get(Fields.Transaction.OPERATION_DATE), transactionDatePattern))
+                .setDate(
+                        LocalDate.parse(
+                                obj.get(Fields.Transaction.OPERATION_DATE), transactionDatePattern))
                 .setAmount(
                         ExactCurrencyAmount.of(
                                 calculateTransactionAmount(
@@ -65,11 +67,11 @@ public class SantanderInvestmentTransactionFetcher
                 .build();
     }
 
-    private BigDecimal calculateTransactionAmount(BigDecimal units, BigDecimal amount) {
+    private BigDecimal calculateTransactionAmount(BigDecimal units, BigDecimal operationAmount) {
         if (units.signum() == -1) {
-            return amount.negate();
+            return operationAmount.negate();
         } else {
-            return amount;
+            return operationAmount;
         }
     }
 }
