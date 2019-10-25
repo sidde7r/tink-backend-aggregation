@@ -17,7 +17,7 @@ public class LogMasker {
                     .thenComparing(Comparator.naturalOrder());
     private static final ImmutableSet<String> WHITELISTED_SENSITIVE_VALUES =
             ImmutableSet.<String>builder().add("true").add("false").build();
-    private static final ImmutableSet<String> MARKETS_MASKER_COVERS_SECREST_FOR =
+    private static final ImmutableSet<String> MARKETS_MASKER_COVERS_SECRETS_FOR =
             ImmutableSet.<String>builder().add("se").add("es").build();
 
     /**
@@ -55,7 +55,7 @@ public class LogMasker {
             return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
         }
 
-        if (!MARKETS_MASKER_COVERS_SECREST_FOR.contains(provider.getMarket().toLowerCase())) {
+        if (!MARKETS_MASKER_COVERS_SECRETS_FOR.contains(provider.getMarket().toLowerCase())) {
             return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
         }
         return LoggingMode.LOGGING_MASKER_COVERS_SECRETS;
