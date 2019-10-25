@@ -4,9 +4,13 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class SibsProgressiveTiagoTestBaseAgent extends SibsProgressiveBaseAgent {
+
+    private static final AggregationLogger log =
+            new AggregationLogger(SibsProgressiveTiagoTestBaseAgent.class);
 
     private static final String TIAGO_USER_ID = "ea47d3ed422840f9987d59b32a8d099e";
 
@@ -19,6 +23,7 @@ public abstract class SibsProgressiveTiagoTestBaseAgent extends SibsProgressiveB
 
     protected SibsConfiguration getClientConfiguration(Credentials credentials) {
         if (TIAGO_USER_ID.equals(credentials.getUserId())) {
+            log.info("Processing agent using new secrets");
             return getAgentConfigurationController().getAgentConfiguration(SibsConfiguration.class);
         }
         return configuration
