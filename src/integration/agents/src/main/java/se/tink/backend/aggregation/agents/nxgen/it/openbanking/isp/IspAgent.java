@@ -4,10 +4,11 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -29,12 +30,13 @@ public class IspAgent extends CbiGlobeAgent
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
                 CbiGlobeTransactionalAccountFetcher.createFromBooked(apiClient, persistentStorage);
 
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
+        final TransactionFetcherController transactionFetcher =
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionPagePaginationController<>(
+                                accountFetcher, FormValues.FIRST_PAGE));
+
+        return new TransactionalAccountRefreshController(
+                metricRefreshController, updateController, accountFetcher, transactionFetcher);
     }
 }

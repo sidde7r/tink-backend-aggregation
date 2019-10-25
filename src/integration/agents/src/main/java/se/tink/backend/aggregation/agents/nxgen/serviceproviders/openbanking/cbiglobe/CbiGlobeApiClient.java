@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.IdTags;
@@ -27,11 +29,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -42,6 +46,7 @@ public class CbiGlobeApiClient {
     private CbiGlobeConfiguration configuration;
     private boolean requestManual;
     private final HashMap<String, GetTransactionsBalancesResponse> temporaryTransactionsStorage;
+    private final TemporaryStorage temporaryStorage;
 
     public CbiGlobeApiClient(
             TinkHttpClient client, PersistentStorage persistentStorage, boolean requestManual) {
@@ -49,6 +54,7 @@ public class CbiGlobeApiClient {
         this.persistentStorage = persistentStorage;
         this.requestManual = requestManual;
         this.temporaryTransactionsStorage = new HashMap<>();
+        this.temporaryStorage = new TemporaryStorage();
     }
 
     protected CbiGlobeConfiguration getConfiguration() {
@@ -131,21 +137,38 @@ public class CbiGlobeApiClient {
     }
 
     public GetTransactionsBalancesResponse getTransactionsBalances(
-            String apiIdentifier, Date fromDate, Date toDate, String bookingType) {
+            String apiIdentifier, int page, String bookingType) {
         try {
-            GetTransactionsBalancesResponse getTransactionsBalancesResponse =
+            HttpResponse httpResponse =
                     createRequestWithConsent(
                                     Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, apiIdentifier))
                             .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
                             .queryParam(
                                     QueryKeys.DATE_FROM,
-                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                                            CbiGlobeUtils.calculateFromDate(new Date())))
                             .queryParam(
                                     QueryKeys.DATE_TO,
-                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                            .get(GetTransactionsBalancesResponse.class);
+                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
+                            .queryParam(QueryKeys.OFFSET, String.valueOf(page))
+                            .get(HttpResponse.class);
 
-            saveTransactionsInTempMap(apiIdentifier, getTransactionsBalancesResponse);
+            String totalPages = httpResponse.getHeaders().getFirst(HeaderKeys.TOTAL_PAGES);
+
+            GetTransactionsBalancesResponse getTransactionsBalancesResponse =
+                    httpResponse.getBody(GetTransactionsBalancesResponse.class);
+
+            if (FormValues.FIRST_PAGE == page) {
+                temporaryStorage.put(apiIdentifier, totalPages);
+                saveTransactionsInTempMap(apiIdentifier, getTransactionsBalancesResponse);
+            }
+
+            totalPages = temporaryStorage.get(apiIdentifier);
+
+            if (Objects.nonNull(totalPages)
+                    && Integer.valueOf(totalPages) > Integer.valueOf(page)) {
+                getTransactionsBalancesResponse.setPageRemaining(true);
+            }
 
             return getTransactionsBalancesResponse;
         } catch (HttpResponseException e) {
