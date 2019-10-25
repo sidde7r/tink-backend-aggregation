@@ -189,7 +189,7 @@ public class EncapMessageUtils {
         return joiner.join(queryPairsWithUrlEncodedValues);
     }
 
-    public static HashMap<String, String> getCryptoRequestParams(
+    public static Map<String, String> getCryptoRequestParams(
             byte[] rand16BytesKey,
             byte[] rand16BytesIv,
             byte[] serverPubKeyBytes,
@@ -289,7 +289,7 @@ public class EncapMessageUtils {
         byte[] pubKeyBytes =
                 EncodingUtils.decodeBase64String(EncapConstants.B64_ELLIPTIC_CURVE_PUBLIC_KEY);
 
-        HashMap<String, String> cryptoRequestParams =
+        Map<String, String> cryptoRequestParams =
                 getCryptoRequestParams(key, iv, pubKeyBytes, plainTextMessage);
 
         String response =
