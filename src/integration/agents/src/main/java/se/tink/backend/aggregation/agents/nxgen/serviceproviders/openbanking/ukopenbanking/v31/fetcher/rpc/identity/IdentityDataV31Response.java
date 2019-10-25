@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class IdentityDataV31Response extends BaseV31Response<List<IdentityDataEntity>> {
     public IdentityDataEntity toTinkIdentityData() {
 
-        return getEntity().orElseGet(null);
+        return getEntity().orElse(null);
     }
 
     private Optional<IdentityDataEntity> getEntity() {
