@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors;
 
+import java.util.EnumSet;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,10 +188,9 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
             case SE_NDA_SSN:
                 return NordeaSEConstants.PaymentAccountTypes.NDASE;
             case SE:
-                if (transfer.getDestination()
-                        .to(SwedishIdentifier.class)
-                        .getBank()
-                        .equals(Bank.NORDEA_PERSONKONTO)) {
+                if (EnumSet.of(Bank.NORDEA_PERSONKONTO, Bank.NORDEA)
+                        .contains(
+                                transfer.getDestination().to(SwedishIdentifier.class).getBank())) {
                     return NordeaSEConstants.PaymentAccountTypes.NDASE;
                 } else {
                     return NordeaSEConstants.PaymentAccountTypes.LBAN;
