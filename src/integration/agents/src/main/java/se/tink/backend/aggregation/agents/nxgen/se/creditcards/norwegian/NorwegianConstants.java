@@ -1,0 +1,79 @@
+package se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian;
+
+import se.tink.backend.aggregation.nxgen.http.url.URL;
+
+public final class NorwegianConstants {
+
+    public static final String INTEGRATION_NAME = "norwegian";
+    public static final String URL_ENCODING = "UTF-8";
+    public static final String CURRENCY = "SEK";
+    public static final String CARD_ALIAS = "Norwegiankortet";
+    public static final String IDENTIFIER = "NORWEGIAN_CARD";
+    public static final String SAVINGS_IDENTIFIER = "NORWEGIAN_SAVINGS_ACCOUNT";
+    public static final String SAVINGS_ALIAS = "Norwegian Sparkonto";
+
+    private NorwegianConstants() {
+        throw new AssertionError();
+    }
+
+    public static class ErrorMessages {
+        public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final String ALREADY_IN_PROGRESS = "ALREADY_IN_PROGRESS";
+    }
+
+    public static class Urls {
+        public static final String BASE_URL = "https://www.banknorwegian.se/";
+        public static final String IDENTITY_BASE_URL = "https://identity.banknorwegian.se/";
+        public static final String CREDIT_CARD_URL = BASE_URL + "MinSida/Creditcard/";
+        public static final String CREDIT_CARD_OVERVIEW_URL =
+                BASE_URL + "api/mypage/creditcard/overview";
+        public static final String IDENTITY_URL = BASE_URL + "MinSida/Settings/ContactInfo";
+        public static final String SAVINGS_ACCOUNTS_URL = BASE_URL + "MinSida/SavingsAccount/";
+        public static final String CARD_TRANSACTION_URL = CREDIT_CARD_URL + "Transactions";
+        public static final String SAVINGS_TRANSACTION_URL = SAVINGS_ACCOUNTS_URL + "Transactions";
+
+        public static final URL TRANSACTIONS_PAGINATION_URL =
+                new URL(BASE_URL + "MyPage2/Transaction/GetTransactionsFromTo");
+
+        public static final String INIT_URL = "https://www.banknorwegian.se/Login";
+        public static final String LOGIN_URL =
+                "https://id.banknorwegian.se/std/method/banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=";
+        public static final String TARGET_URL =
+                "https://identity.banknorwegian.se/MyPage/SignicatCallback?ipid=22&returnUrl=";
+        public static final String COLLECT = "collect";
+        public static final String ORDER = "order";
+    }
+
+    public static class BankIdProgressStatus {
+        public static final String COMPLETE = "COMPLETE";
+        public static final String OUTSTANDING_TRANSACTION = "OUTSTANDING_TRANSACTION";
+        public static final String USER_SIGN = "USER_SIGN";
+        public static final String NO_CLIENT = "NO_CLIENT";
+    }
+
+    public static class ElementNames {
+        public static final String SAML_FORM = "responseForm";
+        public static final String FORM = "form";
+    }
+
+    public static class ElementAttributes {
+        public static final String ACTION = "action";
+    }
+
+    public static class QueryKeys {
+        public static final String ACCOUNT_NUMBER = "accountNo";
+        public static final String DATE_FROM = "dateFrom";
+        public static final String DATE_TO = "dateTo";
+        public static final String GET_LAST_DAYS = "getLastDays";
+        public static final String FROM_LAST_EOC = "fromLastEOC";
+        public static final String CORE_DOWN = "coreDown";
+        public static final String RETURN_URL = "returnUrl";
+    }
+
+    public static class QueryValues {
+        public static final String GET_LAST_DAYS_TRUE = "true";
+        public static final String GET_LAST_DAYS_FALSE = "false";
+        public static final String FROM_LAST_EOC = "false";
+        public static final String CORE_DOWN = "false";
+    }
+}
