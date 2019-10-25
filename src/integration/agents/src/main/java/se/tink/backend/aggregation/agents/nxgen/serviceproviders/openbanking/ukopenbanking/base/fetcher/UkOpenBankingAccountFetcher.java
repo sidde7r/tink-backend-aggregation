@@ -77,9 +77,9 @@ public class UkOpenBankingAccountFetcher<
         // multiple time.
         String partyName =
                 Optional.ofNullable(identityData)
-                    .map(IdentityDataV31Response::toTinkIdentityData)
-                    .map(IdentityDataEntity::getName)
-                    .orElse(null);
+                        .map(IdentityDataV31Response::toTinkIdentityData)
+                        .map(IdentityDataEntity::getName)
+                        .orElse(null);
 
         List<AccountType> tinkAccounts =
                 accounts.stream()
