@@ -81,6 +81,17 @@ public class SantanderApiClient {
         return executeRequest(body);
     }
 
+    public ApiResponse fetchCreditCardTransactions(
+            String fullCardNumber, int pageNumber, int pageSize) {
+
+        String body =
+                String.format(
+                        "|1a541e8552b|1flow|420191024144819275|1time|1|1value|1flow||a541e8552b|1name|D2|L1|1analytics|10105634223|1kernel|D4|0|6%d|1page|1m38ae520e9|1j8c6b81435.readPage|1readPage|1$operation|1|1nextDayTransfer|1|1hour|1|1date|D3|L1|1operationDateResult|0|1$entity|1j8c6b81435|1$caller|1|1BALCTIT|1|1ups|1|1startDate|1|1fullNumber|1|1ZCLIENTE|6|1doubleBalance|1|1CMARCA|1|1MONTDISP|1|1color|10110VP|1CPRODSUB|1|1name|1|1formattedAvailable|1|1CEMPRESA|1|1formattedLimit|1|1watchBckAppleImageCode|32|1index|1|1limit|1|1baseAccount|1|1branch|1%s|1number|1CR|1type|1|1product|1|1MSALDO|1|1baseAccountName|1|1account|1|1expirationDate|1|1FAMILIA|1|1doubleAvailable|1|1backgroundImageCode|1|1CSITUAC|1|1state|1|1ccPartialNumber|1|1currency|1|1availableBalance|6|1used|1|1ccPartialNumberFind|1|1productCardType|1|1accountNumber|1|1statementsImage|D39|L1|1selectedCard|6%d|1pageSize|D8|L1|30|L4",
+                        pageNumber, fullCardNumber, pageSize);
+
+        return executeRequest(body);
+    }
+
     public ApiResponse fetchAssets() {
         return executeRequest(
                 "|1x26bf0e990|1flow|420191022142453892|1time|L0|1analytics|0|1kernel|D4|0|D0|L1|30|L4");

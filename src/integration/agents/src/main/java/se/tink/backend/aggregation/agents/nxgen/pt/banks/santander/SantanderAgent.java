@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -62,14 +63,20 @@ public class SantanderAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new SantanderCreditAccountFetcher(apiClient),
-                        new SantanderCreditCardTransactionFetcher(apiClient));
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        new SantanderCreditCardTransactionFetcher(apiClient), 1)));
 
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
                         updateController,
                         new SantanderInvestmentAccountFetcher(apiClient),
-                        new SantanderInvestmentTransactionFetcher(apiClient));
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        new SantanderInvestmentTransactionFetcher(apiClient), 1)));
     }
 
     @Override

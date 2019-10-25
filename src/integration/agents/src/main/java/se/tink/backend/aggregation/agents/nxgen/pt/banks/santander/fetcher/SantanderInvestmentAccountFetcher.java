@@ -24,7 +24,7 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
 
     public SantanderInvestmentAccountFetcher(SantanderApiClient apiClient) {
         this.apiClient = apiClient;
-        currencyMapper = new CurrencyMapper();
+        this.currencyMapper = new CurrencyMapper();
     }
 
     @Override
@@ -44,25 +44,26 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
                                 Collectors.toList(), Collections::unmodifiableList));
     }
 
-    private InvestmentAccount toTinkAccount(Map<String, String> obj) {
+    private InvestmentAccount toTinkAccount(Map<String, String> account) {
         return InvestmentAccount.nxBuilder()
                 .withoutPortfolios()
                 .withCashBalance(
                         ExactCurrencyAmount.of(
-                                obj.get(Investment.AVAILABLE_BALANCE),
+                                account.get(Investment.AVAILABLE_BALANCE),
                                 currencyMapper
                                         .get(
                                                 Integer.parseInt(
-                                                        obj.get(Investment.CURRENCY_NUMERIC_CODE)))
+                                                        account.get(
+                                                                Investment.CURRENCY_NUMERIC_CODE)))
                                         .getCurrencyCode()))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(obj.get(Investment.FULL_ACCOUNT_NUMBER))
-                                .withAccountNumber(obj.get(Investment.ACCOUNT_NUMBER))
-                                .withAccountName(obj.get(Investment.PRODUCT_NAME).trim())
+                                .withUniqueIdentifier(account.get(Investment.FULL_ACCOUNT_NUMBER))
+                                .withAccountNumber(account.get(Investment.ACCOUNT_NUMBER))
+                                .withAccountName(account.get(Investment.PRODUCT_NAME).trim())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                Type.IBAN, obj.get(Investment.ACCOUNT_NUMBER)))
+                                                Type.IBAN, account.get(Investment.ACCOUNT_NUMBER)))
                                 .build())
                 .build();
     }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderApiClient;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.STORAGE;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Card;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.util.CurrencyMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -29,40 +30,42 @@ public class SantanderCreditAccountFetcher implements AccountFetcher<CreditCardA
     public Collection<CreditCardAccount> fetchAccounts() {
         List<Map<String, String>> businessData = apiClient.fetchCards().getBusinessData();
         return businessData.stream()
-                .filter(obj -> Card.TYPE_CREDIT.equals(obj.get(Card.PRODUCT_CARD_TYPE)))
+                .filter(card -> Card.TYPE_CREDIT.equals(card.get(Card.PRODUCT_CARD_TYPE)))
                 .map(this::toTinkAccount)
                 .collect(Collectors.toList());
     }
 
-    private CreditCardAccount toTinkAccount(Map<String, String> obj) {
+    private CreditCardAccount toTinkAccount(Map<String, String> card) {
         String accountCurrencyCode =
-                currencyMapper.get(Integer.parseInt(obj.get(Card.CURRENCY))).getCurrencyCode();
+                currencyMapper.get(Integer.parseInt(card.get(Card.CURRENCY))).getCurrencyCode();
 
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(obj.get(Card.MASKED_NUMBER))
+                                .withCardNumber(card.get(Card.MASKED_NUMBER))
                                 .withBalance(
                                         ExactCurrencyAmount.of(
-                                                obj.get(Card.AUTHORIZED_BALANCE),
+                                                card.get(Card.AUTHORIZED_BALANCE),
                                                 accountCurrencyCode))
                                 .withAvailableCredit(
                                         ExactCurrencyAmount.of(
-                                                obj.get(Card.AVAILABLE), accountCurrencyCode))
-                                .withCardAlias(obj.get(Card.ALIAS))
+                                                card.get(Card.AVAILABLE), accountCurrencyCode))
+                                .withCardAlias(card.get(Card.ALIAS))
                                 .build())
                 .withInferredAccountFlags()
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(obj.get(Card.ACCOUNT_NUMBER))
-                                .withAccountNumber(obj.get(Card.ACCOUNT_NUMBER))
-                                .withAccountName(obj.get(Card.PRODUCT_NAME))
+                                .withUniqueIdentifier(card.get(Card.ACCOUNT_NUMBER))
+                                .withAccountNumber(card.get(Card.ACCOUNT_NUMBER))
+                                .withAccountName(card.get(Card.PRODUCT_NAME))
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 Type.PAYMENT_CARD_NUMBER,
-                                                obj.get(Card.MASKED_NUMBER)))
-                                .setProductName(obj.get(Card.PRODUCT_NAME))
+                                                card.get(Card.MASKED_NUMBER)))
+                                .setProductName(card.get(Card.PRODUCT_NAME))
                                 .build())
+                .setApiIdentifier(card.get(Card.FULL_NUMBER))
+                .putInTemporaryStorage(STORAGE.CURRENCY_CODE, accountCurrencyCode)
                 .build();
     }
 }

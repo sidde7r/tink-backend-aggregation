@@ -66,6 +66,7 @@ public class Fields {
         public static final String AVAILABLE = "available";
         public static final String ALIAS = "numAlias";
         public static final String ACCOUNT_NUMBER = "accountNumber";
-        public static final String PRODUCT_NAME = "cardType";
+        public static final String PRODUCT_NAME = "name";
+        public static final String FULL_NUMBER = "number";
     }
 }
