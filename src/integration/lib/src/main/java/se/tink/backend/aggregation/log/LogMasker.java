@@ -55,7 +55,7 @@ public class LogMasker {
             return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
         }
 
-        if (MARKETS_MASKER_COVERS_SECREST_FOR.contains(provider.getMarket().toLowerCase())) {
+        if (!MARKETS_MASKER_COVERS_SECREST_FOR.contains(provider.getMarket().toLowerCase())) {
             return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
         }
         return LoggingMode.LOGGING_MASKER_COVERS_SECRETS;
