@@ -6,8 +6,6 @@ import java.text.SimpleDateFormat;
 
 public class ICSConstants {
 
-    public static final String INTEGRATION_NAME = "icsConfiguration";
-
     public static final class Urls {
         public static final String AUTH_BASE = "https://auth.vvwpgvhh.icscards.nl";
         public static final String BASE = "https://api.vvwpgvhh.icscards.nl";
