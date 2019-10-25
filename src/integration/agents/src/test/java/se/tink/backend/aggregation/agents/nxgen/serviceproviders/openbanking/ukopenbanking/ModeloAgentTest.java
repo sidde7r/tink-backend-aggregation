@@ -23,8 +23,10 @@ public class ModeloAgentTest {
     private AgentIntegrationTest.Builder getAgentBuilder() {
         return new AgentIntegrationTest.Builder("uk", "uk-modelo-oauth2")
                 .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
+                .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("modelo")
+                .setAppId("tink")
                 .doLogout(false);
     }
 

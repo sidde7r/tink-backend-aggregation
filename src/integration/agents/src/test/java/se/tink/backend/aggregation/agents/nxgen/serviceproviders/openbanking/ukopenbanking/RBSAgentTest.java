@@ -23,9 +23,11 @@ public class RBSAgentTest {
     private AgentIntegrationTest.Builder getAgentBuilder() {
         return new AgentIntegrationTest.Builder("uk", "uk-rbs-oauth2")
                 .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
+                .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .doLogout(false);
+                .doLogout(false)
+                .setFinancialInstitutionId("rbs")
+                .setAppId("tink");
     }
 
     @Test
@@ -39,7 +41,9 @@ public class RBSAgentTest {
                 new AgentIntegrationTest.Builder("uk", "uk-rbs-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("rbs")
+                        .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

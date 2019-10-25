@@ -9,11 +9,11 @@ public class MarkAndSpencerAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-markandspencer-oauth2")
-                .setFinancialInstitutionId("markandspencer")
-                .setAppId("tink")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("markandspencer")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }

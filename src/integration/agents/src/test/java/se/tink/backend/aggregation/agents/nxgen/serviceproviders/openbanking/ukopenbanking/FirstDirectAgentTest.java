@@ -12,6 +12,8 @@ public class FirstDirectAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("firstdirect")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }

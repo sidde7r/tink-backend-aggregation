@@ -26,6 +26,8 @@ public class TescoAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setAppId("tink")
+                .setFinancialInstitutionId("tesco")
                 .build()
                 .testRefresh();
     }
@@ -35,8 +37,10 @@ public class TescoAgentTest {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("uk", "uk-tesco-oauth2")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("tesco");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

@@ -37,8 +37,10 @@ public class TsbAgentTest {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("uk", "uk-tsb-oauth2")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("tsb");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

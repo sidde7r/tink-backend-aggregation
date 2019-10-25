@@ -9,9 +9,9 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants.In
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.entities.AuthenticationIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.AuthenticationInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.LoginDetailsResponse;
-import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
-import se.tink.backend.aggregation.agents.utils.authentication.encap2.enums.AuthenticationMethod;
-import se.tink.backend.aggregation.agents.utils.authentication.encap2.models.DeviceAuthenticationResponse;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.enums.AuthenticationMethod;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.DeviceAuthenticationResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.Storage;

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.ScreenUpdateResponseDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -13,6 +15,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonDeserialize(using = ScreenUpdateResponseDeserializer.class)
 public class ScreenUpdateResponse extends ResponseEntity {
 
+    private static final Logger log = LoggerFactory.getLogger(ScreenUpdateResponse.class);
     private final List<Widget> widgets;
 
     public ScreenUpdateResponse(List<Widget> widgets) {
@@ -37,6 +40,8 @@ public class ScreenUpdateResponse extends ResponseEntity {
     }
 
     public static Widget findWidgetOrElseThrow(BelfiusResponse response, String widgetId) {
+        log.debug("response: ", response.toString());
+        log.debug("widgetId: ", widgetId);
         return response.filter(ScreenUpdateResponse.class)
                 .flatMap(r -> r.getWidgets().stream())
                 .filter(widget -> widgetId.equalsIgnoreCase(widget.getWidgetId()))
