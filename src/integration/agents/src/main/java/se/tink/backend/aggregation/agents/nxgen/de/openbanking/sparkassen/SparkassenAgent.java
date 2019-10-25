@@ -50,8 +50,7 @@ public final class SparkassenAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
         final SparkassenConfiguration sparkassenConfiguration = getClientConfiguration();
 
-        client.setEidasProxy(
-                configuration.getEidasProxy(), getClientConfiguration().getEidasQwac());
+        client.setEidasProxy(configuration.getEidasProxy());
 
         apiClient.setConfiguration(sparkassenConfiguration);
     }
