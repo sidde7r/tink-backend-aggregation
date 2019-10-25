@@ -74,13 +74,18 @@ public class HttpLoggingFilter extends ClientFilter {
                     "Referer",
                     "Server",
                     "Status",
+                    "TPP-Request-ID",
                     "Transfer-Encoding",
                     "User-Agent",
                     "Vary",
                     "Via",
                     "X-Forwarded-For",
                     "X-Forwarded-Host",
-                    "X-Powered-By");
+                    "X-ING-ReqID",
+                    "X-ING-Response-ID",
+                    "X-Powered-By",
+                    "X-Request-ID",
+                    "X-Response-ID");
 
     public HttpLoggingFilter(
             AggregationLogger log,

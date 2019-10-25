@@ -73,13 +73,18 @@ public class LoggingFilter extends ClientFilter {
                     "referer",
                     "server",
                     "status",
+                    "tpp-request-id",
                     "transfer-encoding",
                     "user-agent",
                     "vary",
                     "via",
                     "x-forwarded-for",
                     "x-forwarded-host",
-                    "x-powered-by");
+                    "x-ing-reqid",
+                    "x-ing-response-id",
+                    "x-powered-by",
+                    "x-request-id",
+                    "x-response-id");
     private final LogMasker logMasker;
     private final LoggingMode loggingMode;
 
