@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -53,7 +54,11 @@ public class AgentTestContext extends AgentContext {
     private Credentials credentials;
 
     public AgentTestContext(Credentials credentials) {
-        LogMasker logMasker = new LogMasker(new Credentials());
+        LogMasker logMasker =
+                LogMasker.builder()
+                        .addStringMaskerBuilder(
+                                new CredentialsStringMaskerBuilder(new Credentials()))
+                        .build();
         setLogMasker(logMasker);
         supplementalClient =
                 NextGenTinkHttpClient.builder(logMasker, LoggingMode.LOGGING_MASKER_COVERS_SECRETS)

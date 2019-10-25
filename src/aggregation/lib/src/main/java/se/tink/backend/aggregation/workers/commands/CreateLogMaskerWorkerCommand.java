@@ -1,16 +1,13 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 
 public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
-
-    private static final AggregationLogger log =
-            new AggregationLogger(CreateAgentConfigurationControllerWorkerCommand.class);
 
     private final Credentials credentials;
     private final AgentWorkerCommandContext agentWorkerCommandContext;
@@ -27,7 +24,10 @@ public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
                     "No AgentConfigurationController found in CreateLogMaskerWorkerCommand, make sure to put the commands in the right order, this should come after the CreateAgentConfigurationControllerWorkerCommand.");
         }
 
-        LogMasker logMasker = new LogMasker(credentials);
+        LogMasker logMasker =
+                LogMasker.builder()
+                        .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
+                        .build();
         agentWorkerCommandContext.getAgentConfigurationController().addObserver(logMasker);
         agentWorkerCommandContext.setLogMasker(logMasker);
 

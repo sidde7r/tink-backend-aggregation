@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 @Ignore
 public class HttpLoggingFilterTest {
@@ -258,7 +259,9 @@ public class HttpLoggingFilterTest {
     }
 
     private static LogMasker createMaskStub() {
-        return new LogMasker(new Credentials());
+        return LogMasker.builder()
+                .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(new Credentials()))
+                .build();
     }
 
     private static int findFreePort() {

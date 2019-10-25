@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public class VolksbankHttpTest {
 
@@ -30,7 +31,11 @@ public class VolksbankHttpTest {
 
         TinkHttpClient client =
                 NextGenTinkHttpClient.builder(
-                                new LogMasker(new Credentials()),
+                                LogMasker.builder()
+                                        .addStringMaskerBuilder(
+                                                new CredentialsStringMaskerBuilder(
+                                                        new Credentials()))
+                                        .build(),
                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
 

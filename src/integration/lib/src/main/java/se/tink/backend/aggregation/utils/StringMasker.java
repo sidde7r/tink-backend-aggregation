@@ -9,12 +9,12 @@ import java.util.regex.Pattern;
 public class StringMasker {
 
     public static final String MASK = "***MASKED***";
-    private static final Predicate<Pattern> NONE_WHITELISTED = (p -> false);
+    private static final Predicate<Pattern> NONE_WHITELISTED = (p -> true);
 
     private static final Comparator<Pattern> SENSITIVE_VALUES_SORTING_COMPARATOR =
             Comparator.comparingInt(p -> p.toString().length());
 
-    private final ImmutableList<Pattern> sensitiveValuesToMask;
+    private ImmutableList<Pattern> sensitiveValuesToMask;
 
     /**
      * Compose a StringMasker from the given builders which can the be used to censor strings.
@@ -29,11 +29,11 @@ public class StringMasker {
      * Compose a StringMasker from the given builders which can the be used to censor strings.
      *
      * @param builders Builders used to compose this masker.
-     * @param isWhiteListedPredicate Predicate that can override strings to be masked by returning
-     *     true for these.
+     * @param shouldMaskPredicate Predicate that can override strings to be masked by returning true
+     *     for these.
      */
     public StringMasker(
-            Iterable<StringMaskerBuilder> builders, Predicate<Pattern> isWhiteListedPredicate) {
+            Iterable<StringMaskerBuilder> builders, Predicate<Pattern> shouldMaskPredicate) {
 
         ImmutableSet.Builder<Pattern> builder = ImmutableSet.builder();
 
@@ -44,7 +44,7 @@ public class StringMasker {
 
         sensitiveValuesToMask =
                 sensitiveValuesWithoutDuplicates.stream()
-                        .filter(isWhiteListedPredicate.negate())
+                        .filter(shouldMaskPredicate)
                         .sorted(SENSITIVE_VALUES_SORTING_COMPARATOR.reversed())
                         .collect(ImmutableList.toImmutableList());
     }
@@ -61,5 +61,25 @@ public class StringMasker {
         }
 
         return result;
+    }
+
+    public void addValuesToMask(
+            StringMaskerBuilder stringMaskerBuilder, Predicate<Pattern> shouldMaskPredicate) {
+        ImmutableSet<Pattern> newValuesToBeMasked =
+                stringMaskerBuilder.getValuesToMask().stream()
+                        .filter(shouldMaskPredicate)
+                        .collect(ImmutableSet.toImmutableSet());
+
+        ImmutableSet<Pattern> sensitiveValuesWithoutDuplicates =
+                ImmutableSet.<Pattern>builder()
+                        .addAll(newValuesToBeMasked)
+                        .addAll(sensitiveValuesToMask)
+                        .build();
+
+        sensitiveValuesToMask =
+                sensitiveValuesWithoutDuplicates.stream()
+                        .filter(shouldMaskPredicate)
+                        .sorted(SENSITIVE_VALUES_SORTING_COMPARATOR.reversed())
+                        .collect(ImmutableList.toImmutableList());
     }
 }

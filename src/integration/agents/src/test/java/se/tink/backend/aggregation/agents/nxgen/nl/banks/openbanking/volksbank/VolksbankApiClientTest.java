@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public final class VolksbankApiClientTest {
 
@@ -73,13 +74,16 @@ public final class VolksbankApiClientTest {
     private static TinkHttpClient createHttpClient() {
         TinkHttpClient tinkHttpClient =
                 NextGenTinkHttpClient.builder(
-                                new LogMasker(new Credentials()),
+                                LogMasker.builder()
+                                        .addStringMaskerBuilder(
+                                                new CredentialsStringMaskerBuilder(
+                                                        new Credentials()))
+                                        .build(),
                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
         EidasProxyConfiguration proxyConfiguration =
                 EidasProxyConfiguration.createLocal(
                         "https://eidas-proxy.staging.aggregation.tink.network");
-        tinkHttpClient.setEidasProxy(proxyConfiguration, "abnamro2");
         tinkHttpClient.setEidasIdentity(
                 new EidasIdentity(
                         NewAgentTestContext.TEST_CLUSTERID,

@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
@@ -83,7 +84,11 @@ public final class NewAgentTestContext extends AgentContext {
         this.setClusterId(MoreObjects.firstNonNull(clusterId, TEST_CLUSTERID));
         this.setAppId(MoreObjects.firstNonNull(appId, TEST_APPID));
         agentTestServerClient = AgentTestServerClient.getInstance();
-        LogMasker logMasker = new LogMasker(new Credentials());
+        LogMasker logMasker =
+                LogMasker.builder()
+                        .addStringMaskerBuilder(
+                                new CredentialsStringMaskerBuilder(new Credentials()))
+                        .build();
         setLogMasker(logMasker);
 
         setTestContext(true);

@@ -6,9 +6,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
+import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.utils.StringMaskerBuilder;
 
@@ -51,12 +53,12 @@ public class LogMasker implements PropertyChangeListener {
     private final StringMasker masker;
 
     private LogMasker(Builder builder) {
-        masker = new StringMasker(builder.getStringMaskerBuilders(), this::isWhiteListed);
+        masker = new StringMasker(builder.getStringMaskerBuilders(), this::shouldMask);
     }
 
-    private boolean isWhiteListed(Pattern sensitiveValue) {
-        return sensitiveValue.toString().length() <= 3
-                || WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue.toString());
+    private boolean shouldMask(Pattern sensitiveValue) {
+        return sensitiveValue.toString().length() > 3
+                && !WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue.toString());
     }
 
     public String mask(String dataToMask) {
@@ -67,14 +69,18 @@ public class LogMasker implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent newSecretValues) {
         switch (newSecretValues.getPropertyName()) {
             case AgentConfigurationController.SECRET_VALUES_PROPERTY_NAME:
+                masker.addValuesToMask(
+                        new ClientConfigurationStringMaskerBuilder(
+                                (Set<String>) newSecretValues.getNewValue()),
+                        this::shouldMask);
                 break;
 
-                default:
-                    throw new IllegalStateException(
+            default:
+                throw new IllegalStateException(
                         "Unrecognized property name received: "
-                            + newSecretValues.getPropertyName());
-            }
+                                + newSecretValues.getPropertyName());
         }
+    }
 
     public static LoggingMode shouldLog(Provider provider) {
         // Temporary disable of http traffic logging for RE agents.
