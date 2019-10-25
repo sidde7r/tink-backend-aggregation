@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.utils.jersey;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableSet;
 import com.sun.jersey.api.client.AbstractClientRequestAdapter;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
@@ -18,12 +17,12 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingConstants;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
@@ -42,49 +41,6 @@ public class LoggingFilter extends ClientFilter {
 
     private static final String RESPONSE_PREFIX = "< ";
 
-    // In lower case
-    private static final Set<String> NON_SENSITIVE_HEADER_FIELDS =
-            ImmutableSet.of(
-                    "accept",
-                    "accept-charset",
-                    "accept-datetime",
-                    "accept-encoding",
-                    "accept-language",
-                    "accept-ranges",
-                    "access-control-allow-origin",
-                    "age",
-                    "allow",
-                    "cache-control",
-                    "connection",
-                    "content-encoding",
-                    "content-language",
-                    "content-length",
-                    "content-type",
-                    "date",
-                    "expires",
-                    "forwarded",
-                    "if-modified-since",
-                    "if-unmodified-since",
-                    "host",
-                    "language",
-                    "last-modified",
-                    "pragma",
-                    "proxy-connection",
-                    "referer",
-                    "server",
-                    "status",
-                    "tpp-request-id",
-                    "transfer-encoding",
-                    "user-agent",
-                    "vary",
-                    "via",
-                    "x-forwarded-for",
-                    "x-forwarded-host",
-                    "x-ing-reqid",
-                    "x-ing-response-id",
-                    "x-powered-by",
-                    "x-request-id",
-                    "x-response-id");
     private final LogMasker logMasker;
     private final LoggingMode loggingMode;
 
@@ -183,7 +139,7 @@ public class LoggingFilter extends ClientFilter {
 
     private static String censorHeaderValue(String key, String value) {
 
-        if (NON_SENSITIVE_HEADER_FIELDS.contains(key.toLowerCase())) {
+        if (HttpLoggingConstants.NON_SENSITIVE_HEADER_FIELDS.contains(key.toLowerCase())) {
             return value;
         }
 
