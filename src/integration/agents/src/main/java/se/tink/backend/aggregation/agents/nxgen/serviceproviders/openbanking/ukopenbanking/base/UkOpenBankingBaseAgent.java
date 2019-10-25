@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.identity.IdentityDataV31Response;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -33,8 +32,12 @@ import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SignatureKey;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.TransportKey;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -49,7 +52,6 @@ import se.tink.backend.aggregation.utils.Base64Masker;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
@@ -67,7 +69,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected SoftwareStatement softwareStatement;
     protected ProviderConfiguration providerConfiguration;
     private boolean disableSslVerification;
-    private final UkOpenBankingAisConfig agentConfig;
 
     private TransferDestinationRefreshController transferDestinationRefreshController;
     private CreditCardRefreshController creditCardRefreshController;
@@ -75,6 +76,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
+    private final UkOpenBankingAisConfig agentConfig;
     private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> transactionalAccountFetcher;
 
     public UkOpenBankingBaseAgent(
@@ -127,57 +129,49 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                                 .build(),
                         LogMasker.shouldLog(request.getProvider()));
         tinkProvider = request.getProvider();
-        this.agentConfig = aisConfig;
         this.wellKnownURL = aisConfig.getWellKnownURL();
+        this.agentConfig = aisConfig;
     }
 
-    private String getSoftwareStatementName() {
-        return tinkProvider.getPayload().split(":")[0];
-    }
-
-    private String getProviderName() {
-        return tinkProvider.getPayload().split(":")[1];
+    // Different part between UkOpenBankingBaseAgent and this class
+    public UkOpenBankingConfiguration getClientConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentConfiguration(UkOpenBankingConfiguration.class);
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        UkOpenBankingConfiguration ukOpenBankingConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getIntegration(UkOpenBankingConstants.INTEGRATION_NAME, String.class)
-                        .map(
-                                s ->
-                                        SerializationUtils.deserializeFromString(
-                                                s, UkOpenBankingConfiguration.class))
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "UK Open Banking integration not configured"));
+        UkOpenBankingConfiguration ukOpenBankingConfiguration = getClientConfiguration();
 
-        String softwareStatementName = getSoftwareStatementName();
-        String providerName = getProviderName();
+        SoftwareStatementAssertion softwareStatementAssertion =
+                new SoftwareStatementAssertion(
+                        ukOpenBankingConfiguration.getSoftwareStatementAssertion(),
+                        ukOpenBankingConfiguration.getSoftwareId(),
+                        ukOpenBankingConfiguration.getRedirectUrl());
+        SignatureKey signingKey =
+                new SignatureKey(
+                        ukOpenBankingConfiguration.getSigningKeyId(),
+                        ukOpenBankingConfiguration.getSigningKey(),
+                        ukOpenBankingConfiguration.getSigningKeyPassword());
+        TransportKey transportKey =
+                new TransportKey(
+                        ukOpenBankingConfiguration.getTransportKeyId(),
+                        ukOpenBankingConfiguration.getTransportKey(),
+                        ukOpenBankingConfiguration.getTransportKeyPassword());
 
         softwareStatement =
-                ukOpenBankingConfiguration
-                        .getSoftwareStatement(softwareStatementName)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format(
-                                                        "Could not find softwareStatement: %s",
-                                                        softwareStatementName)));
+                new SoftwareStatement(softwareStatementAssertion, signingKey, transportKey);
 
         providerConfiguration =
-                softwareStatement
-                        .getProviderConfiguration(providerName)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format(
-                                                        "Could not find provider conf: %s",
-                                                        providerName)));
+                new ProviderConfiguration(
+                        ukOpenBankingConfiguration.getOrganizationId(),
+                        new ClientInfo(
+                                ukOpenBankingConfiguration.getClientId(),
+                                ukOpenBankingConfiguration.getClientSecret()));
+
+        // Different part between UkOpenBankingBaseAgent and this class are ended here
 
         if (this.disableSslVerification) {
             client.disableSslVerification();

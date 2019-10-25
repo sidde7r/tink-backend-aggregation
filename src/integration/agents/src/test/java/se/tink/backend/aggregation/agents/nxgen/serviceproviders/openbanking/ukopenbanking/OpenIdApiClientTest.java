@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
@@ -23,26 +23,26 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class OpenIdApiClientTest {
 
     private OpenIdApiClient apiClient;
+    private String softwareStatementData = "{}";
+    private String providerConfigurationData = "{}";
+    private String rootCAData = "";
+    private String rootCAPassword = "";
 
-    private final UkOpenBankingConfiguration UKOB_TEST_CONFIG =
-            SerializationUtils.deserializeFromString("{}", UkOpenBankingConfiguration.class);
+    private final SoftwareStatement softwareStatement =
+            SerializationUtils.deserializeFromString(
+                    softwareStatementData, SoftwareStatement.class);
+
+    private final ProviderConfiguration providerConfiguration =
+            SerializationUtils.deserializeFromString(
+                    providerConfigurationData, ProviderConfiguration.class);
 
     @Before
     public void setup() {
-        UKOB_TEST_CONFIG.validate();
 
         TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.disableSignatureRequestHeader();
         httpClient.trustRootCaCertificate(
-                UKOB_TEST_CONFIG.getRootCAData(), UKOB_TEST_CONFIG.getRootCAPassword());
-
-        SoftwareStatement softwareStatement =
-                UKOB_TEST_CONFIG.getSoftwareStatement("tink").orElseThrow(AssertionError::new);
-
-        ProviderConfiguration providerConfiguration =
-                softwareStatement
-                        .getProviderConfiguration("modelo")
-                        .orElseThrow(AssertionError::new);
+                EncodingUtils.decodeBase64String(rootCAData), rootCAPassword);
 
         apiClient =
                 new OpenIdApiClient(
