@@ -73,7 +73,7 @@ public final class KbcConstants {
     }
 
     public static class CredentialKeys {
-        public static final String IBAN = "IBAN";
+        public static final String IBAN = "iban";
     }
 
     public static class OAuth {

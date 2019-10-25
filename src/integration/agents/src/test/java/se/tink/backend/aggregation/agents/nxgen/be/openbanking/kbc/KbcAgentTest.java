@@ -23,7 +23,7 @@ public class KbcAgentTest {
         manager.before();
         builder =
                 new AgentIntegrationTest.Builder("be", "be-kbc-ob")
-                        .addCredentialField("IBAN", manager.get(Arg.IBAN))
+                        .addCredentialField(KbcConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .setFinancialInstitutionId("kbc")
                         .setAppId("tink")
                         .expectLoggedIn(false)
