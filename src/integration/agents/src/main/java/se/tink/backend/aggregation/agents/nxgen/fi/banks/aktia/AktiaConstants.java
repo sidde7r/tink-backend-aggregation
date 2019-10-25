@@ -36,7 +36,7 @@ public class AktiaConstants {
     }
 
     public static class ErrorCodes {
-        public static final String INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
+        public static final String INVALID_CREDENTIALS = "INVALID_LOGIN";
     }
 
     public static class Url {
