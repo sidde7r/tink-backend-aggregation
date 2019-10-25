@@ -24,6 +24,8 @@ public class LogMasker {
                     .add("pt")
                     .add("fr")
                     .add("it")
+                    .add("nl")
+                    .add("be")
                     .build();
 
     /**
