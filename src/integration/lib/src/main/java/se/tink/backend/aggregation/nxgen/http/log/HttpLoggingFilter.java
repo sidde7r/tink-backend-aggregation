@@ -5,7 +5,6 @@ import com.google.common.base.Functions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -44,49 +42,6 @@ public class HttpLoggingFilter extends ClientFilter {
     private long requestCount;
     private static final LogTag GENERIC_HTTP_LOGGER = LogTag.from("http_logging_filter");
 
-    private static final Set<String> NON_SENSITIVE_HEADER_FIELDS =
-            ImmutableSet.of(
-                    "Accept",
-                    "Accept-Charset",
-                    "Accept-Datetime",
-                    "Accept-Encoding",
-                    "Accept-Language",
-                    "Accept-Ranges",
-                    "Access-Control-Allow-Origin",
-                    "Age",
-                    "Allow",
-                    "Cache-Control",
-                    "Connection",
-                    "Content-Encoding",
-                    "Content-Language",
-                    "Content-Length",
-                    "Content-Type",
-                    "Date",
-                    "Expires",
-                    "Forwarded",
-                    "If-Modified-Since",
-                    "If-Unmodified-Since",
-                    "Host",
-                    "Language",
-                    "Last-Modified",
-                    "Pragma",
-                    "Proxy-Connection",
-                    "Referer",
-                    "Server",
-                    "Status",
-                    "TPP-Request-ID",
-                    "Transfer-Encoding",
-                    "User-Agent",
-                    "Vary",
-                    "Via",
-                    "X-Forwarded-For",
-                    "X-Forwarded-Host",
-                    "X-ING-ReqID",
-                    "X-ING-Response-ID",
-                    "X-Powered-By",
-                    "X-Request-ID",
-                    "X-Response-ID");
-
     public HttpLoggingFilter(
             AggregationLogger log,
             String logTag,
@@ -96,7 +51,9 @@ public class HttpLoggingFilter extends ClientFilter {
         this.log = log;
         this.logTag = logTag;
         this.logMasker = logMasker;
-        this.headerMasker = new MapValueMaskerImpl(Optional.of(NON_SENSITIVE_HEADER_FIELDS));
+        this.headerMasker =
+                new MapValueMaskerImpl(
+                        Optional.of(HttpLoggingConstants.NON_SENSITIVE_HEADER_FIELDS));
         this.agentClass = agentClass;
         this.requestCount = 0;
         this.loggingMode = loggingMode;

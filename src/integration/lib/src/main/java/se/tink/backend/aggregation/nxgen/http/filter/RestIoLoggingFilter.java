@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.nxgen.http.filter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.sun.jersey.api.client.ClientHandlerException;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -14,7 +12,6 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
@@ -25,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
+import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingConstants;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -36,51 +34,6 @@ public class RestIoLoggingFilter extends Filter {
     private static final String REQUEST_PREFIX = "> ";
 
     private static final String RESPONSE_PREFIX = "< ";
-
-    private static final ImmutableList<String> SENSITIVE_HEADERS =
-            ImmutableList.of("cookie", "set-cookie", "authorization");
-    private static final Set<String> NON_SENSITIVE_HEADERS =
-            ImmutableSet.of(
-                    "accept",
-                    "accept-charset",
-                    "accept-datetime",
-                    "accept-encoding",
-                    "accept-language",
-                    "accept-ranges",
-                    "access-control-allow-origin",
-                    "age",
-                    "allow",
-                    "cache-control",
-                    "connection",
-                    "content-encoding",
-                    "content-language",
-                    "content-length",
-                    "content-type",
-                    "date",
-                    "expires",
-                    "forwarded",
-                    "if-modified-since",
-                    "if-unmodified-since",
-                    "host",
-                    "language",
-                    "last-modified",
-                    "pragma",
-                    "proxy-connection",
-                    "referer",
-                    "server",
-                    "status",
-                    "tpp-request-id",
-                    "transfer-encoding",
-                    "user-agent",
-                    "vary",
-                    "via",
-                    "x-forwarded-for",
-                    "x-forwarded-host",
-                    "x-ing-reqid",
-                    "x-ing-response-id",
-                    "x-powered-by",
-                    "x-request-id",
-                    "x-response-id");
 
     private final PrintStream loggingStream;
     private final LogMasker logMasker;
@@ -145,7 +98,7 @@ public class RestIoLoggingFilter extends Filter {
 
     private static String censorHeaderValue(String key, String value) {
         // do not output sensitive information in our logs
-        if (NON_SENSITIVE_HEADERS.contains(key.toLowerCase())) {
+        if (HttpLoggingConstants.NON_SENSITIVE_HEADER_FIELDS.contains(key.toLowerCase())) {
             return "*** MASKED ***";
         }
         return value;
