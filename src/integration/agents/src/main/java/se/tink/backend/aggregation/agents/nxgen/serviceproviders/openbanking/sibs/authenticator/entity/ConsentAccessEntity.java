@@ -5,11 +5,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ConsentAccessEntity {
 
-    // TODO: Not sure why these are commented out <- investigate
-    // private List<ConsentPayloadEntity> accounts = null;
-    // private List<ConsentPayloadEntity> balances = null;
-    // private List<ConsentPayloadEntity> transactions = null;
-    // private String availableAccounts;
     private String allPsd2;
 
     public ConsentAccessEntity(String allPsd2) {

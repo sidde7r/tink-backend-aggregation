@@ -150,28 +150,6 @@ public class SibsBaseApiClient {
         return new URL(consentResponse.getLinks().getRedirect());
     }
 
-    public ConsentResponse createDecoupledAuthConsent(
-            String state, String psuIdType, String psuId) {
-        ConsentRequest consentRequest = getConsentRequest();
-
-        URL createConsent = createUrl(SibsConstants.Urls.CREATE_CONSENT);
-        ConsentResponse consentResponse =
-                client.request(createConsent)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .type(MediaType.APPLICATION_JSON)
-                        .header(
-                                HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(configuration.getRedirectUrl())
-                                        .queryParam(QueryKeys.STATE, state))
-                        .header(SibsConstants.HeaderKeys.PSU_ID_TYPE, psuIdType)
-                        .header(SibsConstants.HeaderKeys.PSU_ID, psuId)
-                        .post(ConsentResponse.class, consentRequest);
-
-        saveConsentInPersistentStorage(consentResponse);
-
-        return consentResponse;
-    }
-
     public void removeConsentFromPersistentStorage() {
         persistentStorage.remove(StorageKeys.CONSENT_ID);
     }
@@ -323,7 +301,4 @@ public class SibsBaseApiClient {
                 .get(SibsGetPaymentStatusResponse.class);
     }
 
-    public URL buildAuthorizeUrlForPayment(SessionStorage sessionStorage) {
-        return new URL(sessionStorage.get(Storage.PAYMENT_REDIRECT_URI));
-    }
 }
