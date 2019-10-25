@@ -17,6 +17,8 @@ public class LogMasker {
                     .thenComparing(Comparator.naturalOrder());
     private static final ImmutableSet<String> WHITELISTED_SENSITIVE_VALUES =
             ImmutableSet.<String>builder().add("true").add("false").build();
+    private static final ImmutableSet<String> MARKETS_MASKER_COVERS_SECREST_FOR =
+            ImmutableSet.<String>builder().add("se").add("es").build();
 
     /**
      * This enumeration decides if logging should be done or not. NOTE: Only pass
@@ -46,10 +48,6 @@ public class LogMasker {
     }
 
     public static LoggingMode shouldLog(Provider provider) {
-        // Disable logging for now.
-        if (true) {
-            return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
-        }
         // Temporary disable of http traffic logging for RE agents.
         // Leave until all RE agents logging has been evaluted and secrets moved to appropriate
         // format to be handled by logging masker.
@@ -57,14 +55,7 @@ public class LogMasker {
             return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
         }
 
-        if (
-        /*!"FI".equalsIgnoreCase(provider.getMarket())
-        && !"NO".equalsIgnoreCase(provider.getMarket())
-        && !"DE".equalsIgnoreCase(provider.getMarket())
-        && !"FR".equalsIgnoreCase(provider.getMarket())
-        && !"IT".equalsIgnoreCase(provider.getMarket())
-        &&*/ !"SE".equalsIgnoreCase(provider.getMarket())
-                && !"ES".equalsIgnoreCase(provider.getMarket())) {
+        if (MARKETS_MASKER_COVERS_SECREST_FOR.contains(provider.getMarket().toLowerCase())) {
             return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
         }
         return LoggingMode.LOGGING_MASKER_COVERS_SECRETS;
