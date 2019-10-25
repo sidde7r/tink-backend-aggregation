@@ -22,7 +22,6 @@ public class EncapStorage {
     private String saltHash;
     private String authenticationKey;
     private String authenticationKeyWithoutPin;
-    private String totpKey;
 
     // Populated data
     private String username;
@@ -48,7 +47,6 @@ public class EncapStorage {
         this.saltHash = generateRandomBase64Encoded(32);
         this.authenticationKey = generateRandomBase64Encoded(32);
         this.authenticationKeyWithoutPin = generateRandomBase64Encoded(32);
-        this.totpKey = generateRandomBase64Encoded(32);
 
         this.username = username;
         this.clientSaltKeyId = "";
@@ -72,8 +70,7 @@ public class EncapStorage {
                 || Strings.isNullOrEmpty(signingKeyPhrase)
                 || Strings.isNullOrEmpty(samUserId)
                 || Strings.isNullOrEmpty(authenticationKey)
-                || Strings.isNullOrEmpty(authenticationKeyWithoutPin)
-                || Strings.isNullOrEmpty(totpKey));
+                || Strings.isNullOrEmpty(authenticationKeyWithoutPin));
     }
 
     public boolean load() {
@@ -92,7 +89,7 @@ public class EncapStorage {
 
         Storage storageStructure =
                 SerializationUtils.deserializeFromString(storageData, SessionStorage.class);
-        if (Objects.isNull(storageData)) {
+        if (Objects.isNull(storageStructure)) {
             return false;
         }
 
@@ -114,9 +111,6 @@ public class EncapStorage {
         storageStructure
                 .get(EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN, String.class)
                 .ifPresent(v -> authenticationKeyWithoutPin = v);
-        storageStructure
-                .get(EncapConstants.Storage.B64_TOTP_KEY, String.class)
-                .ifPresent(v -> totpKey = v);
         storageStructure
                 .get(EncapConstants.Storage.USERNAME, String.class)
                 .ifPresent(v -> username = v);
@@ -158,7 +152,6 @@ public class EncapStorage {
         storageStructure.put(
                 EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN,
                 authenticationKeyWithoutPin);
-        storageStructure.put(EncapConstants.Storage.B64_TOTP_KEY, totpKey);
         storageStructure.put(EncapConstants.Storage.USERNAME, username);
         storageStructure.put(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY_ID, clientSaltKeyId);
         storageStructure.put(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY, clientSaltKey);
@@ -191,10 +184,6 @@ public class EncapStorage {
 
     public String getAuthenticationKeyWithoutPin() {
         return authenticationKeyWithoutPin;
-    }
-
-    public String getTotpKey() {
-        return totpKey;
     }
 
     public String getUsername() {

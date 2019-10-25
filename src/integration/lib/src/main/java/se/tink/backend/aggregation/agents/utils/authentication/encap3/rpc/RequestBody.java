@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import java.util.HashMap;
+import java.util.Map;
 
 public class RequestBody extends MultivaluedMapImpl {
-    public RequestBody(HashMap<String, String> cryptoRequestParams) {
+    public RequestBody(Map<String, String> cryptoRequestParams) {
         add("EMD", cryptoRequestParams.get("EMD"));
         add("EMK", cryptoRequestParams.get("EMK"));
         add("MAC", cryptoRequestParams.get("MAC"));
