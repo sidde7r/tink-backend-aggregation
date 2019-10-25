@@ -82,10 +82,6 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient> {
 
     void setEidasProxy(EidasProxyConfiguration conf);
 
-    /** @deprecated This should not be used. Use the one without legacyCertId */
-    @Deprecated
-    void setEidasProxy(EidasProxyConfiguration conf, String legacyCertId);
-
     /**
      * @deprecated This should not be used. Use `setEidasProxy` if making proxied requests. Use
      *     `QsealcSigner` if requesting signatures

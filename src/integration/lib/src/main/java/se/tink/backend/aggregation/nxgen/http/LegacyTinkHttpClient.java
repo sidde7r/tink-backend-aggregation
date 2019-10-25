@@ -580,16 +580,11 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     }
 
     public void setEidasProxy(EidasProxyConfiguration conf) {
-        this.setEidasProxy(conf, "");
-    }
-
-    public void setEidasProxy(EidasProxyConfiguration conf, String legacyCertId) {
-
         try {
             setEidasClient(conf.toInternalConfig());
 
             setProxy(conf.getHost());
-            requestExecutor.setLegacyCertId(legacyCertId);
+            requestExecutor.shouldUseEidasProxy();
 
             this.internalHttpClientBuilder =
                     this.internalHttpClientBuilder.setHostnameVerifier(

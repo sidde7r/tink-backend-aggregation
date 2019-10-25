@@ -106,7 +106,7 @@ public final class VolksbankApiClientTest {
         EidasProxyConfiguration proxyConfiguration =
                 EidasProxyConfiguration.createLocal(
                         "https://eidas-proxy.staging.aggregation.tink.network");
-        tinkHttpClient.setEidasProxy(proxyConfiguration, "abnamro2");
+        tinkHttpClient.setEidasProxy(proxyConfiguration);
         tinkHttpClient.setEidasIdentity(
                 new EidasIdentity(
                         NewAgentTestContext.TEST_CLUSTERID,
