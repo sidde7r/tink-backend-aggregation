@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.identity.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.identity.IdentityDataV31Response;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -75,7 +76,10 @@ public class UkOpenBankingAccountFetcher<
         // In order to keep the model simple we accept that we are revisiting the accounts list
         // multiple time.
         String partyName =
-                Objects.isNull(identityData) ? null : identityData.toTinkIdentityData().getName();
+                Optional.ofNullable(identityData)
+                    .map(IdentityDataV31Response::toTinkIdentityData)
+                    .map(IdentityDataEntity::getName)
+                    .orElse(null);
 
         List<AccountType> tinkAccounts =
                 accounts.stream()
