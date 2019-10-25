@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -65,16 +66,18 @@ public abstract class SibsProgressiveBaseAgent
         setConfiguration(configuration);
         apiClient = new SibsBaseApiClient(client, persistentStorage, request.isManual());
         clientName = request.getProvider().getPayload();
-        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
+        apiClient.setConfiguration(
+                getClientConfiguration(request.getCredentials()), configuration.getEidasProxy());
         client.setMessageSignInterceptor(
                 new SibsMessageSignInterceptor(
-                        getClientConfiguration(),
+                        getClientConfiguration(request.getCredentials()),
                         configuration.getEidasProxy(),
                         new EidasIdentity(
                                 context.getClusterId(), context.getAppId(), this.getAgentClass())));
         applyFilters(client);
         client.setEidasProxy(
-                configuration.getEidasProxy(), getClientConfiguration().getCertificateId());
+                configuration.getEidasProxy(),
+                getClientConfiguration(request.getCredentials()).getCertificateId());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         authenticator = constructProgressiveAuthenticator();
     }
@@ -88,7 +91,7 @@ public abstract class SibsProgressiveBaseAgent
 
     protected abstract String getIntegrationName();
 
-    protected SibsConfiguration getClientConfiguration() {
+    SibsConfiguration getClientConfiguration(Credentials credentials) {
         return getAgentConfigurationController().getAgentConfiguration(SibsConfiguration.class);
     }
 
