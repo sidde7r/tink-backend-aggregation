@@ -28,4 +28,9 @@ public class AktiaEncapConfiguration implements EncapConfiguration {
                 + "jDXl3/ISc12E9RNMKwk4YHFXhy8kqBwTW8rgDAaZdIWuqj650aYOGD4yDI3Fm1+yyIKAEq"
                 + "/f5nf7i+K8ZasjcqJ62nW3MV3cjJ/x2yUM8FwIDAQAB";
     }
+
+    @Override
+    public String getClientPrivateKeyString() {
+        return null;
+    }
 }

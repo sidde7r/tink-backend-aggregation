@@ -9,4 +9,6 @@ public interface EncapConfiguration {
     String getAppId(); // eg. com.aktia.mobilebank
 
     String getRsaPubKeyString(); // base64 encoded
+
+    String getClientPrivateKeyString(); // base64 encoded
 }
