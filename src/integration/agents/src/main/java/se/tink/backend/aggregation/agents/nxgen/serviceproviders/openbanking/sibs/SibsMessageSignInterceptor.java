@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SignatureValues;
@@ -22,8 +20,6 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class SibsMessageSignInterceptor extends MessageSignInterceptor {
-
-    private static final Logger logger = LoggerFactory.getLogger(SibsMessageSignInterceptor.class);
 
     private static final String NEW_LINE = "\n";
     private static final String COLON_SPACE = ": ";

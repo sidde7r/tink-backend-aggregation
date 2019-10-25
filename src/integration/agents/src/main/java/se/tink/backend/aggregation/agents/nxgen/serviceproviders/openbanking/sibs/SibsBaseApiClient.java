@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SibsSignSteps;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentRequest;
@@ -37,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SibsBaseApiClient {
 
@@ -148,28 +146,6 @@ public class SibsBaseApiClient {
         saveConsentInPersistentStorage(consentResponse);
 
         return new URL(consentResponse.getLinks().getRedirect());
-    }
-
-    public ConsentResponse createDecoupledAuthConsent(
-            String state, String psuIdType, String psuId) {
-        ConsentRequest consentRequest = getConsentRequest();
-
-        URL createConsent = createUrl(SibsConstants.Urls.CREATE_CONSENT);
-        ConsentResponse consentResponse =
-                client.request(createConsent)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .type(MediaType.APPLICATION_JSON)
-                        .header(
-                                HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(configuration.getRedirectUrl())
-                                        .queryParam(QueryKeys.STATE, state))
-                        .header(SibsConstants.HeaderKeys.PSU_ID_TYPE, psuIdType)
-                        .header(SibsConstants.HeaderKeys.PSU_ID, psuId)
-                        .post(ConsentResponse.class, consentRequest);
-
-        saveConsentInPersistentStorage(consentResponse);
-
-        return consentResponse;
     }
 
     public void removeConsentFromPersistentStorage() {
@@ -321,9 +297,5 @@ public class SibsBaseApiClient {
                                 .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
                 .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .get(SibsGetPaymentStatusResponse.class);
-    }
-
-    public URL buildAuthorizeUrlForPayment(SessionStorage sessionStorage) {
-        return new URL(sessionStorage.get(Storage.PAYMENT_REDIRECT_URI));
     }
 }
