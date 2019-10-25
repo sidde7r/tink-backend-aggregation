@@ -341,37 +341,20 @@ public final class RedsysApiClient {
         return persistentStorage.containsKey(StorageKeys.FETCHED_TRANSACTIONS + accountId);
     }
 
-    private void setFetchingTransactionsUntil(String accountId, LocalDate date) {
+    private void markFetchedAccount(String accountId) {
+        // When an account is marked as fetched,
         final String key = StorageKeys.FETCHED_TRANSACTIONS + accountId;
-        if (Objects.isNull(date)) {
-            sessionStorage.remove(key);
-        } else {
-            final String fetchedUntilDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
-            sessionStorage.put(key, fetchedUntilDate);
-        }
-    }
-
-    private void persistFetchedTransactionsUntil(String accountId) {
-        final String key = StorageKeys.FETCHED_TRANSACTIONS + accountId;
-        final String value = sessionStorage.remove(key);
-        if (!Objects.isNull(value)) {
-            persistentStorage.put(key, value);
-        }
+        persistentStorage.put(key, "true");
     }
 
     private BaseTransactionsResponse<? extends TransactionEntity> fetchTransactions(
-            String accountId, RequestBuilder request) {
+            RequestBuilder request) {
         final HttpResponse response = request.get(HttpResponse.class);
         final BaseTransactionsResponse<? extends TransactionEntity> transactionsResponse =
                 response.getBody(aspspConfiguration.getTransactionsResponseClass());
         // Add Request ID from response header
         final String requestId = response.getHeaders().getFirst(HeaderKeys.REQUEST_ID);
         transactionsResponse.setRequestId(requestId);
-
-        if (transactionsResponse.isLastPage()) {
-            // The last page won't always be reached after the first refresh
-            persistFetchedTransactionsUntil(accountId);
-        }
 
         return transactionsResponse;
     }
@@ -382,26 +365,27 @@ public final class RedsysApiClient {
 
         final Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.CONSENT_ID, consentId);
-        setFetchingTransactionsUntil(accountId, toDate);
 
         final RequestBuilder request =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
                         .queryParam(QueryKeys.DATE_FROM, formatter.format(fromDate))
                         .queryParam(QueryKeys.DATE_TO, formatter.format(toDate))
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOOKED);
-        return fetchTransactions(accountId, request);
+        final BaseTransactionsResponse<? extends TransactionEntity> response =
+                fetchTransactions(request);
+        markFetchedAccount(accountId);
+        return response;
     }
 
     public BaseTransactionsResponse<? extends TransactionEntity> fetchPendingTransactions(
             String accountId, String consentId) {
         final Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.CONSENT_ID, consentId);
-        setFetchingTransactionsUntil(accountId, null);
 
         final RequestBuilder request =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
                         .queryParam(QueryKeys.BOOKING_STATUS, BookingStatus.PENDING);
-        return fetchTransactions(accountId, request);
+        return fetchTransactions(request);
     }
 
     public BaseTransactionsResponse<? extends TransactionEntity> fetchTransactions(
@@ -419,7 +403,7 @@ public final class RedsysApiClient {
 
         final RequestBuilder request =
                 createSignedRequest(makeApiUrl(key.getPath()), null, headers);
-        return fetchTransactions(accountId, request);
+        return fetchTransactions(request);
     }
 
     public CreatePaymentResponse createPayment(
