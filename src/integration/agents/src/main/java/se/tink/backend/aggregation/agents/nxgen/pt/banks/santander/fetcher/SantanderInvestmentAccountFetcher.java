@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.util.Currency
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -37,16 +40,36 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
         List<Map<String, String>> retirementInvestmentAccounts =
                 (List<Map<String, String>>) assets.get(Assets.RETIREMENT_INVESTMENTS);
 
-        return Stream.concat(investmentAccounts.stream(), retirementInvestmentAccounts.stream())
-                .map(this::toTinkAccount)
+        return Stream.concat(
+                        investmentAccounts.stream()
+                                .map(account -> toTinkAccount(account, PortfolioType.DEPOT)),
+                        retirementInvestmentAccounts.stream()
+                                .map(account -> toTinkAccount(account, PortfolioType.PENSION)))
                 .collect(
                         Collectors.collectingAndThen(
                                 Collectors.toList(), Collections::unmodifiableList));
     }
 
-    private InvestmentAccount toTinkAccount(Map<String, String> account) {
+    private InvestmentAccount toTinkAccount(
+            Map<String, String> account, PortfolioType portfolioType) {
+
         return InvestmentAccount.nxBuilder()
-                .withoutPortfolios()
+                .withPortfolios(
+                        PortfolioModule.builder()
+                                .withType(portfolioType)
+                                .withUniqueIdentifier(account.get(Investment.ACCOUNT_NUMBER))
+                                .withCashValue(BigDecimal.ZERO.doubleValue())
+                                .withTotalProfit(
+                                        new BigDecimal(account.get(Investment.AVAILABLE_BALANCE))
+                                                .subtract(
+                                                        new BigDecimal(
+                                                                account.get(Investment.BALANCE)))
+                                                .doubleValue())
+                                .withTotalValue(
+                                        new BigDecimal(account.get(Investment.AVAILABLE_BALANCE))
+                                                .doubleValue())
+                                .withoutInstruments()
+                                .build())
                 .withCashBalance(
                         ExactCurrencyAmount.of(
                                 account.get(Investment.AVAILABLE_BALANCE),

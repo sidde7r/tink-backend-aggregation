@@ -39,6 +39,7 @@ public class Fields {
 
     public static class Investment {
         static final String AVAILABLE_BALANCE = "availableBalance";
+        static final String BALANCE = "balance";
         static final String CURRENCY_NUMERIC_CODE = "currency";
         static final String ACCOUNT_NUMBER = "accountNumber";
         static final String FULL_ACCOUNT_NUMBER = "account";
