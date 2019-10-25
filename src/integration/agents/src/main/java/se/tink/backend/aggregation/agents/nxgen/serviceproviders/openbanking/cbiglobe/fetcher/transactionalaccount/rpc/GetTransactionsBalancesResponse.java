@@ -26,7 +26,8 @@ public class GetTransactionsBalancesResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(pageRemaining);
+        // temporary pagination disabled
+        return Optional.of(false);
     }
 
     public TransactionsEntity getTransactions() {
@@ -39,5 +40,9 @@ public class GetTransactionsBalancesResponse implements PaginatorResponse {
 
     public void setPageRemaining(boolean pageRemaining) {
         this.pageRemaining = pageRemaining;
+    }
+
+    public void setBalances(List<BalanceEntity> balances) {
+        this.balances = balances;
     }
 }
