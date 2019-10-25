@@ -179,7 +179,7 @@ public class EncapMessageUtils {
         queryPairs.put("meta.encapAPIVersion", configuration.getEncapApiVersion());
     }
 
-    private String getUrlEncodedQueryParams(Map<String, String> queryPairs) {
+    public static String getUrlEncodedQueryParams(Map<String, String> queryPairs) {
         Map<String, String> queryPairsWithUrlEncodedValues = Maps.newLinkedHashMap();
         queryPairs.forEach(
                 (key, value) ->
@@ -189,7 +189,7 @@ public class EncapMessageUtils {
         return joiner.join(queryPairsWithUrlEncodedValues);
     }
 
-    private HashMap<String, String> getCryptoRequestParams(
+    public static HashMap<String, String> getCryptoRequestParams(
             byte[] rand16BytesKey,
             byte[] rand16BytesIv,
             byte[] serverPubKeyBytes,
@@ -292,14 +292,12 @@ public class EncapMessageUtils {
         HashMap<String, String> cryptoRequestParams =
                 getCryptoRequestParams(key, iv, pubKeyBytes, plainTextMessage);
 
-        RequestBody encryptionRequestBody = new RequestBody(cryptoRequestParams);
-
         String response =
                 httpClient
                         .request(EncapConstants.Urls.CRYPTO_EXCHANGE)
                         .accept(MediaType.WILDCARD)
                         .type(MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(String.class, encryptionRequestBody);
+                        .post(String.class, new RequestBody(cryptoRequestParams));
 
         Map<String, String> responseQueryPairs = parseResponseQuery(response);
 
@@ -319,11 +317,11 @@ public class EncapMessageUtils {
         return SerializationUtils.deserializeFromString(jsonString, responseType);
     }
 
-    private String hexDecodeEmd(String decryptedEmd) {
+    public static String hexDecodeEmd(String decryptedEmd) {
         return new String(EncodingUtils.decodeHexString(decryptedEmd), StandardCharsets.UTF_8);
     }
 
-    private Map<String, String> parseResponseQuery(String responseQuery) {
+    public static Map<String, String> parseResponseQuery(String responseQuery) {
         Map<String, String> queryPairs = Maps.newHashMap();
         String[] pairs = responseQuery.split("&");
         for (String pair : pairs) {
