@@ -48,6 +48,11 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public AgentWorkerCommandResult execute() {
+        if (Objects.isNull(context.getAgentConfigurationController())) {
+            log.warn(
+                    "`CreateAgentConfigurationControllerWorkerCommand` was not executed before `DebugAgentWorkerCommand`.");
+            return AgentWorkerCommandResult.ABORT;
+        }
         this.logMasker = context.getLogMasker();
         return AgentWorkerCommandResult.CONTINUE;
     }
