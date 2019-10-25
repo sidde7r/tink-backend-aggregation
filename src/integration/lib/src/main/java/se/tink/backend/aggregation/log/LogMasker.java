@@ -18,7 +18,13 @@ public class LogMasker {
     private static final ImmutableSet<String> WHITELISTED_SENSITIVE_VALUES =
             ImmutableSet.<String>builder().add("true").add("false").build();
     private static final ImmutableSet<String> MARKETS_MASKER_COVERS_SECRETS_FOR =
-            ImmutableSet.<String>builder().add("se").add("es").add("pt").build();
+            ImmutableSet.<String>builder()
+                    .add("se")
+                    .add("es")
+                    .add("pt")
+                    .add("fr")
+                    .add("it")
+                    .build();
 
     /**
      * This enumeration decides if logging should be done or not. NOTE: Only pass
