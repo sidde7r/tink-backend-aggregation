@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -170,11 +171,21 @@ public class CbiGlobeApiClient {
                 getTransactionsBalancesResponse.setPageRemaining(true);
             }
 
+            if (Objects.isNull(getTransactionsBalancesResponse.getBalances())) {
+                getTransactionsBalancesResponse.setBalances(
+                        getBalancesResponse(apiIdentifier).getBalances());
+            }
+
             return getTransactionsBalancesResponse;
         } catch (HttpResponseException e) {
             handleAccessExceededError(e);
             throw e;
         }
+    }
+
+    private GetBalanceResponse getBalancesResponse(String apiIdentifier) {
+        return createRequestWithConsent(Urls.BALANCES.parameter(IdTags.ACCOUNT_ID, apiIdentifier))
+                .get(GetBalanceResponse.class);
     }
 
     public void saveTransactionsInTempMap(
