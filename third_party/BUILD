@@ -1883,3 +1883,19 @@ java_library(
         "@org_mockito_mockito_core//jar",
     ],
 )
+
+java_library(
+    name = "io_reactivex_rxjava3_rxjava",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_reactivex_rxjava3_rxjava//jar",
+    ],
+    runtime_deps = [
+        "@com_google_guava_guava//jar",
+        "@junit_junit//jar",
+        "@org_mockito3_mockito_core//jar",
+        "@org_reactivestreams_reactive_streams//jar",
+        "@org_reactivestreams_reactive_streams_tck//jar",
+        "@org_testng_testng//jar",
+    ],
+)

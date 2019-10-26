@@ -2306,6 +2306,30 @@ maven_jar(
     sha1 = "e1cba96c39e75e62fd8cc50978ef7d6cfeaf39f9",
 )
 
+maven_jar(
+    name = "io_reactivex_rxjava3_rxjava",
+    artifact = "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
+    sha1 = "4b3a0afcd12624a615dbc36815b7e6d191cadd5a",
+)
+
+maven_jar(
+    name = "org_reactivestreams_reactive_streams",
+    artifact = "org.reactivestreams:reactive-streams:1.0.3",
+    sha1 = "d9fb7a7926ffa635b3dcaa5049fb2bfa25b3e7d0",
+)
+
+maven_jar(
+    name = "org_reactivestreams_reactive_streams_tck",
+    artifact = "org.reactivestreams:reactive-streams-tck:1.0.3",
+    sha1 = "27f9edc3edb4ad00bc09a57b48d1dfe2d48d2025",
+)
+
+maven_jar(
+    name = "org_testng_testng",
+    artifact = "org.testng:testng:7.0.0",
+    sha1 = "14b73f64988eda81a42b4584e9647d48633ef857",
+)
+
 ### === START === Java Spark dependencies
 maven_jar(
     name = "com_sparkjava_spark_core",
