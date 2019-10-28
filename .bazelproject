@@ -53,6 +53,8 @@ targets:
   //src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/controllers/authentication/password/dk/nemid
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/nordea/v30
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/op
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bbva
+
   -//deb:all
   -//third_party:all
 
