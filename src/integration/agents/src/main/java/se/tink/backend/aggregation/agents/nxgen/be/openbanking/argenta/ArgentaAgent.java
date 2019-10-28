@@ -89,7 +89,7 @@ public final class ArgentaAgent extends NextGenerationAgent
                 controller);
     }
 
-    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final ArgentaTransactionalAccountFetcher accountFetcher =
                 new ArgentaTransactionalAccountFetcher(apiClient);
 
