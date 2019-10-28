@@ -2,12 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.p
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -98,9 +97,10 @@ public class AccountEntity {
     @JsonProperty("transaction_list_search_criteria")
     private TransactionListSearchCriteriaEntity transactionListSearchCriteria;
 
-    public Optional<TransactionalAccount> toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkTransactionalAccount() {
         return TransactionalAccount.nxBuilder()
-                .withTypeAndFlagsFrom(NordeaPartnerConstants.ACCOUNT_TYPE_MAPPER, category)
+                .withTypeAndFlagsFrom(
+                        NordeaPartnerConstants.TRANSACTIONAL_ACCOUNT_TYPE_MAPPER, category)
                 .withBalance(BalanceModule.of(ExactCurrencyAmount.of(availableBalance, currency)))
                 .withId(
                         IdModule.builder()
@@ -125,8 +125,7 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public boolean isTransactionalAccount() {
-        return NordeaPartnerConstants.ACCOUNT_TYPE_MAPPER.isOneOf(
-                category, EnumSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS));
+    public boolean hasIban() {
+        return !Strings.isNullOrEmpty(iban);
     }
 }

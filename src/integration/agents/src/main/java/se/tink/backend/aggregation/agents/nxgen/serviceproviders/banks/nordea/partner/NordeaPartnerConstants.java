@@ -1,17 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public class NordeaPartnerConstants {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
-    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            AccountTypeMapper.builder()
-                    .put(AccountTypes.CHECKING, "TRANSACTION")
-                    .put(AccountTypes.SAVINGS, "SAVINGS")
+    public static final TransactionalAccountTypeMapper TRANSACTIONAL_ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(TransactionalAccountType.CHECKING, "TRANSACTION")
+                    .put(TransactionalAccountType.SAVINGS, "SAVINGS")
                     .build();
 
     public class EndPoints {

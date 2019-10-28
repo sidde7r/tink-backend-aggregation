@@ -15,11 +15,10 @@ public class AccountListResponse {
 
     public Collection<TransactionalAccount> toTinkTransactionalAccounts() {
         return Optional.ofNullable(result).orElse(Collections.emptyList()).stream()
-                .filter(AccountEntity::isTransactionalAccount)
-                .map(AccountEntity::toTinkAccount)
+                .filter(AccountEntity::hasIban)
+                .map(AccountEntity::toTinkTransactionalAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .peek(System.out::println)
                 .collect(Collectors.toList());
     }
 }
