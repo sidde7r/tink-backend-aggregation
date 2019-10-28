@@ -31,29 +31,29 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/hvb
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/santander
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bbva
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bbva
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/creditcards/amex
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/op
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/creditcards/amex
-  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/creditcards/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/banquepopulaire
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/bnpparibas
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/labanquepostale
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/monabanq
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/creditcards/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/creditcards/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/bunq
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/ics
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/bunq
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/rabobank
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/volksbank
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/santander
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/nordea/v30
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/sbab
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/seb
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/skandiabanken
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/amex/v62
-  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/ics
   //src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/controllers/authentication/password/dk/nemid
-  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/nordea/v30
-  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/op
-  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bbva
 
   -//deb:all
   -//third_party:all
