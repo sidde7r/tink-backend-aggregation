@@ -33,7 +33,6 @@ public final class SkandiaApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private SkandiaConfiguration configuration;
-    private EidasProxyConfiguration eidasProxyConfiguration;
 
     public SkandiaApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -48,8 +47,7 @@ public final class SkandiaApiClient {
     protected void setConfiguration(
             SkandiaConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        client.setEidasProxy(eidasProxyConfiguration, "Tink");
+        client.setEidasProxy(eidasProxyConfiguration);
     }
 
     private RequestBuilder createRequest(URL url) {
