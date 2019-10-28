@@ -76,8 +76,7 @@ public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
             throw new IllegalStateException(
                     String.format(
                             "Excepted login status to be %s, but it was %s.",
-                            Values.TAN_REQUESTED,
-                            loginInfoEntity.getLoginStatus()));
+                            Values.TAN_REQUESTED, loginInfoEntity.getLoginStatus()));
         }
 
         scaWithQrCode();
