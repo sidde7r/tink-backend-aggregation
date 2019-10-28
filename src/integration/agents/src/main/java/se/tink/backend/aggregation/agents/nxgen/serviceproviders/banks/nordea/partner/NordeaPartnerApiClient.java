@@ -41,7 +41,7 @@ public class NordeaPartnerApiClient {
     }
 
     private URL endpointUrl(String endpoint) {
-        return new URL(configuration.getBaseUrl() + endpoint);
+        return configuration.getBaseUrl().concat(endpoint);
     }
 
     public AccountListResponse fetchAccounts() {

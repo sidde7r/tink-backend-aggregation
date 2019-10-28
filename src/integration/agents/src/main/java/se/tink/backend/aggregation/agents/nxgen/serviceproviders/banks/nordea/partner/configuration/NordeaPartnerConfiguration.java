@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
 public class NordeaPartnerConfiguration implements ClientConfiguration {
@@ -19,11 +20,11 @@ public class NordeaPartnerConfiguration implements ClientConfiguration {
     @Secret private String tinkEncryptionPublicKey;
     @Secret private String keyId;
 
-    public String getBaseUrl() {
+    public URL getBaseUrl() {
         Preconditions.checkState(
                 !Strings.isNullOrEmpty(baseUrl),
                 "Invalid configuration - baseUrl shouldn't be empty/null");
-        return baseUrl;
+        return new URL(baseUrl);
     }
 
     public String getPartnerId() {
