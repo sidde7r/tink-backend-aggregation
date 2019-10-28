@@ -26,26 +26,25 @@ public class Fields {
         static final String AMOUNT = "amount";
         static final String RAW_OPERATION_DATE = "rawOperationDate";
         static final String DESCRIPTION = "description";
-        public static final String CURRENCY = "CTRCMOEA";
-        public static final String NUMBER_OF_UNITS = "nUPs";
-        public static final String OPERATION_DATE = "operationDate";
+        static final String CURRENCY = "CTRCMOEA";
+        static final String NUMBER_OF_UNITS = "nUPs";
+        static final String OPERATION_DATE = "operationDate";
     }
 
     public static class Session {
         public static final String SESSION_TOKEN = "id";
-        public static final String CUSTOMER_NAME = "userName";
-        public static final String VARIABLES = "variables";
     }
 
-    public static class Investment {
+    static class Investment {
         static final String AVAILABLE_BALANCE = "availableBalance";
+        static final String BALANCE = "balance";
         static final String CURRENCY_NUMERIC_CODE = "currency";
         static final String ACCOUNT_NUMBER = "accountNumber";
         static final String FULL_ACCOUNT_NUMBER = "account";
         static final String PRODUCT_NAME = "number";
     }
 
-    public static class Assets {
+    static class Assets {
         static final String RETIREMENT_INVESTMENTS = "PR";
         static final String INVESTMENT_ACCOUNTS = "FU";
         static final String CREDIT_CARDS = "CR";
@@ -57,15 +56,16 @@ public class Fields {
         public static final String BIRTH_DATE = "birthDate";
     }
 
-    public static class Card {
-        public static final String TYPE_CREDIT = "credit";
-        public static final String PRODUCT_CARD_TYPE = "productCardType";
-        public static final String CURRENCY = "currency";
-        public static final String MASKED_NUMBER = "partialNumber";
-        public static final String AUTHORIZED_BALANCE = "authorizedBalance";
-        public static final String AVAILABLE = "available";
-        public static final String ALIAS = "numAlias";
-        public static final String ACCOUNT_NUMBER = "accountNumber";
-        public static final String PRODUCT_NAME = "cardType";
+    static class Card {
+        static final String TYPE_CREDIT = "credit";
+        static final String PRODUCT_CARD_TYPE = "productCardType";
+        static final String CURRENCY = "currency";
+        static final String MASKED_NUMBER = "partialNumber";
+        static final String AUTHORIZED_BALANCE = "authorizedBalance";
+        static final String AVAILABLE = "available";
+        static final String ALIAS = "numAlias";
+        static final String ACCOUNT_NUMBER = "accountNumber";
+        static final String PRODUCT_NAME = "name";
+        static final String FULL_NUMBER = "number";
     }
 }

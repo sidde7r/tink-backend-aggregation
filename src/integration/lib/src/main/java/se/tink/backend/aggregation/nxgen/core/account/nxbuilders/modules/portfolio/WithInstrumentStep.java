@@ -8,4 +8,6 @@ public interface WithInstrumentStep<T> {
     T withInstruments(InstrumentModule... instrumentModules);
 
     T withInstruments(List<InstrumentModule> instrumentModules);
+
+    T withoutInstruments();
 }

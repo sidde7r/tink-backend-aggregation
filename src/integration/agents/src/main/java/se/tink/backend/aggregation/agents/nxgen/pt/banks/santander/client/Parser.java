@@ -1,11 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.ApiResponse;
 
 /*
 File is delimited with '|'. Escape character is '||'.
@@ -39,7 +38,7 @@ in JSON would be
  ]
 }
  */
-public class Parser {
+class Parser {
 
     private static final String SPLIT_REGEX = "(?<!\\|)\\|(?!\\|)";
 

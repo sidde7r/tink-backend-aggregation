@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.SantanderApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Identity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderCreditAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderCreditCardTransactionFetcher;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -62,14 +64,20 @@ public class SantanderAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new SantanderCreditAccountFetcher(apiClient),
-                        new SantanderCreditCardTransactionFetcher(apiClient));
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        new SantanderCreditCardTransactionFetcher(apiClient), 1)));
 
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
                         updateController,
                         new SantanderInvestmentAccountFetcher(apiClient),
-                        new SantanderInvestmentTransactionFetcher(apiClient));
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        new SantanderInvestmentTransactionFetcher(apiClient), 1)));
     }
 
     @Override

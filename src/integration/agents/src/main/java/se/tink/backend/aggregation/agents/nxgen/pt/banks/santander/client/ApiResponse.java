@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ public class ApiResponse<T> {
     private final String code;
     private final String message;
 
-    public ApiResponse(List<T> businessData, String code, String message) {
+    ApiResponse(List<T> businessData, String code, String message) {
         this.businessData = businessData;
         this.code = code;
         this.message = message;
