@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class NordeaPartnerAuthenticator implements AutoAuthenticator, MultiFactorAuthenticator {
 
@@ -54,7 +55,12 @@ public class NordeaPartnerAuthenticator implements AutoAuthenticator, MultiFacto
             partnerUid =
                     jweHelper
                             .extractTokenSubject(token)
-                            .orElseThrow(ThirdPartyAppError.AUTHENTICATION_ERROR::exception);
+                            .orElseThrow(
+                                    () ->
+                                            ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
+                                                    LocalizableKey.of(
+                                                            NordeaPartnerConstants.LocalizationKeys
+                                                                    .IVALID_TOKEN)));
             persistentStorage.put(NordeaPartnerConstants.StorageKeys.PARTNER_USER_ID, partnerUid);
         }
 

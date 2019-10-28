@@ -61,4 +61,9 @@ public class NordeaPartnerConstants {
         public static final int RETRY_SLEEP_MILLISECONDS = 5000;
         public static final int MAX_NUM_RETRIES = 3;
     }
+
+    public static class LocalizationKeys {
+
+        public static final String IVALID_TOKEN = "Invalid token.";
+    }
 }
