@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaCo
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.configuration.SkandiaConfiguration;
@@ -92,6 +93,18 @@ public final class SkandiaApiClient {
         return client.request(Urls.TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, request.toData())
+                .toTinkToken();
+    }
+
+    public OAuth2Token refreshToken(String refreshToken) {
+        final String clientId = getConfiguration().getClientId();
+        final String clientSecret = getConfiguration().getClientSecret();
+
+        RefreshTokenRequest requestBody =
+                new RefreshTokenRequest(refreshToken, clientId, clientSecret);
+        return client.request(Urls.TOKEN)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .post(TokenResponse.class, requestBody.toData())
                 .toTinkToken();
     }
 

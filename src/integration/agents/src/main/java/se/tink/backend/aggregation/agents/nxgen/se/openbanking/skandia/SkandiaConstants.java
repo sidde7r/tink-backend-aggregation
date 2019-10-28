@@ -76,10 +76,12 @@ public final class SkandiaConstants {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class HeaderKeys {
