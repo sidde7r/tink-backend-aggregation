@@ -1,22 +1,44 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fidor;
 
-import org.junit.Ignore;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-@Ignore
 public class FidorAgentTest {
 
-    private String USERNAME = "";
-    private String PASSWORD = "";
+    private final ArgumentManager<FidorAgentTest.Arg> helper;
+    private final AgentIntegrationTest.Builder builder =
+            new AgentIntegrationTest.Builder("de", "de-hypovereinsbank-password")
+                    .loadCredentialsBefore(false)
+                    .saveCredentialsAfter(false);
+
+    public FidorAgentTest() {
+        helper = new ArgumentManager<>(FidorAgentTest.Arg.values());
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
+
+    @Before
+    public void before() {
+        helper.before();
+    }
 
     @Test
-    public void testLogin() throws Exception {
-        new AgentIntegrationTest.Builder("de", "de-fidor-password")
-                .addCredentialField(Field.Key.USERNAME, USERNAME)
-                .addCredentialField(Field.Key.PASSWORD, PASSWORD)
+    public void testLoginAndRefresh() throws Exception {
+        builder.addCredentialField(Field.Key.USERNAME, helper.get(FidorAgentTest.Arg.USERNAME))
+                .addCredentialField(Field.Key.PASSWORD, helper.get(FidorAgentTest.Arg.PASSWORD))
                 .build()
                 .testRefresh();
+    }
+
+    private enum Arg {
+        USERNAME,
+        PASSWORD,
     }
 }
