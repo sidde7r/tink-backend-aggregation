@@ -24,7 +24,7 @@ public class TransactionEntity {
     private String transactionId;
 
     private boolean booked;
-    private double amount;
+    private BigDecimal amount;
     private String currency;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -48,7 +48,7 @@ public class TransactionEntity {
     private String archiveId;
 
     @JsonProperty("balance_after")
-    private double balanceAfter;
+    private BigDecimal balanceAfter;
 
     @JsonProperty("to_account_number")
     private String toAccountNumber;
@@ -138,7 +138,7 @@ public class TransactionEntity {
     public Transaction toTinkTransaction() {
         Builder builder =
                 Transaction.builder()
-                        .setAmount(ExactCurrencyAmount.of(BigDecimal.valueOf(amount), currency))
+                        .setAmount(ExactCurrencyAmount.of(amount, currency))
                         .setDate(getDate())
                         .setDescription(getTransactionDescription())
                         .setPending(!booked)

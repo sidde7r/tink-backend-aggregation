@@ -55,16 +55,16 @@ public class AccountEntity {
     private String accountStatus;
 
     @JsonProperty("booked_balance")
-    private double bookedBalance;
+    private BigDecimal bookedBalance;
 
     @JsonProperty("credit_limit")
-    private double creditLimit;
+    private BigDecimal creditLimit;
 
     @JsonProperty("available_balance")
-    private double availableBalance;
+    private BigDecimal availableBalance;
 
     @JsonProperty("equivalent_balance")
-    private double equivalentBalance;
+    private BigDecimal equivalentBalance;
 
     private String currency;
 
@@ -101,10 +101,7 @@ public class AccountEntity {
     public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(NordeaPartnerConstants.ACCOUNT_TYPE_MAPPER, category)
-                .withBalance(
-                        BalanceModule.of(
-                                ExactCurrencyAmount.of(
-                                        BigDecimal.valueOf(availableBalance), currency)))
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(availableBalance, currency)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
