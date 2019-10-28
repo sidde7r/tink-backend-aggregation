@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,15 +19,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CookieContainer;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -655,23 +650,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         return new HttpLoggingFilterFactory(
                 log,
                 "TRANSFER",
-                LogMasker.builder()
-                        .addStringMaskerBuilder(
-                                new CredentialsStringMaskerBuilder(
-                                        new Credentials(),
-                                        ImmutableList.of(
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .PASSWORD,
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .SECRET_KEY,
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .SENSITIVE_PAYLOAD,
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .USERNAME)))
-                        .addStringMaskerBuilder(
-                                new ClientConfigurationStringMaskerBuilder(Collections.emptyList()))
-                        .addStringMaskerBuilder(new Base64Masker(Collections.emptyList()))
-                        .build(),
+                testContext.getLogMasker(),
                 transferExecutor.getClass(),
                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
     }
