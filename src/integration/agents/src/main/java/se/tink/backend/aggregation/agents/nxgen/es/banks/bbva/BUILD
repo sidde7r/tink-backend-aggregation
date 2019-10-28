@@ -1,5 +1,5 @@
 java_library(
-    name = "BBVA",
+    name = "bbva",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
