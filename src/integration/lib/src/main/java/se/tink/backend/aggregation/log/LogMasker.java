@@ -19,6 +19,10 @@ public class LogMasker {
             ImmutableSet.<String>builder().add("true").add("false").build();
     private static final ImmutableSet<String> MARKETS_MASKER_COVERS_SECRETS_FOR =
             ImmutableSet.<String>builder()
+                    .add("fi")
+                    .add("no")
+                    .add("de")
+                    .add("at")
                     .add("se")
                     .add("es")
                     .add("pt")
