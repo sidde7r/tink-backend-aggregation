@@ -60,6 +60,8 @@ public class CommerzbankAutoAuthenticator implements AutoAuthenticator {
         }
 
         LoginInfoEntity loginInfoEntity = loginResponse.getLoginInfoEntity();
+        credentials.setSensitivePayload(
+                "LoginInfoEntity", SerializationUtils.serializeToString(loginInfoEntity));
 
         if (!loginInfoEntity.isChallengeStatus()) {
             throw new IllegalStateException(

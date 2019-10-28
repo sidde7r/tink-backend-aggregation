@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.Commerzbank
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.SupplementalFieldName;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Values;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.entities.LoginInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.entities.PrepareApprovalEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.InitScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginResponse;
@@ -67,12 +68,16 @@ public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
             handleLoginError(loginResponse.getError());
         }
 
-        if (!loginResponse.getLoginInfoEntity().isTanRequestedStatus()) {
+        LoginInfoEntity loginInfoEntity = loginResponse.getLoginInfoEntity();
+        credentials.setSensitivePayload(
+                "LoginInfoEntity", SerializationUtils.serializeToString(loginInfoEntity));
+
+        if (!loginInfoEntity.isTanRequestedStatus()) {
             throw new IllegalStateException(
                     String.format(
                             "Excepted login status to be %s, but it was %s.",
                             Values.TAN_REQUESTED,
-                            loginResponse.getLoginInfoEntity().getLoginStatus()));
+                            loginInfoEntity.getLoginStatus()));
         }
 
         scaWithQrCode();
