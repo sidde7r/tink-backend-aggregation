@@ -45,6 +45,7 @@ public final class HttpLoggingConstants {
                     "via",
                     "x-forwarded-for",
                     "x-forwarded-host",
+                    "x-global-transaction-id",
                     "x-ing-reqid",
                     "x-ing-response-id",
                     "x-powered-by",
