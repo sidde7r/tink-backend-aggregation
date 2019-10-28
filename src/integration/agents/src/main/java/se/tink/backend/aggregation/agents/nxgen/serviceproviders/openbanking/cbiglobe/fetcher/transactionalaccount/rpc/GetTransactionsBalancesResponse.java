@@ -38,8 +38,9 @@ public class GetTransactionsBalancesResponse implements PaginatorResponse {
         return balances;
     }
 
-    public void setPageRemaining(boolean pageRemaining) {
+    public GetTransactionsBalancesResponse setPageRemaining(boolean pageRemaining) {
         this.pageRemaining = pageRemaining;
+        return this;
     }
 
     public void setBalances(List<BalanceEntity> balances) {

@@ -67,6 +67,8 @@ public final class CbiGlobeConstants {
         public static final String CONSENT_ID = "consent-id";
         public static final String ACCOUNTS = "accounts";
         public static final String LINK = "link";
+        public static final String FIRST_MANUAL = "firstManual";
+        public static final String DONE = "done";
     }
 
     public static class QueryKeys {
