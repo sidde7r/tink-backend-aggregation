@@ -40,8 +40,8 @@ public class ScreenUpdateResponse extends ResponseEntity {
     }
 
     public static Widget findWidgetOrElseThrow(BelfiusResponse response, String widgetId) {
-        log.debug("response: ", response.toString());
-        log.debug("widgetId: ", widgetId);
+        log.debug("response: {}", response.toString());
+        log.debug("widgetId: {}", widgetId);
         return response.filter(ScreenUpdateResponse.class)
                 .flatMap(r -> r.getWidgets().stream())
                 .filter(widget -> widgetId.equalsIgnoreCase(widget.getWidgetId()))
