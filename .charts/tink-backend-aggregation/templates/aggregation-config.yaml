@@ -70,9 +70,11 @@ data:
     coordination:
       hosts: {{ default "coordination:2181" .Values.coordinationHosts }}
 
+    {{- if not (eq "local" .Values.Cluster) }}
     endpoints:
       eventProducerServiceConfiguration:
-        url: event-producer-service.internal.production.oxford.tink.network:443/
+        url: event-producer-service.internal.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.network:443/
+    {{- end }}
 
     sqsQueueConfiguration:
       {{ .Values.sqsQueueConfiguration | default dict | toYaml | indent 6 | trim }}
