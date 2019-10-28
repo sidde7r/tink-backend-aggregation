@@ -177,7 +177,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             context.getAppId(),
                             clusterIdForSecretsService,
                             credentialsRequest.getCallbackUri());
-            agentConfigurationController.addObserver(context.getLogMasker());
+            context.getLogMasker()
+                    .addSensitiveValuesSetSubject(
+                            agentConfigurationController.getSecretValuesSubject());
             context.setAgentConfigurationController(agentConfigurationController);
             AgentFactory factory = new AgentFactory(configuration);
 

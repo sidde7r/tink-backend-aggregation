@@ -11,9 +11,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.subjects.Subject;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -47,10 +48,9 @@ public final class AgentConfigurationController {
     private final String redirectUrl;
     private final boolean isOpenBankingAgent;
     private final boolean isTestProvider;
-    private final PropertyChangeSupport observablePropertyChangeSupport =
-            new PropertyChangeSupport(this);
     private Map<String, String> allSecrets;
     private Set<String> secretValues = Collections.emptySet();
+    private final Subject<Collection<String>> secretValuesSubject = BehaviorSubject.create();
 
     // Package private for testing purposes.
     AgentConfigurationController() {
@@ -120,6 +120,14 @@ public final class AgentConfigurationController {
         initSecrets();
     }
 
+    public Subject<Collection<String>> getSecretValuesSubject() {
+        return secretValuesSubject;
+    }
+
+    public void completeSecretValuesSubject() {
+        secretValuesSubject.onComplete();
+    }
+
     public boolean isOpenBankingAgent() {
         return isOpenBankingAgent;
     }
@@ -154,6 +162,7 @@ public final class AgentConfigurationController {
                 }
             }
             initRedirectUrl();
+            notifySecretValues(Sets.newHashSet(allSecrets.values()));
         }
     }
 
@@ -181,26 +190,17 @@ public final class AgentConfigurationController {
                                                 + getSecretsServiceParamsString()));
     }
 
-    public void addObserver(PropertyChangeListener observer) {
-        observablePropertyChangeSupport.addPropertyChangeListener(observer);
-        notifySecretValuesUponSubscription();
-    }
-
-    private void notifySecretValuesUponSubscription() {
-        this.observablePropertyChangeSupport.firePropertyChange(
-                SECRET_VALUES_PROPERTY_NAME, null, secretValues);
-    }
-
     private void notifySecretValues(Set<String> newSecretValues) {
-        Set<String> oldSecretValues = ImmutableSet.copyOf(secretValues);
-        this.secretValues =
-                ImmutableSet.<String>builder()
-                        .addAll(oldSecretValues)
-                        .addAll(newSecretValues)
-                        .build();
+        if (!secretValues.containsAll(newSecretValues)) {
+            secretValuesSubject.onNext(newSecretValues);
 
-        this.observablePropertyChangeSupport.firePropertyChange(
-                SECRET_VALUES_PROPERTY_NAME, oldSecretValues, secretValues);
+            Set<String> oldSecretValues = ImmutableSet.copyOf(secretValues);
+            this.secretValues =
+                    ImmutableSet.<String>builder()
+                            .addAll(oldSecretValues)
+                            .addAll(newSecretValues)
+                            .build();
+        }
     }
 
     private String getSecretsServiceParamsString() {
@@ -267,8 +267,6 @@ public final class AgentConfigurationController {
         // To avoid agents accessing the list of registered redirectUrls via their configuration
         // classes. Declaring a member 'redirectUrls' for example.
         allSecrets.remove(REDIRECT_URLS_KEY);
-
-        notifySecretValues(Sets.newHashSet(allSecrets.values()));
     }
 
     private <T extends ClientConfiguration> T getAgentConfigurationFromK8s(

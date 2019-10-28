@@ -176,6 +176,7 @@ junit_test(
         "//third_party:io_dropwizard_dropwizard_client",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:io_grpc_grpc_protobuf_lite",
+        "//third_party:io_reactivex_rxjava3_rxjava",
         "//third_party:io_vavr",
         "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",

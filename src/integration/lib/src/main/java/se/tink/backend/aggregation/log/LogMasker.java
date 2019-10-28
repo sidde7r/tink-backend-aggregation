@@ -2,19 +2,19 @@ package se.tink.backend.aggregation.log;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subjects.Subject;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.utils.StringMaskerBuilder;
 
-public class LogMasker implements PropertyChangeListener {
+public class LogMasker {
 
     public static final Comparator<String> SENSITIVE_VALUES_SORTING_COMPARATOR =
             Comparator.comparing(String::length)
@@ -38,6 +38,8 @@ public class LogMasker implements PropertyChangeListener {
                     .add("gb")
                     .add("dk")
                     .build();
+
+    private CompositeDisposable composite = new CompositeDisposable();
 
     /**
      * This enumeration decides if logging should be done or not. NOTE: Only pass
@@ -65,21 +67,21 @@ public class LogMasker implements PropertyChangeListener {
         return masker.getMasked(dataToMask);
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent newSecretValues) {
-        switch (newSecretValues.getPropertyName()) {
-            case AgentConfigurationController.SECRET_VALUES_PROPERTY_NAME:
-                masker.addValuesToMask(
-                        new ClientConfigurationStringMaskerBuilder(
-                                (Set<String>) newSecretValues.getNewValue()),
-                        this::shouldMask);
-                break;
+    public void addSensitiveValuesSetSubject(
+            Subject<Collection<String>> newSensitiveValuesSetSubject) {
+        composite.add(
+                newSensitiveValuesSetSubject
+                        .subscribeOn(Schedulers.trampoline())
+                        .subscribe(this::addNewSensitiveValuesToMasker));
+    }
 
-            default:
-                throw new IllegalStateException(
-                        "Unrecognized property name received: "
-                                + newSecretValues.getPropertyName());
-        }
+    public void disposeOfAllSubscriptions() {
+        composite.dispose();
+    }
+
+    private void addNewSensitiveValuesToMasker(Collection<String> newSensitiveValues) {
+        masker.addValuesToMask(
+                new ClientConfigurationStringMaskerBuilder(newSensitiveValues), this::shouldMask);
     }
 
     public static LoggingMode shouldLog(Provider provider) {

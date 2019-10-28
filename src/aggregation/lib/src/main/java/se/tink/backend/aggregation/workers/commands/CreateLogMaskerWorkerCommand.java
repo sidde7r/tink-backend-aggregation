@@ -11,6 +11,7 @@ public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
 
     private final Credentials credentials;
     private final AgentWorkerCommandContext agentWorkerCommandContext;
+    private LogMasker logMasker;
 
     public CreateLogMaskerWorkerCommand(AgentWorkerCommandContext agentWorkerCommandContext) {
         this.credentials = agentWorkerCommandContext.getRequest().getCredentials();
@@ -24,16 +25,21 @@ public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
                     "No AgentConfigurationController found in CreateLogMaskerWorkerCommand, make sure to put the commands in the right order, this should come after the CreateAgentConfigurationControllerWorkerCommand.");
         }
 
-        LogMasker logMasker =
+        logMasker =
                 LogMasker.builder()
                         .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
                         .build();
-        agentWorkerCommandContext.getAgentConfigurationController().addObserver(logMasker);
+        logMasker.addSensitiveValuesSetSubject(
+                agentWorkerCommandContext
+                        .getAgentConfigurationController()
+                        .getSecretValuesSubject());
         agentWorkerCommandContext.setLogMasker(logMasker);
 
         return AgentWorkerCommandResult.CONTINUE;
     }
 
     @Override
-    public void postProcess() throws Exception {}
+    public void postProcess() throws Exception {
+        logMasker.disposeOfAllSubscriptions();
+    }
 }

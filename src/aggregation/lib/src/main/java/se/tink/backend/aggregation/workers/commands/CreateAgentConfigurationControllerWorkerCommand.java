@@ -16,6 +16,7 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final AgentWorkerCommandContext agentWorkerCommandContext;
     private final TppSecretsServiceClient tppSecretsServiceClient;
+    private AgentConfigurationController agentConfigurationController;
 
     public CreateAgentConfigurationControllerWorkerCommand(
             AgentWorkerCommandContext agentWorkerCommandContext,
@@ -27,7 +28,7 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
-        AgentConfigurationController agentConfigurationController =
+        agentConfigurationController =
                 new AgentConfigurationController(
                         tppSecretsServiceClient,
                         agentsServiceConfiguration.getIntegrations(),
@@ -42,5 +43,7 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
     }
 
     @Override
-    public void postProcess() throws Exception {}
+    public void postProcess() throws Exception {
+        agentConfigurationController.completeSecretValuesSubject();
+    }
 }

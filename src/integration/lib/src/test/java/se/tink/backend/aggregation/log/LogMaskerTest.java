@@ -5,15 +5,14 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.subjects.Subject;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
@@ -27,7 +26,7 @@ public class LogMaskerTest {
     }
 
     @Test
-    public void testMaskingWithoughClientConfigurationStringMasker() {
+    public void testMaskingWithoutClientConfigurationStringMasker() {
         LogMasker logMasker =
                 LogMasker.builder()
                         .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
@@ -56,61 +55,47 @@ public class LogMaskerTest {
 
     @Test
     public void testMaskingWithUpdatedClientConfigurationStringMasker() {
-        class TestClassWithPropertyChangeSupport {
-            private final PropertyChangeSupport propertyChangeSupport =
-                    new PropertyChangeSupport(this);
-            private Collection<String> secretValues;
-
-            public void addPropertyChangeListener(PropertyChangeListener listener) {
-                this.propertyChangeSupport.addPropertyChangeListener(listener);
-            }
-
-            public void simulateNewValue(Collection<String> newSecretValues) {
-                this.propertyChangeSupport.firePropertyChange(
-                        AgentConfigurationController.SECRET_VALUES_PROPERTY_NAME,
-                        secretValues,
-                        newSecretValues);
-                this.secretValues = newSecretValues;
-            }
-        }
-        TestClassWithPropertyChangeSupport testClassWithPropertyChangeSupport =
-                new TestClassWithPropertyChangeSupport();
-
+        Subject<Collection<String>> testSecretValuesSubject = BehaviorSubject.create();
+        testSecretValuesSubject.onNext(Sets.newHashSet("0000"));
         LogMasker logMasker =
                 LogMasker.builder()
                         .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
                         .build();
-        testClassWithPropertyChangeSupport.addPropertyChangeListener(logMasker);
+        logMasker.addSensitiveValuesSetSubject(testSecretValuesSubject);
 
-        String maskedString1 = logMasker.mask("abcd1111abcd1234abcd5678");
-
-        Assert.assertEquals(
-                "String not masked as expected.", "abcd1111abcd1234abcd5678", maskedString1);
-
-        testClassWithPropertyChangeSupport.simulateNewValue(Sets.newHashSet("1111", "1234"));
-
-        String maskedString2 = logMasker.mask("abcd1111abcd1234abcd5678");
+        String maskedString1 = logMasker.mask("abcd1111abcd1234abcd5678abcd0000");
 
         Assert.assertEquals(
                 "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd5678",
+                "abcd1111abcd1234abcd5678abcd***MASKED***",
+                maskedString1);
+
+        testSecretValuesSubject.onNext(Sets.newHashSet("1111", "1234"));
+
+        String maskedString2 = logMasker.mask("abcd1111abcd1234abcd5678abcd0000");
+
+        Assert.assertEquals(
+                "String not masked as expected.",
+                "abcd***MASKED***abcd***MASKED***abcd5678abcd***MASKED***",
                 maskedString2);
 
-        testClassWithPropertyChangeSupport.simulateNewValue(Sets.newHashSet("5678"));
+        testSecretValuesSubject.onNext(Sets.newHashSet("5678"));
 
-        String maskedString3 = logMasker.mask("abcd1111abcd1234abcd5678");
+        String maskedString3 = logMasker.mask("abcd1111abcd1234abcd5678abcd0000");
 
         Assert.assertEquals(
                 "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd***MASKED***",
+                "abcd***MASKED***abcd***MASKED***abcd***MASKED***abcd***MASKED***",
                 maskedString3);
 
-        String maskedString4 = logMasker.mask("abcd1111abcd2020abcd1010");
+        String maskedString4 = logMasker.mask("abcd1111abcd2020abcd1010abcd0000");
 
         Assert.assertEquals(
                 "String not masked as expected.",
-                "abcd***MASKED***abcd***MASKED***abcd***MASKED***",
+                "abcd***MASKED***abcd***MASKED***abcd***MASKED***abcd***MASKED***",
                 maskedString4);
+
+        testSecretValuesSubject.onComplete();
     }
 
     @Test

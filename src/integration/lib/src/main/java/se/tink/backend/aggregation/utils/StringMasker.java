@@ -78,7 +78,6 @@ public class StringMasker {
 
         sensitiveValuesToMask =
                 sensitiveValuesWithoutDuplicates.stream()
-                        .filter(shouldMaskPredicate)
                         .sorted(SENSITIVE_VALUES_SORTING_COMPARATOR.reversed())
                         .collect(ImmutableList.toImmutableList());
     }

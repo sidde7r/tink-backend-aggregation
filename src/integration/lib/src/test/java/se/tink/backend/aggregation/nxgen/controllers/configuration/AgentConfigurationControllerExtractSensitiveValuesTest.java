@@ -3,10 +3,9 @@ package se.tink.backend.aggregation.nxgen.controllers.configuration;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import io.reactivex.rxjava3.disposables.Disposable;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -146,21 +145,12 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
 
     @Test
     public void testNotifySecretValues() {
-        class TestPropertyChangeListener implements PropertyChangeListener {
-            public Set<String> sensitiveValues = Collections.emptySet();
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                Assert.assertTrue(
-                        "Unexpected property name received: " + evt.getPropertyName(),
-                        AgentConfigurationController.SECRET_VALUES_PROPERTY_NAME.equals(
-                                evt.getPropertyName()));
-                sensitiveValues = (Set<String>) evt.getNewValue();
-            }
-        }
-
-        TestPropertyChangeListener testPropertyChangeListener = new TestPropertyChangeListener();
-        agentConfigurationController.addObserver(testPropertyChangeListener);
+        Set<String> sensitiveValuesTestSet = new HashSet<>();
+        Disposable disposable =
+                agentConfigurationController
+                        .getSecretValuesSubject()
+                        .subscribe(
+                                newSecretValues -> sensitiveValuesTestSet.addAll(newSecretValues));
 
         NestedConfigurationLevel1 nestedConfigurationLevel1 =
                 new NestedConfigurationLevel1("stringLevel2", 2, null);
@@ -179,7 +169,7 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
 
         Assert.assertTrue(
                 "Extracted values are not what was expected.",
-                testPropertyChangeListener.sensitiveValues.containsAll(
+                sensitiveValuesTestSet.containsAll(
                         Sets.newHashSet("stringLevel1", "1", "stringLevel2", "2")));
 
         NestedConfigurationLevel2 nestedConfigurationLevel2 =
@@ -198,7 +188,7 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
 
         Assert.assertTrue(
                 "Extracted values are not what was expected.",
-                testPropertyChangeListener.sensitiveValues.containsAll(
+                sensitiveValuesTestSet.containsAll(
                         Sets.newHashSet(
                                 "stringLevel1", "1", "stringLevel2", "2", "stringLevel3", "3")));
     }
