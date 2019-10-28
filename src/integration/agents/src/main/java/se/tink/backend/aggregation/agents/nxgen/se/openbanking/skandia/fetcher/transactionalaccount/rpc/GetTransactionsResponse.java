@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ public class GetTransactionsResponse implements PaginatorResponse {
     private TransactionsEntity transactions;
 
     @Override
+    @JsonIgnore
     public Collection<? extends Transaction> getTinkTransactions() {
         return transactions.toTinkTransactions();
     }
@@ -26,10 +28,12 @@ public class GetTransactionsResponse implements PaginatorResponse {
         return Optional.of(false);
     }
 
+    @JsonIgnore
     public void setBookedTransactions(List<TransactionEntity> bookedTransactions) {
         transactions.setBookedTransactions(bookedTransactions);
     }
 
+    @JsonIgnore
     public List<TransactionEntity> getBookedTransactoins() {
         return transactions.getBooked();
     }

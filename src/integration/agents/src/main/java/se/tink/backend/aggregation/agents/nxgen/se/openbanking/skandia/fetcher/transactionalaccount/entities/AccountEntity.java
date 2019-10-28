@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +34,7 @@ public class AccountEntity {
 
     private List<BalanceEntity> balances;
 
+    @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
@@ -52,10 +54,12 @@ public class AccountEntity {
                 .build();
     }
 
+    @JsonIgnore
     private AccountIdentifier getIdentifier() {
         return new IbanIdentifier(iban);
     }
 
+    @JsonIgnore
     private ExactCurrencyAmount getAvailableBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(BalanceEntity::isAvailableBalance)
@@ -68,6 +72,7 @@ public class AccountEntity {
         return resourceId;
     }
 
+    @JsonIgnore
     public String getUniqueId() {
         String clearingNumber = iban.substring(4, 8);
         return clearingNumber + bban + "-" + clearingNumber + bban;
