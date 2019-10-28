@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,7 @@ public class TransactionEntity {
     @JsonProperty private String ultimateDebtor;
 
     @JsonProperty protected String remittanceInformationUnstructured;
+    @JsonProperty protected String remittanceInformationStructured;
 
     @JsonProperty private String purposeCo; // ExternalPurpose1Co
 
@@ -80,6 +82,9 @@ public class TransactionEntity {
 
     @JsonIgnore
     public String getDescription() {
+        if (Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
+            return remittanceInformationStructured;
+        }
         return remittanceInformationUnstructured;
     }
 
