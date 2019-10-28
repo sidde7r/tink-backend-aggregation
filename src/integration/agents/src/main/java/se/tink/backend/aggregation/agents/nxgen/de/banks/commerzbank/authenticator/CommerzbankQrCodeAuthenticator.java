@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.security.KeyPair;
 import java.util.Map;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -129,13 +128,14 @@ public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
 
     private void handleLoginError(ErrorEntity error) throws LoginException, SessionException {
 
-        Optional<ErrorMessageEntity> errorMessage = error.getErrorMessage();
+        ErrorMessageEntity errorMessage =
+                error.getErrorMessage()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Login failed without error description present."));
 
-        if (!errorMessage.isPresent()) {
-            throw new IllegalStateException("Login failed without error description present.");
-        }
-
-        switch (errorMessage.get().getMessageId()) {
+        switch (errorMessage.getMessageId()) {
             case Error.PIN_ERROR:
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             case Error.ACCOUNT_SESSION_ACTIVE_ERROR:
@@ -144,7 +144,7 @@ public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
                 throw new IllegalStateException(
                         String.format(
                                 "Login failed with unknown error message: %s",
-                                errorMessage.get().getMessageId()));
+                                errorMessage.getMessageId()));
         }
     }
 
