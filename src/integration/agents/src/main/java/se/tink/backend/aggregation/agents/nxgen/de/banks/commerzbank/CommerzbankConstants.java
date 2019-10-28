@@ -9,6 +9,7 @@ public class CommerzbankConstants {
     public static final String MULTIPLE_SPACES = "  ";
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
     public static final String TIMEZONE_CET = "CET";
+    public static final String LOGIN_INFO_ENTITY = "LoginInfoEntity";
 
     public static class Urls {
         public static final String HOST = "https://app.commerzbank.de";
