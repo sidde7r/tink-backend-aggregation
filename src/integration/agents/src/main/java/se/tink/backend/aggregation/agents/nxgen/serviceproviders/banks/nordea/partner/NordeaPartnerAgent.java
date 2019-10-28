@@ -55,7 +55,7 @@ public class NordeaPartnerAgent extends NextGenerationAgent
     }
 
     private void configureHttpClient(AgentsServiceConfiguration configuration) {
-        client.setEidasProxy(configuration.getEidasProxy(), null);
+        client.setEidasProxy(configuration.getEidasProxy());
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(
                 new TimeoutRetryFilter(

@@ -37,7 +37,6 @@ public class NordeaPartnerConstants {
 
     public class StorageKeys {
         public static final String PARTNER_USER_ID = "partner-user-id";
-        public static final String TOKEN = "token";
     }
 
     public class SupplementalInfoKeys {

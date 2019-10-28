@@ -62,7 +62,7 @@ public class NordeaPartnerJweHelper {
         }
     }
 
-    public OAuth2Token createAccessToken(String partnerUid) {
+    public OAuth2Token createToken(String partnerUid) {
         Preconditions.checkState(
                 !Strings.isNullOrEmpty(partnerUid), "Partner User Id can not be null or empty");
 

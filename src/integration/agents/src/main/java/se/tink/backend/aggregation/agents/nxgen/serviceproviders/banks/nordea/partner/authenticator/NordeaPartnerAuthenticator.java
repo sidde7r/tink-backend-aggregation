@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -57,7 +58,7 @@ public class NordeaPartnerAuthenticator implements AutoAuthenticator, MultiFacto
             persistentStorage.put(NordeaPartnerConstants.StorageKeys.PARTNER_USER_ID, partnerUid);
         }
 
-        usePartnerUserId(partnerUid);
+        createTokenFromPartnerUserId(partnerUid);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class NordeaPartnerAuthenticator implements AutoAuthenticator, MultiFacto
                         .filter(String::isEmpty)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        usePartnerUserId(partnerUid);
+        createTokenFromPartnerUserId(partnerUid);
     }
 
     private String requestNordeaToken() throws ThirdPartyAppException {
@@ -95,9 +96,9 @@ public class NordeaPartnerAuthenticator implements AutoAuthenticator, MultiFacto
         }
     }
 
-    private void usePartnerUserId(String partnerUid) {
-        OAuth2Token accessToken = jweHelper.createAccessToken(partnerUid);
-        sessionStorage.put(NordeaPartnerConstants.StorageKeys.TOKEN, accessToken);
+    private void createTokenFromPartnerUserId(String partnerUid) {
+        OAuth2Token oAuth2Token = jweHelper.createToken(partnerUid);
+        sessionStorage.put(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
         sessionStorage.put(NordeaPartnerConstants.StorageKeys.PARTNER_USER_ID, partnerUid);
     }
 

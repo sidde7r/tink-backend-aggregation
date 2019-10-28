@@ -8,11 +8,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.PathParamsKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.QueryParamsKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.NordeaPartnerJweHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.configuration.NordeaPartnerConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.rpc.AccountListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.rpc.AccountTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -90,7 +90,7 @@ public class NordeaPartnerApiClient {
 
     private OAuth2Token getAccessToken() {
         return sessionStorage
-                .get(StorageKeys.TOKEN, OAuth2Token.class)
+                .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                 .filter(OAuth2Token::hasAccessExpired)
                 .orElse(this.refreshAccessToken());
     }
@@ -104,8 +104,8 @@ public class NordeaPartnerApiClient {
                                 () ->
                                         new IllegalStateException(
                                                 SessionError.SESSION_EXPIRED.exception()));
-        OAuth2Token oAuth2Token = jweHelper.createAccessToken(partnerUid);
-        sessionStorage.put(NordeaPartnerConstants.StorageKeys.TOKEN, oAuth2Token);
+        OAuth2Token oAuth2Token = jweHelper.createToken(partnerUid);
+        sessionStorage.put(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
         return oAuth2Token;
     }
 }
