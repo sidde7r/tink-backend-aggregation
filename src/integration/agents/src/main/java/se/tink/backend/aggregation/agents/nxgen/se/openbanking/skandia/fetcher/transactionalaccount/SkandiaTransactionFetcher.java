@@ -26,7 +26,7 @@ public class SkandiaTransactionFetcher implements TransactionDatePaginator<Trans
         GetTransactionsResponse bookedTransactions =
                 apiClient.getTransactions(
                         account.getApiIdentifier(), fromDate, toDate, QueryValues.BOOKED);
-        transactions.setBookedTransactions(bookedTransactions.getBookedTransactoins());
+        transactions.setBooked(bookedTransactions.getBooked());
         return transactions;
     }
 }

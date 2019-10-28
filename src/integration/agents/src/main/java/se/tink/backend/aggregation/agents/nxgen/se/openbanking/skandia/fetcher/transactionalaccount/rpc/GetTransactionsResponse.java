@@ -29,12 +29,12 @@ public class GetTransactionsResponse implements PaginatorResponse {
     }
 
     @JsonIgnore
-    public void setBookedTransactions(List<TransactionEntity> bookedTransactions) {
-        transactions.setBookedTransactions(bookedTransactions);
+    public void setBooked(List<TransactionEntity> booked) {
+        transactions.setBooked(booked);
     }
 
     @JsonIgnore
-    public List<TransactionEntity> getBookedTransactoins() {
+    public List<TransactionEntity> getBooked() {
         return transactions.getBooked();
     }
 }

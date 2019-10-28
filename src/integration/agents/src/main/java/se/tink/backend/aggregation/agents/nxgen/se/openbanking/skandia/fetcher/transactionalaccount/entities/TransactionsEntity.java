@@ -24,8 +24,8 @@ public class TransactionsEntity {
                 .collect(Collectors.toList());
     }
 
-    public void setBookedTransactions(List<TransactionEntity> bookedTransactions) {
-        this.booked = bookedTransactions;
+    public void setBooked(List<TransactionEntity> booked) {
+        this.booked = booked;
     }
 
     public List<TransactionEntity> getBooked() {
