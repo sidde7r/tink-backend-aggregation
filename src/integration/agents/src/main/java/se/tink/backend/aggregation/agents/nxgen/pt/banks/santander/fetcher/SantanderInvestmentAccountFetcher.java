@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderApiClient;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.SantanderApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Assets;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Investment;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.util.CurrencyMapper;
@@ -53,18 +53,22 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
     private InvestmentAccount toTinkAccount(
             Map<String, String> account, PortfolioType portfolioType) {
 
+        double totalProfit =
+                calculateTotalProfit(
+                        account.get(Investment.AVAILABLE_BALANCE), account.get(Investment.BALANCE));
+
+        String accountCurrencyCode =
+                currencyMapper
+                        .get(Integer.parseInt(account.get(Investment.CURRENCY_NUMERIC_CODE)))
+                        .getCurrencyCode();
+
         return InvestmentAccount.nxBuilder()
                 .withPortfolios(
                         PortfolioModule.builder()
                                 .withType(portfolioType)
                                 .withUniqueIdentifier(account.get(Investment.ACCOUNT_NUMBER))
                                 .withCashValue(BigDecimal.ZERO.doubleValue())
-                                .withTotalProfit(
-                                        new BigDecimal(account.get(Investment.AVAILABLE_BALANCE))
-                                                .subtract(
-                                                        new BigDecimal(
-                                                                account.get(Investment.BALANCE)))
-                                                .doubleValue())
+                                .withTotalProfit(totalProfit)
                                 .withTotalValue(
                                         new BigDecimal(account.get(Investment.AVAILABLE_BALANCE))
                                                 .doubleValue())
@@ -72,13 +76,7 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
                                 .build())
                 .withCashBalance(
                         ExactCurrencyAmount.of(
-                                account.get(Investment.AVAILABLE_BALANCE),
-                                currencyMapper
-                                        .get(
-                                                Integer.parseInt(
-                                                        account.get(
-                                                                Investment.CURRENCY_NUMERIC_CODE)))
-                                        .getCurrencyCode()))
+                                account.get(Investment.AVAILABLE_BALANCE), accountCurrencyCode))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(account.get(Investment.FULL_ACCOUNT_NUMBER))
@@ -89,5 +87,9 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
                                                 Type.IBAN, account.get(Investment.ACCOUNT_NUMBER)))
                                 .build())
                 .build();
+    }
+
+    private double calculateTotalProfit(String availableBalance, String balance) {
+        return new BigDecimal(availableBalance).subtract(new BigDecimal(balance)).doubleValue();
     }
 }

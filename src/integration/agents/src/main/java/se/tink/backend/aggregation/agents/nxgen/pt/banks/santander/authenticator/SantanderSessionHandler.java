@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticato
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderApiClient;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.SantanderApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 

@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderApiClient;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.SantanderApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
@@ -32,18 +32,19 @@ public class SantanderInvestmentTransactionFetcher
                         .fetchInvestmentTransactions(account.getAccountNumber(), page, PAGE_SIZE)
                         .getBusinessData();
 
-        return businessData.stream()
-                .map(this::toTinkTransaction)
-                .collect(
-                        Collectors.collectingAndThen(
-                                Collectors.toList(),
-                                transactions ->
-                                        PaginatorResponseImpl.create(
-                                                transactions, !transactions.isEmpty())));
+        List<Transaction> transactions =
+                businessData.stream().map(this::toTinkTransaction).collect(Collectors.toList());
+
+        return PaginatorResponseImpl.create(transactions, !transactions.isEmpty());
     }
 
     private Transaction toTinkTransaction(Map<String, String> transaction) {
         DateTimeFormatter transactionDatePattern = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        BigDecimal transactionAmount =
+                calculateTransactionAmount(
+                        new BigDecimal(transaction.get(Fields.Transaction.NUMBER_OF_UNITS)),
+                        new BigDecimal(transaction.get(Fields.Transaction.AMOUNT)));
 
         return Transaction.builder()
                 .setDescription(transaction.get(Fields.Transaction.DESCRIPTION))
@@ -53,12 +54,7 @@ public class SantanderInvestmentTransactionFetcher
                                 transactionDatePattern))
                 .setAmount(
                         ExactCurrencyAmount.of(
-                                calculateTransactionAmount(
-                                        new BigDecimal(
-                                                transaction.get(
-                                                        Fields.Transaction.NUMBER_OF_UNITS)),
-                                        new BigDecimal(transaction.get(Fields.Transaction.AMOUNT))),
-                                transaction.get(Fields.Transaction.CURRENCY)))
+                                transactionAmount, transaction.get(Fields.Transaction.CURRENCY)))
                 .build();
     }
 

@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.STORAGE;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.SantanderApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
@@ -37,14 +37,12 @@ public class SantanderCreditCardTransactionFetcher
                         .fetchCreditCardTransactions(account.getApiIdentifier(), page, PAGE_SIZE)
                         .getBusinessData();
 
-        return businessData.stream()
-                .map(transaction -> toTinkTransaction(transaction, account))
-                .collect(
-                        Collectors.collectingAndThen(
-                                Collectors.toList(),
-                                transactions ->
-                                        PaginatorResponseImpl.create(
-                                                transactions, !transactions.isEmpty())));
+        List<Transaction> transactions =
+                businessData.stream()
+                        .map(transaction -> toTinkTransaction(transaction, account))
+                        .collect(Collectors.toList());
+
+        return PaginatorResponseImpl.create(transactions, !transactions.isEmpty());
     }
 
     private Transaction toTinkTransaction(
@@ -52,16 +50,19 @@ public class SantanderCreditCardTransactionFetcher
         DateTimeFormatter dateTimeFormatter =
                 DateTimeFormatter.ofPattern(SantanderConstants.DATE_FORMAT);
 
+        ExactCurrencyAmount transactionAmount =
+                ExactCurrencyAmount.of(
+                        parseAmount(transaction.get(Fields.Transaction.AMOUNT)),
+                        account.getFromTemporaryStorage(STORAGE.CURRENCY_CODE));
+
+        LocalDate transactionDate =
+                LocalDate.parse(
+                        transaction.get(Fields.Transaction.RAW_OPERATION_DATE), dateTimeFormatter);
+
         return CreditCardTransaction.builder()
-                .setAmount(
-                        ExactCurrencyAmount.of(
-                                parseAmount(transaction.get(Fields.Transaction.AMOUNT)),
-                                account.getFromTemporaryStorage(STORAGE.CURRENCY_CODE)))
+                .setAmount(transactionAmount)
                 .setCreditAccount(account)
-                .setDate(
-                        LocalDate.parse(
-                                transaction.get(Fields.Transaction.RAW_OPERATION_DATE),
-                                dateTimeFormatter))
+                .setDate(transactionDate)
                 .setDescription(transaction.get(Fields.Transaction.DESCRIPTION))
                 .build();
     }

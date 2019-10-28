@@ -4,7 +4,7 @@ public class SantanderConstants {
 
     public static final String DATE_FORMAT = "yyyyMMdd";
     public static final String TIMEZONE_ID = "Portugal";
-    static final String API_URL = "https://m.santandertotta.pt/gatewayios/Gateway.aspx";
+    public static final String API_URL = "https://m.santandertotta.pt/gatewayios/Gateway.aspx";
 
     public static class STORAGE {
         public static final String SESSION_TOKEN = "SESSION_TOKEN";

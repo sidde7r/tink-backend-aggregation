@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.SantanderApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Identity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderCreditAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderCreditCardTransactionFetcher;
