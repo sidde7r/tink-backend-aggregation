@@ -45,17 +45,6 @@ agents:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
     abn:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
-  sibs:
-    tink:
-      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
-      certificateId: Tink
-    cgd:
-      redirectUrl: https://main.production.cardiff.tink.se:8443/api/v1/credentials/third-party/callback
-      certificateId: cgd
-  finecobank:
-    tink:
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-      certificateId: Tink
   ing:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
