@@ -576,7 +576,7 @@ agentsServiceConfiguration:
         tinkSingingPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA462xN1CMeCqpIqb7NMGkpn4g2CZWYVpWqAW5UqMCojLcX+lpy72JTHgcEYvBpq7tTq8cR0HvAb2xagQ+273KRvhuvMCrPyi8UEH8QIgSiGceaivqu6hK7ieemvoh0cOaQnkL54PSdVUIlmGm0/BOInmgviS+Lwi6IHCORTdYsxSafNH/n98qkOUJLluRtP/XyRWLpHL/mTB2t+foCsrTlCWAxvyxXn+R+JDd6c8UZO4V0gxrYoKTmx4T0rW9AuC+mzPKIM4CfHeuTf65zRm+nhUNjvnZZC+34YQeFFEhbaV77io8CJBOc8Yz2RayPlfuqumkwCpjA6N1zgj6XUGTVwIDAQAB"
         tinkEncryptionPrivateKey: "dummykey"
         tinkEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqHJbKfWjKYnnY8jwMWq0VKU/EGb/+mi8D2fZdlU5f2QiFxvIj8du7hBt5Pju9xjowzFd1oLsW3uI1AIV/KUAhhB7Lr4Q2cAt7IQQdWZg9lYYez+qssYq5ytyMfBHwHsqRv6zBKaMiXkZ0A8VCFaoSZgF867IT9l094qdbhH92XKkNlaH8AHplSl9v22U8YdzWomIpy8HV1OpKcvHfJY1pHH+/1iO6bER661LG2fRXMCtCQXro9pHsPzZm+eJ0qKBx4jy2+obPU5qu0hT0XGz4zPIOIr+I5xvG0GVWbrZHmDDmA1EBvGPT+yQjXWBtpws3AHzZoPX/Bbt73Ky4lBGzwIDAQAB"
-        kid: "tink-nordea-encrypt"
+        keyId: "tink-nordea-encrypt"
     demoFinancialInstitution:
       mobilebanking:
         baseUrl: "http://localhost:9271/mobilebanking"

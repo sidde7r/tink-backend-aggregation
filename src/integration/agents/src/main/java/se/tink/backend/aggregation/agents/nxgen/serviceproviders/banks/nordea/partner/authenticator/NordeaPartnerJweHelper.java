@@ -93,7 +93,7 @@ public class NordeaPartnerJweHelper {
                             new JWEHeader.Builder(
                                             JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM)
                                     .contentType(NordeaPartnerConstants.Jwt.JWT_CONTENT_TYPE)
-                                    .keyID(configuration.getKid())
+                                    .keyID(configuration.getKeyId())
                                     .build(),
                             new Payload(signedJWT));
             jweObject.encrypt(new RSAEncrypter(keystore.getNordeaEncryptionPublicKey()));

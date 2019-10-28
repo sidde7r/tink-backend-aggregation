@@ -19,7 +19,7 @@ tinkSingingPrivateKey-description: |2
   The private key that will be used to sign Tinks JWE tokens those are included in the headers.
   This should be the PKCS8 base64 encoded private key.
 tinkSingingPrivateKey-example: |2
-  "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDjrbE3UIx4Kqkipvs0waSmfiDY////tuncated/////u9o9oj3Pi6QDrruYjWSeOlnVhiQ=="
+  "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDjrbE3UIx4Kqkipvs0waSmfiDY////truncated/////u9o9oj3Pi6QDrruYjWSeOlnVhiQ=="
 tinkSingingPublicKey-description: |2
   The public key that will be used by Nordea to verify the signed JWE tokens sent by Tink.
   This should be the X509 base64 encoded public key.
@@ -30,7 +30,7 @@ tinkEncryptionPrivateKey-description: |2
   Nordea during authentication as supplemental information. This should be the PKCS8 base64
   encoded private key.
 tinkEncryptionPrivateKey-example: |2
-  "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDjrbE3UIx4Kqkipvs0waSmfiDY////tuncated/////u9o9oj3Pi6QDrruYjWSeOlnVhiQ=="
+  "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDjrbE3UIx4Kqkipvs0waSmfiDY////truncated/////u9o9oj3Pi6QDrruYjWSeOlnVhiQ=="
 tinkEncryptionPublicKey-description: |2
   The public key that will be used by Nordea to encrypt JWE tokens before sending them as
   supplemental information. This should be the X509 base64 encoded public key.
@@ -41,5 +41,5 @@ kid-description: |2
   is a hint indicating which key was used to secure the JWS. This parameter allows originators
   to explicitly signal a change of key to recipients. The structure of the "kid" value is
   unspecified. Its value MUST be a case-sensitive string.
-kid-example: |2
+keyId-example: |2
   "tink-nordea-kid"
