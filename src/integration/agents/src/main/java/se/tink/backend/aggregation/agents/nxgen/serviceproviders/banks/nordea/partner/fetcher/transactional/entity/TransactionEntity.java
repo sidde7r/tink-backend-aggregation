@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -139,7 +140,7 @@ public class TransactionEntity {
                 Transaction.builder()
                         .setAmount(ExactCurrencyAmount.of(BigDecimal.valueOf(amount), currency))
                         .setDate(getDate())
-                        .setDescription(title)
+                        .setDescription(getTransactionDescription())
                         .setPending(!booked)
                         // .setRawDetails(this)
                         .setPayload(TransactionPayloadTypes.EXTERNAL_ID, transactionId);
@@ -152,6 +153,11 @@ public class TransactionEntity {
         }
 
         return builder.build();
+    }
+
+    @JsonIgnore
+    private String getTransactionDescription() {
+        return description != null ? description : title;
     }
 
     private Date getDate() {
