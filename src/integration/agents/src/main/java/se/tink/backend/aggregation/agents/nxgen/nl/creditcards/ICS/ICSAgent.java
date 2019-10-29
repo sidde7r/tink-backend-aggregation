@@ -4,12 +4,10 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -39,20 +37,9 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
         redirectUri = request.getProvider().getPayload().split(" ")[1];
 
         final ICSConfiguration icsConfiguration =
-                agentsServiceConfiguration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                ICSConstants.INTEGRATION_NAME, clientName, ICSConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+                getAgentConfigurationController().getAgentConfiguration(ICSConfiguration.class);
 
-        client.setSslClientCertificate(
-                EncodingUtils.decodeBase64String(icsConfiguration.getClientSSLCertificate()), "");
-        client.trustRootCaCertificate(
-                EncodingUtils.decodeBase64String(icsConfiguration.getRootCACertificate()),
-                icsConfiguration.getRootCAPassword());
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
 
         apiClient =
                 new ICSApiClient(
