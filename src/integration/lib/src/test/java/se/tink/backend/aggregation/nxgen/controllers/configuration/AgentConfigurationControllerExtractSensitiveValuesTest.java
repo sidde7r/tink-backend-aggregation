@@ -109,35 +109,4 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
                                 "stringLevel7",
                                 "7")));
     }
-
-    @Test(expected = IllegalStateException.class)
-    public void testExtractSensitiveValuesMaximumRecursionLevelReached() {
-        NestedConfigurationLevel2 nestedConfigurationLevel2 =
-                new NestedConfigurationLevel2("stringLevel3", 3);
-        NestedConfigurationLevel2 nestedConfigurationLevel2Recursive = nestedConfigurationLevel2;
-        for (int i = 0;
-                i < AgentConfigurationController.MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES;
-                ++i) {
-            NestedConfigurationLevel2 nestedConfigurationLevel2OneMoreLevel =
-                    new NestedConfigurationLevel2("stringLevel" + (4 + i), 4 + i);
-            nestedConfigurationLevel2Recursive.setNestedConfigurationLevel2(
-                    nestedConfigurationLevel2OneMoreLevel);
-            nestedConfigurationLevel2Recursive = nestedConfigurationLevel2OneMoreLevel;
-        }
-
-        NestedConfigurationLevel1 nestedConfigurationLevel1 =
-                new NestedConfigurationLevel1("stringLevel2", 2, nestedConfigurationLevel2);
-        OuterConfiguration outerConfiguration =
-                new OuterConfiguration("stringLevel1", 1, nestedConfigurationLevel1);
-
-        try {
-            serializedConfiguration = OBJECT_MAPPER.writeValueAsString(outerConfiguration);
-            serializedConfigurationAsMap =
-                    OBJECT_MAPPER.readValue(serializedConfiguration, Map.class);
-        } catch (IOException e) {
-            Assert.fail("Error when serializing test configuration.");
-        }
-
-        agentConfigurationController.extractSensitiveValues(serializedConfigurationAsMap);
-    }
 }

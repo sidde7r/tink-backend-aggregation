@@ -13,10 +13,10 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,13 +29,9 @@ import se.tink.backend.agents.rpc.ProviderTypes;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
+import se.tink.libraries.serialization.utils.JsonFlattener;
 
 public final class AgentConfigurationController {
-    public static final String SECRET_VALUES_PROPERTY_NAME = "secret-values-property-name";
-
-    // Package private for testing purposes.
-    static final int MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES = 100;
-
     private static final Logger log = LoggerFactory.getLogger(AgentConfigurationController.class);
     private static final ObjectMapper OBJECT_MAPPER =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -298,48 +294,19 @@ public final class AgentConfigurationController {
     <T extends ClientConfiguration> Set<String> extractSensitiveValues(
             Object clientConfigurationAsObject) {
 
-        Set<String> extractedSensitiveValues = new HashSet<>();
+        final Map<String, String> sensitiveValuesMap;
+        try {
+            sensitiveValuesMap = JsonFlattener.flattenJsonToMap(clientConfigurationAsObject);
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                    "Unexpected error when extracting sensitive agent configuration values.");
+        }
 
-        extractSensitiveValuesRec(clientConfigurationAsObject, extractedSensitiveValues, 0);
-
+        ImmutableSet<String> extractedSensitiveValues =
+                ImmutableSet.copyOf(sensitiveValuesMap.values());
         notifySecretValues(extractedSensitiveValues);
 
         return extractedSensitiveValues;
-    }
-
-    // Structure of configuration object is unknown so we need to explore it recursively to get to
-    // the leaf nodes.
-    private void extractSensitiveValuesRec(
-            Object clientConfigurationAsObject,
-            Set<String> extractedSensitiveValues,
-            int recursionLevel) {
-
-        if (recursionLevel >= MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES) {
-            throw new IllegalStateException(
-                    "Reached maximum recursion depth when trying to extract sensitive configuration values.");
-        }
-
-        if (clientConfigurationAsObject instanceof Map) {
-            Map<String, Object> clientConfigurationAsMap =
-                    (Map<String, Object>) clientConfigurationAsObject;
-
-            clientConfigurationAsMap
-                    .values()
-                    .forEach(
-                            value ->
-                                    extractSensitiveValuesRec(
-                                            value, extractedSensitiveValues, recursionLevel + 1));
-        } else if (clientConfigurationAsObject instanceof List) {
-            List<Object> clientConfigurationAsList = (List<Object>) clientConfigurationAsObject;
-            clientConfigurationAsList.forEach(
-                    value ->
-                            extractSensitiveValuesRec(
-                                    value, extractedSensitiveValues, recursionLevel + 1));
-        } else {
-            Optional.ofNullable(clientConfigurationAsObject)
-                    .ifPresent(
-                            clientConfig -> extractedSensitiveValues.add(clientConfig.toString()));
-        }
     }
 
     // Used to read agent configuration from development.yml instead of Secrets Service

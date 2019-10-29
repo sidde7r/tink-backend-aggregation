@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
@@ -124,9 +123,7 @@ public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
         }
         Map<String, String> map;
         try {
-            map =
-                    JsonFlattener.flattenJsonToMap(
-                            JsonFlattener.ROOT_PATH, new ObjectMapper().readTree(s));
+            map = JsonFlattener.flattenJsonToMap(s);
         } catch (IOException e) {
             throw new IllegalStateException("Could not deserialize storage.", e);
         }

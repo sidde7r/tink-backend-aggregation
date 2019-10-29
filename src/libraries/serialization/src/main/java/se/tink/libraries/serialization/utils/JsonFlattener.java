@@ -19,18 +19,30 @@ import org.slf4j.LoggerFactory;
 public class JsonFlattener {
     private static final Logger LOG = LoggerFactory.getLogger(JsonFlattener.class);
 
+    // Package private for testing purposes.
+    static final int MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES = 200;
+
     public static final String ROOT_PATH = "";
 
     private static final ObjectMapper OBJECT_MAPPER =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public static Map<String, String> flattenJsonToMap(String jsonString) throws IOException {
-        return flattenJsonToMap(ROOT_PATH, OBJECT_MAPPER.readTree(jsonString));
+        return flattenJsonToMap(ROOT_PATH, OBJECT_MAPPER.readTree(jsonString), 0);
     }
 
-    public static Map<String, String> flattenJsonToMap(String currentPath, JsonNode jsonNode)
-            throws IOException {
+    public static Map<String, String> flattenJsonToMap(Object jsonObject) throws IOException {
+        return flattenJsonToMap(ROOT_PATH, OBJECT_MAPPER.valueToTree(jsonObject), 0);
+    }
+
+    private static Map<String, String> flattenJsonToMap(
+            String currentPath, JsonNode jsonNode, int recursionLevel) throws IOException {
         Map<String, String> map = new HashMap<>(Collections.emptyMap());
+
+        if (recursionLevel >= MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES) {
+            throw new IllegalStateException(
+                    "Reached maximum recursion depth when trying to flatten JSON object.");
+        }
 
         // Don't want to add null values.
         if (!jsonNode.isNull()) {
@@ -41,12 +53,20 @@ public class JsonFlattener {
 
                 while (iter.hasNext()) {
                     Map.Entry<String, JsonNode> entry = iter.next();
-                    map.putAll(flattenJsonToMap(pathPrefix + entry.getKey(), entry.getValue()));
+                    map.putAll(
+                            flattenJsonToMap(
+                                    pathPrefix + entry.getKey(),
+                                    entry.getValue(),
+                                    recursionLevel + 1));
                 }
             } else if (jsonNode.isArray()) {
                 ArrayNode arrayNode = (ArrayNode) jsonNode;
                 for (int i = 0; i < arrayNode.size(); i++) {
-                    map.putAll(flattenJsonToMap(currentPath + "[" + i + "]", arrayNode.get(i)));
+                    map.putAll(
+                            flattenJsonToMap(
+                                    currentPath + "[" + i + "]",
+                                    arrayNode.get(i),
+                                    recursionLevel + 1));
                 }
             } else if (jsonNode.isValueNode()) {
                 // This is empirically tested. When we have some nested json objects serialized as a
@@ -72,7 +92,11 @@ public class JsonFlattener {
                     }
                     try {
                         JsonNode tryIfJsonNodeIsJsonObject = OBJECT_MAPPER.readTree(treeString);
-                        map.putAll(flattenJsonToMap(currentPath, tryIfJsonNodeIsJsonObject));
+                        map.putAll(
+                                flattenJsonToMap(
+                                        currentPath,
+                                        tryIfJsonNodeIsJsonObject,
+                                        recursionLevel + 1));
                     } catch (JsonParseException e) {
                         LOG.debug("Tried to parse as Json what could probably be a normal String.");
                         map.put(currentPath, escaped);

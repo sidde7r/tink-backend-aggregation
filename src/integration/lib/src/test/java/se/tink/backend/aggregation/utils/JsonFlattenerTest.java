@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.HashMap;
@@ -58,7 +57,7 @@ public class JsonFlattenerTest {
     @Test
     public void testCreatingKeyValues() throws IOException {
         Map<String, String> map = new HashMap<String, String>();
-        map = JsonFlattener.flattenJsonToMap("", new ObjectMapper().readTree(JSON));
+        map = JsonFlattener.flattenJsonToMap(JSON);
         for (Entry<String, String> entry : map.entrySet()) {
             Assert.assertTrue(map.containsKey(entry.getKey()));
             Assert.assertEquals(map.get(entry.getKey()), entry.getValue());
