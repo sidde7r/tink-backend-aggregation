@@ -13,8 +13,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.SensitiveValuesCollectionStringMaskerBuilder;
 
 public class LogMaskerTest {
 
@@ -103,7 +103,7 @@ public class LogMaskerTest {
         LogMasker logMasker =
                 LogMasker.builder()
                         .addStringMaskerBuilder(
-                                new ClientConfigurationStringMaskerBuilder(
+                                new SensitiveValuesCollectionStringMaskerBuilder(
                                         Arrays.asList("true", "false", "222", "1", "5555")))
                         .build();
 

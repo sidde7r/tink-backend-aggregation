@@ -6,11 +6,11 @@ import java.util.Collection;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.log.LogMasker;
 
-public class ClientConfigurationStringMaskerBuilder implements StringMaskerBuilder {
+public class SensitiveValuesCollectionStringMaskerBuilder implements StringMaskerBuilder {
 
     private final ImmutableList<String> sensitiveValuesToMask;
 
-    public ClientConfigurationStringMaskerBuilder(Collection<String> sensitiveValuesToMask) {
+    public SensitiveValuesCollectionStringMaskerBuilder(Collection<String> sensitiveValuesToMask) {
         ImmutableSet<String> sensitiveValuesToMaskWithoutDuplicates =
                 ImmutableSet.copyOf(sensitiveValuesToMask);
         this.sensitiveValuesToMask =

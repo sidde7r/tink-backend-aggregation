@@ -6,12 +6,12 @@ import com.google.common.collect.ImmutableList;
 import java.util.regex.Pattern;
 import org.junit.Test;
 
-public class ClientConfigurationStringMaskerBuilderTest {
+public class SensitiveValuesCollectionStringMaskerBuilderTest {
 
     @Test
     public void testClientConfigurationMaskBuilder() {
-        ClientConfigurationStringMaskerBuilder masker =
-                new ClientConfigurationStringMaskerBuilder(
+        SensitiveValuesCollectionStringMaskerBuilder masker =
+                new SensitiveValuesCollectionStringMaskerBuilder(
                         ImmutableList.of("SECRET", "CLIENT ID", "SEC"));
         ImmutableList<String> valuesToMask =
                 masker.getValuesToMask().stream()
