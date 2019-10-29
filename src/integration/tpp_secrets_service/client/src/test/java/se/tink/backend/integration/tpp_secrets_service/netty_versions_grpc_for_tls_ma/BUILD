@@ -22,7 +22,6 @@ junit_test(
         "//third_party:junit_junit",
         "//third_party:org_mockito3_mockito_core",
         "//third_party/grpc",
-        "@com_salesforce_servicelibs_grpc_contrib",
         "@com_salesforce_servicelibs_grpc_testing_contrib",
     ],
 )
