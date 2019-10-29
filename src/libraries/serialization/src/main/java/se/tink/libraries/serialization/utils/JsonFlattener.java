@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,11 +29,21 @@ public class JsonFlattener {
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public static Map<String, String> flattenJsonToMap(String jsonString) throws IOException {
-        return flattenJsonToMap(ROOT_PATH, OBJECT_MAPPER.readTree(jsonString), 0);
+        try {
+            return flattenJsonToMap(ROOT_PATH, OBJECT_MAPPER.readTree(jsonString), 0);
+        } catch (JsonParseException e) {
+            LOG.debug("Tried flatten a non JSON String.");
+            return ImmutableMap.of(ROOT_PATH, jsonString);
+        }
     }
 
     public static Map<String, String> flattenJsonToMap(Object jsonObject) throws IOException {
-        return flattenJsonToMap(ROOT_PATH, OBJECT_MAPPER.valueToTree(jsonObject), 0);
+        try {
+            return flattenJsonToMap(ROOT_PATH, OBJECT_MAPPER.valueToTree(jsonObject), 0);
+        } catch (JsonParseException e) {
+            LOG.debug("Tried flatten a non JSON object.");
+            return ImmutableMap.of(ROOT_PATH, jsonObject.toString());
+        }
     }
 
     private static Map<String, String> flattenJsonToMap(
@@ -57,7 +68,7 @@ public class JsonFlattener {
                             flattenJsonToMap(
                                     pathPrefix + entry.getKey(),
                                     entry.getValue(),
-                                    recursionLevel + 1));
+                                    ++recursionLevel));
                 }
             } else if (jsonNode.isArray()) {
                 ArrayNode arrayNode = (ArrayNode) jsonNode;
@@ -66,7 +77,7 @@ public class JsonFlattener {
                             flattenJsonToMap(
                                     currentPath + "[" + i + "]",
                                     arrayNode.get(i),
-                                    recursionLevel + 1));
+                                    ++recursionLevel));
                 }
             } else if (jsonNode.isValueNode()) {
                 // This is empirically tested. When we have some nested json objects serialized as a
@@ -94,9 +105,7 @@ public class JsonFlattener {
                         JsonNode tryIfJsonNodeIsJsonObject = OBJECT_MAPPER.readTree(treeString);
                         map.putAll(
                                 flattenJsonToMap(
-                                        currentPath,
-                                        tryIfJsonNodeIsJsonObject,
-                                        recursionLevel + 1));
+                                        currentPath, tryIfJsonNodeIsJsonObject, ++recursionLevel));
                     } catch (JsonParseException e) {
                         LOG.debug("Tried to parse as Json what could probably be a normal String.");
                         map.put(currentPath, escaped);

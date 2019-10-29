@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.storage;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableSet;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
@@ -46,9 +45,6 @@ public class Storage extends HashMap<String, String> {
         try {
             newSensitiveValues = JsonFlattener.flattenJsonToMap(valueToStore);
             secretValuesSubject.onNext(ImmutableSet.copyOf(newSensitiveValues.values()));
-        } catch (JsonParseException e) {
-            LOG.debug("Tried to parse as Json what could probably be a normal String.");
-            secretValuesSubject.onNext(ImmutableSet.of(valueToStore));
         } catch (IOException e) {
             throw new IllegalStateException(
                     "Unable to extract sensitive information from new value to be stored.", e);
