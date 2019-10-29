@@ -17,8 +17,8 @@ public class ChebancaConfiguration implements ClientConfiguration {
 
     public String getApplicationId() {
         Preconditions.checkNotNull(
-            Strings.emptyToNull(applicationId),
-            String.format(ErrorMessages.INVALID_CONFIGURATION, "Application ID"));
+                Strings.emptyToNull(applicationId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Application ID"));
 
         return applicationId;
     }
