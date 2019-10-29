@@ -253,19 +253,18 @@ public final class ChebancaApiClient {
 
     public GetTransactionsResponse getTransactions(String accountId, Date fromDate, Date toDate) {
         return createRequestInSession(
-                        Urls.TRANSACTIONS
-                                .parameter(
-                                        IdTags.CUSTOMER_ID,
-                                        persistentStorage.get(StorageKeys.CUSTOMER_ID))
-                                .parameter(IdTags.PRODUCT_ID, accountId)
-                                .queryParam(
-                                        QueryKeys.DATE_FROM,
-                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                                .queryParam(
-                                        QueryKeys.DATE_TO,
-                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate)),
+                        buildTransactionRequestUrl(accountId, fromDate, toDate),
                         null,
                         HeaderKeys.GET_METHOD)
                 .get(GetTransactionsResponse.class);
+    }
+
+    private URL buildTransactionRequestUrl(String accountId, Date fromDate, Date toDate) {
+        return Urls.TRANSACTIONS
+                .parameter(IdTags.CUSTOMER_ID, persistentStorage.get(StorageKeys.CUSTOMER_ID))
+                .parameter(IdTags.PRODUCT_ID, accountId)
+                .queryParam(
+                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate));
     }
 }
