@@ -25,6 +25,7 @@ public final class HVBPasswordAuthenticator implements PasswordAuthenticator {
     }
 
     public static RSAPublicKey certificateStringToPublicKey(final String certificate) {
+        // TODO: Consider rewriting to avoid dynamic casting
         final String certificatePem =
                 "-----BEGIN CERTIFICATE-----\n" + certificate + "\n-----END CERTIFICATE-----";
         try {

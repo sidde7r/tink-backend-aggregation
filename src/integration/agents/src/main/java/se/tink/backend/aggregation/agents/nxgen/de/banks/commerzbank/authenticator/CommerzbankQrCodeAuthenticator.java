@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.security.KeyPair;
 import java.util.Map;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -16,10 +15,12 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Error;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.SupplementalFieldName;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Values;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.entities.LoginInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.entities.PrepareApprovalEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.InitScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginResponse;
@@ -67,12 +68,16 @@ public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
             handleLoginError(loginResponse.getError());
         }
 
-        if (!loginResponse.getLoginInfoEntity().isTanRequestedStatus()) {
+        LoginInfoEntity loginInfoEntity = loginResponse.getLoginInfoEntity();
+        credentials.setSensitivePayload(
+                CommerzbankConstants.LOGIN_INFO_ENTITY,
+                SerializationUtils.serializeToString(loginInfoEntity));
+
+        if (!loginInfoEntity.isTanRequestedStatus()) {
             throw new IllegalStateException(
                     String.format(
                             "Excepted login status to be %s, but it was %s.",
-                            Values.TAN_REQUESTED,
-                            loginResponse.getLoginInfoEntity().getLoginStatus()));
+                            Values.TAN_REQUESTED, loginInfoEntity.getLoginStatus()));
         }
 
         scaWithQrCode();
@@ -125,13 +130,14 @@ public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
 
     private void handleLoginError(ErrorEntity error) throws LoginException, SessionException {
 
-        Optional<ErrorMessageEntity> errorMessage = error.getErrorMessage();
+        ErrorMessageEntity errorMessage =
+                error.getErrorMessage()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Login failed without error description present."));
 
-        if (!errorMessage.isPresent()) {
-            throw new IllegalStateException("Login failed without error description present.");
-        }
-
-        switch (errorMessage.get().getMessageId()) {
+        switch (errorMessage.getMessageId()) {
             case Error.PIN_ERROR:
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             case Error.ACCOUNT_SESSION_ACTIVE_ERROR:
@@ -140,7 +146,7 @@ public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
                 throw new IllegalStateException(
                         String.format(
                                 "Login failed with unknown error message: %s",
-                                errorMessage.get().getMessageId()));
+                                errorMessage.getMessageId()));
         }
     }
 
