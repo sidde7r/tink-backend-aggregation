@@ -57,14 +57,16 @@ public abstract class SibsProgressiveBaseAgent
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final ProgressiveAuthenticator authenticator;
+    private final SibsUserState userState;
 
     public SibsProgressiveBaseAgent(
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration.getSignatureKeyPair(), true);
+        userState = new SibsUserState(persistentStorage, credentials);
         setConfiguration(configuration);
-        apiClient = new SibsBaseApiClient(client, persistentStorage, request.isManual());
+        apiClient = new SibsBaseApiClient(client, userState, request.isManual());
         clientName = request.getProvider().getPayload();
         apiClient.setConfiguration(
                 getClientConfiguration(request.getCredentials()), configuration.getEidasProxy());
@@ -98,7 +100,8 @@ public abstract class SibsProgressiveBaseAgent
 
         final SibsRedirectAuthenticationProgressiveController controller =
                 new SibsRedirectAuthenticationProgressiveController(
-                        new SibsAuthenticator(apiClient, credentials), strongAuthenticationState);
+                        new SibsAuthenticator(apiClient, userState, credentials),
+                        strongAuthenticationState);
         return new AutoAuthenticationProgressiveController(
                 request,
                 systemUpdater,
