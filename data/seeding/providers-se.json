@@ -2706,6 +2706,29 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
+            "backgroundRefreshMaxFrequency": 4,
+            "backgroundRefreshEnabled": true,
+            "className": "nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "currency": "SEK",
+            "displayName": "Nordea",
+            "fields": [],
+            "financialInstitutionId": "dde2463acf40501389de4fca5a3693a4",
+            "financialInstitutionName": "Nordea",
+            "groupDisplayName": "Nordea",
+            "market": "SE",
+            "multiFactor": false,
+            "name": "se-nordeapartner-jwt",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": null,
+            "popular": true,
+            "status": "DISABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
         }
     ]
 }
