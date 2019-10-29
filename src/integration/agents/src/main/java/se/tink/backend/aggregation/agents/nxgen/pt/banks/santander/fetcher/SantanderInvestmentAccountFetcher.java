@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.SantanderApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Assets;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Investment;
@@ -34,20 +33,25 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
     public Collection<InvestmentAccount> fetchAccounts() {
         Map<String, Object> assets =
                 (Map<String, Object>) apiClient.fetchAssets().getBusinessData().get(0);
-
         List<Map<String, String>> investmentAccounts =
                 (List<Map<String, String>>) assets.get(Assets.INVESTMENT_ACCOUNTS);
         List<Map<String, String>> retirementInvestmentAccounts =
                 (List<Map<String, String>>) assets.get(Assets.RETIREMENT_INVESTMENTS);
+        List<Map<String, String>> deposits =
+                (List<Map<String, String>>) assets.get(Assets.DEPOSITS);
 
-        return Stream.concat(
-                        investmentAccounts.stream()
-                                .map(account -> toTinkAccount(account, PortfolioType.DEPOT)),
-                        retirementInvestmentAccounts.stream()
-                                .map(account -> toTinkAccount(account, PortfolioType.PENSION)))
-                .collect(
-                        Collectors.collectingAndThen(
-                                Collectors.toList(), Collections::unmodifiableList));
+        List<InvestmentAccount> allInvestments = new ArrayList<>();
+
+        investmentAccounts.forEach(
+                account -> allInvestments.add(toTinkAccount(account, PortfolioType.DEPOT)));
+
+        retirementInvestmentAccounts.forEach(
+                account -> allInvestments.add(toTinkAccount(account, PortfolioType.PENSION)));
+
+        deposits.forEach(
+                account -> allInvestments.add(toTinkAccount(account, PortfolioType.DEPOT)));
+
+        return Collections.unmodifiableCollection(allInvestments);
     }
 
     private InvestmentAccount toTinkAccount(

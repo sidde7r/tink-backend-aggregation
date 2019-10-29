@@ -5,14 +5,14 @@ import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.BUSINESS_DATA_REQUEST_HEADER;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.CARDS_BODY;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.CONTROL_HEADER;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.CREDIT_CARD_TRANSACTIONS_BODY;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.INVESTMENT_TRANSACTIONS_BODY;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.SESSION_TOKEN_BODY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.LOANS_BODY;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.SESSION_TOKKEN_REQUEST_HEADER;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.TRANSACTIONS_BODY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.constructCreditCardTransactionsRequestBody;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.constructTokenRequestBody;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.constructTransactionsRequestBody;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.contructInvestmentTransactionsRequestBody;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.RESPONSE_CODES;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.STORAGE;
@@ -53,6 +53,10 @@ public class SantanderApiClient {
 
     public ApiResponse fetchAccounts() {
         return executeRequest(ACCOUNTS_BODY);
+    }
+
+    public ApiResponse fetchLoans(){
+        return executeRequest(LOANS_BODY);
     }
 
     public ApiResponse fetchTransactions(
@@ -105,43 +109,8 @@ public class SantanderApiClient {
         return parser.parseResponse(rawResponse);
     }
 
-    private String constructTokenRequestBody(String login, String password) {
-        return String.format(SESSION_TOKEN_BODY, escapeString(login), escapeString(password));
-    }
 
-    private String constructTransactionsRequestBody(
-            String accountNumber,
-            String branchCode,
-            LocalDate dateFrom,
-            LocalDate dateTo,
-            int pageNumber,
-            int pageSize) {
-
-        DateTimeFormatter requestDateFormat =
-                DateTimeFormatter.ofPattern(SantanderConstants.DATE_FORMAT);
-
-        return String.format(
-                TRANSACTIONS_BODY,
-                pageSize,
-                accountNumber,
-                branchCode,
-                accountNumber,
-                pageNumber,
-                requestDateFormat.format(dateTo),
-                requestDateFormat.format(dateFrom));
-    }
-
-    private String constructCreditCardTransactionsRequestBody(
-            String fullCardNumber, int pageNumber, int pageSize) {
-        return String.format(CREDIT_CARD_TRANSACTIONS_BODY, pageNumber, fullCardNumber, pageSize);
-    }
-
-    private String contructInvestmentTransactionsRequestBody(
-            String accountNumber, int page, int pageSize) {
-        return String.format(INVESTMENT_TRANSACTIONS_BODY, page, accountNumber, pageSize);
-    }
-
-    private String escapeString(String argValue) {
+    static String escapeString(String argValue) {
         return argValue.replace("|", "||");
     }
 }

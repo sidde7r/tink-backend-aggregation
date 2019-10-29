@@ -6,11 +6,13 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderSessionHandler;
@@ -20,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Santa
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderInvestmentTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderLoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -28,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
@@ -41,11 +45,13 @@ public class SantanderAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshLoanAccountsExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final LoanRefreshController loanRefreshController;
     private final SantanderApiClient apiClient;
     private final SantanderPasswordAuthenticator authenticator;
 
@@ -78,6 +84,12 @@ public class SantanderAgent extends NextGenerationAgent
                                 transactionPaginationHelper,
                                 new TransactionPagePaginationController<>(
                                         new SantanderInvestmentTransactionFetcher(apiClient), 1)));
+
+        this.loanRefreshController =
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new SantanderLoanAccountFetcher(apiClient));
     }
 
     @Override
@@ -150,5 +162,15 @@ public class SantanderAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 }
