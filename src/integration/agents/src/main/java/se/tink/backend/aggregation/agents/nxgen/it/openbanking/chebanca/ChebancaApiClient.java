@@ -182,7 +182,11 @@ public final class ChebancaApiClient {
 
         String signature = signer.getSignatureBase64(signedHeadersWithValues.getBytes());
 
-        return String.format(HeaderValues.SIGNATURE_HEADER, signedHeaders, signature);
+        return String.format(
+                HeaderValues.SIGNATURE_HEADER,
+                chebancaConfiguration.getApplicationId(),
+                signedHeaders,
+                signature);
     }
 
     private String createDigest(String body) {

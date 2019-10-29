@@ -110,7 +110,7 @@ public final class ChebancaConstants {
     public static class HeaderValues {
         public static final String SHA_256 = "SHA-256=";
         public static final String SIGNATURE_HEADER =
-                "keyId=\"TINK\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
+                "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
     }
 
     public static class IdTags {

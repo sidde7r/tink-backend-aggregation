@@ -13,6 +13,15 @@ public class ChebancaConfiguration implements ClientConfiguration {
     private String clientSecret;
     private String redirectUrl;
     private String certificateId;
+    private String applicationId;
+
+    public String getApplicationId() {
+        Preconditions.checkNotNull(
+            Strings.emptyToNull(applicationId),
+            String.format(ErrorMessages.INVALID_CONFIGURATION, "Application ID"));
+
+        return applicationId;
+    }
 
     public String getCertificateId() {
         Preconditions.checkNotNull(
