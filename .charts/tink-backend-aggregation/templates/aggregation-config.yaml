@@ -1,4 +1,5 @@
 {{- $aggregationdb := .Values.aggregationdb | default dict }}
+{{ $eventProducerServiceConfiguration := .Values.eventProducerServiceConfiguration | default dict }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -70,11 +71,13 @@ data:
     coordination:
       hosts: {{ default "coordination:2181" .Values.coordinationHosts }}
 
-    {{- if not (eq "local" .Values.Cluster) }}
+    {{ if $eventProducerServiceConfiguration }}
     endpoints:
       eventProducerServiceConfiguration:
-        url: event-producer-service.internal.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.network:443/
-    {{- end }}
+        url: {{ $eventProducerServiceConfiguration.url | default "event-producer-service.event-producer-service:443" }}
+        pinnedCertificates:
+          - /etc/tls-ca/ca.crt
+    {{ end }}
 
     sqsQueueConfiguration:
       {{ .Values.sqsQueueConfiguration | default dict | toYaml | indent 6 | trim }}
