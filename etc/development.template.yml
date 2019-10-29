@@ -106,9 +106,6 @@ agentsServiceConfiguration:
       abn:
         clientId: "dummyId"
         clientSecret: "dummySecret"
-        clientSSLCertificate: "dummyClientCert"
-        rootCACertificate: "dummyCACert"
-        rootCAPassword: "dummyCAPassword"
     fints:
       regNumber: "dummyId"
     sbab:
