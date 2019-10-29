@@ -8,8 +8,6 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/uuid",
-        "//third_party:com_google_protobuf_protobuf_java",
-        "//third_party:com_salesforce_servicelibs_grpc_testing_contrib",
         "//third_party:io_grpc_grpc_context",
         "//third_party:io_grpc_grpc_netty",
         "//third_party:io_grpc_grpc_protobuf_lite",
@@ -24,5 +22,7 @@ junit_test(
         "//third_party:junit_junit",
         "//third_party:org_mockito3_mockito_core",
         "//third_party/grpc",
+        "@com_salesforce_servicelibs_grpc_contrib",
+        "@com_salesforce_servicelibs_grpc_testing_contrib",
     ],
 )

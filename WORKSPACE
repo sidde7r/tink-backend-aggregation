@@ -2200,18 +2200,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_salesforce_servicelibs_grpc_contrib",
-    artifact = "com.salesforce.servicelibs:grpc-contrib:0.8.1",
-    sha1 = "15f172548a208c43997cb76c3bfea1b26b38e72e",
-)
-
-maven_jar(
-    name = "com_salesforce_servicelibs_grpc_testing_contrib",
-    artifact = "com.salesforce.servicelibs:grpc-testing-contrib:0.8.1",
-    sha1 = "fe552fb9914b8fea9df9d5cec89469d8bdb02069",
-)
-
-maven_jar(
     name = "org_awaitility_awaitility",
     artifact = "org.awaitility:awaitility:4.0.1",
     sha1 = "b1b83c03c9d58c8b1aaf116b1e5365fa2ed2b572",
@@ -2445,7 +2433,6 @@ maven_install(
         "https://repo.maven.apache.org/maven2/",
     ],
 )
-
 load("@java_uuid_generator//:defs.bzl", java_uuid_generator_pin = "pinned_maven_install")
 
 java_uuid_generator_pin()
@@ -2484,7 +2471,6 @@ maven_install(
 )
 
 load("@io_token//:defs.bzl", io_token_pin = "pinned_maven_install")
-
 io_token_pin()
 
 # Use via //third_party/jetty_server9
@@ -2581,3 +2567,31 @@ maven_install(
 load("@selenium//:defs.bzl", pin_selenium = "pinned_maven_install")
 
 pin_selenium()
+
+maven_install(
+    name = "com_salesforce_servicelibs_grpc_contrib",
+    artifacts = [
+        "com.salesforce.servicelibs:grpc-contrib:0.8.1",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:com_salesforce_servicelibs_grpc_contrib_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+)
+load("@com_salesforce_servicelibs_grpc_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_contrib_pin = "pinned_maven_install")
+com_salesforce_servicelibs_grpc_contrib_pin()
+
+maven_install(
+    name = "com_salesforce_servicelibs_grpc_testing_contrib",
+    artifacts = [
+        "com.salesforce.servicelibs:grpc-testing-contrib:0.8.1",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:com_salesforce_servicelibs_grpc_testing_contrib_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+)
+load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
+com_salesforce_servicelibs_grpc_testing_contrib_pin()

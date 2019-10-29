@@ -1670,44 +1670,6 @@ java_library(
 )
 
 java_library(
-    name = "com_salesforce_servicelibs_grpc_contrib",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_salesforce_servicelibs_grpc_contrib//jar",
-    ],
-    runtime_deps = [
-        "@com_google_code_gson_gson//jar",
-        "@io_grpc_grpc_context//jar",
-        "@io_grpc_grpc_core//jar",
-        "@io_grpc_grpc_protobuf//jar",
-        "@io_grpc_grpc_stub//jar",
-        "@io_grpc_grpc_testing//jar",
-        "@junit_junit//jar",
-        "@org_assertj_assertj_core//jar",
-        "@org_awaitility_awaitility//jar",
-        "@org_mockito3_mockito_core//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
-    name = "com_salesforce_servicelibs_grpc_testing_contrib",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_salesforce_servicelibs_grpc_testing_contrib//jar",
-    ],
-    runtime_deps = [
-        "@com_salesforce_servicelibs_grpc_contrib//jar",
-        "@io_grpc_grpc_core//jar",
-        "@io_grpc_grpc_netty//jar",
-        "@io_grpc_grpc_stub//jar",
-        "@io_grpc_grpc_testing_proto//jar",
-        "@junit_junit//jar",
-        "@org_assertj_assertj_core//jar",
-    ],
-)
-
-java_library(
     name = "io_grpc_grpc_testing_proto",
     visibility = ["//visibility:public"],
     exports = [
