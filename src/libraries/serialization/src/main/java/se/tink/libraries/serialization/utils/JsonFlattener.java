@@ -24,50 +24,59 @@ public class JsonFlattener {
     private static final ObjectMapper OBJECT_MAPPER =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+    public static Map<String, String> flattenJsonToMap(String jsonString) throws IOException {
+        return flattenJsonToMap(ROOT_PATH, OBJECT_MAPPER.readTree(jsonString));
+    }
+
     public static Map<String, String> flattenJsonToMap(String currentPath, JsonNode jsonNode)
             throws IOException {
         Map<String, String> map = new HashMap<>(Collections.emptyMap());
-        if (jsonNode.isObject()) {
-            ObjectNode objectNode = (ObjectNode) jsonNode;
-            Iterator<Map.Entry<String, JsonNode>> iter = objectNode.fields();
-            String pathPrefix = currentPath.isEmpty() ? "" : currentPath + ".";
 
-            while (iter.hasNext()) {
-                Map.Entry<String, JsonNode> entry = iter.next();
-                map.putAll(flattenJsonToMap(pathPrefix + entry.getKey(), entry.getValue()));
-            }
-        } else if (jsonNode.isArray()) {
-            ArrayNode arrayNode = (ArrayNode) jsonNode;
-            for (int i = 0; i < arrayNode.size(); i++) {
-                map.putAll(flattenJsonToMap(currentPath + "[" + i + "]", arrayNode.get(i)));
-            }
-        } else if (jsonNode.isValueNode()) {
-            // This is empirically tested. When we have some nested json objects serialized as a
-            // String, depending on how many levels the object has the unescaping of characters
-            // might make it not work. These conditions checking the lenght of the escaped/unescaped
-            // again serialized String make it work.
-            ValueNode valueNode = (ValueNode) jsonNode;
-            String escaped = valueNode.asText();
-            String unescaped = StringEscapeUtils.unescapeJava(valueNode.asText());
-            String escapedAgain = StringEscapeUtils.escapeJava(unescaped);
-            int lengthUnescaped = unescaped.length();
-            int lengthEscaped = valueNode.asText().length();
-            int lengthEscapedAgain = escapedAgain.length();
-            if (lengthEscaped == lengthUnescaped && lengthEscaped == lengthEscapedAgain) {
-                map.put(currentPath, escaped);
-            } else {
-                final String treeString;
-                if (lengthUnescaped < lengthEscaped && lengthEscaped < lengthEscapedAgain) {
-                    treeString = escaped;
-                } else {
-                    treeString = unescaped;
+        // Don't want to add null values.
+        if (!jsonNode.isNull()) {
+            if (jsonNode.isObject()) {
+                ObjectNode objectNode = (ObjectNode) jsonNode;
+                Iterator<Map.Entry<String, JsonNode>> iter = objectNode.fields();
+                String pathPrefix = currentPath.isEmpty() ? "" : currentPath + ".";
+
+                while (iter.hasNext()) {
+                    Map.Entry<String, JsonNode> entry = iter.next();
+                    map.putAll(flattenJsonToMap(pathPrefix + entry.getKey(), entry.getValue()));
                 }
-                try {
-                    JsonNode tryIfJsonNodeIsJsonObject = OBJECT_MAPPER.readTree(treeString);
-                    map.putAll(flattenJsonToMap(currentPath, tryIfJsonNodeIsJsonObject));
-                } catch (JsonParseException e) {
-                    LOG.warn("Tried to parse as Json what could probably be a normal String.");
+            } else if (jsonNode.isArray()) {
+                ArrayNode arrayNode = (ArrayNode) jsonNode;
+                for (int i = 0; i < arrayNode.size(); i++) {
+                    map.putAll(flattenJsonToMap(currentPath + "[" + i + "]", arrayNode.get(i)));
+                }
+            } else if (jsonNode.isValueNode()) {
+                // This is empirically tested. When we have some nested json objects serialized as a
+                // String, depending on how many levels the object has the unescaping of characters
+                // might make it not work. These conditions checking the length of the
+                // escaped/unescaped
+                // again serialized String make it work.
+                ValueNode valueNode = (ValueNode) jsonNode;
+                String escaped = valueNode.asText();
+                String unescaped = StringEscapeUtils.unescapeJava(valueNode.asText());
+                String escapedAgain = StringEscapeUtils.escapeJava(unescaped);
+                int lengthUnescaped = unescaped.length();
+                int lengthEscaped = valueNode.asText().length();
+                int lengthEscapedAgain = escapedAgain.length();
+                if (lengthEscaped == lengthUnescaped && lengthEscaped == lengthEscapedAgain) {
                     map.put(currentPath, escaped);
+                } else {
+                    final String treeString;
+                    if (lengthUnescaped < lengthEscaped && lengthEscaped < lengthEscapedAgain) {
+                        treeString = escaped;
+                    } else {
+                        treeString = unescaped;
+                    }
+                    try {
+                        JsonNode tryIfJsonNodeIsJsonObject = OBJECT_MAPPER.readTree(treeString);
+                        map.putAll(flattenJsonToMap(currentPath, tryIfJsonNodeIsJsonObject));
+                    } catch (JsonParseException e) {
+                        LOG.debug("Tried to parse as Json what could probably be a normal String.");
+                        map.put(currentPath, escaped);
+                    }
                 }
             }
         }

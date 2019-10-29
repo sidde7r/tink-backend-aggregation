@@ -1,12 +1,25 @@
 package se.tink.backend.aggregation.nxgen.storage;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.collect.ImmutableSet;
+import io.reactivex.rxjava3.subjects.ReplaySubject;
+import io.reactivex.rxjava3.subjects.Subject;
+import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.libraries.serialization.utils.JsonFlattener;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class Storage extends HashMap<String, String> {
+    private static Logger LOG = LoggerFactory.getLogger(Storage.class);
+
+    private Subject<Collection<String>> secretValuesSubject = ReplaySubject.create();
+
     private Storage(Map<String, String> map) {
         super(map);
     }
@@ -17,12 +30,29 @@ public class Storage extends HashMap<String, String> {
         return new Storage(map);
     }
 
+    @Override
+    public String put(String key, String value) {
+        secretValuesSubject.onNext(ImmutableSet.of(value));
+        return super.put(key, value);
+    }
+
     public void put(String key, Object value) {
-        super.put(
-                key,
+        final String valueToStore =
                 value instanceof String
                         ? (String) value
-                        : SerializationUtils.serializeToString(value));
+                        : SerializationUtils.serializeToString(value);
+        super.put(key, valueToStore);
+        final Map<String, String> newSensitiveValues;
+        try {
+            newSensitiveValues = JsonFlattener.flattenJsonToMap(valueToStore);
+            secretValuesSubject.onNext(ImmutableSet.copyOf(newSensitiveValues.values()));
+        } catch (JsonParseException e) {
+            LOG.debug("Tried to parse as Json what could probably be a normal String.");
+            secretValuesSubject.onNext(ImmutableSet.of(valueToStore));
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                    "Unable to extract sensitive information from new value to be stored.", e);
+        }
     }
 
     public <T> Optional<T> get(String key, TypeReference<T> valueType) {
@@ -44,5 +74,9 @@ public class Storage extends HashMap<String, String> {
                         : SerializationUtils.deserializeFromString(get(key), valueType);
 
         return Optional.ofNullable(data);
+    }
+
+    public Subject<Collection<String>> getSecretValuesSubject() {
+        return secretValuesSubject;
     }
 }

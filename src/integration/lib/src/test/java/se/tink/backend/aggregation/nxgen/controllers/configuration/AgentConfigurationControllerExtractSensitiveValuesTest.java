@@ -3,9 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.configuration;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
-import io.reactivex.rxjava3.disposables.Disposable;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -141,55 +139,5 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
         }
 
         agentConfigurationController.extractSensitiveValues(serializedConfigurationAsMap);
-    }
-
-    @Test
-    public void testNotifySecretValues() {
-        Set<String> sensitiveValuesTestSet = new HashSet<>();
-        Disposable disposable =
-                agentConfigurationController
-                        .getSecretValuesSubject()
-                        .subscribe(
-                                newSecretValues -> sensitiveValuesTestSet.addAll(newSecretValues));
-
-        NestedConfigurationLevel1 nestedConfigurationLevel1 =
-                new NestedConfigurationLevel1("stringLevel2", 2, null);
-        OuterConfiguration outerConfiguration =
-                new OuterConfiguration("stringLevel1", 1, nestedConfigurationLevel1);
-
-        try {
-            serializedConfiguration = OBJECT_MAPPER.writeValueAsString(outerConfiguration);
-            serializedConfigurationAsMap =
-                    OBJECT_MAPPER.readValue(serializedConfiguration, Map.class);
-        } catch (IOException e) {
-            Assert.fail("Error when serializing test configuration.");
-        }
-
-        agentConfigurationController.extractSensitiveValues(serializedConfigurationAsMap);
-
-        Assert.assertTrue(
-                "Extracted values are not what was expected.",
-                sensitiveValuesTestSet.containsAll(
-                        Sets.newHashSet("stringLevel1", "1", "stringLevel2", "2")));
-
-        NestedConfigurationLevel2 nestedConfigurationLevel2 =
-                new NestedConfigurationLevel2("stringLevel3", 3);
-        nestedConfigurationLevel1.setNestedConfigurationLevel2(nestedConfigurationLevel2);
-
-        try {
-            serializedConfiguration = OBJECT_MAPPER.writeValueAsString(outerConfiguration);
-            serializedConfigurationAsMap =
-                    OBJECT_MAPPER.readValue(serializedConfiguration, Map.class);
-        } catch (IOException e) {
-            Assert.fail("Error when serializing test configuration.");
-        }
-
-        agentConfigurationController.extractSensitiveValues(serializedConfigurationAsMap);
-
-        Assert.assertTrue(
-                "Extracted values are not what was expected.",
-                sensitiveValuesTestSet.containsAll(
-                        Sets.newHashSet(
-                                "stringLevel1", "1", "stringLevel2", "2", "stringLevel3", "3")));
     }
 }

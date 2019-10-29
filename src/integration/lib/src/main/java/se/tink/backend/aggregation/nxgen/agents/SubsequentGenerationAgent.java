@@ -76,6 +76,10 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         this.catalog = context.getCatalog();
         this.persistentStorage = new PersistentStorage();
         this.sessionStorage = new SessionStorage();
+        context.getLogMasker()
+                .addSensitiveValuesSetSubject(persistentStorage.getSecretValuesSubject());
+        context.getLogMasker()
+                .addSensitiveValuesSetSubject(sessionStorage.getSecretValuesSubject());
         this.credentials = request.getCredentials();
         this.updateController =
                 new UpdateController(
