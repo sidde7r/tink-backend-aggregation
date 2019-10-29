@@ -28,6 +28,6 @@ public class GetTransactionsResponse implements PaginatorResponse {
     @JsonIgnore
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(false);
+        return Optional.empty();
     }
 }
