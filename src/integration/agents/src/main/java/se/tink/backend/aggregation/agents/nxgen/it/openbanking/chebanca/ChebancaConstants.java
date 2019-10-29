@@ -39,6 +39,7 @@ public final class ChebancaConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final String AUTHENTICATION_ERROR = "Authentication error.";
     }
 
     public static class Urls {

@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AccountEntity;
@@ -74,7 +75,7 @@ public class ChebancaTransactionalAccountFetcher
         try {
             thirdPartyAppAuthenticationController.authenticate(credentials);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IllegalStateException(ErrorMessages.AUTHENTICATION_ERROR);
         }
 
         apiClient.confirmConsent(consentResponse.getResources().getResourceId());
