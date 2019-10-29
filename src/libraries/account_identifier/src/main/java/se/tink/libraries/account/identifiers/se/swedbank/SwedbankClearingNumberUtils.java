@@ -5,6 +5,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -12,6 +14,8 @@ import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.giro.validation.LuhnCheck;
 
 public class SwedbankClearingNumberUtils {
+    private static final Logger log = LoggerFactory.getLogger(SwedbankClearingNumberUtils.class);
+
     private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
             new DefaultAccountIdentifierFormatter();
 
@@ -88,11 +92,19 @@ public class SwedbankClearingNumberUtils {
      *     <p>Example: 8422831270465 -> 842280031270465
      */
     public static String padWithZerosBetweenClearingAndAccountNumber(String identifier) {
-        Preconditions.checkArgument(StringUtils.isNumeric(identifier), "Not a number string");
-        Preconditions.checkArgument(
-                identifier.startsWith("8"), "Not a Swedbank 8xxx account identifier");
-        Preconditions.checkArgument(
-                isFifthDigitValidCheck(identifier), "Not a valid 5 digit clearing number");
+        try {
+            Preconditions.checkArgument(StringUtils.isNumeric(identifier), "Not a number string");
+            Preconditions.checkArgument(
+                    identifier.startsWith("8"), "Not a Swedbank 8xxx account identifier");
+            Preconditions.checkArgument(
+                    isFifthDigitValidCheck(identifier), "Not a valid 5 digit clearing number");
+        } catch (IllegalArgumentException e) {
+            log.error(
+                    "Swedbank account number padding failed with message: {}, for account identifier {}",
+                    e.getMessage(),
+                    identifier);
+            throw e;
+        }
 
         String clearing = identifier.substring(0, 5);
         String accountNumber = identifier.substring(5, identifier.length());
