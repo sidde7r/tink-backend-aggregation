@@ -114,24 +114,20 @@ public final class ChebancaApiClient {
     }
 
     public URL getAuthorisation() {
+        final URL authorizationUrl = buildAuthorizationUrl();
         HttpResponse res =
-                createRequest(
-                                Urls.AUTHORIZE
-                                        .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
-                                        .queryParam(
-                                                QueryKeys.CLIENT_ID,
-                                                chebancaConfiguration.getClientId())
-                                        .queryParam(
-                                                QueryKeys.REDIRECT_URI,
-                                                chebancaConfiguration.getRedirectUrl())
-                                        .queryParam(
-                                                QueryKeys.STATE,
-                                                strongAuthenticationState.getState()),
-                                null,
-                                HeaderKeys.GET_METHOD)
+                createRequest(authorizationUrl, null, HeaderKeys.GET_METHOD)
                         .get(HttpResponse.class);
 
         return new URL(res.getHeaders().get(HeaderKeys.LOCATION).get(0));
+    }
+
+    private URL buildAuthorizationUrl() {
+        return Urls.AUTHORIZE
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
+                .queryParam(QueryKeys.CLIENT_ID, chebancaConfiguration.getClientId())
+                .queryParam(QueryKeys.REDIRECT_URI, chebancaConfiguration.getRedirectUrl())
+                .queryParam(QueryKeys.STATE, strongAuthenticationState.getState());
     }
 
     public OAuth2Token createToken(TokenRequest tokenRequest) {
