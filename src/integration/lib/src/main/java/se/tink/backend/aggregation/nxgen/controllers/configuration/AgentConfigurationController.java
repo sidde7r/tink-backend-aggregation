@@ -188,14 +188,14 @@ public final class AgentConfigurationController {
 
     private void notifySecretValues(Set<String> newSecretValues) {
         if (!secretValues.containsAll(newSecretValues)) {
-            secretValuesSubject.onNext(newSecretValues);
-
             Set<String> oldSecretValues = ImmutableSet.copyOf(secretValues);
             this.secretValues =
                     ImmutableSet.<String>builder()
                             .addAll(oldSecretValues)
                             .addAll(newSecretValues)
                             .build();
+
+            secretValuesSubject.onNext(newSecretValues);
         }
     }
 
