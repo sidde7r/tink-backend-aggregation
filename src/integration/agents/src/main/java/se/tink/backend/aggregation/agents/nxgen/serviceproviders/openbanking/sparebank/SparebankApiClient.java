@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class SparebankApiClient {
 
@@ -107,33 +108,22 @@ public class SparebankApiClient {
     }
 
     public TransactionResponse fetchTransactions(String resourceId, Date fromDate, Date toDate) {
-
-        /*
-           Since we have bank-side errors that prevent us from being able to fetch transactions
-           properly and customers that will be using this agent do not care about fetching
-           transactions, we temporarily disabled API call to fetch transactions and return
-           empty response instead. We are contacting with the bank to fix the issue and test
-           it locally. After it works locally, we will enable the API call again.
-        */
-
-        return new TransactionResponse();
-
-        /*return createRequest(
-                new URL(getBaseUrl() + Urls.FETCH_TRANSACTIONS)
-                        .parameter(IdTags.RESOURCE_ID, resourceId))
-        .queryParam(
-                SparebankConstants.QueryKeys.DATE_FROM,
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-        .queryParam(
-                SparebankConstants.QueryKeys.DATE_TO,
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-        .queryParam(
-                SparebankConstants.QueryKeys.LIMIT,
-                SparebankConstants.QueryValues.TRANSACTION_LIMIT)
-        .queryParam(
-                SparebankConstants.QueryKeys.BOOKING_STATUS,
-                SparebankConstants.QueryValues.BOOKING_STATUS)
-        .get(TransactionResponse.class);*/
+        return createRequest(
+                        new URL(getBaseUrl() + Urls.FETCH_TRANSACTIONS)
+                                .parameter(IdTags.RESOURCE_ID, resourceId))
+                .queryParam(
+                        SparebankConstants.QueryKeys.DATE_FROM,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(
+                        SparebankConstants.QueryKeys.DATE_TO,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                .queryParam(
+                        SparebankConstants.QueryKeys.LIMIT,
+                        SparebankConstants.QueryValues.TRANSACTION_LIMIT)
+                .queryParam(
+                        SparebankConstants.QueryKeys.BOOKING_STATUS,
+                        SparebankConstants.QueryValues.BOOKING_STATUS)
+                .get(TransactionResponse.class);
     }
 
     public CreatePaymentResponse createPayment(

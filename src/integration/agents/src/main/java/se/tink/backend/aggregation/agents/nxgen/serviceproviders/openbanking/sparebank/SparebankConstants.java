@@ -33,6 +33,10 @@ public final class SparebankConstants {
         public static final String INTEGRATION_NAME = "sparebank";
     }
 
+    public static class TransactionsResponse {
+        public static final int CONSECUTIVE_EMPTY_PAGES = 10;
+    }
+
     public static class Urls {
         public static final String FETCH_TRANSACTIONS = "/v1/accounts/{resourceId}/transactions";
         public static final String GET_ACCOUNTS = "/v1/accounts";
