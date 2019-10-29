@@ -141,22 +141,17 @@ public final class ChebancaApiClient {
 
     private Map<String, Object> getSigningHeaders(
             String requestId, String digest, String date, String httpMethod, URL url) {
-        Map<String, Object> headers =
-                new HashMap<String, Object>() {
-                    {
-                        put(
-                                QueryKeys.REQUEST_TARGET,
-                                String.format(
-                                        "%s %s", httpMethod, url.get().replace(Urls.BASE_URL, "")));
-                        if (digest != null) {
-                            put(HeaderKeys.DIGEST, digest);
-                        }
-                        put(HeaderKeys.DATE, date);
-                        put(HeaderKeys.TPP_REQUEST_ID, requestId);
-                    }
-                };
+        Map<String, Object> headers = new HashMap<>();
+        headers.put(QueryKeys.REQUEST_TARGET, formatMethodAndUrl(httpMethod, url));
+        Optional.ofNullable(digest).ifPresent(d -> headers.put(HeaderKeys.DIGEST, d));
+        headers.put(HeaderKeys.DATE, date);
+        headers.put(HeaderKeys.TPP_REQUEST_ID, requestId);
 
         return headers;
+    }
+
+    private String formatMethodAndUrl(String httpMethod, URL url) {
+        return String.format("%s %s", httpMethod, url.get().replace(Urls.BASE_URL, ""));
     }
 
     private String generateSignatureHeader(Map<String, Object> headers) {
