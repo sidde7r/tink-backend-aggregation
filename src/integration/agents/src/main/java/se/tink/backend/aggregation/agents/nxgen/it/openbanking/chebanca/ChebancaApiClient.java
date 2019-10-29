@@ -160,7 +160,7 @@ public final class ChebancaApiClient {
                         config.getEidasProxy().toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
                         eidasIdentity,
-                        "Tink");
+                        chebancaConfiguration.getCertificateId());
 
         String signedHeaders =
                 Arrays.stream(HeadersToSign.values())

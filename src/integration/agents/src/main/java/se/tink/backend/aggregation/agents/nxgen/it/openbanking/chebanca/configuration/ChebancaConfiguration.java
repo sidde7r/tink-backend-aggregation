@@ -12,6 +12,15 @@ public class ChebancaConfiguration implements ClientConfiguration {
     private String clientId;
     private String clientSecret;
     private String redirectUrl;
+    private String certificateId;
+
+    public String getCertificateId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(certificateId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
+
+        return certificateId;
+    }
 
     public String getClientId() {
         Preconditions.checkNotNull(
