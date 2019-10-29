@@ -6,9 +6,7 @@ import java.io.PrintWriter;
 import java.security.Security;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -34,25 +32,16 @@ public class UkobRegisterCommand {
             return;
         }
 
-        final UkOpenBankingConfiguration config =
+        final UkobRegisterConfiguration config =
                 SerializationUtils.deserializeFromString(
-                        readCredentialFile(args[0]), UkOpenBankingConfiguration.class);
-        config.validate();
+                        readCredentialFile(args[0]), UkobRegisterConfiguration.class);
+
         final String wellKnown = args[1];
 
-        final String ssName = args.length == 3 ? args[2] : DEFAULT_SS;
-        final SoftwareStatement softwareStatement =
-                config.getSoftwareStatement(ssName)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                String.format(
-                                                        "Software Statement \"%s\" was not found in config.",
-                                                        ssName)));
-
-        TinkHttpClient httpClient = createHttpClient(config, softwareStatement);
+        TinkHttpClient httpClient = createHttpClient(config);
         String res =
-                OpenIdApiClient.registerClient(softwareStatement, new URL(wellKnown), httpClient);
+                OpenIdApiClient.registerClient(
+                        config.getSoftwareStatement(), new URL(wellKnown), httpClient);
 
         System.out.println("\n### RESPONSE ###\n\n" + res + "\n\n################\n");
         String outFile = saveResponse(res);
@@ -78,13 +67,11 @@ public class UkobRegisterCommand {
     private static void printUsageInstructions() {
         System.out.println(
                 "usage: bazel run :ukob-register [config] [well-known] [ss (optional)]\n");
-        System.out.println("config      - Path to UkOpenBankingConfiguration in json format.");
+        System.out.println("config      - Path to configuration in JSON format.");
         System.out.println("well-known  - URL to banks well-known configuration.");
-        System.out.println("ss          - Name of software statement. Default = tink.\n");
     }
 
-    private static TinkHttpClient createHttpClient(
-            UkOpenBankingConfiguration config, SoftwareStatement softwareStatement) {
+    private static TinkHttpClient createHttpClient(UkobRegisterConfiguration configuration) {
 
         TinkHttpClient httpClient = new LegacyTinkHttpClient();
         httpClient.disableSignatureRequestHeader();
@@ -92,13 +79,14 @@ public class UkobRegisterCommand {
         if (DISABLE_SSL_VERIFICATION) {
             httpClient.disableSslVerification();
         } else {
-            httpClient.trustRootCaCertificate(config.getRootCAData(), config.getRootCAPassword());
+            httpClient.trustRootCaCertificate(
+                    configuration.getRootCAData(), configuration.getRootCAPassword());
         }
 
         // Softw. Transp. key
         httpClient.setSslClientCertificate(
-                softwareStatement.getTransportKeyP12(),
-                softwareStatement.getTransportKeyPassword());
+                configuration.getSoftwareStatement().getTransportKeyP12(),
+                configuration.getSoftwareStatement().getTransportKeyPassword());
 
         return httpClient;
     }

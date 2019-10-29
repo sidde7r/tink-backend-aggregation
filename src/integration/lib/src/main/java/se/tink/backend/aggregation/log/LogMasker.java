@@ -30,6 +30,8 @@ public class LogMasker {
                     .add("it")
                     .add("nl")
                     .add("be")
+                    .add("gb")
+                    .add("dk")
                     .build();
 
     /**
