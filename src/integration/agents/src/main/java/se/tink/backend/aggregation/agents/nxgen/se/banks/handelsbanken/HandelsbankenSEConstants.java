@@ -85,6 +85,7 @@ public class HandelsbankenSEConstants {
                                 "allkonto ung",
                                 "privatkonto",
                                 "checkkonto")
+                        .ignoreKeys("affärskonto", "skogskonto", "skogslikv kto", "shb-anst kto")
                         .build();
     }
 
