@@ -15,8 +15,8 @@ STATUSPAGE_API_BASE = "https://api.statuspage.io/v1/pages/"
 PAGE_ID = "x1lbt12g0ryw"  # https://tink-enterprise.statuspage.io/
 COMPONENTS_PATH = "/components/"
 BANK_UNAVAILABLE_IDENTIFIER = "(bank status)"
-BANK_UNAVAILABLE_REGEX = r"\(bank status\)$"
-
+# Keep first space - it's not in Prometheus provider name so must be replaced
+BANK_UNAVAILABLE_REGEX = r"\ \(bank status\)$"
 STATUS_ENUMS = {
     0.50: "degraded_performance",
     0.75: "partial_outage",
@@ -150,7 +150,8 @@ def create_missing_components(names_of_missing_components, group_id):
             if failures > 5:
                 logger.warning("Rate limited by Statuspage, will continue creating components on next run.")
                 return False
-        request_body = build_missing_components_request(component_name + " " + BANK_UNAVAILABLE_IDENTIFIER, status, group_id, True)
+        request_body = build_missing_components_request(component_name + " " + BANK_UNAVAILABLE_IDENTIFIER,
+                                                        status, group_id, True)
         r = create_statuspage_request("POST", COMPONENTS_PATH, body=json.dumps(request_body))
         if r.status_code != 201:
             logger.error("Failed to create missing component for component name: [{}]".format(component_name))
@@ -301,9 +302,10 @@ def main():
             # the agent_login time series - 'failed' for Tink problems, 'unavailable' for bank problems. Since both are
             # on the same time series they use the same key and the suffix has to be removed before looking up values.
             if re.search(BANK_UNAVAILABLE_REGEX, component_name):
-                logins = provider_logins.get(component_name[:-len(BANK_UNAVAILABLE_IDENTIFIER)], None)  # Remove suffix
-                if logins is not None and logins > 0.0:
-                    provider_metric_value = provider_unavailable_logins.get(component_name[:-len(BANK_UNAVAILABLE_IDENTIFIER)], 0)
+                provider_name = re.sub(BANK_UNAVAILABLE_REGEX, "", component_name)
+                logins = provider_logins.get(provider_name, None)  # Remove suffix
+                if logins is not None and logins > 0.0:  # Only look for failed logins if there have been logins
+                    provider_metric_value = provider_unavailable_logins.get(provider_name, 0)
                 process_component(component_name, component_info, provider_metric_value)
             else:
                 logins = provider_logins.get(component_name, None)
