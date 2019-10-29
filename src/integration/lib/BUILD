@@ -79,7 +79,6 @@ java_library(
         "//third_party:commons_io_commons_io",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_grpc_grpc_core",
-        "//third_party:io_reactivex_rxjava3_rxjava",
         "//third_party:io_vavr",
         "//third_party:joda_time_joda_time",
         "//third_party:net_sourceforge_cssparser_cssparser",
@@ -102,6 +101,7 @@ java_library(
         "//third_party:org_springframework_spring_core",
         "//third_party:org_springframework_spring_expression",
         "//third_party:zxing-qrcode",
+        "@io_reactivex_rxjava3_rxjava",
         "@io_token//:io_token_proto_common",
         "@io_token//:io_token_sdk_tokenio_sdk_core",
         "@io_token//:io_token_sdk_tokenio_sdk_tpp",
@@ -176,7 +176,6 @@ junit_test(
         "//third_party:io_dropwizard_dropwizard_client",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:io_grpc_grpc_protobuf_lite",
-        "//third_party:io_reactivex_rxjava3_rxjava",
         "//third_party:io_vavr",
         "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",
@@ -195,6 +194,7 @@ junit_test(
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:pl_pragmatists_junitparams",
         "//third_party:zxing-qrcode",
+        "@io_reactivex_rxjava3_rxjava",
     ],
 )
 
