@@ -350,6 +350,9 @@ spec:
         - name: bnppf-cert
           mountPath: /etc/tink/bnppf-cert.p12
           subPath: bnppf-cert.p12
+        - name: internal-ca
+          readOnly: true
+          mountPath: /etc/tls-ca
         {{- if $agentsConfig.mountSignatureKeyPair }}
         - name: signature-request-key
           mountPath: /etc/tink-signature-key
@@ -377,6 +380,9 @@ spec:
         secret:
           secretName: bnppf-cert
           optional: true
+      - name: internal-ca
+        secret:
+          secretName: internal-ca
       {{- if $agentsConfig.mountSignatureKeyPair }}
       - name: signature-request-key
         secret:
