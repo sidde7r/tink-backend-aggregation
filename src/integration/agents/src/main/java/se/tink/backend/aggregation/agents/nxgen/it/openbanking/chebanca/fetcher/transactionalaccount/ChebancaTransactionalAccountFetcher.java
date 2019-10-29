@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.Chebanca
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.CategoryEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.ConsentDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.ConsentAuthorizationResponse;
@@ -82,16 +83,17 @@ public class ChebancaTransactionalAccountFetcher
 
         return getAccountsResponse.getData().getAccounts().stream()
                 .filter(AccountEntity::isCheckingAccount)
-                .map(
-                        accountEntity ->
-                                accountEntity.toTinkAccount(
-                                        apiClient
-                                                .getBalances(accountEntity.getAccountId())
-                                                .getData()
-                                                .getAvailableBalance()))
+                .map(this::toTinkAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    private Optional<TransactionalAccount> toTinkAccount(AccountEntity accountEntity) {
+        AmountEntity amountEntity =
+                apiClient.getBalances(accountEntity.getAccountId()).getData().getAvailableBalance();
+
+        return accountEntity.toTinkAccount(amountEntity);
     }
 
     @Override
