@@ -46,7 +46,7 @@ public class AccountEntity {
     public boolean isCheckingAccount() {
         return ChebancaConstants.ACCOUNT_TYPE_MAPPER
                 .translate(product.getDescription())
-                .orElseThrow(() -> new IllegalStateException("Invalid account type."))
+                .orElse(AccountTypes.OTHER)
                 .equals(AccountTypes.CHECKING);
     }
 
