@@ -23,17 +23,19 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(AmountEntity balance) {
+        IdModule id =
+                IdModule.builder()
+                        .withUniqueIdentifier(iban)
+                        .withAccountNumber(iban)
+                        .withAccountName(name)
+                        .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                        .build();
+
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(balance.toAmount()))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(iban)
-                                .withAccountName(name)
-                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
-                                .build())
+                .withId(id)
                 .addHolderName(name)
                 .setApiIdentifier(accountId)
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
