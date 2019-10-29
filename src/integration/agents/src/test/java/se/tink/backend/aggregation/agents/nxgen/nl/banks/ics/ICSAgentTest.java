@@ -31,6 +31,9 @@ public class ICSAgentTest {
                 .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                 .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("icsConfiguration")
+                .setClusterId("oxford-staging")
+                .setAppId("abn-qwac-psd2")
                 .build()
                 .testRefresh();
     }
