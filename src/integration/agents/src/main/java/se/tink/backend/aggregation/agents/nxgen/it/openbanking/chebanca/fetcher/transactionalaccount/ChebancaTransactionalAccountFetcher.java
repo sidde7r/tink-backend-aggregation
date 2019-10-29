@@ -60,18 +60,29 @@ public class ChebancaTransactionalAccountFetcher
                         .map(AccountEntity::getAccountId)
                         .collect(Collectors.toList());
 
+        createConsent(accountIds);
+
+        return getAccountsResponse.getData().getAccounts().stream()
+                .filter(AccountEntity::isCheckingAccount)
+                .map(this::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    private void createConsent(List<String> accountIds) {
         List<CategoryEntity> categoryEntities =
-                Collections.singletonList(new CategoryEntity(FormValues.ACCOUNT_INFO, accountIds));
+            Collections.singletonList(new CategoryEntity(FormValues.ACCOUNT_INFO, accountIds));
 
         ConsentRequest consentRequest = new ConsentRequest(new ConsentDataEntity(categoryEntities));
 
         ConsentResponse consentResponse = apiClient.createConsent(consentRequest);
         ConsentAuthorizationResponse consentAuthorizationResponse =
-                apiClient.consentAuthorization(consentResponse.getResources().getResourceId());
+            apiClient.consentAuthorization(consentResponse.getResources().getResourceId());
 
         persistentStorage.put(
-                StorageKeys.AUTHORIZATION_URL,
-                consentAuthorizationResponse.getData().getScaRedirectURL());
+            StorageKeys.AUTHORIZATION_URL,
+            consentAuthorizationResponse.getData().getScaRedirectURL());
 
         try {
             thirdPartyAppAuthenticationController.authenticate(credentials);
@@ -80,13 +91,6 @@ public class ChebancaTransactionalAccountFetcher
         }
 
         apiClient.confirmConsent(consentResponse.getResources().getResourceId());
-
-        return getAccountsResponse.getData().getAccounts().stream()
-                .filter(AccountEntity::isCheckingAccount)
-                .map(this::toTinkAccount)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
     }
 
     private Optional<TransactionalAccount> toTinkAccount(AccountEntity accountEntity) {
