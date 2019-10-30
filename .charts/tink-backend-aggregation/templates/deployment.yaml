@@ -113,11 +113,6 @@ spec:
             secretKeyRef:
               name: aggregation-secrets
               key: aggregationdb-password
-        - name: UKOPENBANKINGJSON
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: uk-open-banking-json
         - name: CREDITSAFE_USERNAME
           valueFrom:
             secretKeyRef:
@@ -139,54 +134,6 @@ spec:
             secretKeyRef:
               name: aggregation-secrets
               key: nordea-client-secret
-              optional: true
-        - name: MONZO_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: monzo-client-id
-              optional: true
-        - name: MONZO_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: monzo-client-secret
-              optional: true
-        - name: STARLING_AIS_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: starling-ais-client-id
-              optional: true
-        - name: STARLING_AIS_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: starling-ais-client-secret
-              optional: true
-        - name: STARLING_PIS_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: starling-pis-client-id
-              optional: true
-        - name: STARLING_PIS_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: starling-pis-client-secret
-              optional: true
-        - name: STARLING_SIGNING_KEY_UID
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: starling-signing-key-uid
-              optional: true
-        - name: STARLING_SIGNING_KEY
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: starling-signing-key
               optional: true
         - name: FINTS_REG_NUMBER
           valueFrom:
