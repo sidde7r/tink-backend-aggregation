@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsBalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -33,12 +33,11 @@ public class AccountEntity {
         return resourceId;
     }
 
-    public TransactionalAccount toTinkAccount(
-            GetTransactionsBalancesResponse getTransactionsBalancesResponse) {
+    public TransactionalAccount toTinkAccount(GetBalancesResponse getBalancesResponse) {
         return CheckingAccount.builder()
                 .setUniqueIdentifier(getAccountNumber())
                 .setAccountNumber(iban)
-                .setBalance(getBalance(getTransactionsBalancesResponse.getBalances()))
+                .setBalance(getBalance(getBalancesResponse.getBalances()))
                 .setAlias(getName())
                 .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .setApiIdentifier(resourceId)

@@ -37,24 +37,18 @@ public class CbiGlobeTransactionalAccountFetcher
                 SerializationUtils.deserializeFromString(
                         persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
 
-        Date fromDate = calculateFromDate(new Date());
-
         return getAccountsResponse.getAccounts().stream()
-                .map(
-                        acc ->
-                                acc.toTinkAccount(
-                                        apiClient.getTransactionsBalances(
-                                                acc.getResourceId(),
-                                                fromDate,
-                                                new Date(),
-                                                this.queryValue)))
+                .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
                 .collect(Collectors.toList());
     }
 
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        return apiClient.getTransactionsFromTempMap(account.getApiIdentifier());
+        fromDate = calculateFromDate(toDate);
+
+        return apiClient.getTransactions(
+                account.getApiIdentifier(), fromDate, toDate, this.queryValue);
     }
 
     public static CbiGlobeTransactionalAccountFetcher createFromBoth(
