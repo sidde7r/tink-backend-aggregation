@@ -1,22 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils.calculateFromDate;
+
 import java.util.Collection;
+import java.util.Date;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CbiGlobeTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-                TransactionPagePaginator<TransactionalAccount> {
+                TransactionDatePaginator<TransactionalAccount> {
 
     private final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -35,15 +37,24 @@ public class CbiGlobeTransactionalAccountFetcher
                 SerializationUtils.deserializeFromString(
                         persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
 
+        Date fromDate = calculateFromDate(new Date());
+
         return getAccountsResponse.getAccounts().stream()
                 .map(
                         acc ->
                                 acc.toTinkAccount(
                                         apiClient.getTransactionsBalances(
                                                 acc.getResourceId(),
-                                                FormValues.FIRST_PAGE,
+                                                fromDate,
+                                                new Date(),
                                                 this.queryValue)))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        return apiClient.getTransactionsFromTempMap(account.getApiIdentifier());
     }
 
     public static CbiGlobeTransactionalAccountFetcher createFromBoth(
@@ -56,13 +67,5 @@ public class CbiGlobeTransactionalAccountFetcher
             CbiGlobeApiClient apiClient, PersistentStorage persistentStorage) {
         return new CbiGlobeTransactionalAccountFetcher(
                 apiClient, persistentStorage, QueryValues.BOOKED);
-    }
-
-    @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        return page == 1
-                ? apiClient.getTransactionsFromTempMap(account.getApiIdentifier())
-                : apiClient.getTransactionsBalances(
-                        account.getApiIdentifier(), page, this.queryValue);
     }
 }
