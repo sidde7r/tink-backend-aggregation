@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
