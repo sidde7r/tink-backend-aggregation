@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcCo
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount.Builder;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public class SdcAccount {
     @JsonIgnore
@@ -26,11 +28,20 @@ public class SdcAccount {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount(SdcConfiguration agentConfiguration) {
-        return TransactionalAccount.builder(convertAccountType(), id, amount.toTinkAmount())
-                .setAccountNumber(id)
-                .setName(name)
-                .setBankIdentifier(normalizedBankId())
-                .build();
+
+        AccountTypes type = convertAccountType();
+
+        Builder<?, ?> builder =
+                TransactionalAccount.builder(type, id, amount.toTinkAmount())
+                        .setAccountNumber(id)
+                        .setName(name)
+                        .setBankIdentifier(normalizedBankId());
+
+        if (type.equals(AccountTypes.CHECKING) || type.equals(AccountTypes.SAVINGS)) {
+            builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        }
+
+        return builder.build();
     }
 
     @JsonIgnore
