@@ -40,9 +40,10 @@ public class Base64Masker implements StringMaskerBuilder {
 
         // If target length is < 5 we will end up with cases with no "perfect" b64 substring.
         if (target.length() < 5) {
+
             logger.warn(
-                    "Secret must be length > 5 to be masked by Base64Masker. A shorter string will cause the masker to mask everything.");
-            return Collections.singletonList(Pattern.compile(".*"));
+                    "Secret must be length > 5 to be masked by Base64Masker. A shorter string will cause the masker to disregard this string.");
+            return Collections.emptyList();
         }
 
         // Find all perfect b64 substrings by padding the target string and removing the incomplete

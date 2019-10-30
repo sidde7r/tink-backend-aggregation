@@ -112,7 +112,7 @@ public class Base64MaskerTest {
     }
 
     @Test
-    public void ensure_shortSecret_matchesEverything() {
+    public void ensure_shortSecret_isIgnored() {
 
         Base64Masker maskerBuilder = new Base64Masker(Collections.singletonList("1234"));
 
@@ -120,7 +120,7 @@ public class Base64MaskerTest {
                 maskerBuilder.getValuesToMask().stream()
                         .map(Pattern::toString)
                         .collect(Collectors.toList())
-                        .contains(".*"));
+                        .isEmpty());
     }
 
     // If any digits are found in the string we are leaking whole or part of secret.
