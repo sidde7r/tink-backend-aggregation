@@ -7,16 +7,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
 public class CbiGlobeUtils {
     private static final String ENCODED_BLANK = "%20";
-    private static final int YEAR = 365;
-    private static final int NINETY_DAYS = 90;
 
     private CbiGlobeUtils() {
         throw new AssertionError();
@@ -47,14 +43,11 @@ public class CbiGlobeUtils {
         }
     }
 
-    public static Date calculateFromDate(String isFirstManualDone) {
-        return Objects.isNull(isFirstManualDone)
-                ? parseLocal(LocalDate.now().minusDays(YEAR))
-                : parseLocal(LocalDate.now().minusDays(NINETY_DAYS));
-    }
-
-    public static Date parseLocal(LocalDate localDate) {
-        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    public static Date calculateFromDate(Date toDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(toDate);
+        calendar.add(Calendar.DATE, -365);
+        return calendar.getTime();
     }
 
     public static String encodeBlankSpaces(String value) {
