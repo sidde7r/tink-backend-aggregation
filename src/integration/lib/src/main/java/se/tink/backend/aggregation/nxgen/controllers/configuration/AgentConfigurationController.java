@@ -187,6 +187,7 @@ public final class AgentConfigurationController {
     }
 
     private void notifySecretValues(Set<String> newSecretValues) {
+        newSecretValues.remove(null);
         if (!secretValues.containsAll(newSecretValues)) {
             Set<String> oldSecretValues = ImmutableSet.copyOf(secretValues);
             this.secretValues =
@@ -302,8 +303,7 @@ public final class AgentConfigurationController {
                     "Unexpected error when extracting sensitive agent configuration values.");
         }
 
-        ImmutableSet<String> extractedSensitiveValues =
-                ImmutableSet.copyOf(sensitiveValuesMap.values());
+        Set<String> extractedSensitiveValues = Sets.newHashSet(sensitiveValuesMap.values());
         notifySecretValues(extractedSensitiveValues);
 
         return extractedSensitiveValues;
