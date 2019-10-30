@@ -16,6 +16,6 @@ public class BalanceEntity {
     }
 
     public boolean isAvailable() {
-        return balanceType.equalsIgnoreCase(SdcConstants.Account.AVAILABLE);
+        return balanceType.equalsIgnoreCase(SdcConstants.Account.CLOSING_BOOKED);
     }
 }

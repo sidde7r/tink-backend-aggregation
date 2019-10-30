@@ -38,7 +38,6 @@ public final class SdcApiClient {
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
     private SdcConfiguration configuration;
-    private EidasProxyConfiguration eidasProxyConfiguration;
 
     public SdcApiClient(
             TinkHttpClient client, PersistentStorage persistentStorage, Credentials credentials) {
@@ -55,7 +54,6 @@ public final class SdcApiClient {
     protected void setConfiguration(
             SdcConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.client.setEidasProxy(eidasProxyConfiguration);
     }
 

@@ -12,10 +12,8 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class SdcConfiguration implements ClientConfiguration {
 
     @Secret private String clientId;
-    @SensitiveSecret private String clientSecret;
     @Secret private String redirectUrl;
-    @Secret private String clientKeyStorePath;
-    @SensitiveSecret private String clientKeyStorePassword;
+    @SensitiveSecret private String clientSecret;
     @SensitiveSecret private String ocpApimSubscriptionKey;
 
     public String getClientId() {
@@ -40,22 +38,6 @@ public class SdcConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
-    }
-
-    public String getClientKeyStorePath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientKeyStorePath),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Key Store Path"));
-
-        return clientKeyStorePath;
-    }
-
-    public String getClientKeyStorePassword() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientKeyStorePassword),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Key Store Password"));
-
-        return clientKeyStorePassword;
     }
 
     public String getOcpApimSubscriptionKey() {
