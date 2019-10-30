@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.framework;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,9 +54,6 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -181,12 +177,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             context.getAppId(),
                             clusterIdForSecretsService,
                             credentialsRequest.getCallbackUri());
-            if (!agentConfigurationController.init()) {
-                throw new IllegalStateException(
-                        "Error when initializing AgentConfigurationController.");
-            }
+            context.getLogMasker()
+                    .addSensitiveValuesSetSubject(
+                            agentConfigurationController.getSecretValuesSubject());
             context.setAgentConfigurationController(agentConfigurationController);
-
             AgentFactory factory = new AgentFactory(configuration);
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
@@ -567,29 +561,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             persistentLoginAgent.persistLoginSession();
         }
 
-        final LogMasker logMasker =
-                LogMasker.builder()
-                        .addStringMaskerBuilder(
-                                new CredentialsStringMaskerBuilder(
-                                        credential,
-                                        ImmutableList.of(
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .PASSWORD,
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .SECRET_KEY,
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .SENSITIVE_PAYLOAD,
-                                                CredentialsStringMaskerBuilder.CredentialsProperty
-                                                        .USERNAME)))
-                        .addStringMaskerBuilder(
-                                new ClientConfigurationStringMaskerBuilder(
-                                        context.getAgentConfigurationController()
-                                                .getSecretValues()))
-                        .addStringMaskerBuilder(
-                                new Base64Masker(
-                                        context.getAgentConfigurationController()
-                                                .getSecretValues()))
-                        .build();
+        final LogMasker logMasker = context.getLogMasker();
         final String maskedLog = logMasker.mask(context.getLogOutputStream().toString());
 
         System.out.println("");

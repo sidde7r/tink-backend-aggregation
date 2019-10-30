@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
-import com.google.common.collect.ImmutableList;
-import java.util.Collections;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +18,6 @@ import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public final class VolksbankApiClientTest {
@@ -81,32 +77,13 @@ public final class VolksbankApiClientTest {
                                 LogMasker.builder()
                                         .addStringMaskerBuilder(
                                                 new CredentialsStringMaskerBuilder(
-                                                        new Credentials(),
-                                                        ImmutableList.of(
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .PASSWORD,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .SECRET_KEY,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .SENSITIVE_PAYLOAD,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .USERNAME)))
-                                        .addStringMaskerBuilder(
-                                                new ClientConfigurationStringMaskerBuilder(
-                                                        Collections.emptyList()))
-                                        .addStringMaskerBuilder(
-                                                new Base64Masker(Collections.emptyList()))
+                                                        new Credentials()))
                                         .build(),
                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
         EidasProxyConfiguration proxyConfiguration =
                 EidasProxyConfiguration.createLocal(
                         "https://eidas-proxy.staging.aggregation.tink.network");
-        tinkHttpClient.setEidasProxy(proxyConfiguration);
         tinkHttpClient.setEidasIdentity(
                 new EidasIdentity(
                         NewAgentTestContext.TEST_CLUSTERID,

@@ -225,8 +225,7 @@ public class CredentialsStringMaskerBuilderTest {
             throws IOException {
         String sensitivePayloadAsString = OBJECT_MAPPER.writeValueAsString(sensitivePayload);
         Map<String, String> sensitiveValuesOriginalMap =
-                JsonFlattener.flattenJsonToMap(
-                        JsonFlattener.ROOT_PATH, OBJECT_MAPPER.readTree(sensitivePayloadAsString));
+                JsonFlattener.flattenJsonToMap(sensitivePayloadAsString);
         Set<String> sensitiveValuesToCompare = new HashSet<>(sensitiveValuesOriginalMap.values());
         Arrays.stream(extraValues).forEach(sensitiveValuesToCompare::add);
         return sensitiveValuesToCompare.stream()

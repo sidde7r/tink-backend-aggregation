@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
@@ -8,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -22,6 +22,17 @@ public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
     private final Credentials credentials;
     private final Iterable<CredentialsProperty> maskedProperties;
     private final ImmutableList<String> propertyValuesToMask;
+
+    private static final List<CredentialsProperty> CREDENTIALS_DEFAULT_MASKED_PROPERTIES =
+            ImmutableList.of(
+                    CredentialsStringMaskerBuilder.CredentialsProperty.PASSWORD,
+                    CredentialsStringMaskerBuilder.CredentialsProperty.SECRET_KEY,
+                    CredentialsStringMaskerBuilder.CredentialsProperty.SENSITIVE_PAYLOAD,
+                    CredentialsStringMaskerBuilder.CredentialsProperty.USERNAME);
+
+    public CredentialsStringMaskerBuilder(Credentials credentials) {
+        this(credentials, CREDENTIALS_DEFAULT_MASKED_PROPERTIES);
+    }
 
     public CredentialsStringMaskerBuilder(
             Credentials credentials, Iterable<CredentialsProperty> maskedProperties) {
@@ -112,9 +123,7 @@ public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
         }
         Map<String, String> map;
         try {
-            map =
-                    JsonFlattener.flattenJsonToMap(
-                            JsonFlattener.ROOT_PATH, new ObjectMapper().readTree(s));
+            map = JsonFlattener.flattenJsonToMap(s);
         } catch (IOException e) {
             throw new IllegalStateException("Could not deserialize storage.", e);
         }

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.poppankki.authenticator;
 
-import com.google.common.collect.ImmutableList;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
@@ -16,16 +15,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.S
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.SamlinkAutoAuthenticator;
 import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public class PopPankkiAutoAuthenticatorTest extends NextGenerationAgentTest {
     private static final AggregationLogger LOGGER =
@@ -62,29 +57,7 @@ public class PopPankkiAutoAuthenticatorTest extends NextGenerationAgentTest {
                         context.getLogOutputStream(),
                         null,
                         null,
-                        LogMasker.builder()
-                                .addStringMaskerBuilder(
-                                        new CredentialsStringMaskerBuilder(
-                                                credentials,
-                                                ImmutableList.of(
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.PASSWORD,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.SECRET_KEY,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty
-                                                                .SENSITIVE_PAYLOAD,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.USERNAME)))
-                                .addStringMaskerBuilder(
-                                        new ClientConfigurationStringMaskerBuilder(
-                                                context.getAgentConfigurationController()
-                                                        .getSecretValues()))
-                                .addStringMaskerBuilder(
-                                        new Base64Masker(
-                                                context.getAgentConfigurationController()
-                                                        .getSecretValues()))
-                                .build(),
+                        context.getLogMasker(),
                         LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
         client.setDebugOutput(true);
         SamlinkSessionStorage sessionStorage = new SamlinkSessionStorage(new SessionStorage());

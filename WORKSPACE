@@ -2502,10 +2502,22 @@ maven_install(
         "https://repo.maven.apache.org/maven2/",
     ],
 )
-
 load("@java_uuid_generator//:defs.bzl", java_uuid_generator_pin = "pinned_maven_install")
-
 java_uuid_generator_pin()
+
+maven_install(
+    name = "io_reactivex_rxjava3_rxjava",
+    artifacts = [
+        "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:io_reactivex_rxjava3_rxjava_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+)
+load("@io_reactivex_rxjava3_rxjava//:defs.bzl", io_reactivex_rxjava3_rxjava_pin = "pinned_maven_install")
+io_reactivex_rxjava3_rxjava_pin()
 
 maven_install(
     name = "io_token",
@@ -2523,7 +2535,5 @@ maven_install(
         "https://repo1.maven.org/maven2",
     ],
 )
-
 load("@io_token//:defs.bzl", io_token_pin = "pinned_maven_install")
-
 io_token_pin()

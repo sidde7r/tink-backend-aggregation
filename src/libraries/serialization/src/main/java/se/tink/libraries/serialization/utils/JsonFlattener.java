@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,55 +20,96 @@ import org.slf4j.LoggerFactory;
 public class JsonFlattener {
     private static final Logger LOG = LoggerFactory.getLogger(JsonFlattener.class);
 
+    // Package private for testing purposes.
+    static final int MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES = 200;
+
     public static final String ROOT_PATH = "";
 
     private static final ObjectMapper OBJECT_MAPPER =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    public static Map<String, String> flattenJsonToMap(String currentPath, JsonNode jsonNode)
-            throws IOException {
-        Map<String, String> map = new HashMap<>(Collections.emptyMap());
-        if (jsonNode.isObject()) {
-            ObjectNode objectNode = (ObjectNode) jsonNode;
-            Iterator<Map.Entry<String, JsonNode>> iter = objectNode.fields();
-            String pathPrefix = currentPath.isEmpty() ? "" : currentPath + ".";
+    public static Map<String, String> flattenJsonToMap(String jsonString) throws IOException {
+        try {
+            return flattenJsonToMap(ROOT_PATH, OBJECT_MAPPER.readTree(jsonString), 0);
+        } catch (JsonParseException e) {
+            LOG.debug("Tried flatten a non JSON String.");
+            return ImmutableMap.of(ROOT_PATH, jsonString);
+        }
+    }
 
-            while (iter.hasNext()) {
-                Map.Entry<String, JsonNode> entry = iter.next();
-                map.putAll(flattenJsonToMap(pathPrefix + entry.getKey(), entry.getValue()));
-            }
-        } else if (jsonNode.isArray()) {
-            ArrayNode arrayNode = (ArrayNode) jsonNode;
-            for (int i = 0; i < arrayNode.size(); i++) {
-                map.putAll(flattenJsonToMap(currentPath + "[" + i + "]", arrayNode.get(i)));
-            }
-        } else if (jsonNode.isValueNode()) {
-            // This is empirically tested. When we have some nested json objects serialized as a
-            // String, depending on how many levels the object has the unescaping of characters
-            // might make it not work. These conditions checking the lenght of the escaped/unescaped
-            // again serialized String make it work.
-            ValueNode valueNode = (ValueNode) jsonNode;
-            String escaped = valueNode.asText();
-            String unescaped = StringEscapeUtils.unescapeJava(valueNode.asText());
-            String escapedAgain = StringEscapeUtils.escapeJava(unescaped);
-            int lengthUnescaped = unescaped.length();
-            int lengthEscaped = valueNode.asText().length();
-            int lengthEscapedAgain = escapedAgain.length();
-            if (lengthEscaped == lengthUnescaped && lengthEscaped == lengthEscapedAgain) {
-                map.put(currentPath, escaped);
-            } else {
-                final String treeString;
-                if (lengthUnescaped < lengthEscaped && lengthEscaped < lengthEscapedAgain) {
-                    treeString = escaped;
-                } else {
-                    treeString = unescaped;
+    public static Map<String, String> flattenJsonToMap(Object jsonObject) throws IOException {
+        try {
+            return flattenJsonToMap(ROOT_PATH, OBJECT_MAPPER.valueToTree(jsonObject), 0);
+        } catch (JsonParseException e) {
+            LOG.debug("Tried flatten a non JSON object.");
+            return ImmutableMap.of(ROOT_PATH, jsonObject.toString());
+        }
+    }
+
+    private static Map<String, String> flattenJsonToMap(
+            String currentPath, JsonNode jsonNode, int recursionLevel) throws IOException {
+        Map<String, String> map = new HashMap<>(Collections.emptyMap());
+
+        if (recursionLevel >= MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES) {
+            throw new IllegalStateException(
+                    "Reached maximum recursion depth when trying to flatten JSON object.");
+        }
+
+        // Don't want to add null values.
+        if (!jsonNode.isNull()) {
+            if (jsonNode.isObject()) {
+                ObjectNode objectNode = (ObjectNode) jsonNode;
+                Iterator<Map.Entry<String, JsonNode>> iter = objectNode.fields();
+                String pathPrefix = currentPath.isEmpty() ? "" : currentPath + ".";
+
+                while (iter.hasNext()) {
+                    Map.Entry<String, JsonNode> entry = iter.next();
+                    map.putAll(
+                            flattenJsonToMap(
+                                    pathPrefix + entry.getKey(),
+                                    entry.getValue(),
+                                    ++recursionLevel));
                 }
-                try {
-                    JsonNode tryIfJsonNodeIsJsonObject = OBJECT_MAPPER.readTree(treeString);
-                    map.putAll(flattenJsonToMap(currentPath, tryIfJsonNodeIsJsonObject));
-                } catch (JsonParseException e) {
-                    LOG.warn("Tried to parse as Json what could probably be a normal String.");
+            } else if (jsonNode.isArray()) {
+                ArrayNode arrayNode = (ArrayNode) jsonNode;
+                for (int i = 0; i < arrayNode.size(); i++) {
+                    map.putAll(
+                            flattenJsonToMap(
+                                    currentPath + "[" + i + "]",
+                                    arrayNode.get(i),
+                                    ++recursionLevel));
+                }
+            } else if (jsonNode.isValueNode()) {
+                // This is empirically tested. When we have some nested json objects serialized as a
+                // String, depending on how many levels the object has the unescaping of characters
+                // might make it not work. These conditions checking the length of the
+                // escaped/unescaped
+                // again serialized String make it work.
+                ValueNode valueNode = (ValueNode) jsonNode;
+                String escaped = valueNode.asText();
+                String unescaped = StringEscapeUtils.unescapeJava(valueNode.asText());
+                String escapedAgain = StringEscapeUtils.escapeJava(unescaped);
+                int lengthUnescaped = unescaped.length();
+                int lengthEscaped = valueNode.asText().length();
+                int lengthEscapedAgain = escapedAgain.length();
+                if (lengthEscaped == lengthUnescaped && lengthEscaped == lengthEscapedAgain) {
                     map.put(currentPath, escaped);
+                } else {
+                    final String treeString;
+                    if (lengthUnescaped < lengthEscaped && lengthEscaped < lengthEscapedAgain) {
+                        treeString = escaped;
+                    } else {
+                        treeString = unescaped;
+                    }
+                    try {
+                        JsonNode tryIfJsonNodeIsJsonObject = OBJECT_MAPPER.readTree(treeString);
+                        map.putAll(
+                                flattenJsonToMap(
+                                        currentPath, tryIfJsonNodeIsJsonObject, ++recursionLevel));
+                    } catch (JsonParseException e) {
+                        LOG.debug("Tried to parse as Json what could probably be a normal String.");
+                        map.put(currentPath, escaped);
+                    }
                 }
             }
         }

@@ -15,7 +15,6 @@ import static se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestCon
 import static se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig.USERNAME;
 import static se.tink.libraries.strings.StringUtils.hashAsUUID;
 
-import com.google.common.collect.ImmutableList;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,7 +34,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankPersistentStor
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankMobileConfigurationsEntity;
-import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.mocks.ResultCaptor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -43,9 +41,6 @@ import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public class OpBankAuthenticatorTest {
 
@@ -81,29 +76,7 @@ public class OpBankAuthenticatorTest {
                         context.getLogOutputStream(),
                         null,
                         null,
-                        LogMasker.builder()
-                                .addStringMaskerBuilder(
-                                        new CredentialsStringMaskerBuilder(
-                                                credentials,
-                                                ImmutableList.of(
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.PASSWORD,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.SECRET_KEY,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty
-                                                                .SENSITIVE_PAYLOAD,
-                                                        CredentialsStringMaskerBuilder
-                                                                .CredentialsProperty.USERNAME)))
-                                .addStringMaskerBuilder(
-                                        new ClientConfigurationStringMaskerBuilder(
-                                                context.getAgentConfigurationController()
-                                                        .getSecretValues()))
-                                .addStringMaskerBuilder(
-                                        new Base64Masker(
-                                                context.getAgentConfigurationController()
-                                                        .getSecretValues()))
-                                .build(),
+                        context.getLogMasker(),
                         LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
         // tinkHttpClient.setDebugOutput(true);
         // tinkHttpClient.setProxy("http://127.0.0.1:8888");
@@ -237,32 +210,7 @@ public class OpBankAuthenticatorTest {
                                         context.getLogOutputStream(),
                                         null,
                                         null,
-                                        LogMasker.builder()
-                                                .addStringMaskerBuilder(
-                                                        new CredentialsStringMaskerBuilder(
-                                                                credentials,
-                                                                ImmutableList.of(
-                                                                        CredentialsStringMaskerBuilder
-                                                                                .CredentialsProperty
-                                                                                .PASSWORD,
-                                                                        CredentialsStringMaskerBuilder
-                                                                                .CredentialsProperty
-                                                                                .SECRET_KEY,
-                                                                        CredentialsStringMaskerBuilder
-                                                                                .CredentialsProperty
-                                                                                .SENSITIVE_PAYLOAD,
-                                                                        CredentialsStringMaskerBuilder
-                                                                                .CredentialsProperty
-                                                                                .USERNAME)))
-                                                .addStringMaskerBuilder(
-                                                        new ClientConfigurationStringMaskerBuilder(
-                                                                context.getAgentConfigurationController()
-                                                                        .getSecretValues()))
-                                                .addStringMaskerBuilder(
-                                                        new Base64Masker(
-                                                                context.getAgentConfigurationController()
-                                                                        .getSecretValues()))
-                                                .build(),
+                                        context.getLogMasker(),
                                         LoggingMode.LOGGING_MASKER_COVERS_SECRETS)));
         loginResultCaptor = new ResultCaptor<>();
         doAnswer(loginResultCaptor).when(bankClient).login(any());

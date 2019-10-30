@@ -3,11 +3,9 @@ package se.tink.backend.aggregation.agents;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,8 +29,6 @@ import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
@@ -58,32 +54,14 @@ public class AgentTestContext extends AgentContext {
     private Credentials credentials;
 
     public AgentTestContext(Credentials credentials) {
+        LogMasker logMasker =
+                LogMasker.builder()
+                        .addStringMaskerBuilder(
+                                new CredentialsStringMaskerBuilder(new Credentials()))
+                        .build();
+        setLogMasker(logMasker);
         supplementalClient =
-                NextGenTinkHttpClient.builder(
-                                LogMasker.builder()
-                                        .addStringMaskerBuilder(
-                                                new CredentialsStringMaskerBuilder(
-                                                        new Credentials(),
-                                                        ImmutableList.of(
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .PASSWORD,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .SECRET_KEY,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .SENSITIVE_PAYLOAD,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .USERNAME)))
-                                        .addStringMaskerBuilder(
-                                                new ClientConfigurationStringMaskerBuilder(
-                                                        Collections.emptyList()))
-                                        .addStringMaskerBuilder(
-                                                new Base64Masker(Collections.emptyList()))
-                                        .build(),
-                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                NextGenTinkHttpClient.builder(logMasker, LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
         log = LoggerFactory.getLogger(AgentTestContext.class);
         mapper = new ObjectMapper();

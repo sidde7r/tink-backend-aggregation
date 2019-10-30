@@ -2,10 +2,16 @@ package se.tink.backend.aggregation.log;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subjects.Subject;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.utils.Base64Masker;
+import se.tink.backend.aggregation.utils.SensitiveValuesCollectionStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.utils.StringMaskerBuilder;
 
@@ -33,6 +39,9 @@ public class LogMasker {
                     .add("gb")
                     .add("dk")
                     .build();
+    private static final int MINIMUM_LENGTH_TO_BE_CONSIDERED_A_SECRET = 3;
+
+    private CompositeDisposable composite = new CompositeDisposable();
 
     /**
      * This enumeration decides if logging should be done or not. NOTE: Only pass
@@ -48,17 +57,36 @@ public class LogMasker {
     private final StringMasker masker;
 
     private LogMasker(Builder builder) {
-
-        masker = new StringMasker(builder.getStringMaskerBuilders(), this::isWhiteListed);
+        masker = new StringMasker(builder.getStringMaskerBuilders(), this::shouldMask);
     }
 
-    private boolean isWhiteListed(Pattern sensitiveValue) {
-        return sensitiveValue.toString().length() <= 3
-                || WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue.toString());
+    private boolean shouldMask(Pattern sensitiveValue) {
+        return sensitiveValue.toString().length() > MINIMUM_LENGTH_TO_BE_CONSIDERED_A_SECRET
+                && !WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue.toString());
     }
 
     public String mask(String dataToMask) {
         return masker.getMasked(dataToMask);
+    }
+
+    public void addSensitiveValuesSetSubject(
+            Subject<Collection<String>> newSensitiveValuesSetSubject) {
+        composite.add(
+                newSensitiveValuesSetSubject
+                        .subscribeOn(Schedulers.trampoline())
+                        .subscribe(this::addNewSensitiveValuesToMasker));
+    }
+
+    public void disposeOfAllSubscriptions() {
+        composite.dispose();
+    }
+
+    private void addNewSensitiveValuesToMasker(Collection<String> newSensitiveValues) {
+        masker.addValuesToMask(
+                new SensitiveValuesCollectionStringMaskerBuilder(newSensitiveValues),
+                this::shouldMask);
+
+        masker.addValuesToMask(new Base64Masker(newSensitiveValues), this::shouldMask);
     }
 
     public static LoggingMode shouldLog(Provider provider) {

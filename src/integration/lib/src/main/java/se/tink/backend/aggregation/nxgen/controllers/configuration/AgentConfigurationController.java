@@ -4,18 +4,23 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.subjects.Subject;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
@@ -24,9 +29,9 @@ import se.tink.backend.agents.rpc.ProviderTypes;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
+import se.tink.libraries.serialization.utils.JsonFlattener;
 
 public final class AgentConfigurationController {
-
     private static final Logger log = LoggerFactory.getLogger(AgentConfigurationController.class);
     private static final ObjectMapper OBJECT_MAPPER =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -40,6 +45,21 @@ public final class AgentConfigurationController {
     private final boolean isOpenBankingAgent;
     private final boolean isTestProvider;
     private Map<String, String> allSecrets;
+    private Set<String> secretValues = Collections.emptySet();
+    private final Subject<Collection<String>> secretValuesSubject = BehaviorSubject.create();
+
+    // Package private for testing purposes.
+    AgentConfigurationController() {
+        isOpenBankingAgent = false;
+        isTestProvider = false;
+        redirectUrl = null;
+        clusterId = null;
+        appId = null;
+        financialInstitutionId = null;
+        tppSecretsServiceEnabled = false;
+        integrationsConfiguration = null;
+        tppSecretsServiceClient = null;
+    }
 
     public AgentConfigurationController(
             TppSecretsServiceClient tppSecretsServiceClient,
@@ -48,6 +68,7 @@ public final class AgentConfigurationController {
             String appId,
             String clusterId,
             String redirectUrl) {
+
         Preconditions.checkNotNull(
                 tppSecretsServiceClient, "tppSecretsServiceClient cannot be null.");
         Preconditions.checkNotNull(provider, "provider cannot be null.");
@@ -91,13 +112,23 @@ public final class AgentConfigurationController {
                             + getSecretsServiceParamsString()
                             + ", will not try to read agent configuration from SS.");
         }
+
+        initSecrets();
+    }
+
+    public Subject<Collection<String>> getSecretValuesSubject() {
+        return secretValuesSubject;
+    }
+
+    public void completeSecretValuesSubject() {
+        secretValuesSubject.onComplete();
     }
 
     public boolean isOpenBankingAgent() {
         return isOpenBankingAgent;
     }
 
-    public boolean init() {
+    private void initSecrets() {
         if (tppSecretsServiceEnabled && isOpenBankingAgent && !isTestProvider) {
             try {
                 Optional<Map<String, String>> allSecretsOpt =
@@ -108,110 +139,27 @@ public final class AgentConfigurationController {
                 if (!allSecretsOpt.isPresent()) {
                     log.warn(
                             "Could not fetch secrets due to null or empty appId/financialInstitutionId");
-                    return true;
                 }
 
                 allSecrets = allSecretsOpt.get();
-            } catch (RuntimeException e) {
-                if (e instanceof StatusRuntimeException) {
-                    StatusRuntimeException statusRuntimeException = (StatusRuntimeException) e;
-                    Preconditions.checkNotNull(
-                            statusRuntimeException.getStatus(),
-                            "Cannot be null Status for StatusRuntimeException: "
-                                    + statusRuntimeException);
-                    if (statusRuntimeException.getStatus().getCode()
-                            == Status.NOT_FOUND.getCode()) {
-                        log.info("Could not find secrets" + getSecretsServiceParamsString());
-                        return true;
-                    } else {
-                        log.error(
-                                "StatusRuntimeException when trying to retrieve secrets"
-                                        + getSecretsServiceParamsString()
-                                        + "with Status: "
-                                        + statusRuntimeException.getStatus(),
-                                statusRuntimeException);
-                    }
+            } catch (StatusRuntimeException e) {
+                Preconditions.checkNotNull(
+                        e.getStatus(), "Status cannot be null for StatusRuntimeException: " + e);
+                if (e.getStatus().getCode() == Status.NOT_FOUND.getCode()) {
+                    log.info("Could not find secrets" + getSecretsServiceParamsString());
                 } else {
-                    log.error("Error when retrieving secrets from Secrets Service.", e);
+                    log.error(
+                            "StatusRuntimeException when trying to retrieve secrets"
+                                    + getSecretsServiceParamsString()
+                                    + "with Status: "
+                                    + e.getStatus(),
+                            e);
+                    throw e;
                 }
-                return false;
             }
-            return initRedirectUrl();
+            initRedirectUrl();
+            notifySecretValues(Sets.newHashSet(allSecrets.values()));
         }
-        return true;
-    }
-
-    private String getSecretsServiceParamsString() {
-        return " for financialInstitutionId: "
-                + financialInstitutionId
-                + ", appId: "
-                + appId
-                + " and clusterId: "
-                + clusterId
-                + " ";
-    }
-
-    private boolean initRedirectUrl() {
-        if (allSecrets == null) {
-            log.error(
-                    "allSecrets is null, make sure you fetched the secrets before you called initRedirectUrl.");
-            return false;
-        }
-
-        final String REDIRECT_URLS_KEY = "redirectUrls";
-        final String CHOSEN_REDIRECT_URL_KEY = "redirectUrl";
-
-        if (!allSecrets.containsKey(REDIRECT_URLS_KEY)) {
-            // We end up here when the secrets do not contain redirectUrls key.
-            log.error("Could not find redirectUrls in secrets " + getSecretsServiceParamsString());
-
-            return false;
-        }
-
-        Type listType = new TypeToken<List<String>>() {}.getType();
-
-        final List<String> redirectUrls;
-        try {
-            redirectUrls = new Gson().fromJson(allSecrets.get(REDIRECT_URLS_KEY), listType);
-        } catch (JsonSyntaxException e) {
-            log.error(
-                    "Could not parse redirectUrls secret : "
-                            + allSecrets.get(REDIRECT_URLS_KEY)
-                            + getSecretsServiceParamsString(),
-                    e);
-            return false;
-        }
-
-        if (redirectUrls.isEmpty()) {
-            // We end up here when the secrets do contain redirectUrls key but it is an empty list.
-            log.info("Empty redirectUrls list in secrets" + getSecretsServiceParamsString());
-
-            return true;
-        }
-
-        if (Strings.isNullOrEmpty(redirectUrl)) {
-            // No redirectUrl provided in the CredentialsRequest, pick the first one from
-            // the registered list.
-            allSecrets.put(CHOSEN_REDIRECT_URL_KEY, redirectUrls.get(0));
-        } else if (!redirectUrls.contains(redirectUrl)) {
-            // The redirectUrl provided in the CredentialsRequest is not among those
-            // registered.
-            log.error(
-                    "Requested redirectUrl : "
-                            + redirectUrl
-                            + " is not registered"
-                            + getSecretsServiceParamsString());
-            return false;
-        } else {
-            // The redirectUrl provided in the CredentialsRequest is among those registered.
-            allSecrets.put(CHOSEN_REDIRECT_URL_KEY, redirectUrl);
-        }
-
-        // To avoid agents accessing the list of registered redirectUrls via their configuration
-        // classes. Declaring a member 'redirectUrls' for example.
-        allSecrets.remove(REDIRECT_URLS_KEY);
-
-        return true;
     }
 
     public <T extends ClientConfiguration> T getAgentConfiguration(
@@ -238,6 +186,129 @@ public final class AgentConfigurationController {
                                                 + getSecretsServiceParamsString()));
     }
 
+    private void notifySecretValues(Set<String> newSecretValues) {
+        if (!secretValues.containsAll(newSecretValues)) {
+            Set<String> oldSecretValues = ImmutableSet.copyOf(secretValues);
+            this.secretValues =
+                    ImmutableSet.<String>builder()
+                            .addAll(oldSecretValues)
+                            .addAll(newSecretValues)
+                            .build();
+
+            secretValuesSubject.onNext(newSecretValues);
+        }
+    }
+
+    private String getSecretsServiceParamsString() {
+        return " for financialInstitutionId: "
+                + financialInstitutionId
+                + ", appId: "
+                + appId
+                + " and clusterId: "
+                + clusterId
+                + " ";
+    }
+
+    private void initRedirectUrl() {
+        Preconditions.checkNotNull(
+                allSecrets,
+                "allSecrets is null, make sure you fetched the secrets before you called initRedirectUrl.");
+
+        final String REDIRECT_URLS_KEY = "redirectUrls";
+        final String CHOSEN_REDIRECT_URL_KEY = "redirectUrl";
+
+        if (!allSecrets.containsKey(REDIRECT_URLS_KEY)) {
+            // We end up here when the secrets do not contain redirectUrls key.
+            throw new IllegalStateException(
+                    "Could not find redirectUrls in secrets " + getSecretsServiceParamsString());
+        }
+
+        Type listType = new TypeToken<List<String>>() {}.getType();
+
+        final List<String> redirectUrls;
+        try {
+            redirectUrls = new Gson().fromJson(allSecrets.get(REDIRECT_URLS_KEY), listType);
+        } catch (JsonSyntaxException e) {
+            throw new IllegalStateException(
+                    "Could not parse redirectUrls secret : "
+                            + allSecrets.get(REDIRECT_URLS_KEY)
+                            + getSecretsServiceParamsString(),
+                    e);
+        }
+
+        if (redirectUrls.isEmpty()) {
+            // We end up here when the secrets do contain redirectUrls key but it is an empty list.
+            log.info("Empty redirectUrls list in secrets" + getSecretsServiceParamsString());
+
+            return;
+        }
+
+        if (Strings.isNullOrEmpty(redirectUrl)) {
+            // No redirectUrl provided in the CredentialsRequest, pick the first one from
+            // the registered list.
+            allSecrets.put(CHOSEN_REDIRECT_URL_KEY, redirectUrls.get(0));
+        } else if (!redirectUrls.contains(redirectUrl)) {
+            // The redirectUrl provided in the CredentialsRequest is not among those
+            // registered.
+            throw new IllegalArgumentException(
+                    "Requested redirectUrl : "
+                            + redirectUrl
+                            + " is not registered"
+                            + getSecretsServiceParamsString());
+        } else {
+            // The redirectUrl provided in the CredentialsRequest is among those registered.
+            allSecrets.put(CHOSEN_REDIRECT_URL_KEY, redirectUrl);
+        }
+
+        // To avoid agents accessing the list of registered redirectUrls via their configuration
+        // classes. Declaring a member 'redirectUrls' for example.
+        allSecrets.remove(REDIRECT_URLS_KEY);
+    }
+
+    private <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
+            String integrationName, String clientName, Class<T> clientConfigClass) {
+
+        if (isOpenBankingAgent) {
+            log.warn(
+                    "Trying to read information from k8s for an OB agent: "
+                            + clientConfigClass.toString()
+                            + ". Consider uploading the configuration to ESS instead.");
+        }
+
+        Object clientConfigurationAsObject =
+                integrationsConfiguration
+                        .getClientConfigurationAsObject(integrationName, clientName)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Agent configuration for agent: "
+                                                        + clientConfigClass.toString()
+                                                        + " not found in k8s secrets of cluster: "
+                                                        + clusterId));
+
+        extractSensitiveValues(clientConfigurationAsObject);
+
+        return OBJECT_MAPPER.convertValue(clientConfigurationAsObject, clientConfigClass);
+    }
+
+    <T extends ClientConfiguration> Set<String> extractSensitiveValues(
+            Object clientConfigurationAsObject) {
+
+        final Map<String, String> sensitiveValuesMap;
+        try {
+            sensitiveValuesMap = JsonFlattener.flattenJsonToMap(clientConfigurationAsObject);
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                    "Unexpected error when extracting sensitive agent configuration values.");
+        }
+
+        ImmutableSet<String> extractedSensitiveValues =
+                ImmutableSet.copyOf(sensitiveValuesMap.values());
+        notifySecretValues(extractedSensitiveValues);
+
+        return extractedSensitiveValues;
+    }
+
     // Used to read agent configuration from development.yml instead of Secrets Service
     private <T extends ClientConfiguration> T getAgentConfigurationDev(
             final Class<T> clientConfigClass) {
@@ -246,22 +317,20 @@ public final class AgentConfigurationController {
                         + "uploaded the configuration to Secrets Service in staging and/or "
                         + "production.");
 
-        return integrationsConfiguration
-                .getClientConfiguration(financialInstitutionId, appId, clientConfigClass)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Agent configuration for agent: "
-                                                + clientConfigClass.toString()
-                                                + " is missing"
-                                                + getSecretsServiceParamsString()
-                                                + ". In the development.yml file."));
-    }
+        Object clientConfigurationAsObject =
+                integrationsConfiguration
+                        .getClientConfigurationAsObject(financialInstitutionId, appId)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Agent configuration for agent: "
+                                                        + clientConfigClass.toString()
+                                                        + " is missing"
+                                                        + getSecretsServiceParamsString()
+                                                        + ". In the development.yml file."));
 
-    public Collection<String> getSecretValues() {
-        if (Objects.isNull(allSecrets)) {
-            return Collections.emptyList();
-        }
-        return allSecrets.values();
+        extractSensitiveValues(clientConfigurationAsObject);
+
+        return OBJECT_MAPPER.convertValue(clientConfigurationAsObject, clientConfigClass);
     }
 }

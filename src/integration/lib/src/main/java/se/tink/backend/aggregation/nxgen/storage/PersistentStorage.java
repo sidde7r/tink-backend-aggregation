@@ -10,7 +10,7 @@ public class PersistentStorage extends Storage {
 
     /**
      * Stores the previous value of the given key instead of removing it entirely. This is meant to
-     * be used for sensitive values in persistent storaga that we want to be able to mask out from
+     * be used for sensitive values in persistent storage that we want to be able to mask out from
      * logging etc. These values update during the course of a refresh, making it necessary to keep
      * the old and new value to be able to mask both of them from the logs.
      *

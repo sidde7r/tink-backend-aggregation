@@ -5,7 +5,6 @@ import static org.mockito.Mockito.doAnswer;
 import static se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig.PASSWORD;
 import static se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig.USERNAME;
 
-import com.google.common.collect.ImmutableList;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -21,16 +20,12 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankPersistentStor
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
-import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.mocks.ResultCaptor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.utils.Base64Masker;
-import se.tink.backend.aggregation.utils.ClientConfigurationStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public class OpBankSessionHandlerTest {
     private OpBankApiClient bankClient;
@@ -54,32 +49,7 @@ public class OpBankSessionHandlerTest {
                                 context.getLogOutputStream(),
                                 null,
                                 null,
-                                LogMasker.builder()
-                                        .addStringMaskerBuilder(
-                                                new CredentialsStringMaskerBuilder(
-                                                        credentials,
-                                                        ImmutableList.of(
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .PASSWORD,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .SECRET_KEY,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .SENSITIVE_PAYLOAD,
-                                                                CredentialsStringMaskerBuilder
-                                                                        .CredentialsProperty
-                                                                        .USERNAME)))
-                                        .addStringMaskerBuilder(
-                                                new ClientConfigurationStringMaskerBuilder(
-                                                        context.getAgentConfigurationController()
-                                                                .getSecretValues()))
-                                        .addStringMaskerBuilder(
-                                                new Base64Masker(
-                                                        context.getAgentConfigurationController()
-                                                                .getSecretValues()))
-                                        .build(),
+                                context.getLogMasker(),
                                 LoggingMode.LOGGING_MASKER_COVERS_SECRETS));
         sessionStorage = new SessionStorage();
         OpBankPersistentStorage persistentStorage =

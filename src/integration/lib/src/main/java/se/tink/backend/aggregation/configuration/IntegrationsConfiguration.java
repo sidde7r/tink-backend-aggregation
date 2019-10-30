@@ -39,6 +39,14 @@ public class IntegrationsConfiguration {
                 .map(c -> OBJECT_MAPPER.convertValue(c, clientConfigClass));
     }
 
+    public Optional<Object> getClientConfigurationAsObject(
+            String integrationName, String clientName) {
+        return getIntegration(integrationName)
+                .filter(o -> o instanceof Map)
+                .map(o -> (Map) o)
+                .map(i -> i.get(clientName));
+    }
+
     @JsonAnySetter
     private void addIntegration(String integrationName, Object integration) {
         integrations.put(integrationName, integration);
