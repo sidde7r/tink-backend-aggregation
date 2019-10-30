@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.utils.Base64Masker;
 import se.tink.backend.aggregation.utils.SensitiveValuesCollectionStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.utils.StringMaskerBuilder;
@@ -83,6 +84,8 @@ public class LogMasker {
         masker.addValuesToMask(
                 new SensitiveValuesCollectionStringMaskerBuilder(newSensitiveValues),
                 this::shouldMask);
+
+        masker.addValuesToMask(new Base64Masker(newSensitiveValues), this::shouldMask);
     }
 
     public static LoggingMode shouldLog(Provider provider) {
