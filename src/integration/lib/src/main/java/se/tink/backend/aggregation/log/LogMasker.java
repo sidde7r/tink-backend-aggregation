@@ -39,6 +39,7 @@ public class LogMasker {
                     .add("gb")
                     .add("dk")
                     .build();
+    private static final int MINIMUM_LENGTH_TO_BE_CONSIDERED_A_SECRET = 3;
 
     private CompositeDisposable composite = new CompositeDisposable();
 
@@ -60,7 +61,7 @@ public class LogMasker {
     }
 
     private boolean shouldMask(Pattern sensitiveValue) {
-        return sensitiveValue.toString().length() > 3
+        return sensitiveValue.toString().length() > MINIMUM_LENGTH_TO_BE_CONSIDERED_A_SECRET
                 && !WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue.toString());
     }
 
