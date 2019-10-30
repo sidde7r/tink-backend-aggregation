@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
@@ -9,9 +9,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
 
 public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorkerCommand {
-
-    private static final AggregationLogger log =
-            new AggregationLogger(CreateAgentConfigurationControllerWorkerCommand.class);
 
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final AgentWorkerCommandContext agentWorkerCommandContext;
@@ -44,6 +41,7 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
 
     @Override
     public void postProcess() throws Exception {
-        agentConfigurationController.completeSecretValuesSubject();
+        Optional.ofNullable(agentConfigurationController)
+                .ifPresent(AgentConfigurationController::completeSecretValuesSubject);
     }
 }

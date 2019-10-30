@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
@@ -8,7 +9,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 
 public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
-
     private final Credentials credentials;
     private final AgentWorkerCommandContext agentWorkerCommandContext;
     private LogMasker logMasker;
@@ -40,6 +40,6 @@ public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public void postProcess() throws Exception {
-        logMasker.disposeOfAllSubscriptions();
+        Optional.ofNullable(logMasker).ifPresent(LogMasker::disposeOfAllSubscriptions);
     }
 }

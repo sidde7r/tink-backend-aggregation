@@ -7,16 +7,14 @@ import io.reactivex.rxjava3.subjects.Subject;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Set;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class Storage extends HashMap<String, String> {
-    private static Logger LOG = LoggerFactory.getLogger(Storage.class);
-
     private Subject<Collection<String>> secretValuesSubject = ReplaySubject.create();
 
     private Storage(Map<String, String> map) {
@@ -31,7 +29,7 @@ public class Storage extends HashMap<String, String> {
 
     @Override
     public String put(String key, String value) {
-        secretValuesSubject.onNext(ImmutableSet.of(value));
+        Optional.ofNullable(value).ifPresent(v -> secretValuesSubject.onNext(ImmutableSet.of(v)));
         return super.put(key, value);
     }
 
@@ -41,10 +39,12 @@ public class Storage extends HashMap<String, String> {
                         ? (String) value
                         : SerializationUtils.serializeToString(value);
         super.put(key, valueToStore);
-        final Map<String, String> newSensitiveValues;
+        final Map<String, String> newSensitiveValuesMap;
         try {
-            newSensitiveValues = JsonFlattener.flattenJsonToMap(valueToStore);
-            secretValuesSubject.onNext(ImmutableSet.copyOf(newSensitiveValues.values()));
+            newSensitiveValuesMap = JsonFlattener.flattenJsonToMap(valueToStore);
+            Set<String> newSensitiveValues = new HashSet<>(newSensitiveValuesMap.values());
+            newSensitiveValues.remove(null);
+            secretValuesSubject.onNext(ImmutableSet.copyOf(newSensitiveValues));
         } catch (IOException e) {
             throw new IllegalStateException(
                     "Unable to extract sensitive information from new value to be stored.", e);

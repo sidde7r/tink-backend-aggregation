@@ -21,7 +21,7 @@ public class JsonFlattener {
     private static final Logger LOG = LoggerFactory.getLogger(JsonFlattener.class);
 
     // Package private for testing purposes.
-    static final int MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES = 200;
+    static final int MAX_RECURSION_DEPTH_EXTRACT_SENSITIVE_VALUES = 2000;
 
     public static final String ROOT_PATH = "";
 
