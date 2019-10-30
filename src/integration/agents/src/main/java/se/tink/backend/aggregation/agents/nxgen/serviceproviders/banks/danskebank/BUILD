@@ -17,11 +17,11 @@ java_library(
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_github_detro_ghostdriver_phantomjsdriver",
+        "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:org_json_json",
         "//third_party:org_seleniumhq_selenium_selenium_htmlunit_driver",
         "//third_party:org_slf4j_slf4j_api",
-        "@com_google_guava_guava//jar",
-        "@org_json_json//jar",
         "@tink_httpcore_4_4_9",
     ],
 )
