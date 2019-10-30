@@ -60,7 +60,7 @@ public class CbiGlobeTransactionalAccountFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        return page == FormValues.FIRST_PAGE
+        return page == 1
                 ? apiClient.getTransactionsFromTempMap(account.getApiIdentifier())
                 : apiClient.getTransactionsBalances(
                         account.getApiIdentifier(), page, this.queryValue);

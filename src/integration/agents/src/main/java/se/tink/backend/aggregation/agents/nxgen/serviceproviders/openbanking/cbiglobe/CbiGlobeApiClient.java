@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.IdTags;
@@ -146,28 +147,29 @@ public class CbiGlobeApiClient {
                             .queryParam(
                                     QueryKeys.DATE_FROM,
                                     ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                                            CbiGlobeUtils.calculateFromDate(
-                                                    persistentStorage.get(
-                                                            apiIdentifier
-                                                                    + StorageKeys.FIRST_MANUAL))))
+                                            CbiGlobeUtils.calculateFromDate(new Date())))
                             .queryParam(
                                     QueryKeys.DATE_TO,
                                     ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
                             .queryParam(QueryKeys.OFFSET, String.valueOf(page))
                             .get(HttpResponse.class);
 
-            String totalPages =
-                    Optional.ofNullable(httpResponse.getHeaders().getFirst(HeaderKeys.TOTAL_PAGES))
-                            .orElse(temporaryStorage.get(apiIdentifier));
+            String totalPages = httpResponse.getHeaders().getFirst(HeaderKeys.TOTAL_PAGES);
 
             GetTransactionsBalancesResponse getTransactionsBalancesResponse =
-                    httpResponse
-                            .getBody(GetTransactionsBalancesResponse.class)
-                            .setPageRemaining(isPageRemaining(totalPages, page));
+                    httpResponse.getBody(GetTransactionsBalancesResponse.class);
 
-            temporaryStorage.putIfAbsent(apiIdentifier, totalPages);
-            saveTransactionsInTempMap(apiIdentifier, getTransactionsBalancesResponse);
-            persistentStorage.put(apiIdentifier + StorageKeys.FIRST_MANUAL, StorageKeys.DONE);
+            if (FormValues.FIRST_PAGE == page) {
+                temporaryStorage.put(apiIdentifier, totalPages);
+                saveTransactionsInTempMap(apiIdentifier, getTransactionsBalancesResponse);
+            }
+
+            totalPages = temporaryStorage.get(apiIdentifier);
+
+            if (Objects.nonNull(totalPages)
+                    && Integer.valueOf(totalPages) > Integer.valueOf(page)) {
+                getTransactionsBalancesResponse.setPageRemaining(true);
+            }
 
             if (Objects.isNull(getTransactionsBalancesResponse.getBalances())) {
                 getTransactionsBalancesResponse.setBalances(
@@ -179,10 +181,6 @@ public class CbiGlobeApiClient {
             handleAccessExceededError(e);
             throw e;
         }
-    }
-
-    private boolean isPageRemaining(String totalPages, int page) {
-        return Objects.nonNull(totalPages) && Integer.valueOf(totalPages) > page;
     }
 
     private GetBalanceResponse getBalancesResponse(String apiIdentifier) {
