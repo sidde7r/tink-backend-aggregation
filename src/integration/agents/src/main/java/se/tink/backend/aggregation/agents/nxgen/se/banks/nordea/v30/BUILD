@@ -19,6 +19,7 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/i18n",
+        "//src/libraries/serialization",
         "//src/libraries/social_security_number",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
