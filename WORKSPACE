@@ -2515,6 +2515,7 @@ maven_install(
         "io.token.proto:common:1.1.103",
     ],
     fetch_sources = True,
+    maven_install_json = "//third_party:io_token_install.json",
     repositories = [
         # For direct deps
         "https://token.jfrog.io/token/public-libs-release-local/",
@@ -2523,3 +2524,6 @@ maven_install(
     ],
 )
 
+load("@io_token//:defs.bzl", io_token_pin = "pinned_maven_install")
+
+io_token_pin()
