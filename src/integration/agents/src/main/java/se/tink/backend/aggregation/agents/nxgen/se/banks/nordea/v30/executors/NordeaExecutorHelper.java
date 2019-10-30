@@ -24,14 +24,19 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einv
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaExecutorHelper {
+    private static final AggregationLogger log = new AggregationLogger(NordeaExecutorHelper.class);
+
     // TODO extend BankIdSignHelper
     private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
             new NordeaAccountIdentifierFormatter();
@@ -76,11 +81,7 @@ public class NordeaExecutorHelper {
     protected Optional<BeneficiariesEntity> validateDestinationAccount(Transfer transfer) {
         return apiClient.fetchBeneficiaries().getBeneficiaries().stream()
                 .filter(Predicates.or(BeneficiariesEntity::isLBAN, BeneficiariesEntity::isPgOrBg))
-                .filter(
-                        beneficiary ->
-                                isAccountIdentifierEquals(
-                                        transfer.getDestination(),
-                                        beneficiary.generalGetAccountIdentifier()))
+                .filter(beneficiary -> isAccountIdentifierEqualsLogIfFailure(transfer, beneficiary))
                 .findFirst();
     }
 
@@ -94,6 +95,20 @@ public class NordeaExecutorHelper {
                                 isAccountIdentifierEquals(
                                         transfer.getDestination(), account.getAccountIdentifier()))
                 .findFirst();
+    }
+
+    private boolean isAccountIdentifierEqualsLogIfFailure(
+            Transfer transfer, BeneficiariesEntity beneficiary) {
+        try {
+            return isAccountIdentifierEquals(
+                    transfer.getDestination(), beneficiary.generalGetAccountIdentifier());
+        } catch (NullPointerException e) {
+            log.warnExtraLong(
+                    SerializationUtils.serializeToString(beneficiary),
+                    LogTag.from("Nordea faulty beneficiary"));
+
+            throw e;
+        }
     }
 
     private boolean isAccountIdentifierEquals(AccountIdentifier id1, AccountIdentifier id2) {
