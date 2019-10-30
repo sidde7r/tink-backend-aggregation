@@ -54,7 +54,7 @@ public final class SdcApiClient {
     protected void setConfiguration(
             SdcConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
-        this.client.setEidasProxy(eidasProxyConfiguration, null);
+        this.client.setEidasProxy(eidasProxyConfiguration);
     }
 
     private RequestBuilder createRequest(URL url) {
