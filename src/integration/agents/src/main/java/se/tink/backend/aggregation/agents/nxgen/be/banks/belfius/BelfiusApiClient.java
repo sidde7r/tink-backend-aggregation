@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -65,7 +67,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class BelfiusApiClient {
-
+    private static final Logger log = LoggerFactory.getLogger(BelfiusApiClient.class);
     private final TinkHttpClient client;
     private final BelfiusSessionStorage sessionStorage;
     private final String locale;
@@ -179,10 +181,14 @@ public class BelfiusApiClient {
     }
 
     public FetchProductsResponse fetchProducts() {
-        return post(
-                BelfiusConstants.Url.GEPA_RENDERING_URL,
-                FetchProductsResponse.class,
-                FetchProductsRequest.create());
+        // TODO - Temporary logs below for icecream hack test in staging environment.
+        FetchProductsResponse response =
+                post(
+                        BelfiusConstants.Url.GEPA_RENDERING_URL,
+                        FetchProductsResponse.class,
+                        FetchProductsRequest.create());
+        log.info("fetchProducts response: {} ", response.toString());
+        return response;
     }
 
     public FetchTransactionsResponse fetchTransactions(String key, boolean initialRequest) {
