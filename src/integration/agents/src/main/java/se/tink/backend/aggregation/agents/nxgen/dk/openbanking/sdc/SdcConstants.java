@@ -87,6 +87,8 @@ public final class SdcConstants {
 
     public static class Account {
         public static final String AVAILABLE = "available";
+        public static final String CLOSING_BOOKED = "closingBooked";
+
     }
 
     public static class Transactions {
