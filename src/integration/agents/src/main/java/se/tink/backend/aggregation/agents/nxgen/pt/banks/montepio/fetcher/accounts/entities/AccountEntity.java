@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accou
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -69,6 +70,7 @@ public class AccountEntity {
                 .withoutFlags()
                 .withBalance(balanceModule)
                 .withId(idModule)
+                .putInTemporaryStorage(MontepioConstants.PropertyKeys.HANDLE, handle)
                 .build();
     }
 

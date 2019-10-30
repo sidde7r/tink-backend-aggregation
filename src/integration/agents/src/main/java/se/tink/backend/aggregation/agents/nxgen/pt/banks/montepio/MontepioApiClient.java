@@ -3,16 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio;
 import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.PasswordEncryptionUtil;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.rpc.AuthenticationRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.rpc.AuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchTransactionsRequest;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.GenericResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -58,8 +58,9 @@ public class MontepioApiClient {
     public void loginStep0(String username, String password) throws LoginException {
         String maskedPassword = PasswordEncryptionUtil.encryptPassword(username, password);
         AuthenticationRequest request = new AuthenticationRequest(username, maskedPassword);
-        GenericResponse response =
-                baseRequest(MontepioConstants.URLs.LOGIN).post(GenericResponse.class, request);
+        AuthenticationResponse response =
+                baseRequest(MontepioConstants.URLs.LOGIN)
+                        .post(AuthenticationResponse.class, request);
         if (response.isWrongCredentials()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
@@ -69,41 +70,23 @@ public class MontepioApiClient {
         baseRequest(MontepioConstants.URLs.FINALIZE_LOGIN).post(EMPTY_JSON);
     }
 
-    public GenericResponse fetchAccounts() {
-        GenericResponse response =
-                baseRequest(MontepioConstants.URLs.FETCH_ACCOUNTS)
-                        .header(
-                                MontepioConstants.HeaderKeys.SCREEN_NAME,
-                                MontepioConstants.HeaderValues.ACCOUNTS_SCREEN_NAME)
-                        .post(GenericResponse.class, EMPTY_JSON);
-        response.getResultEntity()
-                .getAccounts()
-                .orElseGet(ArrayList::new)
-                .forEach(a -> saveHandle(a.getNumber(), a.getHandle()));
-        return response;
+    public FetchAccountsResponse fetchAccounts() {
+        return baseRequest(MontepioConstants.URLs.FETCH_ACCOUNTS)
+                .header(
+                        MontepioConstants.HeaderKeys.SCREEN_NAME,
+                        MontepioConstants.HeaderValues.ACCOUNTS_SCREEN_NAME)
+                .post(FetchAccountsResponse.class, EMPTY_JSON);
     }
 
-    public GenericResponse fetchTransactions(
+    public FetchTransactionsResponse fetchTransactions(
             TransactionalAccount account, int pageNumber, LocalDate from, LocalDate to) {
-        String handle =
-                getHandle(account.getAccountNumber()).orElseThrow(IllegalArgumentException::new);
+        String handle = account.getFromTemporaryStorage(MontepioConstants.PropertyKeys.HANDLE);
         FetchTransactionsRequest request =
                 new FetchTransactionsRequest(pageNumber, to, from, handle);
         return baseRequest(MontepioConstants.URLs.FETCH_TRANSACTIONS)
                 .header(
                         MontepioConstants.HeaderKeys.SCREEN_NAME,
                         MontepioConstants.HeaderValues.TRANSACTIONS_SCREEN_NAME)
-                .post(GenericResponse.class, request);
-    }
-
-    private void saveHandle(String accountNumber, String handle) {
-        sessionStorage.put(
-                String.format(ACCOUNT_HANDLE_SESSION_STORAGE_PATTERN, accountNumber), handle);
-    }
-
-    private Optional<String> getHandle(String accountNumber) {
-        return Optional.ofNullable(
-                sessionStorage.get(
-                        String.format(ACCOUNT_HANDLE_SESSION_STORAGE_PATTERN, accountNumber)));
+                .post(FetchTransactionsResponse.class, request);
     }
 }

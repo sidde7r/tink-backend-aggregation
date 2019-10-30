@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.entities.TransactionEntity;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.GenericResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -45,7 +45,7 @@ public class MontepioTransactionalAccountsFetcher
         LocalDate to = LocalDate.now();
         LocalDate from = LocalDate.now().minusMonths(6);
 
-        GenericResponse response = client.fetchTransactions(account, page, from, to);
+        FetchTransactionsResponse response = client.fetchTransactions(account, page, from, to);
         List<Transaction> transactions =
                 response.getResultEntity().getTransactions().orElseGet(Collections::emptyList)
                         .stream()
