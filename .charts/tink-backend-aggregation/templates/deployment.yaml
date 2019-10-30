@@ -240,7 +240,7 @@ spec:
         image: {{ default "bazel/src/aggregation/service:aggregation_debug_image" .Values.image }}
         imagePullPolicy: {{ default "IfNotPresent" .Values.imagePullPolicy }}
         {{ else }}
-        image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default "latest" }}
+        image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default .Values.Version | default "latest" }}
         imagePullPolicy: IfNotPresent
         {{ end }}
         securityContext:
