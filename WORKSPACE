@@ -2503,6 +2503,23 @@ maven_install(
     ],
 )
 
-load("@java_uuid_generator//:defs.bzl", "pinned_maven_install")
+load("@java_uuid_generator//:defs.bzl", java_uuid_generator_pin = "pinned_maven_install")
 
-pinned_maven_install()
+java_uuid_generator_pin()
+
+maven_install(
+    name = "io_token",
+    artifacts = [
+        "io.token.sdk:tokenio-sdk-core:2.6.4",
+        "io.token.sdk:tokenio-sdk-tpp:2.6.4",
+        "io.token.proto:common:1.1.103",
+    ],
+    fetch_sources = True,
+    repositories = [
+        # For direct deps
+        "https://token.jfrog.io/token/public-libs-release-local/",
+        # For transitive deps
+        "https://repo1.maven.org/maven2",
+    ],
+)
+
