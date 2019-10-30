@@ -11,6 +11,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 public enum TransactionalAccountType {
     CHECKING,
     SAVINGS,
+    @Deprecated
     OTHER;
 
     public static Optional<TransactionalAccountType> from(@Nullable AccountTypes type) {

@@ -67,8 +67,6 @@ public class HandelsbankenSEConstants {
     }
 
     public static class Accounts {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("unknown_account_type");
-
         public static final String ACCOUNT_TYPE_NAME_LABEL = "kontoform";
         public static final String CREDIT_CARD_IGNORE_TYPE = "A";
 
@@ -87,6 +85,7 @@ public class HandelsbankenSEConstants {
                                 "allkonto ung",
                                 "privatkonto",
                                 "checkkonto")
+                        .ignoreKeys("affärskonto", "skogskonto", "skogslikv kto", "shb-anst kto")
                         .build();
     }
 
