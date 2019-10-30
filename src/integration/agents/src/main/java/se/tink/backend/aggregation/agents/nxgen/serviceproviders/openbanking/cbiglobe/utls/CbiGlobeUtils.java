@@ -46,7 +46,7 @@ public class CbiGlobeUtils {
     public static Date calculateFromDate(Date toDate) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(toDate);
-        calendar.add(Calendar.DATE, -365);
+        calendar.add(Calendar.DATE, -90);
         return calendar.getTime();
     }
 
