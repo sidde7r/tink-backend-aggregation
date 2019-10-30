@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "netty-versions-grpc-for-tls-ma-test",
+    name = "netty_versions_grpc_for_tls_ma_test",
     srcs = glob(
         ["*.java"],
     ),

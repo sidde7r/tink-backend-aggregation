@@ -2569,20 +2569,6 @@ load("@selenium//:defs.bzl", pin_selenium = "pinned_maven_install")
 pin_selenium()
 
 maven_install(
-    name = "com_salesforce_servicelibs_grpc_contrib",
-    artifacts = [
-        "com.salesforce.servicelibs:grpc-contrib:0.8.1",
-    ],
-    fetch_sources = True,
-    maven_install_json = "//third_party:com_salesforce_servicelibs_grpc_contrib_install.json",
-    repositories = [
-        "https://repo.maven.apache.org/maven2/",
-    ],
-)
-load("@com_salesforce_servicelibs_grpc_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_contrib_pin = "pinned_maven_install")
-com_salesforce_servicelibs_grpc_contrib_pin()
-
-maven_install(
     name = "com_salesforce_servicelibs_grpc_testing_contrib",
     artifacts = [
         "com.salesforce.servicelibs:grpc-testing-contrib:0.8.1",
@@ -2592,6 +2578,9 @@ maven_install(
     repositories = [
         "https://repo.maven.apache.org/maven2/",
     ],
+    excluded_artifacts = [
+        "io.netty:*",
+    ]
 )
 load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
 com_salesforce_servicelibs_grpc_testing_contrib_pin()
