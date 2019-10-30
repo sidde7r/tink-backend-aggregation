@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.TypePai
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -171,18 +172,18 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                 switch (bankIdError) {
                     case CANCELLED:
                         throw new PaymentAuthorizationException(
-                                "BankId signing cancelled by the user.", e);
+                                PaymentConstants.BankId.CANCELLED, e);
                     case NO_CLIENT:
                         throw new PaymentAuthorizationException(
-                                "No BankId client when trying to sign the payment.", e);
+                                PaymentConstants.BankId.NO_CLIENT, e);
                     case TIMEOUT:
-                        throw new PaymentAuthorizationException("BankId signing timed out.", e);
+                        throw new PaymentAuthorizationException(PaymentConstants.BankId.TIMEOUT, e);
                     case INTERRUPTED:
-                        throw new PaymentAuthorizationException("BankId signing interrupted.", e);
+                        throw new PaymentAuthorizationException(
+                                PaymentConstants.BankId.INTERRUPTED, e);
                     case UNKNOWN:
                     default:
-                        throw new PaymentAuthorizationException(
-                                "Unknown problem when signing payment with BankId.", e);
+                        throw new PaymentAuthorizationException(PaymentConstants.BankId.UNKNOWN, e);
                 }
             }
         }
