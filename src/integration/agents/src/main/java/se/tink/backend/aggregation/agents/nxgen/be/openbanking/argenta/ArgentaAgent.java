@@ -62,8 +62,7 @@ public final class ArgentaAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         this.client.setEidasProxy(
-                agentsServiceConfiguration.getEidasProxy(),
-                argentaConfiguration.getCertificateId());
+                agentsServiceConfiguration.getEidasProxy());
     }
 
     @Override
