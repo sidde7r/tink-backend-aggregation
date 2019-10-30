@@ -43,6 +43,7 @@ public final class HttpLoggingConstants {
                     "user-agent",
                     "vary",
                     "via",
+                    "x-fapi-interaction-id",
                     "x-forwarded-for",
                     "x-forwarded-host",
                     "x-global-transaction-id",
