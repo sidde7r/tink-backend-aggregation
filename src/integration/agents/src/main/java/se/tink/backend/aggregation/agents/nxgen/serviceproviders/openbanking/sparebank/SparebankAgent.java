@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.SparebankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.SparebankController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankConfiguration;
@@ -106,7 +107,8 @@ public class SparebankAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController<>(
+                                transactionFetcher, TransactionsResponse.CONSECUTIVE_EMPTY_PAGES)));
     }
 
     @Override
