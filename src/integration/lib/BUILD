@@ -101,6 +101,9 @@ java_library(
         "//third_party:org_springframework_spring_core",
         "//third_party:org_springframework_spring_expression",
         "//third_party:zxing-qrcode",
+        "@io_token//:io_token_proto_common",
+        "@io_token//:io_token_sdk_tokenio_sdk_core",
+        "@io_token//:io_token_sdk_tokenio_sdk_tpp",
     ],
 )
 
