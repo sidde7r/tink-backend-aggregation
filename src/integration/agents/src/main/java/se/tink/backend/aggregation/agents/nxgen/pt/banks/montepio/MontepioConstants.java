@@ -9,6 +9,10 @@ public class MontepioConstants {
         public static final URL FINALIZE_LOGIN = new URL(Endpoints.FINALIZE_LOGIN);
         public static final URL FETCH_ACCOUNTS = new URL(Endpoints.FETCH_ACCOUNTS);
         public static final URL FETCH_TRANSACTIONS = new URL(Endpoints.FETCH_TRANSACTIONS);
+        public static final URL FETCH_SAVINGS_ACCOUNT_STEP0 =
+                new URL(Endpoints.FETCH_SAVINGS_ACCOUNT_STEP0);
+        public static final URL FETCH_SAVINGS_ACCOUNT_STEP1 =
+                new URL(Endpoints.FETCH_SAVINGS_ACCOUNT_STEP1);
     }
 
     public static class Endpoints {
@@ -20,6 +24,10 @@ public class MontepioConstants {
                 BASE + "privateMG/currentAccount/CurrentAccountsTransaction";
         public static final String FETCH_TRANSACTIONS =
                 BASE + "privateMG/currentAccount/CurrentAccountTransactionsTransaction";
+        public static final String FETCH_SAVINGS_ACCOUNT_STEP0 =
+                BASE + "privateMG/savingAccount/SavingAccountWithdrawStep0";
+        public static final String FETCH_SAVINGS_ACCOUNT_STEP1 =
+                BASE + "privateMG/savingAccount/SavingAccountWithdrawStep1";
     }
 
     public static class Crypto {
@@ -67,5 +75,9 @@ public class MontepioConstants {
         public static final String CLIENT_TYPE = "0";
         public static final String LATITUDE = "0.000000";
         public static final String LONGTITUDE = "0.000000";
+    }
+
+    public class PropertyKeys {
+        public static final String HANDLE = "handle";
     }
 }
