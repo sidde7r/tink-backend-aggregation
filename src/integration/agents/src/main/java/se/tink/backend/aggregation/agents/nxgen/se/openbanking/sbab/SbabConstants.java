@@ -107,6 +107,10 @@ public final class SbabConstants {
                 "Supplied payment reference is too long, max is %s characters.";
         public static final String PAYMENT_REF_ILLEGAL_CHARS =
                 "Supplied destination message contains illegal characters.";
+        // Keeping the error message vague (and unfortunately unhelpful) since we're currently
+        // waiting for more details from SBAB support.
+        public static final String INVALID_DATE =
+                "Supplied date is not valid, ensure it's not set to a non business day and try again.";
     }
 
     public static class PaymentValue {
@@ -114,5 +118,9 @@ public final class SbabConstants {
         public static final Pattern ALLOWED_CHARS_PATTERN =
                 Pattern.compile("^[a-zA-Z0-9 åäöÅÄÖ!\\-+%\"/?,.§]+$");
         public static final int MAX_DEST_MSG_LEN = 12;
+
+        // Invalid payment date
+        public static final String TRANSACTION_DATE = "transactionDate";
+        public static final String UNKNOWN = "UNKNOWN";
     }
 }

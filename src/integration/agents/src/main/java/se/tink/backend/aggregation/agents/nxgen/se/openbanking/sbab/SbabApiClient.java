@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
 
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.IdTags;
@@ -16,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchCustomerResponse;
@@ -24,8 +28,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.Utils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -92,11 +98,30 @@ public final class SbabApiClient {
     }
 
     public CreatePaymentResponse createPayment(
-            CreatePaymentRequest createPaymentRequest, String debtorAccountNumber) {
-        return createRequest(
-                        Urls.INITIATE_PAYMENT.parameter(IdTags.ACCOUNT_NUMBER, debtorAccountNumber))
-                .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
-                .post(CreatePaymentResponse.class, createPaymentRequest);
+            CreatePaymentRequest createPaymentRequest, String debtorAccountNumber)
+            throws DateValidationException {
+        try {
+            return createRequest(
+                            Urls.INITIATE_PAYMENT.parameter(
+                                    IdTags.ACCOUNT_NUMBER, debtorAccountNumber))
+                    .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
+                    .post(CreatePaymentResponse.class, createPaymentRequest);
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+
+            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+                if (errorResponse.isInvalidDateError()) {
+                    throw new DateValidationException(
+                            ErrorMessage.INVALID_DATE,
+                            errorResponse.getError().getPropertyPath(),
+                            new IllegalArgumentException());
+                }
+            }
+
+            throw e;
+        }
     }
 
     public GetPaymentResponse getPayment(String transferId, String debtorId) {
