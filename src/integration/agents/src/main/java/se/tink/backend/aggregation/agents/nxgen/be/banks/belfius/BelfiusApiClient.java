@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
+import com.google.gson.Gson;
 import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -187,7 +188,8 @@ public class BelfiusApiClient {
                         BelfiusConstants.Url.GEPA_RENDERING_URL,
                         FetchProductsResponse.class,
                         FetchProductsRequest.create());
-        log.info("fetchProducts response: {} ", response.toString());
+        Gson gson = new Gson();
+        log.info("fetchProducts response: {} ", gson.toJson(response));
         return response;
     }
 
