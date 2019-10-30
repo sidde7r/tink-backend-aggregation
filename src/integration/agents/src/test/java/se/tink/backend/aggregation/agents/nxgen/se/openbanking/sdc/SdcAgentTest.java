@@ -19,8 +19,10 @@ public class SdcAgentTest {
                 new AgentIntegrationTest.Builder("dk", "dk-sdc-ob")
                         .addCredentialField(Key.LOGIN_INPUT, TEST_SSN)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(true)
-                        .expectLoggedIn(false);
+                        .saveCredentialsAfter(false)
+                        .expectLoggedIn(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("sdc");
     }
 
     @Test
