@@ -111,7 +111,7 @@ filter,
 chrome.webRequest.onBeforeRequest.addListener(function(details) {
 
 	let payload = new TextDecoder("utf-8").decode(new Uint8Array(details.requestBody.raw[0].bytes));
-	let requestJson = JSON.parse(payload.substr(payload.indexOf("\n")+1));
+	let requestJson = JSON.parse(payload.split("\n")[1]);
 	let queryJson = JSON.stringify(requestJson["query"]);
 
 	let data = {
