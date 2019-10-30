@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
 
+import java.util.regex.Pattern;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SbabConstants {
@@ -99,5 +100,19 @@ public final class SbabConstants {
     public static class Errors {
         public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
         public static final String KYC_QUESTIONS_NOT_COMPLETED = "kyc_questions_not_completed";
+    }
+
+    public static class ErrorMessage {
+        public static final String PAYMENT_REF_TOO_LONG =
+                "Supplied payment reference is too long, max is %s characters.";
+        public static final String PAYMENT_REF_ILLEGAL_CHARS =
+                "Supplied destination message contains illegal characters.";
+    }
+
+    public static class PaymentValue {
+        // From SBAB documentation
+        public static final Pattern ALLOWED_CHARS_PATTERN =
+                Pattern.compile("^[a-zA-Z0-9 åäöÅÄÖ!\\-+%\"/?,.§]+$");
+        public static final int MAX_DEST_MSG_LEN = 12;
     }
 }

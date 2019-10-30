@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment;
 
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +12,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessage;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.PaymentValue;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.TransferData;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentResponse;
@@ -72,7 +77,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
 
         Payment payment = paymentRequest.getPayment();
 
@@ -82,6 +87,9 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .withCounterPartAccount(payment.getCreditor().getAccountNumber())
                         .withCurrency(payment.getCurrency())
                         .withTransferDate(getExecutionDateOrCurrentDate(payment))
+                        .withCounterPartStatement(
+                                getCounterPartStatementIfValidOrThrow(
+                                        payment.getReference().getValue()))
                         .build();
 
         CreatePaymentRequest createPaymentRequest =
@@ -95,6 +103,28 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                 getPaymentType(paymentRequest),
                 payment.getDebtor().getAccountNumber(),
                 payment.getCreditor().getAccountNumber());
+    }
+
+    private String getCounterPartStatementIfValidOrThrow(String counterPartStatement)
+            throws PaymentException {
+
+        if (Strings.isNullOrEmpty(counterPartStatement)) {
+            return counterPartStatement;
+        }
+
+        if (counterPartStatement.length() > PaymentValue.MAX_DEST_MSG_LEN) {
+            throw new ReferenceValidationException(
+                    String.format(ErrorMessage.PAYMENT_REF_TOO_LONG, PaymentValue.MAX_DEST_MSG_LEN),
+                    "",
+                    new IllegalArgumentException());
+        }
+
+        if (!PaymentValue.ALLOWED_CHARS_PATTERN.matcher(counterPartStatement).matches()) {
+            throw new ReferenceValidationException(
+                    ErrorMessage.PAYMENT_REF_ILLEGAL_CHARS, "", new IllegalArgumentException());
+        }
+
+        return counterPartStatement;
     }
 
     private String getExecutionDateOrCurrentDate(Payment payment) {

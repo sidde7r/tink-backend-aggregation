@@ -30,6 +30,7 @@ public class TransferData {
         this.counterPartAccount = builder.counterPartAccount;
         this.currency = builder.currency;
         this.statement = builder.statement;
+        this.counterPartStatement = builder.counterPartStatement;
         this.transferDate = builder.transferDate;
     }
 
