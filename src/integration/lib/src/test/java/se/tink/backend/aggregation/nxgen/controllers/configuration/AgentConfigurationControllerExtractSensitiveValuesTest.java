@@ -25,7 +25,7 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
     private AgentConfigurationController agentConfigurationController;
 
     @Before
-    public void setUp() {
+    public void setup() {
         agentConfigurationController = new AgentConfigurationController();
     }
 

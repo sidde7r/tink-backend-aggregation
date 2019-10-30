@@ -21,7 +21,7 @@ public class LogMaskerTest {
     private Credentials credentials;
 
     @Before
-    public void setUp() {
+    public void setup() {
         credentials = mockCredentials();
     }
 

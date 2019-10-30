@@ -27,7 +27,7 @@ public class StorageTest {
     private Storage persistentStorage;
 
     @Before
-    public void setUp() throws Exception {
+    public void setup() throws Exception {
         this.sessionStorage = new SessionStorage();
         this.persistentStorage = new PersistentStorage();
     }
