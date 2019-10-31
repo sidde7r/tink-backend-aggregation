@@ -53,8 +53,6 @@ public class Fields {
     static class Assets {
         static final String RETIREMENT_INVESTMENTS = "PR";
         static final String INVESTMENT_ACCOUNTS = "FU";
-        static final String CREDIT_CARDS = "CRP";
-        static final String LOANS = "EP";
         static final String DEPOSITS = "DP";
     }
 
