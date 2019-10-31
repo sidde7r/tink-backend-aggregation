@@ -29,10 +29,10 @@ public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
                 LogMasker.builder()
                         .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
                         .build();
-        logMasker.addSensitiveValuesSetSubject(
+        logMasker.addSensitiveValuesSetObservable(
                 agentWorkerCommandContext
                         .getAgentConfigurationController()
-                        .getSecretValuesSubject());
+                        .getSecretValuesObservable());
         agentWorkerCommandContext.setLogMasker(logMasker);
 
         return AgentWorkerCommandResult.CONTINUE;

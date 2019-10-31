@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import java.io.IOException;
@@ -46,7 +47,8 @@ public final class AgentConfigurationController {
     private final boolean isTestProvider;
     private Map<String, String> allSecrets;
     private Set<String> secretValues = Collections.emptySet();
-    private final Subject<Collection<String>> secretValuesSubject = BehaviorSubject.create();
+    private final Subject<Collection<String>> secretValuesSubject =
+            BehaviorSubject.<Collection<String>>create().toSerialized();
 
     // Package private for testing purposes.
     AgentConfigurationController() {
@@ -116,7 +118,7 @@ public final class AgentConfigurationController {
         initSecrets();
     }
 
-    public Subject<Collection<String>> getSecretValuesSubject() {
+    public Observable<Collection<String>> getSecretValuesObservable() {
         return secretValuesSubject;
     }
 

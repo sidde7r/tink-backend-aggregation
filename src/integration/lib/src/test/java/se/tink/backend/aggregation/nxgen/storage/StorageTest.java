@@ -126,7 +126,7 @@ public class StorageTest {
         Set<String> sensitiveValuesTestSet = new HashSet<>();
         Disposable disposable =
                 persistentStorage
-                        .getSecretValuesSubject()
+                        .getSecretValuesObservable()
                         .subscribeOn(Schedulers.trampoline())
                         .subscribe(
                                 newSecretValues -> sensitiveValuesTestSet.addAll(newSecretValues));
