@@ -4,13 +4,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.AccountsItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.BalancesItemEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.BalanceAccountResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -27,6 +28,9 @@ public class HandelsbankenBaseTransactionalAccountFetcher
     private HandelsbankenBaseAccountConverter converter;
     private SessionStorage sessionStorage;
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(HandelsbankenBaseTransactionalAccountFetcher.class);
+
     public HandelsbankenBaseTransactionalAccountFetcher(
             HandelsbankenBaseApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -39,16 +43,17 @@ public class HandelsbankenBaseTransactionalAccountFetcher
 
     private Optional<TransactionalAccount> mapToTransactionalAccount(
             AccountsItemEntity accountEntity) {
-        BalanceAccountResponse balances = apiClient.getAccountDetails(accountEntity.getAccountId());
         BalancesItemEntity availableBalance =
-                balances.getBalances().stream()
+                apiClient.getAccountDetails(accountEntity.getAccountId()).getBalances().stream()
                         .filter(BalancesItemEntity::isBalance)
                         .findFirst()
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ExceptionMessages.BALANCE_NOT_FOUND));
-        return converter.toTinkAccount(accountEntity, availableBalance);
+                        .orElse(null);
+        if (availableBalance != null) {
+            return converter.toTinkAccount(accountEntity, availableBalance);
+        } else {
+            logger.warn(ExceptionMessages.BALANCE_NOT_FOUND);
+            return Optional.empty();
+        }
     }
 
     @Override
