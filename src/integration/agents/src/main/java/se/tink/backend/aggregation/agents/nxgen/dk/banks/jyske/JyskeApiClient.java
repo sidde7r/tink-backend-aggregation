@@ -112,7 +112,7 @@ public class JyskeApiClient {
                                         Objects.equals(
                                                 Optional.ofNullable(acc.getRegNo()).orElse("")
                                                         + Optional.ofNullable(acc.getAccountNo())
-                                                        .orElse(""),
+                                                                .orElse(""),
                                                 account.getAccountNumber()))
                         .findFirst();
 
@@ -134,7 +134,8 @@ public class JyskeApiClient {
         try {
             return fetchTransactions(account, page, JyskeConstants.Url.GET_TRANSACTIONS);
         } catch (HttpResponseException hre) {
-            return fetchTransactions(account, page, JyskeConstants.Url.GET_TRANSACTIONS_WITH_EXTERNALS);
+            return fetchTransactions(
+                    account, page, JyskeConstants.Url.GET_TRANSACTIONS_WITH_EXTERNALS);
         }
     }
 

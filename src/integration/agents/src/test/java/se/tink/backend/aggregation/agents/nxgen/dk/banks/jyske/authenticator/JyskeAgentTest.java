@@ -10,7 +10,8 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class JyskeAgentTest {
 
-    private final ArgumentManager<JyskeAgentTest.Arg> manager = new ArgumentManager<>(JyskeAgentTest.Arg.values());
+    private final ArgumentManager<JyskeAgentTest.Arg> manager =
+            new ArgumentManager<>(JyskeAgentTest.Arg.values());
 
     @AfterClass
     public static void afterClass() {
@@ -39,5 +40,4 @@ public class JyskeAgentTest {
         USERNAME,
         PASSWORD
     }
-
 }
