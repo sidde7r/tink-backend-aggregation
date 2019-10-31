@@ -312,23 +312,6 @@
             "financialInstitutionId": "7802078d8a7049398f9668e5478934ea"
         },
         {
-            "accessType": "OPEN_BANKING",
-            "className": "nxgen.be.openbanking.belfius.BelfiusAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Belfius (Sandbox)",
-            "fields": [],
-            "financialInstitutionId": "60cdc3bd42aa43a9ab2e6eeef116bebd",
-            "multiFactor": false,
-            "name": "be-belfius-oauth2",
-            "passwordHelpText": null,
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": "true",
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
             "accessType": "OTHER",
             "className": "nxgen.be.banks.beobank.BeobankAgent",
             "credentialsType": "PASSWORD",
