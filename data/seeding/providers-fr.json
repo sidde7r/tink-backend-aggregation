@@ -19,6 +19,7 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
             "name": "fr-americanexpress-password",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
@@ -26,8 +27,7 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "type": "CREDIT_CARD",
-            "financialInstitutionId": "dummyFinancialInstitutionId"
+            "type": "CREDIT_CARD"
         },
         {
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
@@ -49,6 +49,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulairealsace-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -77,6 +79,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulaireaquitaine-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -105,6 +109,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulaireauvergne-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -133,6 +139,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulairebourgogne-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -161,6 +169,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulairebred-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -189,6 +199,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulairemediterranee-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -217,6 +229,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulairenord-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -245,6 +259,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulaireoccitane-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -273,6 +289,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulaireouest-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -301,6 +319,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulairerivesdeparis-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -329,6 +349,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulairesud-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -357,6 +379,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Banque Populaire",
             "name": "fr-banquepopulairevaldefrance-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -382,6 +406,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fr-banquetransatlantique-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -409,6 +435,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fr-bnpparibas-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -437,6 +465,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fr-caisseepargne-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -458,6 +488,8 @@
                     "numeric": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "fr-caixa-ob",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
@@ -486,6 +518,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fr-cic-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -501,6 +535,8 @@
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "CreditAgricole (Sandbox)",
             "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fr-creditagricole-oauth1",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
@@ -548,6 +584,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolealpesprovence-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -593,6 +631,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolealsacevosges-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -638,6 +678,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricoleanjoumaine-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -683,6 +725,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricoleaquitaine-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -728,6 +772,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricoleatlantiquevendee-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -773,6 +819,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolebriepicardie-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -818,6 +866,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolecentreest-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -863,6 +913,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolecentrefrance-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -908,6 +960,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolecentreloire-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -953,6 +1007,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolecentreouest-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -998,6 +1054,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolechampagnebourgogne-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1043,6 +1101,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolecharentemaritime-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1088,6 +1148,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolecharenteperigord-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1133,6 +1195,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolecorse-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1178,6 +1242,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolecotesdarmor-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1223,6 +1289,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolefinistere-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1268,6 +1336,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolefranchecomte-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1313,6 +1383,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricoleguadeloupe-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1358,6 +1430,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricoleiledefrance-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1403,6 +1477,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricoleilleetvilaine-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1448,6 +1524,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolelanguedoc-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1493,6 +1571,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricoleloirehauteloire-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1538,6 +1618,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolelorraine-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1583,6 +1665,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolemartiniqueguyane-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1628,6 +1712,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolemorbihan-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1673,6 +1759,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolenorddefrance-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1718,6 +1806,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolenordest-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1763,6 +1853,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolenordmidipyrenees-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1808,6 +1900,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolenormandie-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1853,6 +1947,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolenormandieseine-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1898,6 +1994,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricoleprovencecotedazur-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1943,6 +2041,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolepyreneesgascogne-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -1988,6 +2088,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolereunion-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -2033,6 +2135,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolesavoie-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -2078,6 +2182,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolesudmediterranee-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -2123,6 +2229,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolesudrohnealpes-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -2168,6 +2276,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricoletoulouse-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -2213,6 +2323,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricoletouraineetpoitou-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -2258,6 +2370,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Crédit Agricole",
             "name": "fr-creditagricolevaldefrance-password",
             "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
@@ -2284,6 +2398,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fr-creditmutuel-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -2300,10 +2416,10 @@
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "ING",
             "fields": [],
-            "multiFactor": false,
-            "name": "fr-ing-oauth2",
             "financialInstitutionId": "dummyFinancialInstitutionId",
             "financialInstitutionName": "ING",
+            "multiFactor": false,
+            "name": "fr-ing-oauth2",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
             "payload": "tink",
             "popular": true,
@@ -2332,29 +2448,29 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
             "multiFactor": false,
             "name": "fr-labanquepostale-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK",
-            "financialInstitutionId": "dummyFinancialInstitutionId"
+            "type": "BANK"
         },
         {
-            "name": "fr-labanquepostale-ob",
-            "displayName": "La Banque Postale (Test only)",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
             "className": "nxgen.fr.openbanking.labanquepostale.LaBanquePostaleAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "La Banque Postale (Test only)",
+            "fields": [],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "multiFactor": false,
+            "name": "fr-labanquepostale-ob",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": null,
-            "fields": [],
-            "payload": "tink",
-            "financialInstitutionId": "dummyFinancialInstitutionId"
+            "type": "BANK"
         },
         {
             "className": "nxgen.fr.banks.lcl.LclAgent",
@@ -2373,6 +2489,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fr-lcl-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -2398,6 +2516,7 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummy",
             "multiFactor": false,
             "name": "fr-monabanq-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -2405,25 +2524,24 @@
             "status": "ENABLED",
             "transactional": "true",
             "tutorialUrl": null,
-            "type": "BANK",
-            "financialInstitutionId": "dummy"
+            "type": "BANK"
         },
         {
-            "name": "fr-monabanq-oauth2",
-            "displayName": "Monabanq (Test)",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "THIRD_PARTY_APP",
-            "multiFactor": false,
-            "className": "nxgen.fr.openbanking.monabanq.MonabanqAgent",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "transactional": true,
-            "payload": "tink",
-            "tutorialUrl": null,
-            "fields": [],
             "accessType": "OPEN_BANKING",
-            "financialInstitutionId": "dummy"
+            "className": "nxgen.fr.openbanking.monabanq.MonabanqAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "Monabanq (Test)",
+            "fields": [],
+            "financialInstitutionId": "dummy",
+            "multiFactor": false,
+            "name": "fr-monabanq-oauth2",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
         },
         {
             "className": "nxgen.serviceproviders.banks.n26.N26Agent",
@@ -2442,6 +2560,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "N26",
             "multiFactor": false,
             "name": "fr-n26-password",
@@ -2475,6 +2595,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "fr-revolut-password",
             "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
@@ -2502,6 +2624,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fr-societegenerale-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -2521,6 +2645,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "fr-test-multi-supplemental",
@@ -2548,6 +2674,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "fr-test-password",

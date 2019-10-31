@@ -20,6 +20,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "American Express",
             "market": "AT",
             "multiFactor": false,
@@ -35,6 +37,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.bankaustria.BankAustriaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Bank Austria",
@@ -51,6 +54,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "at-bankaustria-password",
             "passwordHelpText": null,
@@ -61,7 +66,6 @@
             "status": "ENABLED",
             "transactional": "true",
             "tutorialUrl": null,
-            "accessType": "OTHER",
             "type": "BANK"
         },
         {
@@ -81,6 +85,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "at-bawagpsk-password",
             "passwordHelpText": null,
@@ -110,6 +116,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "at-easybank-password",
             "passwordHelpText": null,
@@ -139,6 +147,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Erste Bank und Sparkasse",
             "name": "at-erstebank-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -160,6 +170,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Erste Bank und Sparkasse",
             "name": "at-erstebank-thirdparty",
             "passwordHelpText": "Use the same username as you would in your bank's mobile app.",
@@ -196,6 +208,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "ING-DiBa",
             "name": "at-ingdiba-password",
             "payload": "",
@@ -223,6 +237,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "N26",
             "multiFactor": false,
             "name": "at-n26-password",
@@ -256,6 +272,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen0-password",
             "payload": "{\"region\": \"Burgenland\", \"regionIndex\": \"0\", \"regionCode\": \"ELVIE33V\"}",
@@ -288,6 +306,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen1-password",
             "payload": "{\"region\": \"Kärnten\", \"regionIndex\": \"1\", \"regionCode\": \"ELOOE03V\"}",
@@ -320,6 +340,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen10-password",
             "payload": "{\"region\": \"Oberösterreich/PRIVAT BANK\", \"regionIndex\": \"10\", \"regionCode\": \"ELOOE01V\"}",
@@ -352,6 +374,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen11-password",
             "payload": "{\"region\": \"Tirol/Jungholz\", \"regionIndex\": \"11\", \"regionCode\": \"ELOOE11V\"}",
@@ -384,6 +408,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen2-password",
             "payload": "{\"region\": \"Niederösterreich/Wien\", \"regionIndex\": \"2\", \"regionCode\": \"ELVIE32V\"}",
@@ -416,6 +442,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen3-password",
             "payload": "{\"region\": \"Oberösterreich\", \"regionIndex\": \"3\", \"regionCode\": \"ELOOE01V\"}",
@@ -448,6 +476,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen4-password",
             "payload": "{\"region\": \"Salzburg\", \"regionIndex\": \"4\", \"regionCode\": \"ELOOE05V\"}",
@@ -480,6 +510,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen5-password",
             "payload": "{\"region\": \"Steiermark\", \"regionIndex\": \"5\", \"regionCode\": \"ELVIE38V\"}",
@@ -512,6 +544,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen6-password",
             "payload": "{\"region\": \"Tirol\", \"regionIndex\": \"6\", \"regionCode\": \"ELOOE11V\"}",
@@ -544,6 +578,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen7-password",
             "payload": "{\"region\": \"Vorarlberg\", \"regionIndex\": \"7\", \"regionCode\": \"ELVIE37V\"}",
@@ -576,6 +612,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen8-password",
             "payload": "{\"region\": \"Kärnten/Posojilnica Bank\", \"regionIndex\": \"8\", \"regionCode\": \"ELVIE91V\"}",
@@ -608,6 +646,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen9-password",
             "payload": "{\"region\": \"Oberösterreich/bankdirekt.at\", \"regionIndex\": \"9\", \"regionCode\": \"ELOOE01V\"}",
@@ -642,6 +682,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "at-revolut-password",
             "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
@@ -669,6 +711,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "at-test-bawag",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
@@ -695,6 +739,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "at-test-easy-bank",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
@@ -721,6 +767,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "at-test-erste-bank",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
@@ -741,6 +789,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "at-test-multi-supplemental",
@@ -768,6 +818,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "at-test-password",
@@ -802,6 +854,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "at-volksbank-password",
             "passwordHelpText": null,

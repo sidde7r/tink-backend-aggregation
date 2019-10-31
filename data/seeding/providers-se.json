@@ -20,6 +20,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "alandsbanken",
@@ -49,6 +51,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "American Express",
             "market": "SE",
             "multiFactor": false,
@@ -82,11 +86,11 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "deadbeefdeadbeefdeadbeefdeadbeef",
             "groupDisplayName": "Avanza",
             "market": "SE",
             "multiFactor": true,
             "name": "avanza-bankid",
-            "financialInstitutionId": "deadbeefdeadbeefdeadbeefdeadbeef",
             "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
             "popular": false,
             "refreshFrequency": 0,
@@ -115,6 +119,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "chevroletmastercard-bankid",
@@ -147,6 +153,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "choicemastercard-bankid",
@@ -178,6 +186,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "collector-bankid",
@@ -206,6 +216,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
             "name": "coop",
@@ -241,6 +253,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "coop-bankid",
@@ -271,6 +285,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Fraud",
             "market": "SE",
             "multiFactor": false,
@@ -430,6 +446,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
             "name": "demo",
@@ -460,6 +478,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "djurgardskortetmastercard-bankid",
@@ -490,6 +510,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "eurocard-bankid",
@@ -520,6 +542,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "finnairmastercard-bankid",
@@ -548,6 +572,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
             "name": "forex",
@@ -725,6 +751,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
             "name": "ikanokort-bankid",
@@ -758,6 +786,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "jetmastercard-bankid",
@@ -791,6 +821,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Länsförsäkringar",
             "market": "SE",
             "multiFactor": false,
@@ -821,6 +853,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "lysa",
@@ -852,6 +886,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "moregolfmastercard-bankid",
@@ -884,6 +920,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "nknyckelnmastercard-bankid",
@@ -895,6 +933,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -931,11 +970,10 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dde2463acf40501389de4fca5a3693a4",
             "groupDisplayName": "Nordea",
-            "accessType": "OTHER",
             "market": "SE",
             "multiFactor": true,
-            "financialInstitutionId": "dde2463acf40501389de4fca5a3693a4",
             "name": "nordea-bankid",
             "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "popular": true,
@@ -965,6 +1003,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Nordnet",
             "market": "SE",
             "multiFactor": false,
@@ -996,6 +1036,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Nordnet",
             "market": "SE",
             "multiFactor": true,
@@ -1064,6 +1106,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
             "name": "okq8bank",
@@ -1095,6 +1139,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "opelmastercard-bankid",
@@ -1123,6 +1169,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
             "name": "preem-bankid",
@@ -1156,6 +1204,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "remembermastercard-bankid",
@@ -1186,6 +1236,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
             "name": "rikskortet",
@@ -1218,6 +1270,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "saabmastercard-bankid",
@@ -1280,6 +1334,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "saseurobonusmastercard-bankid",
@@ -1312,15 +1368,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
-            "supplementalFields": [
-                {
-                    "description": "Beneficiary Name",
-                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
-                    "hint": "Name",
-                    "masked": false,
-                    "name": "addbeneficiaryinput"
-                }
-            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
@@ -1331,6 +1380,15 @@
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
+            "supplementalFields": [
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
+                }
+            ],
             "transactional": true,
             "type": "BANK"
         },
@@ -1356,15 +1414,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
-            "supplementalFields": [
-                {
-                    "description": "Beneficiary Name",
-                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
-                    "hint": "Name",
-                    "masked": false,
-                    "name": "addbeneficiaryinput"
-                }
-            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
@@ -1374,6 +1425,15 @@
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
             "status": "OBSOLETE",
+            "supplementalFields": [
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
+                }
+            ],
             "transactional": true,
             "type": "BANK"
         },
@@ -1426,6 +1486,8 @@
                     "numeric": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "se-alandsbanken-bankid",
@@ -1456,6 +1518,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Avanza",
             "market": "SE",
             "multiFactor": true,
@@ -1584,6 +1648,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "se-nordea-ob",
             "passwordHelpText": "Please authenticate to use this bank.",
@@ -1627,6 +1693,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Nordea",
             "market": "SE",
             "multiFactor": true,
@@ -1658,6 +1726,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "se-sbab_sandbox-oauth2",
@@ -1676,6 +1746,8 @@
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "SEB (Sandbox)",
             "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "se-seb-oauth2",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
@@ -1691,6 +1763,8 @@
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "SEB (Sandbox)",
             "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "se-sebkort-oauth2",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
@@ -1719,6 +1793,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test BankID",
             "multiFactor": true,
             "name": "se-test-bankid-failing",
@@ -1746,6 +1822,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test BankID",
             "multiFactor": true,
             "name": "se-test-bankid-successful",
@@ -1773,6 +1851,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Demo Financial Institution",
             "multiFactor": false,
             "name": "se-test-demofinancialinstitution-mobilebanking-password",
@@ -1801,6 +1881,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Demo Financial Institution",
             "multiFactor": false,
             "name": "se-test-demofinancialinstitution-openbanking-password",
@@ -1823,6 +1905,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "se-test-multi-supplemental",
@@ -1853,6 +1937,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "se-test-password",
@@ -1883,6 +1969,8 @@
             ],
             "financialInstituteId": "f128639c-171b-46eb-8eff-219705bcbbcc",
             "financialInstituteName": "Bink",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Demo providers",
             "multiFactor": true,
             "name": "se-test-psd2-embedded",
@@ -1907,6 +1995,8 @@
             ],
             "financialInstituteId": "f128639c-171b-46eb-8eff-219705bcbbcc",
             "financialInstituteName": "Bink",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Demo providers",
             "multiFactor": true,
             "name": "se-test-psd2-redirect-success",
@@ -1919,6 +2009,8 @@
         {
             "credentialsType": "PASSWORD",
             "displayName": "TEST_PARTNER Abstract",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": null,
             "name": "se-testpartner-abstract",
             "popular": false,
@@ -1944,6 +2036,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
             "name": "seatkortet-bankid",
@@ -1979,6 +2073,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "SEB",
             "market": "SE",
             "multiFactor": true,
@@ -1993,15 +2089,16 @@
             "type": "BANK"
         },
         {
-            "name": "se-seb-bankid",
             "className": "nxgen.se.banks.seb.SebAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "SEB",
             "fields": [],
+            "financialInstitutionId": "dummyInstitutionId",
             "groupDisplayName": "SEB",
             "market": "SE",
             "multiFactor": false,
+            "name": "se-seb-bankid",
             "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "popular": true,
             "refreshFrequency": 0,
@@ -2009,8 +2106,7 @@
             "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": "http://www.seb.se/pow/wcp/index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se",
-            "type": "BANK",
-            "financialInstitutionId": "dummyInstitutionId"
+            "type": "BANK"
         },
         {
             "className": "nxgen.se.creditcards.sebkort.sebwallet.SebWalletMastercardAgent",
@@ -2032,6 +2128,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "sebwalletmastercard-bankid",
@@ -2061,6 +2159,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Shell MasterCard",
             "market": "SE",
             "multiFactor": false,
@@ -2095,6 +2195,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "sjpriomastercard-bankid",
@@ -2111,6 +2213,8 @@
             "currency": "SEK",
             "displayName": "Skandiabanken",
             "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
             "name": "skandiabanken-bankid",
@@ -2122,14 +2226,16 @@
             "type": "BANK"
         },
         {
-            "name": "se-skandiabanken-bankid",
             "className": "nxgen.se.banks.skandiabanken.SkandiaBankenAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Skandiabanken",
             "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
+            "name": "se-skandiabanken-bankid",
             "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "popular": true,
             "refreshFrequency": 0,
@@ -2144,6 +2250,8 @@
             "currency": "SEK",
             "displayName": "Skandiabanken",
             "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
             "name": "skandiabanken-ssn-bankid",
@@ -2174,6 +2282,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Skodakortet",
             "market": "SE",
             "multiFactor": false,
@@ -2206,6 +2316,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "sparbankensyd-bankid",
@@ -2219,21 +2331,23 @@
             "type": "BANK"
         },
         {
-            "name": "se-sparbankensyd-ob",
             "accessType": "OPEN_BANKING",
             "authenticationFlow": "REDIRECT",
-            "displayName": "Sparbanken Syd",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "THIRD_PARTY_APP",
-            "multiFactor": true,
             "className": "nxgen.dk.openbanking.sdc.SdcAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "Sparbanken Syd",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": true,
+            "name": "se-sparbankensyd-ob",
             "passwordHelpText": null,
-            "transactional": true,
             "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
             "tutorialUrl": null,
-            "fields": []
+            "type": "BANK"
         },
         {
             "className": "nxgen.se.creditcards.sebkort.circlek.CircleKMastercardSEAgent",
@@ -2255,6 +2369,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": true,
             "name": "statoilmastercard-bankid",
@@ -2320,15 +2436,6 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
-            "supplementalFields": [
-                {
-                    "description": "Beneficiary Name",
-                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
-                    "hint": "Name",
-                    "masked": false,
-                    "name": "addbeneficiaryinput"
-                }
-            ],
             "financialInstitutionId": "6c1749b4475e5677a83e9fa4bb60a18a",
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
@@ -2340,6 +2447,15 @@
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
+            "supplementalFields": [
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
+                }
+            ],
             "transactional": true,
             "type": "BANK"
         },
@@ -2367,6 +2483,18 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "groupDisplayName": "Swedbank och Sparbankerna",
+            "market": "SE",
+            "multiFactor": true,
+            "name": "swedbank-token",
+            "passwordHelpText": "You need access to your Security token to create a screen code.",
+            "payload": "swedbank",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
             "supplementalFields": [
                 {
                     "description": "One time code",
@@ -2375,11 +2503,11 @@
                     "masked": true,
                     "maxLength": 8,
                     "minLength": 8,
+                    "name": "logininput",
                     "numeric": true,
                     "pattern": "([0-9]{8})",
                     "patternError": "Please enter eight digits.",
-                    "sensitive": true,
-                    "name": "logininput"
+                    "sensitive": true
                 },
                 {
                     "description": "Challenge",
@@ -2397,8 +2525,8 @@
                     "masked": false,
                     "maxLength": 8,
                     "minLength": 8,
-                    "numeric": true,
                     "name": "signfortransferinput",
+                    "numeric": true,
                     "pattern": "^[0-9]{8}$",
                     "patternError": "Please enter eight digits.",
                     "value": null
@@ -2426,8 +2554,8 @@
                     "masked": false,
                     "maxLength": 8,
                     "minLength": 8,
-                    "numeric": true,
                     "name": "signforbeneficiaryinput",
+                    "numeric": true,
                     "pattern": "^[0-9]{8}$",
                     "patternError": "Please enter eight digits.",
                     "value": null
@@ -2436,26 +2564,16 @@
                     "description": "Response Code",
                     "helpText": "Enter the code from the Security token",
                     "hint": "NNNNNNNN",
-                    "maxLength": 8,
-                    "minLength": 8,
-                    "numeric": true,
-                    "pattern": "([0-9]{8})",
-                    "patternError": "Please enter eight digits.",
                     "immutable": true,
                     "masked": false,
-                    "name": "signcodeinput"
+                    "maxLength": 8,
+                    "minLength": 8,
+                    "name": "signcodeinput",
+                    "numeric": true,
+                    "pattern": "([0-9]{8})",
+                    "patternError": "Please enter eight digits."
                 }
             ],
-            "groupDisplayName": "Swedbank och Sparbankerna",
-            "market": "SE",
-            "multiFactor": true,
-            "name": "swedbank-token",
-            "passwordHelpText": "You need access to your Security token to create a screen code.",
-            "payload": "swedbank",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
         },
@@ -2483,6 +2601,18 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "groupDisplayName": "Swedbank och Sparbankerna",
+            "market": "SE",
+            "multiFactor": true,
+            "name": "savingsbank-token",
+            "passwordHelpText": "You need access to your Security token to create a screen code.",
+            "payload": "savingsbank",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
             "supplementalFields": [
                 {
                     "description": "One time code",
@@ -2491,11 +2621,11 @@
                     "masked": true,
                     "maxLength": 8,
                     "minLength": 8,
+                    "name": "logininput",
                     "numeric": true,
                     "pattern": "([0-9]{8})",
                     "patternError": "Please enter eight digits.",
-                    "sensitive": true,
-                    "name": "logininput"
+                    "sensitive": true
                 },
                 {
                     "description": "Challenge",
@@ -2513,8 +2643,8 @@
                     "masked": false,
                     "maxLength": 8,
                     "minLength": 8,
-                    "numeric": true,
                     "name": "signfortransferinput",
+                    "numeric": true,
                     "pattern": "^[0-9]{8}$",
                     "patternError": "Please enter eight digits.",
                     "value": null
@@ -2542,8 +2672,8 @@
                     "masked": false,
                     "maxLength": 8,
                     "minLength": 8,
-                    "numeric": true,
                     "name": "signforbeneficiaryinput",
+                    "numeric": true,
                     "pattern": "^[0-9]{8}$",
                     "patternError": "Please enter eight digits.",
                     "value": null
@@ -2552,26 +2682,16 @@
                     "description": "Response Code",
                     "helpText": "Enter the code from the Security token",
                     "hint": "NNNNNNNN",
-                    "maxLength": 8,
-                    "minLength": 8,
-                    "numeric": true,
-                    "pattern": "([0-9]{8})",
-                    "patternError": "Please enter eight digits.",
                     "immutable": true,
                     "masked": false,
-                    "name": "signcodeinput"
+                    "maxLength": 8,
+                    "minLength": 8,
+                    "name": "signcodeinput",
+                    "numeric": true,
+                    "pattern": "([0-9]{8})",
+                    "patternError": "Please enter eight digits."
                 }
             ],
-            "groupDisplayName": "Swedbank och Sparbankerna",
-            "market": "SE",
-            "multiFactor": true,
-            "name": "savingsbank-token",
-            "passwordHelpText": "You need access to your Security token to create a screen code.",
-            "payload": "savingsbank",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
         },
@@ -2597,15 +2717,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
-            "supplementalFields": [
-                {
-                    "description": "Beneficiary Name",
-                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
-                    "hint": "Name",
-                    "masked": false,
-                    "name": "addbeneficiaryinput"
-                }
-            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Swedbank och Sparbankerna",
             "market": "SE",
             "multiFactor": true,
@@ -2615,6 +2728,15 @@
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
             "status": "OBSOLETE",
+            "supplementalFields": [
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
+                }
+            ],
             "transactional": true,
             "type": "BANK"
         },
@@ -2640,6 +2762,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Swedbank Payment Revamp",
             "market": "SE",
             "multiFactor": true,
@@ -2671,6 +2795,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "SE",
             "multiFactor": false,
             "name": "volkswagenkortet-bankid",
@@ -2701,6 +2827,8 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "volvofinans-bankid",
             "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
@@ -2711,8 +2839,8 @@
         },
         {
             "accessType": "OTHER",
-            "backgroundRefreshMaxFrequency": 4,
             "backgroundRefreshEnabled": true,
+            "backgroundRefreshMaxFrequency": 4,
             "className": "nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "currency": "SEK",

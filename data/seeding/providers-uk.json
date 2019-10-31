@@ -3,6 +3,7 @@
     "market": "GB",
     "providers": [
         {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -17,7 +18,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-aib-oauth2",
@@ -31,6 +33,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -45,7 +48,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-firsttrust-oauth2",
@@ -77,6 +81,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "American Express",
             "multiFactor": false,
             "name": "uk-americanexpress-password",
@@ -89,6 +95,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -103,7 +110,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-bankofireland-oauth2",
@@ -117,6 +125,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -131,6 +140,8 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-bankofscotland-oauth2",
@@ -141,16 +152,15 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK",
-            "accessType": "OPEN_BANKING"
+            "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
             "className": "nxgen.uk.openbanking.barclays.BarclaysV31Agent",
             "credentialsType": "PASSWORD",
-            "accessType": "OPEN_BANKING",
             "displayName": "Barclays",
             "fields": [
                 {
@@ -160,6 +170,8 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-barclays-oauth2",
@@ -173,7 +185,7 @@
             "type": "BANK"
         },
         {
-            "name": "uk-danskebank-oauth2",
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -182,17 +194,19 @@
             "displayName": "Danske Bank",
             "fields": [
                 {
-                    "name": "info",
-                    "value": "Connecting your bank",
                     "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true
+                    "immutable": true,
+                    "name": "info",
+                    "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
-            "payload": "tink:danskebank",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
+            "name": "uk-danskebank-oauth2",
             "passwordhelptext": "Authentication is done on external page",
+            "payload": "tink:danskebank",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -201,6 +215,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.uk.openbanking.firstdirect.FirstDirectV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "First Direct",
@@ -212,7 +227,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-firstdirect-oauth2",
@@ -226,6 +242,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -240,7 +257,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-halifax-oauth2",
@@ -254,6 +272,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.uk.openbanking.hsbc.HsbcV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "HSBC",
@@ -265,7 +284,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-hsbc-oauth2",
@@ -279,7 +299,7 @@
             "type": "BANK"
         },
         {
-            "name": "uk-lloyds-oauth2",
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -288,17 +308,19 @@
             "displayName": "Lloyds Bank",
             "fields": [
                 {
-                    "name": "info",
-                    "value": "Connecting your bank",
                     "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true
+                    "immutable": true,
+                    "name": "info",
+                    "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
-            "payload": "tink:lloyds",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
+            "name": "uk-lloyds-oauth2",
             "passwordhelptext": "Authentication is done on external page",
+            "payload": "tink:lloyds",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -307,6 +329,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.uk.openbanking.markandspencer.MarkAndSpencerV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "M&S Bank",
@@ -318,7 +341,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-markandspencer-oauth2",
@@ -332,14 +356,16 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
-            "accessType": "OPEN_BANKING",
             "className": "nxgen.uk.openbanking.modelo.ModeloAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Modelo test",
             "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-modelo-oauth2",
@@ -353,6 +379,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.uk.openbanking.monzo.MonzoV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Monzo",
@@ -364,7 +391,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Monzo",
             "multiFactor": false,
             "name": "uk-monzo-oauth2",
@@ -392,6 +420,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "uk-n26-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -401,6 +431,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -415,7 +446,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-natwest-oauth2",
@@ -429,6 +461,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -443,7 +476,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-rbs-oauth2",
@@ -457,6 +491,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.uk.openbanking.revolut.RevolutV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Revolut Bank",
@@ -468,7 +503,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-revolut-oauth2",
@@ -482,6 +518,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -496,7 +533,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-santander-oauth2",
@@ -510,8 +548,8 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.uk.openbanking.starling.StarlingAgent",
             "accessType": "OPEN_BANKING",
+            "className": "nxgen.uk.openbanking.starling.StarlingAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Starling",
             "fields": [
@@ -522,6 +560,8 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "uk-starling-oauth2",
             "passwordHelpText": "",
@@ -543,6 +583,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "uk-test-multi-supplemental",
@@ -570,6 +612,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "uk-test-password",
@@ -580,6 +624,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -594,7 +639,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-ulster-oauth2",
@@ -608,6 +654,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.uk.openbanking.tesco.TescoV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Tesco Bank",
@@ -619,7 +666,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-tesco-oauth2",
@@ -633,6 +681,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.uk.openbanking.nationwide.NationwideV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Nationwide Bank",
@@ -644,7 +693,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "accessType": "OPEN_BANKING",
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-nationwide-oauth2",
@@ -670,6 +720,8 @@
                     "value": "Connecting your bank"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-tsb-oauth2",

@@ -26,6 +26,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-albank-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "20",
@@ -60,6 +62,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-almbrandbank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -93,6 +97,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-andelskassen-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "48",
@@ -127,6 +133,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-andelskassenfælleskassen-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "41",
@@ -154,6 +162,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-andelskassenoikos-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -180,6 +190,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-banknordik-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -190,20 +202,22 @@
             "type": "BANK"
         },
         {
-            "name": "dk-banknordik-ob",
             "accessType": "OPEN_BANKING",
             "authenticationFlow": "REDIRECT",
-            "displayName": "BankNordik",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "THIRD_PARTY_APP",
-            "multiFactor": true,
             "className": "nxgen.dk.openbanking.sdc.SdcAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "BankNordik",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": true,
+            "name": "dk-banknordik-ob",
             "passwordHelpText": null,
+            "popular": true,
+            "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": null,
-            "fields": []
+            "type": "BANK"
         },
         {
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
@@ -222,6 +236,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-basisbank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -255,6 +271,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-bil-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "53",
@@ -282,6 +300,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-borbjergsparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -308,6 +328,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-broagersparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -341,6 +363,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-coop-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "888",
@@ -352,6 +376,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.danskebank.DanskeBankDKAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Danske Bank",
@@ -375,14 +400,15 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-danskebank-servicecode",
             "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK",
-            "accessType": "OTHER"
+            "type": "BANK"
         },
         {
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
@@ -408,6 +434,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-denjyskesparekasse-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "508",
@@ -442,6 +470,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-djurslandsbank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -468,6 +498,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-dragsholmsparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -494,6 +526,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-dronninglundsparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -520,6 +554,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-fanosparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -553,6 +589,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-fasterandelskasse-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "82",
@@ -580,6 +618,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-folkesparekassen-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -606,6 +646,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-forbrugsforeningen-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -632,6 +674,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-frossparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -665,6 +709,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-frørupandelskasse-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "67",
@@ -699,6 +745,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-frøslevmollerupsparekasse-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "62",
@@ -733,6 +781,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-fynske-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "338",
@@ -767,6 +817,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-grønlandsbanken-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "4",
@@ -801,6 +853,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-handelsbanken-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "37",
@@ -835,6 +889,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-hvidbjerg-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "25",
@@ -862,6 +918,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-jakandelskasseostervra-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -888,6 +946,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-jutlanderbank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -921,6 +981,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "dk-jyskebank-codecard",
             "passwordHelpText": "Use the same mobile code you use in your Jyske Bank mobile app. You select your mobile code on jyskenetbank.dk under administration \"Agreements and mobile\".",
@@ -946,6 +1008,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-klimsparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -979,6 +1043,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-kreditbanken-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1012,6 +1078,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-københavnsandelskasse-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "80",
@@ -1039,6 +1107,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-langasparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1065,6 +1135,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-lansparbank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1098,6 +1170,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-lollands-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "95",
@@ -1132,6 +1206,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-lægernes-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "30",
@@ -1166,6 +1242,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-merkur-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "87",
@@ -1193,6 +1271,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-middelfartsparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1226,6 +1306,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-møns-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "55",
@@ -1254,6 +1336,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-nordea-nemid",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1286,6 +1370,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-nordfynsbank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1319,6 +1405,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-nordjyskebank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1352,6 +1440,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-nykredit-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "32",
@@ -1386,6 +1476,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-ostjydskbank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1419,6 +1511,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-pensam-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "29",
@@ -1453,6 +1547,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-pfa-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "826",
@@ -1487,6 +1583,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "53c8b70749624122959aa524421ca93d",
+            "financialInstitutionName": "Ringkjøbing Landbobank",
             "multiFactor": false,
             "name": "dk-ringkjobinglandbobank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1494,29 +1592,27 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK",
-            "financialInstitutionId": "53c8b70749624122959aa524421ca93d",
-            "financialInstitutionName": "Ringkjøbing Landbobank"
+            "type": "BANK"
         },
         {
-            "name": "dk-ringkjobinglandbobank-ob",
-            "displayName": "Ringkjøbing Landbobank",
             "accessType": "OPEN_BANKING",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
             "className": "nxgen.dk.openbanking.ringkjobinglandbobank.RingkjobingLandbobankAgent",
-            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-            "transactional": true,
-            "tutorialUrl": null,
+            "credentialsType": "PASSWORD",
+            "currency": "DKK",
+            "displayName": "Ringkjøbing Landbobank",
             "fields": [],
             "financialInstitutionId": "53c8b70749624122959aa524421ca93d",
             "financialInstitutionName": "Ringkjøbing Landbobank",
             "market": "DK",
-            "currency": "DKK",
-            "payload": "tink"
+            "multiFactor": false,
+            "name": "dk-ringkjobinglandbobank-ob",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
         },
         {
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
@@ -1535,6 +1631,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-riseflemloesesparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1561,6 +1659,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-rondeparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1594,6 +1694,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-salling-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "28",
@@ -1621,6 +1723,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-saxoprivatbank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1654,6 +1758,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-sebwealth-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "51",
@@ -1688,6 +1794,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-skjernbank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1714,6 +1822,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-sparekassenballing-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1740,6 +1850,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-sparekassenbredebro-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1766,6 +1878,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-sparekassendenlillebikube-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1792,6 +1906,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-sparekassendjursland-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1818,6 +1934,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-sparekassenkronjylland-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1844,6 +1962,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-sparekassennebelogomegn-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1877,6 +1997,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-sparekassensjaelland-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1903,6 +2025,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-sparekassenthy-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1929,6 +2053,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-sparekassenvendsyssel-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -1962,6 +2088,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-sparnord-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "369",
@@ -1989,6 +2117,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-stadilsparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -2022,6 +2152,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-swedbank-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "830",
@@ -2056,6 +2188,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-sydbank-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -2089,6 +2223,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-søbyskaderhallingsparekasse-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "139",
@@ -2116,6 +2252,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "dk-sønderhahørstedsparekasse-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -2137,6 +2275,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "dk-test-multi-supplemental",
@@ -2164,6 +2304,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "dk-test-password",
@@ -2197,6 +2339,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-totalbanken-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "93",
@@ -2231,6 +2375,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "dk-vestjysk-password",
             "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
             "payload": "19",

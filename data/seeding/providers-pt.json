@@ -353,12 +353,10 @@
             "type": "BANK"
         },
         {
-            "currency": "EUR",
-            "market": "PT",
-            "className": "nxgen.pt.banks.santander.SantanderAgent",
-            "name": "pt-santander-password",
             "accessType": "OTHER",
+            "className": "nxgen.pt.banks.santander.SantanderAgent",
             "credentialsType": "PASSWORD",
+            "currency": "EUR",
             "displayName": "Santander",
             "fields": [
                 {
@@ -373,15 +371,17 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "market": "PT",
             "multiFactor": false,
+            "name": "pt-santander-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK",
-            "financialInstitutionId": "dummyFinancialInstitutionId"
+            "type": "BANK"
         },
         {
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
