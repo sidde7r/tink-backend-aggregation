@@ -90,13 +90,6 @@ public class LogMasker {
     }
 
     public static LoggingMode shouldLog(Provider provider) {
-        // Temporary disable of http traffic logging for RE agents.
-        // Leave until all RE agents logging has been evaluted and secrets moved to appropriate
-        // format to be handled by logging masker.
-        if (!provider.isOpenBanking()) {
-            return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
-        }
-
         if (!MARKETS_MASKER_COVERS_SECRETS_FOR.contains(provider.getMarket().toLowerCase())) {
             return LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS;
         }
