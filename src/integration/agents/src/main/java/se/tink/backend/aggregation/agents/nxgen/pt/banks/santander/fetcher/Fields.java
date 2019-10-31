@@ -75,4 +75,14 @@ public class Fields {
         static final String PRODUCT_NAME = "name";
         static final String FULL_NUMBER = "number";
     }
+
+    static class Loan {
+        static final String ACCOUNT_NUMBER = "accountNumber";
+        static final String NAME = "name";
+        static final String AVAILABLE = "available";
+        static final String BALANCE = "balance";
+        static final String START_DATE = "startDate";
+        static final String CURRENCY = "currency";
+        static final String LOAN_TYPE = "product";
+    }
 }
