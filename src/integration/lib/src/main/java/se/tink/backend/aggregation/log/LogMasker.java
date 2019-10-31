@@ -70,9 +70,9 @@ public class LogMasker {
     }
 
     public void addSensitiveValuesSetObservable(
-            Observable<Collection<String>> newSensitiveValuesSetSubject) {
+            Observable<Collection<String>> newSensitiveValuesSetObservable) {
         composite.add(
-                newSensitiveValuesSetSubject
+                newSensitiveValuesSetObservable
                         .subscribeOn(Schedulers.trampoline())
                         .subscribe(this::addNewSensitiveValuesToMasker));
     }
