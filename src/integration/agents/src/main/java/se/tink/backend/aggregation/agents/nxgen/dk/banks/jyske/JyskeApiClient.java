@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.rpc.Fe
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class JyskeApiClient {
@@ -101,7 +102,7 @@ public class JyskeApiClient {
         return getAccountResponse;
     }
 
-    public GetTransactionsResponse fetchTransactions(Account account, int page) {
+    private GetTransactionsResponse fetchTransactions(Account account, int page, URL url) {
         GetTransactionsRequest request = new GetTransactionsRequest();
 
         Optional<AccountBriefEntity> accountBriefEntity =
@@ -111,7 +112,7 @@ public class JyskeApiClient {
                                         Objects.equals(
                                                 Optional.ofNullable(acc.getRegNo()).orElse("")
                                                         + Optional.ofNullable(acc.getAccountNo())
-                                                                .orElse(""),
+                                                        .orElse(""),
                                                 account.getAccountNumber()))
                         .findFirst();
 
@@ -124,9 +125,17 @@ public class JyskeApiClient {
         request.setPage(page);
         request.setShowPlanning(false);
 
-        return this.createJsonRequest(JyskeConstants.Url.GET_TRANSACTIONS)
+        return this.createJsonRequest(url)
                 .header(JyskeConstants.Header.BUILDNO_KEY, JyskeConstants.Header.BUILDNO_VALUE)
                 .post(GetTransactionsResponse.class, request);
+    }
+
+    public GetTransactionsResponse fetchTransactions(Account account, int page) {
+        try {
+            return fetchTransactions(account, page, JyskeConstants.Url.GET_TRANSACTIONS);
+        } catch (HttpResponseException hre) {
+            return fetchTransactions(account, page, JyskeConstants.Url.GET_TRANSACTIONS_WITH_EXTERNALS);
+        }
     }
 
     public GetTransactionsResponse fetchFutureTransactions(Account account) {
