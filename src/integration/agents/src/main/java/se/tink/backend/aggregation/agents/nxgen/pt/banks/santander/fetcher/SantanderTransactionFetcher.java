@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -104,8 +103,6 @@ public class SantanderTransactionFetcher implements TransactionDatePaginator<Tra
     }
 
     private Transaction toTinkTransaction(Map<String, String> obj, String accountCurrencyCode) {
-        DateTimeFormatter dateTimeFormatter =
-                DateTimeFormatter.ofPattern(SantanderConstants.DATE_FORMAT);
 
         return Transaction.builder()
                 .setAmount(
@@ -114,7 +111,8 @@ public class SantanderTransactionFetcher implements TransactionDatePaginator<Tra
                                 accountCurrencyCode))
                 .setDate(
                         LocalDate.parse(
-                                obj.get(Fields.Transaction.RAW_OPERATION_DATE), dateTimeFormatter))
+                                obj.get(Fields.Transaction.RAW_OPERATION_DATE),
+                                SantanderConstants.DATE_FORMATTER))
                 .setDescription(obj.get(Fields.Transaction.DESCRIPTION))
                 .build();
     }

@@ -6,7 +6,7 @@ import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.CARDS_BODY;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.CONTROL_HEADER;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.LOANS_BODY;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.SESSION_TOKKEN_REQUEST_HEADER;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.SESSION_TOKEN_REQUEST_HEADER;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.constructCreditCardTransactionsRequestBody;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.constructDepositDetailsBody;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.constructTokenRequestBody;
@@ -41,7 +41,7 @@ public class SantanderApiClient {
         String rawResponse =
                 tinkHttpClient
                         .request(SantanderConstants.API_URL)
-                        .header(CONTROL_HEADER, SESSION_TOKKEN_REQUEST_HEADER)
+                        .header(CONTROL_HEADER, SESSION_TOKEN_REQUEST_HEADER)
                         .body(constructTokenRequestBody(login, password))
                         .post(String.class);
 
@@ -113,9 +113,5 @@ public class SantanderApiClient {
                         .post(String.class);
 
         return parser.parseResponse(rawResponse);
-    }
-
-    static String escapeString(String argValue) {
-        return argValue.replace("|", "||");
     }
 }

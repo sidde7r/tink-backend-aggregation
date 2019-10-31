@@ -10,15 +10,15 @@ import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetche
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.SantanderApiClient;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.util.CurrencyMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -30,11 +30,12 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class SantanderLoanAccountFetcher implements AccountFetcher<LoanAccount> {
 
+    private static final Logger log = LoggerFactory.getLogger(SantanderLoanAccountFetcher.class);
+
     private static final GenericTypeMapper<Type, String> loanTypes =
             GenericTypeMapper.<Type, String>genericBuilder()
                     .put(Type.MORTGAGE, "096HG0") // Habitação
                     .put(Type.CREDIT, "096MF0") // Habitação Multifunções
-                    .setDefaultTranslationValue(Type.DERIVE_FROM_NAME)
                     .build();
 
     private final SantanderApiClient apiClient;
@@ -51,9 +52,19 @@ public class SantanderLoanAccountFetcher implements AccountFetcher<LoanAccount> 
 
         if (businessData == null) {
             return Collections.emptyList();
-        } else {
-            return businessData.stream().map(this::toTinkAccount).collect(Collectors.toList());
         }
+
+        List<LoanAccount> accounts = new ArrayList<>();
+        for (Map<String, String> loan : businessData) {
+            String loanType = loan.get(LOAN_TYPE);
+            if (loanTypes.translate(loanType).isPresent()) {
+                accounts.add(toTinkAccount(loan));
+            } else {
+                log.warn("Unknown loan product type: {}. Loan won't be mapped.", loanType);
+            }
+        }
+
+        return accounts;
     }
 
     private LoanAccount toTinkAccount(Map<String, String> loan) {
@@ -61,9 +72,7 @@ public class SantanderLoanAccountFetcher implements AccountFetcher<LoanAccount> 
                 currencyMapper.get(Integer.parseInt(loan.get(CURRENCY))).getCurrencyCode();
 
         LocalDate startDate =
-                LocalDate.parse(
-                        loan.get(START_DATE),
-                        DateTimeFormatter.ofPattern(SantanderConstants.DATE_FORMAT));
+                LocalDate.parse(loan.get(START_DATE), SantanderConstants.DATE_FORMATTER);
 
         return LoanAccount.nxBuilder()
                 .withLoanDetails(

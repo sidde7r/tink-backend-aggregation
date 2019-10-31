@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -47,8 +46,6 @@ public class SantanderCreditCardTransactionFetcher
 
     private Transaction toTinkTransaction(
             Map<String, String> transaction, CreditCardAccount account) {
-        DateTimeFormatter dateTimeFormatter =
-                DateTimeFormatter.ofPattern(SantanderConstants.DATE_FORMAT);
 
         ExactCurrencyAmount transactionAmount =
                 ExactCurrencyAmount.of(
@@ -57,7 +54,8 @@ public class SantanderCreditCardTransactionFetcher
 
         LocalDate transactionDate =
                 LocalDate.parse(
-                        transaction.get(Fields.Transaction.RAW_OPERATION_DATE), dateTimeFormatter);
+                        transaction.get(Fields.Transaction.RAW_OPERATION_DATE),
+                        SantanderConstants.DATE_FORMATTER);
 
         return CreditCardTransaction.builder()
                 .setAmount(transactionAmount)

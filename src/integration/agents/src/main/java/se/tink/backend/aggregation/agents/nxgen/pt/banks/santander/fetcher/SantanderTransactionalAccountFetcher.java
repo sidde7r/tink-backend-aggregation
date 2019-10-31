@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderCons
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.ApiResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.SantanderApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Account;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.util.CurrencyMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;

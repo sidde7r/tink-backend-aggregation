@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client;
 
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.SantanderApiClient.escapeString;
-
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants;
 
 class Requests {
@@ -11,7 +8,7 @@ class Requests {
     static final String CONTROL_HEADER = "MORE-Control";
     static final String BUSINESS_DATA_REQUEST_HEADER =
             "|1process|1service|1%s|1session|1executeFlow|1method|51|1execute|1|1callId|D5";
-    static final String SESSION_TOKKEN_REQUEST_HEADER =
+    static final String SESSION_TOKEN_REQUEST_HEADER =
             "|110.5.5|1version|1process|1service|12.13.24.2|1appVersion|1login|1method|D4";
 
     private static final String INVESTMENT_TRANSACTIONS_BODY_TEMPLATE =
@@ -44,9 +41,6 @@ class Requests {
             int pageNumber,
             int pageSize) {
 
-        DateTimeFormatter requestDateFormat =
-                DateTimeFormatter.ofPattern(SantanderConstants.DATE_FORMAT);
-
         return String.format(
                 TRANSACTIONS_BODY_TEMPLATE,
                 pageSize,
@@ -54,8 +48,8 @@ class Requests {
                 branchCode,
                 accountNumber,
                 pageNumber,
-                requestDateFormat.format(dateTo),
-                requestDateFormat.format(dateFrom));
+                SantanderConstants.DATE_FORMATTER.format(dateTo),
+                SantanderConstants.DATE_FORMATTER.format(dateFrom));
     }
 
     static String constructCreditCardTransactionsRequestBody(
@@ -70,11 +64,17 @@ class Requests {
     }
 
     static String constructTokenRequestBody(String login, String password) {
-        return String.format(
-                SESSION_TOKEN_BODY_TEMPLATE, escapeString(login), escapeString(password));
+        return String.format(SESSION_TOKEN_BODY_TEMPLATE, escape(login), escape(password));
     }
 
     static String constructDepositDetailsBody(String accountNumber, String branchCode) {
         return String.format(DEPOSIT_DETAILS_BODY_TEMPLATE, branchCode, accountNumber);
+    }
+
+    /*
+       Since '|' is used as a delimiter in bank's request format, all '|' occurring in strings must be replaced with '||'.
+    */
+    private static String escape(String argValue) {
+        return argValue.replace("|", "||");
     }
 }

@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.util;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher;
 
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class CurrencyMapper {
+class CurrencyMapper {
 
     private static Map<Integer, Currency> currencies = new HashMap<>();
 
@@ -14,7 +14,7 @@ public class CurrencyMapper {
                 .forEach(currency -> currencies.put(currency.getNumericCode(), currency));
     }
 
-    public Currency get(Integer iso4217Code) {
+    Currency get(Integer iso4217Code) {
         return Optional.ofNullable(currencies.get(iso4217Code))
                 .orElseThrow(
                         () ->
