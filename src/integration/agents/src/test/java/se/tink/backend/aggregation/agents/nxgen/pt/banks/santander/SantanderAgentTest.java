@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-// @Ignore
 public class SantanderAgentTest {
 
     private enum Arg {
