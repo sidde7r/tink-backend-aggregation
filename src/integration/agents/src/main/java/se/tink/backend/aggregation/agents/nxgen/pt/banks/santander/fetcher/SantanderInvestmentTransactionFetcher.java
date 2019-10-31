@@ -32,10 +32,14 @@ public class SantanderInvestmentTransactionFetcher
                         .fetchInvestmentTransactions(account.getAccountNumber(), page, PAGE_SIZE)
                         .getBusinessData();
 
-        List<Transaction> transactions =
-                businessData.stream().map(this::toTinkTransaction).collect(Collectors.toList());
+        if (businessData == null) {
+            return PaginatorResponseImpl.createEmpty(false);
+        } else {
+            List<Transaction> transactions =
+                    businessData.stream().map(this::toTinkTransaction).collect(Collectors.toList());
 
-        return PaginatorResponseImpl.create(transactions, !transactions.isEmpty());
+            return PaginatorResponseImpl.create(transactions, !transactions.isEmpty());
+        }
     }
 
     private Transaction toTinkTransaction(Map<String, String> transaction) {

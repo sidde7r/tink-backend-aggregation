@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.SantanderApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Assets;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Deposit;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Investment;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.util.CurrencyMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -43,23 +44,29 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
         List<InvestmentAccount> allInvestments = new ArrayList<>();
 
         investmentAccounts.forEach(
-                account -> allInvestments.add(toTinkAccount(account, PortfolioType.DEPOT)));
+                account -> allInvestments.add(mapInvestment(account, PortfolioType.DEPOT)));
 
         retirementInvestmentAccounts.forEach(
-                account -> allInvestments.add(toTinkAccount(account, PortfolioType.PENSION)));
+                account -> allInvestments.add(mapInvestment(account, PortfolioType.PENSION)));
 
-        deposits.forEach(
-                account -> allInvestments.add(toTinkAccount(account, PortfolioType.DEPOT)));
+        deposits.forEach(account -> allInvestments.add(mapDeposit(account)));
 
         return Collections.unmodifiableCollection(allInvestments);
     }
 
-    private InvestmentAccount toTinkAccount(
+    private InvestmentAccount mapInvestment(
             Map<String, String> account, PortfolioType portfolioType) {
 
-        double totalProfit =
-                calculateTotalProfit(
-                        account.get(Investment.AVAILABLE_BALANCE), account.get(Investment.BALANCE));
+        PortfolioModule portfolio = buildInvestmentPortfolio(account, portfolioType);
+        return buildAccount(account, portfolio);
+    }
+
+    private InvestmentAccount mapDeposit(Map<String, String> account) {
+        PortfolioModule portfolio = buildDepositPortfolio(account);
+        return buildAccount(account, portfolio);
+    }
+
+    private InvestmentAccount buildAccount(Map<String, String> account, PortfolioModule portfolio) {
 
         String accountCurrencyCode =
                 currencyMapper
@@ -67,17 +74,7 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
                         .getCurrencyCode();
 
         return InvestmentAccount.nxBuilder()
-                .withPortfolios(
-                        PortfolioModule.builder()
-                                .withType(portfolioType)
-                                .withUniqueIdentifier(account.get(Investment.ACCOUNT_NUMBER))
-                                .withCashValue(BigDecimal.ZERO.doubleValue())
-                                .withTotalProfit(totalProfit)
-                                .withTotalValue(
-                                        new BigDecimal(account.get(Investment.AVAILABLE_BALANCE))
-                                                .doubleValue())
-                                .withoutInstruments()
-                                .build())
+                .withPortfolios(portfolio)
                 .withCashBalance(
                         ExactCurrencyAmount.of(
                                 account.get(Investment.AVAILABLE_BALANCE), accountCurrencyCode))
@@ -93,7 +90,45 @@ public class SantanderInvestmentAccountFetcher implements AccountFetcher<Investm
                 .build();
     }
 
-    private double calculateTotalProfit(String availableBalance, String balance) {
+    private PortfolioModule buildInvestmentPortfolio(
+            Map<String, String> account, PortfolioType portfolioType) {
+
+        double totalProfit =
+                calculateTotalInvestmentProfit(
+                        account.get(Investment.AVAILABLE_BALANCE), account.get(Investment.BALANCE));
+
+        return PortfolioModule.builder()
+                .withType(portfolioType)
+                .withUniqueIdentifier(account.get(Investment.ACCOUNT_NUMBER))
+                .withCashValue(BigDecimal.ZERO.doubleValue())
+                .withTotalProfit(totalProfit)
+                .withTotalValue(
+                        new BigDecimal(account.get(Investment.AVAILABLE_BALANCE)).doubleValue())
+                .withoutInstruments()
+                .build();
+    }
+
+    private PortfolioModule buildDepositPortfolio(Map<String, String> depositAccount) {
+        Map<String, String> depositDetails =
+                (Map<String, String>)
+                        apiClient
+                                .fetchDepositDetails(
+                                        depositAccount.get(Investment.ACCOUNT_NUMBER),
+                                        depositAccount.get(Investment.BRANCH_CODE))
+                                .getBusinessData()
+                                .get(0);
+
+        return PortfolioModule.builder()
+                .withType(PortfolioType.DEPOT)
+                .withUniqueIdentifier(depositAccount.get(Investment.ACCOUNT_NUMBER))
+                .withCashValue(Double.parseDouble(depositAccount.get(Deposit.BALANCE)))
+                .withTotalProfit(Double.parseDouble(depositDetails.get(Deposit.GROSS_INTEREST)))
+                .withTotalValue(new BigDecimal(depositAccount.get(Deposit.BALANCE)).doubleValue())
+                .withoutInstruments()
+                .build();
+    }
+
+    private double calculateTotalInvestmentProfit(String availableBalance, String balance) {
         return new BigDecimal(availableBalance).subtract(new BigDecimal(balance)).doubleValue();
     }
 }

@@ -8,6 +8,7 @@ import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.LOANS_BODY;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.SESSION_TOKKEN_REQUEST_HEADER;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.constructCreditCardTransactionsRequestBody;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.constructDepositDetailsBody;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.constructTokenRequestBody;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.constructTransactionsRequestBody;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Requests.contructInvestmentTransactionsRequestBody;
@@ -55,7 +56,7 @@ public class SantanderApiClient {
         return executeRequest(ACCOUNTS_BODY);
     }
 
-    public ApiResponse fetchLoans(){
+    public ApiResponse fetchLoans() {
         return executeRequest(LOANS_BODY);
     }
 
@@ -94,6 +95,11 @@ public class SantanderApiClient {
         return executeRequest(body);
     }
 
+    public ApiResponse fetchDepositDetails(String accountNumber, String branchCode) {
+        String body = constructDepositDetailsBody(accountNumber, branchCode);
+        return executeRequest(body);
+    }
+
     private ApiResponse executeRequest(String body) {
         String rawResponse =
                 tinkHttpClient
@@ -108,7 +114,6 @@ public class SantanderApiClient {
 
         return parser.parseResponse(rawResponse);
     }
-
 
     static String escapeString(String argValue) {
         return argValue.replace("|", "||");

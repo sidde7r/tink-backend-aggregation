@@ -42,6 +42,12 @@ public class Fields {
         static final String ACCOUNT_NUMBER = "accountNumber";
         static final String FULL_ACCOUNT_NUMBER = "account";
         static final String PRODUCT_NAME = "number";
+        static final String BRANCH_CODE = "branch";
+    }
+
+    static class Deposit {
+        static final String BALANCE = "balance";
+        static final String GROSS_INTEREST = "grossInterest";
     }
 
     static class Assets {
