@@ -140,9 +140,8 @@ public class SBABAgent extends AbstractAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        configuration
-                .getIntegrations()
-                .getIntegration(INTEGRATION_NAME, SBABConfiguration.class)
+        getAgentConfigurationController()
+                .getAgentConfigurationFromK8sAsOptional(INTEGRATION_NAME, SBABConfiguration.class)
                 .ifPresent(
                         cfg -> {
                             authenticationClient.setConfiguration(cfg);

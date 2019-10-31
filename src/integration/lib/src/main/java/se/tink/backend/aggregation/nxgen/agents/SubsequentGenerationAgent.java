@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
@@ -124,10 +123,6 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                 new SupplementalInformationFormer(request.getProvider());
         this.appId = context.getAppId();
         this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
-    }
-
-    public AgentConfigurationController getAgentConfigurationController() {
-        return context.getAgentConfigurationController();
     }
 
     protected EidasIdentity getEidasIdentity() {

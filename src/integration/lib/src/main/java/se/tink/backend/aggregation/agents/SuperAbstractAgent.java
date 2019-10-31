@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /**
@@ -57,5 +58,9 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
     public final void close() {
         // Deliberately left empty. Feel free to override for agents that need proper cleanup of
         // resources.
+    }
+
+    public AgentConfigurationController getAgentConfigurationController() {
+        return context.getAgentConfigurationController();
     }
 }

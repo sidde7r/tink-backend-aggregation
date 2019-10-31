@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.banks.se.collector.configuration.CollectorConfiguration;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.CollectAuthenticationResponse;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.ErrorResponse;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -54,6 +55,8 @@ public class CollectorAgent extends AbstractAgent
                 TransferExecutor {
     private static final int MAX_ATTEMPTS = 90;
 
+    private static String INTEGRATION_NAME = "collector";
+
     private final CollectorApiClient apiClient;
     private final Credentials credentials;
     private final Catalog catalog;
@@ -72,8 +75,11 @@ public class CollectorAgent extends AbstractAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        apiClient.setSubscriptionKey(
-                configuration.getAggregationWorker().getCollectorSubscriptionKey());
+        CollectorConfiguration collectorConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(
+                                INTEGRATION_NAME, CollectorConfiguration.class);
+        apiClient.setSubscriptionKey(collectorConfiguration.getCollectorSubscriptionKey());
     }
 
     @Override
