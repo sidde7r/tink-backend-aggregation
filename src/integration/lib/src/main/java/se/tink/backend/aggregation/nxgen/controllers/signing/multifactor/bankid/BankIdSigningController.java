@@ -25,7 +25,7 @@ public class BankIdSigningController<T> implements Signer<T> {
     }
 
     public void sign(T toSign) throws AuthenticationException {
-        supplementalRequester.openBankId(null, false);
+        supplementalRequester.openBankId(signer.getAutostartToken().orElse(null), false);
         poll(toSign);
     }
 
