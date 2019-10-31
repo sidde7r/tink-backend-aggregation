@@ -132,6 +132,11 @@ public class JyskeApiClient {
 
     public GetTransactionsResponse fetchTransactions(Account account, int page) {
         try {
+            /*
+               Some users are getting errors using the GET_TRANSACTIONS endpoint but we are unable to reproduce the issue.
+               In a recent update, they have updated the transactions endpoint to GET_TRANSACTIONS_WITH_EXTERNALS.
+               Will fallback to the new endpoint if GET_TRANSACTIONS fails
+            */
             return fetchTransactions(account, page, JyskeConstants.Url.GET_TRANSACTIONS);
         } catch (HttpResponseException hre) {
             return fetchTransactions(
