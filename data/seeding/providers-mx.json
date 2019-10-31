@@ -27,6 +27,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "MX",
             "multiFactor": false,
             "name": "mx-bbva-password",
@@ -49,8 +51,8 @@
                     "description": "Client Id",
                     "immutable": true,
                     "maxLength": 16,
-                    "numeric": true,
                     "name": "username",
+                    "numeric": true,
                     "sensitive": true
                 },
                 {
@@ -61,6 +63,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "market": "MX",
             "multiFactor": false,
             "name": "mx-citibana-password",

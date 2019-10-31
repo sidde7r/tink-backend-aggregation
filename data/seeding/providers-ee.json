@@ -20,6 +20,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "ee-aslhv-password",
             "passwordHelpText": null,
@@ -42,6 +44,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "ee-test-multi-supplemental",
@@ -69,6 +73,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "ee-test-password",

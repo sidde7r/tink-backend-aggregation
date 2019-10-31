@@ -3,10 +3,10 @@
     "market": "FI",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.aktia.AktiaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Aktia",
-            "accessType": "OTHER",
             "fields": [
                 {
                     "description": "Username",
@@ -24,6 +24,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-aktia-codecard",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
@@ -50,6 +52,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "fi-alandsbanken-codecard",
             "passwordHelpText": "Use the same User-ID and password as you would in your bank's mobile app.",
@@ -77,6 +81,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-americanexpress-password",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
@@ -112,8 +118,8 @@
                     "sensitive": true
                 }
             ],
-            "name": "fi-danskebank-codecard",
             "financialInstitutionId": "6f5f37026d75467f8c7dbe7ce88c4441",
+            "name": "fi-danskebank-codecard",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
             "refreshFrequency": 1,
@@ -155,6 +161,8 @@
                     "patternError": "Please input the password also used for the web login."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-handelsbanken-codecard",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "refreshFrequency": 1,
@@ -176,6 +184,8 @@
                     "numeric": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "fi-nordea-thirdpartyapp",
             "popular": true,
@@ -204,6 +214,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-omasp-codecard",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
@@ -230,6 +242,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-op-codecard",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
@@ -255,6 +269,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-opbank-openbanking",
             "payload": "tink",
             "popular": true,
@@ -282,6 +298,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fi-poppankki-codecard",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -310,6 +328,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fi-saastopankki-codecard",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -335,6 +355,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fi-spankki-codecard",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -355,6 +377,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "fi-test-multi-supplemental",
@@ -382,6 +406,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "fi-test-password",

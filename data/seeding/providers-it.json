@@ -19,13 +19,13 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
             "name": "it-americanexpress-password",
             "passwordHelpText": "You use the same password as when you log in to the %s website. You can order a new username and password from [%s](%s).",
             "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": "https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=it_IT",
-            "type": "CREDIT_CARD",
-            "financialInstitutionId": "dummyFinancialInstitutionId"
+            "type": "CREDIT_CARD"
         }
     ]
 }

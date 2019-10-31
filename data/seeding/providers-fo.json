@@ -19,6 +19,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fo-banknordik-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -45,6 +47,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fo-betribanki-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -71,6 +75,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fo-nordoyasparikassi-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -97,6 +103,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fo-suduroyarsparikassi-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",

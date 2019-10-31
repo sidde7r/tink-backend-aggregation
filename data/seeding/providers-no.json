@@ -28,6 +28,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-aasen-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -64,6 +66,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-afjord-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -100,6 +104,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-andebu-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -136,6 +142,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-arendal-og-omegns-sparekasse",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -172,6 +180,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-askim-og-spydeberg-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -208,6 +218,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-aurland-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -244,6 +256,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-aurskog-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -280,6 +294,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-bank2",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -316,6 +332,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-berg-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -352,6 +370,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-bien-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -388,6 +408,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-birkenes-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -424,6 +446,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-bjugn-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -460,6 +484,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-blaker-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -496,6 +522,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-bud-fraena-hustad-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -532,6 +560,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-cultura-bank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -568,6 +598,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-danskebank-password",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -602,6 +634,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "no-dnb",
             "passwordHelpText": null,
@@ -637,6 +671,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-drangedal-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -673,6 +709,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-easybank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -709,6 +747,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-eidsberg-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -745,6 +785,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-eika-kredittbank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -781,6 +823,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-etnedal-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -817,6 +861,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-evje-hornnes-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -853,6 +899,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-fornebubanken",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -889,6 +937,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-gildeskal-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -925,6 +975,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-gjerstad-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -961,6 +1013,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-grong-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -997,6 +1051,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-grue-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1033,6 +1089,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-haltdalen-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1070,6 +1128,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "no-handelsbanken-bankid",
             "passwordHelpText": null,
@@ -1106,6 +1166,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-harstad-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1142,6 +1204,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-hegra-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1178,6 +1242,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-hemne-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1214,6 +1280,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-hjartdal-gransherad-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1250,6 +1318,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-hjelmeland-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1286,6 +1356,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-honefoss-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1322,6 +1394,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-høland-setskog-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1358,6 +1432,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-indre-sogn-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1394,6 +1470,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-jaeren-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1430,6 +1508,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-jernbanepersonalets-bank-og-forsikring",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1466,6 +1546,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-klaebu-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1502,6 +1584,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-kvinesdal-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1538,6 +1622,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-larvikbanken",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1574,6 +1660,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-lillestrombanken",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1610,6 +1698,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-lofoten-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1646,6 +1736,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-marker-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1682,6 +1774,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-melhusbanken",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1718,6 +1812,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-nesset-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1755,6 +1851,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Nordea",
             "multiFactor": true,
             "name": "no-nordea-bankid",
@@ -1794,6 +1892,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Nordea",
             "multiFactor": false,
             "name": "no-nordea-lightlogin",
@@ -1830,6 +1930,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-odal-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1866,6 +1968,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-ofoten-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1902,6 +2006,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-oppdalsbanken",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1938,6 +2044,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-orkla-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -1974,6 +2082,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-orland-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2010,6 +2120,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-orskog-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2046,6 +2158,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-personellservice-trondelag",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2082,6 +2196,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-rindal-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2118,6 +2234,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-rorosbanken",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2154,6 +2272,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-sandnes-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2190,6 +2310,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-selbu-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2226,6 +2348,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-skagerrak-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2262,6 +2386,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-skue-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2298,6 +2424,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-soknedal-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2334,6 +2462,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-bv",
@@ -2370,6 +2500,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-gudbrandsdal",
@@ -2406,6 +2538,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-hallingdal-valdres",
@@ -2442,6 +2576,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-lom-og-skjak",
@@ -2478,6 +2614,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-modum",
@@ -2514,6 +2652,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-nord-norge",
@@ -2550,6 +2690,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-nordvest",
@@ -2586,6 +2728,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-ostfold-akershus",
@@ -2622,6 +2766,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-ostlandet",
@@ -2658,6 +2804,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-ringerike-hadeland",
@@ -2694,6 +2842,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-smn",
@@ -2730,6 +2880,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-sore-sunnmore",
@@ -2766,6 +2918,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-sr-bank",
@@ -2802,6 +2956,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Sparebank 1",
             "multiFactor": true,
             "name": "no-sparebank1-telemark",
@@ -2838,6 +2994,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-sparebanken-din",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2874,6 +3032,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-sparebanken-narvik",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -2911,6 +3071,8 @@
                     "patternError": "Please enter a valid mobile phone number."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "no-sparebankensor-bankid",
             "passwordHelpText": "In order to use this bank, please authenticate using a BankID.",
@@ -2948,6 +3110,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-sparebankenvest-activationcode",
             "passwordHelpText": "Log on to your Internet bank, go to settings and then mobile bank. Choose the option to add phone and follow the instructions. Enter the received activation code.",
@@ -2982,6 +3146,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-stadsbygd-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3018,6 +3184,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-storebrand",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3054,6 +3222,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-strommen-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3090,6 +3260,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-sunndal-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3126,6 +3298,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-surnadal-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3148,6 +3322,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "no-test-multi-supplemental",
@@ -3175,6 +3351,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "no-test-password",
@@ -3210,6 +3388,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-tinn-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3246,6 +3426,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-tolga-os-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3282,6 +3464,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-totens-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3318,6 +3502,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-trogstad-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3354,6 +3540,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-tysnes-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3390,6 +3578,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-valle-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3426,6 +3616,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-vang-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3462,6 +3654,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-vekselbanken",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3498,6 +3692,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-vestre-slidre-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3534,6 +3730,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-vik-sparebank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
@@ -3570,6 +3768,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "no-ya-bank",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
