@@ -932,8 +932,10 @@
                 }
             ],
             "groupDisplayName": "Nordea",
+            "accessType": "OTHER",
             "market": "SE",
             "multiFactor": true,
+            "financialInstitutionId": "dde2463acf40501389de4fca5a3693a4",
             "name": "nordea-bankid",
             "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "popular": true,
