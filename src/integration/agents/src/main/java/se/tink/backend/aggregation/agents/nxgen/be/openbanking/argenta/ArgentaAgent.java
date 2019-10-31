@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.ArgentaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configuration.ArgentaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.ArgentaTransactionalAccountFetcher;
@@ -39,16 +38,11 @@ public final class ArgentaAgent extends NextGenerationAgent
         String clientName = request.getProvider().getPayload();
 
         ArgentaConfiguration argentaConfiguration =
-                agentsServiceConfiguration
-                        .getIntegrations()
-                        .getClientConfiguration(
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(
                                 ArgentaConstants.INTEGRATION_NAME,
                                 clientName,
-                                ArgentaConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+                                ArgentaConfiguration.class);
         super.setConfiguration(agentsServiceConfiguration);
 
         this.apiClient =
