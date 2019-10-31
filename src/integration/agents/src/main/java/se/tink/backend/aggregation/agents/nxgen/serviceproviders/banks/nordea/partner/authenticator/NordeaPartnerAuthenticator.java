@@ -58,7 +58,7 @@ public class NordeaPartnerAuthenticator implements AutoAuthenticator, MultiFacto
                             .orElseThrow(
                                     () ->
                                             ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
-                                                    LocalizableKey.of(
+                                                    new LocalizableKey(
                                                             NordeaPartnerConstants.LocalizationKeys
                                                                     .IVALID_TOKEN)));
             persistentStorage.put(NordeaPartnerConstants.StorageKeys.PARTNER_USER_ID, partnerUid);

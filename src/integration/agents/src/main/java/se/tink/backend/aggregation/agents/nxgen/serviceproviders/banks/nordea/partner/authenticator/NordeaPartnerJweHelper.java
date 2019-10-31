@@ -46,7 +46,7 @@ public class NordeaPartnerJweHelper {
                 !Strings.isNullOrEmpty(token), "Nordea token can not be null or empty");
         try {
             JWEObject jwe = JWEObject.parse(token);
-            jwe.decrypt(new RSADecrypter(keystore.getTinkEncryptionKeyPair().getPrivate()));
+            jwe.decrypt(new RSADecrypter(keystore.getTinkEncryptionKey()));
             SignedJWT signedJWT = jwe.getPayload().toSignedJWT();
             boolean verified =
                     signedJWT.verify(new RSASSAVerifier(keystore.getNordeaSigningPublicKey()));
@@ -87,7 +87,7 @@ public class NordeaPartnerJweHelper {
 
         try {
 
-            signedJWT.sign(new RSASSASigner(keystore.getTinkSigningKeyPair().getPrivate()));
+            signedJWT.sign(new RSASSASigner(keystore.getTinkSigningKey()));
             JWEObject jweObject =
                     new JWEObject(
                             new JWEHeader.Builder(

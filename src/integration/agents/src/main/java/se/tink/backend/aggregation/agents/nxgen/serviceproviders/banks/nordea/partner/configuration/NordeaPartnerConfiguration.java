@@ -14,9 +14,11 @@ public class NordeaPartnerConfiguration implements ClientConfiguration {
     @Secret private String baseUrl;
     @Secret private String nordeaSigningPublicKey;
     @Secret private String nordeaEncryptionPublicKey;
-    @SensitiveSecret private String tinkSingingPrivateKey;
+    @Secret private String tinkSingingPrivateKey;
+    @SensitiveSecret private String tinkSingingKeyPassword;
     @Secret private String tinkSingingPublicKey;
-    @SensitiveSecret private String tinkEncryptionPrivateKey;
+    @Secret private String tinkEncryptionPrivateKey;
+    @SensitiveSecret private String tinkEncryptionKeyPassword;
     @Secret private String tinkEncryptionPublicKey;
     @Secret private String keyId;
 
@@ -81,5 +83,19 @@ public class NordeaPartnerConfiguration implements ClientConfiguration {
                 !Strings.isNullOrEmpty(keyId),
                 "Invalid configuration - keyId shouldn't be empty/null");
         return keyId;
+    }
+
+    public String getTinkSingingKeyPassword() {
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(tinkSingingKeyPassword),
+                "Invalid configuration - tinkSingingKeyPassword shouldn't be empty/null");
+        return tinkSingingKeyPassword;
+    }
+
+    public String getTinkEncryptionKeyPassword() {
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(tinkEncryptionKeyPassword),
+                "Invalid configuration - tinkEncryptionKeyPassword shouldn't be empty/null");
+        return tinkEncryptionKeyPassword;
     }
 }
