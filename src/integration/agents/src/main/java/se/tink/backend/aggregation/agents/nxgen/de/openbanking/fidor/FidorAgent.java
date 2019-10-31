@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.FidorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.configuration.FidorConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.FidorAccountFetcher;
@@ -43,17 +42,7 @@ public final class FidorAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration); // x
-        fidorConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                FidorConstants.INTEGRATION_NAME,
-                                clientName,
-                                FidorConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "FidorBank configuration missing."));
+        fidorConfiguration = getClientConfiguration();
         apiClient.setConfiguration(fidorConfiguration);
         final String certificateId = fidorConfiguration.getCertificateId();
         final EidasProxyConfiguration eidasProxyConfiguration = configuration.getEidasProxy();
@@ -61,11 +50,9 @@ public final class FidorAgent extends NextGenerationAgent
     }
 
     protected FidorConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        FidorConstants.INTEGRATION_NAME, clientName, FidorConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return getAgentConfigurationController()
+                .getAgentConfigurationFromK8s(
+                        FidorConstants.INTEGRATION_NAME, clientName, FidorConfiguration.class);
     }
 
     @Override

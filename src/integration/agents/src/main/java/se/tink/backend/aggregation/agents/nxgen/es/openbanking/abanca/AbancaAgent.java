@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authenticator.AbancaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.configuration.AbancaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.AbancaTransactionalAccountFetcher;
@@ -46,11 +45,9 @@ public final class AbancaAgent extends NextGenerationAgent
     }
 
     protected AbancaConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        AbancaConstants.INTEGRATION_NAME, clientName, AbancaConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return getAgentConfigurationController()
+                .getAgentConfigurationFromK8s(
+                        AbancaConstants.INTEGRATION_NAME, clientName, AbancaConfiguration.class);
     }
 
     @Override

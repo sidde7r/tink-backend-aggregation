@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.LansforsakringarAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.LansforsakringarPaymentExecutor;
@@ -49,16 +48,11 @@ public final class LansforsakringarAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         lansforsakringarConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(
                                 LansforsakringarConstants.Market.INTEGRATION_NAME,
                                 request.getProvider().getPayload(),
-                                LansforsakringarConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+                                LansforsakringarConfiguration.class);
 
         client.setEidasProxy(configuration.getEidasProxy());
         apiClient.setConfiguration(lansforsakringarConfiguration);

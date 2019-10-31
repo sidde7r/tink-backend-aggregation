@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.authenticator.TargobankSandboxAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.configuration.TargobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.TargobankPaymentExecutor;
@@ -63,13 +62,11 @@ public final class TargobankAgent extends NextGenerationAgent
     }
 
     protected TargobankConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
+        return getAgentConfigurationController()
+                .getAgentConfigurationFromK8s(
                         TargobankConstants.INTEGRATION_NAME,
                         clientName,
-                        TargobankConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                        TargobankConfiguration.class);
     }
 
     @Override

@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authenticator.SantanderAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.configuration.SantanderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.SantanderPaymentExecutorSelector;
@@ -47,13 +46,11 @@ public final class SantanderAgent extends NextGenerationAgent
     }
 
     protected SantanderConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
+        return getAgentConfigurationController()
+                .getAgentConfigurationFromK8s(
                         SantanderConstants.INTEGRATION_NAME,
                         clientName,
-                        SantanderConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                        SantanderConfiguration.class);
     }
 
     @Override

@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.CreditAgricoleConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.authenticator.CreditAgricoleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.configuration.CreditAgricoleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.fetcher.transactionalaccount.CreditAgricoleTransactionalAccountFetcher;
@@ -45,13 +44,11 @@ public final class CreditAgricoleAgent extends NextGenerationAgent
     }
 
     protected CreditAgricoleConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
+        return getAgentConfigurationController()
+                .getAgentConfigurationFromK8s(
                         CreditAgricoleConstants.INTEGRATION_NAME,
                         clientName,
-                        CreditAgricoleConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                        CreditAgricoleConfiguration.class);
     }
 
     @Override

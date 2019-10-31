@@ -45,16 +45,12 @@ public abstract class OpenBankProjectAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         final OpenBankProjectConfiguration openBankProjectConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(
                                 getIntegrationName(),
                                 getClientName(),
-                                OpenBankProjectConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+                                OpenBankProjectConfiguration.class);
+
         if (!openBankProjectConfiguration.isValid()) {
             throw new IllegalStateException(ErrorMessages.BAD_CONFIGURATION);
         }

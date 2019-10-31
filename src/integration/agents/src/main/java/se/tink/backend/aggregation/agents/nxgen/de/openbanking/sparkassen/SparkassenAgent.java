@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.configuration.SparkassenConfiguration;
@@ -56,13 +55,11 @@ public final class SparkassenAgent extends NextGenerationAgent
     }
 
     protected SparkassenConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
+        return getAgentConfigurationController()
+                .getAgentConfigurationFromK8s(
                         SparkassenConstants.INTEGRATION_NAME,
                         clientName,
-                        SparkassenConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                        SparkassenConfiguration.class);
     }
 
     @Override

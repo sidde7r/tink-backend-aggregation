@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConstants.CredentialKeys;
-import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.BawagAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.BawagAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.configuration.BawagConfiguration;
@@ -58,11 +57,9 @@ public final class BawagAgent extends NextGenerationAgent
     }
 
     protected BawagConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        BawagConstants.INTEGRATION_NAME, clientName, BawagConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return getAgentConfigurationController()
+                .getAgentConfigurationFromK8s(
+                        BawagConstants.INTEGRATION_NAME, clientName, BawagConfiguration.class);
     }
 
     @Override
