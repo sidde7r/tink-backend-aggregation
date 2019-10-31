@@ -19,5 +19,8 @@ public class ErrorResponse {
         if (Errors.NOT_SHB_APPROVED.equalsIgnoreCase(error)) {
             throw BankIdError.BANK_ID_UNAUTHORIZED_ISSUER.exception();
         }
+        if (Errors.MBID_ERROR.equalsIgnoreCase(error)) {
+            throw BankIdError.INTERRUPTED.exception();
+        }
     }
 }
