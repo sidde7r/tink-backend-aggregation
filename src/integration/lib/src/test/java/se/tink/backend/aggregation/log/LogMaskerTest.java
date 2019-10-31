@@ -61,7 +61,7 @@ public class LogMaskerTest {
                 LogMasker.builder()
                         .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
                         .build();
-        logMasker.addSensitiveValuesSetSubject(testSecretValuesSubject);
+        logMasker.addSensitiveValuesSetObservable(testSecretValuesSubject);
 
         String maskedString1 = logMasker.mask("abcd1111abcd1234abcd5678abcd0000");
 

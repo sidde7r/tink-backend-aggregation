@@ -34,7 +34,7 @@ public class AgentConfigurationControllerTest {
         Set<String> sensitiveValuesTestSet = new HashSet<>();
         Disposable disposable =
                 agentConfigurationController
-                        .getSecretValuesSubject()
+                        .getSecretValuesObservable()
                         .subscribeOn(Schedulers.trampoline())
                         .subscribe(
                                 newSecretValues -> sensitiveValuesTestSet.addAll(newSecretValues));

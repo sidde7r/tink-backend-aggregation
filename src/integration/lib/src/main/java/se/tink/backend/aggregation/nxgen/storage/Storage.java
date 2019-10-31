@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.storage;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableSet;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import java.io.IOException;
@@ -15,7 +16,8 @@ import se.tink.libraries.serialization.utils.JsonFlattener;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class Storage extends HashMap<String, String> {
-    private Subject<Collection<String>> secretValuesSubject = ReplaySubject.create();
+    private Subject<Collection<String>> secretValuesSubject =
+            ReplaySubject.<Collection<String>>create().toSerialized();
 
     private Storage(Map<String, String> map) {
         super(map);
@@ -72,7 +74,7 @@ public class Storage extends HashMap<String, String> {
         return Optional.ofNullable(data);
     }
 
-    public Subject<Collection<String>> getSecretValuesSubject() {
+    public Observable<Collection<String>> getSecretValuesObservable() {
         return secretValuesSubject;
     }
 }

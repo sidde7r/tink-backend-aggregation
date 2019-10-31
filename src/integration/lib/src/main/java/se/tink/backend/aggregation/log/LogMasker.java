@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.log;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import io.reactivex.rxjava3.subjects.Subject;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -69,10 +69,10 @@ public class LogMasker {
         return masker.getMasked(dataToMask);
     }
 
-    public void addSensitiveValuesSetSubject(
-            Subject<Collection<String>> newSensitiveValuesSetSubject) {
+    public void addSensitiveValuesSetObservable(
+            Observable<Collection<String>> newSensitiveValuesSetObservable) {
         composite.add(
-                newSensitiveValuesSetSubject
+                newSensitiveValuesSetObservable
                         .subscribeOn(Schedulers.trampoline())
                         .subscribe(this::addNewSensitiveValuesToMasker));
     }
