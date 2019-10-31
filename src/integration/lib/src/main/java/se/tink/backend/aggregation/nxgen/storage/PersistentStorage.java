@@ -1,11 +1,42 @@
 package se.tink.backend.aggregation.nxgen.storage;
 
-public class PersistentStorage extends Storage {
+import com.google.common.collect.ImmutableSet;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.ReplaySubject;
+import io.reactivex.rxjava3.subjects.Subject;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
+
+public class PersistentStorage extends Storage implements SensitiveValuesStorage {
     private static final String OLD_VALUE_PREFIX = "OLD_";
+
+    private Subject<Collection<String>> secretValuesSubject =
+            ReplaySubject.<Collection<String>>create().toSerialized();
 
     @Override
     public void clear() {
         // do not allow to clear the storage
+    }
+
+    @Override
+    public String put(String key, String value) {
+        Optional.ofNullable(value).ifPresent(v -> secretValuesSubject.onNext(ImmutableSet.of(v)));
+        return super.put(key, value);
+    }
+
+    @Override
+    public Observable<Collection<String>> getSensitiveValuesObservable() {
+        return secretValuesSubject;
+    }
+
+    @Override
+    public String put(String key, Object value) {
+        final String valueToStore = super.put(key, value);
+        Set<String> newSensitiveValues =
+                SensitiveValuesStorage.extractSensitiveValues(valueToStore);
+        secretValuesSubject.onNext(ImmutableSet.copyOf(newSensitiveValues));
+        return valueToStore;
     }
 
     /**
