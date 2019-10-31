@@ -293,24 +293,24 @@ public final class AgentConfigurationController {
     }
 
     public <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
-        String integrationName, Class<T> clientConfigClass) {
+            String integrationName, Class<T> clientConfigClass) {
         if (isOpenBankingAgent) {
             log.warn(
-                "Trying to read information from k8s for an OB agent: "
-                    + clientConfigClass.toString()
-                    + ". Consider uploading the configuration to ESS instead.");
+                    "Trying to read information from k8s for an OB agent: "
+                            + clientConfigClass.toString()
+                            + ". Consider uploading the configuration to ESS instead.");
         }
 
         Object clientConfigurationAsObject =
-            integrationsConfiguration
-                .getIntegration(integrationName)
-                .orElseThrow(
-                    () ->
-                        new IllegalStateException(
-                            "Agent configuration for agent: "
-                                + clientConfigClass.toString()
-                                + " not found in k8s secrets of cluster: "
-                                + clusterId));
+                integrationsConfiguration
+                        .getIntegration(integrationName)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Agent configuration for agent: "
+                                                        + clientConfigClass.toString()
+                                                        + " not found in k8s secrets of cluster: "
+                                                        + clusterId));
 
         extractSensitiveValues(clientConfigurationAsObject);
 
@@ -318,23 +318,23 @@ public final class AgentConfigurationController {
     }
 
     public <T extends ClientConfiguration> Optional<T> getAgentConfigurationFromK8sAsOptional(
-        String integrationName, Class<T> clientConfigClass) {
+            String integrationName, Class<T> clientConfigClass) {
         if (isOpenBankingAgent) {
             log.warn(
-                "Trying to read information from k8s for an OB agent: "
-                    + clientConfigClass.toString()
-                    + ". Consider uploading the configuration to ESS instead.");
+                    "Trying to read information from k8s for an OB agent: "
+                            + clientConfigClass.toString()
+                            + ". Consider uploading the configuration to ESS instead.");
         }
 
         Optional<Object> clientConfigurationAsObject =
-            integrationsConfiguration.getIntegration(integrationName);
+                integrationsConfiguration.getIntegration(integrationName);
 
         clientConfigurationAsObject.ifPresent(
-            clientConfiguration -> extractSensitiveValues(clientConfiguration));
+                clientConfiguration -> extractSensitiveValues(clientConfiguration));
 
         return clientConfigurationAsObject.map(
-            clientConfiguration ->
-                OBJECT_MAPPER.convertValue(clientConfiguration, clientConfigClass));
+                clientConfiguration ->
+                        OBJECT_MAPPER.convertValue(clientConfiguration, clientConfigClass));
     }
 
     <T extends ClientConfiguration> Set<String> extractSensitiveValues(

@@ -174,7 +174,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             tppSecretsServiceClient,
                             configuration.getIntegrations(),
                             provider,
-                            credential,
                             context.getAppId(),
                             clusterIdForSecretsService,
                             credentialsRequest.getCallbackUri());
