@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -25,17 +23,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalanceResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsBalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -45,16 +41,12 @@ public class CbiGlobeApiClient {
     private final PersistentStorage persistentStorage;
     private CbiGlobeConfiguration configuration;
     private boolean requestManual;
-    private final HashMap<String, GetTransactionsBalancesResponse> temporaryTransactionsStorage;
-    private final TemporaryStorage temporaryStorage;
 
     public CbiGlobeApiClient(
             TinkHttpClient client, PersistentStorage persistentStorage, boolean requestManual) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.requestManual = requestManual;
-        this.temporaryTransactionsStorage = new HashMap<>();
-        this.temporaryStorage = new TemporaryStorage();
     }
 
     protected CbiGlobeConfiguration getConfiguration() {
@@ -136,67 +128,32 @@ public class CbiGlobeApiClient {
         return createAccountsRequestWithConsent().get(GetAccountsResponse.class);
     }
 
-    public GetTransactionsBalancesResponse getTransactionsBalances(
-            String apiIdentifier, int page, String bookingType) {
+    public GetBalancesResponse getBalances(String resourceId) {
         try {
-            HttpResponse httpResponse =
-                    createRequestWithConsent(
-                                    Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, apiIdentifier))
-                            .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
-                            .queryParam(
-                                    QueryKeys.DATE_FROM,
-                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                                            CbiGlobeUtils.calculateFromDate(
-                                                    persistentStorage.get(
-                                                            apiIdentifier
-                                                                    + StorageKeys.FIRST_MANUAL))))
-                            .queryParam(
-                                    QueryKeys.DATE_TO,
-                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
-                            .queryParam(QueryKeys.OFFSET, String.valueOf(page))
-                            .get(HttpResponse.class);
-
-            String totalPages =
-                    Optional.ofNullable(httpResponse.getHeaders().getFirst(HeaderKeys.TOTAL_PAGES))
-                            .orElse(temporaryStorage.get(apiIdentifier));
-
-            GetTransactionsBalancesResponse getTransactionsBalancesResponse =
-                    httpResponse
-                            .getBody(GetTransactionsBalancesResponse.class)
-                            .setPageRemaining(isPageRemaining(totalPages, page));
-
-            temporaryStorage.putIfAbsent(apiIdentifier, totalPages);
-            saveTransactionsInTempMap(apiIdentifier, getTransactionsBalancesResponse);
-            persistentStorage.put(apiIdentifier + StorageKeys.FIRST_MANUAL, StorageKeys.DONE);
-
-            if (Objects.isNull(getTransactionsBalancesResponse.getBalances())) {
-                getTransactionsBalancesResponse.setBalances(
-                        getBalancesResponse(apiIdentifier).getBalances());
-            }
-
-            return getTransactionsBalancesResponse;
+            return createRequestWithConsent(Urls.BALANCES.parameter(IdTags.ACCOUNT_ID, resourceId))
+                    .get(GetBalancesResponse.class);
         } catch (HttpResponseException e) {
             handleAccessExceededError(e);
             throw e;
         }
     }
 
-    private boolean isPageRemaining(String totalPages, int page) {
-        return Objects.nonNull(totalPages) && Integer.valueOf(totalPages) > page;
-    }
-
-    private GetBalanceResponse getBalancesResponse(String apiIdentifier) {
-        return createRequestWithConsent(Urls.BALANCES.parameter(IdTags.ACCOUNT_ID, apiIdentifier))
-                .get(GetBalanceResponse.class);
-    }
-
-    public void saveTransactionsInTempMap(
-            String apiIdentifier, GetTransactionsBalancesResponse tinkTransactions) {
-        temporaryTransactionsStorage.put(apiIdentifier, tinkTransactions);
-    }
-
-    public GetTransactionsBalancesResponse getTransactionsFromTempMap(String apiIdentifier) {
-        return temporaryTransactionsStorage.get(apiIdentifier);
+    public GetTransactionsResponse getTransactions(
+            String apiIdentifier, Date fromDate, Date toDate, String bookingType) {
+        try {
+            return createRequestWithConsent(
+                            Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, apiIdentifier))
+                    .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
+                    .queryParam(
+                            QueryKeys.DATE_FROM,
+                            ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                    .queryParam(
+                            QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                    .get(GetTransactionsResponse.class);
+        } catch (HttpResponseException e) {
+            handleAccessExceededError(e);
+            throw e;
+        }
     }
 
     public void handleAccessExceededError(HttpResponseException e) {

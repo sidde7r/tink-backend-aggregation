@@ -67,8 +67,6 @@ public final class CbiGlobeConstants {
         public static final String CONSENT_ID = "consent-id";
         public static final String ACCOUNTS = "accounts";
         public static final String LINK = "link";
-        public static final String FIRST_MANUAL = "firstManual";
-        public static final String DONE = "done";
     }
 
     public static class QueryKeys {
@@ -78,7 +76,6 @@ public final class CbiGlobeConstants {
         public static final String BOOKING_STATUS = "booking_status";
         public static final String DATE_FROM = "date_from";
         public static final String DATE_TO = "date_to";
-        public static final String OFFSET = "offset";
     }
 
     public static class QueryValues {
@@ -100,7 +97,6 @@ public final class CbiGlobeConstants {
         public static final String CONSENT_ID = "consent-id";
         public static final String PSU_ID_TYPE = "psu-id-type";
         public static final String PSU_IP_ADDRESS = "psu-ip-address";
-        public static final String TOTAL_PAGES = "cpaas-total-pages";
     }
 
     public static class HeaderValues {
@@ -115,7 +111,6 @@ public final class CbiGlobeConstants {
         public static final String FREQUENCY_PER_DAY_ONE = "1";
         public static final String FALSE = "false";
         public static final String FREQUENCY_PER_DAY = "4";
-        public static final int FIRST_PAGE = 1;
     }
 
     public static class LogTags {
