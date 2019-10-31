@@ -232,8 +232,7 @@ public final class BecApiClient {
                 QsealcSigner.build(
                         config.getEidasProxy().toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        becConfiguration.getEidasQwac());
+                        eidasIdentity);
 
         String signedHeaders =
                 Arrays.stream(HeadersToSign.values())

@@ -51,7 +51,6 @@ public class BecAgent extends NextGenerationAgent
         apiClient.setConfiguration(
                 becConfiguration, agentsServiceConfiguration, this.getEidasIdentity());
 
-        final String certificateId = becConfiguration.getEidasQwac();
         final EidasProxyConfiguration eidasProxyConfiguration = configuration.getEidasProxy();
 
         client.setEidasProxy(eidasProxyConfiguration);

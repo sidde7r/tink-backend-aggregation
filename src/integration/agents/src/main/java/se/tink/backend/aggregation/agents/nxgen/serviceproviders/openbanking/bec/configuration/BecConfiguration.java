@@ -12,17 +12,9 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class BecConfiguration implements ClientConfiguration {
 
-    @JsonProperty @Secret private String eidasQwac;
     @JsonProperty @SensitiveSecret private String qSealc;
     @JsonProperty @SensitiveSecret private String keyId;
     @JsonProperty @Secret private String redirectUrl;
-
-    public String getEidasQwac() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(eidasQwac),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Eidas Qwac"));
-        return eidasQwac;
-    }
 
     public String getQsealCertificate() {
         Preconditions.checkNotNull(
