@@ -24,11 +24,6 @@ tinkSingingKeyPassword-description: |2
   The password of the tink singing private key, which is used to PBE the key
 tinkSingingKeyPassword-example: |2
   "123456"
-tinkSingingPublicKey-description: |2
-  The public key that will be used by Nordea to verify the signed JWE tokens sent by Tink.
-  This should be the X509 base64 encoded public key.
-tinkSingingPublicKey-example: |2
-  "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA462xN1CMeCqpIqb7NMGkpn4g2CZWYVpWqAW5UqMCojLcX+lpy72JTHgcEYvBpq7tTq8cR0HvAb2xagQ+273KRvhuvMCrPyi8UEH8QIgSiGceaivqu6hK7ieemvoh0cOaQnkL54PSdVUIlmGm0/BOInmgviS+Lwi6IHCORTdYsxSafNH/n98qkOUJLluRtP/XyRWLpHL/mTB2t+foCsrTlCWAxvyxXn+R+JDd6c8UZO4V0gxrYoKTmx4T0rW9AuC+mzPKIM4CfHeuTf65zRm+nhUNjvnZZC+34YQeFFEhbaV77io8CJBOc8Yz2RayPlfuqumkwCpjA6N1zgj6XUGTVwIDAQAB"
 tinkEncryptionPrivateKey-description: |2
   The private key that will be used by Tink to decrypt JWE tokens those are received from
   Nordea during authentication as supplemental information. This should be the PBE encrypted PKCS8
@@ -39,11 +34,6 @@ tinkEncryptionKeyPassword-description: |2
   The password of the tink encryption private key, which is used to PBE the key
 tinkEncryptionKeyPassword-example: |2
   "123456"
-tinkEncryptionPublicKey-description: |2
-  The public key that will be used by Nordea to encrypt JWE tokens before sending them as
-  supplemental information. This should be the X509 base64 encoded public key.
-tinkEncryptionPublicKey-example: |2
-  "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqHJbKfWjKYnnY8jwMWq0VKU/EGb/+mi8D2fZdlU5f2QiFxvIj8du7hBt5Pju9xjowzFd1oLsW3uI1AIV/KUAhhB7Lr4Q2cAt7IQQdWZg9lYYez+qssYq5ytyMfBHwHsqRv6zBKaMiXkZ0A8VCFaoSZgF867IT9l094qdbhH92XKkNlaH8AHplSl9v22U8YdzWomIpy8HV1OpKcvHfJY1pHH+/1iO6bER661LG2fRXMCtCQXro9pHsPzZm+eJ0qKBx4jy2+obPU5qu0hT0XGz4zPIOIr+I5xvG0GVWbrZHmDDmA1EBvGPT+yQjXWBtpws3AHzZoPX/Bbt73Ky4lBGzwIDAQAB"
 kid-description: |2
   From https://tools.ietf.org/html/rfc7515#section-4.1.4: The "kid" (key ID) Header Parameter
   is a hint indicating which key was used to secure the JWS. This parameter allows originators
