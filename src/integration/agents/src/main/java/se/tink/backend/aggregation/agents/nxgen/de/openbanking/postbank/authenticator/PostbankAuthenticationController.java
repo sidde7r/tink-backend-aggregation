@@ -65,7 +65,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
             ScaMethodEntity chosenScaMethod = initValues.getChosenScaMethodEntity();
 
             // Select SCA method when user has more than one device.
-            if (chosenScaMethod == null && !CollectionUtils.isEmpty(scaMethods)) {
+            if (chosenScaMethod == null && CollectionUtils.isNotEmpty(scaMethods)) {
                 Map<String, String> supplementalInformation =
                         this.supplementalInformationHelper.askSupplementalInformation(
                                 new Field[] {this.getChosenScaMethod(scaMethods)});

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -65,7 +65,7 @@ public class ArgentaAuthenticator implements OAuth2Authenticator {
         List<ScaMethodEntity> scaMethods = consentResponse.getScaMethods();
 
         // Select SCA method when user has more than one device.
-        if (scaMethods != null && !CollectionUtils.isEmpty(scaMethods)) {
+        if (CollectionUtils.isNotEmpty(scaMethods)) {
 
             Map<String, String> supplementalInformation;
 
