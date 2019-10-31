@@ -13,6 +13,7 @@ public class MontepioConstants {
                 new URL(Endpoints.FETCH_SAVINGS_ACCOUNT_STEP0);
         public static final URL FETCH_SAVINGS_ACCOUNT_STEP1 =
                 new URL(Endpoints.FETCH_SAVINGS_ACCOUNT_STEP1);
+        public static final URL FETCH_ACCOUNT_DETAILS = new URL(Endpoints.FETCH_ACCOUNT_DETAILS);
     }
 
     public static class Endpoints {
@@ -22,6 +23,8 @@ public class MontepioConstants {
         public static final String FINALIZE_LOGIN = BASE + "publicMG/LoginTransactionStep1";
         public static final String FETCH_ACCOUNTS =
                 BASE + "privateMG/currentAccount/CurrentAccountsTransaction";
+        public static final String FETCH_ACCOUNT_DETAILS =
+                BASE + "privateMG/currentAccount/CurrentAccountDetailsTransaction";
         public static final String FETCH_TRANSACTIONS =
                 BASE + "privateMG/currentAccount/CurrentAccountTransactionsTransaction";
         public static final String FETCH_SAVINGS_ACCOUNT_STEP0 =

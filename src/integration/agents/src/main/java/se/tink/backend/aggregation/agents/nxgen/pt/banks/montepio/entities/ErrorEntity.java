@@ -8,7 +8,14 @@ public class ErrorEntity {
     @JsonProperty("Code")
     private String code;
 
+    @JsonProperty("Message")
+    private String message;
+
     public String getCode() {
         return code;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

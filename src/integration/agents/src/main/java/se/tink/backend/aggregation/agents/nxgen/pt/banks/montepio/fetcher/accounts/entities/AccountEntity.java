@@ -29,7 +29,7 @@ public class AccountEntity {
     private String externalNumber;
 
     @JsonProperty("Id")
-    private String handle; // used for transaction fetching
+    private String handle; // used for details and transaction fetching
 
     @JsonProperty("IsDefault")
     private boolean isDefault;
@@ -52,18 +52,17 @@ public class AccountEntity {
     @JsonProperty("Type")
     private int type;
 
-    public Optional<TransactionalAccount> toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount(String iban) {
         BalanceModule balanceModule =
                 BalanceModule.builder()
                         .withBalance(ExactCurrencyAmount.of(avaibleBalance, currency))
                         .build();
         IdModule idModule =
                 IdModule.builder()
-                        .withUniqueIdentifier(number)
-                        .withAccountNumber(number)
+                        .withUniqueIdentifier(iban)
+                        .withAccountNumber(iban)
                         .withAccountName(name)
-                        .addIdentifier(
-                                AccountIdentifier.create(AccountIdentifier.Type.IBAN, number))
+                        .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                         .build();
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)

@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.PasswordEncryptionUtil;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.rpc.AuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.rpc.AuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchAccountDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchAccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchTransactionsResponse;
@@ -76,6 +78,15 @@ public class MontepioApiClient {
                         MontepioConstants.HeaderKeys.SCREEN_NAME,
                         MontepioConstants.HeaderValues.ACCOUNTS_SCREEN_NAME)
                 .post(FetchAccountsResponse.class, EMPTY_JSON);
+    }
+
+    public FetchAccountDetailsResponse fetchAccountDetails(String handle) {
+        FetchAccountDetailsRequest request = new FetchAccountDetailsRequest(handle);
+        return baseRequest(MontepioConstants.URLs.FETCH_ACCOUNT_DETAILS)
+                .header(
+                        MontepioConstants.HeaderKeys.SCREEN_NAME,
+                        MontepioConstants.HeaderValues.ACCOUNTS_SCREEN_NAME)
+                .post(FetchAccountDetailsResponse.class, request);
     }
 
     public FetchTransactionsResponse fetchTransactions(
