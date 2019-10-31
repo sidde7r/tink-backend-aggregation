@@ -40,6 +40,9 @@ PROJECTS = {
 
 RELEASE_TRAIN_CHARTS = [
     "tink-backend-aggregation",
+    "tink-backend-integration",
+    "tink-backend-notifying-aggregation-service-asserter",
+    "tink-backend-aggregation-connectivity-cronjob",
 ]
 
 STEP = """
