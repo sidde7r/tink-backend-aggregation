@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.SibsPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategy;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategyFactory;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.RateLimitErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.ServiceInvalidErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountTransactionFetcher;
@@ -86,6 +87,7 @@ public abstract class SibsProgressiveBaseAgent
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new ServiceInvalidErrorFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        client.addFilter(new RateLimitErrorFilter());
     }
 
     protected abstract String getIntegrationName();
