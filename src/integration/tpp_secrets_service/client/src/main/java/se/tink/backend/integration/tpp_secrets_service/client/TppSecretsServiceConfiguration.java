@@ -19,6 +19,7 @@ public class TppSecretsServiceConfiguration {
     private String tlsKeyPath;
     private CertificatesLocation certificatesLocation;
     private boolean enabled;
+    private String environment;
 
     public boolean isEnabled() {
         return enabled;
@@ -57,5 +58,9 @@ public class TppSecretsServiceConfiguration {
             Preconditions.checkArgument(port != 0, String.format(INVALID_CONFIGURATION, "port"));
         }
         return port;
+    }
+
+    public String getEnvironment() {
+        return environment;
     }
 }

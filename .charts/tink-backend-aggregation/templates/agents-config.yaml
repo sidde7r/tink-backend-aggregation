@@ -40,6 +40,7 @@ data:
         tlsKeyPath: "/etc/client-certificate/tls.key"
         certificatesLocation: {{ $tppSecretsServiceConfig.certificatesLocation }}
         enabled: {{ $tppSecretsServiceConfig.enabled }}
+        environment: {{ .Values.Environment }}
       {{- end }}
 
       {{- if $agentsConfig.mountCallbackJwtSignaturePair }}
