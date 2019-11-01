@@ -13,6 +13,7 @@ public class NordeaPartnerConstants {
                     .put(TransactionalAccountType.CHECKING, "TRANSACTION")
                     .put(TransactionalAccountType.SAVINGS, "SAVINGS")
                     .build();
+    public static final String INTEGRATION_NAME = "nordeapartner";
 
     public class EndPoints {
         public static final String PARTNER_PATH = "/partners/{partner_id}";
