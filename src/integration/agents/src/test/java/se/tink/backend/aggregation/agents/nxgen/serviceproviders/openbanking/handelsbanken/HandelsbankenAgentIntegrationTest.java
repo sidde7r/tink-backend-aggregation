@@ -175,8 +175,8 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
                             context.getClusterId(),
                             credentialsRequest.getCallbackUri());
             context.getLogMasker()
-                    .addSensitiveValuesSetSubject(
-                            agentConfigurationController.getSecretValuesSubject());
+                    .addSensitiveValuesSetObservable(
+                            agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
 
             AgentFactory factory = new AgentFactory(configuration);
