@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
 public class NordeaPartnerConfiguration implements ClientConfiguration {
-    @Secret private String redirectUrl;
     @Secret private String partnerId;
     @Secret private String baseUrl;
     @Secret private String nordeaSigningPublicKey;
