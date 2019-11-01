@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AuthorizationResponse {
 
+    private String paymentId;
     private String consentId;
 
     private List<ScaMethodsItemEntity> scaMethods;

@@ -26,7 +26,7 @@ public class HandelsbankenBaseTransactionalAccountFetcher
 
     private final HandelsbankenBaseApiClient apiClient;
     private HandelsbankenBaseAccountConverter converter;
-    private SessionStorage sessionStorage;
+    private final SessionStorage sessionStorage;
 
     private static final Logger logger =
             LoggerFactory.getLogger(HandelsbankenBaseTransactionalAccountFetcher.class);

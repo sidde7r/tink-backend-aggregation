@@ -4,11 +4,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken.executor.payment.HandelsbankenPaymentExecutorSelector;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.executor.payment.HandelsbankenSEPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.HandelsbankenBankidAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Market;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -44,12 +45,16 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent {
     }
 
     @Override
-    protected Authenticator constructAuthenticator() {
+    protected String getMarket() {
+        return Market.SWEDEN;
+    }
 
+    @Override
+    protected Authenticator constructAuthenticator() {
         BankIdAuthenticationController bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalRequester,
-                        new HandelsbankenBankidAuthenticator(apiClient),
+                        new HandelsbankenBankIdAuthenticator(apiClient),
                         persistentStorage,
                         credentials);
 
@@ -62,8 +67,9 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent {
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        HandelsbankenPaymentExecutorSelector paymentExecutorSelector =
-                new HandelsbankenPaymentExecutorSelector(apiClient);
-        return Optional.of(new PaymentController(paymentExecutorSelector, paymentExecutorSelector));
+        final HandelsbankenSEPaymentExecutor paymentExecutor =
+                new HandelsbankenSEPaymentExecutor(
+                        apiClient, credentials, supplementalRequester, persistentStorage);
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }

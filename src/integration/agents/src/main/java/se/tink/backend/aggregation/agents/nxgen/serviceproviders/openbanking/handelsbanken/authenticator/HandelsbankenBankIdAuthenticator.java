@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.Han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Errors;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Status;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.DecoupledResponse;
@@ -31,17 +32,16 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<SessionResponse> {
+public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<SessionResponse> {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(HandelsbankenBankidAuthenticator.class);
+            LoggerFactory.getLogger(HandelsbankenBankIdAuthenticator.class);
 
     private final HandelsbankenBaseApiClient apiClient;
-
     private OAuth2Token token;
     private String autoStartToken;
 
-    public HandelsbankenBankidAuthenticator(HandelsbankenBaseApiClient apiClient) {
+    public HandelsbankenBankIdAuthenticator(HandelsbankenBaseApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -55,11 +55,13 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
         }
 
         try {
-            TokenResponse tokenResponse = apiClient.requestClientCredentialGrantToken();
-            AuthorizationResponse authorizationResponse =
+            TokenResponse tokenResponse =
+                    apiClient.requestClientCredentialGrantTokenWithScope(Scope.AIS);
+            AuthorizationResponse consent =
                     apiClient.initiateConsent(tokenResponse.getAccessToken());
+
             SessionResponse response =
-                    apiClient.initDecoupledAuthorization(ssn, authorizationResponse.getConsentId());
+                    apiClient.initDecoupledAuthorizationAis(ssn, consent.getConsentId());
             this.autoStartToken = response.getAutoStartToken();
             Uninterruptibles.sleepUninterruptibly(response.getSleepTime(), TimeUnit.MILLISECONDS);
             return response;
@@ -124,8 +126,7 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
         logger.info("Refreshing access token");
-
-        TokenResponse response = apiClient.refreshAccessToken(refreshToken);
+        TokenResponse response = apiClient.getRefreshToken(refreshToken);
 
         return Optional.of(
                 OAuth2Token.create(
