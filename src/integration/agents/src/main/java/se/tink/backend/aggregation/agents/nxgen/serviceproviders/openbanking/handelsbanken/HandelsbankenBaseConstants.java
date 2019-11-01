@@ -44,7 +44,7 @@ public final class HandelsbankenBaseConstants {
     public static class StorageKeys {
         public static final String MAX_FETCH_PERIOD_MONTHS = "maxFetchPeriodMonths";
         public static final String PAYMENT_ID = "paymentId";
-        public static final String TINK_ACCESS_TOKEN = "tinkAccessToken";
+        public static final String PIS_TOKEN = "pisToken";
     }
 
     public static class QueryKeys {
@@ -96,7 +96,6 @@ public final class HandelsbankenBaseConstants {
         public static final String ALL_ACCOUNTS = "ALL_ACCOUNTS";
         public static final String PSD2_ADMIN = "PSD2-ADMIN";
         public static final String SUBSCRIPTION_CONSENTS = "consents";
-        public static final String AIS_SCOPE = "AIS";
         // "Resource owner Personal Id type, currently only domain value '1' exist. Optional, must
         // exist if personalId is given."
         public static final String PERSONAL_ID_TP = "1";
@@ -123,11 +122,8 @@ public final class HandelsbankenBaseConstants {
         public static final String BALANCE_NOT_FOUND = "Balance not found.";
         public static final String PAYMENT_EXCEPTION =
                 "Error code: %s; error message: %s; more info: %s";
-        public static final String CONFIG_MISSING = "Handelsbanken configuration missing.";
         public static final String NOT_PARSE_DATE = "Could not parse date.";
         public static final String TOKEN_NOT_FOUND = "Could not find token";
-        public static final String AUTHENTICATION_ERROR = "Authentication error.";
-        public static final String AUTHORIZATION_ERROR = "Authorization error.";
     }
 
     public static class Errors {
@@ -136,11 +132,8 @@ public final class HandelsbankenBaseConstants {
         public static final String INVALID_REQUEST = "invalid_request";
         public static final String NOT_SHB_APPROVED = "not_shb_approved";
         public static final String NOT_SHB_ACTIVATED = "mbid_not_shb_activated";
-        public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
         public static final String MBID_MAX_POLLING = "mbid_max_polling";
         public static final String TOKEN_NOT_ACTIVE = "Token is not active";
-        public static final String MISSING_PAYMENT_ID =
-                "Can't get session token for null paymentId";
     }
 
     public static class Status {

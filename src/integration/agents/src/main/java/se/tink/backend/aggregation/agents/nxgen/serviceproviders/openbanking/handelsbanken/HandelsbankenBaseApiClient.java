@@ -79,7 +79,7 @@ public class HandelsbankenBaseApiClient {
 
     private OAuth2Token getPisOauthToken() {
         return persistentStorage
-                .get(StorageKeys.TINK_ACCESS_TOKEN, OAuth2Token.class)
+                .get(StorageKeys.PIS_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
@@ -212,7 +212,7 @@ public class HandelsbankenBaseApiClient {
                             null,
                             response.getExpiresIn());
 
-            persistentStorage.put(StorageKeys.TINK_ACCESS_TOKEN, clientCredentialPaymentToken);
+            persistentStorage.put(StorageKeys.PIS_TOKEN, clientCredentialPaymentToken);
             URL url =
                     new URL(Urls.INITIATE_PAYMENT)
                             .parameter(QueryKeys.PAYMENT_PRODUCT, paymentProduct.toString());
