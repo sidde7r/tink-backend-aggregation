@@ -5,16 +5,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AccountBriefEntity {
     protected String regNo;
-    private String shadowAccountId;
-
-    public String getShadowAccountId() {
-        return shadowAccountId;
-    }
-
-    public void setShadowAccountId(String shadowAccountId) {
-        this.shadowAccountId = shadowAccountId;
-    }
-
     protected String accountNo;
 
     public String getRegNo() {
