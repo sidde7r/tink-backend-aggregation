@@ -12,6 +12,7 @@ java_library(
         "//src/integration/account:enums",
         "//src/integration/account:rpc",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/danskebank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/base",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
         "//src/integration/amount",
         "//src/integration/api",

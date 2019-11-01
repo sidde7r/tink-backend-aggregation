@@ -1883,3 +1883,15 @@ java_library(
         "@org_mockito_mockito_core//jar",
     ],
 )
+
+java_library(
+    name = "net_minidev_json_smart",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@net_minidev_json_smart//jar",
+    ],
+    runtime_deps = [
+        "@junit_junit//jar",
+        "@net_minidev_asm//jar",
+    ],
+)
