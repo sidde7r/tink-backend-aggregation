@@ -215,20 +215,32 @@ public class ClientConfigurationTemplateBuilder {
 
         StringBuffer sb = new StringBuffer();
 
-        String fieldDescriptionKey = fieldName + "-description";
-        if (fieldsDescriptionsAndExamples.containsKey(fieldDescriptionKey)) {
-            sb.append(System.lineSeparator());
-            sb.append("Description:");
-            sb.append(System.lineSeparator());
-            sb.append(fieldsDescriptionsAndExamples.get(fieldDescriptionKey));
+        if (includeDescriptions) {
+            String fieldDescriptionKey = fieldName + "-description";
+            if (fieldsDescriptionsAndExamples.containsKey(fieldDescriptionKey)) {
+                sb.append(System.lineSeparator());
+                sb.append("Description:");
+                sb.append(System.lineSeparator());
+                sb.append(fieldsDescriptionsAndExamples.get(fieldDescriptionKey));
+            }
         }
 
-        String fieldExampleKey = fieldName + "-example";
-        if (fieldsDescriptionsAndExamples.containsKey(fieldExampleKey)) {
-            sb.append(System.lineSeparator());
-            sb.append("Example:");
-            sb.append(System.lineSeparator());
-            sb.append(fieldsDescriptionsAndExamples.get(fieldExampleKey));
+        if (includeExamples) {
+            String fieldExampleKey = fieldName + "-example";
+            if (fieldsDescriptionsAndExamples.containsKey(fieldExampleKey)) {
+                String example = fieldsDescriptionsAndExamples.get(fieldExampleKey);
+                if (includeDescriptions) {
+                    sb.append(System.lineSeparator());
+                    sb.append("Example:");
+                    sb.append(System.lineSeparator());
+                } else {
+                    example = example.trim();
+                    if (example.startsWith("\"") && example.endsWith("\"")) {
+                        example = example.substring(1, example.length() - 1);
+                    }
+                }
+                sb.append(example);
+            }
         }
 
         if (sb.length() == 0) {
