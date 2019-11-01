@@ -3,18 +3,24 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
-git_repository(
+http_archive(
     name = "bazel_skylib",
-    commit = "6126842e3db2ec4986752f6dfc0860ca922997f1",
-    remote = "https://github.com/bazelbuild/bazel-skylib",
-    shallow_since = "1557756873 +0200",
+    sha256 = "97e70364e9249702246c0e9444bccdc4b847bed1eb03c5a3ece4f83dfe6abc44",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
+    ],
 )
+
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
+bazel_skylib_workspace()
 
 # This checks that the version of Bazel in use is at least the set version
 # Usually this should be set to the version of Bazel used for CI
 load("@bazel_skylib//lib:versions.bzl", "versions")
 
-versions.check("0.28.1")
+versions.check("0.28.1", "0.29.1")
 
 http_archive(
     name = "rules_java",
@@ -56,7 +62,7 @@ git_repository(
 git_repository(
     name = "tink_backend_shared_libraries",
     commit = "cecd27397f7d35b188d960cbc11b737e46f5ad7d",
-    remote = "git@github.com:tink-ab/tink-backend-shared-libraries",
+    remote = "git@github.com:tink-ab/tink-backend-shared-libraries.git",
     shallow_since = "1543992595 +0100",
 )
 
@@ -77,8 +83,8 @@ git_repository(
 git_repository(
     name = "tink_backend",
     commit = "92d2e6c7adca04e074ab3351ba8a9404244f6765",
-    remote = "git@github.com:tink-ab/tink-backend",
-    shallow_since = "1572610208 +0000"
+    remote = "git@github.com:tink-ab/tink-backend.git",
+    shallow_since = "1572535216 +0000"
 )
 
 # Docker dependencies
