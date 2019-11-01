@@ -10,14 +10,15 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
 public class NordeaPartnerConfiguration implements ClientConfiguration {
+    @Secret private String redirectUrl;
     @Secret private String partnerId;
     @Secret private String baseUrl;
     @Secret private String nordeaSigningPublicKey;
     @Secret private String nordeaEncryptionPublicKey;
-    @SensitiveSecret private String tinkSingingPrivateKey;
-    @Secret private String tinkSingingPublicKey;
-    @SensitiveSecret private String tinkEncryptionPrivateKey;
-    @Secret private String tinkEncryptionPublicKey;
+    @Secret private String tinkSingingPrivateKey;
+    @SensitiveSecret private String tinkSingingKeyPassword;
+    @Secret private String tinkEncryptionPrivateKey;
+    @SensitiveSecret private String tinkEncryptionKeyPassword;
     @Secret private String keyId;
 
     public URL getBaseUrl() {
@@ -55,13 +56,6 @@ public class NordeaPartnerConfiguration implements ClientConfiguration {
         return tinkSingingPrivateKey;
     }
 
-    public String getTinkSingingPublicKey() {
-        Preconditions.checkState(
-                !Strings.isNullOrEmpty(tinkSingingPublicKey),
-                "Invalid configuration - tinkSingingPublicKey shouldn't be empty/null");
-        return tinkSingingPublicKey;
-    }
-
     public String getTinkEncryptionPrivateKey() {
         Preconditions.checkState(
                 !Strings.isNullOrEmpty(tinkEncryptionPrivateKey),
@@ -69,17 +63,24 @@ public class NordeaPartnerConfiguration implements ClientConfiguration {
         return tinkEncryptionPrivateKey;
     }
 
-    public String getTinkEncryptionPublicKey() {
-        Preconditions.checkState(
-                !Strings.isNullOrEmpty(tinkEncryptionPublicKey),
-                "Invalid configuration - tinkEncryptionPublicKey shouldn't be empty/null");
-        return tinkEncryptionPublicKey;
-    }
-
     public String getKeyId() {
         Preconditions.checkState(
                 !Strings.isNullOrEmpty(keyId),
                 "Invalid configuration - keyId shouldn't be empty/null");
         return keyId;
+    }
+
+    public String getTinkSingingKeyPassword() {
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(tinkSingingKeyPassword),
+                "Invalid configuration - tinkSingingKeyPassword shouldn't be empty/null");
+        return tinkSingingKeyPassword;
+    }
+
+    public String getTinkEncryptionKeyPassword() {
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(tinkEncryptionKeyPassword),
+                "Invalid configuration - tinkEncryptionKeyPassword shouldn't be empty/null");
+        return tinkEncryptionKeyPassword;
     }
 }
