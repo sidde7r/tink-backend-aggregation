@@ -12,6 +12,7 @@ import com.google.gson.JsonSyntaxException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import java.io.IOException;
@@ -119,7 +120,7 @@ public final class AgentConfigurationController {
     }
 
     public Observable<Collection<String>> getSecretValuesObservable() {
-        return secretValuesSubject;
+        return secretValuesSubject.subscribeOn(Schedulers.trampoline());
     }
 
     public void completeSecretValuesSubject() {
