@@ -26,7 +26,8 @@ public final class JyskeConstants {
 
         public static final URL NEMID_ENROLL = toBankDataUrl("/nemid/inroll");
         public static final URL NEMID_LOGIN = toBankDataUrl("/nemid/login_with_installid_prop");
-        public static final URL GET_ACCOUNTS_WITH_EXTERNALS = toBankDataUrl("/accounts/withexternals");
+        public static final URL GET_ACCOUNTS_WITH_EXTERNALS =
+                toBankDataUrl("/accounts/withexternals");
 
         public static final URL GET_TRANSACTIONS_WITH_EXTERNALS =
                 toBankDataUrl("/pfm/transactions/withexternals");
@@ -70,22 +71,22 @@ public final class JyskeConstants {
         public static final RSAPublicKey PRODUCT_NEMID_KEY =
                 JyskeSecurityHelper.convertToPublicKey(
                         ("-----BEGIN CERTIFICATE-----\n"
-                                + " MIIEVDCCAzygAwIBAgIJAOZ1nSI+Z/1TMA0GCSqGSIb3DQEBBQUAMHkxCzAJBgNVBAYTAkRLMQowCAYDVQQIEwEgMR0wGwYDVQQ"
-                                + "HExRFcnJpdHNvZSwgRnJlZGVyaWNpYTERMA8GA1UEChMIQmFua2RhdGExDDAKBgNVBAsTA1NJSzEeMBwGA1UEAxMVTW9iaWxiYW5"
-                                + "rIHZlcjAwMSBQcm9kMB4XDTE2MDQxMTE1MTE0OFoXDTQxMDQwNTE1MTE0OFoweTELMAkGA1UEBhMCREsxCjAIBgNVBAgTASAxHTA"
-                                + "bBgNVBAcTFEVycml0c29lLCBGcmVkZXJpY2lhMREwDwYDVQQKEwhCYW5rZGF0YTEMMAoGA1UECxMDU0lLMR4wHAYDVQQDExVNb2J"
-                                + "pbGJhbmsgdmVyMDAxIFByb2QwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCfhSKIK21UpwaEWhnyDr0SPXdhQc5+qB9"
-                                + "0Y3ioQKBqgnySMlBqULw6AEZ3SXREikzdHInaBlscP97NKvinMv0j2wogJ4lDikDuXidWofNdce2eGdudqO2Cf0uwfxR1Mrl0PRU"
-                                + "UR1gYSvU9HeuoEdLKMxqbewYYbBPOYUWfc5kTRFNfz03ScFp/AZogO/F49or5Pn1U41u29MiTnvHD2PlqfklLScyTA+iULZ+NH3W"
-                                + "9/eGZ6igCpZubUSkj3JVaahJip9OE3usGSet0dQT+ckQ94mOvzzRC/e/0C+faxtXbqwLhnLm1LpOwdkSGLcW/EgmIO5pv1Gf3IX5"
-                                + "HmlLQlIN1AgMBAAGjgd4wgdswHQYDVR0OBBYEFH/N+XATSI+6MdtD5ZbDk/3ev9PEMIGrBgNVHSMEgaMwgaCAFH/N+XATSI+6Mdt"
-                                + "D5ZbDk/3ev9PEoX2kezB5MQswCQYDVQQGEwJESzEKMAgGA1UECBMBIDEdMBsGA1UEBxMURXJyaXRzb2UsIEZyZWRlcmljaWExETA"
-                                + "PBgNVBAoTCEJhbmtkYXRhMQwwCgYDVQQLEwNTSUsxHjAcBgNVBAMTFU1vYmlsYmFuayB2ZXIwMDEgUHJvZIIJAOZ1nSI+Z/1TMAw"
-                                + "GA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBADqGsF7mxb1CxpRaAOv5+w5+B44rQykqZP3iic14A/zG+6mHLleyscwIiYQ"
-                                + "lW9iw480sac0Zt7GoxiWZChFa+PD/+joLB/6lFO+/bx0GPWy5SkPdZII7689/Zo70rJdyZRd1tp6qk/O/+WDPy+M0w90HiNZG0q0"
-                                + "NqxfomZvZ6fAFuPVsupJIJq6DLL24FvBcCiJm5v6LPjjr9/lKwXZj5pBR9icqBucHhPmrv9YQmMwEyHnDqK27NKKim0Xny8w7xGW"
-                                + "V5It/uTbJMNetYXIiWkW0wKZkS71hgPSSkfMWhN+tx5eViVG7VVI/CN4Aj6zrfPW6moETruOfyOQmmq1lr1A=\n"
-                                + "-----END CERTIFICATE-----")
+                                        + " MIIEVDCCAzygAwIBAgIJAOZ1nSI+Z/1TMA0GCSqGSIb3DQEBBQUAMHkxCzAJBgNVBAYTAkRLMQowCAYDVQQIEwEgMR0wGwYDVQQ"
+                                        + "HExRFcnJpdHNvZSwgRnJlZGVyaWNpYTERMA8GA1UEChMIQmFua2RhdGExDDAKBgNVBAsTA1NJSzEeMBwGA1UEAxMVTW9iaWxiYW5"
+                                        + "rIHZlcjAwMSBQcm9kMB4XDTE2MDQxMTE1MTE0OFoXDTQxMDQwNTE1MTE0OFoweTELMAkGA1UEBhMCREsxCjAIBgNVBAgTASAxHTA"
+                                        + "bBgNVBAcTFEVycml0c29lLCBGcmVkZXJpY2lhMREwDwYDVQQKEwhCYW5rZGF0YTEMMAoGA1UECxMDU0lLMR4wHAYDVQQDExVNb2J"
+                                        + "pbGJhbmsgdmVyMDAxIFByb2QwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCfhSKIK21UpwaEWhnyDr0SPXdhQc5+qB9"
+                                        + "0Y3ioQKBqgnySMlBqULw6AEZ3SXREikzdHInaBlscP97NKvinMv0j2wogJ4lDikDuXidWofNdce2eGdudqO2Cf0uwfxR1Mrl0PRU"
+                                        + "UR1gYSvU9HeuoEdLKMxqbewYYbBPOYUWfc5kTRFNfz03ScFp/AZogO/F49or5Pn1U41u29MiTnvHD2PlqfklLScyTA+iULZ+NH3W"
+                                        + "9/eGZ6igCpZubUSkj3JVaahJip9OE3usGSet0dQT+ckQ94mOvzzRC/e/0C+faxtXbqwLhnLm1LpOwdkSGLcW/EgmIO5pv1Gf3IX5"
+                                        + "HmlLQlIN1AgMBAAGjgd4wgdswHQYDVR0OBBYEFH/N+XATSI+6MdtD5ZbDk/3ev9PEMIGrBgNVHSMEgaMwgaCAFH/N+XATSI+6Mdt"
+                                        + "D5ZbDk/3ev9PEoX2kezB5MQswCQYDVQQGEwJESzEKMAgGA1UECBMBIDEdMBsGA1UEBxMURXJyaXRzb2UsIEZyZWRlcmljaWExETA"
+                                        + "PBgNVBAoTCEJhbmtkYXRhMQwwCgYDVQQLEwNTSUsxHjAcBgNVBAMTFU1vYmlsYmFuayB2ZXIwMDEgUHJvZIIJAOZ1nSI+Z/1TMAw"
+                                        + "GA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBADqGsF7mxb1CxpRaAOv5+w5+B44rQykqZP3iic14A/zG+6mHLleyscwIiYQ"
+                                        + "lW9iw480sac0Zt7GoxiWZChFa+PD/+joLB/6lFO+/bx0GPWy5SkPdZII7689/Zo70rJdyZRd1tp6qk/O/+WDPy+M0w90HiNZG0q0"
+                                        + "NqxfomZvZ6fAFuPVsupJIJq6DLL24FvBcCiJm5v6LPjjr9/lKwXZj5pBR9icqBucHhPmrv9YQmMwEyHnDqK27NKKim0Xny8w7xGW"
+                                        + "V5It/uTbJMNetYXIiWkW0wKZkS71hgPSSkfMWhN+tx5eViVG7VVI/CN4Aj6zrfPW6moETruOfyOQmmq1lr1A=\n"
+                                        + "-----END CERTIFICATE-----")
                                 .getBytes(JyskeConstants.CHARSET));
 
         public static final String AES_PADDING = "XOXOXOXOXOXOXOXO";
