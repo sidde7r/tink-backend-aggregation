@@ -133,18 +133,14 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         }
     }
 
-    public <T> T fetchUserDetails(URL identityDataEndpointURL, Class<T> responseType) {
-        return createAisRequest(identityDataEndpointURL).get(responseType);
-    }
-
-    private RequestBuilder createPisRequest(URL url) {
+    protected RequestBuilder createPisRequest(URL url) {
         return httpClient
                 .request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .addFilter(getPisAuthFilter());
     }
 
-    private RequestBuilder createAisRequest(URL url) {
+    public RequestBuilder createAisRequest(URL url) {
         return httpClient
                 .request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)

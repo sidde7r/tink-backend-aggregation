@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.IdentityDataV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.account.AccountBalanceV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.account.AccountsV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
@@ -35,7 +36,8 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                 apiClient,
                 AccountsV31Response.class,
                 AccountBalanceV31Response.class,
-                AccountsV31Response::toTransactionalAccount);
+                AccountsV31Response::toTransactionalAccount,
+                new IdentityDataV31Fetcher(apiClient));
     }
 
     @Override
@@ -68,7 +70,8 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                 apiClient,
                 AccountsV31Response.class,
                 AccountBalanceV31Response.class,
-                AccountsV31Response::toCreditCardAccount);
+                AccountsV31Response::toCreditCardAccount,
+                new IdentityDataV31Fetcher(apiClient));
     }
 
     @Override

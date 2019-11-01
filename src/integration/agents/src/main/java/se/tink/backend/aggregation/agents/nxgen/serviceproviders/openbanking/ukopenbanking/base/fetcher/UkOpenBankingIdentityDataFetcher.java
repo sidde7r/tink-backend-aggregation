@@ -28,7 +28,7 @@ public class UkOpenBankingIdentityDataFetcher<IdentityDataResponseType>
         String name =
                 Objects.isNull(agentConfig.getIdentityData())
                         ? agentConfig.getHolderName()
-                        : agentConfig.getIdentityData().toTinkIdentityData().getName();
+                        : agentConfig.getIdentityData().getName();
 
         return IdentityData.builder().setFullName(name).setDateOfBirth(null).build();
     }

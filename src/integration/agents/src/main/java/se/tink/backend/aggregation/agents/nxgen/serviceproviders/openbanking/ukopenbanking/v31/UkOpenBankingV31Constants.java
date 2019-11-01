@@ -14,6 +14,10 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
 
+    private UkOpenBankingV31Constants() {
+        throw new AssertionError();
+    }
+
     public static final int HEX_SIZE = 8;
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
@@ -98,10 +102,6 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
         public static final String CONSENT_REQUEST = "/account-access-consents";
         public static final String AISP_PREFIX = "/aisp";
         public static final String PISP_PREFIX = "/pisp";
-    }
-
-    public static final class ResponseKeys {
-        public static final String CONSENT_ID_KEY = "consentId";
     }
 
     public static class Links {

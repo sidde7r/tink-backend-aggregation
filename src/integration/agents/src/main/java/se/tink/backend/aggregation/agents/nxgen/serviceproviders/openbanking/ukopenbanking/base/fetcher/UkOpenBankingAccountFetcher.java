@@ -5,9 +5,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.IdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.identity.IdentityDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.identity.IdentityDataV31Response;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -32,6 +32,7 @@ public class UkOpenBankingAccountFetcher<
     private final Class<BalanceResponseType> balanceEntityType;
     private final AccountConverter<AccountResponseType, BalanceResponseType, AccountType>
             accountConverter;
+    private final IdentityDataFetcher identityDataFetcher;
 
     /**
      * @param apiClient Ukob api client
@@ -57,6 +58,26 @@ public class UkOpenBankingAccountFetcher<
         this.balanceEntityType = balancesResponseType;
 
         this.accountConverter = accountConverter;
+        this.identityDataFetcher = new IdentityDataFetcher(apiClient);
+    }
+
+    public UkOpenBankingAccountFetcher(
+            UkOpenBankingAisConfig ukOpenBankingAisConfig,
+            UkOpenBankingApiClient apiClient,
+            Class<AccountResponseType> accountsResponseType,
+            Class<BalanceResponseType> balancesResponseType,
+            AccountConverter<AccountResponseType, BalanceResponseType, AccountType>
+                    accountConverter,
+            IdentityDataFetcher identityDataFetcher) {
+
+        this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
+        this.apiClient = apiClient;
+
+        this.accountEntityType = accountsResponseType;
+        this.balanceEntityType = balancesResponseType;
+
+        this.accountConverter = accountConverter;
+        this.identityDataFetcher = identityDataFetcher;
     }
 
     @Override
@@ -67,7 +88,7 @@ public class UkOpenBankingAccountFetcher<
 
         URL identityDataEndpointURL = ukOpenBankingAisConfig.getIdentityDataURL();
 
-        IdentityDataV31Response identityData = null;
+        IdentityDataEntity identityData = null;
 
         if (Objects.nonNull(identityDataEndpointURL)) {
             identityData = fetchIdentityData(accounts, identityDataEndpointURL);
@@ -76,10 +97,7 @@ public class UkOpenBankingAccountFetcher<
         // In order to keep the model simple we accept that we are revisiting the accounts list
         // multiple time.
         String partyName =
-                Optional.ofNullable(identityData)
-                        .map(IdentityDataV31Response::toTinkIdentityData)
-                        .map(IdentityDataEntity::getName)
-                        .orElse(null);
+                Optional.ofNullable(identityData).map(IdentityDataEntity::getName).orElse(null);
 
         List<AccountType> tinkAccounts =
                 accounts.stream()
@@ -110,22 +128,23 @@ public class UkOpenBankingAccountFetcher<
         return tinkAccounts;
     }
 
-    private IdentityDataV31Response fetchIdentityData(
+    private IdentityDataEntity fetchIdentityData(
             AccountResponseType accounts, URL identityDataEndpointURL) {
         if (identityDataEndpointURL.get().contains("accounts")) {
-            return apiClient.fetchUserDetails(
+            return identityDataFetcher.fetchUserDetails(
                     ukOpenBankingAisConfig
                             .getApiBaseURL()
                             .concat(
                                     String.format(
                                             identityDataEndpointURL.get(),
-                                            accounts.stream().findAny().get().getBankIdentifier())),
-                    IdentityDataV31Response.class);
+                                            accounts.stream()
+                                                    .findAny()
+                                                    .get()
+                                                    .getBankIdentifier())));
 
         } else {
-            return apiClient.fetchUserDetails(
-                    ukOpenBankingAisConfig.getApiBaseURL().concat(identityDataEndpointURL.get()),
-                    IdentityDataV31Response.class);
+            return identityDataFetcher.fetchUserDetails(
+                    ukOpenBankingAisConfig.getApiBaseURL().concat(identityDataEndpointURL.get()));
         }
     }
 }
