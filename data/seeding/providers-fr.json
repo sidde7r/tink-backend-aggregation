@@ -3,6 +3,7 @@
     "market": "FR",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.creditcards.amex.AmericanExpressFRAgent",
             "credentialsType": "PASSWORD",
             "displayName": "American Express",
@@ -30,6 +31,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire Alsace Lorraine Champagne",
@@ -60,6 +62,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire Aquitaine Centre Atlantique",
@@ -90,6 +93,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire Auvergne Rhône Alpes",
@@ -120,6 +124,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire Bourgogne Franche-Comté",
@@ -150,6 +155,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire BRED",
@@ -180,6 +186,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire Méditerranée",
@@ -210,6 +217,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire Nord",
@@ -240,6 +248,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire Occitane",
@@ -270,6 +279,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire Grand Ouest",
@@ -300,6 +310,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire Rives de Paris",
@@ -330,6 +341,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire Sud",
@@ -360,6 +372,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Populaire Val de France",
@@ -390,6 +403,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquetransatlantique.BanqueTransatlantiqueAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banque Transatlantique",
@@ -418,6 +432,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.bnpparibas.BnpParibasAgent",
             "credentialsType": "PASSWORD",
             "displayName": "BNP Paribas",
@@ -446,6 +461,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.caisseepargne.CaisseEpargneAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Caisse d'Épargne",
@@ -501,6 +517,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.cic.CicBankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "CIC",
@@ -531,6 +548,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "CreditAgricole (Sandbox)",
@@ -548,6 +566,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Alpes Provence",
@@ -595,6 +614,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Alsace Vosges",
@@ -642,6 +662,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Anjou Maine",
@@ -689,6 +710,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Aquitaine",
@@ -736,6 +758,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Atlantique Vendée",
@@ -783,6 +806,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Brie Picardie",
@@ -830,6 +854,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Centre-Est",
@@ -877,6 +902,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Centre France",
@@ -924,6 +950,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Centre Loire",
@@ -971,6 +998,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Centre Ouest",
@@ -1018,6 +1046,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Champagne-Bourgogne",
@@ -1065,6 +1094,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Charente-Maritime Deux-Sèvres",
@@ -1112,6 +1142,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Charente-Périgord",
@@ -1159,6 +1190,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Corse",
@@ -1206,6 +1238,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Côtes d'Armor",
@@ -1253,6 +1286,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Finistère",
@@ -1300,6 +1334,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Franche-Comté",
@@ -1347,6 +1382,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole de Guadeloupe",
@@ -1394,6 +1430,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole d'Île-de-France",
@@ -1441,6 +1478,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Ille-et-Vilaine",
@@ -1488,6 +1526,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Languedoc",
@@ -1535,6 +1574,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Loire Haute Loire",
@@ -1582,6 +1622,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Lorraine",
@@ -1629,6 +1670,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Martinique et Guyane",
@@ -1676,6 +1718,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Morbihan",
@@ -1723,6 +1766,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Nord de France",
@@ -1770,6 +1814,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Nord Est",
@@ -1817,6 +1862,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Nord Mini Pyrenées",
@@ -1864,6 +1910,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Normandie",
@@ -1911,6 +1958,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Normandie-Seine",
@@ -1958,6 +2006,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Provence Côte d'Azur",
@@ -2005,6 +2054,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Pyrenées Gascogne",
@@ -2052,6 +2102,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Réunion",
@@ -2099,6 +2150,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Des Savoie",
@@ -2146,6 +2198,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Sud Mediterranée",
@@ -2193,6 +2246,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Sud Rhône Alpes",
@@ -2240,6 +2294,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Toulouse 31",
@@ -2287,6 +2342,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Touraine et Poitou",
@@ -2334,6 +2390,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Crédit Agricole Val de France",
@@ -2381,6 +2438,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.creditmutuel.CreditMutuelAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Credit Mutuel",
@@ -2429,6 +2487,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.labanquepostale.LaBanquePostaleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "La Banque Postale",
@@ -2457,6 +2516,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.labanquepostale.LaBanquePostaleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "La Banque Postale (Test only)",
@@ -2473,6 +2533,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.lcl.LclAgent",
             "credentialsType": "PASSWORD",
             "displayName": "LCL",
@@ -2500,6 +2561,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.monabanq.MonaBanqAgent",
             "credentialsType": "PASSWORD",
             "displayName": "MonaBanq",
@@ -2544,6 +2606,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.n26.N26Agent",
             "credentialsType": "PASSWORD",
             "displayName": "N26",
@@ -2572,6 +2635,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Revolut",
@@ -2605,6 +2669,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fr.banks.societegenerale.SocieteGeneraleAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Société Générale",
@@ -2634,6 +2699,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -2657,6 +2723,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",

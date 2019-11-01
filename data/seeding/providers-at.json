@@ -3,6 +3,7 @@
     "market": "AT",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.creditcards.amex.v62.AmericanExpressV62ATAgent",
             "credentialsType": "PASSWORD",
             "currency": "EUR",
@@ -69,6 +70,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
             "credentialsType": "PASSWORD",
             "displayName": "BAWAG P.S.K.",
@@ -100,6 +102,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Easybank",
@@ -131,6 +134,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.erstebank.password.ErsteBankPasswordAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Password",
@@ -160,6 +164,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.erstebank.sidentity.ErstebankSidentityAgent",
             "credentialsType": "MOBILE_BANKID",
             "displayName": "s Identity",
@@ -192,6 +197,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.ing.IngAtAgent",
             "credentialsType": "PASSWORD",
             "displayName": "ING-DiBa",
@@ -221,6 +227,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.n26.N26Agent",
             "credentialsType": "PASSWORD",
             "displayName": "N26",
@@ -251,6 +258,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Burgenland)",
@@ -285,6 +293,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Kärnten)",
@@ -319,6 +328,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Oberösterreich/PRIVAT BANK)",
@@ -353,6 +363,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Tirol/Jungholz)",
@@ -387,6 +398,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Niederösterreich/Wien)",
@@ -421,6 +433,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Oberösterreich)",
@@ -455,6 +468,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Salzburg)",
@@ -489,6 +503,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Steiermark)",
@@ -523,6 +538,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Tirol)",
@@ -557,6 +573,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Vorarlberg)",
@@ -591,6 +608,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Kärnten/Posojilnica Bank)",
@@ -625,6 +643,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Oberösterreich/bankdirekt.at)",
@@ -659,6 +678,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Revolut",
@@ -694,6 +714,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -722,6 +743,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -750,6 +772,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -778,6 +801,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -801,6 +825,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -832,6 +857,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.volksbank.VolksbankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Volksbank Tirol",

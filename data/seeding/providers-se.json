@@ -3,6 +3,7 @@
     "market": "SE",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.banks.alandsbanken.keycard.AlandsBankenKeyCardSeAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -34,6 +35,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -68,6 +70,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "brokers.avanza.AvanzaV2Agent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -100,6 +103,7 @@
             "type": "BROKER"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.chevrolet.ChevroletMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -134,6 +138,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.nordicchoice.NordicChoiceClubMastercardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -166,6 +171,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -200,6 +206,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.coop.CoopAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -234,6 +241,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.entercard.coop.CoopMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -268,6 +276,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "fraud.CreditSafeAgent",
             "credentialsType": "FRAUD",
             "currency": "SEK",
@@ -299,6 +308,7 @@
             "type": "FRAUD"
         },
         {
+            "accessType": "OTHER",
             "className": "other.CSNAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -342,6 +352,7 @@
             "type": "OTHER"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -392,6 +403,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -429,6 +441,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "demo.DemoAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -459,6 +472,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.djurgardskortet.DjurgardskortetMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -491,6 +505,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.eurocard.EurocardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -523,6 +538,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.finnair.FinnairMastercardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -555,6 +571,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "demo.DemoAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -586,6 +603,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -635,6 +653,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -672,6 +691,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -703,6 +723,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -734,6 +755,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "creditcards.ikano.api.IkanoApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -767,6 +789,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.ingo.IngoMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -799,6 +822,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -836,6 +860,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "brokers.lysa.LysaAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -867,6 +892,7 @@
             "type": "BROKER"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.entercard.moregolf.MoreGolfMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -901,6 +927,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.nknyckeln.NkNyckelnMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -985,6 +1012,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "brokers.NordnetAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -1018,6 +1046,7 @@
             "type": "BROKER"
         },
         {
+            "accessType": "OTHER",
             "className": "brokers.NordnetAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -1083,6 +1112,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "creditcards.okq8.OKQ8BankAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -1120,6 +1150,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.opel.OpelMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -1152,6 +1183,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "creditcards.ikano.api.IkanoApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -1185,6 +1217,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.entercard.remember.RememberAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -1219,6 +1252,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "creditcards.rikskortet.RikskortetAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -1251,6 +1285,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.saab.SaabMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -1283,6 +1318,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -1315,6 +1351,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.saseurobonus.SasEurobonusMastercardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -1347,6 +1384,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -1393,6 +1431,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -1438,6 +1477,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -1474,6 +1514,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.banks.alandsbanken.bankid.AlandsBankenBankidSeAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -1500,6 +1541,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.brokers.avanza.AvanzaAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -1533,6 +1575,7 @@
             "type": "BROKER"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -1561,6 +1604,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -1600,6 +1644,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.banks.nordea.v30.NordeaSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -1632,6 +1677,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.se.openbanking.nordea.NordeaSeAgent",
             "credentialsType": "MOBILE_BANKID",
             "displayName": "Nordea",
@@ -1661,6 +1707,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.banks.nordea.v30.NordeaSEAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -1709,6 +1756,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.banks.sbab.SbabAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "currency": "SEK",
@@ -1742,6 +1790,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.serviceproviders.openbanking.sebopenbanking.SebAccountsAndCardsAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "SEB (Sandbox)",
@@ -1759,6 +1808,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.serviceproviders.openbanking.sebbrandedcards.SebBrandedCardsAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "SEB (Sandbox)",
@@ -1776,6 +1826,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.bankid.FailingBankIdDemoAgent",
             "credentialsType": "MOBILE_BANKID",
             "displayDescription": "Mobile BankID",
@@ -1805,6 +1856,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.bankid.BankIdDemoAgent",
             "credentialsType": "MOBILE_BANKID",
             "displayDescription": "Mobile BankID",
@@ -1834,6 +1886,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -1864,6 +1917,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.demo.openbanking.demofinancialinstitution.DemoFinancialInstitutionAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -1894,6 +1948,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -1917,6 +1972,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -2007,6 +2063,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "credentialsType": "PASSWORD",
             "displayName": "TEST_PARTNER Abstract",
             "financialInstitutionId": "dummyId",
@@ -2019,6 +2076,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "creditcards.ikano.api.IkanoApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2091,6 +2149,7 @@
             "financialInstitutionId": "SEB"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.banks.seb.SebAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2111,6 +2170,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.sebwallet.SebWalletMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2143,6 +2203,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "creditcards.ikano.api.IkanoApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2178,6 +2239,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.sjprio.SjPrioMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2210,6 +2272,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "banks.SkandiabankenAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2228,6 +2291,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.banks.skandiabanken.SkandiaBankenAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2247,6 +2311,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "banks.SkandiabankenAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2266,6 +2331,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "creditcards.ikano.api.IkanoApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2301,6 +2367,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.banks.sdcse.SdcSeAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2352,6 +2419,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.creditcards.sebkort.circlek.CircleKMastercardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2385,6 +2453,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "creditcards.supremecard.v2.SupremeCardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2417,6 +2486,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -2698,6 +2768,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -2743,6 +2814,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -2780,6 +2852,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "creditcards.ikano.api.IkanoApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2813,6 +2886,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.se.banks.volvofinans.VolvoFinansAgent",
             "credentialsType": "MOBILE_BANKID",
             "displayName": "Volvofinans Bank",

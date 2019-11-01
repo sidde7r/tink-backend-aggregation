@@ -36,6 +36,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.alandsbanken.AlandsBankenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Ålandsbanken",
@@ -65,6 +66,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.creditcards.amex.AmericanExpressFIAgent",
             "credentialsType": "PASSWORD",
             "displayName": "American Express",
@@ -93,6 +95,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.danskebank.DanskeBankFIAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Danske Bank",
@@ -129,6 +132,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.handelsbanken.HandelsbankenFIAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Handelsbanken",
@@ -172,6 +176,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.nordea.v33.NordeaFIAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "displayDescription": "Nordea Codes App",
@@ -196,6 +201,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.omasp.OmaspAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Oma Säästöpankki",
@@ -226,6 +232,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.op.OpBankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "OP",
@@ -254,6 +261,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.fi.openbanking.opbank.OpBankAgent",
             "credentialsType": "PASSWORD",
             "fields": [
@@ -281,6 +289,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.poppankki.PopPankkiAgent",
             "credentialsType": "PASSWORD",
             "displayName": "POP Pankki",
@@ -311,6 +320,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.saastopankki.SpAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Säästöpankki",
@@ -339,6 +349,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.spankki.SpankkiAgent",
             "credentialsType": "PASSWORD",
             "displayName": "S-Pankki",
@@ -366,6 +377,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -389,6 +401,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",

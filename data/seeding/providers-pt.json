@@ -384,6 +384,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -407,6 +408,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",

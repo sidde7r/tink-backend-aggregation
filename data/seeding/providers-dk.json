@@ -3,6 +3,7 @@
     "market": "DK",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "AL-Bank",
@@ -39,6 +40,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Alm Brand Bank",
@@ -74,6 +76,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Andelskassen",
@@ -110,6 +113,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Andelskassen Fælleskassen",
@@ -146,6 +150,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Andelskassen Oikos",
@@ -174,6 +179,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "BankNordik",
@@ -220,6 +226,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Basisbank",
@@ -248,6 +255,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "BIL Danmark",
@@ -284,6 +292,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Borbjerg Sparekasse",
@@ -312,6 +321,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Broager Sparekasse",
@@ -340,6 +350,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Coop",
@@ -411,6 +422,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Den Jyske Sparekasse",
@@ -447,6 +459,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Djurslands Bank",
@@ -482,6 +495,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Dragsholm Sparekasse",
@@ -510,6 +524,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Dronninglund Sparekasse",
@@ -538,6 +553,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Fanø Sparekasse",
@@ -566,6 +582,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Faster Andelskasse",
@@ -602,6 +619,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Folkesparekassen",
@@ -630,6 +648,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Forbrugsforeningen",
@@ -658,6 +677,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Frøs Sparekasse",
@@ -686,6 +706,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Frørup Andelskasse",
@@ -722,6 +743,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Frøslev-Mollerup Sparekasse",
@@ -758,6 +780,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Fynske",
@@ -794,6 +817,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Grønlandsbanken",
@@ -830,6 +854,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Handelsbanken DK",
@@ -866,6 +891,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Hvidbjerg",
@@ -902,6 +928,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "J.A.K. Andelskasse Østervrå",
@@ -930,6 +957,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Jutlander Bank",
@@ -958,6 +986,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.jyske.JyskeAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Jyske Bank",
@@ -992,6 +1021,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Klim Sparekasse",
@@ -1020,6 +1050,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Kreditbanken",
@@ -1055,6 +1086,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Københavns Andelskasse",
@@ -1091,6 +1123,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Langå Sparekasse",
@@ -1119,6 +1152,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Lån & Spar Bank A/S",
@@ -1147,6 +1181,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Lollands",
@@ -1183,6 +1218,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Lægernes",
@@ -1219,6 +1255,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Merkur",
@@ -1255,6 +1292,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Middelfart Sparekasse",
@@ -1283,6 +1321,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Møns",
@@ -1319,6 +1358,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.nordea.NordeaDkAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "NemID Login",
@@ -1347,6 +1387,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Nordfyns Bank",
@@ -1382,6 +1423,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Nordjyske Bank",
@@ -1417,6 +1459,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Nykredit",
@@ -1453,6 +1496,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Østjydsk Bank",
@@ -1488,6 +1532,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "PenSam",
@@ -1524,6 +1569,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "PFA",
@@ -1560,6 +1606,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Ringkjøbing Landbobank",
@@ -1615,6 +1662,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Rise Flemløse Sparekasse",
@@ -1643,6 +1691,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Rønde Sparekasse",
@@ -1671,6 +1720,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Salling",
@@ -1707,6 +1757,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Saxo Privatbank A/S",
@@ -1735,6 +1786,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "SEB Wealth Management",
@@ -1771,6 +1823,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Skjern Bank",
@@ -1806,6 +1859,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sparekassen Balling",
@@ -1834,6 +1888,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sparekassen Bredebro",
@@ -1862,6 +1917,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sparekassen Den lille Bikube",
@@ -1890,6 +1946,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sparekassen Djursland",
@@ -1918,6 +1975,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sparekassen Kronjylland",
@@ -1946,6 +2004,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sparekassen for Nr. Nebel og Omegn",
@@ -1974,6 +2033,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sparekassen Sjælland",
@@ -2009,6 +2069,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sparekassen Thy",
@@ -2037,6 +2098,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sparekassen Vendsyssel",
@@ -2065,6 +2127,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Spar Nord",
@@ -2101,6 +2164,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Stadil Sparekasse",
@@ -2129,6 +2193,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Swedbank DK",
@@ -2165,6 +2230,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sydbank",
@@ -2200,6 +2266,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Søby-Skader-Halling Sparekasse",
@@ -2236,6 +2303,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Sønderhå-Hørsted Sparekasse",
@@ -2264,6 +2332,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -2287,6 +2356,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -2316,6 +2386,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Totalbanken",
@@ -2352,6 +2423,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Vestjysk",
