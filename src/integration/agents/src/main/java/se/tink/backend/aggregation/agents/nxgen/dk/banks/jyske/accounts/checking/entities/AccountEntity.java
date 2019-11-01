@@ -4,6 +4,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants;
 import se.tink.backend.aggregation.agents.utils.typeguesser.TypeGuesser;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -71,13 +72,13 @@ public class AccountEntity extends AccountBriefEntity {
                 .setAccountNumber(getAccountNumber())
                 .setName(name)
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .setHolderName(new HolderName(accountOwner))
                 .build();
     }
 
     public AccountBriefEntity toAccountBriefEntity() {
         AccountBriefEntity accountBriefEntity = new AccountBriefEntity();
         accountBriefEntity.setAccountNo(accountNo);
-        accountBriefEntity.setShadowAccountId("");
         accountBriefEntity.setRegNo(regNo);
         return accountBriefEntity;
     }

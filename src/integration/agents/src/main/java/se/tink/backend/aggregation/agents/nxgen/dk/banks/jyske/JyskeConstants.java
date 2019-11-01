@@ -26,9 +26,9 @@ public final class JyskeConstants {
 
         public static final URL NEMID_ENROLL = toBankDataUrl("/nemid/inroll");
         public static final URL NEMID_LOGIN = toBankDataUrl("/nemid/login_with_installid_prop");
-        public static final URL GET_ACCOUNTS = toBankDataUrl("/accounts");
+        public static final URL GET_ACCOUNTS_WITH_EXTERNALS =
+                toBankDataUrl("/accounts/withexternals");
 
-        public static final URL GET_TRANSACTIONS = toBankDataUrl("/pfm/transactions");
         public static final URL GET_TRANSACTIONS_WITH_EXTERNALS =
                 toBankDataUrl("/pfm/transactions/withexternals");
         public static final URL GET_FUTURE_TRANSACTIONS = toBankDataUrl("/pfm/transactions/future");
@@ -53,7 +53,7 @@ public final class JyskeConstants {
         public static final String APPID_KEY = "x-appid";
         public static final String APPID_VALUE = APP_ID_VALUE;
         public static final String VERSION_KEY = "x-version";
-        public static final String VERSION_VALUE = "3.10.2";
+        public static final String VERSION_VALUE = "3.20.5";
         public static final String BANKNO_KEY = "x-bankNo";
         public static final String BANKNO_VALUE = "51";
         public static final String OS_KEY = "x-os";
