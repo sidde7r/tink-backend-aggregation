@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.tools;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -53,6 +55,9 @@ public class ClientConfigurationTemplateBuilder {
         this.includeDescriptions = includeDescriptions;
         this.includeExamples = includeExamples;
         this.financialInstitutionId = provider.getFinancialInstitutionId();
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(this.financialInstitutionId),
+                "financialInstitutionId in requested provider cannot be null.");
         this.noConfigurationClassFoundExceptionSupplier =
                 () ->
                         new IllegalArgumentException(
