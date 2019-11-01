@@ -8,9 +8,10 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.InitiatePaymentBodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.HandelsbankenBasePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.AmountEntity;
@@ -31,7 +32,6 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstant
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier.Type;
 
 public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExecutor {
@@ -43,26 +43,24 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
                                     HandelsbankenPaymentType.SWEDISH_DOMESTIC_CREDIT_TRANSFER,
                                     new AccountTypePair(Type.SE, Type.SE))
                             .put(
-                                    HandelsbankenPaymentType.SWEDISH_DOMESTICGIRO_PAYMENT,
+                                    HandelsbankenPaymentType.SWEDISH_DOMESTIC_GIRO_PAYMENT,
                                     new AccountTypePair(Type.SE, Type.SE_BG),
                                     new AccountTypePair(Type.SE, Type.SE_PG))
                             .build();
-    private final SessionStorage sessionStorage;
     private final SupplementalRequester supplementalRequester;
-    private final PersistentStorage persistentStorage;
     private Credentials credentials;
+    private final HandelsbankenSEBankIdSigner bankIdSigner;
 
     public HandelsbankenSEPaymentExecutor(
             HandelsbankenBaseApiClient apiClient,
             Credentials credentials,
-            SessionStorage sessionStorage,
             SupplementalRequester supplementalRequester,
             PersistentStorage persistentStorage) {
         super(apiClient);
         this.credentials = credentials;
-        this.sessionStorage = sessionStorage;
         this.supplementalRequester = supplementalRequester;
-        this.persistentStorage = persistentStorage;
+        this.bankIdSigner =
+                new HandelsbankenSEBankIdSigner(persistentStorage, apiClient, credentials);
     }
 
     @Override
@@ -81,10 +79,7 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
 
     @Override
     public Signer getSigner() {
-        return new BankIdSigningController(
-                supplementalRequester,
-                new HandelsbankenSEBankIdSigner(
-                        persistentStorage, apiClient, sessionStorage, credentials));
+        return new BankIdSigningController(supplementalRequester, bankIdSigner);
     }
 
     @Override
@@ -122,9 +117,11 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        sessionStorage.put(
-                StorageKeys.PAYMENT_ID, paymentMultiStepRequest.getPayment().getUniqueId());
-
+        String ssn = credentials.getField(CredentialKeys.USERNAME);
+        SessionResponse sessionResponse =
+                apiClient.initDecoupledAuthorizationPis(
+                        ssn, paymentMultiStepRequest.getPayment().getUniqueId());
+        bankIdSigner.setAutoStartToken(sessionResponse);
         try {
             getSigner().sign(paymentMultiStepRequest);
         } catch (AuthenticationException e) {

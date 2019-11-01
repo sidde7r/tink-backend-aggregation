@@ -45,11 +45,11 @@ public class HandelsbankenAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Debtor debtor = mock(Debtor.class);
-            doReturn(Type.SE).when(debtor).getAccountIdentifierType();
+            doReturn(Type.BBAN).when(debtor).getAccountIdentifierType();
             doReturn(manager.get(Arg.DEBTOR_ACCOUNT)).when(debtor).getAccountNumber();
 
             Creditor creditor = mock(Creditor.class);
-            doReturn(Type.SE).when(creditor).getAccountIdentifierType();
+            doReturn(Type.BBAN).when(creditor).getAccountIdentifierType();
             doReturn(manager.get(Arg.CREDITOR_ACCOUNT)).when(creditor).getAccountNumber();
 
             Amount amount = Amount.inSEK(5);

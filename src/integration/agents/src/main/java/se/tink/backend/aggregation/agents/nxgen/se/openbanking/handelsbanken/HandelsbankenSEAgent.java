@@ -4,13 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.executor.payment.HandelsbankenSEPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Market;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -53,34 +51,25 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
+        BankIdAuthenticationController bankIdAuthenticationController =
+                new BankIdAuthenticationController<>(
+                        supplementalRequester,
+                        new HandelsbankenBankIdAuthenticator(apiClient),
+                        persistentStorage,
+                        credentials);
 
-        if (credentials.getField(CredentialKeys.SCOPE).equalsIgnoreCase(Scope.AIS)) {
-            BankIdAuthenticationController bankIdAuthenticationController =
-                    new BankIdAuthenticationController<>(
-                            supplementalRequester,
-                            new HandelsbankenBankIdAuthenticator(apiClient),
-                            persistentStorage,
-                            credentials);
-
-            return new AutoAuthenticationController(
-                    request,
-                    systemUpdater,
-                    bankIdAuthenticationController,
-                    bankIdAuthenticationController);
-        } else {
-            return new HandelsbankenSEAuthenticator(apiClient, persistentStorage);
-        }
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                bankIdAuthenticationController,
+                bankIdAuthenticationController);
     }
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
         final HandelsbankenSEPaymentExecutor paymentExecutor =
                 new HandelsbankenSEPaymentExecutor(
-                        apiClient,
-                        credentials,
-                        sessionStorage,
-                        supplementalRequester,
-                        persistentStorage);
+                        apiClient, credentials, supplementalRequester, persistentStorage);
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }

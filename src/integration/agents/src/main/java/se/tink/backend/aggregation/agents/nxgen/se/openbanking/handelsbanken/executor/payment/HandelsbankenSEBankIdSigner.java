@@ -19,12 +19,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.DecoupledResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigner;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class HandelsbankenSEBankIdSigner implements BankIdSigner<PaymentRequest> {
 
@@ -33,18 +31,15 @@ public class HandelsbankenSEBankIdSigner implements BankIdSigner<PaymentRequest>
 
     private final PersistentStorage persistentStorage;
     private final HandelsbankenBaseApiClient apiClient;
-    private final SessionStorage sessionStorage;
     private final Credentials credentials;
-    private SessionResponse sessionResponse;
+    private SessionResponse autoStartToken;
 
     public HandelsbankenSEBankIdSigner(
             PersistentStorage persistentStorage,
             HandelsbankenBaseApiClient apiClient,
-            SessionStorage sessionStorage,
             Credentials credentials) {
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
         this.credentials = credentials;
     }
 
@@ -53,19 +48,16 @@ public class HandelsbankenSEBankIdSigner implements BankIdSigner<PaymentRequest>
         if (Strings.isNullOrEmpty(credentials.getField(CredentialKeys.USERNAME))) {
             logger.error("SSN/USERNAME was passed as empty or null!");
         }
-        SessionResponse response = pisAuthorization(credentials.getField(CredentialKeys.USERNAME));
-        Uninterruptibles.sleepUninterruptibly(response.getSleepTime(), TimeUnit.MILLISECONDS);
-
-        sessionResponse = response;
-        return Optional.ofNullable(response.getAutoStartToken());
+        Uninterruptibles.sleepUninterruptibly(autoStartToken.getSleepTime(), TimeUnit.MILLISECONDS);
+        return Optional.ofNullable(autoStartToken.getAutoStartToken());
     }
 
     @Override
-    public BankIdStatus collect(PaymentRequest toCollect) {
+    public BankIdStatus collect(PaymentRequest paymentRequest) {
 
         DecoupledResponse decoupledResponse =
                 apiClient.getDecoupled(
-                        new URL(sessionResponse.getLinks().getTokenEntity().getHref()));
+                        new URL(autoStartToken.getLinks().getTokenEntity().getHref()));
 
         if (decoupledResponse.hasError()) {
             switch (decoupledResponse.getError()) {
@@ -79,7 +71,7 @@ public class HandelsbankenSEBankIdSigner implements BankIdSigner<PaymentRequest>
                         throw AuthorizationError.UNAUTHORIZED.exception(
                                 HandelsbankenSEConstants.BankIdUserMessage.ACTIVATION_NEEDED);
                     } catch (AuthorizationException e) {
-                        e.printStackTrace();
+                        logger.error("BankId Authorization error.");
                     }
                 default:
                     logger.warn(
@@ -97,21 +89,14 @@ public class HandelsbankenSEBankIdSigner implements BankIdSigner<PaymentRequest>
                 return BankIdStatus.CANCELLED;
             case Status.COMPLETE:
                 persistentStorage.put(
-                        PersistentStorageKeys.OAUTH_2_TOKEN, decoupledResponse.toOauthToken());
+                        StorageKeys.TINK_ACCESS_TOKEN, decoupledResponse.toOauthToken());
                 return BankIdStatus.DONE;
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
         }
     }
 
-    private SessionResponse pisAuthorization(String ssn) {
-        SessionResponse response =
-                sessionStorage
-                        .get(StorageKeys.PAYMENT_ID, String.class)
-                        .map(paymentId -> apiClient.initDecoupledAuthorizationPis(ssn, paymentId))
-                        .orElseThrow(() -> new IllegalStateException(Errors.MISSING_PAYMENT_ID));
-        sessionStorage.remove(StorageKeys.PAYMENT_ID);
-
-        return response;
+    public void setAutoStartToken(SessionResponse autoStartToken) {
+        this.autoStartToken = autoStartToken;
     }
 }

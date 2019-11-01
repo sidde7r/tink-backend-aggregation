@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.iban4j.IbanUtil;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.AccountType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Market;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -28,7 +27,7 @@ public class AccountEntity {
         this.accountNumber = accountNumber;
         this.accountType = accountType;
         this.currency = currency;
-        this.country = mapAccountTypeToCountry(accountType);
+        this.country = mapAccountTypeToCountry();
     }
 
     public AccountEntity(String accountNumber, String accountType, String text, String currency) {
@@ -36,11 +35,11 @@ public class AccountEntity {
         this.accountType = accountType;
         this.text = text;
         this.currency = currency;
-        this.country = mapAccountTypeToCountry(accountType);
+        this.country = mapAccountTypeToCountry();
     }
 
     @JsonIgnore
-    private String mapAccountTypeToCountry(String accountType) {
+    private String mapAccountTypeToCountry() {
         if (accountType.equalsIgnoreCase(Type.SE.toString())
                 || accountType.equalsIgnoreCase(Type.BE.toString())
                 || accountType.equalsIgnoreCase(Type.SE_PG.toString())
@@ -58,7 +57,7 @@ public class AccountEntity {
         Creditor creditor = paymentRequest.getPayment().getCreditor();
         return new AccountEntity(
                 creditor.getAccountNumber(),
-                AccountType.BBAN,
+                creditor.getAccountIdentifierType().toString().toUpperCase(),
                 paymentRequest.getPayment().getCurrency());
     }
 
@@ -68,7 +67,7 @@ public class AccountEntity {
 
         return new AccountEntity(
                 debtor.getAccountNumber(),
-                AccountType.BBAN,
+                debtor.getAccountIdentifierType().toString().toUpperCase(),
                 paymentRequest.getPayment().getReference().getValue(),
                 paymentRequest.getPayment().getCurrency());
     }

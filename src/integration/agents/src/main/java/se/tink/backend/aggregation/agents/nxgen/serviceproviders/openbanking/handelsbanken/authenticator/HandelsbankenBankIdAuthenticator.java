@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Status;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.DecoupledResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.TokenResponse;
@@ -55,7 +55,13 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
         }
 
         try {
-            SessionResponse response = aisAuthorization(ssn);
+            TokenResponse tokenResponse =
+                    apiClient.requestClientCredentialGrantTokenWithScope(Scope.AIS);
+            AuthorizationResponse consent =
+                    apiClient.initiateConsent(tokenResponse.getAccessToken());
+
+            SessionResponse response =
+                    apiClient.initDecoupledAuthorizationAis(ssn, consent.getConsentId());
             this.autoStartToken = response.getAutoStartToken();
             Uninterruptibles.sleepUninterruptibly(response.getSleepTime(), TimeUnit.MILLISECONDS);
             return response;
@@ -128,13 +134,5 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
                         response.getAccessToken(),
                         refreshToken,
                         response.getExpiresIn()));
-    }
-
-    private SessionResponse aisAuthorization(String ssn) {
-        TokenResponse tokenResponse =
-                apiClient.requestClientCredentialGrantTokenWithScope(Scope.AIS);
-        ConsentResponse consent = apiClient.initiateConsent(tokenResponse.getAccessToken());
-
-        return apiClient.initDecoupledAuthorizationAis(ssn, consent.getConsentId());
     }
 }
