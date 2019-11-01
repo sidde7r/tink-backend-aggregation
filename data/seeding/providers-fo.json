@@ -3,6 +3,7 @@
     "market": "FO",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "BankNordik",
@@ -31,6 +32,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Betri Banki",
@@ -59,6 +61,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Norðoya Sparikassi",
@@ -87,6 +90,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Suðuroyar Sparikassi",

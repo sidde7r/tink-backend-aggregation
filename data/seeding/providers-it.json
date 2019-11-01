@@ -3,6 +3,7 @@
     "market": "IT",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.it.creditcards.amex.AmericanExpressITAgent",
             "credentialsType": "PASSWORD",
             "displayName": "American Express",

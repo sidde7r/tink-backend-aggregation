@@ -3,6 +3,7 @@
     "market": "MX",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.mx.banks.bbva.BbvaMxAgent",
             "credentialsType": "PASSWORD",
             "currency": "MXN",
@@ -42,6 +43,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.mx.banks.citibanamex.CitiBanaMexAgent",
             "credentialsType": "PASSWORD",
             "currency": "MXN",

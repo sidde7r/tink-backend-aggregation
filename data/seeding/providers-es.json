@@ -3,6 +3,7 @@
     "market": "ES",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.creditcards.amex.AmericanExpressESAgent",
             "credentialsType": "PASSWORD",
             "displayName": "American Express",
@@ -29,6 +30,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.popular.BancoPopularAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banco Popular",
@@ -61,6 +63,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.sabadell.SabadellAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banco Sabadell",
@@ -88,6 +91,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.santander.SantanderEsAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banco Santander",
@@ -143,6 +147,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.bbva.BbvaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "BBVA",
@@ -172,6 +177,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.bankinter.BankinterAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Bankinter",
@@ -200,6 +206,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.evobanco.EvoBancoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "EvoBanco",
@@ -231,6 +238,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.ibercaja.IberCajaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "IberCaja",
@@ -258,6 +266,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.imaginbank.ImaginBankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "ImaginBank",
@@ -288,6 +297,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.ing.v195.IngAgent",
             "credentialsType": "PASSWORD",
             "displayName": "ING",
@@ -331,6 +341,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.lacaixa.LaCaixaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "LaCaixa",
@@ -359,6 +370,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.n26.N26Agent",
             "credentialsType": "PASSWORD",
             "displayName": "N26",
@@ -386,6 +398,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.openbank.OpenbankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Openbank",
@@ -425,6 +438,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.serviceproviders.openbanking.redsys.RedsysAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Redsys (Sandbox)",
@@ -442,6 +456,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Revolut",
@@ -475,6 +490,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.targo.TargoBankESAgent",
             "credentialsType": "PASSWORD",
             "displayName": "TargoBank",
@@ -500,6 +516,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -523,6 +540,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
