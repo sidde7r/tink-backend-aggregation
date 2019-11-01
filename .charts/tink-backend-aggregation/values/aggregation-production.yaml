@@ -108,6 +108,10 @@ clients:
     aggregatorIdentifier: "Lån & Spar"
   dk-langa-sparekasse:
     aggregatorIdentifier: "Langå Sparekasse"
+  dk-proveo-testing:
+    aggregatorIdentifier: "proVeo"
+  dk-proveo-staging:
+    aggregatorIdentifier: "proVeo"
   dk-proveo-production:
     aggregatorIdentifier: "proVeo"
   dk-rise-flemlose-sparekasse-production:
