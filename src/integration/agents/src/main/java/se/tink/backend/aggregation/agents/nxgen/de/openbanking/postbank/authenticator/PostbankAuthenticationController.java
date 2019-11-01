@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -58,9 +59,10 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                         credentials.getType()));
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
+
         if (!Strings.isNullOrEmpty(username) && !Strings.isNullOrEmpty(password)) {
             AuthorisationResponse initValues = this.authenticator.init(username, password);
-
+            credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
             List<ScaMethodEntity> scaMethods = initValues.getScaMethods();
             ScaMethodEntity chosenScaMethod = initValues.getChosenScaMethodEntity();
 
