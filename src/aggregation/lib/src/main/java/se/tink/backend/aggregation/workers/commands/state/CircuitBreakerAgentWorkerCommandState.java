@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.configuration.CircuitBreakerConfiguration;
 import se.tink.backend.aggregation.workers.concurrency.CircuitBreakerStatistics;
 import se.tink.backend.aggregation.workers.ratelimit.CachingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class CircuitBreakerAgentWorkerCommandState {
     private final CachingProviderRateLimiterFactory cachingProviderRateLimiterFactory;

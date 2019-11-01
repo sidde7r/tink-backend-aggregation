@@ -9,8 +9,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class ResourceRequestResponseCountFilter
         implements ContainerRequestFilter, ContainerResponseFilter, ResourceFilter {

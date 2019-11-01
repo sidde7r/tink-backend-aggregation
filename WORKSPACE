@@ -14,7 +14,19 @@ git_repository(
 # Usually this should be set to the version of Bazel used for CI
 load("@bazel_skylib//lib:versions.bzl", "versions")
 
-versions.check("0.25.0")
+versions.check("0.28.1")
+
+http_archive(
+    name = "rules_java",
+    sha256 = "220b87d8cfabd22d1c6d8e3cdb4249abd4c93dcc152e0667db061fb1b957ee68",
+    url = "https://github.com/bazelbuild/rules_java/releases/download/0.1.1/rules_java-0.1.1.tar.gz",
+)
+
+load("@rules_java//java:repositories.bzl", "rules_java_dependencies", "rules_java_toolchains")
+
+rules_java_dependencies()
+
+rules_java_toolchains()
 
 ## Tink virtual monorepsotiroy
 # These are repositories under Tink control. They are trusted, and imported
@@ -45,27 +57,28 @@ git_repository(
     name = "tink_backend_shared_libraries",
     commit = "cecd27397f7d35b188d960cbc11b737e46f5ad7d",
     remote = "git@github.com:tink-ab/tink-backend-shared-libraries",
+    shallow_since = "1543992595 +0100",
 )
 
 git_repository(
     name = "tink_backend_integration_openbanking",
     commit = "9b7a6bec84fd9bb33ea9fb23c4436322682ad405",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
-    shallow_since = "1562076445 +0000",
+    shallow_since = "1572535216 +0000"
 )
 
 git_repository(
     name = "com_tink_api_grpc",
     commit = "f23aeafc40b0105ab41cc0aeb31de754bb450a06",
     remote = "git@github.com:tink-ab/tink-grpc.git",
-    #shallow_since = "1562857859 +0000",
+    shallow_since = "1563525421 +0000",
 )
 
 git_repository(
     name = "tink_backend",
-    commit = "e5628712b14294c6a390892661e6f180802c4ed9",
+    commit = "92d2e6c7adca04e074ab3351ba8a9404244f6765",
     remote = "git@github.com:tink-ab/tink-backend",
-    shallow_since = "1543992595 +0100",
+    shallow_since = "1572610208 +0000"
 )
 
 # Docker dependencies
@@ -259,6 +272,12 @@ maven_jar(
     name = "org_eclipse_jetty_jetty_server",
     artifact = "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
     sha1 = "682ae23f9e4a5e397d96f215b62641755d2a59b7",
+)
+
+maven_jar(
+    name = "org_eclipse_jetty_jetty_proxy",
+    artifact = "org.eclipse.jetty:jetty-proxy:9.0.7.v20131107",
+    sha1 = "5d16b84cf4ff40ef743c72ec3ffb118553f709c1",
 )
 
 maven_jar(

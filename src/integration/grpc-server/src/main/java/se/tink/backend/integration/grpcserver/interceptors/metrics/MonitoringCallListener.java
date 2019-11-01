@@ -3,8 +3,8 @@ package se.tink.backend.integration.gprcserver.interceptors.metrics;
 import io.grpc.ForwardingServerCallListener;
 import io.grpc.ServerCall;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class MonitoringCallListener<R> extends ForwardingServerCallListener<R> {
     private final ServerCall.Listener<R> delegate;

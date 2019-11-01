@@ -14,8 +14,8 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.NamedRunnable;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class RateLimitedExecutorService implements Managed {
 

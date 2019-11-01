@@ -16,8 +16,8 @@ import se.tink.libraries.concurrency.NamedRunnable;
 import se.tink.libraries.concurrency.TypedThreadPoolBuilder;
 import se.tink.libraries.concurrency.WrappedRunnableListenableFutureTask;
 import se.tink.libraries.executor.ExecutorServiceUtils;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AgentWorker implements Managed {
 

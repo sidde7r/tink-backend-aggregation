@@ -11,7 +11,7 @@ import java.util.Optional;
 import javax.ws.rs.Path;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class ResourceCounterFilterFactory implements ResourceFilterFactory {
 

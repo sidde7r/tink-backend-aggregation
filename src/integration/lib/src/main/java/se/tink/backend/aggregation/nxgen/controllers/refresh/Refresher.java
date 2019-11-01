@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh;
 
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 
 public interface Refresher {
     MetricId REFRESHER_METRIC_ID = MetricId.newId("refresh_controller");

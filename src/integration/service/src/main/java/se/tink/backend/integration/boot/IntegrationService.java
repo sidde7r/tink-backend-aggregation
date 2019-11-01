@@ -18,7 +18,7 @@ import se.tink.backend.integration.gprcserver.GrpcServer;
 import se.tink.backend.integration.gprcserver.configuration.GrpcServerModule;
 import se.tink.backend.libraries.healthcheckhandler.HealthCheckHandler;
 import se.tink.backend.libraries.httpserver.SimpleHTTPServer;
-import se.tink.libraries.metrics.PrometheusExportServer;
+import se.tink.libraries.metrics.prometheus.PrometheusExportServer;
 
 class IntegrationService {
     private static final Logger logger = LogManager.getLogger(IntegrationService.class);

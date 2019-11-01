@@ -5,8 +5,8 @@ import com.google.common.cache.LoadingCache;
 import javax.inject.Inject;
 import se.tink.backend.aggregation.workers.metrics.MeterCacheLoader;
 import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.counters.Counter;
 import se.tink.libraries.metrics.types.timers.Timer;
 
