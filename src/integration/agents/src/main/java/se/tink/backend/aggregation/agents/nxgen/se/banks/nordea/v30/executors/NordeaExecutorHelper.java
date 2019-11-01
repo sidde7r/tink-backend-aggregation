@@ -342,6 +342,15 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
+    protected TransferExecutionException notEnoughFundsError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(
+                        catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
+                .setEndUserMessage(
+                        catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
+                .build();
+    }
+
     private TransferExecutionException signTransferFailedError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(

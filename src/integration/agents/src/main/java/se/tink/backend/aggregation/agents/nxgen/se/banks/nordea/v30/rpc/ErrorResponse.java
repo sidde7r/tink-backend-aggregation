@@ -69,4 +69,9 @@ public class ErrorResponse {
     public boolean isUnregisteredRecipient() {
         return ErrorCodes.UNREGISTERED_RECIPIENT.equalsIgnoreCase(errorDescription);
     }
+
+    @JsonIgnore
+    public boolean isNotEnoughFunds() {
+        return NordeaSEConstants.ErrorCodes.NOT_ENOUGH_FUNDS.equalsIgnoreCase(errorDescription);
+    }
 }
