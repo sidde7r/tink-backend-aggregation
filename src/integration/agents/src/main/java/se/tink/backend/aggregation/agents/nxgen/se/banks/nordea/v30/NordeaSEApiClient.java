@@ -367,6 +367,23 @@ public class NordeaSEApiClient {
         return request.patch(responseType);
     }
 
+    private <T> T requestRefreshableDelete(RequestBuilder request, Class<T> responseType) {
+        try {
+            return request.header(
+                            HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken())
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, NordeaSEConstants.HeaderParams.LANGUAGE)
+                    .delete(responseType);
+
+        } catch (HttpResponseException hre) {
+            tryRefreshAccessToken(hre);
+            // use the new access token
+            request.overrideHeader(
+                    HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
+            // retry request with new access token
+            return request.delete(responseType);
+        }
+    }
+
     private void tryRefreshAccessToken(HttpResponseException hre) {
         ErrorResponse error = ErrorResponse.of(hre);
         if (error.tokenRequired() || error.isInvalidAccessToken()) {
@@ -485,5 +502,16 @@ public class NordeaSEApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(verifyRequest, MediaType.APPLICATION_JSON_TYPE)
                 .put(VerifyPersonalCodeResponse.class, verifyRequest);
+    }
+
+    public ResultSignResponse cancelSign(String orderRef) {
+        final RequestBuilder request =
+                httpClient
+                        .request(
+                                NordeaSEConstants.Urls.POLL_SIGN.parameter(
+                                        NordeaSEConstants.IdTags.ORDER_REF, orderRef))
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
+
+        return requestRefreshableDelete(request, ResultSignResponse.class);
     }
 }
