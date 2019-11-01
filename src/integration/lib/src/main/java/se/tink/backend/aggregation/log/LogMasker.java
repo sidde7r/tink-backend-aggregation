@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -72,9 +71,7 @@ public class LogMasker {
     public void addSensitiveValuesSetObservable(
             Observable<Collection<String>> newSensitiveValuesSetObservable) {
         composite.add(
-                newSensitiveValuesSetObservable
-                        .subscribeOn(Schedulers.trampoline())
-                        .subscribe(this::addNewSensitiveValuesToMasker));
+                newSensitiveValuesSetObservable.subscribe(this::addNewSensitiveValuesToMasker));
     }
 
     public void disposeOfAllSubscriptions() {

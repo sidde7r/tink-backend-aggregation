@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.storage;
 
 import com.google.common.collect.Sets;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Assert;
@@ -28,7 +27,6 @@ public class PersistentStorageTest {
         Disposable disposable =
                 persistentStorage
                         .getSensitiveValuesObservable()
-                        .subscribeOn(Schedulers.trampoline())
                         .subscribe(
                                 newSecretValues -> sensitiveValuesTestSet.addAll(newSecretValues));
 

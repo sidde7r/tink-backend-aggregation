@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.storage;
 
 import com.google.common.collect.ImmutableSet;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import java.util.Collection;
@@ -27,7 +28,7 @@ public class PersistentStorage extends Storage implements SensitiveValuesStorage
 
     @Override
     public Observable<Collection<String>> getSensitiveValuesObservable() {
-        return secretValuesSubject;
+        return secretValuesSubject.subscribeOn(Schedulers.trampoline());
     }
 
     @Override

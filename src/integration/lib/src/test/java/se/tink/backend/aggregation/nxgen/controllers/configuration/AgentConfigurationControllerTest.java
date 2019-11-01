@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
@@ -35,7 +34,6 @@ public class AgentConfigurationControllerTest {
         Disposable disposable =
                 agentConfigurationController
                         .getSecretValuesObservable()
-                        .subscribeOn(Schedulers.trampoline())
                         .subscribe(
                                 newSecretValues -> sensitiveValuesTestSet.addAll(newSecretValues));
 
