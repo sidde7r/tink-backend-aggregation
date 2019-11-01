@@ -92,8 +92,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             User user = context.getRequest().getUser();
 
             // Debug output for non-transfers such as refresh commands and delete.
-            if (shouldPrintDebugLog(credentials, user)
-                    && context.getRequest().getProvider().isOpenBanking()) {
+            if (shouldPrintDebugLog(credentials, user)) {
                 writeToDebugFile(credentials, null);
             }
         }
