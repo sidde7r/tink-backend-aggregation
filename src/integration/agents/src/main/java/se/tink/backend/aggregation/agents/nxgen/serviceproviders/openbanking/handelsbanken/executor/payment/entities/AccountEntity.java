@@ -40,6 +40,7 @@ public class AccountEntity {
 
     @JsonIgnore
     private String mapAccountTypeToCountry() {
+        // TODO: Requires change when we implement the other markets such as GB
         if (accountType.equalsIgnoreCase(Type.SE.toString())
                 || accountType.equalsIgnoreCase(Type.BE.toString())
                 || accountType.equalsIgnoreCase(Type.SE_PG.toString())
