@@ -23,7 +23,7 @@ public class NorisbankAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("de", "de-norisbank-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
-                        .addCredentialField(CredentialKeys.PSU_ID, manager.get(Arg.PSU_ID))
+                        .addCredentialField(CredentialKeys.USERNAME, manager.get(Arg.USERNAME))
                         .setFinancialInstitutionId("norisbank")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
@@ -38,6 +38,6 @@ public class NorisbankAgentTest {
 
     private enum Arg {
         IBAN,
-        PSU_ID,
+        USERNAME,
     }
 }

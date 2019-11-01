@@ -23,7 +23,7 @@ public class PostbankAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("de", "de-postbank-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
-                        .addCredentialField(CredentialKeys.USERNAME, manager.get(Arg.PSU_ID))
+                        .addCredentialField(CredentialKeys.USERNAME, manager.get(Arg.USERNAME))
                         .addCredentialField(CredentialKeys.PASSWORD, manager.get(Arg.PASSWORD))
                         .setFinancialInstitutionId("postbank")
                         .setAppId("tink")
@@ -39,7 +39,7 @@ public class PostbankAgentTest {
 
     private enum Arg {
         IBAN,
-        PSU_ID,
+        USERNAME,
         PASSWORD,
     }
 }

@@ -48,7 +48,8 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent {
                                 apiClient,
                                 sessionStorage,
                                 credentials.getField(DeutscheBankConstants.CredentialKeys.IBAN),
-                                credentials.getField(DeutscheBankConstants.CredentialKeys.PSU_ID)),
+                                credentials.getField(
+                                        DeutscheBankConstants.CredentialKeys.USERNAME)),
                         strongAuthenticationState);
 
         return new AutoAuthenticationController(

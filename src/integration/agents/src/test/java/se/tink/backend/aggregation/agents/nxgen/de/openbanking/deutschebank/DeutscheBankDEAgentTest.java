@@ -23,7 +23,7 @@ public class DeutscheBankDEAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("de", "de-deutschebank-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
-                        .addCredentialField(CredentialKeys.PSU_ID, manager.get(Arg.PSU_ID))
+                        .addCredentialField(CredentialKeys.USERNAME, manager.get(Arg.USERNAME))
                         .setFinancialInstitutionId("deutschebank-de")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
@@ -38,6 +38,6 @@ public class DeutscheBankDEAgentTest {
 
     private enum Arg {
         IBAN,
-        PSU_ID,
+        USERNAME,
     }
 }
