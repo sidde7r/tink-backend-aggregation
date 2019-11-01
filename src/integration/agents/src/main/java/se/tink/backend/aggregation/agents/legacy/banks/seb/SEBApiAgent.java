@@ -655,8 +655,6 @@ public class SEBApiAgent extends AbstractAgent
                                                                 instruments.add(instrument);
                                                             }));
                     portfolio.setInstruments(instruments);
-                    portfolio.setTotalProfit(
-                            instruments.stream().mapToDouble(Instrument::getProfit).sum());
 
                     depotAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
                 });
@@ -664,13 +662,15 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private void checkPossibleFaultyParsing(HoldingEntity holding, Instrument instrument) {
-        Double estimatedAverageAcquisitionPrice =
-                instrument.getMarketValue() / instrument.getQuantity();
-        if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice())
-                > 1) {
-            log.warn(
-                    "Possibly faulty value parsing: "
-                            + SerializationUtils.serializeToString(holding));
+        if (instrument.getAverageAcquisitionPrice() != null && !(instrument.getQuantity() == 0)) {
+            Double estimatedAverageAcquisitionPrice =
+                    instrument.getMarketValue() / instrument.getQuantity();
+            if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice())
+                    > 1) {
+                log.warn(
+                        "Possibly faulty value parsing: "
+                                + SerializationUtils.serializeToString(holding));
+            }
         }
     }
 

@@ -2052,6 +2052,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
@@ -2086,7 +2087,8 @@
             "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": "http://www.seb.se/pow/wcp/index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se",
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionId": "SEB"
         },
         {
             "className": "nxgen.se.banks.seb.SebAgent",
