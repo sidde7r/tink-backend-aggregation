@@ -275,6 +275,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_google_inject_extensions_guice_multibindings//jar",
+    ],
+    runtime_deps = [
         "@com_google_inject_guice//jar",
     ],
 )
