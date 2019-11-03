@@ -285,9 +285,19 @@ java_library(
     name = "com_google_inject_guice",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_google_inject_guice//jar",
+    ],
+    runtime_deps = [
         "@aopalliance_aopalliance//jar",
         "@com_google_guava_guava//jar",
-        "@com_google_inject_guice//jar",
+        "@javax_inject_javax_inject//jar",
+    ],
+)
+
+java_library(
+    name = "javax_inject_javax_inject",
+    visibility = ["//visibility:public"],
+    exports = [
         "@javax_inject_javax_inject//jar",
     ],
 )

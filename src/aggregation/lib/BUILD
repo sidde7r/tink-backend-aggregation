@@ -163,6 +163,7 @@ java_library(
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_vavr",
+        "//third_party:javax_inject_javax_inject",
         "//third_party:joda_time_joda_time",
         "//third_party:net_sourceforge_cssparser_cssparser",
         "//third_party:net_sourceforge_tess4j",
