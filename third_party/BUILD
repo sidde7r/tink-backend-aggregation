@@ -480,10 +480,12 @@ java_library(
     name = "io_dropwizard_dropwizard_configuration",
     visibility = ["//visibility:public"],
     exports = [
+        "@io_dropwizard_dropwizard_configuration//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@commons_lang_commons_lang//jar",
-        "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_validation//jar",
     ],
@@ -940,6 +942,14 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@commons_cli_commons_cli//jar",
+    ],
+)
+
+java_library(
+    name = "org_apache_commons_commons_lang",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@commons_lang_commons_lang//jar",
     ],
 )
 
