@@ -157,6 +157,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_github_detro_ghostdriver_phantomjsdriver//jar",
+    ],
+    runtime_deps = [
         "@commons_codec_commons_codec//jar",
         "@mx4j_mx4j_tools//jar",
         "@net_jcip_jcip_annotations//jar",
