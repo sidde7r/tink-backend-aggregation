@@ -178,7 +178,6 @@ junit_test(
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_http_client_google_http_client",
-        "//third_party:com_maxmind_geoip2_geoip2",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:de_jollyday_jollyday",
         "//third_party:io_dropwizard_dropwizard_core",

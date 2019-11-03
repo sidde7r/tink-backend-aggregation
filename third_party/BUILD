@@ -364,20 +364,6 @@ java_library(
 )
 
 java_library(
-    # TODO check is it used??
-    name = "com_maxmind_geoip2_geoip2",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_http_client_google_http_client//jar",
-        "@com_maxmind_db_maxmind_db//jar",
-        "@com_maxmind_geoip2_geoip2//jar",
-        "@org_apache_httpcomponents_httpclient//jar",
-    ],
-)
-
-java_library(
     name = "com_sun_jersey_contribs_jersey_apache_client4",
     visibility = ["//visibility:public"],
     exports = [
