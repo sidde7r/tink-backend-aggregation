@@ -21,6 +21,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@ch_qos_logback_logback_classic//jar",
+    ],
+    runtime_deps = [
         "@ch_qos_logback_logback_core//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
