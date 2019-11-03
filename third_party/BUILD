@@ -314,12 +314,14 @@ java_library(
     name = "com_netflix_governator",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_netflix_governator//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_google_inject_extensions_guice_assistedinject//jar",
         "@com_google_inject_extensions_guice_grapher//jar",
         "@com_google_inject_extensions_guice_multibindings//jar",
         "@com_google_inject_guice//jar",
-        "@com_netflix_governator//jar",
         "@com_netflix_governator_api//jar",
         "@com_netflix_governator_core//jar",
         "@javax_inject_javax_inject//jar",
