@@ -102,11 +102,13 @@ java_library(
     name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_base//jar",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
         "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
     ],
 )
