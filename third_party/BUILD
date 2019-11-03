@@ -128,10 +128,12 @@ java_library(
     name = "com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_fasterxml_jackson_dataformat_jackson_dataformat_xml//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@com_fasterxml_jackson_dataformat_jackson_dataformat_xml//jar",
         "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
         "@javax_xml_stream_stax_api//jar",
         "@org_codehaus_woodstox_stax2_api//jar",
