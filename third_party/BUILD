@@ -395,8 +395,10 @@ java_library(
     name = "com_sun_jersey_jersey_server",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
+    ],
+    runtime_deps = [
+        "@com_sun_jersey_jersey_core//jar",
     ],
 )
 
