@@ -262,8 +262,10 @@ java_library(
     name = "com_google_http_client_google_http_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_code_findbugs_jsr305//jar",
         "@com_google_http_client_google_http_client//jar",
+    ],
+    runtime_deps = [
+        "@com_google_code_findbugs_jsr305//jar",
         "@org_apache_httpcomponents_httpclient//jar",
     ],
 )
