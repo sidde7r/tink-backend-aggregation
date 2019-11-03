@@ -7,7 +7,7 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.IdentifiableAccount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.UkOpenBankingV30Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -132,7 +132,7 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     public AccountTypes getAccountType() {
-        return UkOpenBankingV30Constants.ACCOUNT_TYPE_MAPPER
+        return UkOpenBankingV31Constants.ACCOUNT_TYPE_MAPPER
                 .translate(rawAccountSubType)
                 .orElseThrow(
                         () ->
