@@ -145,8 +145,10 @@ java_library(
     name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_datatype_jackson_datatype_joda//jar",
+    ],
+    runtime_deps = [
+        "@com_fasterxml_jackson_core_jackson_annotations//jar",
     ],
 )
 
