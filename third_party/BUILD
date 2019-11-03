@@ -407,6 +407,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_yubico_yubico_validation_client2//jar",
+    ],
+    runtime_deps = [
         "@commons_codec_commons_codec//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
