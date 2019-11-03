@@ -462,12 +462,14 @@ java_library(
     name = "io_dropwizard_dropwizard_client",
     visibility = ["//visibility:public"],
     exports = [
+        "@io_dropwizard_dropwizard_client//jar",
+    ],
+    runtime_deps = [
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_httpclient//jar",
         "@com_sun_jersey_contribs_jersey_apache_client4//jar",
         "@com_sun_jersey_jersey_client//jar",
         "@commons_codec_commons_codec//jar",
-        "@io_dropwizard_dropwizard_client//jar",
         "@io_dropwizard_dropwizard_core//jar",
         "@org_apache_httpcomponents_httpclient//jar",
         "@org_apache_httpcomponents_httpcore//jar",
