@@ -377,6 +377,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_sun_jersey_jersey_client//jar",
+    ],
+    runtime_deps = [
         "@com_sun_jersey_jersey_core//jar",
     ],
 )

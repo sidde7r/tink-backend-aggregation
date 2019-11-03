@@ -209,6 +209,7 @@ junit_test(
         "//third_party:com_nimbusds_nimbus_jose_jwt",
         "//third_party:com_nimbusds_srp6a",
         "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_io_commons_io",
         "//third_party:io_dropwizard_dropwizard_client",
         "//third_party:io_dropwizard_dropwizard_configuration",
