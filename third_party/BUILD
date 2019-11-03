@@ -443,6 +443,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@de_jollyday_jollyday//jar",
+    ],
+    runtime_deps = [
         "@javax_xml_bind_jaxb_api//jar",
         "@joda_time_joda_time//jar",
     ],
