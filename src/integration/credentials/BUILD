@@ -71,6 +71,7 @@ java_library(
         "//src/integration/api",
         "//src/integration/user:rpc",
         "//src/libraries/uuid",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",

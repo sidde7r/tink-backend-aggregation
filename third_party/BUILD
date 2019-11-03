@@ -90,9 +90,11 @@ java_library(
     name = "com_fasterxml_jackson_core_jackson_databind",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_fasterxml_jackson_core_jackson_databind//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
     ],
 )
 

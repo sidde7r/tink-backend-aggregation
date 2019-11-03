@@ -5,13 +5,10 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:org_slf4j_slf4j_api",
-
-        # Guava
-        "//third_party:com_google_guava_guava",
-
-        # Jackson
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_guava_guava",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )
 
