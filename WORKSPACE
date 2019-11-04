@@ -71,13 +71,6 @@ git_repository(
 )
 
 git_repository(
-    name = "tink_backend_shared_libraries",
-    commit = "cecd27397f7d35b188d960cbc11b737e46f5ad7d",
-    remote = "git@github.com:tink-ab/tink-backend-shared-libraries.git",
-    shallow_since = "1543992595 +0100",
-)
-
-git_repository(
     name = "tink_backend_integration_openbanking",
     commit = "9b7a6bec84fd9bb33ea9fb23c4436322682ad405",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
@@ -2573,3 +2566,23 @@ maven_install(
 )
 load("@io_token//:defs.bzl", io_token_pin = "pinned_maven_install")
 io_token_pin()
+
+# Use via //third_party/jetty_server9
+maven_install(
+    name = "jetty_server9",
+    artifacts = [
+        "org.eclipse.jetty:jetty-util:9.4.15.v20190215",
+        "org.eclipse.jetty:jetty-server:9.4.15.v20190215",
+        "org.eclipse.jetty:jetty-http:9.4.15.v20190215",
+        "javax.servlet:javax.servlet-api:3.1.0",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:jetty_server9_install.json",
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+)
+
+load("@jetty_server9//:defs.bzl", pin_jetty_server9 = "pinned_maven_install")
+
+pin_jetty_server9()
