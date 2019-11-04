@@ -38,6 +38,7 @@ public class SibsBaseApiClient {
     private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
             DateTimeFormatter.ofPattern(Formats.CONSENT_BODY_DATE_FORMAT);
     private static final String TRUE = "true";
+    private static final String PSU_IP_ADDRESS = "127.0.0.1";
     private final String isPsuInvolved;
     protected final TinkHttpClient client;
     protected SibsConfiguration configuration;
@@ -54,7 +55,6 @@ public class SibsBaseApiClient {
      * - global - change pattern in sign interceptor
      * - single - use code above to create date with correct pattern and add header (it won't be override)
     */
-
     public SibsBaseApiClient(
             TinkHttpClient client, SibsUserState userState, boolean isRequestManual) {
         this.client = client;
@@ -93,7 +93,6 @@ public class SibsBaseApiClient {
                 createUrl(SibsConstants.Urls.ACCOUNT_TRANSACTIONS)
                         .parameter(PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier());
         String transactionFetchFromDate = userState.getTransactionsFetchBeginDate(account);
-        log.info("Fetching transactions starting from " + transactionFetchFromDate);
         return client.request(accountTransactions)
                 .queryParam(QueryKeys.WITH_BALANCE, TRUE)
                 .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
@@ -177,7 +176,7 @@ public class SibsBaseApiClient {
         return client.request(
                         createPaymentUrl.parameter(
                                 PathParameterKeys.PAYMENT_PRODUCT, sibsPaymentType.getValue()))
-                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, "127.0.0.1")
+                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, PSU_IP_ADDRESS)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
@@ -243,7 +242,7 @@ public class SibsBaseApiClient {
                                         PathParameterKeys.PAYMENT_PRODUCT,
                                         sibsPaymentType.getValue())
                                 .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
-                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, "127.0.0.1")
+                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, PSU_IP_ADDRESS)
                 .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .delete(SibsCancelPaymentResponse.class);
     }
