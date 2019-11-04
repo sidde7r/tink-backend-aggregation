@@ -300,56 +300,65 @@ public class IcaBankenExecutorHelper {
                     case WAITING:
                         break;
                     case CANCELLED:
-                        throw TransferExecutionException.builder(
-                                        SignableOperationStatuses.CANCELLED)
-                                .setMessage(
-                                        TransferExecutionException.EndUserMessage.BANKID_CANCELLED
-                                                .getKey()
-                                                .get())
-                                .setEndUserMessage(
-                                        catalog.getString(
-                                                TransferExecutionException.EndUserMessage
-                                                        .BANKID_CANCELLED))
-                                .build();
+                        throw bankIdCancelledError();
+                    case TIMEOUT:
+                        throw bankIdTimeoutError();
                     default:
-                        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                .setMessage(
-                                        TransferExecutionException.EndUserMessage
-                                                .BANKID_TRANSFER_FAILED
-                                                .getKey()
-                                                .get())
-                                .setEndUserMessage(
-                                        catalog.getString(
-                                                TransferExecutionException.EndUserMessage
-                                                        .BANKID_TRANSFER_FAILED))
-                                .build();
+                        throw bankIdFailedError();
                 }
 
                 Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
 
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setMessage(
-                                    IcaBankenConstants.UserMessage.BANKID_TRANSFER_INTERRUPTED
-                                            .getKey()
-                                            .get())
-                            .setEndUserMessage(
-                                    catalog.getString(
-                                            IcaBankenConstants.UserMessage
-                                                    .BANKID_TRANSFER_INTERRUPTED))
-                            .setException(e)
-                            .build();
+                    throw bankIdInterruptedError(e);
                 }
             }
         }
 
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+        throw bankIdTimeoutError();
+    }
+
+    private TransferExecutionException bankIdTimeoutError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(
                         TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
                 .setEndUserMessage(
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE))
+                .build();
+    }
+
+    private TransferExecutionException bankIdCancelledError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(
+                        TransferExecutionException.EndUserMessage.BANKID_CANCELLED.getKey().get())
+                .setEndUserMessage(
+                        catalog.getString(
+                                TransferExecutionException.EndUserMessage.BANKID_CANCELLED))
+                .build();
+    }
+
+    private TransferExecutionException bankIdInterruptedError(HttpResponseException e) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(
+                        IcaBankenConstants.UserMessage.BANKID_TRANSFER_INTERRUPTED.getKey().get())
+                .setEndUserMessage(
+                        catalog.getString(
+                                IcaBankenConstants.UserMessage.BANKID_TRANSFER_INTERRUPTED))
+                .setException(e)
+                .build();
+    }
+
+    private TransferExecutionException bankIdFailedError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(
+                        TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED
+                                .getKey()
+                                .get())
+                .setEndUserMessage(
+                        catalog.getString(
+                                TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED))
                 .build();
     }
 

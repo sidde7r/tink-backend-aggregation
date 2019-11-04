@@ -172,6 +172,7 @@ junit_test(
         "//third_party:org_apache_kafka_kafka_streams",
         "//third_party:org_apache_velocity_velocity",
         "//third_party:org_assertj_assertj_core",
+        "//third_party:org_codehaus_jackson_jackson_core_asl",
         "//third_party:org_hamcrest_hamcrest_library",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_jsoup_jsoup",

@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.entity.account;
 
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
@@ -10,7 +10,7 @@ public class AmountEntity {
     private String currency;
     private String content;
 
-    public Amount toTinkAmount() {
-        return new Amount(currency, StringUtils.parseAmount(content));
+    public ExactCurrencyAmount toTinkAmount() {
+        return new ExactCurrencyAmount(new BigDecimal(content), currency);
     }
 }
