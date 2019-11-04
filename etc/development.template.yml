@@ -106,6 +106,9 @@ agentsServiceConfiguration:
       abn:
         clientId: "dummyId"
         clientSecret: "dummySecret"
+      abn-qwac-psd2:
+        clientId: "dummyId"
+        clientSecret: "dummySecret"
     fints:
       regNumber: "dummyId"
     sbab:

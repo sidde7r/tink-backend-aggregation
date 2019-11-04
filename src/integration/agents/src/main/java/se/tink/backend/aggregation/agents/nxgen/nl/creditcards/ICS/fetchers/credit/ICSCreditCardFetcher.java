@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit;
 
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
-public class ICSCreditCardFetcher implements TransactionPagePaginator<CreditCardAccount> {
+public class ICSCreditCardFetcher implements TransactionDatePaginator<CreditCardAccount> {
 
     private final ICSApiClient client;
 
@@ -14,9 +17,19 @@ public class ICSCreditCardFetcher implements TransactionPagePaginator<CreditCard
         this.client = client;
     }
 
-    // At this time they do not support pagination
     @Override
-    public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-        return client.getTransactions(account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID));
+    public PaginatorResponse getTransactionsFor(
+            CreditCardAccount account, Date fromDate, Date toDate) {
+        try {
+            return client.getTransactionsByDate(
+                    account.getFromTemporaryStorage(ICSConstants.StorageKeys.ACCOUNT_ID),
+                    fromDate,
+                    toDate);
+        } catch (HttpResponseException exception) {
+            if (exception.getResponse().getStatus() == 401) {
+                return PaginatorResponseImpl.createEmpty(false);
+            }
+            throw exception;
+        }
     }
 }
