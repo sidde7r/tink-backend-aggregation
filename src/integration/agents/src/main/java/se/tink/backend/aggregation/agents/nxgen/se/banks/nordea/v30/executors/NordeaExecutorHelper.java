@@ -198,8 +198,7 @@ public class NordeaExecutorHelper {
 
     private CompleteTransferResponse poll(String orderRef) {
         BankIdStatus status;
-        int i = 1;
-        for (; i < NordeaSEConstants.Transfer.MAX_POLL_ATTEMPTS; i++) {
+        for (int i = 1; i < NordeaSEConstants.Transfer.MAX_POLL_ATTEMPTS; i++) {
             // sleep before so when a time out occur the bankId signing is canceled after polling
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
             try {
@@ -220,6 +219,8 @@ public class NordeaExecutorHelper {
                 if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
                     throw bankIdAlreadyInProgressError(e);
                 }
+                log.error(e.getMessage(), e);
+                throw signTransferFailedError();
             }
         }
         // Time out - cancel the signing request
