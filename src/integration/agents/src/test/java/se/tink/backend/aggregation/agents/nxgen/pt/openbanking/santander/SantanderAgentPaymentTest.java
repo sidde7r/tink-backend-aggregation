@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.santander;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -50,7 +51,6 @@ public class SantanderAgentPaymentTest {
             doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
             doReturn("PT50001800032142950702402").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inEUR(100);
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
 
@@ -58,7 +58,7 @@ public class SantanderAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(new ExactCurrencyAmount(new BigDecimal(100), currency))
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());

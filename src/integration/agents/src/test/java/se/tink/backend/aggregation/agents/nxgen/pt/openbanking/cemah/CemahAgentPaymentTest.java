@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.cemah;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -54,7 +55,6 @@ public class CemahAgentPaymentTest {
             doReturn(Iban.random(CountryCode.SE).toString()).when(debtor).getAccountNumber();
             //      doReturn("PT50005900012230190001669").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inEUR(1);
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
 
@@ -62,7 +62,7 @@ public class CemahAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(new ExactCurrencyAmount(new BigDecimal(1), currency))
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());
