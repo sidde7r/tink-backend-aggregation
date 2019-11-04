@@ -6,7 +6,7 @@ import java.util.Map;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public abstract class AgentContext implements CompositeAgentContext {
     protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();

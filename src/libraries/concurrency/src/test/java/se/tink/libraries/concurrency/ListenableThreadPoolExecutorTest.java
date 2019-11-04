@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.libraries.executor.ExecutorServiceUtils;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class ListenableThreadPoolExecutorTest {
     private final ThreadFactory threadFactory = new ThreadFactoryBuilder().build();

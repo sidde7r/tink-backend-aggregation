@@ -1,4 +1,4 @@
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
+load("@rules_pkg//:pkg.bzl", "pkg_deb", "pkg_tar")
 
 # TODO: as there is no data deb this section is repetitive
 # data pkgs

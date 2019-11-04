@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 

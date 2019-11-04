@@ -12,8 +12,8 @@ import org.junit.Test;
 import se.tink.backend.aggregation.workers.ratelimit.RateLimitedExecutorProxy.RateLimiter;
 import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.TypedThreadPoolBuilder;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class RateLimitedExecutorProxyTest {
 

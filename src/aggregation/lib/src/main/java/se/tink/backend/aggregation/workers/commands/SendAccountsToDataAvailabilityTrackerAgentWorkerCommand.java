@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 
 public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends AgentWorkerCommand
         implements MetricsCommand {

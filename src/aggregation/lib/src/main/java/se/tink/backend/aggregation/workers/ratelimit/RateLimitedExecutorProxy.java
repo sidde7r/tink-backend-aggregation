@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 import se.tink.libraries.concurrency.InstrumentedRunnable;
 import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.RunnableMdcWrapper;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class RateLimitedExecutorProxy extends AbstractExecutorService {
     private final MetricRegistry metricRegistry;

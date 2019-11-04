@@ -7,8 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class VersionInformation {

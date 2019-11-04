@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.timers.Timer;
 
 public class CacheInstrumentationDecorator implements CacheClient {

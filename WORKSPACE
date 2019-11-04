@@ -3,18 +3,47 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
-git_repository(
+http_archive(
     name = "bazel_skylib",
-    commit = "6126842e3db2ec4986752f6dfc0860ca922997f1",
-    remote = "https://github.com/bazelbuild/bazel-skylib",
-    shallow_since = "1557756873 +0200",
+    sha256 = "97e70364e9249702246c0e9444bccdc4b847bed1eb03c5a3ece4f83dfe6abc44",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
+    ],
 )
+
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
+bazel_skylib_workspace()
 
 # This checks that the version of Bazel in use is at least the set version
 # Usually this should be set to the version of Bazel used for CI
 load("@bazel_skylib//lib:versions.bzl", "versions")
 
-versions.check("0.25.0")
+versions.check("0.28.1", "0.29.1")
+
+# rules_pkg
+http_archive(
+    name = "rules_pkg",
+    sha256 = "4ba8f4ab0ff85f2484287ab06c0d871dcb31cc54d439457d28fd4ae14b18450a",
+    url = "https://github.com/bazelbuild/rules_pkg/releases/download/0.2.4/rules_pkg-0.2.4.tar.gz",
+)
+
+load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+
+rules_pkg_dependencies()
+
+http_archive(
+    name = "rules_java",
+    sha256 = "220b87d8cfabd22d1c6d8e3cdb4249abd4c93dcc152e0667db061fb1b957ee68",
+    url = "https://github.com/bazelbuild/rules_java/releases/download/0.1.1/rules_java-0.1.1.tar.gz",
+)
+
+load("@rules_java//java:repositories.bzl", "rules_java_dependencies", "rules_java_toolchains")
+
+rules_java_dependencies()
+
+rules_java_toolchains()
 
 ## Tink virtual monorepsotiroy
 # These are repositories under Tink control. They are trusted, and imported
@@ -42,30 +71,24 @@ git_repository(
 )
 
 git_repository(
-    name = "tink_backend_shared_libraries",
-    commit = "cecd27397f7d35b188d960cbc11b737e46f5ad7d",
-    remote = "git@github.com:tink-ab/tink-backend-shared-libraries",
-)
-
-git_repository(
     name = "tink_backend_integration_openbanking",
     commit = "609a3c29750602108f6f6442210c3c2ee2a68230",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
-    shallow_since = "1562076445 +0000",
+    shallow_since = "1572535216 +0000"
 )
 
 git_repository(
     name = "com_tink_api_grpc",
     commit = "f23aeafc40b0105ab41cc0aeb31de754bb450a06",
     remote = "git@github.com:tink-ab/tink-grpc.git",
-    #shallow_since = "1562857859 +0000",
+    shallow_since = "1563525421 +0000",
 )
 
 git_repository(
     name = "tink_backend",
-    commit = "e5628712b14294c6a390892661e6f180802c4ed9",
-    remote = "git@github.com:tink-ab/tink-backend",
-    shallow_since = "1543992595 +0100",
+    commit = "92d2e6c7adca04e074ab3351ba8a9404244f6765",
+    remote = "git@github.com:tink-ab/tink-backend.git",
+    shallow_since = "1572535216 +0000"
 )
 
 # Docker dependencies
@@ -191,14 +214,6 @@ maven_jar(
     sha1 = "f07d3a325f1fe69ee40d6b409086964edfef4e69",
 )
 
-# TODO: Remove when the dependency on tink_backend_shared_libraries is gone
-# Referenced by @tink_backend_shared_libraries//third_party:netty
-maven_jar(
-    name = "io_opencensus_opencensus_grpc_metrics",
-    artifact = "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
-    sha1 = "f07d3a325f1fe69ee40d6b409086964edfef4e69",
-)
-
 maven_jar(
     name = "io_perfmark_perfmark_api",
     artifact = "io.perfmark:perfmark-api:0.17.0",
@@ -259,6 +274,12 @@ maven_jar(
     name = "org_eclipse_jetty_jetty_server",
     artifact = "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
     sha1 = "682ae23f9e4a5e397d96f215b62641755d2a59b7",
+)
+
+maven_jar(
+    name = "org_eclipse_jetty_jetty_proxy",
+    artifact = "org.eclipse.jetty:jetty-proxy:9.0.7.v20131107",
+    sha1 = "5d16b84cf4ff40ef743c72ec3ffb118553f709c1",
 )
 
 maven_jar(
@@ -2537,3 +2558,23 @@ maven_install(
 )
 load("@io_token//:defs.bzl", io_token_pin = "pinned_maven_install")
 io_token_pin()
+
+# Use via //third_party/jetty_server9
+maven_install(
+    name = "jetty_server9",
+    artifacts = [
+        "org.eclipse.jetty:jetty-util:9.4.15.v20190215",
+        "org.eclipse.jetty:jetty-server:9.4.15.v20190215",
+        "org.eclipse.jetty:jetty-http:9.4.15.v20190215",
+        "javax.servlet:javax.servlet-api:3.1.0",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:jetty_server9_install.json",
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+)
+
+load("@jetty_server9//:defs.bzl", pin_jetty_server9 = "pinned_maven_install")
+
+pin_jetty_server9()

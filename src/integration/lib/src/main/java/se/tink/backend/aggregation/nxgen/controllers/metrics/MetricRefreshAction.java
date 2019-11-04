@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.nxgen.controllers.metrics;
 
 import java.util.List;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class MetricRefreshAction extends MetricAction {
     private final List<? extends Number> counterBuckets;

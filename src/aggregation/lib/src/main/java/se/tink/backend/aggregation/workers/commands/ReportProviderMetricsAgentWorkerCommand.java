@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 
 public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand {
     private static final AggregationLogger log =

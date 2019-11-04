@@ -44,7 +44,7 @@ import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;

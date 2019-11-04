@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "asm_asm",
     visibility = ["//visibility:public"],
@@ -1893,5 +1895,17 @@ java_library(
     runtime_deps = [
         "@junit_junit//jar",
         "@net_minidev_asm//jar",
+    ],
+)
+
+java_library(
+    name = "jetty_server9",
+    licenses = ["notice"],
+    visibility = ["//visibility:public"],
+    exports = [
+        "@jetty_server9//:javax_servlet_javax_servlet_api",
+        "@jetty_server9//:org_eclipse_jetty_jetty_http",
+        "@jetty_server9//:org_eclipse_jetty_jetty_server",
+        "@jetty_server9//:org_eclipse_jetty_jetty_util",
     ],
 )

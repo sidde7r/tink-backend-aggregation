@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TestAccountBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class CreditCardRefreshControllerTest {

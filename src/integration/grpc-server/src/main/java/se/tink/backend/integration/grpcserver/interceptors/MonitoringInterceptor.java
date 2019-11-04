@@ -13,7 +13,7 @@ import se.tink.backend.integration.gprcserver.interceptors.metrics.GrpcMethod;
 import se.tink.backend.integration.gprcserver.interceptors.metrics.GrpcMethodUtils;
 import se.tink.backend.integration.gprcserver.interceptors.metrics.MonitoringCall;
 import se.tink.backend.integration.gprcserver.interceptors.metrics.MonitoringCallListener;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class MonitoringInterceptor implements ServerInterceptor {
     private final MetricRegistry metricRegistry;

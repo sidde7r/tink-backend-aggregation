@@ -15,7 +15,18 @@ java_library(
         "//src/libraries/access_logging",
 
         # Metrics (Prometheus)
-        "//src/libraries/metrics",
+        "//src/libraries/metrics:core",
+        "//src/libraries/metrics:collection",
+        "//src/libraries/metrics:configuration",
+        "//src/libraries/metrics:logbackappender",
+        "//src/libraries/metrics:monitor",
+        "//src/libraries/metrics:prometheus",
+        "//src/libraries/metrics:registry",
+        "//src/libraries/metrics:counters",
+        "//src/libraries/metrics:gauges",
+        "//src/libraries/metrics:histograms",
+        "//src/libraries/metrics:other",
+        "//src/libraries/metrics:timers",
 
         # Guava
         "//third_party:com_google_guava_guava",

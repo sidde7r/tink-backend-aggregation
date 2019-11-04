@@ -89,7 +89,7 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>

@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.grpc.FakeIntegrationArgumentsCreator;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class FetchController {
     private final AgentFactory agentFactory;

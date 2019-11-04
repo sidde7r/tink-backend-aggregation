@@ -1,4 +1,4 @@
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load(
     "@io_bazel_rules_docker//container:container.bzl",
     "container_image",
@@ -23,9 +23,9 @@ java_binary(
         "//third_party:netty-runtime",
     ],
     deps = [
-        "//src/libraries:health-check-handler",
-        "//src/libraries:simple-http-server",
+        "//src/libraries/health_check_handler",
         "//src/libraries/serialization",
+        "//src/libraries/simple_http_server",
         "//src/nasa/metrics",
         "//third_party:com_google_code_gson_gson",
         "//third_party:com_google_guava_guava",
@@ -47,9 +47,9 @@ junit_test(
         "//etc/nasa:development-configuration",
     ],
     deps = [
-        "//src/libraries:health-check-handler",
-        "//src/libraries:simple-http-server",
+        "//src/libraries/health_check_handler",
         "//src/libraries/serialization",
+        "//src/libraries/simple_http_server",
         "//src/nasa/metrics",
         "//src/nasa/service:nasa",
         "//third_party:com_google_code_gson_gson",

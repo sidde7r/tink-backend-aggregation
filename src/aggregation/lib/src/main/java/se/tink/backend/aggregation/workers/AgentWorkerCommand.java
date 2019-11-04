@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.workers;
 
 import com.google.common.collect.Lists;
 import java.util.List;
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 
 public abstract class AgentWorkerCommand {
     /**

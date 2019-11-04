@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.agents.abnamro.client.rpc.enrollment.CollectE
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.enrollment.InitiateEnrollmentRequest;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.enrollment.InitiateEnrollmentResponse;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroEnrollmentConfiguration;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.timers.Timer;
 
 public class EnrollmentClient {
