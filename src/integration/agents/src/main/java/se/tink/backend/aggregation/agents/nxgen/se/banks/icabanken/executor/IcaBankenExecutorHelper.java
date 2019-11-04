@@ -344,7 +344,7 @@ public class IcaBankenExecutorHelper {
             }
         }
 
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(
                         TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
                 .setEndUserMessage(
