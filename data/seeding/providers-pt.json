@@ -98,7 +98,7 @@
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Bankinter (Test)",
             "fields": [],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionId": "bankinter",
             "financialInstitutionName": "Bankinter",
             "multiFactor": true,
             "name": "pt-bankinter-oauth2",
@@ -148,37 +148,11 @@
         },
         {
             "accessType": "OPEN_BANKING",
-            "className": "nxgen.pt.openbanking.caixa.CaixaAgent",
-            "credentialsType": "THIRD_PARTY_APP",
-            "displayName": "Caixa (Test)",
-            "fields": [
-                {
-                    "description": "Identifier",
-                    "maxLength": 30,
-                    "minLength": 4,
-                    "name": "username",
-                    "numeric": true
-                }
-            ],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
-            "financialInstitutionName": "Caixa Geral de Depósitos",
-            "multiFactor": false,
-            "name": "pt-caixa-oauth2",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
             "className": "nxgen.pt.openbanking.caixa.CaixaRedirectAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caixa (Test)",
             "fields": [],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionId": "caixa-pt",
             "financialInstitutionName": "Caixa Geral de Depósitos",
             "multiFactor": true,
             "name": "pt-caixa-ob",
