@@ -88,7 +88,7 @@ public class SibsGetPaymentResponse {
                 new Payment.Builder()
                         .withCreditor(creditorAccount.toTinkCreditor())
                         .withDebtor(debtorAccount.toTinkDebtor())
-                        .withAmount(instructedAmount.toTinkAmount())
+                        .withExactCurrencyAmount(instructedAmount.toTinkAmount())
                         .withExecutionDate(requestedExecutionDate)
                         .withCurrency(instructedAmount.getCurrency())
                         .withStatus(getTransactionStatus().getTinkStatus())
