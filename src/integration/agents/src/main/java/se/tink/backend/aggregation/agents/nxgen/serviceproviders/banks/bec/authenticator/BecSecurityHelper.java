@@ -23,20 +23,65 @@ import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 
 public final class BecSecurityHelper {
 
-    private static byte[] symmetricKey;
+    private static BecSecurityHelper instance;
+    private final PublicKey publicKey;
+    private final byte[] symmetricKey;
 
-    private BecSecurityHelper() {}
+    private BecSecurityHelper(String signingCertificate, String publicKeySalt) {
+        publicKey = calculatePublicKey(signingCertificate, publicKeySalt);
+        symmetricKey = generateSymmetricKey();
+    }
 
-    public static String getKey() {
+    public static BecSecurityHelper getInstance(String signingCertificate, String publicKeySalt) {
+        // Ugly but works
+        if (instance == null) {
+            synchronized (BecSecurityHelper.class) {
+                if (instance == null) {
+                    instance = new BecSecurityHelper(signingCertificate, publicKeySalt);
+                }
+            }
+        }
+        return instance;
+    }
+
+    private PublicKey calculatePublicKey(String signingCertificate, String publicKeySalt) {
         try {
-            return toJsonString(
-                    RSA.encryptNonePkcs1((RSAPublicKey) loadPublicKey(), generateSymmetricKey()));
-        } catch (GeneralSecurityException e) {
+            X509Certificate x509Certificate =
+                (X509Certificate)
+                    CertificateFactory.getInstance(BecConstants.Crypto.X509)
+                        .generateCertificate(
+                            (new ByteArrayInputStream(
+                                signingCertificate
+                                    .getBytes())));
+            byte[] signatureBytes = x509Certificate.getPublicKey().getEncoded();
+
+            X509EncodedKeySpec x509EncodedKeySpec =
+                new X509EncodedKeySpec(blend(Base64.decodeBase64(publicKeySalt), signatureBytes));
+
+            return KeyFactory.getInstance("RSA").generatePublic(x509EncodedKeySpec);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | CertificateException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
 
-    public static String encrypt(byte[] paramArrayOfByte) {
+    private byte[] generateSymmetricKey() {
+        KeyGenerator localKeyGenerator;
+        try {
+            localKeyGenerator = KeyGenerator.getInstance(BecConstants.Crypto.AES);
+        } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError("Algorithm should exist", e);
+        }
+        localKeyGenerator.init(256);
+
+        return localKeyGenerator.generateKey().getEncoded();
+    }
+
+    public String getKey() {
+            return toJsonString(
+                    RSA.encryptNonePkcs1((RSAPublicKey) publicKey, symmetricKey));
+    }
+
+    public String encrypt(byte[] paramArrayOfByte) {
         try {
             if (paramArrayOfByte != null && symmetricKey != null) {
                 return new String(
@@ -50,7 +95,7 @@ public final class BecSecurityHelper {
     }
 
     // NOTE keep it in case we need to use the data from encrypted payload in authentication phase.
-    public static byte[] decrypt(String paramString) {
+    public byte[] decrypt(String paramString) {
         try {
             if (paramString != null) {
                 byte[] arrayOfByte =
@@ -63,7 +108,7 @@ public final class BecSecurityHelper {
         }
     }
 
-    private static byte[] decryptPayload(byte[] key, byte[] dataToDec)
+    private byte[] decryptPayload(byte[] key, byte[] dataToDec)
             throws GeneralSecurityException {
         SecretKeySpec localSecretKeySpec = new SecretKeySpec(key, BecConstants.Crypto.AES);
         Cipher localCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -82,7 +127,7 @@ public final class BecSecurityHelper {
         return arrayOfByte2;
     }
 
-    private static byte[] encryptPayload(byte[] paramArrayOfByte1, byte[] paramArrayOfByte2)
+    private byte[] encryptPayload(byte[] paramArrayOfByte1, byte[] paramArrayOfByte2)
             throws GeneralSecurityException {
         SecretKeySpec localSecretKeySpec =
                 new SecretKeySpec(paramArrayOfByte1, BecConstants.Crypto.AES);
@@ -107,31 +152,7 @@ public final class BecSecurityHelper {
         return arrayOfByte3;
     }
 
-    private static PublicKey loadPublicKey() {
-        return calculateKey(BecConstants.Crypto.PUBLIC_KEY_PRODUCTION_SALT);
-    }
-
-    private static PublicKey calculateKey(String seed) {
-        try {
-            X509Certificate x509Certificate =
-                    (X509Certificate)
-                            CertificateFactory.getInstance(BecConstants.Crypto.X509)
-                                    .generateCertificate(
-                                            (new ByteArrayInputStream(
-                                                    BecConstants.Crypto.SIGNING_CERTIFICATE
-                                                            .getBytes())));
-            byte[] signatureBytes = x509Certificate.getPublicKey().getEncoded();
-
-            X509EncodedKeySpec x509EncodedKeySpec =
-                    new X509EncodedKeySpec(blend(Base64.decodeBase64(seed), signatureBytes));
-
-            return KeyFactory.getInstance("RSA").generatePublic(x509EncodedKeySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | CertificateException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
-    private static byte[] blend(byte[] byteA, byte[] byteB) {
+    private byte[] blend(byte[] byteA, byte[] byteB) {
         int i = byteA.length;
         int j = -1 + byteB.length;
         byte[] blended = new byte[i];
@@ -141,17 +162,7 @@ public final class BecSecurityHelper {
         return blended;
     }
 
-    private static byte[] generateSymmetricKey() throws NoSuchAlgorithmException {
-        if (symmetricKey == null) {
-            KeyGenerator localKeyGenerator = KeyGenerator.getInstance(BecConstants.Crypto.AES);
-            localKeyGenerator.init(256);
-
-            symmetricKey = localKeyGenerator.generateKey().getEncoded();
-        }
-        return symmetricKey;
-    }
-
-    private static String toJsonString(byte[] paramArrayOfByte) {
+    private String toJsonString(byte[] paramArrayOfByte) {
         try {
             return new String(Base64.encodeBase64(paramArrayOfByte), BecConstants.Crypto.UTF8);
         } catch (UnsupportedEncodingException e) {

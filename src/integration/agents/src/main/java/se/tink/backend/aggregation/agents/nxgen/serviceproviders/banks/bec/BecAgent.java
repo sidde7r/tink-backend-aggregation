@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecSecurityHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.filter.BecFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment.BecInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.BecLoanFetcher;
@@ -38,6 +39,8 @@ public class BecAgent extends NextGenerationAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
+
+    private static final String INTEGRATION_NAME = "bec-dk";
     private final BecApiClient apiClient;
     private final BecAccountTransactionsFetcher transactionFetcher;
     private final InvestmentRefreshController investmentRefreshController;
@@ -49,9 +52,15 @@ public class BecAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.client.addFilter(new BecFilter());
+
+        BecConfiguration configuration = getAgentConfigurationController()
+            .getAgentConfigurationFromK8s(INTEGRATION_NAME, BecConfiguration.class);
+        BecSecurityHelper securityHelper = BecSecurityHelper
+            .getInstance(configuration.getSigningCertificate(), configuration.getPublicKeySalt());
         this.apiClient =
                 new BecApiClient(
-                        this.client, new BecUrlConfiguration(request.getProvider().getPayload()));
+                    securityHelper, this.client, new BecUrlConfiguration(request.getProvider().getPayload()));
+
         this.transactionFetcher = new BecAccountTransactionsFetcher(this.apiClient);
         this.investmentRefreshController =
                 new InvestmentRefreshController(

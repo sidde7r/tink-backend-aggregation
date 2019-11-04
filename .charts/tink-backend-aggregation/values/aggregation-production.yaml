@@ -73,6 +73,8 @@ agents:
 
   jyskeBankDK: true
 
+  becDK: true
+
 clients:
   avanza-production:
     aggregatorIdentifier: "Avanza"

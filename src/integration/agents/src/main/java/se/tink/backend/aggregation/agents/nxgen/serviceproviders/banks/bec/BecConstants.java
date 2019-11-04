@@ -26,39 +26,6 @@ public final class BecConstants {
     }
 
     public static final class Crypto {
-
-        public static final String SIGNING_CERTIFICATE =
-                "-----BEGIN CERTIFICATE-----\n"
-                        + "MIIDwjCCAqqgAwIBAgIETb6a0TANBgkqhkiG9w0BAQQFADCBojELMAkGA1UEBhMC"
-                        + "REsxETAPBgNVBAgTCFJvc2tpbGRlMR4wHAYDVQQKExVCYW5rZXJuZXMgRURCIENl"
-                        + "bnRyYWwxHTAbBgNVBAsTFFRla25pc2sgdWR2LiBzdXBwb3J0MR4wHAYDVQQDExVt"
-                        + "b2JpbGJhbmsucHJvZC5iZWMuZGsxITAfBgkqhkiG9w0BCQEWEmJlY3NzbGNlcnRz"
-                        + "QGJlYy5kazAeFw0xMTA1MDIxMTUxNDVaFw00MTA0MjQxMTUxNDVaMIGiMQswCQYD"
-                        + "VQQGEwJESzERMA8GA1UECBMIUm9za2lsZGUxHjAcBgNVBAoTFUJhbmtlcm5lcyBF"
-                        + "REIgQ2VudHJhbDEdMBsGA1UECxMUVGVrbmlzayB1ZHYuIHN1cHBvcnQxHjAcBgNV"
-                        + "BAMTFW1vYmlsYmFuay5wcm9kLmJlYy5kazEhMB8GCSqGSIb3DQEJARYSYmVjc3Ns"
-                        + "Y2VydHNAYmVjLmRrMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAki1j"
-                        + "mfDve8au2xDbRF0h2xkWN7IChwyg6Wq+q58GnR3RqiibpirD64g18TuWskdM4ejV"
-                        + "Tu64soItfqYM3zab5/m5aRTFVg6zcFakoBXsS2hi3Wa6iZX+7SKUVQrUixAbWW/0"
-                        + "hBnyAsasqRRzcXeQ2+TBu2xUQ5I02NbA5dms97GJT6iJ37gKzHICUxjjByG/bIfQ"
-                        + "Fjjl5mMJl4ppcxrIhNAXP5zsn2ae6i5nYBwiaaJ9UMNv1ZhLo8fDTHKmnJCOXXJU"
-                        + "l5IUO9EXetuKOv4GQuFm5ZF++HXJsYyhY7fTzI/fIeIo6BzC8/AcRFNltUFR0kdv"
-                        + "CsWhKgaTHlX3mjjnmwIDAQABMA0GCSqGSIb3DQEBBAUAA4IBAQANU74YKCuifHoK"
-                        + "p+5Pvs5VN2cfwPq+CUX37djQW5Bf+mFkK18MwiH9w+PBPKGHOsKDZ/MypkCaXevi"
-                        + "fXnnn+AzqdgfeMTDXdHLiO+udFz2ezI+OKUuyiiEBfeUdj1j+j6vK9YKhSJN95V3"
-                        + "SzppeeoxiAvvtCOTfse+ywIbdhsGKm3vtrlkZ2ZQWG7+LNMY0t4ueOtjes6uM+oc"
-                        + "1IISfsrOj/pnIfkhdjhqBRqW93Xvqv7Peop4QItGH3m97O0QqZZgY/fRndZD7zED"
-                        + "qQR4eDzrA+p/vI1PMS0mVh/uQHHxaartMFgFWhKZAeTnOQ2eIgaUrh7mI396jNaO"
-                        + "mBF9hE/h\n"
-                        + "-----END CERTIFICATE-----\n";
-
-        public static final String PUBLIC_KEY_PRODUCTION_SALT =
-                "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI/e+"
-                        + "AAFbsYSUMkj1Hq6gloeE5iC/Vt8DmkwiPwxAHkXE19pkcrTiOPVeME4kvEUey4Qb2ty8zIjvy1SoxAKk0Nku0xu4EGyJn+"
-                        + "/1CDRYp4xOZyfXHVk4y18+4amRrGgLFDh4wg3cesCaJ5ETxoM7lvqb/R+zsg3ZtweJsD1pBxxFdjc7B9BKfDnVUk08CPAZ"
-                        + "hM9DGZ5HpiBV//sz+TusDZTvWtYtZGBZP6Bc4ApKOd3fS6NFE2IP8c2vJ7j2oeP0aDh/WW8ad5BY/sW0iKTiqi3FFxf1oo"
-                        + "DjBpfmCcmlEcST4cWZyPfu5p8SZXyKGZ3rtKRoPdMkYBHcLXDweHvSMgAAAAAx";
-
         public static final String AES = "AES";
         public static final String X509 = "X509";
         public static final String UTF8 = "UTF-8";
