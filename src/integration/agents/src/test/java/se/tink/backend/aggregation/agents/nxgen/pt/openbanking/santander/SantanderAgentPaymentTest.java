@@ -58,7 +58,8 @@ public class SantanderAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withExactCurrencyAmount(new ExactCurrencyAmount(new BigDecimal(100), currency))
+                            .withExactCurrencyAmount(
+                                    new ExactCurrencyAmount(new BigDecimal(100), currency))
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());

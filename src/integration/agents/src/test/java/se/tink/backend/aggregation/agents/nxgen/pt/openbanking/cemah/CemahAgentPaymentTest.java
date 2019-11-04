@@ -62,7 +62,8 @@ public class CemahAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withExactCurrencyAmount(new ExactCurrencyAmount(new BigDecimal(1), currency))
+                            .withExactCurrencyAmount(
+                                    new ExactCurrencyAmount(new BigDecimal(1), currency))
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());
