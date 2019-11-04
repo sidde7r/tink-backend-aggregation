@@ -27,10 +27,15 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class RevolutApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private RevolutConfiguration configuration;
 
-    public RevolutApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public RevolutApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            RevolutConfiguration configuration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.configuration = configuration;
     }
 
     public HttpResponse assertAuthorized() {
@@ -115,9 +120,7 @@ public class RevolutApiClient {
 
     private RequestBuilder getAppAuthorizedRequest(URL url) {
         String authStringB64 =
-                getFormattedAuthStringAsB64(
-                        RevolutConstants.AppAuthenticationValues.APP_AUTHORIZATION.getKey(),
-                        RevolutConstants.AppAuthenticationValues.APP_AUTHORIZATION.getValue());
+                getFormattedAuthStringAsB64("App", configuration.getAppAuthorization());
 
         persistentStorage.put(
                 RevolutConstants.Headers.AUTHORIZATION_HEADER,

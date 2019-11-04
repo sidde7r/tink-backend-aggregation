@@ -94,6 +94,11 @@ data:
           clientSecret: "DANSKEBANK_DK_CLIENT_SECRET"
         {{- end }}
 
+        {{- if $agentsConfig.revolutPasswordUK }}
+        revolut-pw-uk:
+          appAuthorization: "REVOLUT_PW_UK_APP_AUTHORIZATION"
+        {{- end }}
+
         {{- if $agentsConfig.demoFinancialInstitution }}
         demoFinancialInstitution:
           mobilebanking:
