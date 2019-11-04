@@ -42,13 +42,18 @@ public class Fields {
         static final String ACCOUNT_NUMBER = "accountNumber";
         static final String FULL_ACCOUNT_NUMBER = "account";
         static final String PRODUCT_NAME = "number";
+        static final String BRANCH_CODE = "branch";
+    }
+
+    static class Deposit {
+        static final String BALANCE = "balance";
+        static final String GROSS_INTEREST = "grossInterest";
     }
 
     static class Assets {
         static final String RETIREMENT_INVESTMENTS = "PR";
         static final String INVESTMENT_ACCOUNTS = "FU";
-        static final String CREDIT_CARDS = "CR";
-        static final String LOANS = "EP";
+        static final String DEPOSITS = "DP";
     }
 
     public static class Identity {
@@ -67,5 +72,15 @@ public class Fields {
         static final String ACCOUNT_NUMBER = "accountNumber";
         static final String PRODUCT_NAME = "name";
         static final String FULL_NUMBER = "number";
+    }
+
+    static class Loan {
+        static final String ACCOUNT_NUMBER = "accountNumber";
+        static final String NAME = "name";
+        static final String AVAILABLE = "available";
+        static final String BALANCE = "balance";
+        static final String START_DATE = "startDate";
+        static final String CURRENCY = "currency";
+        static final String LOAN_TYPE = "product";
     }
 }
