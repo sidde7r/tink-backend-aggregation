@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentStatusResponse;
@@ -19,6 +20,7 @@ public class SibsAuthenticator {
     private static final int NINETY_DAYS = 90;
     private final SibsBaseApiClient apiClient;
     private final Credentials credentials;
+    private final SibsUserState userState;
 
     private enum AuthenticationState {
         MANUAL_ON_GOING,
@@ -26,9 +28,11 @@ public class SibsAuthenticator {
         AUTO
     }
 
-    public SibsAuthenticator(SibsBaseApiClient apiClient, Credentials credentials) {
+    public SibsAuthenticator(
+            SibsBaseApiClient apiClient, SibsUserState userState, Credentials credentials) {
         this.apiClient = apiClient;
         this.credentials = credentials;
+        this.userState = userState;
     }
 
     public URL buildAuthorizeUrl(String state) {
@@ -41,7 +45,7 @@ public class SibsAuthenticator {
 
     private AuthenticationState getCurrentAuthenticationState() throws SessionException {
         ConsentStatus consentStatus = getConsentStatus();
-        final boolean manualAuthenticationInProgress = apiClient.isManualAuthenticationInProgress();
+        final boolean manualAuthenticationInProgress = userState.isManualAuthenticationInProgress();
         if (manualAuthenticationInProgress) {
             if (consentStatus.isAcceptedStatus()) {
                 return AuthenticationState.MANUAL_SUCCEEDED;
@@ -73,7 +77,7 @@ public class SibsAuthenticator {
                 return;
             } else {
                 if (authenticationState == AuthenticationState.MANUAL_SUCCEEDED) {
-                    apiClient.markManualAuthenticationFinished();
+                    userState.finishManualAuthentication();
                 }
                 throw SessionError.SESSION_EXPIRED.exception();
             }
@@ -100,7 +104,7 @@ public class SibsAuthenticator {
             throws SessionException {
         final String message = rethrowIfNotConsentProblems.getResponse().getBody(String.class);
         if (isConsentsProblem(message)) {
-            apiClient.removeConsentFromPersistentStorage();
+            userState.removeConsent();
             throw SessionError.SESSION_EXPIRED.exception(rethrowIfNotConsentProblems);
         }
         throw rethrowIfNotConsentProblems;
