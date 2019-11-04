@@ -39,13 +39,14 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
         SibsPaymentInitiationRequest sibsPaymentRequest =
                 new SibsPaymentInitiationRequest.Builder()
                         .withCreditorAccount(fromCreditor(paymentRequest.getPayment()))
                         .withDebtorAccount(fromDebtor(paymentRequest.getPayment()))
                         .withInstructedAmount(
-                                SibsAmountEntity.of(paymentRequest.getPayment().getAmount()))
+                                SibsAmountEntity.of(
+                                        paymentRequest.getPayment().getExactCurrencyAmount()))
                         .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
                         .build();
 

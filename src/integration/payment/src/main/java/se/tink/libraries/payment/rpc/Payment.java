@@ -1,6 +1,7 @@
 package se.tink.libraries.payment.rpc;
 
 import com.google.common.collect.ImmutableList;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -8,6 +9,7 @@ import org.iban4j.IbanUtil;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -70,6 +72,10 @@ public class Payment {
 
     public Amount getAmount() {
         return amount;
+    }
+
+    public ExactCurrencyAmount getExactCurrencyAmount() {
+        return new ExactCurrencyAmount(new BigDecimal(amount.getValue()), amount.getCurrency());
     }
 
     public UUID getId() {
@@ -163,6 +169,14 @@ public class Payment {
 
         public Builder withAmount(Amount amount) {
             this.amount = amount;
+            return this;
+        }
+
+        public Builder withExactCurrencyAmount(ExactCurrencyAmount exactCurrencyAmount) {
+            this.amount =
+                    new Amount(
+                            exactCurrencyAmount.getCurrencyCode(),
+                            exactCurrencyAmount.getDoubleValue());
             return this;
         }
 
