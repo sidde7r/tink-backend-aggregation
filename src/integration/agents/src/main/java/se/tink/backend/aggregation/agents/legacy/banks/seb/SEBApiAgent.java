@@ -1714,6 +1714,7 @@ public class SEBApiAgent extends AbstractAgent
         Session session = new Session();
         session.setCustomerId(customerId);
         session.setUserName(userName);
+        session.setUserId(userId);
         session.setCookiesFromClient(client);
 
         credentials.setPersistentSession(session);
@@ -1726,6 +1727,7 @@ public class SEBApiAgent extends AbstractAgent
         if (session != null) {
             customerId = session.getCustomerId();
             userName = session.getUserName();
+            userId = session.getUserId();
             addSessionCookiesToClient(client, session);
         }
     }
@@ -1735,6 +1737,7 @@ public class SEBApiAgent extends AbstractAgent
         // Clean the session in memory
         customerId = null;
         userName = null;
+        userId = null;
 
         // Clean the persisted session
         credentials.removePersistentSession();
