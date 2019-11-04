@@ -39,3 +39,5 @@ data:
     substitute-secret ICS_CLIENT_SSL_CERT "$ICS_CLIENT_SSL_CERT"
     substitute-secret ICS_CA_CERT "$ICS_CA_CERT"
     substitute-secret ICS_ROOT_CA_PASSWORD "$ICS_ROOT_CA_PASSWORD"
+    substitute-secret DANSKEBANK_DK_CLIENT_ID "$DANSKEBANK_DK_CLIENT_ID"
+    substitute-secret DANSKEBANK_DK_CLIENT_SECRET "$DANSKEBANK_DK_CLIENT_SECRET"

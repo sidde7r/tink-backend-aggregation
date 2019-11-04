@@ -88,6 +88,12 @@ data:
           regNumber: "FINTS_REG_NUMBER"
         {{- end }}
 
+        {{- if $agentsConfig.danskeBankDK }}
+        danskebank-dk:
+          clientId: "DANSKEBANK_DK_CLIENT_ID"
+          clientSecret: "DANSKEBANK_DK_CLIENT_SECRET"
+        {{- end }}
+
         {{- if $agentsConfig.demoFinancialInstitution }}
         demoFinancialInstitution:
           mobilebanking:

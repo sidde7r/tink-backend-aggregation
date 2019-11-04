@@ -14,6 +14,7 @@ s3StorageConfiguration:
   enabled: false
 
 agents:
+  danskeBankDK: true
   demoFinancialInstitution:
     mobilebanking:
       baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271/mobilebanking
