@@ -67,4 +67,11 @@ public class NordeaPartnerConstants {
 
         public static final String IVALID_TOKEN = "Invalid token.";
     }
+
+    public static class Keystore {
+        public static final String KEYSTORE_PATH =
+                "data/agents/serviceprovider/nordea/partner/TinkKeystore.jks";
+        public static final String SIGNING_KEY_ALIAS = "tinksign";
+        public static final String ENCRYPTION_KEY_ALIAS = "tinkencrypt";
+    }
 }
