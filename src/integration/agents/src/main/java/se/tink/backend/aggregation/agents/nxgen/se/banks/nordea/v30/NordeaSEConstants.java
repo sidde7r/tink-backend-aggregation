@@ -287,6 +287,7 @@ public class NordeaSEConstants {
         public static final String PAYMENT_ERROR = "Something went wrong with the payment.";
         public static final String UNREGISTERED_RECIPIENT =
                 "Recipient accounts missing from accounts ledger";
+        public static final String NOT_ENOUGH_FUNDS = "Not enough funds";
     }
 
     public static class LogTags {

@@ -55,6 +55,14 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
                 createNewPayment(transfer);
             }
         } catch (HttpResponseException e) {
+            final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+
+            if (errorResponse.isDuplicatePayment()) {
+                throw executorHelper.duplicatePaymentError(e);
+            }
+            if (errorResponse.isNotEnoughFunds()) {
+                throw executorHelper.notEnoughFundsError();
+            }
             log.warn("Payment execution failed", e);
             throw executorHelper.paymentFailedError(e);
         }

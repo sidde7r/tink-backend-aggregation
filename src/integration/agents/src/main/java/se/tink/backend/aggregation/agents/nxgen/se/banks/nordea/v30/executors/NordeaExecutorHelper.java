@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
@@ -15,7 +18,9 @@ import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMess
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.entities.ResultsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.entities.SignatureEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.CompleteTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ResultSignResponse;
@@ -23,11 +28,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.rpc.FetchPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
@@ -183,34 +186,28 @@ public class NordeaExecutorHelper {
 
     private void pollSignTransfer(String transferId, String orderRef) {
         try {
-            poll(orderRef);
-            assertSuccessfulSign(transferId);
-        } catch (Exception initialException) {
-            if (!isTransferFailedButWasSuccessful(transferId)) {
-                if (initialException.getCause() instanceof HttpResponseException) {
-                    HttpResponse response =
-                            ((HttpResponseException) initialException.getCause()).getResponse();
-                    if (response.getStatus() == HttpStatus.SC_CONFLICT) {
-                        throw bankIdAlreadyInProgressError(initialException);
-                    }
-                }
-
-                throw initialException;
+            CompleteTransferResponse completeTransferResponse = poll(orderRef);
+            assertSuccessfulSignOrThrow(completeTransferResponse, transferId);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
+                throw bankIdAlreadyInProgressError(e);
             }
+            throw e;
         }
     }
 
-    private void poll(String orderRef) {
+    private CompleteTransferResponse poll(String orderRef) {
         BankIdStatus status;
         for (int i = 1; i < NordeaSEConstants.Transfer.MAX_POLL_ATTEMPTS; i++) {
+            // sleep before so when a time out occur the bankId signing is canceled after polling
+            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
             try {
                 ResultSignResponse signResponse = apiClient.pollSign(orderRef, i);
                 status = signResponse.getBankIdStatus();
 
                 switch (status) {
                     case DONE:
-                        completeTransfer(orderRef);
-                        return;
+                        return completeTransfer(orderRef);
                     case WAITING:
                         break;
                     case CANCELLED:
@@ -218,46 +215,50 @@ public class NordeaExecutorHelper {
                     default:
                         throw signTransferFailedError();
                 }
-                Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
                     throw bankIdAlreadyInProgressError(e);
                 }
+                log.error(e.getMessage(), e);
+                throw signTransferFailedError();
             }
+        }
+        // Time out - cancel the signing request
+        cancelSign(orderRef);
+        throw bankIdTimedOut();
+    }
+
+    private CompleteTransferResponse completeTransfer(String orderRef) {
+        return apiClient.completeTransfer(orderRef);
+    }
+
+    private void cancelSign(String orderRef) {
+        try {
+            // the user will still be able to sign but this will set the status at Nordea at
+            // canceled.
+            apiClient.cancelSign(orderRef);
+        } catch (Exception e) {
+            // NOP
         }
     }
 
-    /** Check the transfer did not receive status rejected in the outbox */
-    private void assertSuccessfulSign(String transferId) {
-        FetchPaymentsResponse fetchOutbox = apiClient.fetchPayments();
-
-        Optional<PaymentEntity> rejectedTransfer =
-                fetchOutbox.getPayments().stream()
-                        .filter(entity -> entity.getApiIdentifier().equalsIgnoreCase(transferId))
-                        .filter(PaymentEntity::isRejected)
-                        .findFirst();
-
-        if (rejectedTransfer.isPresent()) {
+    /** Check if there are errors in the Complete Transfer Response */
+    private void assertSuccessfulSignOrThrow(
+            CompleteTransferResponse completeTransferResponse, String transferId) {
+        if (completeTransferResponse.hasErrors()) {
             throw transferRejectedError(
                     ErrorCodes.TRANSFER_REJECTED,
                     catalog.getString(EndUserMessage.TRANSFER_REJECTED));
         }
-    }
-
-    /**
-     * Returns true if the registered transfer (which we got a fail response for) does not exist in
-     * the outbox.
-     */
-    private boolean isTransferFailedButWasSuccessful(String transferId) {
-        FetchPaymentsResponse fetchOutbox = apiClient.fetchPayments();
-
-        Optional<PaymentEntity> failedTransfer =
-                fetchOutbox.getPayments().stream()
-                        .filter(PaymentEntity::isUnconfirmed)
-                        .filter(entity -> entity.getApiIdentifier().equalsIgnoreCase(transferId))
+        Optional<ResultsEntity> first =
+                Optional.ofNullable(completeTransferResponse.getResults())
+                        .orElse(Collections.emptyList()).stream()
+                        .filter(Objects::nonNull)
+                        .filter(result -> transferId.equalsIgnoreCase(result.getId()))
                         .findFirst();
 
-        return !failedTransfer.isPresent();
+        Preconditions.checkState(first.isPresent(), "Got empty complete-transfer response");
+        log.info("Transfer status received from nordea: " + first.get().getStatus());
     }
 
     /**
@@ -332,6 +333,22 @@ public class NordeaExecutorHelper {
                 .setEndUserMessage(
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage.BANKID_CANCELLED))
+                .build();
+    }
+
+    private TransferExecutionException bankIdTimedOut() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(catalog.getString(EndUserMessage.BANKID_NO_RESPONSE))
+                .setEndUserMessage(catalog.getString(EndUserMessage.BANKID_NO_RESPONSE))
+                .build();
+    }
+
+    protected TransferExecutionException notEnoughFundsError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(
+                        catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
+                .setEndUserMessage(
+                        catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
                 .build();
     }
 
@@ -414,9 +431,5 @@ public class NordeaExecutorHelper {
                 .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION)
                 .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION))
                 .build();
-    }
-
-    private void completeTransfer(String orderRef) {
-        apiClient.completeTransfer(orderRef);
     }
 }

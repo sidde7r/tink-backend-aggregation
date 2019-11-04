@@ -202,6 +202,9 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         if (errorResponse.isDuplicatePayment()) {
             throw executorHelper.duplicatePaymentError(e);
         }
+        if (errorResponse.isNotEnoughFunds()) {
+            throw executorHelper.notEnoughFundsError();
+        }
         if (errorResponse.isUnregisteredRecipient()) {
             throw executorHelper.transferRejectedError(
                     ErrorCodes.UNREGISTERED_RECIPIENT,

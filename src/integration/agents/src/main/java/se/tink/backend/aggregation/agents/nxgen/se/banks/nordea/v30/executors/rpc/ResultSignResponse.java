@@ -20,6 +20,7 @@ public class ResultSignResponse {
     @JsonProperty("order_reference")
     private String orderReference;
 
+    @JsonIgnore
     public BankIdStatus getBankIdStatus() {
         switch (status.toUpperCase()) {
             case NordeaBankIdStatus.PENDING:
