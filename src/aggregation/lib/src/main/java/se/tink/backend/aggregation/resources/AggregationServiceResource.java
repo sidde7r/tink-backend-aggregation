@@ -23,6 +23,8 @@ import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
+import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 import se.tink.backend.aggregation.rpc.SecretsTemplateRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -254,5 +256,11 @@ public class AggregationServiceResource implements AggregationService {
                         request.getIncludeDescriptions(),
                         request.getIncludeExamples())
                 .buildTemplate();
+    }
+
+    @Override
+    public SecretsNamesValidationResponse validateSecretsNames(
+            SecretsNamesValidationRequest request) {
+        return null;
     }
 }
