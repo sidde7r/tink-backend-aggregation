@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.entities.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferResponse;
@@ -237,7 +238,9 @@ public class NordeaExecutorHelper {
                         .findFirst();
 
         if (rejectedTransfer.isPresent()) {
-            throw transferRejectedError();
+            throw transferRejectedError(
+                    ErrorCodes.TRANSFER_REJECTED,
+                    catalog.getString(EndUserMessage.TRANSFER_REJECTED));
         }
     }
 
@@ -351,10 +354,11 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    private TransferExecutionException transferRejectedError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.ErrorCodes.TRANSFER_REJECTED)
-                .setEndUserMessage(NordeaSEConstants.ErrorCodes.TRANSFER_REJECTED)
+    protected TransferExecutionException transferRejectedError(
+            String errorMessage, String endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(errorMessage)
+                .setEndUserMessage(endUserMessage)
                 .build();
     }
 

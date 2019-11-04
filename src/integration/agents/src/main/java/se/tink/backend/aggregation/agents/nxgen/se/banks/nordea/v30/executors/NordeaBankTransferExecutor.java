@@ -5,8 +5,10 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.BankPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferResponse;
@@ -55,12 +57,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                 createNewTransfer(transfer);
             }
         } catch (HttpResponseException e) {
-            final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-            if (errorResponse.isDuplicatePayment()) {
-                throw executorHelper.duplicatePaymentError(e);
-            }
-            log.warn("Transfer execution failed", e);
-            throw executorHelper.transferFailedError(e);
+            handleTransferErrors(e);
         }
         return Optional.empty();
     }
@@ -198,5 +195,19 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
             default:
                 return NordeaSEConstants.PaymentAccountTypes.LBAN;
         }
+    }
+
+    private void handleTransferErrors(HttpResponseException e) {
+        final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+        if (errorResponse.isDuplicatePayment()) {
+            throw executorHelper.duplicatePaymentError(e);
+        }
+        if (errorResponse.isUnregisteredRecipient()) {
+            throw executorHelper.transferRejectedError(
+                    ErrorCodes.UNREGISTERED_RECIPIENT,
+                    catalog.getString(EndUserMessage.UNREGISTERED_RECIPIENT));
+        }
+        log.warn("Transfer execution failed", e);
+        throw executorHelper.transferFailedError(e);
     }
 }

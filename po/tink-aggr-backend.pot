@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-16 16:54+0200\n"
+"POT-Creation-Date: 2019-11-01 14:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1102,4 +1102,53 @@ msgid ""
 "Your BankID was not issued by the bank you are trying to authenticate with. "
 "This is not allowed by the bank. Please contact the bank to resolve this "
 "issue."
+msgstr ""
+
+msgid ""
+"We currently only support photo TAN with QR code scanning, which is not "
+"available for your user."
+msgstr ""
+
+msgid "Scan the QR code with the photoTAN app."
+msgstr ""
+
+msgid "TAN"
+msgstr ""
+
+msgid "Enter the TAN from the photoTAN app."
+msgstr ""
+
+msgid "Unknown error"
+msgstr ""
+
+msgid ""
+"You have reached the maximum number of mobile device registrations. Please "
+"check if you can unregister some devices using the bank's web portal, or "
+"contact the bank."
+msgstr ""
+
+msgid "You have reached maximum number of tries. Please try again later"
+msgstr ""
+
+msgid ""
+"Your password has changed. Please enter the latest password in all other "
+"devices."
+msgstr ""
+
+msgid "The consent has been expired. "
+msgstr ""
+
+msgid "The consent is invalid. "
+msgstr ""
+
+msgid "The consent has been revoked by the user. "
+msgstr ""
+
+msgid "The consent has been revoked by the bank. "
+msgstr ""
+
+msgid "Recipient accounts missing from accounts ledger"
+msgstr ""
+
+msgid "Transfer rejected by the Bank"
 msgstr ""

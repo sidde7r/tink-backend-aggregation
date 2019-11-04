@@ -285,6 +285,8 @@ public class NordeaSEConstants {
         public static final String TRANSFER_REJECTED = "Transfer rejected by Nordea";
         public static final String TRANSFER_ERROR = "Something went wrong with the transfer.";
         public static final String PAYMENT_ERROR = "Something went wrong with the payment.";
+        public static final String UNREGISTERED_RECIPIENT =
+                "Recipient accounts missing from accounts ledger";
     }
 
     public static class LogTags {
