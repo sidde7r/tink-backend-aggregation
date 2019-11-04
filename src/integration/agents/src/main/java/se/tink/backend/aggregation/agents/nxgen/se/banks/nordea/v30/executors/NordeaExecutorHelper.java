@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -24,7 +26,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einv
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
@@ -33,7 +34,7 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaExecutorHelper {
-    private static final AggregationLogger log = new AggregationLogger(NordeaExecutorHelper.class);
+    private static final Logger log = LoggerFactory.getLogger(NordeaExecutorHelper.class);
 
     // TODO extend BankIdSignHelper
     private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
@@ -79,7 +80,11 @@ public class NordeaExecutorHelper {
     protected Optional<BeneficiariesEntity> validateDestinationAccount(Transfer transfer) {
         return apiClient.fetchBeneficiaries().getBeneficiaries().stream()
                 .filter(Predicates.or(BeneficiariesEntity::isLBAN, BeneficiariesEntity::isPgOrBg))
-                .filter(beneficiary -> beneficiary.generalGetAccountIdentifier().isValid())
+                .filter(
+                        beneficiary ->
+                                beneficiary.generalGetAccountIdentifier().isValid()
+                                        && identifierCanBeFormatted(
+                                                beneficiary.generalGetAccountIdentifier()))
                 .filter(
                         beneficiary ->
                                 isAccountIdentifierEquals(
@@ -91,6 +96,11 @@ public class NordeaExecutorHelper {
     /** Check if transfer destination account is an internal account. */
     protected Optional<AccountEntity> validateOwnDestinationAccount(
             Transfer transfer, FetchAccountResponse accountResponse) {
+
+        if (!identifierCanBeFormatted(transfer.getDestination())) {
+            throw invalidDestError();
+        }
+
         return accountResponse.getAccounts().stream()
                 .filter(account -> account.getPermissions().isCanTransferToAccount())
                 .filter(
@@ -98,6 +108,24 @@ public class NordeaExecutorHelper {
                                 isAccountIdentifierEquals(
                                         transfer.getDestination(), account.getAccountIdentifier()))
                 .findFirst();
+    }
+
+    /**
+     * Method added to handle faulty Swedbank accounts, but will also handle other cases where we
+     * can't properly parse the account identifier. Used when verifying transfer's destination
+     * account, if parsing fails we'll then throw a transfer execution exception. Also used when
+     * matching transfer's destination account with user's stored beneficiaries, if parsing fails
+     * we'll just ignore that beneficiary as a candidate.
+     */
+    private boolean identifierCanBeFormatted(AccountIdentifier identifier) {
+        try {
+            identifier.getIdentifier(NORDEA_ACCOUNT_FORMATTER);
+        } catch (IllegalArgumentException e) {
+            log.info("Account identifier couldn't be parsed. Reason: {}.", e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 
     private boolean isAccountIdentifierEquals(AccountIdentifier id1, AccountIdentifier id2) {
