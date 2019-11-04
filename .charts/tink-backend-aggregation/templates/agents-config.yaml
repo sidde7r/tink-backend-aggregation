@@ -89,6 +89,16 @@ data:
         {{- end }}
         {{- end }}
 
+        {{- if $agentsConfig.nordeapartner }}
+        nordeapartner:
+          partnerId: "{{ $agentsConfig.nordeapartner.partnerId }}"
+          baseUrl: "{{ $agentsConfig.nordeapartner.baseUrl }}"
+          nordeaSigningPublicKey: "{{ $agentsConfig.nordeapartner.nordeaSigningPublicKey }}"
+          nordeaEncryptionPublicKey: "{{ $agentsConfig.nordeapartner.nordeaEncryptionPublicKey }}"
+          keyId: "{{ $agentsConfig.nordeapartner.keyId }}"
+          partnerKeystorePassword: "NORDEA_PARTNER_KEYSTORE_PASSWORD"
+        {{- end }}
+
         {{- if $agentsConfig.dnb }}
         dnb:
           tink:
