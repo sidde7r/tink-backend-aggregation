@@ -9,12 +9,12 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.tink.backend.libraries.healthcheckhandler.HealthCheckHandler;
-import se.tink.backend.libraries.httpserver.SimpleHTTPServer;
 import se.tink.backend.nasa.boot.configuration.Configuration;
 import se.tink.backend.nasa.boot.configuration.ConfigurationUtils;
 import se.tink.backend.nasa.boot.configuration.NASAServiceModule;
 import se.tink.backend.nasa.boot.configuration.SensitiveConfiguration;
 import se.tink.backend.nasa.metrics.PrometheusExportServer;
+import se.tink.libraries.simple_http_server.SimpleHTTPServer;
 import spark.Filter;
 import spark.Spark;
 
@@ -127,7 +127,7 @@ class NASAService {
         Spark.stop();
 
         // Stop simple http server for health checks
-        httpServer.stop(shutdownLatch, duration, unit);
+        httpServer.stop(shutdownLatch);
 
         shutdownLatch.await(duration + 1, unit);
 

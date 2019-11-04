@@ -23,8 +23,8 @@ java_binary(
         "//third_party:netty-runtime",
     ],
     deps = [
-        "//src/libraries:health-check-handler",
-        "//src/libraries:simple-http-server",
+        "//src/libraries/simple_http_server:simple_http_server",
+        "//src/libraries/health_check_handler:health_check_handler",
         "//src/libraries/serialization",
         "//src/nasa/metrics",
         "//third_party:com_google_code_gson_gson",
@@ -47,8 +47,8 @@ junit_test(
         "//etc/nasa:development-configuration",
     ],
     deps = [
-        "//src/libraries:health-check-handler",
-        "//src/libraries:simple-http-server",
+        "//src/libraries/health_check_handler:health_check_handler",
+        "//src/libraries/simple_http_server:simple_http_server",
         "//src/libraries/serialization",
         "//src/nasa/metrics",
         "//src/nasa/service:nasa",

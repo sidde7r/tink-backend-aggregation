@@ -17,8 +17,8 @@ import se.tink.backend.integration.boot.configuration.SensitiveConfiguration;
 import se.tink.backend.integration.gprcserver.GrpcServer;
 import se.tink.backend.integration.gprcserver.configuration.GrpcServerModule;
 import se.tink.backend.libraries.healthcheckhandler.HealthCheckHandler;
-import se.tink.backend.libraries.httpserver.SimpleHTTPServer;
 import se.tink.libraries.metrics.prometheus.PrometheusExportServer;
+import se.tink.libraries.simple_http_server.SimpleHTTPServer;
 
 class IntegrationService {
     private static final Logger logger = LogManager.getLogger(IntegrationService.class);
@@ -112,7 +112,7 @@ class IntegrationService {
 
         final CountDownLatch shutdownLatch =
                 new CountDownLatch(2); // same numbers as components to close
-        httpServer.stop(shutdownLatch, duration, unit);
+        httpServer.stop(shutdownLatch);
         grpcServer.stop(shutdownLatch, duration, unit);
 
         shutdownLatch.await(duration + 1, unit);
