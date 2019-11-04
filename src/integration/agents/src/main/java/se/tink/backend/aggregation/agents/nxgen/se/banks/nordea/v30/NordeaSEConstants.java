@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 
 public class NordeaSEConstants {
     public static final int NUM_TRANSACTIONS_PER_PAGE = 200;
+    public static final int NUM_CREDIT_CARD_TRANSACTIONS_PER_PAGE = 30;
     public static final String CURRENCY = "SEK";
 
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
@@ -120,7 +121,8 @@ public class NordeaSEConstants {
         public static final String LIMIT = "limit";
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
-        public static final String PAGE_SIZE_LIMIT = "30";
+        public static final String PAGE_SIZE_LIMIT =
+                String.valueOf(NUM_CREDIT_CARD_TRANSACTIONS_PER_PAGE);
         public static final String POLLING_SEQUENCE = "polling_sequence";
         public static final String STATUS = "status";
         public static final String STATUS_VALUES = "unconfirmed,confirmed,rejected,inprogress";
@@ -189,7 +191,7 @@ public class NordeaSEConstants {
 
     public static final class Fetcher {
         public static final int START_PAGE = 1;
-        public static final int CAN_FETCH_MORE = 30;
+        public static final int CAN_FETCH_MORE = NUM_CREDIT_CARD_TRANSACTIONS_PER_PAGE;
     }
 
     public static final class PaymentStatus {
