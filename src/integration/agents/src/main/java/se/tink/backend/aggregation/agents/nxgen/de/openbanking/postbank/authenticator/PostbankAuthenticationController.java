@@ -129,13 +129,12 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         String regexForRangePattern = RangeRegexUtils.regexForRange(1, maxNumber);
 
         return Field.builder()
-                .description(this.catalog.getString(description))
-                .helpText("Please select SCA method")
+                .description(String.format("Select from 1 to %d", maxNumber))
+                .helpText("Please select SCA method" + "\n" + this.catalog.getString(description))
                 .name(CHOSEN_SCA_METHOD)
                 .numeric(true)
                 .minLength(1)
                 .maxLength(length)
-                .hint(String.format("Select from 1 to %d", maxNumber))
                 .pattern(regexForRangePattern)
                 .patternError("The chosen SCA method is not valid")
                 .build();
