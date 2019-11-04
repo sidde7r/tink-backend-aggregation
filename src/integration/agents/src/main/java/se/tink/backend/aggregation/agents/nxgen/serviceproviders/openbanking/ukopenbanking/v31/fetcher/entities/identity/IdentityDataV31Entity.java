@@ -3,10 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class IdentityDataEntity {
+public class IdentityDataV31Entity {
     @JsonProperty("PartyId")
     private String partyId;
 
@@ -30,6 +31,10 @@ public class IdentityDataEntity {
 
     @JsonProperty("Mobile")
     private String mobile;
+
+    public IdentityDataEntity toTinkIdentityData() {
+        return new IdentityDataEntity(getName());
+    }
 
     public String getName() {
         return Objects.nonNull(fullLegalName) ? fullLegalName : name;

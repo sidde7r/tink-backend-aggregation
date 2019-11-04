@@ -9,7 +9,11 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
-public abstract class UkOpenBankingV20Constants extends UkOpenBankingConstants {
+public final class UkOpenBankingV20Constants extends UkOpenBankingConstants {
+
+    private UkOpenBankingV20Constants() {
+        throw new AssertionError();
+    }
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()

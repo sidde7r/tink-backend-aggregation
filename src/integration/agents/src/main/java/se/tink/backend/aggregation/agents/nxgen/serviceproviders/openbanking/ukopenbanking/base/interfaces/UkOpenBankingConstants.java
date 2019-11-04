@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces;
 
 import com.google.common.collect.ImmutableMap;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants;
 
-public abstract class UkOpenBankingConstants extends OpenbankConstants {
+public abstract class UkOpenBankingConstants {
+
+    protected UkOpenBankingConstants() {
+        throw new AssertionError();
+    }
+
     public static final String INTEGRATION_NAME = "ukOpenBankingJson";
 
     public static class HttpHeaders {

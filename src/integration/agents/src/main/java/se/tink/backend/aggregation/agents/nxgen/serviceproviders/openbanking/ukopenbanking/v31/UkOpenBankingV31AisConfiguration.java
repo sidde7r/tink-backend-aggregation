@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.authenticator.rpc.AccountPermissionResponseV31;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.identity.IdentityDataV31Response;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UkOpenBankingV31AisConfiguration implements UkOpenBankingAisConfig {
@@ -21,7 +21,7 @@ public class UkOpenBankingV31AisConfiguration implements UkOpenBankingAisConfig 
     private final URL identityDataURL;
     private final URL appToAppURL;
     private final List<String> additionalPermissions;
-    private IdentityDataV31Response identityData;
+    private IdentityDataEntity identityData;
     private String holderName;
 
     private UkOpenBankingV31AisConfiguration(
@@ -54,12 +54,12 @@ public class UkOpenBankingV31AisConfiguration implements UkOpenBankingAisConfig 
     }
 
     @Override
-    public IdentityDataV31Response getIdentityData() {
+    public IdentityDataEntity getIdentityData() {
         return identityData;
     }
 
     @Override
-    public void setIdentityData(IdentityDataV31Response identityData) {
+    public void setIdentityData(IdentityDataEntity identityData) {
         this.identityData = identityData;
     }
 

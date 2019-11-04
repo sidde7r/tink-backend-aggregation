@@ -8,9 +8,9 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.google.common.base.Preconditions;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.identity.IdentityDataV31Response;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UkOpenBankingV20AisConfiguration implements UkOpenBankingAisConfig {
@@ -87,12 +87,12 @@ public class UkOpenBankingV20AisConfiguration implements UkOpenBankingAisConfig 
     }
 
     @Override
-    public void setIdentityData(IdentityDataV31Response identityData) {
+    public void setIdentityData(IdentityDataEntity identityData) {
         // soon V20 needs to be deprecated
     }
 
     @Override
-    public IdentityDataV31Response getIdentityData() {
+    public IdentityDataEntity getIdentityData() {
         return null;
     }
 

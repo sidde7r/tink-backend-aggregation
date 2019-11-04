@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.ResponseKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -51,7 +50,7 @@ public class UkOpenBankingPisAuthenticator implements OpenIdAuthenticator {
             URL authorizeUrl, String state, String nonce, String callbackUri) {
 
         paymentResponse = ukOpenBankingPis.getBankTransferIntentId(apiClient, paymentRequest);
-        intentId = paymentResponse.getStorage().get(ResponseKeys.CONSENT_ID_KEY);
+        intentId = paymentResponse.getStorage().get("consentId");
 
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
 
