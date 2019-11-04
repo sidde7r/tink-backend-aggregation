@@ -214,14 +214,6 @@ maven_jar(
     sha1 = "f07d3a325f1fe69ee40d6b409086964edfef4e69",
 )
 
-# TODO: Remove when the dependency on tink_backend_shared_libraries is gone
-# Referenced by @tink_backend_shared_libraries//third_party:netty
-maven_jar(
-    name = "io_opencensus_opencensus_grpc_metrics",
-    artifact = "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
-    sha1 = "f07d3a325f1fe69ee40d6b409086964edfef4e69",
-)
-
 maven_jar(
     name = "io_perfmark_perfmark_api",
     artifact = "io.perfmark:perfmark-api:0.17.0",
