@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.tools;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -41,13 +43,21 @@ public class ClientConfigurationTemplateBuilder {
 
     private final Supplier<IllegalArgumentException> noConfigurationClassFoundExceptionSupplier;
     private final Provider provider;
+    private final boolean includeDescriptions;
+    private final boolean includeExamples;
     private final String financialInstitutionId;
     private final Function<Field, String> fieldToFieldName =
             field -> specialFieldsMapper.getOrDefault(field.getName(), field.getName());
 
-    public ClientConfigurationTemplateBuilder(Provider provider) {
+    public ClientConfigurationTemplateBuilder(
+            Provider provider, boolean includeDescriptions, boolean includeExamples) {
         this.provider = provider;
+        this.includeDescriptions = includeDescriptions;
+        this.includeExamples = includeExamples;
         this.financialInstitutionId = provider.getFinancialInstitutionId();
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(this.financialInstitutionId),
+                "financialInstitutionId in requested provider cannot be null.");
         this.noConfigurationClassFoundExceptionSupplier =
                 () ->
                         new IllegalArgumentException(
@@ -210,20 +220,32 @@ public class ClientConfigurationTemplateBuilder {
 
         StringBuffer sb = new StringBuffer();
 
-        String fieldDescriptionKey = fieldName + "-description";
-        if (fieldsDescriptionsAndExamples.containsKey(fieldDescriptionKey)) {
-            sb.append(System.lineSeparator());
-            sb.append("Description:");
-            sb.append(System.lineSeparator());
-            sb.append(fieldsDescriptionsAndExamples.get(fieldDescriptionKey));
+        if (includeDescriptions) {
+            String fieldDescriptionKey = fieldName + "-description";
+            if (fieldsDescriptionsAndExamples.containsKey(fieldDescriptionKey)) {
+                sb.append(System.lineSeparator());
+                sb.append("Description:");
+                sb.append(System.lineSeparator());
+                sb.append(fieldsDescriptionsAndExamples.get(fieldDescriptionKey));
+            }
         }
 
-        String fieldExampleKey = fieldName + "-example";
-        if (fieldsDescriptionsAndExamples.containsKey(fieldExampleKey)) {
-            sb.append(System.lineSeparator());
-            sb.append("Example:");
-            sb.append(System.lineSeparator());
-            sb.append(fieldsDescriptionsAndExamples.get(fieldExampleKey));
+        if (includeExamples) {
+            String fieldExampleKey = fieldName + "-example";
+            if (fieldsDescriptionsAndExamples.containsKey(fieldExampleKey)) {
+                String example = fieldsDescriptionsAndExamples.get(fieldExampleKey);
+                if (includeDescriptions) {
+                    sb.append(System.lineSeparator());
+                    sb.append("Example:");
+                    sb.append(System.lineSeparator());
+                } else {
+                    example = example.trim();
+                    if (example.startsWith("\"") && example.endsWith("\"")) {
+                        example = example.substring(1, example.length() - 1);
+                    }
+                }
+                sb.append(example);
+            }
         }
 
         if (sb.length() == 0) {
