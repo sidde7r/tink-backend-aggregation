@@ -311,6 +311,8 @@ public class IcaBankenExecutorHelper {
                                                 TransferExecutionException.EndUserMessage
                                                         .BANKID_CANCELLED))
                                 .build();
+                    case TIMEOUT:
+                        throw bankIdTimeoutError();
                     default:
                         throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                                 .setMessage(
@@ -344,7 +346,11 @@ public class IcaBankenExecutorHelper {
             }
         }
 
-        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+        throw bankIdTimeoutError();
+    }
+
+    private TransferExecutionException bankIdTimeoutError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(
                         TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
                 .setEndUserMessage(
