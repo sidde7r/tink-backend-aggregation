@@ -31,10 +31,14 @@ public abstract class CmcicAgent extends NextGenerationAgent
     private final String clientName;
     private final CmcicApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final CmcicConfiguration cmcicConfiguration;
 
     public CmcicAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+
+        cmcicConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
 
         apiClient = new CmcicApiClient(client, persistentStorage, sessionStorage);
 
@@ -49,8 +53,7 @@ public abstract class CmcicAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         return Optional.of(
                 new CmcicPaymentController(
-                        new CmcicPaymentExecutor(
-                                apiClient, sessionStorage, getClientConfiguration()),
+                        new CmcicPaymentExecutor(apiClient, sessionStorage, cmcicConfiguration),
                         supplementalInformationHelper,
                         sessionStorage,
                         strongAuthenticationState));
@@ -59,17 +62,9 @@ public abstract class CmcicAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        CmcicConfiguration cmcicConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
 
         apiClient.setConfiguration(
                 cmcicConfiguration, configuration.getEidasProxy(), getEidasIdentity());
-    }
-
-    protected CmcicConfiguration getClientConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        getIntegrationName(), clientName, CmcicConfiguration.class);
     }
 
     @Override
