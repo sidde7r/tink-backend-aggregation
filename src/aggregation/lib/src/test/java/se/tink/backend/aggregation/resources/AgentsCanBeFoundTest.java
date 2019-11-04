@@ -11,7 +11,7 @@ public final class AgentsCanBeFoundTest {
      */
     @Test
     public void testAgentsPackageClassIsFound() throws ClassNotFoundException {
-        AgentClassFactory.getAgentClass("nxgen.uk.openbanking.aib.AibV31Agent");
+        AgentClassFactory.getAgentClass("nxgen.uk.openbanking.firstdirect.FirstDirectV31Agent");
     }
 
     /**
@@ -21,6 +21,8 @@ public final class AgentsCanBeFoundTest {
     @Test
     public void testIsolatedAgentClassIsFound() throws ClassNotFoundException {
         AgentClassFactory.getAgentClass("nxgen.be.banks.axa.AxaAgent");
+        AgentClassFactory.getAgentClass("nxgen.uk.openbanking.aib.AibV31Agent");
+        AgentClassFactory.getAgentClass("nxgen.uk.openbanking.danskebank.DanskeBankV31Agent");
     }
 
     @Test
