@@ -88,7 +88,8 @@ public class HandelsbankenSEBankIdSigner implements BankIdSigner<PaymentRequest>
             case Status.USER_CANCEL:
                 return BankIdStatus.CANCELLED;
             case Status.COMPLETE:
-                persistentStorage.put(StorageKeys.PIS_TOKEN, decoupledResponse.toOauthToken());
+                persistentStorage.rotateStorageValue(
+                        StorageKeys.PIS_TOKEN, decoupledResponse.toOauthToken());
                 return BankIdStatus.DONE;
             default:
                 return BankIdStatus.FAILED_UNKNOWN;

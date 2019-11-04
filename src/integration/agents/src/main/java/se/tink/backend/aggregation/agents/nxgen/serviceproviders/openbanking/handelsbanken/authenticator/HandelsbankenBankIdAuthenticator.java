@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<SessionResponse> {
 
@@ -38,11 +39,14 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
             LoggerFactory.getLogger(HandelsbankenBankIdAuthenticator.class);
 
     private final HandelsbankenBaseApiClient apiClient;
+    private final SessionStorage sessionStorage;
     private OAuth2Token token;
     private String autoStartToken;
 
-    public HandelsbankenBankIdAuthenticator(HandelsbankenBaseApiClient apiClient) {
+    public HandelsbankenBankIdAuthenticator(
+            HandelsbankenBaseApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -57,6 +61,10 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ses
         try {
             TokenResponse tokenResponse =
                     apiClient.requestClientCredentialGrantTokenWithScope(Scope.AIS);
+            // store in session storage so it will ba masked
+            sessionStorage.put(
+                    HandelsbankenBaseConstants.StorageKeys.CLIENT_TOKEN,
+                    tokenResponse.getAccessToken());
             AuthorizationResponse consent =
                     apiClient.initiateConsent(tokenResponse.getAccessToken());
 

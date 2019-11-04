@@ -45,6 +45,7 @@ public final class HandelsbankenBaseConstants {
         public static final String MAX_FETCH_PERIOD_MONTHS = "maxFetchPeriodMonths";
         public static final String PAYMENT_ID = "paymentId";
         public static final String PIS_TOKEN = "pisToken";
+        public static final String CLIENT_TOKEN = "clientToken";
     }
 
     public static class QueryKeys {
