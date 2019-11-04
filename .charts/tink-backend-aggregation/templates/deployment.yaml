@@ -237,6 +237,24 @@ spec:
               name: aggregation-secrets
               key: revolut-pw-uk-app-authorization
               optional: true
+        - name: JYSKEBANK_DK_PRODUCT_NEMID_PUBLIC_KEY_B64
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: jyskebank-dk-product-nemid-public-key-b64
+              optional: true
+        - name: JYSKEBANK_DK_AES_PADDING
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: jyskebank-dk-aes-padding
+              optional: true
+        - name: JYSKEBANK_DK_MOBILE_SERVICE_PUBLIC_KEY_B64
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: jyskebank-dk-mobile-service-public-key-b64
+              optional: true
 
       containers:
       - name: tink-backend-aggregation

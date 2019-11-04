@@ -29,12 +29,14 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class JyskeApiClient {
 
+    private JyskeConfiguration configuration;
     private final TinkHttpClient client;
     private List<AccountBriefEntity> accounts;
 
-    public JyskeApiClient(TinkHttpClient client) {
+    public JyskeApiClient(TinkHttpClient client, JyskeConfiguration configuration) {
         this.client = client;
         this.client.addFilter(new JyskeBankUnavailableFilter());
+        this.configuration = configuration;
     }
 
     public NemIdLoginResponse nemIdInit(Token token) {
@@ -43,7 +45,7 @@ public class JyskeApiClient {
 
         request.setData(
                 JyskeSecurityHelper.encryptForBankdataWithRSAAndBase64Encode(
-                        token.getBytes(), JyskeConstants.Crypto.PRODUCT_NEMID_KEY));
+                        token.getBytes(), configuration.getProductNemIdPublicKey()));
 
         return createJsonRequest(JyskeConstants.Url.NEMID_INIT)
                 .post(NemIdLoginResponse.class, request);
@@ -65,7 +67,10 @@ public class JyskeApiClient {
 
     private NemIdResponse doNemIdRequest(URL url, Token token, Encryptable encryptable) {
         return createJsonRequest(url)
-                .post(NemIdResponse.class, NemIdGenericRequest.create(token, encryptable));
+                .post(
+                        NemIdResponse.class,
+                        NemIdGenericRequest.create(
+                                token, configuration.getAesPadding(), encryptable));
     }
 
     public NemIdLoginResponse mobilServiceInit(Token token) {
@@ -73,7 +78,7 @@ public class JyskeApiClient {
 
         request.setData(
                 JyskeSecurityHelper.encryptForServiceWithRSAAndBase64Encode(
-                        token.getBytes(), JyskeConstants.Crypto.MOBILE_SERVICE_KEY));
+                        token.getBytes(), configuration.getMobileServicePublicKey()));
 
         return createJsonRequest(JyskeConstants.Url.TRANSPORT_KEY)
                 .post(NemIdLoginResponse.class, request);
