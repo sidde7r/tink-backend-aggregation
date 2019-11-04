@@ -23,8 +23,7 @@ java_binary(
     deps = [
         "//src/integration/grpc-server",
         "//src/integration/grpc-services",
-        "//src/libraries/health_check_handler:health_check_handler",
-        "//src/libraries/simple_http_server:simple_http_server",
+        "//src/libraries/health_check_handler",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",
         "//src/libraries/metrics:core",
@@ -37,6 +36,7 @@ java_binary(
         "//src/libraries/metrics:prometheus",
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",
+        "//src/libraries/simple_http_server",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:io_grpc_grpc_core",
