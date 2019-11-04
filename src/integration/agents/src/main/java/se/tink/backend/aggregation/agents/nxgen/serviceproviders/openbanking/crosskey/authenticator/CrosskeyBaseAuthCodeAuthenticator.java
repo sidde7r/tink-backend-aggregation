@@ -1,22 +1,36 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator;
 
+import java.util.function.Function;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class CrosskeyBaseAuthenticator implements OAuth2Authenticator {
+public class CrosskeyBaseAuthCodeAuthenticator implements OAuth2Authenticator {
 
     private final CrosskeyBaseApiClient apiClient;
+    private final Function<String, URL> getAuthorizeUrl;
 
-    public CrosskeyBaseAuthenticator(CrosskeyBaseApiClient apiClient) {
+    private CrosskeyBaseAuthCodeAuthenticator(
+            CrosskeyBaseApiClient apiClient, Function<String, URL> getAuthorizeUrl) {
         this.apiClient = apiClient;
+        this.getAuthorizeUrl = getAuthorizeUrl;
+    }
+
+    public static CrosskeyBaseAuthCodeAuthenticator getInstanceForAis(
+            CrosskeyBaseApiClient apiClient) {
+        return new CrosskeyBaseAuthCodeAuthenticator(apiClient, apiClient::getAisAuthorizeUrl);
+    }
+
+    public static CrosskeyBaseAuthCodeAuthenticator getInstanceForPis(
+            CrosskeyBaseApiClient apiClient) {
+        return new CrosskeyBaseAuthCodeAuthenticator(apiClient, apiClient::getPisAuthorizeUrl);
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        return apiClient.getAuthorizeUrl(state);
+        return getAuthorizeUrl.apply(state);
     }
 
     @Override

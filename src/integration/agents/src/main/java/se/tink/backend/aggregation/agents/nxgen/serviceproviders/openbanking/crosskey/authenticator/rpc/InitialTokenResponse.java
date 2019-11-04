@@ -23,6 +23,10 @@ public class InitialTokenResponse {
         return accessToken;
     }
 
+    public long getExpiresIn() {
+        return expiresIn;
+    }
+
     public OAuth2Token toTinkToken() {
         return OAuth2Token.create(tokenType, accessToken, null, expiresIn);
     }

@@ -13,7 +13,7 @@ public class AccountBalanceEntity {
     private String accountId;
     private AmountEntity amount;
     private String creditDebitIndicator;
-    private List<CreditLineEntity> creditLine = null;
+    private List<CreditLineEntity> creditLine;
     private String dateTime;
     private String type;
 
