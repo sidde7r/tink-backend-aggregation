@@ -1,57 +1,47 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts;
-
-import static java.util.Objects.requireNonNull;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.investments;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConstants;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities.TransactionEntity;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchAccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.investments.entities.InvestmentAccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class MontepioTransactionalAccountsFetcher
-        implements AccountFetcher<TransactionalAccount>,
-                TransactionPagePaginator<TransactionalAccount> {
+public class MontepioInvestmentAccountsFetcher
+        implements AccountFetcher<InvestmentAccount>, TransactionPagePaginator<InvestmentAccount> {
 
-    private static final String IBAN_DETAILS_KEY = "Iban";
+    private final MontepioApiClient apiClient;
 
-    private final MontepioApiClient client;
-
-    public MontepioTransactionalAccountsFetcher(final MontepioApiClient client) {
-        this.client = requireNonNull(client);
+    public MontepioInvestmentAccountsFetcher(MontepioApiClient apiClient) {
+        this.apiClient = Objects.requireNonNull(apiClient);
     }
 
     @Override
-    public Collection<TransactionalAccount> fetchAccounts() {
-        return client.fetchAccounts().getResultEntity().getAccounts().orElseGet(ArrayList::new)
-                .stream()
-                .map(this::mapAccount)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+    public Collection<InvestmentAccount> fetchAccounts() {
+        return apiClient.fetchSavingsAccounts().getResult().getAccounts().stream()
+                .map(InvestmentAccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
+    public PaginatorResponse getTransactionsFor(InvestmentAccount account, int page) {
         LocalDate to = LocalDate.now();
         LocalDate from =
                 LocalDate.now().minusMonths(MontepioConstants.MAX_TRANSACTION_HISTORY_MONTHS);
 
         FetchTransactionsResponse response =
-                client.fetchCheckingAccountTransactions(account, page, from, to);
+                apiClient.fetchSavingsAccountTransactions(account, page, from, to);
 
         response.getError()
                 .ifPresent(
@@ -70,20 +60,5 @@ public class MontepioTransactionalAccountsFetcher
                         .collect(Collectors.toList());
         return PaginatorResponseImpl.create(
                 transactions, response.getResultEntity().hasMorePages());
-    }
-
-    private Optional<TransactionalAccount> mapAccount(AccountEntity accountEntity) {
-        FetchAccountDetailsResponse detailsResponse =
-                client.fetchAccountDetails(accountEntity.getHandle());
-        String iban =
-                detailsResponse.getResult().getAccountDetails().stream()
-                        .filter(a -> IBAN_DETAILS_KEY.equals(a.getKey()))
-                        .findAny()
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                "Did not find IBAN account in accountDetails"))
-                        .getValue();
-        return accountEntity.toTinkAccount(iban);
     }
 }

@@ -4,15 +4,18 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class MontepioConstants {
 
+    public static final int MAX_TRANSACTION_HISTORY_MONTHS = 6;
+    public static final String TRANSACTIONS_FETCH_ERROR_FORMAT =
+            "Cannot fetch transactions, bank returned error with [code=%s, message=%s]";
+
     public static class URLs {
         public static final URL LOGIN = new URL(Endpoints.LOGIN);
         public static final URL FINALIZE_LOGIN = new URL(Endpoints.FINALIZE_LOGIN);
         public static final URL FETCH_ACCOUNTS = new URL(Endpoints.FETCH_ACCOUNTS);
         public static final URL FETCH_TRANSACTIONS = new URL(Endpoints.FETCH_TRANSACTIONS);
-        public static final URL FETCH_SAVINGS_ACCOUNT_STEP0 =
-                new URL(Endpoints.FETCH_SAVINGS_ACCOUNT_STEP0);
-        public static final URL FETCH_SAVINGS_ACCOUNT_STEP1 =
-                new URL(Endpoints.FETCH_SAVINGS_ACCOUNT_STEP1);
+        public static final URL FETCH_SAVINGS_ACCOUNTS = new URL(Endpoints.FETCH_SAVINGS_ACCOUNTS);
+        public static final URL FETCH_SAVINGS_ACCOUNT_TRANSACTIONS =
+                new URL(Endpoints.FETCH_SAVINGS_ACCOUNT_TRANSACTIONS);
         public static final URL FETCH_ACCOUNT_DETAILS = new URL(Endpoints.FETCH_ACCOUNT_DETAILS);
     }
 
@@ -27,10 +30,10 @@ public class MontepioConstants {
                 BASE + "privateMG/currentAccount/CurrentAccountDetailsTransaction";
         public static final String FETCH_TRANSACTIONS =
                 BASE + "privateMG/currentAccount/CurrentAccountTransactionsTransaction";
-        public static final String FETCH_SAVINGS_ACCOUNT_STEP0 =
+        public static final String FETCH_SAVINGS_ACCOUNTS =
                 BASE + "privateMG/savingAccount/SavingAccountWithdrawStep0";
-        public static final String FETCH_SAVINGS_ACCOUNT_STEP1 =
-                BASE + "privateMG/savingAccount/SavingAccountWithdrawStep1";
+        public static final String FETCH_SAVINGS_ACCOUNT_TRANSACTIONS =
+                BASE + "privateMG/savingAccount/SavingAccountTransactionsTransaction";
     }
 
     public static class Crypto {
@@ -64,6 +67,8 @@ public class MontepioConstants {
         public static final String PSU_IP = "0.0.0.0";
         public static final String ACCOUNTS_SCREEN_NAME = "AccountsMovementsViewController_P";
         public static final String TRANSACTIONS_SCREEN_NAME = "AccountsDocumentsViewController_P";
+        public static final String SAVINGS_ACCOUNTS_SCREEN_NAME =
+                "SavingsMobilizationViewController_P";
     }
 
     public static class ErrorMessages {
