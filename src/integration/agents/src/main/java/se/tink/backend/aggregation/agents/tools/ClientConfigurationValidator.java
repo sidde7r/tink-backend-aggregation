@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.tools;
 
-import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Provider;
@@ -21,20 +20,15 @@ public class ClientConfigurationValidator {
     }
 
     public SecretsNamesValidationResponse validate(SecretsNamesValidationRequest request) {
-        Set<String> mappedSecretsNames =
-                clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(
-                        request.getSecretsNames());
-        Set<String> invalidSecretsFields = getInvalidSecretsFields(mappedSecretsNames);
+        Set<String> invalidSecretsFields = getInvalidSecretsFields(request.getSecretsNames());
         Set<String> missingSecretsFields =
-                getMissingSecretsFields(mappedSecretsNames, request.getExcludedSecretsNames());
+                getMissingSecretsFields(
+                        request.getSecretsNames(), request.getExcludedSecretsNames());
 
-        Set<String> mappedSensitiveSecretsNames =
-                clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(
-                        request.getSensitiveSecretsNames());
         Set<String> invalidSensitiveSecretsFields =
-                getInvalidSensitiveSecretsFields(mappedSensitiveSecretsNames);
+                getInvalidSensitiveSecretsFields(request.getSensitiveSecretsNames());
         Set<String> missingSensitiveSecretsFields =
-                getMissingSensitiveSecretsFields(mappedSensitiveSecretsNames);
+                getMissingSensitiveSecretsFields(request.getSensitiveSecretsNames());
 
         return new SecretsNamesValidationResponse(
                 invalidSecretsFields,
@@ -46,24 +40,23 @@ public class ClientConfigurationValidator {
     // Package private for testing.
     Set<String> getMissingSecretsFields(
             Set<String> secretsNames, Set<String> excludedSecretsNames) {
+        Set<String> mappedSecretsNames =
+                clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(secretsNames);
         Set<String> secretFieldsNamesFromConfigurationClass =
                 clientConfigurationMetaInfoHandler.getSecretFieldsNames();
-        if (secretFieldsNamesFromConfigurationClass.containsAll(secretsNames)) {
-            return Collections.emptySet();
-        } else {
-            return secretFieldsNamesFromConfigurationClass.stream()
-                    // Just get the ones that are in the configuration class and not in the set that
-                    // we passed to the method.
-                    .filter(
-                            secretFieldNameFromConfiguration ->
-                                    !secretsNames.contains(secretFieldNameFromConfiguration))
-                    // Do not count as missing those that are excluded.
-                    .filter(
-                            missingSecretFieldNameFromConfiguration ->
-                                    !excludedSecretsNames.contains(
-                                            missingSecretFieldNameFromConfiguration))
-                    .collect(Collectors.toSet());
-        }
+
+        return secretFieldsNamesFromConfigurationClass.stream()
+                // Just get the ones that are in the configuration class and not in the set that
+                // we passed to the method.
+                .filter(
+                        secretFieldNameFromConfiguration ->
+                                !mappedSecretsNames.contains(secretFieldNameFromConfiguration))
+                // Do not count as missing those that are excluded.
+                .filter(
+                        missingSecretFieldNameFromConfiguration ->
+                                !excludedSecretsNames.contains(
+                                        missingSecretFieldNameFromConfiguration))
+                .collect(Collectors.toSet());
     }
 
     private Set<String> getInvalidSecretsFields(Set<String> secretsNames) {

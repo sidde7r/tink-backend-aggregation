@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.tools;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -16,15 +18,30 @@ public class ClientConfigurationValidatorTest {
         ClientConfigurationMetaInfoHandler mockClientConfigurationMetaInfoHandler =
                 mock(ClientConfigurationMetaInfoHandler.class);
         when(mockClientConfigurationMetaInfoHandler.getSecretFieldsNames())
-                .thenReturn(ImmutableSet.<String>builder().add("secret1").add("secret2").add("redirectUrl").build());
+                .thenReturn(
+                        ImmutableSet.<String>builder()
+                                .add("secret1")
+                                .add("secret2")
+                                .add("redirectUrl")
+                                .build());
+        when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
+                .thenCallRealMethod();
 
         clientConfigurationValidator =
                 new ClientConfigurationValidator(mockClientConfigurationMetaInfoHandler);
 
-        Set<String> secretsNames = ImmutableSet.<String>builder().add("secret1").add("redirectUrls").build();
-        Set<String> missingSecretsFields = clientConfigurationValidator
-            .getMissingSecretsFields(secretsNames, Collections.emptySet());
+        Set<String> secretsNames =
+                ImmutableSet.<String>builder().add("secret1").add("redirectUrls").build();
+        Set<String> missingSecretsFields =
+                clientConfigurationValidator.getMissingSecretsFields(
+                        secretsNames, Collections.emptySet());
 
-        System.out.println(missingSecretsFields);
+        assertThat(missingSecretsFields).contains("secret2");
+
+        Set<String> missingSecretsFieldsWithExcluded =
+                clientConfigurationValidator.getMissingSecretsFields(
+                        secretsNames, ImmutableSet.of("secret2"));
+
+        assertThat(missingSecretsFieldsWithExcluded).isEmpty();
     }
 }
