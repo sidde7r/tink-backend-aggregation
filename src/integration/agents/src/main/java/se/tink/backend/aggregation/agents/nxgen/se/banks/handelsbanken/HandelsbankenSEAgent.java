@@ -162,6 +162,7 @@ public class HandelsbankenSEAgent
                                         catalog,
                                         TransferMessageLengthConfig.createWithMaxLength(14, 12),
                                         new StringNormalizerSwedish(",.-?!/+")),
+                                catalog,
                                 paymentExecutor),
                         new HandelsbankenSEEInvoiceExecutor(
                                 client, sessionStorage, exceptionResolver, paymentExecutor),
