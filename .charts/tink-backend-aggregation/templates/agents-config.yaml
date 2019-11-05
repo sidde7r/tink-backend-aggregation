@@ -60,6 +60,9 @@ data:
           debugLogFrequencyPercent: {{ .Values.debugLogFrequencyPercent }}
         {{- end }}
 
+      featureFlags:
+        enableSpanishProxy: {( .Values.featureFlags.enableSpanishProxy | default false}}
+
       integrations:
         {{- if $agentsConfig.collectorSubscriptionKey }}
         collector:
