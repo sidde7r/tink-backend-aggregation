@@ -3,8 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.authenticator.rpc.AccountPermissionResponseV31;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.authenticator.rpc.AccountPermissionResponseV30;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UkOpenBankingV30PisConfiguration implements UkOpenBankingPisConfig {
@@ -19,7 +18,7 @@ public class UkOpenBankingV30PisConfiguration implements UkOpenBankingPisConfig 
 
     @Override
     public <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType() {
-        return (Class<T>) AccountPermissionResponseV31.class;
+        return (Class<T>) AccountPermissionResponseV30.class;
     }
 
     @Override
@@ -40,10 +39,9 @@ public class UkOpenBankingV30PisConfiguration implements UkOpenBankingPisConfig 
     @Override
     public URL getDomesticPaymentConsentURL(String consentId) {
         return pisBaseURL
-                .concat(UkOpenBankingV31Constants.ApiServices.Domestic.PAYMENT_CONSENT_STATUS)
+                .concat(UkOpenBankingConstants.ApiServices.Domestic.PAYMENT_CONSENT_STATUS)
                 .parameter(
-                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.consentId,
-                        consentId);
+                        UkOpenBankingConstants.ApiServices.UrlParameterKeys.consentId, consentId);
     }
 
     @Override
@@ -51,8 +49,7 @@ public class UkOpenBankingV30PisConfiguration implements UkOpenBankingPisConfig 
         return pisBaseURL
                 .concat(UkOpenBankingConstants.ApiServices.Domestic.PAYMENT_FUNDS_CONFIRMATION)
                 .parameter(
-                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.consentId,
-                        consentId);
+                        UkOpenBankingConstants.ApiServices.UrlParameterKeys.consentId, consentId);
     }
 
     @Override
@@ -65,7 +62,7 @@ public class UkOpenBankingV30PisConfiguration implements UkOpenBankingPisConfig 
         return pisBaseURL
                 .concat(UkOpenBankingConstants.ApiServices.Domestic.PAYMENT_STATUS)
                 .parameter(
-                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.paymentId,
+                        UkOpenBankingConstants.ApiServices.UrlParameterKeys.paymentId,
                         domesticPaymentId);
     }
 
@@ -79,8 +76,7 @@ public class UkOpenBankingV30PisConfiguration implements UkOpenBankingPisConfig 
         return pisBaseURL
                 .concat(UkOpenBankingConstants.ApiServices.International.PAYMENT_CONSENT_STATUS)
                 .parameter(
-                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.consentId,
-                        consentId);
+                        UkOpenBankingConstants.ApiServices.UrlParameterKeys.consentId, consentId);
     }
 
     @Override
@@ -88,8 +84,7 @@ public class UkOpenBankingV30PisConfiguration implements UkOpenBankingPisConfig 
         return pisBaseURL
                 .concat(UkOpenBankingConstants.ApiServices.International.PAYMENT_FUNDS_CONFIRMATION)
                 .parameter(
-                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.consentId,
-                        consentId);
+                        UkOpenBankingConstants.ApiServices.UrlParameterKeys.consentId, consentId);
     }
 
     @Override
@@ -102,7 +97,7 @@ public class UkOpenBankingV30PisConfiguration implements UkOpenBankingPisConfig 
         return pisBaseURL
                 .concat(UkOpenBankingConstants.ApiServices.International.PAYMENT_STATUS)
                 .parameter(
-                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.paymentId,
+                        UkOpenBankingConstants.ApiServices.UrlParameterKeys.paymentId,
                         internationalPaymentId);
     }
 }

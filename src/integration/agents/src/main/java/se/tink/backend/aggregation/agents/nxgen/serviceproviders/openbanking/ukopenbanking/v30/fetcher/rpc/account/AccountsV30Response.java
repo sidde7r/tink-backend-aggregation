@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.UkOpenBankingV30Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.entities.account.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -39,7 +38,7 @@ public class AccountsV30Response extends BaseResponse<List<AccountEntity>>
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
                 .filter(
                         e ->
-                                UkOpenBankingV31Constants.ACCOUNT_TYPE_MAPPER.isOf(
+                                UkOpenBankingV30Constants.ACCOUNT_TYPE_MAPPER.isOf(
                                         e.getRawAccountSubType(), AccountTypes.CREDIT_CARD))
                 .findFirst()
                 .map(e -> AccountEntity.toCreditCardAccount(e, balance.getBalance()));

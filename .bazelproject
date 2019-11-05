@@ -53,6 +53,8 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/skandiabanken
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/amex/v62
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/aib
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/danskebank
   //src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/controllers/authentication/password/dk/nemid
 
   -//deb:all
