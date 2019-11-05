@@ -30,7 +30,7 @@ public class IngSessionHandler implements SessionHandler {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
         } catch (HttpResponseException | HttpClientException exception) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(exception);
         }
     }
 }

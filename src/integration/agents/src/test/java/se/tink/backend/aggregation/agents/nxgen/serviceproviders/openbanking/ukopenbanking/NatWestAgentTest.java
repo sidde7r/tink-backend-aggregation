@@ -27,6 +27,8 @@ public class NatWestAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("natwest")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }
@@ -37,7 +39,9 @@ public class NatWestAgentTest {
                 new AgentIntegrationTest.Builder("uk", "uk-natwest-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("natwest")
+                        .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

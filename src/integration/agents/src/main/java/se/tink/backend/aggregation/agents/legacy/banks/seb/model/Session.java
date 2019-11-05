@@ -8,6 +8,7 @@ public class Session extends CookieContainer {
 
     private String customerId;
     private String userName;
+    private String userId;
 
     public String getCustomerId() {
         return customerId;
@@ -23,5 +24,13 @@ public class Session extends CookieContainer {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

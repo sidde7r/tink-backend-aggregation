@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 
 public class NordeaSEConstants {
     public static final int NUM_TRANSACTIONS_PER_PAGE = 200;
+    public static final int NUM_CREDIT_CARD_TRANSACTIONS_PER_PAGE = 30;
     public static final String CURRENCY = "SEK";
 
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
@@ -120,7 +121,8 @@ public class NordeaSEConstants {
         public static final String LIMIT = "limit";
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
-        public static final String PAGE_SIZE_LIMIT = "30";
+        public static final String PAGE_SIZE_LIMIT =
+                String.valueOf(NUM_CREDIT_CARD_TRANSACTIONS_PER_PAGE);
         public static final String POLLING_SEQUENCE = "polling_sequence";
         public static final String STATUS = "status";
         public static final String STATUS_VALUES = "unconfirmed,confirmed,rejected,inprogress";
@@ -167,6 +169,7 @@ public class NordeaSEConstants {
         public static final String DEVICE_PRIVATE_KEY = "devicePrivateKey";
         public static final String DEVICE_PUBLIC_KEY = "devicePublicKey";
         public static final String PERSONAL_CODE_VALID_UNTIL = "personalCodeValidUntil";
+        public static final String DEVICE_AUTH_TOKEN = "deviceAuthToken";
     }
 
     public static final class NordeaBankIdStatus {
@@ -188,7 +191,7 @@ public class NordeaSEConstants {
 
     public static final class Fetcher {
         public static final int START_PAGE = 1;
-        public static final int CAN_FETCH_MORE = 30;
+        public static final int CAN_FETCH_MORE = NUM_CREDIT_CARD_TRANSACTIONS_PER_PAGE;
     }
 
     public static final class PaymentStatus {
@@ -284,6 +287,9 @@ public class NordeaSEConstants {
         public static final String TRANSFER_REJECTED = "Transfer rejected by Nordea";
         public static final String TRANSFER_ERROR = "Something went wrong with the transfer.";
         public static final String PAYMENT_ERROR = "Something went wrong with the payment.";
+        public static final String UNREGISTERED_RECIPIENT =
+                "Recipient accounts missing from accounts ledger";
+        public static final String NOT_ENOUGH_FUNDS = "Not enough funds";
     }
 
     public static class LogTags {

@@ -21,6 +21,7 @@ public class BelfiusConstants {
     public static final String TRANSACTION_BANK_NAME = "Belfius Belgium";
     public static final int MAX_NUMBER_OF_TRANSACTION_PAGES = 100;
     public static final int FIRST_TRANSACTION_PAGE = 0;
+    public static final String NOT_AVAILABLE = "N/A";
 
     public static final String TINK_FRENCH = "fr";
 
@@ -55,11 +56,6 @@ public class BelfiusConstants {
 
     public static final class MultiFactorAuthentication {
         public static final String CODE = "code";
-    }
-
-    public static final class Device {
-        public static final String DEVICE_BRAND = "Apple iPhone 6S";
-        public static final String DEVICE_NAME = "iPhone6S";
     }
 
     public static final class Widget {

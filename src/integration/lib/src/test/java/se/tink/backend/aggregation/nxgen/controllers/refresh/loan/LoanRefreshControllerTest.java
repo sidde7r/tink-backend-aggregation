@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshContro
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanRefreshControllerTest {

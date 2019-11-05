@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ArgentaErrorResponse;
@@ -118,37 +119,45 @@ public class ArgentaApiClient {
             HttpResponse response = responseException.getResponse();
             ArgentaErrorResponse argentaErrorResponse =
                     response.getBody(ArgentaErrorResponse.class);
-            handleKnownErrorResponses(argentaErrorResponse);
-            LOGGER.warn(getErrorMessage(argentaErrorResponse));
-            throw new IllegalArgumentException(getErrorMessage(argentaErrorResponse));
+            handleKnownErrorResponses(argentaErrorResponse, responseException);
+            LOGGER.warn(getErrorMessage(argentaErrorResponse), responseException);
+            throw new IllegalArgumentException(
+                    getErrorMessage(argentaErrorResponse), responseException);
         }
     }
 
-    private void handleKnownErrorResponses(ArgentaErrorResponse argentaErrorResponse)
+    private void handleKnownErrorResponses(
+            ArgentaErrorResponse argentaErrorResponse, HttpResponseException responseException)
             throws LoginException, AuthorizationException {
         String errorCode = argentaErrorResponse.getCode();
         if (!Strings.isNullOrEmpty(errorCode)) {
             if (errorCode.toLowerCase().startsWith(ArgentaConstants.ErrorResponse.AUTHENTICATION)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(responseException);
             } else if (errorCode
                     .toLowerCase()
                     .startsWith(ArgentaConstants.ErrorResponse.ERROR_CODE_SBP)) {
                 String errorMessage = getErrorMessage(argentaErrorResponse);
                 if (!Strings.isNullOrEmpty(errorMessage)) {
-                    handleKnownErrorMessages(errorMessage.toLowerCase());
+                    handleKnownErrorMessages(errorMessage.toLowerCase(), responseException);
                 }
             }
         }
     }
 
-    private void handleKnownErrorMessages(String errorMessage)
+    private void handleKnownErrorMessages(
+            String errorMessage, HttpResponseException responseException)
             throws LoginException, AuthorizationException {
         if (errorMessage.contains(ArgentaConstants.ErrorResponse.TOO_MANY_DEVICES)) {
-            throw LoginError.REGISTER_DEVICE_ERROR.exception();
+            throw LoginError.REGISTER_DEVICE_ERROR.exception(responseException);
         } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.AUTHENTICATION_ERROR)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(responseException);
         } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.ACCOUNT_BLOCKED)) {
-            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception(responseException);
+        } else if (errorMessage.contains(
+                ArgentaConstants.ErrorResponse.PROBLEM_SOLVING_IN_PROGRESS)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(responseException);
+        } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.SOMETHING_WRONG)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(responseException);
         }
     }
 

@@ -68,24 +68,18 @@ public class CrossKeyAccount {
         return agentConfiguration.parseInvestmentAccount(this, portfolio);
     }
 
-    public boolean isKnownPortfolioType() {
-        return CrossKeyConstants.PORTFOLIO_TYPES.containsKey(accountType);
-    }
-
     public Portfolio.Type getPortfolioType() {
-        return CrossKeyConstants.PORTFOLIO_TYPES.getOrDefault(accountType, Portfolio.Type.OTHER);
+        return CrossKeyConstants.PORTFOLIO_TYPES
+                .translate(accountType)
+                .orElse(Portfolio.Type.OTHER);
     }
 
     public boolean isLoan() {
         return CrossKeyConstants.Fetcher.Account.LOAN.equalsIgnoreCase(accountGroup);
     }
 
-    public boolean isKnownLoanType() {
-        return CrossKeyConstants.LOAN_TYPES.containsKey(accountType);
-    }
-
     public LoanDetails.Type getLoanType() {
-        return CrossKeyConstants.LOAN_TYPES.getOrDefault(accountType, LoanDetails.Type.OTHER);
+        return CrossKeyConstants.LOAN_TYPES.translate(accountType).orElse(LoanDetails.Type.OTHER);
     }
 
     public LoanAccount toLoanAccount(

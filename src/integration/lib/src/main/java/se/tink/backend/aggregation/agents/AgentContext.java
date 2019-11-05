@@ -4,8 +4,9 @@ import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public abstract class AgentContext implements CompositeAgentContext {
     protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
@@ -17,6 +18,7 @@ public abstract class AgentContext implements CompositeAgentContext {
     private MetricRegistry metricRegistry;
     private String appId;
     private AgentConfigurationController agentConfigurationController;
+    private LogMasker logMasker;
 
     public String getAppId() {
         return appId;
@@ -90,5 +92,13 @@ public abstract class AgentContext implements CompositeAgentContext {
     public void setAgentConfigurationController(
             AgentConfigurationController agentConfigurationController) {
         this.agentConfigurationController = agentConfigurationController;
+    }
+
+    public LogMasker getLogMasker() {
+        return logMasker;
+    }
+
+    public void setLogMasker(LogMasker logMasker) {
+        this.logMasker = logMasker;
     }
 }

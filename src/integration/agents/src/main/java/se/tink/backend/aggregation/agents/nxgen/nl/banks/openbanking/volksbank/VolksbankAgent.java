@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.HttpClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.ConsentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.VolksbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
@@ -53,7 +54,8 @@ public class VolksbankAgent
 
         final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
 
-        final VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
+        final VolksbankUrlFactory urlFactory =
+                new VolksbankUrlFactory(Urls.HOST, bankPath, isSandbox);
 
         final VolksbankConfiguration volksbankConfiguration =
                 getAgentConfigurationController()
@@ -68,12 +70,10 @@ public class VolksbankAgent
                 new ConsentFetcher(
                         volksbankApiClient, persistentStorage, isSandbox, redirectUrl, clientId);
 
-        final String certificateId = volksbankConfiguration.getCertificateId();
-
         final EidasProxyConfiguration eidasProxyConfiguration =
                 agentsServiceConfiguration.getEidasProxy();
 
-        client.setEidasProxy(eidasProxyConfiguration, certificateId);
+        client.setEidasProxy(eidasProxyConfiguration);
 
         // Prevent read timeouts
         client.setTimeout(HttpClient.READ_TIMEOUT_MILLISECONDS);

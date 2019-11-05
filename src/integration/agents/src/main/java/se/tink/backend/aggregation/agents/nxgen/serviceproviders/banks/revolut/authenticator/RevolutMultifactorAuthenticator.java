@@ -41,7 +41,7 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassw
             apiClient.signIn(username, password);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
             throw e;
         }
@@ -59,7 +59,7 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassw
             confirmSignInResponse = apiClient.confirmSignIn(initValues, otp);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
-                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
             }
             throw e;
         }

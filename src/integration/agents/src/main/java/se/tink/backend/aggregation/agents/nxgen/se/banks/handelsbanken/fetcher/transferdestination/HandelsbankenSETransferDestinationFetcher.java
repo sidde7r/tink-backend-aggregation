@@ -105,7 +105,8 @@ public class HandelsbankenSETransferDestinationFetcher implements TransferDestin
                 LOGGER.error(
                         HandelsbankenSEConstants.Transfers.LOG_TAG
                                 + " - unable to fetch payment context - "
-                                + failure);
+                                + failure,
+                        e);
             }
             return Optional.empty();
         }

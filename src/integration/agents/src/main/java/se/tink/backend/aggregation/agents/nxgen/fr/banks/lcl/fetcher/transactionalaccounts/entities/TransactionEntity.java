@@ -91,7 +91,7 @@ public class TransactionEntity {
 
             return ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(transactionDate);
         } catch (ParseException e) {
-            throw new IllegalStateException(String.format("Invalid date: %s", transactionDate));
+            throw new IllegalStateException(String.format("Invalid date: %s", transactionDate), e);
         }
     }
 

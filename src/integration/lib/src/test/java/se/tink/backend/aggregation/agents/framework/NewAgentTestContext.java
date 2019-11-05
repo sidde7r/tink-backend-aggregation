@@ -37,12 +37,14 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -52,8 +54,8 @@ public final class NewAgentTestContext extends AgentContext {
     private static final Logger log = LoggerFactory.getLogger(NewAgentTestContext.class);
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    private final String TEST_CLUSTERID = "oxford-staging";
-    private final String TEST_APPID = "5f98e87106384b2981c0354a33b51590";
+    public static final String TEST_CLUSTERID = "oxford-staging";
+    public static final String TEST_APPID = "5f98e87106384b2981c0354a33b51590";
 
     private final Map<String, Account> accountsByBankId = new HashMap<>();
     private final Map<String, AccountFeatures> accountFeaturesByBankId = new HashMap<>();
@@ -82,6 +84,12 @@ public final class NewAgentTestContext extends AgentContext {
         this.setClusterId(MoreObjects.firstNonNull(clusterId, TEST_CLUSTERID));
         this.setAppId(MoreObjects.firstNonNull(appId, TEST_APPID));
         agentTestServerClient = AgentTestServerClient.getInstance();
+        LogMasker logMasker =
+                LogMasker.builder()
+                        .addStringMaskerBuilder(
+                                new CredentialsStringMaskerBuilder(new Credentials()))
+                        .build();
+        setLogMasker(logMasker);
 
         setTestContext(true);
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());

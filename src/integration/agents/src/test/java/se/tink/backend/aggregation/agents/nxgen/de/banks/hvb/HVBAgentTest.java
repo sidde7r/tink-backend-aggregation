@@ -8,30 +8,24 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
 public class HVBAgentTest {
-    private enum Arg {
-        USERNAME,
-        PASSWORD,
-    }
-
     private final ArgumentManager<Arg> helper;
-
-    public HVBAgentTest() {
-        helper = new ArgumentManager<>(Arg.values());
-    }
-
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("de", "de-hypovereinsbank-password")
                     .loadCredentialsBefore(false)
                     .saveCredentialsAfter(false);
 
-    @Before
-    public void before() {
-        helper.before();
+    public HVBAgentTest() {
+        helper = new ArgumentManager<>(Arg.values());
     }
 
     @AfterClass
     public static void afterClass() {
         ArgumentManager.afterClass();
+    };;
+
+    @Before
+    public void before() {
+        helper.before();
     }
 
     @Test
@@ -40,5 +34,10 @@ public class HVBAgentTest {
                 .addCredentialField(Field.Key.PASSWORD, helper.get(Arg.PASSWORD))
                 .build()
                 .testRefresh();
+    }
+
+    private enum Arg {
+        USERNAME,
+        PASSWORD,
     }
 }

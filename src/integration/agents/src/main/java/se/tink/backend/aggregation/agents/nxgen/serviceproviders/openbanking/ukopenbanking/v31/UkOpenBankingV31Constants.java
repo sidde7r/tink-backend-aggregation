@@ -14,6 +14,10 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
 
+    private UkOpenBankingV31Constants() {
+        throw new AssertionError();
+    }
+
     public static final int HEX_SIZE = 8;
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
@@ -43,8 +47,10 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
                             .put(ExternalAccountIdentification4Code.PAYM, "UK.OBIE.Paym")
                             .put(
                                     ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER,
-                                    "UK.OBIE.SortCodeAccountNumber")
-                            // TODO: Remove the following mapping for PAN when Santander starts
+                                    "UK.OBIE.SortCodeAccountNumber",
+                                    "UK.Santander.SavingsRollNumber")
+                            // TODO: Remove the following mapping for PAN and
+                            // UK.Santander.SavingsRollNumber when Santander starts
                             // sending UK.OBIE.PAN for Credit Card Accounts
                             .put(ExternalAccountIdentification4Code.PAN, "UK.OBIE.PAN", "PAN")
                             .build();
@@ -96,10 +102,6 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
         public static final String CONSENT_REQUEST = "/account-access-consents";
         public static final String AISP_PREFIX = "/aisp";
         public static final String PISP_PREFIX = "/pisp";
-    }
-
-    public static final class ResponseKeys {
-        public static final String CONSENT_ID_KEY = "consentId";
     }
 
     public static class Links {

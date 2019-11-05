@@ -15,7 +15,7 @@ public class SantanderEsBankServiceExceptionFilter extends Filter {
         try {
             return nextFilter(httpRequest);
         } catch (HttpClientException e) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
         }
     }
 }

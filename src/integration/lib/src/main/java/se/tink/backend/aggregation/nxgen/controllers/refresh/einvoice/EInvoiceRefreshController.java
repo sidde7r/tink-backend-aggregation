@@ -9,7 +9,7 @@ import java.util.List;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public final class EInvoiceRefreshController implements Refresher {

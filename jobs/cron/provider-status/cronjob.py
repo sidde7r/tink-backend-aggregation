@@ -5,34 +5,37 @@ import json
 import logging
 import sys
 import os
+import re
 import time
 from collections import defaultdict
 
 # STATUS PAGE
 STATUSPAGE_API_KEY = os.environ.get("STATUSPAGE_API_KEY").rstrip("\n")
 STATUSPAGE_API_BASE = "https://api.statuspage.io/v1/pages/"
-NOT_CIRCUIT_BROKEN = 0
-PAGE_ID = "n814cl79vp6c" # https://tinksandbox.statuspage.io/
+PAGE_ID = "x1lbt12g0ryw"  # https://tink-enterprise.statuspage.io/
 COMPONENTS_PATH = "/components/"
-
+BANK_UNAVAILABLE_IDENTIFIER = "(bank status)"
+# Keep first space - it's not in Prometheus provider name so must be replaced
+BANK_UNAVAILABLE_REGEX = r"\ \(bank status\)$"
 STATUS_ENUMS = {
     0.50: "degraded_performance",
     0.75: "partial_outage",
     1: "major_outage"
 }
 
-GROUP_IDS = {'se': 'x195hl534bxs', 'be': '56dnhms6f8tj', 'at': 'gkgss64655mg',
-             'es': 'yhl9srftt46k', 'fi': 'sfyg9gmkpnr0', 'uk': 'gc7b1qmwwh18',
-             'dk': 'bqd3nfpkww8m', 'no': 'v696xwjf6rz2', 'de': 'kyvpbs1ys1tf',
-             'pt': '8v8r717k6fs9', 'nl': '5dlcmc71jbzp'}
+GROUP_IDS = {'se': 'c20kyrkjrgks', 'be': 'lw36806hwvfm', 'at': 'n8p3fc6ltzfw',
+             'es': 'zxf8mcfwz08q', 'fi': 'rkknf5992fpg', 'uk': 'cbvwtp1bxzhm',
+             'dk': 'f1bctj61c0bv', 'no': 't99h0j1xfrj0', 'de': 'zflg1lrtvhpp',
+             'pt': '5d71y2xjh9fm', 'nl': 'jw9m70dk8379', 'it': '5f9pbpx5bzzg',
+             'fr': '6hy84x3bjnwc'}
 
 # PROMETHEUS
 PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus.svc.cluster.local:9090/api/v1/query"
 
 # Queries
-PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
-FAILING_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='failed',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
-UNAVAILABLE_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='unavailable',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',cluster='aggregation',environment='production',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
+PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
+FAILING_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='failed',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
+UNAVAILABLE_PROVIDERS_QUERY = "sum(increase(tink_agent_login_total{action='login', outcome='unavailable',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)/sum(increase(tink_agent_login_total{action='login',provider!~'.*abstract.*',className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}[30m])) by (provider, market)"
 
 # LOGGING
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -124,7 +127,7 @@ def calculate_status(value):
     # TODO restore previous more readable structure
     status = "operational"
 
-    previouslimit = NOT_CIRCUIT_BROKEN
+    previouslimit = 0
     for upper_limit, s in STATUS_ENUMS.items():
         if previouslimit < value <= upper_limit:
             status = s
@@ -147,7 +150,8 @@ def create_missing_components(names_of_missing_components, group_id):
             if failures > 5:
                 logger.warning("Rate limited by Statuspage, will continue creating components on next run.")
                 return False
-        request_body = build_missing_components_request(component_name + " (bank is failing)", status, group_id, True)
+        request_body = build_missing_components_request(component_name + " " + BANK_UNAVAILABLE_IDENTIFIER,
+                                                        status, group_id, True)
         r = create_statuspage_request("POST", COMPONENTS_PATH, body=json.dumps(request_body))
         if r.status_code != 201:
             logger.error("Failed to create missing component for component name: [{}]".format(component_name))
@@ -293,13 +297,15 @@ def main():
 
         for component_name, component_info in components.items():
             provider_metric_value = None
-            if component_name[-18:] == " (bank is failing)":
-                # suffix is used by us to create a separate time series for errors not with Tink
-                logins = provider_logins.get(component_name[:-18], None)
-                # If there haven't been any logins at all, status won't be updated
-                if logins is not None and logins > 0.0:
-                    provider_metric_value = provider_unavailable_logins.get(component_name[:-18], 0)
-                    # ...but the component is still processed, so we get something in the logs?
+            # The "bank status" suffix is used by us on Statuspage to indicate that errors aren't with Tink, but an
+            # integration still isn't in a usable state. In Prometheus this is reflected as two different 'outcomes' on
+            # the agent_login time series - 'failed' for Tink problems, 'unavailable' for bank problems. Since both are
+            # on the same time series they use the same key and the suffix has to be removed before looking up values.
+            if re.search(BANK_UNAVAILABLE_REGEX, component_name):
+                provider_name = re.sub(BANK_UNAVAILABLE_REGEX, "", component_name)
+                logins = provider_logins.get(provider_name, None)  # Remove suffix
+                if logins is not None and logins > 0.0:  # Only look for failed logins if there have been logins
+                    provider_metric_value = provider_unavailable_logins.get(provider_name, 0)
                 process_component(component_name, component_info, provider_metric_value)
             else:
                 logins = provider_logins.get(component_name, None)

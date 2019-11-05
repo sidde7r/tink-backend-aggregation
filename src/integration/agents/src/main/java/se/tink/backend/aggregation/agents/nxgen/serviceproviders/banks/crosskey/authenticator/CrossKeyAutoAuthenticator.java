@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -45,17 +46,22 @@ public class CrossKeyAutoAuthenticator implements PasswordAuthenticator, AutoAut
         try {
             authenticationController.authenticate(credentials);
         } catch (AuthenticationException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
+
+        final String deviceToken = persistentStorage.getDeviceToken();
+        credentials.setSensitivePayload(Field.Key.USERNAME, username);
+        credentials.setSensitivePayload(Field.Key.PASSWORD, password);
+        credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, deviceToken);
         LoginWithTokenResponse response =
                 client.loginWithToken(
                         new LoginWithTokenRequest()
-                                .setDeviceToken(persistentStorage.getDeviceToken())
+                                .setDeviceToken(deviceToken)
                                 .setDeviceId(persistentStorage.getDeviceId())
                                 .setPassword(password)
                                 .setAppVersion(CrossKeyConstants.AutoAuthentication.APP_VERSION));

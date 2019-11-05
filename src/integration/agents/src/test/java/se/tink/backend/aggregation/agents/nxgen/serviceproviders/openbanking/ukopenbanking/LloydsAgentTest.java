@@ -26,6 +26,8 @@ public class LloydsAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("lloyds")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }
@@ -35,8 +37,10 @@ public class LloydsAgentTest {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("uk", "uk-lloyds-oauth2")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("lloyds")
+                        .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

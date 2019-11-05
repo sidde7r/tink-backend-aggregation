@@ -78,7 +78,8 @@ public class SibsPaymentInitiationResponse {
                 new Payment.Builder()
                         .withCreditor(paymentRequest.getPayment().getCreditor())
                         .withDebtor(paymentRequest.getPayment().getDebtor())
-                        .withAmount(paymentRequest.getPayment().getAmount())
+                        .withExactCurrencyAmount(
+                                paymentRequest.getPayment().getExactCurrencyAmount())
                         .withExecutionDate(paymentRequest.getPayment().getExecutionDate())
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withUniqueId(getPaymentId())

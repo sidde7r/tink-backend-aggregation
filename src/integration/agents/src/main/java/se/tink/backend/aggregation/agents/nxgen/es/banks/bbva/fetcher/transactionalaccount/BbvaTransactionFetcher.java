@@ -36,7 +36,7 @@ public class BbvaTransactionFetcher
                 .recover(
                         HttpClientException.class,
                         e -> {
-                            logRetry(account, key, attempt);
+                            logRetry(account, key, attempt, e);
                             backoffAWhile();
                             return fetchWithBackoffAndRetry(account, key, attempt + 1);
                         })
@@ -50,11 +50,12 @@ public class BbvaTransactionFetcher
         try {
             Thread.sleep(Fetchers.BACKOFF);
         } catch (InterruptedException e) {
-            LOGGER.debug("Woke up early");
+            LOGGER.debug("Woke up early", e);
         }
     }
 
-    private void logRetry(TransactionalAccount account, String key, int attempt) {
+    private void logRetry(
+            TransactionalAccount account, String key, int attempt, HttpClientException e) {
         final String accountNumber = account.getAccountNumber();
 
         LOGGER.warn(
@@ -62,6 +63,7 @@ public class BbvaTransactionFetcher
                 LogTags.TRANSACTIONS_RETRYING,
                 attempt,
                 accountNumber,
-                key);
+                key,
+                e);
     }
 }

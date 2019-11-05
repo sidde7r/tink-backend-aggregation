@@ -91,7 +91,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
         try {
             return apiClient.refreshAccessToken(request).toOauthToken();
         } catch (final HttpResponseException exception) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(exception);
         }
     }
 

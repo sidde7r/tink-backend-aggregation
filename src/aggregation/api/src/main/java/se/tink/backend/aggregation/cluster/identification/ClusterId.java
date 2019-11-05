@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.cluster.identification;
 
 import com.google.common.base.Strings;
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 
 public class ClusterId {
     public static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";

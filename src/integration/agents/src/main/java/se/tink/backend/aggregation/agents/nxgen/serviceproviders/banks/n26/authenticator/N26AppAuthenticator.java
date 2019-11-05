@@ -14,24 +14,30 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.passwordandapp.ExternalThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.passwordandapp.ExternalThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class N26AppAuthenticator implements ExternalAppAuthenticator<String> {
 
     private final N26ApiClient apiClient;
-    private final SessionStorage storage;
+    private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
 
-    public N26AppAuthenticator(N26ApiClient n26APiClient, SessionStorage storage) {
+    public N26AppAuthenticator(
+            N26ApiClient n26APiClient,
+            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage) {
         this.apiClient = n26APiClient;
-        this.storage = storage;
+        this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public ExternalThirdPartyAppResponse<String> init() {
-
         String mfaToken =
-                N26Utils.getFromStorage(storage, N26Constants.Storage.MFA_TOKEN, String.class);
+                N26Utils.getFromStorage(
+                        sessionStorage, N26Constants.Storage.MFA_TOKEN, String.class);
         apiClient.initiate2fa(N26Constants.Body.MultiFactor.APP, MultiFactorAppResponse.class);
 
         return ExternalThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING, mfaToken);
@@ -48,7 +54,8 @@ public class N26AppAuthenticator implements ExternalAppAuthenticator<String> {
             return ExternalThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING, reference);
         }
         // TODO: Work on cancellation and timeout for login
-        storage.put(N26Constants.Storage.TOKEN_ENTITY, authenticationResponses.get().getToken());
+        sessionStorage.put(
+                N26Constants.Storage.TOKEN_ENTITY, authenticationResponses.get().getToken());
         return ExternalThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE, reference);
     }
 

@@ -29,8 +29,8 @@ public class SignatureValidator extends HandelsbankenValidator<BaseResponse> {
             LOGGER.warn(
                     String.format(
                             "#login-refactoring - SHB - Login failed (validateSignatureResponse/result) with "
-                                    + "message %s, code %s, errors %s, result %s",
-                            getMessage(), getCode(), getErrors(), result));
+                                    + "message %s, code %s, errors %s",
+                            getMessage(), getCode(), getErrors()));
             throw HandelsbankenConstants.AutoAuthentication.UserError.INCORRECT_CREDENTIALS
                     .exception();
         }

@@ -12,6 +12,8 @@ public class MarkAndSpencerAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("markandspencer")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }

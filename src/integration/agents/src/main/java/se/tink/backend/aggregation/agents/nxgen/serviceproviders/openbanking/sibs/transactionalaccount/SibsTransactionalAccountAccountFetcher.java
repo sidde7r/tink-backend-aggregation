@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class SibsTransactionalAccountAccountFetcher
         implements AccountFetcher<TransactionalAccount> {
@@ -32,8 +32,7 @@ public class SibsTransactionalAccountAccountFetcher
     }
 
     protected Optional<TransactionalAccount> toTinkAccount(AccountEntity accountEntity) {
-
-        Amount balanceAmount =
+        ExactCurrencyAmount balanceAmount =
                 apiClient.getAccountBalances(accountEntity.getId()).getBalances().stream()
                         .findFirst()
                         .orElseThrow(

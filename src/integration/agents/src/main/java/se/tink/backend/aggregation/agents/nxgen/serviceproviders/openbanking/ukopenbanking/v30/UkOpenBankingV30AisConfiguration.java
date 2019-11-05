@@ -5,12 +5,13 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_TRANSACTIONS_REQUEST;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST;
 
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class UkOpenBankingV30AisConfiguration implements UkOpenBankingAisConfig {
+public abstract class UkOpenBankingV30AisConfiguration implements UkOpenBankingAisConfig {
 
     private final URL apiBaseURL;
     private final URL authBaseURL;
@@ -58,7 +59,8 @@ public class UkOpenBankingV30AisConfiguration implements UkOpenBankingAisConfig 
         return apiBaseURL;
     }
 
-    public URL getAuthBaseURL() {
-        return authBaseURL;
+    @Override
+    public List<String> getAdditionalPermissions() {
+        return null;
     }
 }

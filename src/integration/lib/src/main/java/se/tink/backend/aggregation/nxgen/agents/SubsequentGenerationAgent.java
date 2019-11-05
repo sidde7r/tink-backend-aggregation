@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
@@ -75,6 +75,10 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         this.catalog = context.getCatalog();
         this.persistentStorage = new PersistentStorage();
         this.sessionStorage = new SessionStorage();
+        context.getLogMasker()
+                .addSensitiveValuesSetObservable(persistentStorage.getSensitiveValuesObservable());
+        context.getLogMasker()
+                .addSensitiveValuesSetObservable(sessionStorage.getSensitiveValuesObservable());
         this.credentials = request.getCredentials();
         this.updateController =
                 new UpdateController(
@@ -82,9 +86,11 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         MarketCode.valueOf(request.getProvider().getMarket()),
                         request.getProvider().getCurrency(),
                         request.getUser());
+        LogMasker logMasker = context.getLogMasker();
         if (useNextGenClient) {
             this.client =
-                    NextGenTinkHttpClient.builder()
+                    NextGenTinkHttpClient.builder(
+                                    logMasker, LogMasker.shouldLog(request.getProvider()))
                             .setAggregatorInfo(context.getAggregatorInfo())
                             .setMetricRegistry(metricContext.getMetricRegistry())
                             .setLogOutputStream(context.getLogOutputStream())
@@ -98,7 +104,9 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                             metricContext.getMetricRegistry(),
                             context.getLogOutputStream(),
                             signatureKeyPair,
-                            request.getProvider());
+                            request.getProvider(),
+                            logMasker,
+                            LogMasker.shouldLog(request.getProvider()));
         }
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();
@@ -115,10 +123,6 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                 new SupplementalInformationFormer(request.getProvider());
         this.appId = context.getAppId();
         this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
-    }
-
-    public AgentConfigurationController getAgentConfigurationController() {
-        return context.getAgentConfigurationController();
     }
 
     protected EidasIdentity getEidasIdentity() {

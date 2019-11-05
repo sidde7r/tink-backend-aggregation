@@ -96,10 +96,17 @@ public class IkanoApiClient {
             sessionId = response.getSessionId();
             sessionKey = response.getSessionKey();
 
+            storeSessionInSensitivePayload(sessionId, sessionKey);
             return true;
         }
 
         return false;
+    }
+
+    /** Store session tokens in sensitive payload, so it will be masked from logs */
+    private void storeSessionInSensitivePayload(String sessionId, String sessionKey) {
+        credentials.setSensitivePayload("SessionId", sessionId);
+        credentials.setSensitivePayload("SessionKey", sessionKey);
     }
 
     public CardList fetchCards() throws LoginException, UserErrorException, FatalErrorException {

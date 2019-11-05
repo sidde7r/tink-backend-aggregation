@@ -26,6 +26,8 @@ public class HalifaxAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setAppId("tink")
+                .setFinancialInstitutionId("halifax")
                 .build()
                 .testRefresh();
     }
@@ -36,7 +38,9 @@ public class HalifaxAgentTest {
                 new AgentIntegrationTest.Builder("uk", "uk-halifax-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("halifax");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

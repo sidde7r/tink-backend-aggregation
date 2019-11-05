@@ -13,11 +13,11 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class N26SmsAuthenticator implements SmsOtpAuthenticatorPassword<String> {
     private final N26ApiClient apiClient;
-    private final SessionStorage storage;
+    private final SessionStorage sessionStorage;
 
     public N26SmsAuthenticator(SessionStorage sessionStorage, N26ApiClient apiClient) {
         this.apiClient = apiClient;
-        this.storage = sessionStorage;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -39,6 +39,7 @@ public class N26SmsAuthenticator implements SmsOtpAuthenticatorPassword<String> 
         Either<ErrorResponse, AuthenticationResponse> authenticationResponses =
                 apiClient.loginWithOtp(otp);
 
-        storage.put(N26Constants.Storage.TOKEN_ENTITY, authenticationResponses.get().getToken());
+        sessionStorage.put(
+                N26Constants.Storage.TOKEN_ENTITY, authenticationResponses.get().getToken());
     }
 }

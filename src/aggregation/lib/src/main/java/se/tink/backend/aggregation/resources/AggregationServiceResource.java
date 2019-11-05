@@ -249,6 +249,10 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public String getSecretsTemplate(SecretsTemplateRequest request) {
-        return new ClientConfigurationTemplateBuilder(request.getProvider()).buildTemplate();
+        return new ClientConfigurationTemplateBuilder(
+                        request.getProvider(),
+                        request.getIncludeDescriptions(),
+                        request.getIncludeExamples())
+                .buildTemplate();
     }
 }

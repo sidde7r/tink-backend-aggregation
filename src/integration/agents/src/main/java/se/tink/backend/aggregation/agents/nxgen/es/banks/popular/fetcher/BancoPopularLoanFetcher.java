@@ -48,7 +48,8 @@ public class BancoPopularLoanFetcher extends BancoPopularContractFetcher
         } catch (Exception e) {
             log.infoExtraLong(
                     "Could not fetch loan accounts " + e.toString(),
-                    BancoPopularConstants.Fetcher.LOAN_LOGGING);
+                    BancoPopularConstants.Fetcher.LOAN_LOGGING,
+                    e);
         }
 
         return Collections.emptyList();

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +31,8 @@ public class SebCreditCardFetcher
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         final Response response = apiClient.fetchCreditCardAccounts();
-        final List<CreditCardEntity> creditCardEntities = response.getCreditCards();
+        final List<CreditCardEntity> creditCardEntities =
+                response.getCreditCards().orElseGet(ArrayList::new);
 
         // Handle is a special value used to query for transactions for a specific account.
         // It is different in each session, so we have to save it in session storage while mapping.

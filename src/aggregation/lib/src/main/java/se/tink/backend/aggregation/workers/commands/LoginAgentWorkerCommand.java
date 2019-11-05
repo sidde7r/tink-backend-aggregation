@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.workers.metrics.MetricActionComposite;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.types.timers.Timer.Context;
 import se.tink.libraries.user.rpc.User;
 

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.cre
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities.CreditDataEntity;
@@ -25,9 +26,12 @@ public class CreditTransactionsResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return data.getTransactions().stream()
-                .map(TransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+        if (data != null && data.getTransactions() != null) {
+            return data.getTransactions().stream()
+                    .map(TransactionEntity::toTinkTransaction)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 
     /**
@@ -37,6 +41,6 @@ public class CreditTransactionsResponse implements PaginatorResponse {
      */
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(false);
+        return Optional.empty();
     }
 }

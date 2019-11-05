@@ -34,7 +34,8 @@ public class BbvaUtils {
                                 LOGGER.error(
                                         "{}: Could not parse next page key in: {}",
                                         UTILS_SPLIT_GET_PAGINATION_KEY,
-                                        uriToSplit))
+                                        uriToSplit,
+                                        e))
                 .map(URIBuilder::getQueryParams)
                 .map(List::ofAll)
                 .getOrElse(List::empty)

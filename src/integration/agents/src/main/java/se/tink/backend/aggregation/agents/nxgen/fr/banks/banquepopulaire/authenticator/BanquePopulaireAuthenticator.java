@@ -78,7 +78,7 @@ public class BanquePopulaireAuthenticator implements PasswordAuthenticator {
             if (response != null
                     && (response.getStatus() == HttpStatus.SC_UNAUTHORIZED
                             || response.getStatus() == HttpStatus.SC_FORBIDDEN)) {
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(hre);
             }
             // if not auth error throw
             throw hre;

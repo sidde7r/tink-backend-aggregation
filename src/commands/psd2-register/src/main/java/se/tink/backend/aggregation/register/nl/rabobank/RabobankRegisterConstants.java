@@ -19,6 +19,8 @@ public final class RabobankRegisterConstants {
         public static final String EMAIL = "e";
         public static final String ORGANIZATION = "o";
         public static final String CERTIFICATE_ID = "i";
+        public static final String CLUSTER_ID = "l";
+        public static final String APP_ID = "a";
     }
 
     public static class Header {

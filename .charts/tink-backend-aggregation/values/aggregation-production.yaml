@@ -33,48 +33,14 @@ agents:
     openbanking:
       baseUrl: http://demo-financial-institute.internal.production.aggregation.tink.network/openbanking
   collectorSubscriptionKey: true
-  starling:
-    redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   dnb:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-  monzo:
-    redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   bunq:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
     abn:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
-  sibs:
-    tink:
-      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
-      certificateId: Tink
-    cgd:
-      redirectUrl: https://main.production.cardiff.tink.se:8443/api/v1/credentials/third-party/callback
-      certificateId: cgd
-  unicredit:
-    tink:
-      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
-      eidasQwac: Tink
-  swedbank:
-    tink:
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-      eidasQwac: Tink
-      bypassTransactionConsent: false
-  cbi:
-    tink:
-      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
-      eidasQwac: Tink
-      environment: production
-  belfius:
-    tink:
-      baseUrl: https://psd2.b2b.belfius.be:8443
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-      certificateId: Tink
-  finecobank:
-    tink:
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-      certificateId: Tink
   ing:
     tink:
       redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
@@ -100,6 +66,8 @@ agents:
   mountSignatureKeyPair: true
 
   icsConfiguration: true
+
+  danskeBankDK: true
 
 clients:
   avanza-production:
@@ -142,6 +110,10 @@ clients:
     aggregatorIdentifier: "Lån & Spar"
   dk-langa-sparekasse:
     aggregatorIdentifier: "Langå Sparekasse"
+  dk-proveo-testing:
+    aggregatorIdentifier: "proVeo"
+  dk-proveo-staging:
+    aggregatorIdentifier: "proVeo"
   dk-proveo-production:
     aggregatorIdentifier: "proVeo"
   dk-rise-flemlose-sparekasse-production:
@@ -186,6 +158,8 @@ clients:
     aggregatorIdentifier: "Ica Spara"
   icaspara-test:
     aggregatorIdentifier: "Ica Spara"
+  it-bnp-bnl-testing:
+    aggregatorIdentifier: "BNL Gruppo BNP Paribas"
   kbc-production:
     aggregatorIdentifier: "KBC"
   kbc-testing:
@@ -396,3 +370,6 @@ tppSecretsServiceConfiguration:
   enabled: true
 
 debugLogFrequencyPercent: 100
+
+eventProducerServiceConfiguration:
+  url: event-producer-service.event-producer-service:443

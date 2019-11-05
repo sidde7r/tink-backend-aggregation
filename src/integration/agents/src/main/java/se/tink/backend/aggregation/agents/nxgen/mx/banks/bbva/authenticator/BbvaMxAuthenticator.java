@@ -80,16 +80,19 @@ public class BbvaMxAuthenticator implements Authenticator {
             if (BbvaMxConstants.ERROR.NO_ACCOUNT_FOUND_CODE.equalsIgnoreCase(err.getErrorCode())
                     || BbvaMxConstants.ERROR.INCORRECT_CREDENTIALS_CODE.equalsIgnoreCase(
                             err.getErrorCode())) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
 
             if (BbvaMxConstants.ERROR.USER_BLOCKED.equalsIgnoreCase(err.getErrorCode())) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(e);
             }
 
             logger.error(
-                    "{} LoginError: {}", BbvaMxConstants.LOGGING.UNKNOWN_LOGIN_ERROR, e.toString());
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+                    "{} LoginError: {}",
+                    BbvaMxConstants.LOGGING.UNKNOWN_LOGIN_ERROR,
+                    e.toString(),
+                    e);
+            throw LoginError.INCORRECT_CREDENTIALS.exception(e);
         }
     }
 

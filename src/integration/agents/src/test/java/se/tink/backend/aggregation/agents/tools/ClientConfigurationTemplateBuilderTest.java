@@ -9,23 +9,36 @@ import se.tink.backend.aggregation.configuration.ProviderConfig;
 
 public class ClientConfigurationTemplateBuilderTest {
     private final Provider provider;
+    private final boolean includeDescriptions;
+    private final boolean includeExamples;
 
     private ClientConfigurationTemplateBuilderTest(Builder builder) {
         this.provider = builder.getProvider();
+        this.includeDescriptions = builder.getIncludeDescriptions();
+        this.includeExamples = builder.getIncludeExamples();
     }
 
     public ClientConfigurationTemplateBuilder getClientConfigurationTemplateBuilder() {
-        return new ClientConfigurationTemplateBuilder(provider);
+        return new ClientConfigurationTemplateBuilder(
+                provider, includeDescriptions, includeExamples);
     }
 
     public static class Builder {
         private final Provider provider;
+        private final boolean includeDescriptions;
+        private final boolean includeExamples;
 
-        public Builder(String market, String providerName) {
+        public Builder(
+                String market,
+                String providerName,
+                boolean includeDescriptions,
+                boolean includeExamples) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
             this.provider.setMarket(marketProviders.getMarket());
             this.provider.setCurrency(marketProviders.getCurrency());
+            this.includeDescriptions = includeDescriptions;
+            this.includeExamples = includeExamples;
         }
 
         private static ProviderConfig readProvidersConfiguration(String market) {
@@ -46,6 +59,14 @@ public class ClientConfigurationTemplateBuilderTest {
 
         public Provider getProvider() {
             return provider;
+        }
+
+        public boolean getIncludeDescriptions() {
+            return includeDescriptions;
+        }
+
+        public boolean getIncludeExamples() {
+            return includeExamples;
         }
 
         public ClientConfigurationTemplateBuilderTest build() {

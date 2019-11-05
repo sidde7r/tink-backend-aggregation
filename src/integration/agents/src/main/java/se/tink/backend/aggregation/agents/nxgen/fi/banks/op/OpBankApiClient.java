@@ -2,6 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants.Headers;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants.RequestParameters;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.InitRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.InitResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpAuthResponse;
@@ -41,68 +45,56 @@ public class OpBankApiClient {
     }
 
     public InitResponseEntity init(InitRequestEntity requestEntity) {
-        return createRequest(OpBankConstants.Urls.INIT_URI)
-                .post(InitResponseEntity.class, requestEntity);
+        return createRequest(Urls.INIT_URI).post(InitResponseEntity.class, requestEntity);
     }
 
     public OpAuthResponse auth(String authToken) {
-        return createRequest(OpBankConstants.Urls.AUTH)
-                .queryParam("authToken", authToken)
+        return createRequest(Urls.AUTH)
+                .queryParam(RequestParameters.AUTH_TOKEN, authToken)
                 .get(OpAuthResponse.class);
     }
 
     public OpBankResponseEntity instance(String authToken) {
-        return createRequest(OpBankConstants.Urls.INSTANCE)
-                .queryParam("authToken", authToken)
+        return createRequest(Urls.INSTANCE)
+                .queryParam(RequestParameters.AUTH_TOKEN, authToken)
                 .get(OpBankResponseEntity.class);
     }
 
     public OpBankLoginResponseEntity login(OpBankLoginRequestEntity requestEntity) {
-        return createRequest(OpBankConstants.Urls.LOGIN_URI)
-                .post(OpBankLoginResponseEntity.class, requestEntity);
+        return createRequest(Urls.LOGIN_URI).post(OpBankLoginResponseEntity.class, requestEntity);
     }
 
     public OpBankResponseEntity refreshSession() {
-        return createRequest(OpBankConstants.Urls.REFRESH_SESSION_URI)
-                .post(OpBankResponseEntity.class);
+        return createRequest(Urls.REFRESH_SESSION_URI).post(OpBankResponseEntity.class);
     }
 
     public OpBankResponseEntity logout() {
-        return createRequest(OpBankConstants.Urls.LOGOUT_URI).get(OpBankResponseEntity.class);
+        return createRequest(Urls.LOGOUT_URI).get(OpBankResponseEntity.class);
     }
 
     public OpBankAccountsResponse fetchAccounts() {
-        return createRequest(OpBankConstants.Urls.ACCOUNTS_URI)
-                .queryParam(
-                        OpBankConstants.RequestParameters.FILTER_ALL_PARAM,
-                        OpBankConstants.RequestParameters.FILTER_ALL_VALUE)
+        return createRequest(Urls.ACCOUNTS_URI)
+                .queryParam(RequestParameters.FILTER_ALL_PARAM, RequestParameters.FILTER_ALL_VALUE)
                 .get(OpBankAccountsResponse.class);
     }
 
     public OpBankAuthenticateResponse authenticate() {
-        return createRequest(OpBankConstants.Urls.AUTHENTICATE_URI)
-                .get(OpBankAuthenticateResponse.class);
+        return createRequest(Urls.AUTHENTICATE_URI).get(OpBankAuthenticateResponse.class);
     }
 
     public OpBankAuthenticateResponse authenticate(OpBankAuthenticateCodeRequest request) {
-        return createRequest(OpBankConstants.Urls.AUTHENTICATE_URI)
-                .post(OpBankAuthenticateResponse.class, request);
+        return createRequest(Urls.AUTHENTICATE_URI).post(OpBankAuthenticateResponse.class, request);
     }
 
     public OpBankMobileConfigurationsEntity getMobileConfigurations() {
-        return createRequest(OpBankConstants.Urls.CONFIGURATION_URI)
-                .get(OpBankMobileConfigurationsEntity.class);
+        return createRequest(Urls.CONFIGURATION_URI).get(OpBankMobileConfigurationsEntity.class);
     }
 
     public OpBankMobileConfigurationsEntity enableExtendedMobileServices(
             String applicationInstanceId) {
-        return createRequest(OpBankConstants.Urls.CONFIGURATION_URI)
-                .queryParam(
-                        OpBankConstants.RequestParameters.OVERRIDE_PARAM,
-                        OpBankConstants.RequestParameters.OVERRIDE_VALUE)
-                .queryParam(
-                        OpBankConstants.RequestParameters.CREATE_NEW_PARAM,
-                        OpBankConstants.RequestParameters.CREATE_NEW_VALUE)
+        return createRequest(Urls.CONFIGURATION_URI)
+                .queryParam(RequestParameters.OVERRIDE_PARAM, RequestParameters.OVERRIDE_VALUE)
+                .queryParam(RequestParameters.CREATE_NEW_PARAM, RequestParameters.CREATE_NEW_VALUE)
                 .post(
                         OpBankMobileConfigurationsEntity.class,
                         new OpBankConfigurationEntity()
@@ -113,78 +105,67 @@ public class OpBankApiClient {
 
     public OpBankTransactionsResponse getTransactions(TransactionalAccount account) {
         return createRequest(
-                        OpBankConstants.Urls.TRANSACTIONS_URL.parameter(
+                        Urls.TRANSACTIONS_URL.parameter(
                                 OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER,
                                 account.getApiIdentifier()))
-                .queryParam(
-                        OpBankConstants.RequestParameters.MAX_PAST_PARAM,
-                        OpBankConstants.RequestParameters.MAX_PAST_VALUE)
+                .queryParam(RequestParameters.MAX_PAST_PARAM, RequestParameters.MAX_PAST_VALUE)
                 .get(OpBankTransactionsResponse.class);
     }
 
     public OpBankTransactionsResponse getTransactions(
             TransactionalAccount account, String previousTransactionId) {
         return createRequest(
-                        OpBankConstants.Urls.TRANSACTIONS_URL.parameter(
+                        Urls.TRANSACTIONS_URL.parameter(
                                 OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER,
                                 account.getApiIdentifier()))
-                .queryParam(
-                        OpBankConstants.RequestParameters.ENCRYPTED_TRX_ID, previousTransactionId)
-                .queryParam(
-                        OpBankConstants.RequestParameters.MAX_FUTURE,
-                        OpBankConstants.RequestParameters.MAX_FUTURE_VALUE)
+                .queryParam(RequestParameters.ENCRYPTED_TRX_ID, previousTransactionId)
+                .queryParam(RequestParameters.MAX_FUTURE, RequestParameters.MAX_FUTURE_VALUE)
                 .get(OpBankTransactionsResponse.class);
     }
 
     public void setRepresentationType() {
         createRequest(
-                        OpBankConstants.Urls.REPRESENTATION_TYPE.queryParam(
-                                OpBankConstants.IdTags.REPTYPE_TAG,
-                                OpBankConstants.IdTags.REPTYPE_PERSON_TAG))
+                        Urls.REPRESENTATION_TYPE.queryParam(
+                                IdTags.REPTYPE_TAG, IdTags.REPTYPE_PERSON_TAG))
                 .get(OpBankRepTypeResponse.class);
     }
 
     public void postLogin(String authToken, String appid) {
         OpBankPostLoginRequest request =
                 new OpBankPostLoginRequest().setApplicationInstanceId(appid);
-        createRequest(
-                        OpBankConstants.Urls.POSTLOGIN.queryParam(
-                                OpBankConstants.IdTags.AUTH_TOKEN_TAG, authToken))
-                .post(request);
+        createRequest(Urls.POSTLOGIN.queryParam(IdTags.AUTH_TOKEN_TAG, authToken)).post(request);
     }
 
     public OpBankAdobeAnalyticsResponse adobeAnalyticsConfig(
             String authToken, OpBankPersistentStorage persistentStorage) {
         return createRequest(
-                        OpBankConstants.Urls.AUTH_TOKEN_CONFIG
+                        Urls.AUTH_TOKEN_CONFIG
                                 .parameter(
-                                        OpBankConstants.IdTags.IDENTIFIER_TAG,
+                                        IdTags.IDENTIFIER_TAG,
                                         persistentStorage.retrieveInstanceId())
-                                .queryParam(OpBankConstants.IdTags.AUTH_TOKEN_TAG, authToken))
+                                .queryParam(IdTags.AUTH_TOKEN_TAG, authToken))
                 .get(OpBankAdobeAnalyticsResponse.class);
     }
 
     public String fetchTradingAssetsSummary() {
-        return createRequest(OpBankConstants.Urls.TRADING_ASSETS_SUMMARY).get(String.class);
+        return createRequest(Urls.TRADING_ASSETS_SUMMARY).get(String.class);
     }
 
     public OpBankPortfolioRootEntity fetchTradingAssetsPortfolios() {
-        return createRequest(OpBankConstants.Urls.TRADING_ASSETS_PORTFOLIOS)
-                .get(OpBankPortfolioRootEntity.class);
+        return createRequest(Urls.TRADING_ASSETS_PORTFOLIOS).get(OpBankPortfolioRootEntity.class);
     }
 
     public String fetchTradingAssetsPortfolioDetails(String portfolioId) {
         return createRequest(
-                        OpBankConstants.Urls.TRADING_ASSETS_PORTFOLIO_DETAILS
+                        Urls.TRADING_ASSETS_PORTFOLIO_DETAILS
                                 .parameter(OpBankConstants.PARAM_NAME_PORTFOLIO_ID, portfolioId)
                                 .queryParam(
-                                        OpBankConstants.RequestParameters.TYPE_PARAM,
-                                        OpBankConstants.RequestParameters.TYPE_VALUE))
+                                        RequestParameters.TYPE_PARAM, RequestParameters.TYPE_VALUE))
                 .get(String.class);
     }
 
     public CardsResponse fetchCards() {
-        return createRequest(OpBankConstants.Urls.CARDS).get(CardsResponse.class);
+        return createRequest(Urls.CARDS).get(CardsResponse.class);
     }
 
     public String fetchCreditCardTransactions(CreditCardAccount account) {
@@ -194,39 +175,34 @@ public class OpBankApiClient {
     public String fetchCreditCardTransactions(
             CreditCardAccount account, String previousTransactionId) {
         return getCreditCardTransactionsRequest(account)
-                .queryParam(
-                        OpBankConstants.RequestParameters.ENCRYPTED_TRX_ID, previousTransactionId)
+                .queryParam(RequestParameters.ENCRYPTED_TRX_ID, previousTransactionId)
                 .get(String.class);
     }
 
     public String fetchCreditCardTransactionsOldEndpoint(CreditCardAccount account) {
         return createRequest(
-                        OpBankConstants.Urls.LEGACY_CREDIT_CARD_TRANSACTIONS_URL.parameter(
+                        Urls.LEGACY_CREDIT_CARD_TRANSACTIONS_URL.parameter(
                                 OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER,
                                 account.getApiIdentifier()))
-                .queryParam(
-                        OpBankConstants.RequestParameters.MAX_PAST_PARAM,
-                        OpBankConstants.RequestParameters.MAX_PAST_VALUE)
+                .queryParam(RequestParameters.MAX_PAST_PARAM, RequestParameters.MAX_PAST_VALUE)
                 .get(String.class);
     }
 
     private RequestBuilder getCreditCardTransactionsRequest(CreditCardAccount account) {
         return createRequest(
-                        OpBankConstants.Urls.TRANSACTIONS_URL.parameter(
+                        Urls.TRANSACTIONS_URL.parameter(
                                 OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER,
                                 account.getApiIdentifier()))
-                .queryParam(
-                        OpBankConstants.RequestParameters.MAX_PAST_PARAM,
-                        OpBankConstants.RequestParameters.MAX_PAST_VALUE);
+                .queryParam(RequestParameters.MAX_PAST_PARAM, RequestParameters.MAX_PAST_VALUE);
     }
 
     public FetchCreditsResponse fetchCredits() {
-        return createRequest(OpBankConstants.Urls.CREDITS).get(FetchCreditsResponse.class);
+        return createRequest(Urls.CREDITS).get(FetchCreditsResponse.class);
     }
 
     public String fetchContinuingCreditTransactions(String encryptedAgreementNumber) {
         return createRequest(
-                        OpBankConstants.Urls.CONTINUING_CREDITS_TRANSACTIONS.parameter(
+                        Urls.CONTINUING_CREDITS_TRANSACTIONS.parameter(
                                 OpBankConstants.PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED,
                                 encryptedAgreementNumber))
                 .get(String.class);
@@ -234,7 +210,7 @@ public class OpBankApiClient {
 
     public CreditDetailsResponse fetchSpecialCreditDetails(String encryptedAgreementNumber) {
         return createRequest(
-                        OpBankConstants.Urls.SPECIAL_CREDITS_DETAILS.parameter(
+                        Urls.SPECIAL_CREDITS_DETAILS.parameter(
                                 OpBankConstants.PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED,
                                 encryptedAgreementNumber))
                 .get(CreditDetailsResponse.class);
@@ -242,7 +218,7 @@ public class OpBankApiClient {
 
     public CreditDetailsResponse fetchFlexiCreditDetails(String encryptedAgreementNumber) {
         return createRequest(
-                        OpBankConstants.Urls.FLEXI_CREDITS_DETAILS.parameter(
+                        Urls.FLEXI_CREDITS_DETAILS.parameter(
                                 OpBankConstants.PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED,
                                 encryptedAgreementNumber))
                 .get(CreditDetailsResponse.class);
@@ -251,7 +227,7 @@ public class OpBankApiClient {
     public CollateralCreditDetailsResponse fetchCollateralCreditDetails(
             String encryptedAgreementNumber) {
         return createRequest(
-                        OpBankConstants.Urls.COLLATERAL_CREDITS_DETAILS.parameter(
+                        Urls.COLLATERAL_CREDITS_DETAILS.parameter(
                                 OpBankConstants.PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED,
                                 encryptedAgreementNumber))
                 .get(CollateralCreditDetailsResponse.class);
@@ -259,12 +235,8 @@ public class OpBankApiClient {
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
-                .header(
-                        OpBankConstants.Headers.API_VERSION_KEY,
-                        OpBankConstants.Headers.API_VERSION_VALUE)
-                .header(
-                        OpBankConstants.Headers.ACCEPT_LANGUAGE,
-                        OpBankConstants.Headers.ACCEPT_LANGUAGE_VALUE)
+                .header(Headers.API_VERSION_KEY, Headers.API_VERSION_VALUE)
+                .header(Headers.ACCEPT_LANGUAGE, Headers.ACCEPT_LANGUAGE_VALUE)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }

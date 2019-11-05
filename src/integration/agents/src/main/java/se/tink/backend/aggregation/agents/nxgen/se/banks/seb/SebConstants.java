@@ -32,27 +32,41 @@ public class SebConstants {
                 new URL(BASE.concat(Endpoints.LIST_PENDING_CREDIT_CARD_TRANSACTIONS));
         public static final URL LIST_BOOKED_CREDIT_CARD_TRANSACTIONS =
                 new URL(BASE.concat(Endpoints.LIST_BOOKED_CREDIT_CARD_TRANSACTIONS));
+        public static final URL LIST_INVESTMENT_ACCOUNTS =
+                new URL(BASE.concat(Endpoints.LIST_INVESTMENT_ACCOUNTS));
+        public static final URL FETCH_INTESTMENT_ACCOUNT_DETAILS =
+                new URL(BASE.concat(Endpoints.INVESTMENT_ACCOUNT_DETAILS));
     }
 
     public static class Endpoints {
         public static final String FETCH_AUTOSTART_TOKEN = "/nauth2/Authentication/api/v1/bid/auth";
         public static final String COLLECT_BANKID = "/nauth2/Authentication/api/v1/bid/";
-        private static final String API_BASE = "/1000/ServiceFactory/PC_BANK/PC_Bank";
-        public static final String INITIATE_SESSION = API_BASE + "Init11Session01.asmx/Execute";
-        public static final String ACTIVATE_SESSION = API_BASE + "Aktivera01Session01.asmx/Execute";
-        public static final String LIST_ACCOUNTS = API_BASE + "Lista01Konton_privat01.asmx/Execute";
-        public static final String LIST_CARDS = API_BASE + "Lista11Kort_privat05.asmx/Execute";
-        public static final String LIST_LOANS = API_BASE + "Lista11Laninfo_privat03.asmx/Execute";
+
+        private static final String API_BASE = "/1000/ServiceFactory/PC_BANK/";
+        public static final String LIST_INVESTMENT_ACCOUNTS =
+                API_BASE + "Tl_forsakringLista11Enga01.asmx/Execute";
+        public static final String INVESTMENT_ACCOUNT_DETAILS =
+                API_BASE + "PC_BankHamta11Savingsvarde01.asmx/Execute";
+        public static final String INITIATE_SESSION =
+                API_BASE + "PC_BankInit11Session01.asmx/Execute";
+        public static final String ACTIVATE_SESSION =
+                API_BASE + "PC_BankAktivera01Session01.asmx/Execute";
+        public static final String LIST_ACCOUNTS =
+                API_BASE + "PC_BankLista01Konton_privat01.asmx/Execute";
+        public static final String LIST_CARDS =
+                API_BASE + "PC_BankLista11Kort_privat05.asmx/Execute";
+        public static final String LIST_LOANS =
+                API_BASE + "PC_BankLista11Laninfo_privat03.asmx/Execute";
         public static final String LIST_TRANSACTIONS =
-                API_BASE + "Lista01Rorelse_ftg03.asmx/Execute";
+                API_BASE + "PC_BankLista01Rorelse_ftg03.asmx/Execute";
         public static final String LIST_RESERVED_TRANSACTIONS =
-                API_BASE + "Lista01Skydd01.asmx/Execute";
+                API_BASE + "PC_BankLista01Skydd01.asmx/Execute";
         private static final String LIST_UPCOMING_TRANSACTIONS =
-                API_BASE + "Lista11Komm_uppdrag02.asmx/Execute";
+                API_BASE + "PC_BankLista11Komm_uppdrag02.asmx/Execute";
         private static final String LIST_PENDING_CREDIT_CARD_TRANSACTIONS =
-                API_BASE + "Lista11Ofakt_korttran02.asmx/Execute";
+                API_BASE + "PC_BankLista11Ofakt_korttran02.asmx/Execute";
         private static final String LIST_BOOKED_CREDIT_CARD_TRANSACTIONS =
-                API_BASE + "Lista11Fakt_korttran02.asmx/Execute";
+                API_BASE + "PC_BankLista11Fakt_korttran02.asmx/Execute";
     }
 
     public static class HeaderKeys {
@@ -89,6 +103,7 @@ public class SebConstants {
         public static final String ACCOUNT_NUMBER = "KONTO_NR";
         public static final String CREDIT_CARD_HANDLE = "BILL_UNIT_HDL";
         public static final String PENDING_TRANSACTIONS = "RESERVE_AMT_FL";
+        public static final String INVESTMENT_DETAIL_HANDLE = "DETAIL_URL";
     }
 
     public static class ServiceInputValues {

@@ -106,7 +106,8 @@ public class LaBanquePostaleAuthenticator implements Authenticator {
 
         } catch (IOException e) {
 
-            throw new IllegalStateException(LaBanquePostaleConstants.ErrorMessages.NO_NUMPAD_IMAGE);
+            throw new IllegalStateException(
+                    LaBanquePostaleConstants.ErrorMessages.NO_NUMPAD_IMAGE, e);
         }
     }
 

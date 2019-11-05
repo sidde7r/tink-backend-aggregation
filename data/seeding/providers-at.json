@@ -3,6 +3,7 @@
     "market": "AT",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.creditcards.amex.v62.AmericanExpressV62ATAgent",
             "credentialsType": "PASSWORD",
             "currency": "EUR",
@@ -20,6 +21,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "American Express",
             "market": "AT",
             "multiFactor": false,
@@ -35,6 +38,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.bankaustria.BankAustriaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Bank Austria",
@@ -51,6 +55,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "at-bankaustria-password",
             "passwordHelpText": null,
@@ -64,6 +70,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
             "credentialsType": "PASSWORD",
             "displayName": "BAWAG P.S.K.",
@@ -80,6 +87,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "at-bawagpsk-password",
             "passwordHelpText": null,
@@ -93,6 +102,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Easybank",
@@ -109,6 +119,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "at-easybank-password",
             "passwordHelpText": null,
@@ -122,6 +134,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.erstebank.password.ErsteBankPasswordAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Password",
@@ -138,6 +151,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Erste Bank und Sparkasse",
             "name": "at-erstebank-password",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -149,6 +164,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.erstebank.sidentity.ErstebankSidentityAgent",
             "credentialsType": "MOBILE_BANKID",
             "displayName": "s Identity",
@@ -159,6 +175,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Erste Bank und Sparkasse",
             "name": "at-erstebank-thirdparty",
             "passwordHelpText": "Use the same username as you would in your bank's mobile app.",
@@ -179,6 +197,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.ing.IngAtAgent",
             "credentialsType": "PASSWORD",
             "displayName": "ING-DiBa",
@@ -195,6 +214,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "ING-DiBa",
             "name": "at-ingdiba-password",
             "payload": "",
@@ -206,6 +227,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.n26.N26Agent",
             "credentialsType": "PASSWORD",
             "displayName": "N26",
@@ -222,6 +244,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "N26",
             "multiFactor": false,
             "name": "at-n26-password",
@@ -234,6 +258,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Burgenland)",
@@ -255,6 +280,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen0-password",
             "payload": "{\"region\": \"Burgenland\", \"regionIndex\": \"0\", \"regionCode\": \"ELVIE33V\"}",
@@ -266,6 +293,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Kärnten)",
@@ -287,6 +315,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen1-password",
             "payload": "{\"region\": \"Kärnten\", \"regionIndex\": \"1\", \"regionCode\": \"ELOOE03V\"}",
@@ -298,6 +328,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Oberösterreich/PRIVAT BANK)",
@@ -319,6 +350,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen10-password",
             "payload": "{\"region\": \"Oberösterreich/PRIVAT BANK\", \"regionIndex\": \"10\", \"regionCode\": \"ELOOE01V\"}",
@@ -330,6 +363,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Tirol/Jungholz)",
@@ -351,6 +385,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen11-password",
             "payload": "{\"region\": \"Tirol/Jungholz\", \"regionIndex\": \"11\", \"regionCode\": \"ELOOE11V\"}",
@@ -362,6 +398,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Niederösterreich/Wien)",
@@ -383,6 +420,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen2-password",
             "payload": "{\"region\": \"Niederösterreich/Wien\", \"regionIndex\": \"2\", \"regionCode\": \"ELVIE32V\"}",
@@ -394,6 +433,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Oberösterreich)",
@@ -415,6 +455,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen3-password",
             "payload": "{\"region\": \"Oberösterreich\", \"regionIndex\": \"3\", \"regionCode\": \"ELOOE01V\"}",
@@ -426,6 +468,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Salzburg)",
@@ -447,6 +490,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen4-password",
             "payload": "{\"region\": \"Salzburg\", \"regionIndex\": \"4\", \"regionCode\": \"ELOOE05V\"}",
@@ -458,6 +503,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Steiermark)",
@@ -479,6 +525,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen5-password",
             "payload": "{\"region\": \"Steiermark\", \"regionIndex\": \"5\", \"regionCode\": \"ELVIE38V\"}",
@@ -490,6 +538,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Tirol)",
@@ -511,6 +560,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen6-password",
             "payload": "{\"region\": \"Tirol\", \"regionIndex\": \"6\", \"regionCode\": \"ELOOE11V\"}",
@@ -522,6 +573,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Vorarlberg)",
@@ -543,6 +595,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen7-password",
             "payload": "{\"region\": \"Vorarlberg\", \"regionIndex\": \"7\", \"regionCode\": \"ELVIE37V\"}",
@@ -554,6 +608,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Kärnten/Posojilnica Bank)",
@@ -575,6 +630,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen8-password",
             "payload": "{\"region\": \"Kärnten/Posojilnica Bank\", \"regionIndex\": \"8\", \"regionCode\": \"ELVIE91V\"}",
@@ -586,6 +643,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Raiffeisen (Oberösterreich/bankdirekt.at)",
@@ -607,6 +665,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Raiffeisen",
             "name": "at-raiffeisen9-password",
             "payload": "{\"region\": \"Oberösterreich/bankdirekt.at\", \"regionIndex\": \"9\", \"regionCode\": \"ELOOE01V\"}",
@@ -618,6 +678,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Revolut",
@@ -641,6 +702,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "at-revolut-password",
             "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
@@ -651,6 +714,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -668,6 +732,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "at-test-bawag",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
@@ -677,6 +743,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -694,6 +761,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "at-test-easy-bank",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
@@ -703,6 +772,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -720,6 +790,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "at-test-erste-bank",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
@@ -729,6 +801,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -740,6 +813,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "at-test-multi-supplemental",
@@ -750,6 +825,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -767,6 +843,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "at-test-password",
@@ -779,6 +857,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.at.banks.volksbank.VolksbankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Volksbank Tirol",
@@ -801,6 +880,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "at-volksbank-password",
             "passwordHelpText": null,

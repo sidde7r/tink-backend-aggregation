@@ -153,6 +153,8 @@ public class TransferExecutionException extends RuntimeException {
         SOURCE_NOT_FOUND(new LocalizableKey("Could not find source account")),
         NEW_RECIPIENT_FAILED(new LocalizableKey("Unable to create new recipient account")),
         NEW_RECIPIENT_NAME_ABSENT(new LocalizableKey("You must specify a recipient name")),
+        UNREGISTERED_RECIPIENT(
+                new LocalizableKey("Recipient accounts missing from accounts ledger")),
         TRANSFER_MODIFY_AMOUNT(
                 new LocalizableKey("It's not possible to modify the amount of this transfer")),
         TRANSFER_MODIFY_DESTINATION(
@@ -171,6 +173,7 @@ public class TransferExecutionException extends RuntimeException {
         TRANSFER_DELETE_FAILED(new LocalizableKey("Could not delete transfer")),
         TRANSFER_CONFIRM_FAILED(
                 new LocalizableKey("An error occurred when confirming the transfer")),
+        TRANSFER_REJECTED(new LocalizableKey("Transfer rejected by the Bank")),
         EINVOICE_MODIFY_AMOUNT(
                 new LocalizableKey("It's not possible to modify the amount of this e-invoice")),
         EINVOICE_MODIFY_DUEDATE(

@@ -6,6 +6,10 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class UkOpenBankingV30Constants extends UkOpenBankingConstants {
 
+    private UkOpenBankingV30Constants() {
+        throw new AssertionError();
+    }
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CurrentAccount")

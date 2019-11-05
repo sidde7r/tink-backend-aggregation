@@ -19,11 +19,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.utils.CookieContainer;
-import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -648,6 +648,10 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
             Credentials credentials, HttpLoggableExecutor transferExecutor) {
         AggregationLogger log = new AggregationLogger(getClass());
         return new HttpLoggingFilterFactory(
-                log, "TRANSFER", ImmutableList.<StringMasker>of(), transferExecutor.getClass());
+                log,
+                "TRANSFER",
+                testContext.getLogMasker(),
+                transferExecutor.getClass(),
+                LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
     }
 }

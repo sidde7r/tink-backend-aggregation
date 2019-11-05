@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -24,9 +25,13 @@ public class DanskebankAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-danskebank-oauth2")
-                .loadCredentialsBefore(false)
+                .loadCredentialsBefore(true)
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                .setFinancialInstitutionId("danskebank")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }
@@ -37,7 +42,9 @@ public class DanskebankAgentTest {
                 new AgentIntegrationTest.Builder("uk", "uk-danskebank-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("danskebank")
+                        .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

@@ -23,7 +23,7 @@ public class VolksbankSessionHandler implements SessionHandler {
         try {
             apiClient.getMain();
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

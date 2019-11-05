@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +29,8 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
         final String customerNumber = sessionStorage.getCustomerNumber();
         final Response response =
                 apiClient.fetchAccounts(customerNumber, ServiceInputValues.DEFAULT_ACCOUNT_TYPE);
-        final List<AccountEntity> accountEntities = response.getAccountEntities();
+        final List<AccountEntity> accountEntities =
+                response.getAccountEntities().orElseGet(() -> new ArrayList<>());
 
         return accountEntities.stream()
                 .filter(AccountEntity::isTransactionalAccount)

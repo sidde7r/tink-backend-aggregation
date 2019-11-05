@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
 import com.google.common.base.Strings;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.rpc.ContractsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountIdentifierEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.PaginationDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.SearchCriteriaEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AcountTransactionsResponse;
@@ -107,14 +109,15 @@ public class BankiaApiClient {
                         exception.getResponse().getBody(RsaKeyResponse.class);
                 if (!Objects.isNull(rsaKeyResponse)
                         && !Strings.isNullOrEmpty(rsaKeyResponse.getResponseUrl())) {
-                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception(exception);
                 }
             }
             throw exception;
         }
     }
 
-    public AcountTransactionsResponse getTransactions(Account account, Date fromDate, Date toDate) {
+    public AcountTransactionsResponse getTransactions(
+            Account account, @Nullable PaginationDataEntity paginationData) {
         AccountIdentifierEntity accountIdentifier = new AccountIdentifierEntity();
         accountIdentifier.setCountry(
                 account.getFromTemporaryStorage(BankiaConstants.StorageKey.COUNTRY));
@@ -122,13 +125,22 @@ public class BankiaApiClient {
                 account.getFromTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS));
         accountIdentifier.setIdentifier(account.getApiIdentifier());
 
-        SearchCriteriaEntity searchCriteria = new SearchCriteriaEntity();
-        searchCriteria.setDateOperationFrom(DateEntity.of(fromDate));
-        searchCriteria.setOperationDateUntil(DateEntity.of(toDate));
+        SearchCriteriaEntity searchCriteria = null;
+        if (Objects.isNull(paginationData)) {
+            // Specify search dates on first page request
+            // Bankia allows fetching transactions since day 1 of 23 months ago
+            searchCriteria = new SearchCriteriaEntity();
+            searchCriteria.setDateOperationFrom(
+                    DateEntity.of(LocalDate.now().minusMonths(23).withDayOfMonth(1)));
+            searchCriteria.setOperationDateUntil(DateEntity.of(LocalDate.now()));
+        }
 
         AccountTransactionsRequest request =
                 AccountTransactionsRequest.create(
-                        accountIdentifier, searchCriteria, BankiaConstants.LANGUAGE);
+                        accountIdentifier,
+                        searchCriteria,
+                        BankiaConstants.LANGUAGE,
+                        paginationData);
 
         return createInSessionRequest(BankiaConstants.Url.SERVICES_ACCOUNT_MOVEMENT)
                 .body(request, MediaType.APPLICATION_JSON)

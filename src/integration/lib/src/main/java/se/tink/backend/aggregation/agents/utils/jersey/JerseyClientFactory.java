@@ -20,14 +20,30 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.TextUtils;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.libraries.net.AbstractJerseyClientFactory;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.net.TinkApacheHttpClient4Handler;
 
 public class JerseyClientFactory extends AbstractJerseyClientFactory {
 
-    public JerseyClientFactory() {
+    private final LogMasker logMasker;
+    private final LoggingMode loggingMode;
+
+    /**
+     * Takes a logMasker that masks sensitive values from logs, the loggingMode parameter should *
+     * only be passed with the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the
+     * * logMasker handles the sensitive values in the provider. use {@link *
+     * se.tink.backend.aggregation.log.LogMasker#shouldLog(Provider)} if you can.
+     *
+     * @param logMasker masks values from logs.
+     * @param loggingMode determines if logs should be produced at all.
+     */
+    public JerseyClientFactory(LogMasker logMasker, LoggingMode loggingMode) {
         super(JerseyClientFactory.class);
+        this.logMasker = logMasker;
+        this.loggingMode = loggingMode;
     }
 
     public Client createBasicClient(OutputStream httpLogOutputStream) {
@@ -37,7 +53,10 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         try {
             if (httpLogOutputStream != null) {
                 client.addFilter(
-                        new LoggingFilter(new PrintStream(httpLogOutputStream, true, "UTF-8")));
+                        new LoggingFilter(
+                                new PrintStream(httpLogOutputStream, true, "UTF-8"),
+                                logMasker,
+                                loggingMode));
             }
         } catch (Exception e) {
             log.error("Could not add logging filter", e);
@@ -58,7 +77,10 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         try {
             if (httpLogOutputStream != null) {
                 client.addFilter(
-                        new LoggingFilter(new PrintStream(httpLogOutputStream, true, "UTF-8")));
+                        new LoggingFilter(
+                                new PrintStream(httpLogOutputStream, true, "UTF-8"),
+                                logMasker,
+                                loggingMode));
             }
         } catch (Exception e) {
             log.error("Could not add logging filter", e);
@@ -81,7 +103,10 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         try {
             if (httpLogOutputStream != null) {
                 client.addFilter(
-                        new LoggingFilter(new PrintStream(httpLogOutputStream, true, "UTF-8")));
+                        new LoggingFilter(
+                                new PrintStream(httpLogOutputStream, true, "UTF-8"),
+                                logMasker,
+                                loggingMode));
             }
         } catch (Exception e) {
             log.error("Could not add logging filter", e);
@@ -106,7 +131,10 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         try {
             if (httpLogOutputStream != null) {
                 client.addFilter(
-                        new LoggingFilter(new PrintStream(httpLogOutputStream, true, "UTF-8")));
+                        new LoggingFilter(
+                                new PrintStream(httpLogOutputStream, true, "UTF-8"),
+                                logMasker,
+                                loggingMode));
             }
         } catch (Exception e) {
             log.error("Could not add logging filter", e);
@@ -131,7 +159,10 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         try {
             if (httpLogOutputStream != null) {
                 client.addFilter(
-                        new LoggingFilter(new PrintStream(httpLogOutputStream, true, "UTF-8")));
+                        new LoggingFilter(
+                                new PrintStream(httpLogOutputStream, true, "UTF-8"),
+                                logMasker,
+                                loggingMode));
             }
         } catch (Exception e) {
             log.error("Could not add logging filter", e);
@@ -147,7 +178,10 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
         try {
             if (httpLogOutputStream != null) {
                 client.addFilter(
-                        new LoggingFilter(new PrintStream(httpLogOutputStream, true, "UTF-8")));
+                        new LoggingFilter(
+                                new PrintStream(httpLogOutputStream, true, "UTF-8"),
+                                logMasker,
+                                loggingMode));
             }
         } catch (Exception e) {
             log.error("Could not add logging filter", e);
@@ -180,7 +214,10 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
 
         try {
             tinkJerseyClient.addFilter(
-                    new LoggingFilter(new PrintStream(httpLogOutputStream, true, "UTF-8")));
+                    new LoggingFilter(
+                            new PrintStream(httpLogOutputStream, true, "UTF-8"),
+                            logMasker,
+                            loggingMode));
         } catch (UnsupportedEncodingException e) {
             log.warn("Could not add buffered logging filter.");
         }

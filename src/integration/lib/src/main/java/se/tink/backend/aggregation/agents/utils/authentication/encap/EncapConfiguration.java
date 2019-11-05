@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap;
 
-public interface EncapConfiguration {
+import se.tink.backend.aggregation.configuration.ClientConfiguration;
+
+public interface EncapConfiguration extends ClientConfiguration {
 
     String getApplicationVersion(); // meta information in message exchange
 

@@ -3,6 +3,7 @@
     "market": "EE",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.ee.banks.aslhv.AsLhvAgent",
             "credentialsType": "PASSWORD",
             "displayName": "AS LHV Pank",
@@ -20,6 +21,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "ee-aslhv-password",
             "passwordHelpText": null,
@@ -31,6 +34,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -42,6 +46,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "ee-test-multi-supplemental",
@@ -52,6 +58,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -69,6 +76,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "ee-test-password",

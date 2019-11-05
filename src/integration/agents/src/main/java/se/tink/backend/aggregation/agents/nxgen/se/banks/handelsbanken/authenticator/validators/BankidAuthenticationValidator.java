@@ -34,16 +34,6 @@ public class BankidAuthenticationValidator extends HandelsbankenValidator<BaseRe
                             new LocalizableKey(
                                     "You lack the sufficient permissions for this service."));
                 default:
-                    LOGGER.warn(
-                            String.format(
-                                    "#"
-                                            + HandelsbankenSEConstants.Authentication
-                                                    .SE_LOGIN_REFACTORING
-                                            + " - Login failed (authorizeResponse) with message %s, code "
-                                            + "%s, error messages %s",
-                                    getMessage(),
-                                    getCode(),
-                                    getErrors()));
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
         }

@@ -21,22 +21,16 @@ public class IntegrationsConfiguration {
 
     @JsonProperty private ImmutableList<String> proxyUris;
 
-    private Optional<Object> getIntegration(String integrationName) {
+    public Optional<Object> getIntegration(String integrationName) {
         return Optional.ofNullable(integrations.get(integrationName));
     }
 
-    public <T> Optional<T> getIntegration(String integrationName, Class<T> integrationConfigClass) {
-        return getIntegration(integrationName)
-                .map(i -> OBJECT_MAPPER.convertValue(i, integrationConfigClass));
-    }
-
-    public <T extends ClientConfiguration> Optional<T> getClientConfiguration(
-            String integrationName, String clientName, Class<T> clientConfigClass) {
+    public Optional<Object> getClientConfigurationAsObject(
+            String integrationName, String clientName) {
         return getIntegration(integrationName)
                 .filter(o -> o instanceof Map)
                 .map(o -> (Map) o)
-                .map(i -> i.get(clientName))
-                .map(c -> OBJECT_MAPPER.convertValue(c, clientConfigClass));
+                .map(i -> i.get(clientName));
     }
 
     @JsonAnySetter

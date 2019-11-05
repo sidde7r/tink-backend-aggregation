@@ -12,6 +12,8 @@ public class FirstTrustAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("firsttrust")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }

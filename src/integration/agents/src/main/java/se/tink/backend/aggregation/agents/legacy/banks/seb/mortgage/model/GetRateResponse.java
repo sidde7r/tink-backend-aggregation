@@ -30,7 +30,7 @@ public class GetRateResponse {
         try {
             this.dateValid = ThreadSafeDateFormat.FORMATTER_SECONDS_T.parse(dateValid);
         } catch (ParseException e) {
-            throw new IllegalArgumentException(String.format("Invalid date: %s", dateValid));
+            throw new IllegalArgumentException(String.format("Invalid date: %s", dateValid), e);
         }
     }
 

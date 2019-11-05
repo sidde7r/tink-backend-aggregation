@@ -4,10 +4,12 @@ import java.security.spec.RSAPublicKeySpec;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtConstants.SensitivePayload;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.entities.AccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.rpc.WebLoginResponse;
@@ -21,11 +23,15 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
+    private final Credentials credentials;
     private final IngAtApiClient apiClient;
     private final IngAtSessionStorage sessionStorage;
 
     public IngAtPasswordAuthenticator(
-            final IngAtApiClient apiClient, final IngAtSessionStorage sessionStorage) {
+            final Credentials credentials,
+            final IngAtApiClient apiClient,
+            final IngAtSessionStorage sessionStorage) {
+        this.credentials = credentials;
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -61,9 +67,10 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        final HttpResponse response = apiClient.initiateWebLogin(IngAtConstants.Url.AUTH_START);
-        final Form passwordForm =
-                fillInPasswordForm(response.getBody(String.class), username, password);
+        final String response =
+                apiClient.initiateWebLogin(IngAtConstants.Url.AUTH_START).getBody(String.class);
+        credentials.setSensitivePayload(SensitivePayload.loginResponse, response);
+        final Form passwordForm = fillInPasswordForm(response, username, password);
         final HttpResponse loginResponse =
                 apiClient.logIn(IngAtConstants.Url.PASSWORD, passwordForm);
         final URL page0 = IngAtApiClient.getLastRedirectUrl(loginResponse);

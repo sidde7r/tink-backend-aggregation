@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 java_library(
     name = "asm_asm",
     visibility = ["//visibility:public"],
@@ -51,14 +53,6 @@ java_library(
         "@com_amazonaws_aws_java_sdk_kms//jar",
         "@com_amazonaws_aws_java_sdk_s3//jar",
         "@com_amazonaws_jmespath_java//jar",
-    ],
-)
-
-java_library(
-    name = "com_fasterxml_uuid_java_uuid_generator",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_uuid_java_uuid_generator//jar",
     ],
 )
 
@@ -1708,5 +1702,210 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_fasterxml_jackson_datatype_jackson_datatype_jsr310//jar",
+    ],
+)
+
+java_library(
+    name = "com_salesforce_servicelibs_grpc_contrib",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_salesforce_servicelibs_grpc_contrib//jar",
+    ],
+    runtime_deps = [
+        "@com_google_code_gson_gson//jar",
+        "@io_grpc_grpc_context//jar",
+        "@io_grpc_grpc_core//jar",
+        "@io_grpc_grpc_protobuf//jar",
+        "@io_grpc_grpc_stub//jar",
+        "@io_grpc_grpc_testing//jar",
+        "@junit_junit//jar",
+        "@org_assertj_assertj_core//jar",
+        "@org_awaitility_awaitility//jar",
+        "@org_mockito3_mockito_core//jar",
+        "@org_slf4j_slf4j_api//jar",
+    ],
+)
+
+java_library(
+    name = "com_salesforce_servicelibs_grpc_testing_contrib",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_salesforce_servicelibs_grpc_testing_contrib//jar",
+    ],
+    runtime_deps = [
+        "@com_salesforce_servicelibs_grpc_contrib//jar",
+        "@io_grpc_grpc_core//jar",
+        "@io_grpc_grpc_netty//jar",
+        "@io_grpc_grpc_stub//jar",
+        "@io_grpc_grpc_testing_proto//jar",
+        "@junit_junit//jar",
+        "@org_assertj_assertj_core//jar",
+    ],
+)
+
+java_library(
+    name = "io_grpc_grpc_testing_proto",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_grpc_grpc_testing_proto//jar",
+    ],
+    runtime_deps = [
+        "@io_grpc_grpc_protobuf//jar",
+        "@io_grpc_grpc_stub//jar",
+    ],
+)
+
+java_library(
+    name = "io_grpc_grpc_netty",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_grpc_grpc_netty//jar",
+    ],
+    runtime_deps = [
+        "@io_grpc_grpc_core//jar",
+        "@io_netty_netty_codec_http2//jar",
+        "@io_netty_netty_handler_proxy//jar",
+    ],
+)
+
+java_library(
+    name = "io_grpc_grpc_context",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_grpc_grpc_context//jar",
+    ],
+)
+
+java_library(
+    name = "io_grpc_grpc_stub",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_grpc_grpc_stub//jar",
+    ],
+    runtime_deps = [
+        "@io_grpc_grpc_api//jar",
+    ],
+)
+
+java_library(
+    name = "io_grpc_grpc_testing",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_grpc_grpc_testing//jar",
+    ],
+    runtime_deps = [
+        "@io_grpc_grpc_core//jar",
+        "@io_grpc_grpc_stub//jar",
+        "@junit_junit//jar",
+    ],
+)
+
+java_library(
+    name = "io_netty_netty_codec_http2",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_netty_netty_codec_http2//jar",
+    ],
+    runtime_deps = [
+        "@com_google_code_gson_gson//jar",
+        "@com_jcract_jzlib//jar",
+        "@io_netty_netty_buffer//jar",
+        "@io_netty_netty_codec//jar",
+        "@io_netty_netty_codec_http//jar",
+        "@io_netty_netty_common//jar",
+        "@io_netty_netty_handler//jar",
+        "@io_netty_netty_transport//jar",
+        "@org_mockito_mockito_core//jar",
+    ],
+)
+
+java_library(
+    name = "io_netty_netty_common",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_netty_netty_common//jar",
+    ],
+    runtime_deps = [
+        "@com_oracle_substratevm_svm//jar",
+        "@commons_logging_commons_logging//jar",
+        "@io_netty_netty_dev_tools//jar",
+        "@log4j_log4j//jar",
+        "@org_apache_logging_log4j_log4j_api//jar",
+        "@org_apache_logging_log4j_log4j_core//jar",
+        "@org_mockito_mockito_core//jar",
+        "@org_slf4j_slf4j_api//jar",
+    ],
+)
+
+java_library(
+    name = "io_netty_netty_handler",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_netty_netty_handler//jar",
+    ],
+    runtime_deps = [
+        "@io_netty_netty_buffer//jar",
+        "@io_netty_netty_codec//jar",
+        "@io_netty_netty_tcnative_boringssl_static//jar",
+        "@io_netty_netty_transport//jar",
+        "@org_bouncycastle_bcpkix_jdk15on//jar",
+        "@org_mockito_mockito_core//jar",
+    ],
+)
+
+java_library(
+    name = "io_netty_netty_tcnative_boringssl_static",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_netty_netty_tcnative_boringssl_static//jar",
+    ],
+)
+
+java_library(
+    name = "org_mockito3_mockito_core",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@org_mockito3_mockito_core//jar",
+    ],
+    runtime_deps = [
+        "@net_bytebuddy_byte_buddy//jar",
+        "@net_bytebuddy_byte_buddy_agent//jar",
+        "@org_objenesis_objenesis//jar",
+    ],
+)
+
+java_library(
+    name = "io_netty_netty_resolver",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_netty_netty_resolver//jar",
+    ],
+    runtime_deps = [
+        "@io_netty_netty_common//jar",
+        "@org_mockito_mockito_core//jar",
+    ],
+)
+
+java_library(
+    name = "net_minidev_json_smart",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@net_minidev_json_smart//jar",
+    ],
+    runtime_deps = [
+        "@junit_junit//jar",
+        "@net_minidev_asm//jar",
+    ],
+)
+
+java_library(
+    name = "jetty_server9",
+    licenses = ["notice"],
+    visibility = ["//visibility:public"],
+    exports = [
+        "@jetty_server9//:javax_servlet_javax_servlet_api",
+        "@jetty_server9//:org_eclipse_jetty_jetty_http",
+        "@jetty_server9//:org_eclipse_jetty_jetty_server",
+        "@jetty_server9//:org_eclipse_jetty_jetty_util",
     ],
 )

@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.CreditLineEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.entities.CreditLineEntity;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.strings.StringUtils;
 
 public class UkOpenBankingApiDefinitions {
@@ -210,11 +210,28 @@ public class UkOpenBankingApiDefinitions {
         SORT_CODE_ACCOUNT_NUMBER,
         PAN;
 
+        private static final GenericTypeMapper<ExternalAccountIdentification4Code, String>
+                ACCOUNT_IDENTIFIER_TYPE_MAPPER =
+                        GenericTypeMapper
+                                .<ExternalAccountIdentification4Code, String>genericBuilder()
+                                .put(ExternalAccountIdentification4Code.BBAN, "UK.OBIE.BBAN")
+                                .put(ExternalAccountIdentification4Code.IBAN, "UK.OBIE.IBAN")
+                                .put(ExternalAccountIdentification4Code.PAYM, "UK.OBIE.Paym")
+                                .put(
+                                        ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER,
+                                        "UK.OBIE.SortCodeAccountNumber",
+                                        "UK.Santander.SavingsRollNumber")
+                                // TODO: Remove the following mapping for PAN and
+                                // UK.Santander.SavingsRollNumber when Santander starts
+                                // sending UK.OBIE.PAN for Credit Card Accounts
+                                .put(ExternalAccountIdentification4Code.PAN, "UK.OBIE.PAN", "PAN")
+                                .build();
+
         @JsonCreator
         private static ExternalAccountIdentification4Code fromString(String key) {
 
             return (key != null)
-                    ? UkOpenBankingV31Constants.ACCOUNT_IDENTIFIER_TYPE_MAPPER
+                    ? ACCOUNT_IDENTIFIER_TYPE_MAPPER
                             .translate(key)
                             .orElseThrow(
                                     () ->
@@ -300,6 +317,19 @@ public class UkOpenBankingApiDefinitions {
             return (key != null)
                     ? CreditDebitIndicator.valueOf(
                             CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
+        }
+    }
+
+    public enum PartyType {
+        DELEGATE,
+        JOINT,
+        SOLE;
+
+        @JsonCreator
+        private static PartyType fromString(String key) {
+            return (key != null)
+                    ? PartyType.valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
                     : null;
         }
     }

@@ -155,7 +155,7 @@ public class BanquePopulaireApiClient {
                             .get(HttpResponse.class);
             return rawResponse.getBody(ContractsResponse.class);
         } catch (Exception e) {
-            logPaginationResponse(rawResponse);
+            logPaginationResponse(rawResponse, e);
             throw e;
         }
     }
@@ -194,7 +194,7 @@ public class BanquePopulaireApiClient {
 
             return rawResponse.getBody(BanquePopulaireTransactionsResponse.class);
         } catch (Exception e) {
-            logPaginationResponse(rawResponse);
+            logPaginationResponse(rawResponse, e);
             throw e;
         }
     }
@@ -221,7 +221,8 @@ public class BanquePopulaireApiClient {
             if (rawResponse != null && rawResponse.hasBody()) {
                 LOGGER.warnExtraLong(
                         rawResponse.getBody(String.class),
-                        BanquePopulaireConstants.LogTags.PAGINATION_RESPONSE);
+                        BanquePopulaireConstants.LogTags.PAGINATION_RESPONSE,
+                        e);
             }
             throw e;
         }
@@ -315,11 +316,12 @@ public class BanquePopulaireApiClient {
         }
     }
 
-    private void logPaginationResponse(HttpResponse rawResponse) {
+    private void logPaginationResponse(HttpResponse rawResponse, Exception e) {
         if (rawResponse != null && rawResponse.hasBody()) {
             LOGGER.warnExtraLong(
                     rawResponse.getBody(String.class),
-                    BanquePopulaireConstants.LogTags.PAGINATION_RESPONSE);
+                    BanquePopulaireConstants.LogTags.PAGINATION_RESPONSE,
+                    e);
         }
     }
 

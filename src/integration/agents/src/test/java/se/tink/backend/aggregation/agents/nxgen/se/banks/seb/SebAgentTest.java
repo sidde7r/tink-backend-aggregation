@@ -27,7 +27,7 @@ public class SebAgentTest {
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .loadCredentialsBefore(true)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true);
     }
 

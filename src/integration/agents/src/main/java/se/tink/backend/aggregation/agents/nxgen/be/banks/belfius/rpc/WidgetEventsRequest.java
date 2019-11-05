@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class WidgetEventsRequest extends RequestEntity {
-
     private String applicationId;
     private List<WidgetEventInformation> widgetEventInformations;
 

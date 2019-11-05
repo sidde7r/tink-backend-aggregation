@@ -5,14 +5,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SibsSignSteps;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Storage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentStatusResponse;
@@ -25,30 +21,29 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentInitiationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentUpdateRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentUpdateResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.Consent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SibsBaseApiClient {
 
+    private static final AggregationLogger log = new AggregationLogger(SibsBaseApiClient.class);
     private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
             DateTimeFormatter.ofPattern(Formats.CONSENT_BODY_DATE_FORMAT);
     private static final String TRUE = "true";
+    private static final String PSU_IP_ADDRESS = "127.0.0.1";
     private final String isPsuInvolved;
     protected final TinkHttpClient client;
-    protected final PersistentStorage persistentStorage;
     protected SibsConfiguration configuration;
     protected EidasProxyConfiguration eidasConf;
+    private final SibsUserState userState;
 
     /*
     * TODO: remove this section after full AIS and PIS test:
@@ -60,11 +55,10 @@ public class SibsBaseApiClient {
      * - global - change pattern in sign interceptor
      * - single - use code above to create date with correct pattern and add header (it won't be override)
     */
-
     public SibsBaseApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, boolean isRequestManual) {
+            TinkHttpClient client, SibsUserState userState, boolean isRequestManual) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
+        this.userState = userState;
         this.isPsuInvolved = String.valueOf(isRequestManual);
     }
 
@@ -74,23 +68,11 @@ public class SibsBaseApiClient {
         this.eidasConf = Preconditions.checkNotNull(eidasConf);
     }
 
-    private String getConsentIdFromStorage() {
-        Consent consent = getConsentFromStorage();
-        return consent.getConsentId();
-    }
-
-    private Consent getConsentFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.CONSENT_ID, Consent.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
-    }
-
     public AccountsResponse fetchAccounts() {
         URL accounts = createUrl(SibsConstants.Urls.ACCOUNTS);
         return client.request(accounts)
                 .queryParam(QueryKeys.WITH_BALANCE, TRUE)
-                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .get(AccountsResponse.class);
     }
 
@@ -101,7 +83,7 @@ public class SibsBaseApiClient {
 
         return client.request(accountBalances)
                 .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
-                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .get(BalancesResponse.class);
     }
 
@@ -110,14 +92,13 @@ public class SibsBaseApiClient {
         URL accountTransactions =
                 createUrl(SibsConstants.Urls.ACCOUNT_TRANSACTIONS)
                         .parameter(PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier());
-
+        String transactionFetchFromDate = userState.getTransactionsFetchBeginDate(account);
         return client.request(accountTransactions)
                 .queryParam(QueryKeys.WITH_BALANCE, TRUE)
                 .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
                 .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
-                .queryParam(
-                        QueryKeys.DATE_FROM, SibsUtils.getPaginationDate(getConsentFromStorage()))
-                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .queryParam(QueryKeys.DATE_FROM, transactionFetchFromDate)
+                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .get(TransactionsResponse.class);
     }
 
@@ -126,7 +107,7 @@ public class SibsBaseApiClient {
 
         return client.request(new URL(baseUrl + key))
                 .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
-                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .get(TransactionsResponse.class);
     }
 
@@ -145,49 +126,16 @@ public class SibsBaseApiClient {
                                         .queryParam(QueryKeys.STATE, state))
                         .post(ConsentResponse.class, consentRequest);
 
-        saveConsentInPersistentStorage(consentResponse);
+        userState.startManualAuthentication(consentResponse);
 
         return new URL(consentResponse.getLinks().getRedirect());
-    }
-
-    public ConsentResponse createDecoupledAuthConsent(
-            String state, String psuIdType, String psuId) {
-        ConsentRequest consentRequest = getConsentRequest();
-
-        URL createConsent = createUrl(SibsConstants.Urls.CREATE_CONSENT);
-        ConsentResponse consentResponse =
-                client.request(createConsent)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .type(MediaType.APPLICATION_JSON)
-                        .header(
-                                HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(configuration.getRedirectUrl())
-                                        .queryParam(QueryKeys.STATE, state))
-                        .header(SibsConstants.HeaderKeys.PSU_ID_TYPE, psuIdType)
-                        .header(SibsConstants.HeaderKeys.PSU_ID, psuId)
-                        .post(ConsentResponse.class, consentRequest);
-
-        saveConsentInPersistentStorage(consentResponse);
-
-        return consentResponse;
-    }
-
-    public void removeConsentFromPersistentStorage() {
-        persistentStorage.remove(StorageKeys.CONSENT_ID);
-    }
-
-    private void saveConsentInPersistentStorage(ConsentResponse consentResponse) {
-        Consent consent =
-                new Consent(consentResponse.getConsentId(), LocalDateTime.now().toString());
-        persistentStorage.put(SibsSignSteps.SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS, true);
-        persistentStorage.put(StorageKeys.CONSENT_ID, consent);
     }
 
     public ConsentStatusResponse getConsentStatus() throws SessionException {
         try {
             URL consentStatus =
                     createUrl(SibsConstants.Urls.CONSENT_STATUS)
-                            .parameter(PathParameterKeys.CONSENT_ID, getConsentIdFromStorage());
+                            .parameter(PathParameterKeys.CONSENT_ID, userState.getConsentId());
             return client.request(consentStatus).get(ConsentStatusResponse.class);
         } catch (IllegalStateException ex) {
             if (ex.getCause() instanceof SessionException) {
@@ -195,16 +143,6 @@ public class SibsBaseApiClient {
             }
             throw ex;
         }
-    }
-
-    public boolean isManualAuthenticationInProgress() {
-        return persistentStorage
-                .get(SibsSignSteps.SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS, Boolean.class)
-                .orElse(false);
-    }
-
-    public void markManualAuthenticationFinished() {
-        persistentStorage.put(SibsSignSteps.SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS, false);
     }
 
     private ConsentRequest getConsentRequest() {
@@ -238,10 +176,10 @@ public class SibsBaseApiClient {
         return client.request(
                         createPaymentUrl.parameter(
                                 PathParameterKeys.PAYMENT_PRODUCT, sibsPaymentType.getValue()))
-                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, "127.0.0.1")
+                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, PSU_IP_ADDRESS)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(configuration.getRedirectUrl()).queryParam(QueryKeys.STATE, state))
@@ -259,7 +197,7 @@ public class SibsBaseApiClient {
                                         sibsPaymentType.getValue())
                                 .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .get(SibsGetPaymentResponse.class);
     }
 
@@ -276,7 +214,7 @@ public class SibsBaseApiClient {
                                         PathParameterKeys.PAYMENT_PRODUCT,
                                         sibsPaymentType.getValue())
                                 .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
-                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .put(SibsPaymentUpdateResponse.class, sibsPaymentUpdateRequest);
@@ -288,7 +226,7 @@ public class SibsBaseApiClient {
         URL updatePaymentUrl = createUrl(updatePsuIdUrl);
 
         return client.request(updatePaymentUrl)
-                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .put(SibsPaymentUpdateResponse.class, sibsPaymentUpdateRequest);
@@ -304,8 +242,8 @@ public class SibsBaseApiClient {
                                         PathParameterKeys.PAYMENT_PRODUCT,
                                         sibsPaymentType.getValue())
                                 .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
-                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, "127.0.0.1")
-                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .header(SibsConstants.HeaderKeys.PSU_IP_ADDRESS, PSU_IP_ADDRESS)
+                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .delete(SibsCancelPaymentResponse.class);
     }
 
@@ -319,11 +257,7 @@ public class SibsBaseApiClient {
                                         PathParameterKeys.PAYMENT_PRODUCT,
                                         sibsPaymentType.getValue())
                                 .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
-                .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
+                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .get(SibsGetPaymentStatusResponse.class);
-    }
-
-    public URL buildAuthorizeUrlForPayment(SessionStorage sessionStorage) {
-        return new URL(sessionStorage.get(Storage.PAYMENT_REDIRECT_URI));
     }
 }

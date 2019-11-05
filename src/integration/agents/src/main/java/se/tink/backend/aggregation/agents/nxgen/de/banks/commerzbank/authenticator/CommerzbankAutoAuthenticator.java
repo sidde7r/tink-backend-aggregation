@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Error;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Values;
@@ -60,6 +61,9 @@ public class CommerzbankAutoAuthenticator implements AutoAuthenticator {
         }
 
         LoginInfoEntity loginInfoEntity = loginResponse.getLoginInfoEntity();
+        credentials.setSensitivePayload(
+                CommerzbankConstants.LOGIN_INFO_ENTITY,
+                SerializationUtils.serializeToString(loginInfoEntity));
 
         if (!loginInfoEntity.isChallengeStatus()) {
             throw new IllegalStateException(

@@ -11,8 +11,6 @@ public class AggregationWorkerConfiguration {
 
     @JsonProperty private int debugLogFrequencyPercent;
 
-    @JsonProperty private String collectorSubscriptionKey;
-
     @JsonProperty
     private CircuitBreakerConfiguration circuitBreaker = new CircuitBreakerConfiguration();
 
@@ -25,10 +23,6 @@ public class AggregationWorkerConfiguration {
 
     public String getDebugLogDir() {
         return debugLogDir;
-    }
-
-    public String getCollectorSubscriptionKey() {
-        return collectorSubscriptionKey;
     }
 
     public CircuitBreakerConfiguration getCircuitBreaker() {

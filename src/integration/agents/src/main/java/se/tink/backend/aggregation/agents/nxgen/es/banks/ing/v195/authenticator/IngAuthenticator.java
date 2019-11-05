@@ -28,12 +28,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.ErrorRespo
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.countries.EsIdentityDocumentType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class IngAuthenticator implements Authenticator {
+public class IngAuthenticator implements Authenticator, AuthenticationControllerType {
     private static final AggregationLogger LOGGER = new AggregationLogger(IngAuthenticator.class);
 
     private static final Pattern NIF_PATTERN = Pattern.compile("^[0-9]{8}[a-zA-Z]$");
@@ -60,7 +62,7 @@ public class IngAuthenticator implements Authenticator {
             Preconditions.checkArgument(!isNullOrEmpty(dob), "DOB is null or empty");
             Preconditions.checkArgument(!isNullOrEmpty(password), "Password is null or empty");
         } catch (IllegalArgumentException ex) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(ex);
         }
 
         final CreateSessionResponse response;
@@ -73,7 +75,16 @@ public class IngAuthenticator implements Authenticator {
                 final ErrorResponse errorResponse = hre.getResponse().getBody(ErrorResponse.class);
                 if (errorResponse.hasErrorField(ErrorCodes.LOGIN_DOCUMENT_FIELD)) {
                     // login document didn't pass server-side validation
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                    throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
+                }
+            } else if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                final ErrorResponse errorResponse = hre.getResponse().getBody(ErrorResponse.class);
+                if (errorResponse.hasErrorCode(ErrorCodes.MOBILE_VALIDATION_ENROLLMENT_REQUIRED)) {
+                    // mobile validation enrollment required
+                    throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(hre);
+                } else if (errorResponse.hasErrorCode(ErrorCodes.GENERIC_LOCK)) {
+                    // account blocked
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception(hre);
                 }
             }
             throw hre;
@@ -143,7 +154,7 @@ public class IngAuthenticator implements Authenticator {
                     SerializationUtils.serializeToString(pinPadNumbers),
                     Logging.INVALID_PINPAD_NUMBERS,
                     ex);
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(ex);
         }
 
         // then, lookup the required indexes in the map
@@ -156,7 +167,7 @@ public class IngAuthenticator implements Authenticator {
                     SerializationUtils.serializeToString(pinPositions),
                     Logging.MISSING_PINPAD_POSITION,
                     ex);
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(ex);
         }
     }
 
@@ -173,7 +184,7 @@ public class IngAuthenticator implements Authenticator {
                     "Non numeric character encountered in password",
                     Logging.NON_NUMERIC_PASSWORD,
                     ex);
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception(ex);
         }
     }
 
@@ -219,11 +230,16 @@ public class IngAuthenticator implements Authenticator {
     private void handleErrors(HttpResponseException hre) throws LoginException {
         switch (hre.getResponse().getStatus()) {
             case HttpStatus.SC_FORBIDDEN:
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
             case HttpStatus.SC_CONFLICT:
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(hre);
             default:
                 throw hre;
         }
+    }
+
+    @Override
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        return request.isUpdate() || request.isCreate();
     }
 }

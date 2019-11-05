@@ -291,5 +291,7 @@ public class DanskeBankConstants {
 
     public static class DanskeRequestHeaders {
         public static final String REFERRER = "Referer";
+        public static final String AUTHORIZATION = "Authorization";
+        public static final String PERSISTENT_AUTH = "Persistent-Auth";
     }
 }

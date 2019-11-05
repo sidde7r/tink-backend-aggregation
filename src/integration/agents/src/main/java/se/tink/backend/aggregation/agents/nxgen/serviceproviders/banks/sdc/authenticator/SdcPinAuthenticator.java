@@ -63,7 +63,7 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
 
             Optional<InvalidPinResponse> invalidPin = InvalidPinResponse.from(e);
             if (invalidPin.isPresent()) {
-                throw invalidPin.get().exception();
+                throw invalidPin.get().exception(e);
             }
             if (isInternalError(e)) {
                 // errorMessage is null safe
@@ -74,16 +74,16 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
                                                 .getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
                                 .orElse("");
                 if (this.agentConfiguration.isNotCustomer(errorMessage)) {
-                    throw LoginError.NOT_CUSTOMER.exception();
+                    throw LoginError.NOT_CUSTOMER.exception(e);
                 } else if (agentConfiguration.isLoginError(errorMessage)) {
-                    LOGGER.info(errorMessage);
+                    LOGGER.info(errorMessage, e);
 
                     // if user is blocked throw more specific exception
                     if (agentConfiguration.isUserBlocked(errorMessage)) {
-                        throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+                        throw AuthorizationError.ACCOUNT_BLOCKED.exception(e);
                     }
 
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                    throw LoginError.INCORRECT_CREDENTIALS.exception(e);
                 }
             }
 

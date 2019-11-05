@@ -24,12 +24,15 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -51,7 +54,15 @@ public class AgentTestContext extends AgentContext {
     private Credentials credentials;
 
     public AgentTestContext(Credentials credentials) {
-        supplementalClient = NextGenTinkHttpClient.builder().build();
+        LogMasker logMasker =
+                LogMasker.builder()
+                        .addStringMaskerBuilder(
+                                new CredentialsStringMaskerBuilder(new Credentials()))
+                        .build();
+        setLogMasker(logMasker);
+        supplementalClient =
+                NextGenTinkHttpClient.builder(logMasker, LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                        .build();
         log = LoggerFactory.getLogger(AgentTestContext.class);
         mapper = new ObjectMapper();
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"));

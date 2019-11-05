@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces;
 
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public interface UkOpenBankingAisConfig {
@@ -19,7 +21,21 @@ public interface UkOpenBankingAisConfig {
 
     URL getUpcomingTransactionRequestURL(String accountId);
 
-    URL getAuthBaseURL();
-
     URL getApiBaseURL();
+
+    public URL getWellKnownURL();
+
+    public URL getIdentityDataURL();
+
+    public URL getAppToAppURL();
+
+    public List<String> getAdditionalPermissions();
+
+    void setIdentityData(IdentityDataEntity identityData);
+
+    public IdentityDataEntity getIdentityData();
+
+    void setHolderName(String holderName);
+
+    public String getHolderName();
 }

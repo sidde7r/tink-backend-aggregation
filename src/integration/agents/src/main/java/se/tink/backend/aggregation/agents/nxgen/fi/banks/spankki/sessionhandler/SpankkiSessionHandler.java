@@ -27,7 +27,7 @@ public class SpankkiSessionHandler implements SessionHandler {
                 return;
             }
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
 
         throw SessionError.SESSION_EXPIRED.exception();

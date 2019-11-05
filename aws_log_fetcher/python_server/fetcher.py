@@ -8,6 +8,7 @@ import websockets
 import asyncio
 import aws_google_auth
 import keyring
+from datetime import datetime, timedelta
 from LogOrganiser import organise
 from datetime import datetime
 
@@ -56,8 +57,14 @@ async def run(cookie,
     await send_message(ws, "Fetched unique request IDs. There are " + str(len(request_ids)) + " ids", payload)
 
     # Get the timestamps for the lower and upper limit of time range used in the query
-    gte = int(json.loads(query)["bool"]["must"][-1]["range"]["@timestamp"]["gte"])
-    lte = int(json.loads(query)["bool"]["must"][-1]["range"]["@timestamp"]["lte"])
+    gte = json.loads(query)["bool"]["must"][-1]["range"]["@timestamp"]["gte"]
+    lte = json.loads(query)["bool"]["must"][-1]["range"]["@timestamp"]["lte"]
+
+    gte_date = datetime.strptime(gte, "%Y-%m-%dT%H:%M:%S.%fZ") - timedelta(minutes=10)
+    lte_date = datetime.strptime(lte, "%Y-%m-%dT%H:%M:%S.%fZ") + timedelta(minutes=10)
+
+    gte_date = gte_date.strftime("%Y-%m-%dT%H:%M:%S") + ".000Z"
+    lte_date = lte_date.strftime("%Y-%m-%dT%H:%M:%S") + ".999Z"
 
     metadata = []
     download_requests = []
@@ -71,8 +78,8 @@ async def run(cookie,
         logs_for_session = elasticsearch_manager.make_query(query=json.dumps(requestid_query),
                                                             replacements=[
                                                                 ("<requestId>", request_id),
-                                                                ("<gte>", str(gte - 10000)),
-                                                                ("<lte>", str(lte + 10000))
+                                                                ("<gte>", gte_date),
+                                                                ("<lte>", lte_date)
                                                             ])
 
         await send_message(ws, "Fetched logs for the flow with requestID = " + request_id

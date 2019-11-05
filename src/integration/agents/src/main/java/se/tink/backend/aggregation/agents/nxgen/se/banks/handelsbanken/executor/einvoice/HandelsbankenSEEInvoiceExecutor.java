@@ -151,30 +151,36 @@ public class HandelsbankenSEEInvoiceExecutor implements ApproveEInvoiceExecutor 
     private TransferExecutionException translateUpdateException(TransferExecutionException e) {
         switch (EndUserMessage.valueOf(e.getUserMessage())) {
             case PAYMENT_UPDATE_NOT_ALLOWED:
-                throw exception(EINVOICE_MODIFY_NOT_ALLOWED);
+                throw exception(EINVOICE_MODIFY_NOT_ALLOWED, e);
             case PAYMENT_UPDATE_AMOUNT:
-                throw exception(EINVOICE_MODIFY_AMOUNT);
+                throw exception(EINVOICE_MODIFY_AMOUNT, e);
             case PAYMENT_UPDATE_DUEDATE:
-                throw exception(EINVOICE_MODIFY_DUEDATE);
+                throw exception(EINVOICE_MODIFY_DUEDATE, e);
             case PAYMENT_UPDATE_DESTINATION_MESSAGE:
-                throw exception(EINVOICE_MODIFY_DESTINATION_MESSAGE);
+                throw exception(EINVOICE_MODIFY_DESTINATION_MESSAGE, e);
             case PAYMENT_UPDATE_SOURCE:
-                throw exception(EINVOICE_MODIFY_SOURCE);
+                throw exception(EINVOICE_MODIFY_SOURCE, e);
             case PAYMENT_UPDATE_SOURCE_MESSAGE:
-                throw exception(EINVOICE_MODIFY_SOURCE_MESSAGE);
+                throw exception(EINVOICE_MODIFY_SOURCE_MESSAGE, e);
             case PAYMENT_UPDATE_DESTINATION:
-                throw exception(EINVOICE_MODIFY_DESTINATION);
+                throw exception(EINVOICE_MODIFY_DESTINATION, e);
             default:
-                return exception(EINVOICE_MODIFY_FAILED);
+                return exception(EINVOICE_MODIFY_FAILED, e);
         }
     }
 
     // A lot of exceptions are thrown in this executor, this method saves us a lot of lines
-    private TransferExecutionException exception(EndUserMessage endUserMessage) {
+    private TransferExecutionException exception(
+            EndUserMessage endUserMessage, TransferExecutionException e) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(endUserMessage)
                 .setMessage(endUserMessage.toString())
+                .setException(e)
                 .build();
+    }
+
+    private TransferExecutionException exception(EndUserMessage endUserMessage) {
+        return exception(endUserMessage, null);
     }
 
     private String getIdInHref(String href) {

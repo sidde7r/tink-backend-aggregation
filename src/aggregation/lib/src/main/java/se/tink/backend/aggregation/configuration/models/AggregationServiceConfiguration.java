@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.storage.file.models.ProvisionClientsConfig;
-import se.tink.libraries.endpoints.EndpointsConfiguration;
+import se.tink.libraries.endpoints.dropwizard.EndpointsConfiguration;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.repository.config.DatabaseConfiguration;
 

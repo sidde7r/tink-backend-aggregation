@@ -44,8 +44,11 @@ public class OpAuthenticator implements KeyCardAuthenticator {
 
     @Override
     public KeyCardInitValues init(String username, String password) throws LoginException {
+        credentials.setSensitivePayload(Field.Key.USERNAME, username);
+        credentials.setSensitivePayload(Field.Key.PASSWORD, password);
         InitResponseEntity iResponse = apiClient.init(new InitRequestEntity());
         String authToken = OpAuthenticationTokenGenerator.calculateAuthToken(iResponse.getSeed());
+        credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, authToken);
         this.authToken = authToken;
 
         OpBankLoginRequestEntity request =
@@ -74,6 +77,7 @@ public class OpAuthenticator implements KeyCardAuthenticator {
 
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
+        credentials.setSensitivePayload(Field.Key.OTP_INPUT, code);
 
         try {
             OpBankAuthenticateResponse response =
@@ -97,7 +101,7 @@ public class OpAuthenticator implements KeyCardAuthenticator {
             ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
 
             if (errorResponse.isIncorrectLoginCredentials()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
         }
 

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.utils.jersey;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableSet;
 import com.sun.jersey.api.client.AbstractClientRequestAdapter;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
@@ -18,10 +17,12 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingConstants;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
@@ -40,44 +41,8 @@ public class LoggingFilter extends ClientFilter {
 
     private static final String RESPONSE_PREFIX = "< ";
 
-    // In lower case
-    private static final Set<String> NON_SENSITIVE_HEADER_FIELDS =
-            ImmutableSet.of(
-                    "accept",
-                    "accept-charset",
-                    "accept-datetime",
-                    "accept-encoding",
-                    "accept-language",
-                    "accept-ranges",
-                    "access-control-allow-origin",
-                    "age",
-                    "allow",
-                    "cache-control",
-                    "connection",
-                    "content-encoding",
-                    "content-language",
-                    "content-length",
-                    "content-type",
-                    "date",
-                    "expires",
-                    "forwarded",
-                    "if-modified-since",
-                    "if-unmodified-since",
-                    "host",
-                    "language",
-                    "last-modified",
-                    "pragma",
-                    "proxy-connection",
-                    "referer",
-                    "server",
-                    "status",
-                    "transfer-encoding",
-                    "user-agent",
-                    "vary",
-                    "via",
-                    "x-forwarded-for",
-                    "x-forwarded-host",
-                    "x-powered-by");
+    private final LogMasker logMasker;
+    private final LoggingMode loggingMode;
 
     private final class Adapter extends AbstractClientRequestAdapter {
         private final StringBuilder b;
@@ -139,26 +104,42 @@ public class LoggingFilter extends ClientFilter {
     private boolean censorSensitiveHeaders = true; // Default
 
     /**
-     * Create a logging filter logging the request and response to print stream.
+     * Create a logging filter logging the request and response to print stream. Takes a logMasker
+     * that masks sensitive values from logs, the loggingMode parameter should only be passed with
+     * the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the logMasker handles
+     * the sensitive values in the provider. use {@link
+     * se.tink.backend.aggregation.log.LogMasker#shouldLog(Provider)} if you can.
      *
      * @param loggingStream the print stream to log requests and responses.
+     * @param logMasker Masks values from logs.
+     * @param loggingMode determines if logs should be outputted at all.
      */
-    public LoggingFilter(PrintStream loggingStream) {
+    public LoggingFilter(PrintStream loggingStream, LogMasker logMasker, LoggingMode loggingMode) {
         this.loggingStream = loggingStream;
+        this.logMasker = logMasker;
+        this.loggingMode = loggingMode;
     }
 
-    public LoggingFilter(PrintStream loggingStream, boolean censorSensitiveHeaders) {
+    public LoggingFilter(
+            PrintStream loggingStream,
+            LogMasker logMasker,
+            boolean censorSensitiveHeaders,
+            LoggingMode loggingMode) {
         this.loggingStream = loggingStream;
         this.censorSensitiveHeaders = censorSensitiveHeaders;
+        this.logMasker = logMasker;
+        this.loggingMode = loggingMode;
     }
 
     private void log(StringBuilder b) {
-        loggingStream.print(b);
+        if (LoggingMode.LOGGING_MASKER_COVERS_SECRETS.equals(loggingMode)) {
+            loggingStream.print(logMasker.mask(b.toString()));
+        }
     }
 
     private static String censorHeaderValue(String key, String value) {
 
-        if (NON_SENSITIVE_HEADER_FIELDS.contains(key.toLowerCase())) {
+        if (HttpLoggingConstants.NON_SENSITIVE_HEADER_FIELDS.contains(key.toLowerCase())) {
             return value;
         }
 

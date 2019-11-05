@@ -50,16 +50,16 @@ public class BunqAuthenticator implements Authenticator {
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         if (request.isCreate() || request.isUpdate()) {
-            registration(credentials);
+            registration(credentials, null);
         } else {
             authentication(credentials);
         }
     }
 
-    private void registration(Credentials credentials)
+    private void registration(Credentials credentials, SessionException autoException)
             throws AuthenticationException, AuthorizationException {
         if (!request.isManual()) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(autoException);
         }
 
         registrationAuthenticator.authenticate(credentials);
@@ -74,7 +74,7 @@ public class BunqAuthenticator implements Authenticator {
                 throw autoException;
             }
 
-            registration(credentials);
+            registration(credentials, autoException);
         }
     }
 }

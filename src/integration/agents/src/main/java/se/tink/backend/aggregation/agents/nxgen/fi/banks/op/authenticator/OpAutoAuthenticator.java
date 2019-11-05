@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator;
 
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -55,9 +56,12 @@ public class OpAutoAuthenticator implements PasswordAuthenticator, AutoAuthentic
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
+        credentials.setSensitivePayload(Field.Key.USERNAME, username);
+        credentials.setSensitivePayload(Field.Key.PASSWORD, password);
         InitResponseEntity iResponse = apiClient.init(new InitRequestEntity());
         String authToken = OpAuthenticationTokenGenerator.calculateAuthToken(iResponse.getSeed());
         this.authToken = authToken;
+        credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, authToken);
         OpBankLoginRequestEntity request =
                 new OpBankLoginRequestEntity()
                         .setPassword(password)

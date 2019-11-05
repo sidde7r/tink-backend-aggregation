@@ -1,18 +1,39 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.ics;
 
-import org.junit.Ignore;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-@Ignore
 public class ICSAgentTest {
+
+    private enum Arg {
+        LOAD_BEFORE,
+        SAVE_AFTER,
+    }
+
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+
+    @Before
+    public void before() {
+        manager.before();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Test
     public void refresh() throws Exception {
         new AgentIntegrationTest.Builder("nl", "nl-ics-oauth2")
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
+                .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("icsConfiguration")
+                .setClusterId("oxford-staging")
+                .setAppId("abn-qwac-psd2")
                 .build()
                 .testRefresh();
     }

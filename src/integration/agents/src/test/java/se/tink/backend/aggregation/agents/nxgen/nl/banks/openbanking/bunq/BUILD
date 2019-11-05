@@ -21,6 +21,7 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
         "//third_party:org_iban4j_iban4j",

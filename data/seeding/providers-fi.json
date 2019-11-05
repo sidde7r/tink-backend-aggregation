@@ -3,6 +3,7 @@
     "market": "FI",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.aktia.AktiaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Aktia",
@@ -23,6 +24,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-aktia-codecard",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
@@ -33,6 +36,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.alandsbanken.AlandsBankenAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Ålandsbanken",
@@ -49,6 +53,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "fi-alandsbanken-codecard",
             "passwordHelpText": "Use the same User-ID and password as you would in your bank's mobile app.",
@@ -60,6 +66,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.creditcards.amex.AmericanExpressFIAgent",
             "credentialsType": "PASSWORD",
             "displayName": "American Express",
@@ -76,6 +83,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-americanexpress-password",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
@@ -86,6 +95,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.danskebank.DanskeBankFIAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Danske Bank",
@@ -111,8 +121,8 @@
                     "sensitive": true
                 }
             ],
-            "name": "fi-danskebank-codecard",
             "financialInstitutionId": "6f5f37026d75467f8c7dbe7ce88c4441",
+            "name": "fi-danskebank-codecard",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
             "refreshFrequency": 1,
@@ -122,6 +132,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.handelsbanken.HandelsbankenFIAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Handelsbanken",
@@ -154,6 +165,8 @@
                     "patternError": "Please input the password also used for the web login."
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-handelsbanken-codecard",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "refreshFrequency": 1,
@@ -163,6 +176,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.nordea.v33.NordeaFIAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "displayDescription": "Nordea Codes App",
@@ -175,6 +189,8 @@
                     "numeric": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "fi-nordea-thirdpartyapp",
             "popular": true,
@@ -185,6 +201,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.omasp.OmaspAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Oma Säästöpankki",
@@ -203,6 +220,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-omasp-codecard",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
@@ -213,6 +232,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.op.OpBankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "OP",
@@ -229,6 +249,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-op-codecard",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
@@ -239,6 +261,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.fi.openbanking.opbank.OpBankAgent",
             "credentialsType": "PASSWORD",
             "fields": [
@@ -254,6 +277,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "fi-opbank-openbanking",
             "payload": "tink",
             "popular": true,
@@ -264,6 +289,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.poppankki.PopPankkiAgent",
             "credentialsType": "PASSWORD",
             "displayName": "POP Pankki",
@@ -281,6 +307,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fi-poppankki-codecard",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -292,6 +320,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.saastopankki.SpAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Säästöpankki",
@@ -309,6 +338,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fi-saastopankki-codecard",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -318,6 +349,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fi.banks.spankki.SpankkiAgent",
             "credentialsType": "PASSWORD",
             "displayName": "S-Pankki",
@@ -334,6 +366,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fi-spankki-codecard",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -343,6 +377,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -354,6 +389,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "fi-test-multi-supplemental",
@@ -364,6 +401,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -381,6 +419,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "fi-test-password",

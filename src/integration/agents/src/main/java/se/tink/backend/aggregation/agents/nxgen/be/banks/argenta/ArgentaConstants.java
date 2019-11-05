@@ -48,6 +48,7 @@ public class ArgentaConstants {
         public static final String DEVICE_ID = "DEVICE_ID";
         public static final String HOME_OFFICE = "HOME_OFFICE";
         public static final String UAK = "UAK";
+        public static final String IS_NEW_CREDENTIAL = "IS_NEW_CREDENTIAL";
     }
 
     public static class Fetcher {
@@ -65,6 +66,7 @@ public class ArgentaConstants {
     }
 
     public static class Device {
+        public static final String UNKNOWN = "N/A";
         public static final String VENDOR = "Apple";
         public static final String NAME = "Tink";
         public static final String MODEL = "iPhone9,4";
@@ -83,6 +85,10 @@ public class ArgentaConstants {
         public static final String TOO_MANY_DEVICES = "maximumaantal actieve registraties";
         public static final String AUTHENTICATION_ERROR = "de logingegevens zijn niet juist";
         public static final String ACCOUNT_BLOCKED = "is geblokkeerd";
+        public static final String INTERNET_BANKING_NOT_ACTIVE = "internetbankieren is niet actief";
+        public static final String PROBLEM_SOLVING_IN_PROGRESS =
+                "We lossen het probleem zo snel mogelijk op";
+        public static final String SOMETHING_WRONG = "Oeps, er ging iets mis";
     }
 
     public static class LogTags {

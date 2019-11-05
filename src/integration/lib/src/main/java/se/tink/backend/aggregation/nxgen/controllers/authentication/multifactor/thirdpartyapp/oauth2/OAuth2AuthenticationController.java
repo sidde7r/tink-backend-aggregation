@@ -88,38 +88,45 @@ public class OAuth2AuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        OAuth2Token accessToken =
+        OAuth2Token oAuth2Token =
                 persistentStorage
-                        .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                        .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        if (accessToken.hasAccessExpired()) {
-            if (!accessToken.canRefresh()) {
+        if (oAuth2Token.hasAccessExpired()) {
+            if (!oAuth2Token.canRefresh()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
-
-            persistentStorage.remove(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN);
 
             // Refresh token is not always present, if it's absent we fall back to the manual
             // authentication.
             String refreshToken =
-                    accessToken
+                    oAuth2Token
                             .getRefreshToken()
                             .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-            accessToken = authenticator.refreshAccessToken(refreshToken);
-            if (!accessToken.isValid()) {
+            OAuth2Token refreshedOAuth2Token = authenticator.refreshAccessToken(refreshToken);
+            if (!refreshedOAuth2Token.isValid()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
+            if (refreshedOAuth2Token.hasRefreshExpire()) {
+                credentials.setSessionExpiryDate(
+                        OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                                refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));
+            }
+
+            oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
+
             // Store the new access token on the persistent storage again.
-            persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
+            persistentStorage.rotateStorageValue(
+                    OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
 
             // Fall through.
         }
 
         // Tell the authenticator which access token it can use.
-        authenticator.useAccessToken(accessToken);
+        authenticator.useAccessToken(oAuth2Token);
     }
 
     @Override
@@ -173,25 +180,25 @@ public class OAuth2AuthenticationController
             throw new IllegalStateException("callbackData did not contain 'code'");
         }
 
-        OAuth2Token accessToken = authenticator.exchangeAuthorizationCode(code);
+        OAuth2Token oAuth2Token = authenticator.exchangeAuthorizationCode(code);
 
-        if (!accessToken.isValid()) {
+        if (!oAuth2Token.isValid()) {
             throw new IllegalStateException("Invalid access token.");
         }
 
-        if (!accessToken.isBearer()) {
+        if (!oAuth2Token.isBearer()) {
             throw new IllegalStateException(
-                    String.format("Unknown token type '%s'.", accessToken.getTokenType()));
+                    String.format("Unknown token type '%s'.", oAuth2Token.getTokenType()));
         }
 
         credentials.setSessionExpiryDate(
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
-                        accessToken, tokenLifetime, tokenLifetimeUnit));
+                        oAuth2Token, tokenLifetime, tokenLifetimeUnit));
 
-        persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
+        persistentStorage.put(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
 
         // Tell the authenticator which access token it can use.
-        authenticator.useAccessToken(accessToken);
+        authenticator.useAccessToken(oAuth2Token);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }

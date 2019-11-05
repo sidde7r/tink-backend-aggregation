@@ -55,7 +55,10 @@ public class TransactionRecord {
             return true;
         } catch (Exception e) {
             logger.error(
-                    "{} {}", SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_ERROR, e.toString());
+                    "{} {}",
+                    SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_ERROR,
+                    e.toString(),
+                    e);
             return false;
         }
     }
@@ -67,8 +70,9 @@ public class TransactionRecord {
             logger.error(
                     "{} Cannot parse date: {}",
                     SantanderConstants.LOGTAG.SANTANDER_DATE_PARSING_ERROR,
-                    transactionDate);
-            throw new IllegalStateException("Cannot parse datetransaction");
+                    transactionDate,
+                    e);
+            throw new IllegalStateException("Cannot parse datetransaction", e);
         }
     }
 

@@ -21,7 +21,7 @@ public class RevolutSessionHandler implements SessionHandler {
         try {
             apiClient.assertAuthorized();
         } catch (HttpResponseException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

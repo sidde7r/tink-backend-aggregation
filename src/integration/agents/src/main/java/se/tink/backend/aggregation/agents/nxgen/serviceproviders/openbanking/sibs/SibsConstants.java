@@ -36,10 +36,6 @@ public final class SibsConstants {
                 "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}/status";
     }
 
-    public static class StorageKeys {
-        public static final String CONSENT_ID = "CONSENT_ID";
-    }
-
     public static class QueryKeys {
         public static final String STATE = "state";
         public static final String WITH_BALANCE = "withBalance";
@@ -77,7 +73,6 @@ public final class SibsConstants {
         public static final String CONSENT_BODY_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
         public static final String CONSENT_REQUEST_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss Z";
         public static final String RSA = "RSA";
-        public static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
         public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd";
         public static final String SIGNATURE_STRING_FORMAT =
                 "keyId=\"%s\",algorithm=\"%s\",headers=\"%s\",signature=\"%s\"";

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -11,13 +12,13 @@ import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsRedirectAuthenticationProgressiveController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.SibsPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategy;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategyFactory;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.RateLimitErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.ServiceInvalidErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountTransactionFetcher;
@@ -52,28 +53,33 @@ public abstract class SibsProgressiveBaseAgent
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
 
-    private final String clientName;
+    protected final String clientName;
     protected final SibsBaseApiClient apiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final ProgressiveAuthenticator authenticator;
+    private final SibsUserState userState;
 
     public SibsProgressiveBaseAgent(
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration.getSignatureKeyPair(), true);
+        userState = new SibsUserState(persistentStorage, credentials);
         setConfiguration(configuration);
-        apiClient = new SibsBaseApiClient(client, persistentStorage, request.isManual());
+        apiClient = new SibsBaseApiClient(client, userState, request.isManual());
         clientName = request.getProvider().getPayload();
-        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
+        apiClient.setConfiguration(
+                getClientConfiguration(request.getCredentials()), configuration.getEidasProxy());
         client.setMessageSignInterceptor(
                 new SibsMessageSignInterceptor(
-                        getClientConfiguration(),
+                        getClientConfiguration(request.getCredentials()),
                         configuration.getEidasProxy(),
                         new EidasIdentity(
                                 context.getClusterId(), context.getAppId(), this.getAgentClass())));
         applyFilters(client);
+
+        client.setEidasProxy(configuration.getEidasProxy());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         authenticator = constructProgressiveAuthenticator();
     }
@@ -83,22 +89,21 @@ public abstract class SibsProgressiveBaseAgent
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new ServiceInvalidErrorFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        client.addFilter(new RateLimitErrorFilter());
     }
 
     protected abstract String getIntegrationName();
 
-    protected SibsConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(getIntegrationName(), clientName, SibsConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    SibsConfiguration getClientConfiguration(Credentials credentials) {
+        return getAgentConfigurationController().getAgentConfiguration(SibsConfiguration.class);
     }
 
     private ProgressiveAuthenticator constructProgressiveAuthenticator() {
 
         final SibsRedirectAuthenticationProgressiveController controller =
                 new SibsRedirectAuthenticationProgressiveController(
-                        new SibsAuthenticator(apiClient, credentials), strongAuthenticationState);
+                        new SibsAuthenticator(apiClient, userState, credentials),
+                        strongAuthenticationState);
         return new AutoAuthenticationProgressiveController(
                 request,
                 systemUpdater,

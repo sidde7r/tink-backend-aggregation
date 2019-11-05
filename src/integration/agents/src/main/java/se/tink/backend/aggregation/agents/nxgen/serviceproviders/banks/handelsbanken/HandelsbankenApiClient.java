@@ -113,7 +113,8 @@ public abstract class HandelsbankenApiClient {
         } catch (HttpResponseException e) {
             LOGGER.warn(
                     HandelsbankenConstants.URLS.KeepAlive.LOG_TAG
-                            + " - Keeping session alive failed");
+                            + " - Keeping session alive failed",
+                    e);
             return KeepAliveResponse.deadEntryPoint();
         }
     }

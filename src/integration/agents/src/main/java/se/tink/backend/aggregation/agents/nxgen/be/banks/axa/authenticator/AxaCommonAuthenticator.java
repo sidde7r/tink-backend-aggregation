@@ -45,7 +45,7 @@ public final class AxaCommonAuthenticator {
             if (response.isPermanentlyBlocked()) {
                 // Happens if the user has permanently un-registered their device using e.g. the
                 // webpage. The user would have to create a new credential.
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(e);
             }
             throw e;
         }

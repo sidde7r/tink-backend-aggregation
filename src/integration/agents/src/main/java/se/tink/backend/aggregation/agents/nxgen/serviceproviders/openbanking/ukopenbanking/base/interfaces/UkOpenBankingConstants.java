@@ -1,13 +1,48 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces;
 
-import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
+import com.google.common.collect.ImmutableMap;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants;
 
-public abstract class UkOpenBankingConstants extends OpenbankConstants {
+public abstract class UkOpenBankingConstants {
+
+    protected UkOpenBankingConstants() {
+        throw new AssertionError();
+    }
+
     public static final String INTEGRATION_NAME = "ukOpenBankingJson";
 
     public static class HttpHeaders {
         public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
         public static final String X_JWS_SIGNATURE = "x-jws-signature";
+    }
+
+    public static class AgentConfigurations {
+        public static final String WELL_KNOWN_URL = "wellKnownUrl";
+        public static final String AIS_BASE_URL = "aisBaseUel";
+        public static final String PIS_BASE_URL = "pisBaseUrl";
+        public static final String ACCOUNT_HOLDER_ENDPOINT = "accountHolderEndpoint";
+    }
+
+    public static class PartyEndpoints {
+        public static final String IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES =
+                "/accounts/%s/parties";
+        public static final String IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY = "/accounts/%s/party";
+        public static final String IDENTITY_DATA_ENDPOINT_PARTY = "/party";
+        public static ImmutableMap<String, String> partyEndpointsPermissionMap =
+                ImmutableMap.<String, String>builder()
+                        .put(
+                                IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY,
+                                UkOpenBankingAisAuthenticatorConstants
+                                        .ACCOUNT_PERMISSION_READ_PARTY)
+                        .put(
+                                IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES,
+                                UkOpenBankingAisAuthenticatorConstants
+                                        .ACCOUNT_PERMISSION_READ_PARTY)
+                        .put(
+                                IDENTITY_DATA_ENDPOINT_PARTY,
+                                UkOpenBankingAisAuthenticatorConstants
+                                        .ACCOUNT_PERMISSION_READ_PARTY_PSU)
+                        .build();
     }
 
     public static class ApiServices {

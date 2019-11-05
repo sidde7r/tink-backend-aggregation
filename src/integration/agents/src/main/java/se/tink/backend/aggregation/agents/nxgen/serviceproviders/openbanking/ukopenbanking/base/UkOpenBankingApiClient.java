@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants.ACCOUNT_PERMISSIONS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TINK_UKOPENBANKING_ORGID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.UKOB_TAN;
 
@@ -10,11 +11,14 @@ import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jwt.SignedJWT;
 import java.text.ParseException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import net.minidev.json.JSONObject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.TinkJwtCreator;
@@ -31,6 +35,7 @@ import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.SIGNING_ALGORITHM;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
@@ -38,17 +43,21 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class UkOpenBankingApiClient extends OpenIdApiClient {
     private static final AggregationLogger LOGGER =
             new AggregationLogger(UkOpenBankingApiClient.class);
+    private final PersistentStorage persistentStorage;
 
     public UkOpenBankingApiClient(
             TinkHttpClient httpClient,
             SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration,
-            URL wellKnownURL) {
+            URL wellKnownURL,
+            PersistentStorage persistentStorage) {
         super(httpClient, softwareStatement, providerConfiguration, wellKnownURL);
+        this.persistentStorage = persistentStorage;
     }
 
     public <T> T createPaymentIntentId(
@@ -75,10 +84,18 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     private <T extends AccountPermissionResponse> T createAccountIntentId(
             UkOpenBankingAisConfig aisConfig, Class<T> responseType) {
+        // Account Permissions are added to persistentStorage
+        List<String> accountPermissions = new ArrayList<>(ACCOUNT_PERMISSIONS);
+        if (Objects.nonNull(aisConfig.getAdditionalPermissions())) {
+            accountPermissions.addAll(aisConfig.getAdditionalPermissions());
+        }
+
+        persistentStorage.put(
+                PersistentStorageKeys.AIS_ACCOUNT_PERMISSIONS_GRANTED, accountPermissions);
 
         return createAisRequest(aisConfig.createConsentRequestURL())
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .body(AccountPermissionRequest.create())
+                .body(AccountPermissionRequest.create(aisConfig.getAdditionalPermissions()))
                 .post(responseType);
     }
 
@@ -116,14 +133,14 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         }
     }
 
-    private RequestBuilder createPisRequest(URL url) {
+    protected RequestBuilder createPisRequest(URL url) {
         return httpClient
                 .request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .addFilter(getPisAuthFilter());
     }
 
-    private RequestBuilder createAisRequest(URL url) {
+    public RequestBuilder createAisRequest(URL url) {
         return httpClient
                 .request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -145,7 +162,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                         RandomUtils.generateRandomHexEncoded(8));
     }
 
-    private RequestBuilder createPISRequest(URL url, Object request) {
+    private RequestBuilder createPISRequestWithJWSHeader(URL url, Object request) {
         return createPisRequest(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
@@ -167,7 +184,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             LOGGER.error(
                     "Not able to parse algorithm from Software Statement so defaulting to RS256. "
                             + "This should never happen. "
-                            + Arrays.toString(e.getStackTrace()));
+                            + Arrays.toString(e.getStackTrace()),
+                    e);
             jwsAlgorithm = SIGNING_ALGORITHM.RS256.name();
         }
 
@@ -233,7 +251,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     public <T> T createDomesticPaymentConsent(
             UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createPISRequest(pisConfig.createDomesticPaymentConsentURL(), request)
+        return createPISRequestWithJWSHeader(pisConfig.createDomesticPaymentConsentURL(), request)
                 .post(responseType, request);
     }
 
@@ -245,7 +263,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     public <T> T executeDomesticPayment(
             UkOpenBankingPisConfig pisConfig, Object request, Class<T> responseType) {
-        return createPISRequest(pisConfig.createDomesticPaymentURL(), request)
+        return createPISRequestWithJWSHeader(pisConfig.createDomesticPaymentURL(), request)
                 .post(responseType, request);
     }
 

@@ -11,14 +11,11 @@ public class BelfiusAgentTest {
     private enum Arg {
         USERNAME,
         PASSWORD,
+        LOAD_BEFORE,
+        SAVE_AFTER,
     }
 
     private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
-
-    private final AgentIntegrationTest.Builder builder =
-            new AgentIntegrationTest.Builder("be", "be-belfius-cardreader")
-                    .loadCredentialsBefore(false)
-                    .saveCredentialsAfter(true);
 
     @Before
     public void before() {
@@ -36,7 +33,10 @@ public class BelfiusAgentTest {
     }
 
     private AgentIntegrationTest buildWithCredentials() {
-        return builder.addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
+        return new AgentIntegrationTest.Builder("be", "be-belfius-cardreader")
+                .loadCredentialsBefore(Boolean.parseBoolean(helper.get(Arg.LOAD_BEFORE)))
+                .saveCredentialsAfter(Boolean.parseBoolean(helper.get(Arg.SAVE_AFTER)))
+                .addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
                 .addCredentialField(Field.Key.PASSWORD, helper.get(Arg.PASSWORD))
                 .build();
     }

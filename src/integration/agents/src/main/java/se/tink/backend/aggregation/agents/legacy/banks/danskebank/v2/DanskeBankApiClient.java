@@ -74,6 +74,7 @@ public class DanskeBankApiClient {
     private final String sessionLanguage;
     private final Client client;
     private final String userAgent;
+    private Credentials credentials;
 
     private CardsResponse cardsResponse;
     private String magicKey;
@@ -84,7 +85,8 @@ public class DanskeBankApiClient {
             String userAgent,
             BankIdResourceHelper bankIdResourceHelper,
             String providerCountry,
-            String sessionLanguage) {
+            String sessionLanguage,
+            Credentials credentials) {
         this.client = client;
         this.userAgent = userAgent;
         this.bankIdResourceHelper = bankIdResourceHelper;
@@ -92,11 +94,12 @@ public class DanskeBankApiClient {
         this.sessionLanguage = sessionLanguage;
         this.magicKey = null;
         this.nssId = null;
+        this.credentials = credentials;
     }
 
     /** Initializes a session for a password login. */
-    public CreateSessionResponse initAndCreateSession(Credentials credentials) {
-        return initAndCreateSession(credentials, Optional.empty());
+    public CreateSessionResponse initAndCreateSession() {
+        return initAndCreateSession(Optional.empty());
     }
 
     public LoginResponse loginWithPassword(LoginRequest loginRequest) {
@@ -140,8 +143,8 @@ public class DanskeBankApiClient {
      * cookie. Without this call the user will never be logged in and authed to access nodes in the
      * `MB` url subset.
      */
-    public CreateSessionResponse createAuthenticatedSession(Credentials credentials) {
-        return initAndCreateSession(credentials, Optional.ofNullable(nssId));
+    public CreateSessionResponse createAuthenticatedSession() {
+        return initAndCreateSession(Optional.ofNullable(nssId));
     }
 
     public AccountListResponse getAccounts() {
@@ -331,6 +334,8 @@ public class DanskeBankApiClient {
         // This is needed to intercept the nssid from password login
         if (response instanceof LoginResponse) {
             nssId = ((LoginResponse) response).getSgSession();
+            // Store tokens in sensitive payload, so it will be masked from logs
+            credentials.setSensitivePayload(COOKIE_KEY_NSSID, nssId);
         }
 
         updateMagicKey(response);
@@ -339,6 +344,9 @@ public class DanskeBankApiClient {
 
     private void updateMagicKey(AbstractResponse response) {
         magicKey = response.getMagicKey();
+
+        // Store tokens in sensitive payload, so it will be masked from logs
+        credentials.setSensitivePayload(QUERYPARAM_KEY_MAGICKEY, magicKey);
     }
 
     private <T extends AbstractResponse> T postWithoutMagicKeyUpdate(
@@ -358,6 +366,8 @@ public class DanskeBankApiClient {
         for (NewCookie cookie : response.getCookies()) {
             if (cookie.getName().equals(COOKIE_KEY_NSSID)) {
                 nssId = cookie.getValue();
+                // Store tokens in sensitive payload, so it will be masked from logs
+                credentials.setSensitivePayload(COOKIE_KEY_NSSID, nssId);
                 return;
             }
         }
@@ -473,8 +483,7 @@ public class DanskeBankApiClient {
      * the same system for login and for other authed calls, so there we don't use this call with
      * NSSID.
      */
-    private CreateSessionResponse initAndCreateSession(
-            Credentials credentials, Optional<String> nssId) {
+    private CreateSessionResponse initAndCreateSession(Optional<String> nssId) {
         InitSessionResponse initSessionResponse =
                 postWithoutMagicKeyUpdate(
                         DanskeBankUrl.INITSESSION,

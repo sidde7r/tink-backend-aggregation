@@ -154,7 +154,8 @@ public class SocieteGeneraleApiClient {
             logger.error(
                     "{} Failed to parse (or decrypt): {}",
                     SocieteGeneraleConstants.Logging.PARSE_FAILURE,
-                    raw);
+                    raw,
+                    e);
             throw new IllegalStateException(e);
         }
 

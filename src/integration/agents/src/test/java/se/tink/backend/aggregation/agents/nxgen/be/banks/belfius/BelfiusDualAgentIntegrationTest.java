@@ -32,7 +32,7 @@ public class BelfiusDualAgentIntegrationTest {
     public void dualTest() throws Exception {
 
         DualAgentIntegrationTest.of(
-                        new AgentIntegrationTest.Builder("be", "be-belfius-oauth2")
+                        new AgentIntegrationTest.Builder("be", "be-belfius-ob")
                                 .addCredentialField("iban", manager.get(Arg.IBAN))
                                 .expectLoggedIn(false)
                                 .loadCredentialsBefore(false)

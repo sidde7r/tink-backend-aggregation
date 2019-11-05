@@ -1,17 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
+import java.util.Collections;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.SebCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.investment.SebInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.loan.SebLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.TransactionalAccountFetcher;
@@ -22,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -34,12 +39,14 @@ public class SebAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
                 RefreshCreditCardAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor {
     private final SebApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final SebSessionStorage sebSessionStorage;
     private final CreditCardRefreshController creditCardRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final InvestmentRefreshController investmentFetcher;
 
     public SebAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -51,6 +58,12 @@ public class SebAgent extends NextGenerationAgent
         loanRefreshController =
                 new LoanRefreshController(
                         metricRefreshController, updateController, new SebLoanFetcher(apiClient));
+        investmentFetcher = constructInvestmentRefreshController();
+    }
+
+    private InvestmentRefreshController constructInvestmentRefreshController() {
+        return new InvestmentRefreshController(
+                metricRefreshController, updateController, new SebInvestmentFetcher(apiClient));
     }
 
     @Override
@@ -127,5 +140,15 @@ public class SebAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return loanRefreshController.fetchLoanTransactions();
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentFetcher.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return new FetchTransactionsResponse(Collections.EMPTY_MAP);
     }
 }

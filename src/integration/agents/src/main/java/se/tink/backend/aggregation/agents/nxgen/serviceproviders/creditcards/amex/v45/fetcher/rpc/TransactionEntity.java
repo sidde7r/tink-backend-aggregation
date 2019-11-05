@@ -58,7 +58,8 @@ public class TransactionEntity {
                             + "from transaction: "
                             + description
                             + "in account: "
-                            + account.getAccountNumber());
+                            + account.getAccountNumber(),
+                    e);
         }
 
         return transactionSuppIndex.equals(Integer.valueOf(account.getBankIdentifier()));

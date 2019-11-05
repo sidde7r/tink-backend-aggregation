@@ -7,6 +7,7 @@ import java.util.Optional;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class Storage extends HashMap<String, String> {
+
     private Storage(Map<String, String> map) {
         super(map);
     }
@@ -17,12 +18,13 @@ public class Storage extends HashMap<String, String> {
         return new Storage(map);
     }
 
-    public void put(String key, Object value) {
-        super.put(
-                key,
+    public String put(String key, Object value) {
+        final String valueToStore =
                 value instanceof String
                         ? (String) value
-                        : SerializationUtils.serializeToString(value));
+                        : SerializationUtils.serializeToString(value);
+        super.put(key, valueToStore);
+        return valueToStore;
     }
 
     public <T> Optional<T> get(String key, TypeReference<T> valueType) {

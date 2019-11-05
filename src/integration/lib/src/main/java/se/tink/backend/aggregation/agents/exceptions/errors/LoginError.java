@@ -27,7 +27,10 @@ public enum LoginError implements AgentError {
                     "Your device could not be registered. This could be due to restrictions in the number of devices your bank allows you to register. Please try again later or reach out to your bank.")),
     NO_ACCESS_TO_MOBILE_BANKING(
             new LocalizableKey(
-                    "You do not have access to mobile banking. Please contact your bank."));
+                    "You do not have access to mobile banking. Please contact your bank.")),
+    PASSWORD_CHANGED(
+            new LocalizableKey(
+                    "Your password has changed. Please enter the latest password in all other devices."));
 
     private LocalizableKey userMessage;
 

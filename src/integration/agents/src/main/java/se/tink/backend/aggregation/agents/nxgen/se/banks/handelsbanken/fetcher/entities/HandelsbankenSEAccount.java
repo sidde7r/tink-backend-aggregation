@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Strings;
-import io.vavr.Tuple;
-import io.vavr.Tuple2;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountInfoResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -24,12 +20,10 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
@@ -55,13 +49,11 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         BankIdValidator.validate(number);
 
         final String accountNumber = getAccountNumber(transactionsResponse);
-        Tuple2<TransactionalAccountType, String> accountType =
-                getAccountType(client, transactionsResponse);
+        final String accountTypeName = getAccountTypeName(client, transactionsResponse);
 
         return TransactionalAccount.nxBuilder()
-                .withType(accountType._1)
-                .withFlagsFrom(
-                        HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_MAPPER, accountType._2)
+                .withTypeAndFlagsFrom(
+                        HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_MAPPER, accountTypeName)
                 .withBalance(BalanceModule.of(findBalanceAmount().asAmount()))
                 .withId(
                         IdModule.builder()
@@ -113,48 +105,20 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         return transactionsAccount.getClearingNumber() + "-" + numberFormatted;
     }
 
-    private Tuple2<TransactionalAccountType, String> getAccountType(
+    /**
+     * Account type name is only present if the account name has been changed. Otherwise the account
+     * name contains the account type name.
+     */
+    private String getAccountTypeName(
             HandelsbankenApiClient client, TransactionsSEResponse transactionsResponse) {
-        String accountTypeName = "";
-        AccountInfoResponse accountInfo = null;
+        final Optional<URL> accountInfoURL = transactionsResponse.getAccount().getAccountInfoUrl();
 
-        try {
-            Optional<URL> accountInfoURL = transactionsResponse.getAccount().getAccountInfoUrl();
-            if (accountInfoURL.isPresent()) {
-                accountInfo = client.accountInfo(accountInfoURL.get());
-
-                accountTypeName =
-                        accountInfo
-                                .getValuesByLabel()
-                                .getOrDefault(
-                                        HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_NAME_LABEL,
-                                        name);
-            }
-        } catch (Exception e) {
-            LOG.info("Unable to fetch account info " + e.getMessage());
+        if (accountInfoURL.isPresent()) {
+            return client.accountInfo(accountInfoURL.get())
+                    .getValuesByLabel()
+                    .getOrDefault(HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_NAME_LABEL, name);
         }
-
-        TransactionalAccountType accountType =
-                HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_MAPPER
-                        .translate(Strings.nullToEmpty(accountTypeName).toLowerCase())
-                        .orElse(TransactionalAccountType.OTHER);
-        // log unknown account types
-        if (accountType == TransactionalAccountType.OTHER && accountInfo != null) {
-            LOG.info(
-                    String.format(
-                            "%s %s",
-                            HandelsbankenSEConstants.Accounts.UNKNOWN_ACCOUNT_TYPE,
-                            SerializationUtils.serializeToString(accountInfo)));
-        }
-
-        if (accountType == TransactionalAccountType.OTHER) {
-            accountType =
-                    HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_MAPPER
-                            .translate(Strings.nullToEmpty(name).toLowerCase())
-                            .orElse(TransactionalAccountType.OTHER);
-        }
-
-        return Tuple.of(accountType, accountTypeName);
+        return name;
     }
 
     /**
@@ -222,7 +186,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         try {
             return Optional.of(findLink(HandelsbankenConstants.URLS.Links.ACCOUNT_INFO));
         } catch (Exception e) {
-            LOG.info("Failed to find link for account info ", e.getMessage());
+            LOG.info("Failed to find link for account info ", e.getMessage(), e);
         }
 
         return Optional.empty();

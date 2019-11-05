@@ -7,7 +7,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.google.common.collect.ImmutableList;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -23,7 +22,9 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.utils.StringMasker;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 @Ignore
 public class HttpLoggingFilterTest {
@@ -45,7 +46,8 @@ public class HttpLoggingFilterTest {
                         createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
-                        createLoggedClass());
+                        createLoggedClass(),
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the
@@ -99,7 +101,8 @@ public class HttpLoggingFilterTest {
                         createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
-                        createLoggedClass());
+                        createLoggedClass(),
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the
@@ -127,7 +130,8 @@ public class HttpLoggingFilterTest {
                         createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
-                        createLoggedClass());
+                        createLoggedClass(),
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the
@@ -154,7 +158,8 @@ public class HttpLoggingFilterTest {
                         createAggregationLogger(),
                         createLogTag(),
                         createMaskStub(),
-                        createLoggedClass());
+                        createLoggedClass(),
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
 
         // Attach the instance to the client and make a request to the stubbed http service and get
         // back the
@@ -253,8 +258,10 @@ public class HttpLoggingFilterTest {
         return credentials;
     }
 
-    private static ImmutableList<StringMasker> createMaskStub() {
-        return ImmutableList.<StringMasker>of(string -> "***MAAAAASK***" + string);
+    private static LogMasker createMaskStub() {
+        return LogMasker.builder()
+                .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(new Credentials()))
+                .build();
     }
 
     private static int findFreePort() {

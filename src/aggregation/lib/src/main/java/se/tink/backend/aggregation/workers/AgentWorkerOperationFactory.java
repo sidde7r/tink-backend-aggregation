@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOpera
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CredentialsRefreshStartEventCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
@@ -73,7 +74,7 @@ import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.MigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
@@ -329,11 +330,12 @@ public class AgentWorkerOperationFactory {
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(
-                new DebugAgentWorkerCommand(
-                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
+        commands.add(new CreateLogMaskerWorkerCommand(context));
+        commands.add(
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -407,11 +409,12 @@ public class AgentWorkerOperationFactory {
                         context, metricsName, reportMetricsAgentWorkerCommandState));
 
         commands.add(
-                new DebugAgentWorkerCommand(
-                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
+        commands.add(new CreateLogMaskerWorkerCommand(context));
+        commands.add(
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -570,10 +573,11 @@ public class AgentWorkerOperationFactory {
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(
                                         RefreshableItem.REFRESHABLE_ITEMS_ALL))),
-                new DebugAgentWorkerCommand(
-                        context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient),
+                new CreateLogMaskerWorkerCommand(context),
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
                 new LoginAgentWorkerCommand(
                         context, loginAgentWorkerCommandState, createCommandMetricState(request)),
@@ -619,10 +623,11 @@ public class AgentWorkerOperationFactory {
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(
                                         RefreshableItem.REFRESHABLE_ITEMS_ALL))),
-                new DebugAgentWorkerCommand(
-                        context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient),
+                new CreateLogMaskerWorkerCommand(context),
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request)));
@@ -728,11 +733,12 @@ public class AgentWorkerOperationFactory {
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, "keep-alive", reportMetricsAgentWorkerCommandState));
         commands.add(
-                new DebugAgentWorkerCommand(
-                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
+        commands.add(new CreateLogMaskerWorkerCommand(context));
+        commands.add(
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(new KeepAliveAgentWorkerCommand(context));
@@ -876,11 +882,12 @@ public class AgentWorkerOperationFactory {
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(
-                new DebugAgentWorkerCommand(
-                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
+        commands.add(new CreateLogMaskerWorkerCommand(context));
+        commands.add(
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
@@ -969,11 +976,12 @@ public class AgentWorkerOperationFactory {
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(
-                new DebugAgentWorkerCommand(
-                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
+        commands.add(new CreateLogMaskerWorkerCommand(context));
+        commands.add(
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(

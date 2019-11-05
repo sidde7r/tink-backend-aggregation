@@ -20,7 +20,7 @@ public final class CertManager {
         try {
             keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
         keyPairGenerator.initialize(WLConstants.RSA_KEY_SIZE);
         return keyPairGenerator.genKeyPair();

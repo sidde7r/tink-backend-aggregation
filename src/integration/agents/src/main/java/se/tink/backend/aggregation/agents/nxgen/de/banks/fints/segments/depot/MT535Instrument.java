@@ -146,7 +146,7 @@ public class MT535Instrument {
                             new SimpleDateFormat("yyyymmdd")
                                     .parse(Optional.ofNullable(m.group(1)).orElse(""));
                 } catch (ParseException e) {
-                    log.error("Unable to parse the price date from {} : {}", clause, e);
+                    log.error("Unable to parse the price date from {}", clause, e);
                 }
             }
 

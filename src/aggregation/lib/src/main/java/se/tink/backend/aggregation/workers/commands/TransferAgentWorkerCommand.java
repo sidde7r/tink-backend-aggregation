@@ -1,16 +1,13 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
@@ -25,29 +22,23 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.aggregation.utils.CredentialsStringMasker;
-import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.uuid.UUIDUtils;
 
 public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerCommand
         implements MetricsCommand {
     private static final AggregationLogger log =
             new AggregationLogger(TransferAgentWorkerCommand.class);
-    private static final String LOG_TAG_TRANSFER = "EXECUTE_TRANSFER";
 
     private final TransferRequest transferRequest;
     private final AgentWorkerCommandMetricState metrics;
@@ -59,31 +50,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         super(context, transferRequest.getCredentials(), transferRequest.getSignableOperation());
         this.transferRequest = transferRequest;
         this.metrics = metrics.init(this);
-    }
-
-    private static ClientFilterFactory createHttpLoggingFilterFactory(
-            String logTag,
-            Class<? extends HttpLoggableExecutor> agentClass,
-            Credentials credentials) {
-        Iterable<StringMasker> stringMaskers = createHttpLogMaskers(credentials);
-        return new HttpLoggingFilterFactory(log, logTag, stringMaskers, agentClass);
-    }
-
-    private static Iterable<StringMasker> createHttpLogMaskers(Credentials credentials) {
-        StringMasker stringMasker =
-                new CredentialsStringMasker(
-                        credentials,
-                        ImmutableList.of(
-                                CredentialsStringMasker.CredentialsProperty.PASSWORD,
-                                CredentialsStringMasker.CredentialsProperty.SECRET_KEY,
-                                CredentialsStringMasker.CredentialsProperty.SENSITIVE_PAYLOAD,
-                                CredentialsStringMasker.CredentialsProperty.USERNAME));
-
-        return ImmutableList.of(stringMasker);
-    }
-
-    private static String getLogTagTransfer(Transfer transfer) {
-        return LOG_TAG_TRANSFER + ":" + UUIDUtils.toTinkUUID(transfer.getId());
     }
 
     @Override
@@ -111,17 +77,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                                         transferRequest.isUpdate()
                                                 ? MetricName.UPDATE_TRANSFER
                                                 : MetricName.EXECUTE_TRANSFER));
-
-        HttpLoggableExecutor httpLoggableExecutor = (HttpLoggableExecutor) agent;
-        ClientFilterFactory loggingFilterFactory =
-                createHttpLoggingFilterFactory(
-                        getLogTagTransfer(transfer), httpLoggableExecutor.getClass(), credentials);
-
         Optional<String> operationStatusMessage = Optional.empty();
         try {
-            // TODO: DISABLED UNTIL SECRET MASKING HAS BEEN FIXED
-            // We want to explicitly log everything that has to do with transfers.
-            //            httpLoggableExecutor.attachHttpFilters(loggingFilterFactory);
             log.info(transfer, getTransferExecuteLogInfo(transfer, transferRequest.isUpdate()));
 
             if (agent instanceof TransferExecutor) {
@@ -236,8 +193,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             return AgentWorkerCommandResult.ABORT;
         } finally {
-            // Disable the logging filter when we're done with the transfer execute command.
-            loggingFilterFactory.removeClientFilters();
             resetCredentialsStatus();
         }
     }
@@ -245,7 +200,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     private void handlePayment(PaymentController paymentController, TransferRequest transferRequest)
             throws PaymentException {
         PaymentResponse createPaymentResponse =
-                paymentController.create(PaymentRequest.of(transferRequest));
+                paymentController.create(
+                        PaymentRequest.of(
+                                transferRequest.getTransfer(), transferRequest.isSkipRefresh()));
         PaymentMultiStepResponse signPaymentMultiStepResponse =
                 paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
 

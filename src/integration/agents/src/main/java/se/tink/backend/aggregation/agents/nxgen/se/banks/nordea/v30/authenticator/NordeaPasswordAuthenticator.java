@@ -41,8 +41,8 @@ import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -51,7 +51,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.strings.StringUtils;
 
-public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
+public class NordeaPasswordAuthenticator implements TypedAuthenticator, AutoAuthenticator {
 
     private static final Logger log = LoggerFactory.getLogger(NordeaPasswordAuthenticator.class);
     private final NordeaSEApiClient apiClient;
@@ -130,8 +130,8 @@ public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, Au
             login(storedPassword);
         } catch (LoginException e) {
             // fallback to manual authentication if possible
-            log.warn("Auto Login Failed: " + e.getMessage());
-            throw SessionError.SESSION_EXPIRED.exception();
+            log.warn("Auto Login Failed: " + e.getMessage(), e);
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 
@@ -139,6 +139,8 @@ public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, Au
         String codeVerifier = EncodingUtils.encodeAsBase64UrlSafe(RandomUtils.secureRandom(64));
         // authenticate device
         String deviceToken = authenticateDevice(codeVerifier);
+        sessionStorage.put(StorageKeys.DEVICE_AUTH_TOKEN, deviceToken);
+
         VerifyPersonalCodeRequest verifyRequest =
                 VerifyPersonalCodeRequest.create(password, deviceToken);
         // verify personal code
@@ -172,7 +174,7 @@ public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, Au
             return deviceToken;
         } catch (HttpResponseException e) {
             log.warn("Could not authenticate device enrollment, reason: ", e);
-            throw LoginError.REGISTER_DEVICE_ERROR.exception();
+            throw LoginError.REGISTER_DEVICE_ERROR.exception(e);
         }
     }
 
@@ -181,11 +183,11 @@ public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, Au
         try {
             return apiClient.verifyPersonalCode(verifyRequest);
         } catch (HttpResponseException e) {
-            log.warn("Failed to verify personal code");
+            log.warn("Failed to verify personal code", e);
             if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             } else {
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(e);
             }
         }
     }
@@ -197,7 +199,7 @@ public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, Au
                     PasswordTokenRequest.of(codeVerifier, authCode));
         } catch (HttpResponseException e) {
             log.warn("Failed to get Access token", e);
-            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(e);
         }
     }
 
@@ -239,7 +241,7 @@ public class NordeaPasswordAuthenticator implements MultiFactorAuthenticator, Au
             revokeBankIdToken();
         } catch (HttpResponseException e) {
             log.warn("Failed to activate personal code, reason: ", e);
-            throw LoginError.REGISTER_DEVICE_ERROR.exception();
+            throw LoginError.REGISTER_DEVICE_ERROR.exception(e);
         }
     }
 

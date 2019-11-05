@@ -14,7 +14,13 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/volksbank",
+        "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:org_json_json",
     ],
 )

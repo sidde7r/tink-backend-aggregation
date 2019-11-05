@@ -5,7 +5,6 @@ import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_TRA
 import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_ACCOUNTS;
 import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_TRANSACTIONS;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
@@ -38,6 +37,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -146,7 +146,6 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
@@ -497,7 +496,7 @@ public class LansforsakringarAgent extends AbstractAgent
             // Error-Message: "Du saknar den här tjänsten. Kontakta oss för att få hjälp att komma
             // igång."
             if (e.hasErrorCode(12051)) {
-                log.info(e.getMessage());
+                log.info(e.getMessage(), e);
                 return Lists.newArrayList();
             }
 
@@ -539,7 +538,7 @@ public class LansforsakringarAgent extends AbstractAgent
         } catch (HttpStatusCodeErrorException e) {
             // Error-Message: "Du har inte behörighet att använda denna tjänst."
             if (e.hasErrorCode(12231)) {
-                log.info(e.getMessage());
+                log.info(e.getMessage(), e);
                 return false;
             }
 
@@ -711,13 +710,14 @@ public class LansforsakringarAgent extends AbstractAgent
             validateTransactionClientResponse(bankIdResponse);
 
         } catch (TransferExecutionException e) {
-            cancelUnsignedPayment(paymentEntityToSign.getUniqueId());
+            cancelUnsignedPayment(paymentEntityToSign.getUniqueId(), e);
             throw e;
         }
     }
 
-    private void cancelUnsignedPayment(String uniqueId) throws TransferExecutionException {
-        log.info("Removing e-invoice/payment from inbox since signing failed.");
+    private void cancelUnsignedPayment(String uniqueId, Exception e)
+            throws TransferExecutionException {
+        log.info("Removing e-invoice/payment from inbox since signing failed.", e);
         CancelPaymentRequest request = new CancelPaymentRequest();
         request.setUniqueId(uniqueId);
 
@@ -875,7 +875,7 @@ public class LansforsakringarAgent extends AbstractAgent
         try {
             signAndValidatePayment(paymentRequest);
         } catch (Exception initialException) {
-            boolean cancelled = cancelFailedPayment(paymentRequest);
+            boolean cancelled = cancelFailedPayment(paymentRequest, initialException);
             boolean deleted = deleteSignedTransaction(paymentRequest);
             if (cancelled || deleted) {
                 throw initialException;
@@ -986,7 +986,7 @@ public class LansforsakringarAgent extends AbstractAgent
         return Optional.empty();
     }
 
-    private boolean cancelFailedPayment(PaymentRequest paymentRequest)
+    private boolean cancelFailedPayment(PaymentRequest paymentRequest, Exception initialException)
             throws TransferExecutionException, HttpStatusCodeErrorException {
         List<PaymentEntity> unsignedPayments = fetchUnsignedPaymentsAndTransfers();
 
@@ -998,7 +998,7 @@ public class LansforsakringarAgent extends AbstractAgent
         }
 
         try {
-            cancelUnsignedPayment(uniqueId.get());
+            cancelUnsignedPayment(uniqueId.get(), initialException);
             return true;
         } catch (TransferExecutionException deleteException) {
             log.warn(
@@ -1298,6 +1298,7 @@ public class LansforsakringarAgent extends AbstractAgent
         Preconditions.checkNotNull(loginResponse);
 
         ticket = loginResponse.getTicket();
+        credentials.setSensitivePayload(Key.ACCESS_TOKEN, ticket);
 
         return true;
     }
@@ -1357,27 +1358,6 @@ public class LansforsakringarAgent extends AbstractAgent
 
     private List<AccountEntity> fetchAccountEntities() throws HttpStatusCodeErrorException {
         return createGetRequest(OVERVIEW_URL, OverviewEntity.class).getAccountEntities();
-    }
-
-    // This could be moved into abstract agent when we have support for different data types in
-    // result
-    protected Map<String, Object> requestSupplementalInformation(
-            Credentials credentials, List<Field> fields) {
-
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
-
-        String supplementalInformation =
-                supplementalRequester.requestSupplementalInformation(credentials, true);
-
-        log.info("Supplemental Information response is: " + supplementalInformation);
-
-        if (Strings.isNullOrEmpty(supplementalInformation)) {
-            log.warn("Supplemental information is empty/null");
-            return null;
-        }
-
-        return SerializationUtils.deserializeFromString(supplementalInformation, TYPE_MAP_REF);
     }
 
     @Override
@@ -1719,7 +1699,7 @@ public class LansforsakringarAgent extends AbstractAgent
             loans = createGetRequest(FETCH_LOANS_URL, LoanListResponse.class);
         } catch (Exception e) {
             // Seeing LF return 400 and 500 responses from time to time, therefore this try-catch
-            log.warn("Was not able to retrieve loans from Lansforsakringar: " + e.getMessage());
+            log.warn("Was not able to retrieve loans from Lansforsakringar: " + e.getMessage(), e);
         }
 
         if (loans == null) {
@@ -1742,7 +1722,7 @@ public class LansforsakringarAgent extends AbstractAgent
 
                 loanAccounts.put(account, AccountFeatures.createForLoan(loan));
             } catch (Exception e) {
-                log.warn("Was not able to retrieve loan: " + e.getMessage());
+                log.warn("Was not able to retrieve loan: " + e.getMessage(), e);
             }
         }
         return new FetchLoanAccountsResponse(loanAccounts);
@@ -1893,16 +1873,11 @@ public class LansforsakringarAgent extends AbstractAgent
                                     if (instrumentDetails == null) {
                                         return;
                                     }
-                                    log.info(
-                                            "#lf - bond details: "
-                                                    + MAPPER.writeValueAsString(instrumentDetails));
                                 } catch (HttpStatusCodeErrorException e) {
                                     // If the user don't have an fund depot this request will get a
                                     // response with status code 400.
                                     // Just return and don't do anything.
                                     return;
-                                } catch (JsonProcessingException e) {
-                                    // Just continue
                                 }
                                 bondEntity.toInstrument().ifPresent(instruments::add);
                             });
@@ -2056,16 +2031,11 @@ public class LansforsakringarAgent extends AbstractAgent
                                 if (instrumentDetails == null) {
                                     return;
                                 }
-                                log.info(
-                                        "#lf - stockdepot - bond details: "
-                                                + MAPPER.writeValueAsString(instrumentDetails));
                             } catch (HttpStatusCodeErrorException e) {
                                 // If the user don't have an fund depot this request will get a
                                 // response with status code 400.
                                 // Just return and don't do anything.
                                 return;
-                            } catch (JsonProcessingException e) {
-                                // Just continue
                             }
                             bondEntity.toInstrument().ifPresent(instruments::add);
                         });

@@ -149,7 +149,7 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.strings.StringUtils;
@@ -2100,7 +2100,7 @@ public class NordeaV20Agent extends AbstractAgent
             }
         } catch (UniformInterfaceException e) {
             if (Objects.equal(e.getResponse().getStatus(), 204)) {
-                this.log.debug("No payments available");
+                this.log.debug("No payments available", e);
                 return Lists.newArrayList();
             }
 

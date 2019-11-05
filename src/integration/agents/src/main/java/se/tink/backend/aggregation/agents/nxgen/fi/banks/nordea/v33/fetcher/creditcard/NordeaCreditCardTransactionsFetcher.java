@@ -39,7 +39,8 @@ public class NordeaCreditCardTransactionsFetcher
                     String.format(
                             "%s: %s",
                             NordeaFIConstants.LogTags.CREDIT_TRANSACTIONS_ERROR.toString(),
-                            e.toString()));
+                            e.toString()),
+                    e);
             return PaginatorResponseImpl.createEmpty(false);
         }
     }

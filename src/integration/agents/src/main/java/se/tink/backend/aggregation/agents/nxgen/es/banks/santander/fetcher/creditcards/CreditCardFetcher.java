@@ -119,9 +119,10 @@ public class CreditCardFetcher
                 // matching
                 if (soapFaultError.isPresent()) {
                     log.warn(
-                            "ERROR: " + SerializationUtils.serializeToString(soapFaultError.get()));
+                            "ERROR: " + SerializationUtils.serializeToString(soapFaultError.get()),
+                            hre);
                 } else {
-                    log.warn("Fetch transactions returned error");
+                    log.warn("Fetch transactions returned error", hre);
                 }
             }
             throw hre;

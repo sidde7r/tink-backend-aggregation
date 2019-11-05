@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.onetimecode.OneTimeActivationCodeAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -45,7 +45,7 @@ public class BelfiusAgent extends NextGenerationAgent
 
     public BelfiusAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         this.belfiusSessionStorage = new BelfiusSessionStorage(this.sessionStorage);
         this.apiClient =
                 new BelfiusApiClient(
@@ -67,12 +67,13 @@ public class BelfiusAgent extends NextGenerationAgent
                         credentials,
                         persistentStorage,
                         belfiusSessionStorage,
-                        supplementalInformationHelper);
+                        supplementalInformationHelper,
+                        context.getAggregatorInfo().getAggregatorIdentifier());
 
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new OneTimeActivationCodeAuthenticationController(authenticator),
+                new PasswordAuthenticationController(authenticator),
                 authenticator);
     }
 

@@ -50,7 +50,7 @@ public class BankdataPinAuthenticator implements PasswordAuthenticator {
             LoginErrorResponse errorResponse = response.getBody(LoginErrorResponse.class);
             if (errorResponse.getErrorCode()
                     == BankdataConstants.Authentication.ERROR_CODE_BANK_SERVICE_OFFLINE) {
-                throw BankServiceError.NO_BANK_SERVICE.exception();
+                throw BankServiceError.NO_BANK_SERVICE.exception(e);
             }
         }
     }

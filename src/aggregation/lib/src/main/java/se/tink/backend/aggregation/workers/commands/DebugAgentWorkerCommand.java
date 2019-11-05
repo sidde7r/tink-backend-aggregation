@@ -13,6 +13,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -33,7 +35,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     private DebugAgentWorkerCommandState state;
     private AgentWorkerCommandContext context;
     private AgentDebugStorageHandler agentDebugStorage;
-    private int debugLogFrequencyPercent;
+    private LogMasker logMasker;
 
     public DebugAgentWorkerCommand(
             AgentWorkerCommandContext context,
@@ -46,17 +48,16 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public AgentWorkerCommandResult execute() {
+        this.logMasker = context.getLogMasker();
         return AgentWorkerCommandResult.CONTINUE;
     }
 
     @Override
     public void postProcess() {
 
-        // Disable all logging until we have looked over how sensitive information is masked in
-        // logs.
-        final boolean HARD_DISABLE = true;
-
-        if (HARD_DISABLE) {
+        // Disable logging depending on this.
+        if (LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS.equals(
+                LogMasker.shouldLog(context.getRequest().getProvider()))) {
             return;
         }
 
@@ -91,15 +92,19 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             User user = context.getRequest().getUser();
 
             // Debug output for non-transfers such as refresh commands and delete.
-            if (credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR
-                    || credentials.getStatus() == CredentialsStatus.TEMPORARY_ERROR
-                    || credentials.getStatus() == CredentialsStatus.UNCHANGED
-                    || credentials.isDebug()
-                    || user.isDebug()
-                    || shouldPrintDebugLogRegardless()) {
+            if (shouldPrintDebugLog(credentials, user)) {
                 writeToDebugFile(credentials, null);
             }
         }
+    }
+
+    private boolean shouldPrintDebugLog(Credentials credentials, User user) {
+        return credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR
+                || credentials.getStatus() == CredentialsStatus.TEMPORARY_ERROR
+                || credentials.getStatus() == CredentialsStatus.UNCHANGED
+                || credentials.isDebug()
+                || user.isDebug()
+                || shouldPrintDebugLogRegardless();
     }
 
     private String maskSensitiveOutputLog(String logContent, Credentials credentials) {
@@ -113,7 +118,11 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             }
         }
 
-        return logContent;
+        // If we have no masker, log nothing.
+        if (Objects.isNull(logMasker)) {
+            return "";
+        }
+        return logMasker.mask(logContent);
     }
 
     private static String getFormattedSize(String str) {

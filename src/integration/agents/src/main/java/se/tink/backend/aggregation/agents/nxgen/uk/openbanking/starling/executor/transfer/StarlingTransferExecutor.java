@@ -159,11 +159,12 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
         } catch (AuthenticationException | AuthorizationException e) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage("Authentication error.")
+                    .setException(e)
                     .build();
         }
 
         return dummyStorage
-                .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(

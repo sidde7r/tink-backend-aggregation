@@ -65,7 +65,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class BelfiusApiClient {
-
     private final TinkHttpClient client;
     private final BelfiusSessionStorage sessionStorage;
     private final String locale;

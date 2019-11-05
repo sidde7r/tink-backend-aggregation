@@ -28,3 +28,8 @@ alias(
     name = "format",
     actual = "//tools/format:format-java-diff",
 )
+
+alias(
+    name = "formatjson",
+    actual = "//tools/format:format-json-diff",
+)

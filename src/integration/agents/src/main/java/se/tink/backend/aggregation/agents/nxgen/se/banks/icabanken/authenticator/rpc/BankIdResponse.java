@@ -24,6 +24,8 @@ public class BankIdResponse extends BaseResponse<BankIdBodyEntity> {
                 return BankIdStatus.WAITING;
             case IcaBankenConstants.BankIdStatus.ABORTED:
                 return BankIdStatus.CANCELLED;
+            case IcaBankenConstants.BankIdStatus.TIMEOUT:
+                return BankIdStatus.TIMEOUT;
             default:
                 log.warn("Unknown bankID status: {}", status);
                 return BankIdStatus.FAILED_UNKNOWN;

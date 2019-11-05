@@ -5,7 +5,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 
 public class InitEnrollRequestBody extends MultivaluedMapImpl {
 
-    public InitEnrollRequestBody(String ingId, String cardNumber, String deviceId) {
+    public InitEnrollRequestBody(
+            final String ingId, final String cardNumber, final String deviceId) {
         add(IngConstants.Session.SECURITY_TYPE_KEY, IngConstants.Session.SECURITY_TYPE_UCR_VALUE);
         add(
                 IngConstants.Session.ValuePairs.LOGON_TYPE.getKey(),
@@ -40,9 +41,7 @@ public class InitEnrollRequestBody extends MultivaluedMapImpl {
                 IngConstants.Session.ValuePairs.APP_IDENTIFICATION.getKey(),
                 IngConstants.Session.ValuePairs.APP_IDENTIFICATION.getValue());
         add(IngConstants.Session.LOGON_TIMESTAMP, getLogonTimeStampString());
-        add(
-                IngConstants.Session.ValuePairs.DEVICE_NAME.getKey(),
-                IngConstants.Session.ValuePairs.DEVICE_NAME.getValue());
+        add(IngConstants.Session.DEVICE_NAME, IngConstants.Session.NOT_AVAILABLE);
         add(IngConstants.Storage.DEVICE_ID, deviceId);
         add(
                 IngConstants.Session.ValuePairs.DSE_TYPE.getKey(),

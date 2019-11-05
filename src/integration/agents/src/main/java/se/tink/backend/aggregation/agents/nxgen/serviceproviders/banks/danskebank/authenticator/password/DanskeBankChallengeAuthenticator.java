@@ -46,8 +46,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
@@ -64,7 +64,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DanskeBankChallengeAuthenticator
-        implements MultiFactorAuthenticator, AutoAuthenticator, KeyCardAuthenticator {
+        implements TypedAuthenticator, AutoAuthenticator, KeyCardAuthenticator {
 
     private static final AggregationLogger log =
             new AggregationLogger(DanskeBankChallengeAuthenticator.class);
@@ -114,6 +114,8 @@ public class DanskeBankChallengeAuthenticator
         // Determine if we should do KeyCard Authentication or CodeApp Authentication.
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
+        credentials.setSensitivePayload(Field.Key.USERNAME, username);
+        credentials.setSensitivePayload(Field.Key.PASSWORD, password);
 
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
@@ -132,7 +134,7 @@ public class DanskeBankChallengeAuthenticator
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             if (response.getStatus() != 401) {
-                throw new IllegalStateException();
+                throw new IllegalStateException(e);
             }
 
             bindDeviceResponse = response.getBody(BindDeviceResponse.class);
@@ -199,14 +201,15 @@ public class DanskeBankChallengeAuthenticator
             switch (e.getError()) {
                 case CANCELLED:
                     throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                            UserMessage.CODE_APP_REJECTED_ERROR.getKey());
+                            UserMessage.CODE_APP_REJECTED_ERROR.getKey(), e);
                 case TIMED_OUT:
                     throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                            UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
+                            UserMessage.CODE_APP_TIMEOUT_ERROR.getKey(), e);
                 default:
                     throw new IllegalStateException(
                             String.format(
-                                    "Unknown third party app exception error: %s.", e.getError()));
+                                    "Unknown third party app exception error: %s.", e.getError()),
+                            e);
             }
         }
 
@@ -242,7 +245,7 @@ public class DanskeBankChallengeAuthenticator
                 HttpResponse response = hre.getResponse();
                 if (response.getStatus() == 401) {
                     throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                            UserMessage.CREDENTIALS_VERIFICATION_ERROR.getKey());
+                            UserMessage.CREDENTIALS_VERIFICATION_ERROR.getKey(), hre);
                 }
                 throw hre;
             }
@@ -274,7 +277,7 @@ public class DanskeBankChallengeAuthenticator
                     this.credentials.getField(Field.Key.USERNAME),
                     this.credentials.getField(Field.Key.PASSWORD));
         } catch (AuthenticationException | AuthorizationException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
 
         // Check device
@@ -289,7 +292,7 @@ public class DanskeBankChallengeAuthenticator
             HttpResponse response = e.getResponse();
             if (response.getStatus() != 401) {
                 log.warnExtraLong(
-                        "Could not auto authenticate user: " + response.getBody(String.class),
+                        "Could not auto authenticate user, status " + response.getStatus(),
                         DanskeBankConstants.LogTags.AUTHENTICATION_AUTO,
                         e);
                 throw e;
@@ -340,7 +343,9 @@ public class DanskeBankChallengeAuthenticator
                     driver.findElement(By.tagName("body")).getAttribute("trustedChallengeInfo");
             // if no challengeInfo available, force a new device pinning
             if (Strings.isNullOrEmpty(challengeInfo)) {
-                log.infoExtraLong(driver.getPageSource(), LogTag.from("danskebank_autherror"));
+                log.infoExtraLong(
+                        "Attribute 'trustedChallengeInfo' not found",
+                        LogTag.from("danskebank_autherror"));
                 throw SessionError.SESSION_EXPIRED.exception();
             }
             KeyCardEntity keyCardEntity =
@@ -390,7 +395,7 @@ public class DanskeBankChallengeAuthenticator
                     throw SessionError.SESSION_EXPIRED.exception();
                 }
             } catch (HttpResponseException e) {
-                throw SessionError.SESSION_EXPIRED.exception();
+                throw SessionError.SESSION_EXPIRED.exception(e);
             }
         } finally {
             if (driver != null) {
@@ -421,8 +426,15 @@ public class DanskeBankChallengeAuthenticator
                         this.configuration.getSecuritySystem(), this.configuration.getBrand());
 
         // Add the authorization header from the response
+        final String persistentAuth =
+                getResponse
+                        .getHeaders()
+                        .getFirst(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH);
+        // Store tokens in sensitive payload, so it will be masked from logs
+        credentials.setSensitivePayload(
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
         this.apiClient.addPersistentHeader(
-                "Authorization", getResponse.getHeaders().getFirst("Persistent-Auth"));
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
 
         // Create Javascript that will return device information
         String deviceInfoJavascript =
@@ -522,7 +534,7 @@ public class DanskeBankChallengeAuthenticator
                     this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SECRET));
             generateResponseJson.put("challenge", challenge);
         } catch (JSONException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
 
         return generateResponseJson.toString();
@@ -536,7 +548,7 @@ public class DanskeBankChallengeAuthenticator
                     "devSerialNo",
                     this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER));
         } catch (JSONException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
 
         return validateStepUpTrustedDeviceJson.toString();

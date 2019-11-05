@@ -10,7 +10,6 @@ import org.junit.Test;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CreditCalculation {
-    private List<AccountBalanceV11TestEntity> testCasesV11;
     private List<AccountBalanceV20TestEntity> testCasesV20;
     private List<AccountBalanceV30TestEntity> testCasesV30;
 
@@ -24,36 +23,12 @@ public class CreditCalculation {
                 testFile.canRead(),
                 String.format(
                         "Could not load %s. Is it missing from the BUILD file?", testFilePath));
-
-        testCasesV11 = loadTestCases(testFile, AccountBalanceV11TestCollection.class);
         testCasesV20 = loadTestCases(testFile, AccountBalanceV20TestCollection.class);
         testCasesV30 = loadTestCases(testFile, AccountBalanceV30TestCollection.class);
     }
 
     private <T> T loadTestCases(File file, Class<T> cls) {
         return SerializationUtils.deserializeFromString(file, cls);
-    }
-
-    @Test
-    public void testV11() {
-
-        for (AccountBalanceV11TestEntity creditTest : testCasesV11) {
-
-            Assert.assertEquals(
-                    creditTest.getExpectedBalance(),
-                    creditTest.getBalance().toBigDecimal().doubleValue(),
-                    0);
-
-            if (creditTest.getAvailableCredit().isPresent()) {
-                Assert.assertTrue(creditTest.getExpectedAvailableCredit().isPresent());
-                Assert.assertEquals(
-                        creditTest.getExpectedAvailableCredit().get(),
-                        creditTest.getAvailableCredit().get().toBigDecimal().doubleValue(),
-                        0);
-            } else {
-                Assert.assertFalse(creditTest.getExpectedAvailableCredit().isPresent());
-            }
-        }
     }
 
     @Test

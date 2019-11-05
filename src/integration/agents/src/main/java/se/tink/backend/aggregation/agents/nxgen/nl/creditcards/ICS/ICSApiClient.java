@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 import static io.vavr.Predicates.not;
 
 import com.google.common.base.Strings;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -45,17 +46,20 @@ public class ICSApiClient {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final String redirectUri;
-    private ICSConfiguration configuration;
+    private final ICSConfiguration configuration;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public ICSApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage,
-            String redirectUri) {
+            final TinkHttpClient client,
+            final SessionStorage sessionStorage,
+            final PersistentStorage persistentStorage,
+            final String redirectUri,
+            final ICSConfiguration configuration) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
+        this.configuration = configuration;
 
         this.client.addFilter(new BankServiceInternalErrorFilter());
     }
@@ -63,10 +67,6 @@ public class ICSApiClient {
     public ICSConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    public void setConfiguration(ICSConfiguration configuration) {
-        this.configuration = configuration;
     }
 
     private RequestBuilder createRequest(String url) {
@@ -117,6 +117,14 @@ public class ICSApiClient {
                 .header(HeaderKeys.X_FAPI_INTERACTION_ID, xInteractionId)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+    }
+
+    private RequestBuilder createRequestWithDateInSession(
+            String url, OAuth2Token token, Date fromDate, Date toDate) {
+        RequestBuilder requestBuilder = createRequestInSession(url, token);
+        return requestBuilder
+                .queryParam("fromBookingDate", dateFormat.format(fromDate))
+                .queryParam("toBookingDate", dateFormat.format(toDate));
     }
 
     public AccountSetupResponse setupAccount(OAuth2Token token) {
@@ -184,9 +192,10 @@ public class ICSApiClient {
         return createRequestInSession(url, getToken()).get(CreditBalanceResponse.class);
     }
 
-    public CreditTransactionsResponse getTransactions(String accountId) {
+    public CreditTransactionsResponse getTransactionsByDate(
+            String accountId, Date fromDate, Date toDate) {
         final String url = String.format(Urls.TRANSACTIONS, accountId);
-
-        return createRequestInSession(url, getToken()).get(CreditTransactionsResponse.class);
+        return createRequestWithDateInSession(url, getToken(), fromDate, toDate)
+                .get(CreditTransactionsResponse.class);
     }
 }

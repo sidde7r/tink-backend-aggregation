@@ -4,6 +4,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.BancoPopularAuthenticator;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -32,7 +33,9 @@ public class BancoPopularTestBase {
                         context.getMetricRegistry(),
                         context.getLogOutputStream(),
                         null,
-                        null);
+                        null,
+                        context.getLogMasker(),
+                        LoggingMode.LOGGING_MASKER_COVERS_SECRETS);
         client.setDebugOutput(true);
 
         persistentStorage = new BancoPopularPersistentStorage(new PersistentStorage());

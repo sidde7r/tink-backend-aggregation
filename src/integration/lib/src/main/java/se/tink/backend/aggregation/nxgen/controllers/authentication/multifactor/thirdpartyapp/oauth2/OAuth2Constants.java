@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 public class OAuth2Constants {
     public static class PersistentStorageKeys {
-        public static final String ACCESS_TOKEN = "oauth2_access_token";
+        public static final String OAUTH_2_TOKEN = "oauth2_access_token";
     }
 
     public static class CallbackParams {

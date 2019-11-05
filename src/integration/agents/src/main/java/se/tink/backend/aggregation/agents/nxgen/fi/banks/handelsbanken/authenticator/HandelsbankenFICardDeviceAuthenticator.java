@@ -30,10 +30,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.InitNewProfileRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.InitNewProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.validators.CommitProfileResponseValidator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 
-public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthenticator {
+public class HandelsbankenFICardDeviceAuthenticator implements TypedAuthenticator {
 
     private final HandelsbankenFIApiClient client;
     private final HandelsbankenPersistentStorage persistentStorage;
@@ -63,7 +63,8 @@ public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthen
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         LibTFA tfa = new LibTFA();
-
+        final String username = credentials.getField(Field.Key.USERNAME);
+        credentials.setSensitivePayload(Field.Key.USERNAME, username);
         EntryPointResponse entryPoint = client.fetchEntryPoint();
 
         InitNewProfileResponse initNewProfile =
@@ -75,7 +76,7 @@ public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthen
                         EncryptedUserCredentialsRequest.create(
                                 initNewProfile,
                                 UserCredentialsRequest.create(
-                                        credentials.getField(Field.Key.USERNAME),
+                                        username,
                                         credentials.getField(
                                                 HandelsbankenFIConstants.DeviceAuthentication
                                                         .SIGNUP_PASSWORD)),

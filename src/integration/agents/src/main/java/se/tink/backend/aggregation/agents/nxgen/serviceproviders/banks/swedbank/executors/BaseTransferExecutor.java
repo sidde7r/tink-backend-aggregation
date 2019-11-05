@@ -145,6 +145,7 @@ public class BaseTransferExecutor {
                                 TransferExecutionException.EndUserMessage
                                         .INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY)
                         .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
+                        .setException(hre)
                         .build();
             }
         }

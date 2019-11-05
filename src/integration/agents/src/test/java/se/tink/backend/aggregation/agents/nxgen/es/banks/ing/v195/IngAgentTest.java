@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class IngAgentTest {
     private enum Arg {
@@ -32,6 +33,8 @@ public class IngAgentTest {
                 .addCredentialField(Field.Key.USERNAME, args.get(Arg.USERNAME))
                 .addCredentialField(IngConstants.DATE_OF_BIRTH, args.get(Arg.DATE_OF_BIRTH))
                 .addCredentialField(Field.Key.PASSWORD, args.get(Arg.PASSWORD))
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false);
     }

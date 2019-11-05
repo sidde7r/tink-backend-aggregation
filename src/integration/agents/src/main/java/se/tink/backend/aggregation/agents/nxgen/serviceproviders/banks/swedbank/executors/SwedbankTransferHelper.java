@@ -125,6 +125,7 @@ public class SwedbankTransferHelper {
                                     TransferExecutionException.EndUserMessage
                                             .BANKID_ANOTHER_IN_PROGRESS)
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
+                            .setException(hre)
                             .build();
                 }
 
@@ -346,6 +347,7 @@ public class SwedbankTransferHelper {
                     .setEndUserMessage(
                             TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED)
                     .setMessage(SwedbankBaseConstants.ErrorMessage.TOKEN_SIGN_FAILED)
+                    .setException(sie)
                     .build();
         }
         return registerTransferResponse.getLinks();

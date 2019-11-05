@@ -48,4 +48,8 @@ public class SantanderEsSessionStorage {
     public String getUserId() {
         return sessionStorage.get(ID_NUMBER);
     }
+
+    public String put(String key, String value) {
+        return sessionStorage.put(key, value);
+    }
 }

@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.filter.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AmericanExpressV62Agent extends NextGenerationAgent
@@ -43,7 +44,8 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
             SignatureKeyPair signatureKeyPair,
             AmericanExpressV62Configuration config) {
         super(request, context, signatureKeyPair);
-        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        this.client.addFilter(new TimeoutFilter());
 
         this.apiClient =
                 new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);

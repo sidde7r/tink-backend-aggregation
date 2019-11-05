@@ -80,7 +80,7 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient> {
 
     void setEidasIdentity(EidasIdentity eidasIdentity);
 
-    void setEidasProxy(EidasProxyConfiguration conf, String legacyCertId);
+    void setEidasProxy(EidasProxyConfiguration conf);
 
     /**
      * @deprecated This should not be used. Use `setEidasProxy` if making proxied requests. Use

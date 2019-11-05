@@ -18,6 +18,7 @@ service ExternalCertificateService {
 
 service InternalSecretsService {
     rpc GetAllSecrets (GetSecretsRequest) returns (GetAllSecretsResponse) {}
+    rpc Ping (PingMessage) returns (PingMessage) {}
 }
 
 service ExternalSecretsService {

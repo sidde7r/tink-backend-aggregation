@@ -26,7 +26,7 @@ public class FortisAgent extends NextGenerationAgent
 
     public FortisAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         configureHttpClient(client);
 
         String[] payload = request.getProvider().getPayload().split(" ");

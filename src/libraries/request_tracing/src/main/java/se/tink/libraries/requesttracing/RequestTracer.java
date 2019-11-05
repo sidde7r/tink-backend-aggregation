@@ -22,8 +22,8 @@ public class RequestTracer {
         MDC.remove(REQUEST_ID_MDC_KEY);
     }
 
-    public static String getRequestId() {
-        return MDC.get(REQUEST_ID_MDC_KEY);
+    public static Optional<String> getRequestId() {
+        return Optional.ofNullable(MDC.get(REQUEST_ID_MDC_KEY));
     }
 
     private static String generateRequestId() {

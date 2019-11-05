@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -73,14 +72,14 @@ public abstract class HandelsbankenAgent<
             HandelsbankenSessionStorage handelsbankenSessionStorage);
 
     protected AutoAuthenticationController constructAutoAuthenticationController(
-            MultiFactorAuthenticator cardDeviceAuthenticator,
+            TypedAuthenticator cardDeviceAuthenticator,
             HandelsbankenAutoAuthenticator autoAuthenticator) {
         return new AutoAuthenticationController(
                 this.request, this.systemUpdater, cardDeviceAuthenticator, autoAuthenticator);
     }
 
     protected AutoAuthenticationController constructAutoAuthenticationController(
-            MultiFactorAuthenticator cardDeviceAuthenticator) {
+            TypedAuthenticator cardDeviceAuthenticator) {
         return constructAutoAuthenticationController(
                 cardDeviceAuthenticator, constructAutoAuthenticator());
     }

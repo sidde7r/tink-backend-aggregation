@@ -5,7 +5,6 @@ import com.google.common.base.Functions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
@@ -21,85 +20,57 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.utils.MapValueMasker;
 import se.tink.backend.aggregation.utils.MapValueMaskerImpl;
-import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class HttpLoggingFilter extends ClientFilter {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private final AggregationLogger log;
     private final String logTag;
-    private final Iterable<StringMasker> stringMaskers;
     private final Class<?> agentClass;
     private final MapValueMasker headerMasker;
     private static final String LOG_FORMAT = "HTTP(%s) %s@{%d:%d}=%s";
+    private final LogMasker logMasker;
+    private final LoggingMode loggingMode;
     private long requestCount;
     private static final LogTag GENERIC_HTTP_LOGGER = LogTag.from("http_logging_filter");
-
-    private static final Set<String> NON_SENSITIVE_HEADER_FIELDS =
-            ImmutableSet.of(
-                    "Accept",
-                    "Accept-Charset",
-                    "Accept-Datetime",
-                    "Accept-Encoding",
-                    "Accept-Language",
-                    "Accept-Ranges",
-                    "Access-Control-Allow-Origin",
-                    "Age",
-                    "Allow",
-                    "Cache-Control",
-                    "Connection",
-                    "Content-Encoding",
-                    "Content-Language",
-                    "Content-Length",
-                    "Content-Type",
-                    "Date",
-                    "Expires",
-                    "Forwarded",
-                    "If-Modified-Since",
-                    "If-Unmodified-Since",
-                    "Host",
-                    "Language",
-                    "Last-Modified",
-                    "Pragma",
-                    "Proxy-Connection",
-                    "Referer",
-                    "Server",
-                    "Status",
-                    "Transfer-Encoding",
-                    "User-Agent",
-                    "Vary",
-                    "Via",
-                    "X-Forwarded-For",
-                    "X-Forwarded-Host",
-                    "X-Powered-By");
 
     public HttpLoggingFilter(
             AggregationLogger log,
             String logTag,
-            Iterable<StringMasker> stringMaskers,
-            Class<? extends HttpLoggableExecutor> agentClass) {
+            LogMasker logMasker,
+            Class<? extends HttpLoggableExecutor> agentClass,
+            LoggingMode loggingMode) {
         this.log = log;
         this.logTag = logTag;
-        this.stringMaskers = stringMaskers;
-        this.headerMasker = new MapValueMaskerImpl(Optional.of(NON_SENSITIVE_HEADER_FIELDS));
+        this.logMasker = logMasker;
+        this.headerMasker =
+                new MapValueMaskerImpl(
+                        Optional.of(HttpLoggingConstants.NON_SENSITIVE_HEADER_FIELDS));
         this.agentClass = agentClass;
         this.requestCount = 0;
+        this.loggingMode = loggingMode;
     }
 
     @Override
     public ClientResponse handle(ClientRequest clientRequest) throws ClientHandlerException {
         requestCount++;
 
-        log(requestCount, createRequestLogEntry(clientRequest));
+        if (LoggingMode.LOGGING_MASKER_COVERS_SECRETS.equals(loggingMode)) {
+            log(requestCount, createRequestLogEntry(clientRequest));
+        }
+
         ClientResponse clientResponse = getNext().handle(clientRequest);
-        log(requestCount, createResponseLogEntry(clientResponse));
+        if (LoggingMode.LOGGING_MASKER_COVERS_SECRETS.equals(loggingMode)) {
+            log(requestCount, createResponseLogEntry(clientResponse));
+        }
 
         return clientResponse;
     }
@@ -173,7 +144,7 @@ public class HttpLoggingFilter extends ClientFilter {
 
     private String getMaskedUrl(ClientRequest clientRequest) {
         if (clientRequest.getURI() != null) {
-            return mask(clientRequest.getURI().toString());
+            return logMasker.mask(clientRequest.getURI().toString());
         } else {
             return null;
         }
@@ -181,7 +152,7 @@ public class HttpLoggingFilter extends ClientFilter {
 
     private String getMaskedLocation(ClientResponse clientResponse) {
         if (clientResponse.getLocation() != null) {
-            return mask(clientResponse.getLocation().toString());
+            return logMasker.mask(clientResponse.getLocation().toString());
         } else {
             return null;
         }
@@ -191,7 +162,7 @@ public class HttpLoggingFilter extends ClientFilter {
         if (clientRequest.getEntity() != null) {
             try {
                 String entity = MAPPER.writeValueAsString(clientRequest.getEntity());
-                return mask(entity);
+                return logMasker.mask(entity);
             } catch (IOException e) {
                 return "Could not serialize request body to String";
             }
@@ -203,7 +174,7 @@ public class HttpLoggingFilter extends ClientFilter {
     private String getMaskedBody(ClientResponse clientResponse) {
         String entity = getEntityAsStringAndSetupNewInputStream(clientResponse);
         if (entity != null) {
-            return mask(entity);
+            return logMasker.mask(entity);
         } else {
             return null;
         }
@@ -247,7 +218,7 @@ public class HttpLoggingFilter extends ClientFilter {
         try {
             String maskedHeaderJson =
                     MAPPER.writeValueAsString(headerMasker.copyAndMaskMultiValues(headerStrings));
-            return mask(maskedHeaderJson);
+            return logMasker.mask(maskedHeaderJson);
         } catch (IOException e) {
             return "Could not serialize header map from request";
         }
@@ -276,7 +247,7 @@ public class HttpLoggingFilter extends ClientFilter {
         try {
             String maskedHeaderJson =
                     MAPPER.writeValueAsString(headerMasker.copyAndMaskMultiValues(headerStrings));
-            return mask(maskedHeaderJson);
+            return logMasker.mask(maskedHeaderJson);
         } catch (IOException e) {
             return "Could not serialize header map from response";
         }
@@ -288,19 +259,5 @@ public class HttpLoggingFilter extends ClientFilter {
                         .uniqueIndex(Map.Entry::getKey);
 
         return Maps.transformValues(headerMap, Map.Entry::getValue);
-    }
-
-    private String mask(String string) {
-        if (string == null) {
-            return null;
-        }
-
-        String masked = string;
-
-        for (StringMasker masker : stringMaskers) {
-            masked = masker.getMasked(masked);
-        }
-
-        return masked;
     }
 }

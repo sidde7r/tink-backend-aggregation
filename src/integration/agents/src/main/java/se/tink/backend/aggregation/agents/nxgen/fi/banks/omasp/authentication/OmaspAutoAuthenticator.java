@@ -77,14 +77,15 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
             switch (error.toLowerCase()) {
                 case OmaspConstants.Error.AUTHENTICATION_FAILED:
                 case OmaspConstants.Error.BAD_REQUEST:
-                    throw SessionError.SESSION_EXPIRED.exception();
+                    throw SessionError.SESSION_EXPIRED.exception(e);
                 default:
                     LOGGER.warn(
                             String.format(
                                     "%s: Unknown error code for loginRequest: %s, Message: %s",
                                     OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,
                                     omaspErrorResponse.getError(),
-                                    omaspErrorResponse.getMessage()));
+                                    omaspErrorResponse.getMessage()),
+                            e);
                     throw e;
             }
         }

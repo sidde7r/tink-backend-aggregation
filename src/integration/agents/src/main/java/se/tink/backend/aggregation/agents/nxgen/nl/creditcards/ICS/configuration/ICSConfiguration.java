@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,16 +10,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class ICSConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
-    private String clientSSLCertificate;
-    private String rootCACertificate;
-    private String rootCAPassword;
+    @JsonProperty @Secret private String clientId;
+    @JsonProperty @SensitiveSecret private String clientSecret;
+    @JsonProperty @Secret private String clientSSLCertificate;
+    @JsonProperty @Secret private String rootCACertificate;
+    @JsonProperty @Secret private String rootCAPassword;
 
     @JsonIgnore
     private static final Logger logger = LoggerFactory.getLogger(ICSConfiguration.class);

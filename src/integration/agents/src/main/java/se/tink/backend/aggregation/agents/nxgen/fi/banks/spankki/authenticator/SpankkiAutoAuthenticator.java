@@ -42,6 +42,10 @@ public class SpankkiAutoAuthenticator implements AutoAuthenticator {
         String deviceId = this.persistentStorage.getDeviceId();
         String deviceToken = this.persistentStorage.getDeviceToken();
 
+        credentials.setSensitivePayload(Field.Key.USERNAME, username);
+        credentials.setSensitivePayload(Field.Key.PASSWORD, password);
+        credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, deviceToken);
+
         if (Strings.isNullOrEmpty(username)
                 || Strings.isNullOrEmpty(password)
                 || Strings.isNullOrEmpty(deviceId)
@@ -52,7 +56,6 @@ public class SpankkiAutoAuthenticator implements AutoAuthenticator {
         try {
             SpankkiResponse challengeResponse = this.apiClient.handleSetupChallenge();
             this.sessionStorage.putSessionId(challengeResponse.getSessionId());
-
             TokenLoginResponse loginResponse =
                     this.apiClient.loginWithToken(password, deviceId, deviceToken);
             if (loginResponse.isMustChangePassword()) {
@@ -67,7 +70,7 @@ public class SpankkiAutoAuthenticator implements AutoAuthenticator {
         } catch (BankServiceException e) {
             throw e;
         } catch (AuthenticationException | AuthorizationException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
 
         // Update device token

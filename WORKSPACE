@@ -3,18 +3,47 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
-git_repository(
+http_archive(
     name = "bazel_skylib",
-    commit = "6126842e3db2ec4986752f6dfc0860ca922997f1",
-    remote = "https://github.com/bazelbuild/bazel-skylib",
-    shallow_since = "1557756873 +0200",
+    sha256 = "97e70364e9249702246c0e9444bccdc4b847bed1eb03c5a3ece4f83dfe6abc44",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.2/bazel-skylib-1.0.2.tar.gz",
+    ],
 )
+
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
+bazel_skylib_workspace()
 
 # This checks that the version of Bazel in use is at least the set version
 # Usually this should be set to the version of Bazel used for CI
 load("@bazel_skylib//lib:versions.bzl", "versions")
 
-versions.check("0.25.0")
+versions.check("0.28.1", "0.29.1")
+
+# rules_pkg
+http_archive(
+    name = "rules_pkg",
+    sha256 = "4ba8f4ab0ff85f2484287ab06c0d871dcb31cc54d439457d28fd4ae14b18450a",
+    url = "https://github.com/bazelbuild/rules_pkg/releases/download/0.2.4/rules_pkg-0.2.4.tar.gz",
+)
+
+load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+
+rules_pkg_dependencies()
+
+http_archive(
+    name = "rules_java",
+    sha256 = "220b87d8cfabd22d1c6d8e3cdb4249abd4c93dcc152e0667db061fb1b957ee68",
+    url = "https://github.com/bazelbuild/rules_java/releases/download/0.1.1/rules_java-0.1.1.tar.gz",
+)
+
+load("@rules_java//java:repositories.bzl", "rules_java_dependencies", "rules_java_toolchains")
+
+rules_java_dependencies()
+
+rules_java_toolchains()
 
 ## Tink virtual monorepsotiroy
 # These are repositories under Tink control. They are trusted, and imported
@@ -42,30 +71,24 @@ git_repository(
 )
 
 git_repository(
-    name = "tink_backend_shared_libraries",
-    commit = "cecd27397f7d35b188d960cbc11b737e46f5ad7d",
-    remote = "git@github.com:tink-ab/tink-backend-shared-libraries",
-)
-
-git_repository(
     name = "tink_backend_integration_openbanking",
-    commit = "bd95dd5b6fe2d6b932200963b407753f5cfc30f8",
+    commit = "c7f167427e4b514e7379f6fcffc0a022e84e476a",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
-    shallow_since = "1562076445 +0000",
+    shallow_since = "1572535216 +0000"
 )
 
 git_repository(
     name = "com_tink_api_grpc",
     commit = "f23aeafc40b0105ab41cc0aeb31de754bb450a06",
     remote = "git@github.com:tink-ab/tink-grpc.git",
-    #shallow_since = "1562857859 +0000",
+    shallow_since = "1563525421 +0000",
 )
 
 git_repository(
     name = "tink_backend",
-    commit = "e5628712b14294c6a390892661e6f180802c4ed9",
-    remote = "git@github.com:tink-ab/tink-backend",
-    shallow_since = "1543992595 +0100",
+    commit = "92d2e6c7adca04e074ab3351ba8a9404244f6765",
+    remote = "git@github.com:tink-ab/tink-backend.git",
+    shallow_since = "1572535216 +0000"
 )
 
 # Docker dependencies
@@ -137,25 +160,27 @@ http_file(
 # which is the proto-compiler.
 PROTOBUF_VERSION = "3.9.0"
 
-GRPC_JAVA_VERSION = "1.22.1"
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+GRPC_JAVA_VERSION = "1.23.0"
 
-GRPC_JAVA_NANO_VERSION = "1.21.0"
+GRPC_JAVA_NANO_VERSION = "1.21.1"
 
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
-    sha256 = "9b2091268704422f9648827a0b729c4287abcfe81ee3a67bb31978e2075c8a04",
+    sha256 = "b3823d7bca0c3513d48ef43de63f6a48410040f5f7b16d5eceea0adb98d07f42",
     urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-linux-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
 
 http_file(
     name = "protoc_gen_grpc_java_macosx",
-    sha256 = "fd01cffceedf6f3b8ebc3679ad22efeeb3e3b8c3b31495f698137297a0bc5fa6",
+    sha256 = "e5e514c76264f3cd8f26c19628a6fc5db2c355b1d285d252aa9b91c136b0f025",
     urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-osx-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
 
 http_file(
     name = "protoc_gen_grpc_java_windows_x86_64",
-    sha256 = "9e2534ab1df91e6d52b0811dae406fbe96371c0b552a8f4c618688d83e7bee0b",
+    sha256 = "8e8b2b3a0b5b083cf5fc0268da7dd6b305762e591ec4a468e5e688f77c32e63f",
     urls = ["https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-windows-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
 
@@ -185,14 +210,6 @@ maven_jar(
 
 maven_jar(
     name = "io_opencensus_opencensus_contrib_grpc_metrics",
-    artifact = "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
-    sha1 = "f07d3a325f1fe69ee40d6b409086964edfef4e69",
-)
-
-# TODO: Remove when the dependency on tink_backend_shared_libraries is gone
-# Referenced by @tink_backend_shared_libraries//third_party:netty
-maven_jar(
-    name = "io_opencensus_opencensus_grpc_metrics",
     artifact = "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
     sha1 = "f07d3a325f1fe69ee40d6b409086964edfef4e69",
 )
@@ -260,6 +277,12 @@ maven_jar(
 )
 
 maven_jar(
+    name = "org_eclipse_jetty_jetty_proxy",
+    artifact = "org.eclipse.jetty:jetty-proxy:9.0.7.v20131107",
+    sha1 = "5d16b84cf4ff40ef743c72ec3ffb118553f709c1",
+)
+
+maven_jar(
     name = "org_seleniumhq_selenium_selenium_firefox_driver",
     artifact = "org.seleniumhq.selenium:selenium-firefox-driver:2.29.0",
     sha1 = "135043df1b5af4b672de5fe9255e8dfb7382204d",
@@ -271,22 +294,28 @@ maven_jar(
     sha1 = "c658daf41b1ecf934ccd21e83eeeb18703355afb",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_resolver",
-    artifact = "io.netty:netty-resolver:4.1.30.Final",
-    sha1 = "5106fd687066ffd712e5295d32af4e2ac6482613",
+    artifact = "io.netty:netty-resolver:4.1.38.Final",
+    sha1 = "b00be4aa309e9b56e498191aa8c73e4f393759ed",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_resolver_dns",
-    artifact = "io.netty:netty-resolver-dns:4.1.30.Final",
-    sha1 = "3f4bcf2e9fff1361ac9ad0bd27a10a1b31399294",
+    artifact = "io.netty:netty-resolver-dns:4.1.38.Final",
+    sha1 = "a628b322a1a7fadc427edc15eb3c141d50706437",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_dns",
-    artifact = "io.netty:netty-codec-dns:4.1.30.Final",
-    sha1 = "7d28ce324f6cd5ae4ddd7f3e5027e2a7f126740b",
+    artifact = "io.netty:netty-codec-dns:4.1.38.Final",
+    sha1 = "cfc06c8566e4bf060a0360e28865e70e37d150e8",
 )
 
 maven_jar(
@@ -559,10 +588,12 @@ maven_jar(
     sha1 = "ccf90d0082081f4fc2b0799bdbf786912bbb2284",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec",
-    artifact = "io.netty:netty-codec:4.1.30.Final",
-    sha1 = "515c8f609aaca28a94f984d89a9667dd3359c1b1",
+    artifact = "io.netty:netty-codec:4.1.38.Final",
+    sha1 = "ccfbdfc727cbf702350572a0b12fe92185ebf162",
 )
 
 maven_jar(
@@ -685,10 +716,12 @@ maven_jar(
     sha1 = "302704f30c6e7abb7a0457f7771739e03c973e80",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_handler_proxy",
-    artifact = "io.netty:netty-handler-proxy:4.1.30.Final",
-    sha1 = "1baa1568fa936caddca0fae96fdf127fd5cbad16",
+    artifact = "io.netty:netty-handler-proxy:4.1.38.Final",
+    sha1 = "dbb09abb0c9c494cb651234eed428189eb730872",
 )
 
 maven_jar(
@@ -755,12 +788,6 @@ maven_jar(
     name = "oauth_signpost_signpost_core",
     artifact = "oauth.signpost:signpost-core:1.2.1.1",
     sha1 = "d1b39a438178bc885d724458de64cee33f1932a6",
-)
-
-maven_jar(
-    name = "com_fasterxml_uuid_java_uuid_generator",
-    artifact = "com.fasterxml.uuid:java-uuid-generator:3.1.5",
-    sha1 = "8784df945176ab4e8e268fd24508cf882d3378de",
 )
 
 maven_jar(
@@ -1051,10 +1078,12 @@ maven_jar(
     sha1 = "89ac043b711248ba512b98493d2266328d1f1045",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_common",
-    artifact = "io.netty:netty-common:4.1.30.Final",
-    sha1 = "5dca0c34d8f38af51a2398614e81888f51cf811a",
+    artifact = "io.netty:netty-common:4.1.38.Final",
+    sha1 = "6f8aae763f743d91fb1ba1e9011dae0ef4f6ff34",
 )
 
 maven_jar(
@@ -1075,10 +1104,12 @@ maven_jar(
     sha1 = "bffeae9b9f75f53d3e5dc1bfd56725f67f2f67c0",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_handler",
-    artifact = "io.netty:netty-handler:4.1.30.Final",
-    sha1 = "ecc076332ed103411347f4806a44ee32d9d9cb5f",
+    artifact = "io.netty:netty-handler:4.1.38.Final",
+    sha1 = "ebf1f2bd0dad5e16aa1fc48d32e5dbe507b38d53",
 )
 
 maven_jar(
@@ -1201,16 +1232,20 @@ maven_jar(
     sha1 = "f05d7c249dfe8b884e72d614531630a9992bb037",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_socks",
-    artifact = "io.netty:netty-codec-socks:4.1.30.Final",
-    sha1 = "ea272e3bb281d3a91d27278f47e61b4de285cc27",
+    artifact = "io.netty:netty-codec-socks:4.1.38.Final",
+    sha1 = "9a6b2c27383061ac9b6de10e6f0f81a7283216f5",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_buffer",
-    artifact = "io.netty:netty-buffer:4.1.30.Final",
-    sha1 = "597adb653306470fb3ec1af3c0f3f30a37b1310a",
+    artifact = "io.netty:netty-buffer:4.1.38.Final",
+    sha1 = "d16cf15d29c409987cecde77407fbb6f1e16d262",
 )
 
 maven_jar(
@@ -1297,10 +1332,12 @@ maven_jar(
     sha1 = "fa362aecd78883991f57a5d64e19f34b57a2c34d",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_http2",
-    artifact = "io.netty:netty-codec-http2:4.1.30.Final",
-    sha1 = "2da92f518409904954d3e8dcc42eb6a562a70302",
+    artifact = "io.netty:netty-codec-http2:4.1.38.Final",
+    sha1 = "0dc353dd011c512d5e631a4bee517b17ed3155c1",
 )
 
 maven_jar(
@@ -1369,10 +1406,12 @@ maven_jar(
     sha1 = "f58f6b727293b2d4392064db8c91fdf1d0eb4ffe",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_transport",
-    artifact = "io.netty:netty-transport:4.1.30.Final",
-    sha1 = "3d27bb432a3b125167ac161b26415ad29ec17f02",
+    artifact = "io.netty:netty-transport:4.1.38.Final",
+    sha1 = "cd8b612d5daa42d1be3bb3203e4857597d5db79b",
 )
 
 maven_jar(
@@ -1531,10 +1570,12 @@ maven_jar(
     sha1 = "f7b520c458572890807d143670c9b24f4de90897",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_tcnative_boringssl_static",
-    artifact = "io.netty:netty-tcnative-boringssl-static:2.0.17.Final",
-    sha1 = "b1e5acbde8c444c656131238ac6ab9e73f694300",
+    artifact = "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
+    sha1 = "185980556f9f083b5339825f19c9641c6c879417",
 )
 
 maven_jar(
@@ -1609,10 +1650,12 @@ maven_jar(
     sha1 = "07dfdf16fade726000564386825ed6d911a44ba1",
 )
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_http",
-    artifact = "io.netty:netty-codec-http:4.1.30.Final",
-    sha1 = "1384c630e8a0eeef33ad12a28791dce6e1d8767c",
+    artifact = "io.netty:netty-codec-http:4.1.38.Final",
+    sha1 = "4d55b3cdb74cd140d262de96987ebd369125a64c",
 )
 
 maven_jar(
@@ -1941,8 +1984,14 @@ maven_jar(
 
 maven_jar(
     name = "net_bytebuddy_byte_buddy",
-    artifact = "net.bytebuddy:byte-buddy:1.5.5",
-    sha1 = "8557b6465cea17f3769678235e77d5cb076c1170",
+    artifact = "net.bytebuddy:byte-buddy:1.10.1",
+    sha1 = "11fe565e2b8b857c9dcee66e4170b97abb92530b",
+)
+
+maven_jar(
+    name = "net_bytebuddy_byte_buddy_agent",
+    artifact = "net.bytebuddy:byte-buddy-agent:1.10.1",
+    sha1 = "9b7d95d699d08e92eb51a29b4949ae975325b40b",
 )
 
 maven_jar(
@@ -1992,67 +2041,67 @@ maven_jar(
 maven_jar(
     name = "io_grpc_grpc_protobuf",
     artifact = "io.grpc:grpc-protobuf:%s" % GRPC_JAVA_VERSION,
-    sha1 = "425bc5c92125afb951e7418b269d9600014fb69e",
+    sha1 = "01428515d3aca8964dfdc4d4ba912d0fda0f41f2",
 )
 
 maven_jar(
     name = "io_grpc_grpc_auth",
     artifact = "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
-    sha1 = "84d6760cc890d2980ff64ee225a3e24d084c7ba7",
+    sha1 = "19d71f19653d2cc786498819557431312d0dbf2d",
 )
 
 maven_jar(
     name = "io_grpc_grpc_context",
     artifact = "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
-    sha1 = "1a074f9cf6f367b99c25e70dc68589f142f82d11",
+    sha1 = "94aedfbfeebc5a32bdfe6984289bb18abf93cf20",
 )
 
 maven_jar(
     name = "io_grpc_grpc_protobuf_lite",
     artifact = "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
-    sha1 = "db8ab67d6142aa6a80ac1c61c8843e5833f8bb99",
+    sha1 = "c030daf2f8c4185ee003e206c38e28987fe2684d",
 )
 
 maven_jar(
     name = "io_grpc_grpc_protobuf_nano",
     artifact = "io.grpc:grpc-protobuf-nano:%s" % GRPC_JAVA_NANO_VERSION,
-    sha1 = "be9ff6c1f004fde5b67ce164ba81f80b0ef64e87",
+    sha1 = "9fce4ff1563fd0176aaefb0a083b9d66a0346bd7",
 )
 
 maven_jar(
     name = "io_grpc_grpc_stub",
     artifact = "io.grpc:grpc-stub:%s" % GRPC_JAVA_VERSION,
-    sha1 = "910550293aab760b706827c5f71c80551e5490f3",
+    sha1 = "2e9e6890a7e8402a9b715ce1fad0d1827e733e49",
 )
 
 maven_jar(
     name = "io_grpc_grpc_core",
     artifact = "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
-    sha1 = "f8b6f872b7f069aaff1c3380b2ba7f91f06e4da1",
+    sha1 = "82d0c88d65acf92fb3d66a0ee800b5da85258c39",
 )
 
 maven_jar(
     name = "io_grpc_grpc_api",
     artifact = "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
-    sha1 = "77311e5735c4097c5cce57f0f4d0847c51db63bb",
+    sha1 = "903f250bc1d01299480e526a25cd974088699a48",
 )
 
 maven_jar(
     name = "io_grpc_grpc_netty",
     artifact = "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
-    sha1 = "6447e7b4aa13b2de695da02ab840e25413e48908",
+    sha1 = "a166b3e2abb4b47810434ee6883435b6d789b2a6",
 )
 
 maven_jar(
     name = "io_grpc_grpc_testing",
     artifact = "io.grpc:grpc-testing:%s" % GRPC_JAVA_VERSION,
-    sha1 = "7b939ca9a56265589c1c9a72cef3c55fb92e990e",
+    sha1 = "9397894991efc626d8b95c74691285a4468f55af",
 )
 
 maven_jar(
     name = "io_grpc_grpc_services",
     artifact = "io.grpc:grpc-services:%s" % GRPC_JAVA_VERSION,
-    sha1 = "92a305d6cc80761e00c7fb5bb3344cf5cb0c1839",
+    sha1 = "fc18ad19c48b58df090ad9f07646bc68780c3b8d",
 )
 
 maven_jar(
@@ -2228,6 +2277,56 @@ maven_jar(
     sha1 = "a33df137557793b0404a486888dbe049f7abeeeb",
 )
 
+maven_jar(
+    name = "com_salesforce_servicelibs_grpc_contrib",
+    artifact = "com.salesforce.servicelibs:grpc-contrib:0.8.1",
+    sha1 = "15f172548a208c43997cb76c3bfea1b26b38e72e",
+)
+
+maven_jar(
+    name = "com_salesforce_servicelibs_grpc_testing_contrib",
+    artifact = "com.salesforce.servicelibs:grpc-testing-contrib:0.8.1",
+    sha1 = "fe552fb9914b8fea9df9d5cec89469d8bdb02069",
+)
+
+maven_jar(
+    name = "org_awaitility_awaitility",
+    artifact = "org.awaitility:awaitility:4.0.1",
+    sha1 = "b1b83c03c9d58c8b1aaf116b1e5365fa2ed2b572",
+)
+
+maven_jar(
+    name = "io_grpc_grpc_testing_proto",
+    artifact = "io.grpc:grpc-testing-proto:1.24.0",
+    sha1 = "4bf1a3b690dc12ea0999643ae8e37c09e55a8c13",
+)
+
+maven_jar(
+    name = "com_jcract_jzlib",
+    artifact = "com.jcraft:jzlib:1.1.3",
+    sha1 = "c01428efa717624f7aabf4df319939dda9646b2d",
+)
+
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+maven_jar(
+    name = "io_netty_netty_dev_tools",
+    artifact = "io.netty:netty-dev-tools:4.1.38.Final",
+    sha1 = "1208cf0fb96a4faa8030c735af3410cfd04012f9",
+)
+
+maven_jar(
+    name = "org_mockito3_mockito_core",
+    artifact = "org.mockito:mockito-core:3.0.0",
+    sha1 = "15fd0225cb1858f6922f44776b1577ac26739279",
+)
+
+maven_jar(
+    name = "com_oracle_substratevm_svm",
+    artifact = "com.oracle.substratevm:svm:19.0.0",
+    sha1 = "e1cba96c39e75e62fd8cc50978ef7d6cfeaf39f9",
+)
+
 ### === START === Java Spark dependencies
 maven_jar(
     name = "com_sparkjava_spark_core",
@@ -2372,15 +2471,24 @@ maven_jar(
 # GRPC/Protobuf rules
 http_archive(
     name = "build_stack_rules_proto",
-    sha256 = "0d88313ba32c0042c2633c3cbdd187afb0c3c9468b978f6eb4919ac6e535f029",
-    strip_prefix = "rules_proto-8afa882b3dff5fec93b22519d34d0099083a7ce2",
-    urls = ["https://github.com/stackb/rules_proto/archive/8afa882b3dff5fec93b22519d34d0099083a7ce2.tar.gz"],
+    sha256 = "8a9cf001e3ba5c97d45ed8eb09985f15355df4bbe2dc6dd4844cccfe71f17d3e",
+    strip_prefix = "rules_proto-9e68c7eb1e36bd08e9afebc094883ebc4debdb09",
+    urls = ["https://github.com/stackb/rules_proto/archive/9e68c7eb1e36bd08e9afebc094883ebc4debdb09.tar.gz"],
+)
+
+# Newer version than what's loaded by @io_grpc_grpc_java grpc_java_repositories()
+http_archive(
+    name = "com_google_protobuf_javalite",
+    sha256 = "a8cb9b8db16aff743a4bc8193abec96cf6ac0b0bc027121366b43ae8870f6fd3",
+    strip_prefix = "protobuf-fa08222434bc58d743e8c2cc716bc219c3d0f44e",
+    urls = ["https://github.com/google/protobuf/archive/fa08222434bc58d743e8c2cc716bc219c3d0f44e.zip"],
 )
 
 # Used by java_grpc_library
+
 http_archive(
     name = "io_grpc_grpc_java",
-    sha256 = "ceade229adade0d7b156f6d17fbc1df9298bfc8d3c4eeaba596f7a4a4d3701fc",
+    sha256 = "b1dcce395bdb6c620d3142597b5017f7175c527b0f9ae46c456726940876347e",
     strip_prefix = "grpc-java-%s" % GRPC_JAVA_VERSION,
     urls = [
         "https://github.com/grpc/grpc-java/archive/v%s.zip" % GRPC_JAVA_VERSION,
@@ -2390,3 +2498,83 @@ http_archive(
 load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
 
 grpc_java_repositories(omit_com_google_protobuf = True)
+
+RULES_JVM_EXTERNAL_TAG = "2.9"
+
+RULES_JVM_EXTERNAL_SHA = "e5b97a31a3e8feed91636f42e19b11c49487b85e5de2f387c999ea14d77c7f45"
+
+http_archive(
+    name = "rules_jvm_external",
+    sha256 = RULES_JVM_EXTERNAL_SHA,
+    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
+    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
+)
+
+load("@rules_jvm_external//:defs.bzl", "maven_install")
+
+maven_install(
+    name = "java_uuid_generator",
+    artifacts = [
+        "com.fasterxml.uuid:java-uuid-generator:3.1.5",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:java_uuid_generator_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+)
+load("@java_uuid_generator//:defs.bzl", java_uuid_generator_pin = "pinned_maven_install")
+java_uuid_generator_pin()
+
+maven_install(
+    name = "io_reactivex_rxjava3_rxjava",
+    artifacts = [
+        "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:io_reactivex_rxjava3_rxjava_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+)
+load("@io_reactivex_rxjava3_rxjava//:defs.bzl", io_reactivex_rxjava3_rxjava_pin = "pinned_maven_install")
+io_reactivex_rxjava3_rxjava_pin()
+
+maven_install(
+    name = "io_token",
+    artifacts = [
+        "io.token.sdk:tokenio-sdk-core:2.6.4",
+        "io.token.sdk:tokenio-sdk-tpp:2.6.4",
+        "io.token.proto:common:1.1.103",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:io_token_install.json",
+    repositories = [
+        # For direct deps
+        "https://token.jfrog.io/token/public-libs-release-local/",
+        # For transitive deps
+        "https://repo1.maven.org/maven2",
+    ],
+)
+load("@io_token//:defs.bzl", io_token_pin = "pinned_maven_install")
+io_token_pin()
+
+# Use via //third_party/jetty_server9
+maven_install(
+    name = "jetty_server9",
+    artifacts = [
+        "org.eclipse.jetty:jetty-util:9.4.15.v20190215",
+        "org.eclipse.jetty:jetty-server:9.4.15.v20190215",
+        "org.eclipse.jetty:jetty-http:9.4.15.v20190215",
+        "javax.servlet:javax.servlet-api:3.1.0",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:jetty_server9_install.json",
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+)
+
+load("@jetty_server9//:defs.bzl", pin_jetty_server9 = "pinned_maven_install")
+
+pin_jetty_server9()

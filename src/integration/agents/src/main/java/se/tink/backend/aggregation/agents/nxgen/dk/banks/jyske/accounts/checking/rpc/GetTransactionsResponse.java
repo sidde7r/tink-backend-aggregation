@@ -32,7 +32,7 @@ public class GetTransactionsResponse implements PaginatorResponse {
     }
 
     public List<TransactionsEntity> getLstTransactions() {
-        return lstTransactions;
+        return lstTransactions != null ? lstTransactions : Collections.emptyList();
     }
 
     public AccountBalanceEntity getAccountBalance() {

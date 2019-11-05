@@ -17,9 +17,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import se.tink.backend.aggregation.eidas.EidasProxyConstants.Algorithm;
-import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
-import se.tink.backend.aggregation.eidas.Signer;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Cli;
@@ -94,12 +94,32 @@ public final class RabobankRegisterCommand {
                                         + " generate a signature.")
                         .build();
 
+        final Option clusterIdOption =
+                Option.builder(Cli.CLUSTER_ID)
+                        .longOpt("cluster_id")
+                        .required()
+                        .hasArg()
+                        .argName("Cluster ID")
+                        .desc("An identifier for the cluster the proxy will use for signing")
+                        .build();
+
+        final Option appIdOption =
+                Option.builder(Cli.APP_ID)
+                        .longOpt("app_id")
+                        .required()
+                        .hasArg()
+                        .argName("App ID")
+                        .desc("An identifier for the app the proxy will use for signing")
+                        .build();
+
         final Options options = new Options();
 
         options.addOption(qsealcPathOption);
         options.addOption(emailOption);
         options.addOption(organizationOption);
         options.addOption(certificateIdOption);
+        options.addOption(clusterIdOption);
+        options.addOption(appIdOption);
 
         return options;
     }
@@ -126,6 +146,8 @@ public final class RabobankRegisterCommand {
         final String email = cmd.getOptionValue(Cli.EMAIL);
         final String organization = cmd.getOptionValue(Cli.ORGANIZATION);
         final String certificateId = cmd.getOptionValue(Cli.CERTIFICATE_ID);
+        final String clusterId = cmd.getOptionValue(Cli.CLUSTER_ID);
+        final String appId = cmd.getOptionValue(Cli.APP_ID);
 
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
@@ -138,11 +160,15 @@ public final class RabobankRegisterCommand {
         // Expire after 6 hours
         final int exp = (int) (System.currentTimeMillis() / 1000) + 6 * 60 * 60;
 
-        final Signer jwsSigner =
-                new QsealcEidasProxySigner(
-                        RabobankRegisterConstants.eidasProxyConf,
-                        certificateId,
-                        Algorithm.EIDAS_RSA_SHA256);
+        EidasIdentity eidasIdentity =
+                new EidasIdentity(clusterId, appId, RabobankRegisterCommand.class);
+
+        QsealcSigner jwsSigner =
+                QsealcSigner.build(
+                        RabobankRegisterConstants.eidasProxyConf.toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        eidasIdentity,
+                        certificateId);
 
         final JwsRequest body = JwsRequest.create(qsealcB64, jwsSigner, exp, email, organization);
 

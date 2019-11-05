@@ -151,6 +151,11 @@ public final class PortfolioModule {
         }
 
         @Override
+        public PortfolioBuildStep withoutInstruments() {
+            return this;
+        }
+
+        @Override
         public PortfolioBuildStep setRawType(@Nonnull String rawType) {
             this.rawType = rawType;
             return this;

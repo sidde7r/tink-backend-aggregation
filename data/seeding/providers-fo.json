@@ -3,6 +3,7 @@
     "market": "FO",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "BankNordik",
@@ -19,6 +20,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fo-banknordik-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -29,6 +32,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Betri Banki",
@@ -45,6 +49,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fo-betribanki-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -55,6 +61,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Norðoya Sparikassi",
@@ -71,6 +78,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fo-nordoyasparikassi-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
@@ -81,6 +90,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Suðuroyar Sparikassi",
@@ -97,6 +107,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fo-suduroyarsparikassi-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",

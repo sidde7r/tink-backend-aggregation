@@ -4,12 +4,13 @@ import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.agents.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
-import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.core.MetricId;
 
 public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand {
     private static final AggregationLogger log =
@@ -60,12 +61,20 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
         MetricId.MetricLabels typeMetricName = constructCredentialsTypeMetricLabels();
         MetricId.MetricLabels providerMetricName = constructProviderMetricLabels();
 
+        ProviderStatuses providerStatus = context.getRequest().getProvider().getStatus();
         CredentialsStatus status = credentials.getStatus();
         if (status != null) {
             switch (status) {
                 case TEMPORARY_ERROR:
-                    state.getTemporaryErrorMeters().get(providerMetricName).inc();
 
+                    // Do not log fail metric if provider is disabled.
+                    if (providerStatus == ProviderStatuses.TEMPORARY_DISABLED
+                            || providerStatus == ProviderStatuses.DISABLED) {
+
+                        break;
+                    }
+
+                    state.getTemporaryErrorMeters().get(providerMetricName).inc();
                     break;
                 case AUTHENTICATION_ERROR:
                     state.getAuthenticationErrorMeters().get(providerMetricName).inc();

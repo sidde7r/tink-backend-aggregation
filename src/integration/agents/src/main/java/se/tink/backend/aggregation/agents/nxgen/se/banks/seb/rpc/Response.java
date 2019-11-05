@@ -14,6 +14,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.SystemStat
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.investment.entities.InvestmentEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.investment.entities.InvestmentInstrumnentEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.investment.entities.SimpleInsuranceEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
@@ -89,8 +92,8 @@ public class Response {
     }
 
     @JsonIgnore
-    public List<AccountEntity> getAccountEntities() {
-        return payload.getAccountEntities();
+    public Optional<List<AccountEntity>> getAccountEntities() {
+        return Optional.ofNullable(payload.getAccountEntities());
     }
 
     @JsonIgnore
@@ -99,8 +102,8 @@ public class Response {
     }
 
     @JsonIgnore
-    public List<TransactionEntity> getTransactions() {
-        return payload.getTransactions();
+    public Optional<List<TransactionEntity>> getTransactions() {
+        return Optional.ofNullable(payload.getTransactions());
     }
 
     @JsonIgnore
@@ -114,8 +117,8 @@ public class Response {
     }
 
     @JsonIgnore
-    public List<CreditCardEntity> getCreditCards() {
-        return payload.getCreditCards();
+    public Optional<List<CreditCardEntity>> getCreditCards() {
+        return Optional.ofNullable(payload.getCreditCards());
     }
 
     @JsonIgnore
@@ -126,6 +129,21 @@ public class Response {
     @JsonIgnore
     public List<CreditCardTransactionEntity> getBookedCreditCardTransactions() {
         return payload.getBookedCreditCardTransactions();
+    }
+
+    @JsonIgnore
+    public List<InvestmentEntity> getInvestments() {
+        return payload.getInvestments();
+    }
+
+    @JsonIgnore
+    public List<SimpleInsuranceEntity> getInsurances() {
+        return payload.getInsurances();
+    }
+
+    @JsonIgnore
+    public List<InvestmentInstrumnentEntity> getInvestmentInstruments() {
+        return payload.getInvestmentInstruments();
     }
 
     @JsonIgnore

@@ -22,5 +22,14 @@ final class BankOfIrelandConstants {
             public static final String WELL_KNOWN_URL =
                     "https://auth.obapi.bankofireland.com/oauth/as/.well-known/openid-configuration";
         }
+
+        class V31 {
+            public static final String AIS_AUTH_URL = "";
+            public static final String AIS_API_URL = "";
+            public static final String PIS_AUTH_URL = "";
+            public static final String PIS_API_URL = "";
+            public static final String WELL_KNOWN_URL =
+                    "https://auth.obapi.bankofireland.com/oauth/as/.well-known/openid-configuration";
+        }
     }
 }

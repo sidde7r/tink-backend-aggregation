@@ -88,7 +88,7 @@ public class IkanoApiAgent extends AbstractAgent
 
             return true;
         } catch (UserErrorException e) {
-            stopLoginAttempt(e.getMessage());
+            stopLoginAttempt(e);
         }
 
         return false;
@@ -164,8 +164,9 @@ public class IkanoApiAgent extends AbstractAgent
         supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
-    private void stopLoginAttempt(String message) {
-        log.info("Ikano agent user error: " + message);
+    private void stopLoginAttempt(UserErrorException e) {
+        String message = e.getMessage();
+        log.info("Ikano agent user error: " + message, e);
         statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, message);
     }
 

@@ -12,6 +12,8 @@ public class SantanderAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("santander")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }

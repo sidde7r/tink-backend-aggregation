@@ -508,7 +508,7 @@ public class SEBApiAgent extends AbstractAgent
             log.infoExtraLong(response, LogTag.from("SEB insurance account instruments response"));
 
         } catch (Exception e) {
-            log.warn("SEB insurance account instruments: Fetching of instruments failed.");
+            log.warn("SEB insurance account instruments: Fetching of instruments failed.", e);
         }
     }
 
@@ -655,8 +655,6 @@ public class SEBApiAgent extends AbstractAgent
                                                                 instruments.add(instrument);
                                                             }));
                     portfolio.setInstruments(instruments);
-                    portfolio.setTotalProfit(
-                            instruments.stream().mapToDouble(Instrument::getProfit).sum());
 
                     depotAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
                 });
@@ -664,13 +662,15 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private void checkPossibleFaultyParsing(HoldingEntity holding, Instrument instrument) {
-        Double estimatedAverageAcquisitionPrice =
-                instrument.getMarketValue() / instrument.getQuantity();
-        if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice())
-                > 1) {
-            log.warn(
-                    "Possibly faulty value parsing: "
-                            + SerializationUtils.serializeToString(holding));
+        if (instrument.getAverageAcquisitionPrice() != null && !(instrument.getQuantity() == 0)) {
+            Double estimatedAverageAcquisitionPrice =
+                    instrument.getMarketValue() / instrument.getQuantity();
+            if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice())
+                    > 1) {
+                log.warn(
+                        "Possibly faulty value parsing: "
+                                + SerializationUtils.serializeToString(holding));
+            }
         }
     }
 
@@ -1195,13 +1195,13 @@ public class SEBApiAgent extends AbstractAgent
             SocialSecurityNumber.Sweden ssn =
                     new SocialSecurityNumber.Sweden(credentials.getField(Field.Key.USERNAME));
             if (!ssn.isValid()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
 
             if (e.getResponse().getStatus() == 403
                     && ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < 18) {
                 throw AuthorizationError.UNAUTHORIZED.exception(
-                        UserMessage.DO_NOT_SUPPORT_YOUTH.getKey());
+                        UserMessage.DO_NOT_SUPPORT_YOUTH.getKey(), e);
             }
 
             throw e;
@@ -1283,7 +1283,7 @@ public class SEBApiAgent extends AbstractAgent
                     transaction.setPayload(TransactionPayloadTypes.SUB_ACCOUNT, subAccount);
                 }
             } catch (Exception e) {
-                log.warn("Unable to parse credit card transaction");
+                log.warn("Unable to parse credit card transaction", e);
                 continue;
             }
             transactions.add(transaction);
@@ -1356,7 +1356,7 @@ public class SEBApiAgent extends AbstractAgent
                                     String.valueOf(foreignParser.getExchangeRate()));
                             date = foreignParser.getDate();
                         } catch (Exception e) {
-                            log.error("Could not parse foreign transaction");
+                            log.error("Could not parse foreign transaction", e);
                         }
                     }
                 }
@@ -1714,6 +1714,7 @@ public class SEBApiAgent extends AbstractAgent
         Session session = new Session();
         session.setCustomerId(customerId);
         session.setUserName(userName);
+        session.setUserId(userId);
         session.setCookiesFromClient(client);
 
         credentials.setPersistentSession(session);
@@ -1726,6 +1727,7 @@ public class SEBApiAgent extends AbstractAgent
         if (session != null) {
             customerId = session.getCustomerId();
             userName = session.getUserName();
+            userId = session.getUserId();
             addSessionCookiesToClient(client, session);
         }
     }
@@ -1735,6 +1737,7 @@ public class SEBApiAgent extends AbstractAgent
         // Clean the session in memory
         customerId = null;
         userName = null;
+        userId = null;
 
         // Clean the persisted session
         credentials.removePersistentSession();
@@ -1910,6 +1913,7 @@ public class SEBApiAgent extends AbstractAgent
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage(
                             "Could not parse the due date of the eInvoice. This should never happen.")
+                    .setException(e)
                     .build();
         }
 
@@ -2176,7 +2180,7 @@ public class SEBApiAgent extends AbstractAgent
             TransferListEntity transferQueuedUp, Exception initialException) throws Exception {
         try {
             if (!deleteTransferFromOutbox(transferQueuedUp)) {
-                log.error("Could not clean up transfer!");
+                log.error("Could not clean up transfer!", initialException);
             }
         } catch (Exception deleteException) {
             log.warn(

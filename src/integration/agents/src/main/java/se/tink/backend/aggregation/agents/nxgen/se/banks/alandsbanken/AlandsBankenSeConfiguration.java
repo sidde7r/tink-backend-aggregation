@@ -5,15 +5,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyTransaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.loan.entities.LoanDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.rpc.IdentityDataResponse;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -26,29 +23,12 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
-    private static final Logger LOG = LoggerFactory.getLogger(AlandsBankenSeConfiguration.class);
 
     @Override
     public String getBaseUrl() {
         return AlandsBankenSeConstants.Url.BASE;
-    }
-
-    @Override
-    public LogTag getLoanLogTag() {
-        return AlandsBankenSeConstants.Fetcher.LOAN_LOGGING;
-    }
-
-    @Override
-    public LogTag getInvestmentPortfolioLogTag() {
-        return AlandsBankenSeConstants.Fetcher.INVESTMENT_PORTFOLIO_LOGGING;
-    }
-
-    @Override
-    public LogTag getInvestmentInstrumentLogTag() {
-        return AlandsBankenSeConstants.Fetcher.INVESTMENT_INSTRUMENT_LOGGING;
     }
 
     @Override
@@ -106,21 +86,6 @@ public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
                 .setDescription(createDescription(transaction))
                 .setDate(transaction.getDueDate())
                 .build();
-    }
-
-    // logging method, find out if we can find "pending" transactions
-    private void logIncomingTransaction(CrossKeyTransaction transaction) {
-        try {
-            if (transaction.isIncoming()) {
-                LOG.info(
-                        String.format(
-                                "%s - %s",
-                                AlandsBankenSeConstants.Fetcher.TRANSACTION_LOGGING,
-                                SerializationUtils.serializeToString(transaction)));
-            }
-        } catch (Exception e) {
-            LOG.debug("Could not log transaction " + e.getMessage());
-        }
     }
 
     private Collection<AccountIdentifier> getIdentifiers(CrossKeyAccount account) {

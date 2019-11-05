@@ -32,12 +32,8 @@ public class MonzoConstants {
         public static final String AIS_TRANSACTIONS = API_MONZO_COM + "ais/transactions";
 
         class V31 {
-            public static final String AIS_AUTH_URL =
-                    "https://openbanking.monzo.com/open-banking/v3.1/aisp";
             public static final String AIS_API_URL =
                     "https://openbanking.monzo.com/open-banking/v3.1/aisp";
-            public static final String PIS_AUTH_URL =
-                    "https://openbanking.monzo.com/open-banking/v3.1/pisp";
             public static final String PIS_API_URL =
                     "https://openbanking.monzo.com/open-banking/v3.1/pisp";
             public static final String WELL_KNOWN_URL =
@@ -67,7 +63,8 @@ public class MonzoConstants {
     }
 
     public class StorageKey {
-        public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
+        public static final String OAUTH_TOKEN =
+                OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
         public static final String REDIRECT_URL = "redirect_url";

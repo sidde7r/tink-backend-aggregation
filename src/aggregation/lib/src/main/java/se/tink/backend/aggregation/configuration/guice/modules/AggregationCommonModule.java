@@ -19,12 +19,12 @@ import se.tink.libraries.cache.CacheReplicator;
 import se.tink.libraries.cache.MemcacheClient;
 import se.tink.libraries.cache.NonCachingCacheClient;
 import se.tink.libraries.concurrency.LockFactory;
-import se.tink.libraries.metrics.MeterFactory;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.PrometheusExportServer;
 import se.tink.libraries.metrics.collection.MetricCollector;
-import se.tink.libraries.metrics.types.gauges.HeapDumpGauge;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.prometheus.PrometheusExportServer;
+import se.tink.libraries.metrics.registry.MeterFactory;
+import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.metrics.types.other.HeapDumpGauge;
 import se.tink.libraries.service.version.VersionInformation;
 
 public class AggregationCommonModule extends AbstractModule {

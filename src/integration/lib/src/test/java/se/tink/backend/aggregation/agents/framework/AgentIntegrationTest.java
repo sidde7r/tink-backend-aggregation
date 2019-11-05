@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.framework;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.io.File;
@@ -35,6 +36,7 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
+import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
@@ -79,6 +81,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private final NewAgentTestContext context;
     private final SupplementalInformationController supplementalInformationController;
     private final String redirectUrl;
+    private final String clusterIdForSecretsService;
     private Credentials credential;
     // if it should override standard logic (Todo: find a better way to implement this!)
     private Boolean requestFlagCreate;
@@ -98,6 +101,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
+        this.clusterIdForSecretsService =
+                MoreObjects.firstNonNull(
+                        builder.getClusterIdForSecretsService(),
+                        NewAgentTestContext.TEST_CLUSTERID);
 
         this.context =
                 new NewAgentTestContext(
@@ -168,14 +175,12 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             configuration.getIntegrations(),
                             provider,
                             context.getAppId(),
-                            context.getClusterId(),
+                            clusterIdForSecretsService,
                             credentialsRequest.getCallbackUri());
-            if (!agentConfigurationController.init()) {
-                throw new IllegalStateException(
-                        "Error when initializing AgentConfigurationController.");
-            }
+            context.getLogMasker()
+                    .addSensitiveValuesSetObservable(
+                            agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
-
             AgentFactory factory = new AgentFactory(configuration);
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
@@ -533,6 +538,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         try {
             login(agent, credentialsRequest);
             refresh(agent);
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -547,6 +555,21 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return context;
     }
 
+    private void printMaskedDebugLog(Agent agent) {
+        if (agent instanceof PersistentLogin) {
+            final PersistentLogin persistentLoginAgent = (PersistentLogin) agent;
+            persistentLoginAgent.persistLoginSession();
+        }
+
+        final LogMasker logMasker = context.getLogMasker();
+        final String maskedLog = logMasker.mask(context.getLogOutputStream().toString());
+
+        System.out.println("");
+        System.out.println("===== MASKED DEBUG LOG =====");
+        System.out.println(maskedLog);
+        System.out.println("");
+    }
+
     private void testBankTransfer(Transfer transfer, boolean isUpdate) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
@@ -554,6 +577,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         try {
             login(agent, credentialsRequest);
             doBankTransfer(agent, transfer, isUpdate);
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -586,6 +612,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
             }
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -608,6 +637,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
+            }
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
             }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
@@ -654,6 +686,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String appId = null;
         private String clusterId = null;
         private String redirectUrl;
+        private String clusterIdForSecretsService = null;
 
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
@@ -863,6 +896,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public Builder setClusterId(String clusterId) {
             this.clusterId = clusterId;
+            return this;
+        }
+
+        public String getClusterIdForSecretsService() {
+            return clusterIdForSecretsService;
+        }
+
+        public Builder setClusterIdForSecretsService(String clusterIdForSecretsService) {
+            this.clusterIdForSecretsService = clusterIdForSecretsService;
             return this;
         }
 

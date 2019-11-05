@@ -7,15 +7,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.CustodyContentResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class SdcCustodyDetailsModel {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(SdcCustodyDetailsModel.class);
 
     private String displayId;
     private String id;
@@ -30,11 +26,6 @@ public class SdcCustodyDetailsModel {
     //    private SdcChange intradayChange;
 
     public InvestmentAccount toInvestmentAccount(SdcApiClient bankClient) {
-        // log values to see if this is cash balance
-        LOGGER.infoExtraLong(
-                SerializationUtils.serializeToString(this),
-                SdcConstants.Fetcher.Investment.CASH_BALANCE);
-
         return InvestmentAccount.builder(this.id)
                 .setCashBalance(getCashBalance())
                 .setAccountNumber(this.id)

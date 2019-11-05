@@ -43,7 +43,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.enums.StatisticMode;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
-import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.transfer.rpc.Transfer;
 

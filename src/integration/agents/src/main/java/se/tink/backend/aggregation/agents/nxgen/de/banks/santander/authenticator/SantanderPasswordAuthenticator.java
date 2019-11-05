@@ -31,12 +31,13 @@ public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
             String error = e.getResponse().getBody(String.class);
             if (StringUtils.containsIgnoreCase(
                     error, SantanderConstants.ERROR.WRONG_PASSWORD_CODE)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
             logger.error(
                     "{} Unable to authenticate error {}",
                     SantanderConstants.LOGTAG.SANTANDER_LOGIN_ERROR,
-                    error);
+                    error,
+                    e);
             throw e;
         }
     }

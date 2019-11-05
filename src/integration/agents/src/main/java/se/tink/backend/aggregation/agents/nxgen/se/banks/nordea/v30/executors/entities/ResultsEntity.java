@@ -34,4 +34,12 @@ public class ResultsEntity {
     @JsonProperty private String due;
     @JsonProperty private String currency;
     @JsonProperty private PermissionsEntity permissions;
+
+    public String getId() {
+        return id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
 }

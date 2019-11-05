@@ -98,7 +98,7 @@
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Bankinter (Test)",
             "fields": [],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionId": "bankinter",
             "financialInstitutionName": "Bankinter",
             "multiFactor": true,
             "name": "pt-bankinter-oauth2",
@@ -148,37 +148,11 @@
         },
         {
             "accessType": "OPEN_BANKING",
-            "className": "nxgen.pt.openbanking.caixa.CaixaAgent",
-            "credentialsType": "THIRD_PARTY_APP",
-            "displayName": "Caixa (Test)",
-            "fields": [
-                {
-                    "description": "Identifier",
-                    "maxLength": 30,
-                    "minLength": 4,
-                    "name": "username",
-                    "numeric": true
-                }
-            ],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
-            "financialInstitutionName": "Caixa Geral de Depósitos",
-            "multiFactor": false,
-            "name": "pt-caixa-oauth2",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
             "className": "nxgen.pt.openbanking.caixa.CaixaRedirectAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caixa (Test)",
             "fields": [],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionId": "caixa-pt",
             "financialInstitutionName": "Caixa Geral de Depósitos",
             "multiFactor": true,
             "name": "pt-caixa-ob",
@@ -353,6 +327,38 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
+            "className": "nxgen.pt.banks.santander.SantanderAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "EUR",
+            "displayName": "Santander",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "market": "PT",
+            "multiFactor": false,
+            "name": "pt-santander-password",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -376,6 +382,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -416,6 +423,37 @@
             "financialInstitutionName": "Unicre",
             "multiFactor": true,
             "name": "pt-unicre-oauth2",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
+            "className": "nxgen.pt.banks.montepio.MontepioAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Banco Montepio",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionName": "Banco Montepio",
+            "groupDisplayName": "Banco Montepio",
+            "multiFactor": false,
+            "name": "pt-montepio-password",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
             "payload": "tink",
             "popular": true,

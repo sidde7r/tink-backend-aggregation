@@ -47,7 +47,7 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
 
             if (ErrorCodes.INCORRECT_CREDENTIALS.stream()
                     .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
-                throw new LoginException(LoginError.INCORRECT_CREDENTIALS);
+                throw new LoginException(LoginError.INCORRECT_CREDENTIALS, e);
             } else {
                 throw e;
             }
@@ -63,6 +63,8 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
                         tokenCredentialNode.getFirstChild().getTextContent(),
                         "Could not parse token credentials.");
         apiClient.setTokenCredential(tokenCredential);
+        // store in session storage so that it will be masked in the log
+        santanderEsSessionStorage.put(SantanderEsConstants.Storage.ACCESS_TOKEN, tokenCredential);
 
         try {
             responseString = apiClient.login();
@@ -82,6 +84,6 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .filter(fault -> !fault.matchesErrorMessage(SoapErrorMessages.NOT_CUSTOMER))
-                .orElseThrow(LoginError.NOT_CUSTOMER::exception);
+                .orElseThrow(() -> LoginError.NOT_CUSTOMER.exception(e));
     }
 }

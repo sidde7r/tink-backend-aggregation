@@ -4,14 +4,11 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -19,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -32,36 +29,23 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
     private final CreditCardRefreshController creditCardRefreshController;
 
     public ICSAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         clientName = request.getProvider().getPayload().split(" ")[0];
         redirectUri = request.getProvider().getPayload().split(" ")[1];
-        apiClient = new ICSApiClient(client, sessionStorage, persistentStorage, redirectUri);
+
+        final ICSConfiguration icsConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(ICSConfiguration.class);
+
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+
+        apiClient =
+                new ICSApiClient(
+                        client, sessionStorage, persistentStorage, redirectUri, icsConfiguration);
 
         creditCardRefreshController = constructCreditCardRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
-        final ICSConfiguration icsConfiguration = getClientConfiguration();
-
-        client.setSslClientCertificate(
-                EncodingUtils.decodeBase64String(icsConfiguration.getClientSSLCertificate()), "");
-        client.trustRootCaCertificate(
-                EncodingUtils.decodeBase64String(icsConfiguration.getRootCACertificate()),
-                icsConfiguration.getRootCAPassword());
-
-        apiClient.setConfiguration(icsConfiguration);
-    }
-
-    public ICSConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        ICSConstants.INTEGRATION_NAME, clientName, ICSConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
@@ -99,8 +83,8 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
                 new ICSAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(
-                                new ICSCreditCardFetcher(apiClient), 0),
+                        new TransactionDatePaginationController<>(
+                                new ICSCreditCardFetcher(apiClient)),
                         null));
     }
 

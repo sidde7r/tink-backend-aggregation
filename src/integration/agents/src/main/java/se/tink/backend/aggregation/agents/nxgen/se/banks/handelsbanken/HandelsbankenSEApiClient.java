@@ -217,7 +217,7 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
             ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
 
             if (errorResponse.isTmpBankSideFailure()) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
             }
 
             throw e;

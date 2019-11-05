@@ -97,7 +97,8 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
         } catch (NullPointerException e) {
             LOGGER.error(
                     "Can not fetch transaction for account: "
-                            + SerializationUtils.serializeToString(card));
+                            + SerializationUtils.serializeToString(card),
+                    e);
             return;
         }
 
@@ -121,7 +122,7 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
                                                                     transaction.getSuppIndex())
                                                             .equals(cartSupOnCurrentPage);
                                                 } catch (IllegalStateException e) {
-                                                    LOGGER.warn(e.toString());
+                                                    LOGGER.warn(e.toString(), e);
                                                     return false;
                                                 }
                                             })

@@ -16,8 +16,7 @@ s3StorageConfiguration:
 
 agents:
   icsConfiguration: true
-  starling:
-    redirectUrl: tink://thirdparty/callback
+  danskeBankDK: true
   demoFinancialInstitution:
     mobilebanking:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/mobilebanking
@@ -26,37 +25,6 @@ agents:
   dnb:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-  sibs:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      certificateId: Tink
-    cgd:
-      redirectUrl: https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback
-      certificateId: cgd
-  unicredit:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      eidasQwac: Tink
-  swedbank:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      eidasQwac: Tink
-      bypassTransactionConsent: false
-      monthsToFetch: 25
-  cbi:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      eidasQwac: Tink
-      environment: production
-  belfius:
-    tink:
-      baseUrl: https://psd2.b2b.belfius.be:8443
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      certificateId: Tink
-  finecobank:
-    tink:
-      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
-      certificateId: Tink
 
   mountCallbackJwtSignaturePair: true
   callbackJwtSignatureKeyPairEnabled: true
@@ -73,3 +41,6 @@ tppSecretsServiceConfiguration:
   enabled: true
 
 debugLogFrequencyPercent: 100
+
+eventProducerServiceConfiguration:
+  url: event-producer-service.event-producer-service:443

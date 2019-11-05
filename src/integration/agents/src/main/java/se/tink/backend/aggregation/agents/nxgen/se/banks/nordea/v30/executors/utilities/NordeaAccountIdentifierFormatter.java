@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities;
 
 import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
@@ -8,6 +10,9 @@ import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifier
 import se.tink.libraries.account.identifiers.se.swedbank.SwedbankClearingNumberUtils;
 
 public class NordeaAccountIdentifierFormatter implements AccountIdentifierFormatter {
+    private static final Logger log =
+            LoggerFactory.getLogger(NordeaAccountIdentifierFormatter.class);
+
     private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
             new DefaultAccountIdentifierFormatter();
 
@@ -16,15 +21,23 @@ public class NordeaAccountIdentifierFormatter implements AccountIdentifierFormat
         if (identifier.is(AccountIdentifier.Type.SE)) {
             SwedishIdentifier swedishIdentifier = identifier.to(SwedishIdentifier.class);
 
-            switch (swedishIdentifier.getBank()) {
-                case SWEDBANK:
-                    return applySwedbank(swedishIdentifier);
-                case HANDELSBANKEN:
-                    return applyHandelsbanken(swedishIdentifier);
-                case NORDEA_PERSONKONTO:
-                    return applyNordeaPersonkonto(swedishIdentifier);
-                default:
-                    break;
+            try {
+                switch (swedishIdentifier.getBank()) {
+                    case SWEDBANK:
+                        return applySwedbank(swedishIdentifier);
+                    case HANDELSBANKEN:
+                        return applyHandelsbanken(swedishIdentifier);
+                    case NORDEA_PERSONKONTO:
+                        return applyNordeaPersonkonto(swedishIdentifier);
+                    default:
+                        break;
+                }
+            } catch (NullPointerException e) {
+                log.error(
+                        "Nordea NPE when formatting account identifier. Supplied account identifier: {}",
+                        identifier.toString());
+
+                throw e;
             }
         }
 

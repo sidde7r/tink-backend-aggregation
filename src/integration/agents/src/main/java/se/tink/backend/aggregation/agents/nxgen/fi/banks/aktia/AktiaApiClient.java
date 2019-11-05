@@ -74,7 +74,7 @@ public class AktiaApiClient {
 
             String loginStatus = getFirstHeader(response, AktiaConstants.HttpHeaders.LOGIN_STATUS);
             if (AktiaConstants.ErrorCodes.INVALID_CREDENTIALS.equalsIgnoreCase(loginStatus)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
             }
 
             throw hre;

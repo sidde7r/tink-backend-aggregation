@@ -27,6 +27,8 @@ public class UlsterAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("ulster")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }
@@ -37,7 +39,9 @@ public class UlsterAgentTest {
                 new AgentIntegrationTest.Builder("uk", "uk-ulster-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("ulster")
+                        .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

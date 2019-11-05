@@ -100,10 +100,15 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         final String tokenResponse = apiClient.extractRequestVerificationToken(codeVerifier);
 
-        return Jsoup.parse(tokenResponse)
-                .getElementById("autostart-page")
-                .getElementsByAttributeValue("name", "__RequestVerificationToken")
-                .attr("value");
+        String requestVerificationToken =
+                Jsoup.parse(tokenResponse)
+                        .getElementById("autostart-page")
+                        .getElementsByAttributeValue("name", "__RequestVerificationToken")
+                        .attr("value");
+
+        // store it in session storage so it will masked in logs
+        sessionStorage.put(StorageKeys.REQUEST_VER_TOKEN, requestVerificationToken);
+        return requestVerificationToken;
     }
 
     private String extractRequestVerificationToken2() {

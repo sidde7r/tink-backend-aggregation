@@ -70,8 +70,9 @@ public class Mov {
             logger.error(
                     "{} cannot parse date: {}",
                     SantanderConstants.LOGTAG.SANTANDER_DATE_PARSING_ERROR,
-                    date);
-            throw new IllegalStateException("Cannot parse date!");
+                    date,
+                    e);
+            throw new IllegalStateException("Cannot parse date!", e);
         }
     }
 
@@ -81,7 +82,10 @@ public class Mov {
             return true;
         } catch (Exception e) {
             logger.error(
-                    "{} {}", SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_ERROR, e.toString());
+                    "{} {}",
+                    SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_ERROR,
+                    e.toString(),
+                    e);
             return false;
         }
     }

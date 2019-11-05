@@ -35,6 +35,8 @@ public class SamlinkAutoAuthenticator extends SamlinkAuthenticatorBase
         String deviceId = persistentStorage.getDeviceId();
         String deviceToken = persistentStorage.getDeviceToken();
 
+        credentials.setSensitivePayload(Field.Key.USERNAME, username);
+        credentials.setSensitivePayload(Field.Key.PASSWORD, password);
         if (Strings.isNullOrEmpty(username)
                 || Strings.isNullOrEmpty(password)
                 || Strings.isNullOrEmpty(deviceId)
@@ -52,5 +54,6 @@ public class SamlinkAutoAuthenticator extends SamlinkAuthenticatorBase
 
         // Update device token
         persistentStorage.putDeviceToken(deviceToken);
+        credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, deviceToken);
     }
 }

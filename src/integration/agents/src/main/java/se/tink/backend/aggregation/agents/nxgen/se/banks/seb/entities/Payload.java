@@ -15,6 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.InitResult;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.creditcard.entities.CreditCardTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.investment.entities.InvestmentEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.investment.entities.InvestmentInstrumnentEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.investment.entities.SimpleInsuranceEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionEntity;
@@ -168,5 +171,23 @@ public class Payload {
         Preconditions.checkNotNull(vodb);
 
         return Optional.ofNullable(vodb.blancoLoans).orElse(Collections.emptyList());
+    }
+
+    @JsonIgnore
+    public List<InvestmentEntity> getInvestments() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.investments;
+    }
+
+    @JsonIgnore
+    public List<SimpleInsuranceEntity> getInsurances() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.insurances;
+    }
+
+    @JsonIgnore
+    public List<InvestmentInstrumnentEntity> getInvestmentInstruments() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.investmentInstruments;
     }
 }

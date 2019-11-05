@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.entities;
 
+import com.google.common.base.Strings;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants;
 import se.tink.backend.aggregation.agents.utils.typeguesser.TypeGuesser;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -67,17 +69,25 @@ public class AccountEntity extends AccountBriefEntity {
     }
 
     public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(getType(), regNo + accountNo, getTinkBalance())
-                .setAccountNumber(getAccountNumber())
-                .setName(name)
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .build();
+        TransactionalAccount.Builder<?, ?> builder =
+                TransactionalAccount.builder(getType(), regNo + accountNo, getTinkBalance())
+                        .setAccountNumber(getAccountNumber())
+                        .setName(name);
+
+        if (!Strings.isNullOrEmpty(iban)) {
+            builder.addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban));
+        }
+
+        if (!Strings.isNullOrEmpty(accountOwner)) {
+            builder.setHolderName(new HolderName(accountOwner));
+        }
+
+        return builder.build();
     }
 
     public AccountBriefEntity toAccountBriefEntity() {
         AccountBriefEntity accountBriefEntity = new AccountBriefEntity();
         accountBriefEntity.setAccountNo(accountNo);
-        accountBriefEntity.setShadowAccountId("");
         accountBriefEntity.setRegNo(regNo);
         return accountBriefEntity;
     }

@@ -23,9 +23,11 @@ public class NationwideAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-nationwide-oauth2")
-                .loadCredentialsBefore(true)
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("nationwide")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }
@@ -35,8 +37,10 @@ public class NationwideAgentTest {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("uk", "uk-nationwide-oauth2")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("nationwide")
+                        .setAppId("tink");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

@@ -22,9 +22,9 @@ public class DanskeBankPasswordErrorHandler {
                         response.getBody(String.class), FinalizeAuthenticationResponse.class);
         switch (finalizeAuthenticationResponse.getSessionStatus()) {
             case 519:
-                throw AuthorizationError.UNAUTHORIZED.exception();
+                throw AuthorizationError.UNAUTHORIZED.exception(hre);
             case 520:
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
             default:
                 throw hre;
         }

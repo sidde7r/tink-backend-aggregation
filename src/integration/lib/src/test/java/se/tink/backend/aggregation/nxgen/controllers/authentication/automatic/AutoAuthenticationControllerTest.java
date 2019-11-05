@@ -14,15 +14,14 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public class AutoAuthenticationControllerTest {
     private CredentialsRequest request = Mockito.mock(CredentialsRequest.class);
     private AgentContext context = Mockito.mock(AgentContext.class);
-    private MultiFactorAuthenticator multiFactorAuthenticator =
-            Mockito.mock(MultiFactorAuthenticator.class);
+    private TypedAuthenticator multiFactorAuthenticator = Mockito.mock(TypedAuthenticator.class);
     private AutoAuthenticator autoAuthenticator = Mockito.mock(AutoAuthenticator.class);
     private AutoAuthenticationController autoAuthenticationController;
 

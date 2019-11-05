@@ -1,4 +1,4 @@
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load(
     "@io_bazel_rules_docker//container:container.bzl",
     "container_image",
@@ -23,9 +23,20 @@ java_binary(
     deps = [
         "//src/integration/grpc-server",
         "//src/integration/grpc-services",
-        "//src/libraries:health-check-handler",
-        "//src/libraries:simple-http-server",
-        "//src/libraries/metrics",
+        "//src/libraries/health_check_handler",
+        "//src/libraries/metrics:collection",
+        "//src/libraries/metrics:configuration",
+        "//src/libraries/metrics:core",
+        "//src/libraries/metrics:counters",
+        "//src/libraries/metrics:gauges",
+        "//src/libraries/metrics:histograms",
+        "//src/libraries/metrics:logbackappender",
+        "//src/libraries/metrics:monitor",
+        "//src/libraries/metrics:other",
+        "//src/libraries/metrics:prometheus",
+        "//src/libraries/metrics:registry",
+        "//src/libraries/metrics:timers",
+        "//src/libraries/simple_http_server",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:io_grpc_grpc_core",

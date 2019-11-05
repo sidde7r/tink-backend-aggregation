@@ -60,7 +60,7 @@ public class IngCreditCardFetcher
             creditCardTransactionsRequestUrl.ifPresent(
                     url -> LOGGER.info("{}: {}", IngConstants.Logs.CREDITCARD_TRANSACTIONS, url));
         } catch (Exception e) {
-            LOGGER.warn("Something went wrong when logging credit card endpoints");
+            LOGGER.warn("Something went wrong when logging credit card endpoints", e);
         }
 
         return Collections.emptyList();

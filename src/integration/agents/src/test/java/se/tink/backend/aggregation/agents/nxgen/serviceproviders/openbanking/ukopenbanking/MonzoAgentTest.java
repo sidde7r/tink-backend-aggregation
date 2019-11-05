@@ -23,9 +23,11 @@ public class MonzoAgentTest {
     @Test
     public void testLogin() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-monzo-oauth2")
-                .loadCredentialsBefore(true)
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setAppId("tink")
+                .setFinancialInstitutionId("monzo")
                 .build()
                 .testRefresh();
     }
@@ -35,8 +37,10 @@ public class MonzoAgentTest {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("uk", "uk-monzo-oauth2")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("monzo");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }

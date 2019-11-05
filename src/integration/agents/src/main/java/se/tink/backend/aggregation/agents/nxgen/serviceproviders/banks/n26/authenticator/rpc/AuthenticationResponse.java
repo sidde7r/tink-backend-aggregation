@@ -55,9 +55,8 @@ public class AuthenticationResponse {
     }
 
     @JsonIgnore
-    // TODO: Time Unit needs to be confirmed!!
     public LocalDateTime getExpiresAt() {
-        return LocalDateTime.now().plus(expiresIn, ChronoUnit.DAYS);
+        return LocalDateTime.now().plus(expiresIn, ChronoUnit.SECONDS);
     }
 
     public String getError() {

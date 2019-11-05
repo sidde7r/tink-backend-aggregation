@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import java.util.Objects;
 import java.util.UUID;
 import org.apache.http.HttpStatus;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -30,15 +32,17 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
 
     private final OmaspApiClient apiClient;
     private final PersistentStorage persistentStorage;
-
+    private final Credentials credentials;
     private SessionStorage sessionStorage;
 
     public OmaspKeyCardAuthenticator(
             OmaspApiClient apiClient,
             PersistentStorage persistentStorage,
+            Credentials credentials,
             SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
+        this.credentials = credentials;
         this.sessionStorage = sessionStorage;
     }
 
@@ -80,15 +84,15 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
 
             switch (error.toLowerCase()) {
                 case OmaspConstants.Error.AUTHENTICATION_FAILED:
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                    throw LoginError.INCORRECT_CREDENTIALS.exception(e);
                 case OmaspConstants.Error.BAD_REQUEST:
                     if (errorResponse.isPasswordError()) {
-                        throw LoginError.INCORRECT_CREDENTIALS.exception();
+                        throw LoginError.INCORRECT_CREDENTIALS.exception(e);
                     } else {
                         throw e;
                     }
                 case OmaspConstants.Error.OTHER_BANK_CUSTOMER:
-                    throw LoginError.NOT_CUSTOMER.exception();
+                    throw LoginError.NOT_CUSTOMER.exception(e);
                 case OmaspConstants.Error.LOGIN_WARNING:
                     String message = errorResponse.getMessage();
 
@@ -97,14 +101,15 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
                     }
 
                     throw AuthorizationError.ACCOUNT_BLOCKED.exception(
-                            OmaspConstants.UserMessage.LOGIN_BLOCKED.getKey());
+                            OmaspConstants.UserMessage.LOGIN_BLOCKED.getKey(), e);
                 default:
                     LOGGER.warn(
                             String.format(
                                     "%s: Unknown error code for loginRequest: %s, Message: %s",
                                     OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,
                                     errorResponse.getError(),
-                                    errorResponse.getMessage()));
+                                    errorResponse.getMessage()),
+                            e);
                     throw e;
             }
         }
@@ -112,6 +117,7 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
 
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
+        credentials.setSensitivePayload(Field.Key.OTP_INPUT, code);
         try {
             String deviceId = persistentStorage.get(Storage.DEVICE_ID);
 
@@ -128,8 +134,10 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
                     !Strings.isNullOrEmpty(registerDeviceResponse.getDeviceToken()),
                     "Device token is null or empty");
 
-            persistentStorage.put(
-                    OmaspConstants.Storage.DEVICE_TOKEN, registerDeviceResponse.getDeviceToken());
+            String deviceToken = registerDeviceResponse.getDeviceToken();
+            credentials.setSensitivePayload(Storage.DEVICE_TOKEN, deviceToken);
+            persistentStorage.put(OmaspConstants.Storage.DEVICE_TOKEN, deviceToken);
+
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() != 403) {
                 throw e;
@@ -144,14 +152,15 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
 
             switch (error.toLowerCase()) {
                 case OmaspConstants.Error.SECURITY_KEY_FAILED:
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                    throw LoginError.INCORRECT_CREDENTIALS.exception(e);
                 default:
                     LOGGER.warn(
                             String.format(
                                     "%s: Unknown error code for registerDevice: %s, Message: %s",
                                     OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,
                                     errorResponse.getError(),
-                                    errorResponse.getMessage()));
+                                    errorResponse.getMessage()),
+                            e);
                     throw e;
             }
         }

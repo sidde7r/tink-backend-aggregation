@@ -78,13 +78,13 @@ public class EvoBancoAutoAuthenticator implements AutoAuthenticator {
                 try {
                     e.getResponse().getBody(EELoginResponse.class).handleReturnCode();
                 } catch (LoginException e1) {
-                    throw AuthorizationError.NO_VALID_PROFILE.exception(e1.getUserMessage());
+                    throw AuthorizationError.NO_VALID_PROFILE.exception(e1.getUserMessage(), e1);
                 }
             } else {
                 throw e;
             }
         } catch (LoginException e) {
-            throw AuthorizationError.NO_VALID_PROFILE.exception(e.getUserMessage());
+            throw AuthorizationError.NO_VALID_PROFILE.exception(e.getUserMessage(), e);
         }
 
         // Workaround needed due to the fact that EvoBanco's backend expects a check of the

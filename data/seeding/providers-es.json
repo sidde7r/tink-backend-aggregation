@@ -3,6 +3,7 @@
     "market": "ES",
     "providers": [
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.creditcards.amex.AmericanExpressESAgent",
             "credentialsType": "PASSWORD",
             "displayName": "American Express",
@@ -19,6 +20,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "es-americanexpress-password",
             "passwordHelpText": "You use the same password as when you log in to the %s website. You can order a new username and password from [%s](%s).",
             "status": "ENABLED",
@@ -27,6 +30,7 @@
             "type": "CREDIT_CARD"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.popular.BancoPopularAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banco Popular",
@@ -49,6 +53,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "es-bancopopular-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
@@ -57,6 +63,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.sabadell.SabadellAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banco Sabadell",
@@ -74,6 +81,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "es-bancosabadell-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
@@ -82,6 +91,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.santander.SantanderEsAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banco Santander",
@@ -99,6 +109,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "es-bancosantander-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
@@ -107,6 +119,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.bankia.BankiaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Bankia",
@@ -125,6 +138,7 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "none",
             "name": "es-bankia-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
@@ -133,6 +147,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.bbva.BbvaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "BBVA",
@@ -152,6 +167,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "es-bbva-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
@@ -160,6 +177,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.bankinter.BankinterAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Bankinter",
@@ -178,16 +196,17 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "e8ce90be687146e388286f976e6aaf81",
+            "financialInstitutionName": "Bankinter",
             "name": "es-bankinter-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK",
-            "financialInstitutionId": "e8ce90be687146e388286f976e6aaf81",
-            "financialInstitutionName": "Bankinter"
+            "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.evobanco.EvoBancoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "EvoBanco",
@@ -209,6 +228,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "es-evobanco-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
@@ -217,6 +238,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.ibercaja.IberCajaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "IberCaja",
@@ -234,6 +256,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "es-ibercaja-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
@@ -242,6 +266,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.imaginbank.ImaginBankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "ImaginBank",
@@ -263,6 +288,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "es-imaginbank-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "status": "ENABLED",
@@ -270,6 +297,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.ing.v195.IngAgent",
             "credentialsType": "PASSWORD",
             "displayName": "ING",
@@ -303,6 +331,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "es-ing-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
@@ -311,6 +341,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.lacaixa.LaCaixaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "LaCaixa",
@@ -339,6 +370,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.n26.N26Agent",
             "credentialsType": "PASSWORD",
             "displayName": "N26",
@@ -355,6 +387,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "N26",
             "name": "es-n26-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
@@ -364,6 +398,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.openbank.OpenbankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Openbank",
@@ -393,6 +428,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "es-openbank-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
@@ -401,10 +438,13 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.serviceproviders.openbanking.redsys.RedsysAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Redsys (Sandbox)",
             "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "es-redsys-oauth2",
             "passwordHelpText": null,
@@ -416,6 +456,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Revolut",
@@ -439,6 +480,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "multiFactor": true,
             "name": "es-revolut-password",
             "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
@@ -447,6 +490,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.targo.TargoBankESAgent",
             "credentialsType": "PASSWORD",
             "displayName": "TargoBank",
@@ -463,6 +507,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "name": "es-targobank-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "status": "ENABLED",
@@ -470,6 +516,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -481,6 +528,8 @@
                     "name": "username"
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
             "name": "es-test-multi-supplemental",
@@ -491,6 +540,7 @@
             "type": "TEST"
         },
         {
+            "accessType": "OTHER",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayDescription": "Password",
@@ -508,6 +558,8 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
             "groupDisplayName": "Test Password",
             "multiFactor": true,
             "name": "es-test-password",

@@ -90,7 +90,7 @@ public class JyskeApiClient {
     public GetAccountResponse fetchAccounts() {
 
         GetAccountResponse getAccountResponse =
-                this.createRequest(JyskeConstants.Url.GET_ACCOUNTS)
+                this.createRequest(JyskeConstants.Url.GET_ACCOUNTS_WITH_EXTERNALS)
                         .header(
                                 JyskeConstants.Header.BUILDNO_KEY,
                                 JyskeConstants.Header.BUILDNO_VALUE)
@@ -124,7 +124,7 @@ public class JyskeApiClient {
         request.setPage(page);
         request.setShowPlanning(false);
 
-        return this.createJsonRequest(JyskeConstants.Url.GET_TRANSACTIONS)
+        return this.createJsonRequest(JyskeConstants.Url.GET_TRANSACTIONS_WITH_EXTERNALS)
                 .header(JyskeConstants.Header.BUILDNO_KEY, JyskeConstants.Header.BUILDNO_VALUE)
                 .post(GetTransactionsResponse.class, request);
     }

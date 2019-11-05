@@ -6,7 +6,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -59,9 +59,10 @@ public class TransactionEntity {
         return ICSConstants.Transaction.DEBIT.equalsIgnoreCase(creditDebitIndicator);
     }
 
-    private Amount toTinkAmount() {
+    private ExactCurrencyAmount toTinkAmount() {
 
-        Amount result = new Amount(billingCurrency, Double.parseDouble(billingAmount)).stripSign();
+        ExactCurrencyAmount result =
+                ExactCurrencyAmount.of(Double.parseDouble(billingAmount), billingCurrency);
 
         if (isDebit()) {
             return result.negate();
@@ -74,7 +75,7 @@ public class TransactionEntity {
         try {
             return ICSConstants.Date.TRANSACTION_FORMAT.parse(transactionDate);
         } catch (ParseException e) {
-            throw new IllegalStateException("Cannot parse date!");
+            throw new IllegalStateException("Cannot parse date!", e);
         }
     }
 

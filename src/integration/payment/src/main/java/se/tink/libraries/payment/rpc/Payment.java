@@ -1,12 +1,16 @@
 package se.tink.libraries.payment.rpc;
 
 import com.google.common.collect.ImmutableList;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 import org.iban4j.IbanUtil;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -40,6 +44,20 @@ public class Payment {
         this.id = UUID.randomUUID();
     }
 
+    /*
+       This method is used by UK OpenBanking for EndToEndIdentification field since
+       there the max allowed length for id is 31
+       From the Docs: The Faster Payments Scheme can only access 31 characters for
+       the EndToEndIdentification field.
+    */
+    public String getUniqueIdForUKOPenBanking() {
+        if (uniqueId.length() > 31) {
+            return uniqueId.substring(0, 31);
+        }
+
+        return uniqueId;
+    }
+
     public String getCurrency() {
         return currency;
     }
@@ -54,6 +72,10 @@ public class Payment {
 
     public Amount getAmount() {
         return amount;
+    }
+
+    public ExactCurrencyAmount getExactCurrencyAmount() {
+        return new ExactCurrencyAmount(new BigDecimal(amount.getValue()), amount.getCurrency());
     }
 
     public UUID getId() {
@@ -85,6 +107,9 @@ public class Payment {
     }
 
     public Pair<AccountIdentifier.Type, AccountIdentifier.Type> getCreditorAndDebtorAccountType() {
+        if (Objects.isNull(debtor)) {
+            return new Pair<>(null, creditor.getAccountIdentifierType());
+        }
         return new Pair<>(debtor.getAccountIdentifierType(), creditor.getAccountIdentifierType());
     }
 
@@ -96,6 +121,29 @@ public class Payment {
                             IbanUtil.getCountryCode(creditor.getAccountNumber()))) return true;
         }
         return false;
+    }
+
+    public String getIbanMarket(String accountNumber) {
+        return IbanUtil.getCountryCode(accountNumber);
+    }
+
+    public String getMarketCode(
+            String accountNumber, String marketCode, AccountIdentifier.Type accountIdentifierType) {
+        switch (accountIdentifierType) {
+            case PAYM_PHONE_NUMBER:
+            case SORT_CODE:
+                marketCode = String.valueOf(MarketCode.GB);
+                break;
+            case IBAN:
+                marketCode = getIbanMarket(accountNumber);
+                break;
+            case SE:
+            case BBAN:
+                marketCode = String.valueOf(MarketCode.SE);
+                break;
+            default:
+        }
+        return marketCode;
     }
 
     public static class Builder {
@@ -121,6 +169,14 @@ public class Payment {
 
         public Builder withAmount(Amount amount) {
             this.amount = amount;
+            return this;
+        }
+
+        public Builder withExactCurrencyAmount(ExactCurrencyAmount exactCurrencyAmount) {
+            this.amount =
+                    new Amount(
+                            exactCurrencyAmount.getCurrencyCode(),
+                            exactCurrencyAmount.getDoubleValue());
             return this;
         }
 

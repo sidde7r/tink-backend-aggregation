@@ -25,7 +25,7 @@ public class SantanderSessionHandler implements SessionHandler {
         try {
             this.santanderApiClient.fetchAccounts();
         } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            throw SessionError.SESSION_EXPIRED.exception(e);
         }
     }
 }

@@ -15,7 +15,10 @@ public class ClientConfigurationTemplateBuilderForOneProviderTest {
         manager.before();
         clientConfigurationTemplateBuilderTest =
                 new ClientConfigurationTemplateBuilderTest.Builder(
-                                manager.get(Arg.MARKET), manager.get(Arg.PROVIDER_NAME))
+                                manager.get(Arg.MARKET),
+                                manager.get(Arg.PROVIDER_NAME),
+                                Boolean.parseBoolean(manager.get(Arg.INCLUDE_DESCRIPTIONS)),
+                                Boolean.parseBoolean(manager.get(Arg.INCLUDE_EXAMPLES)))
                         .build();
     }
 
@@ -34,6 +37,8 @@ public class ClientConfigurationTemplateBuilderForOneProviderTest {
 
     private enum Arg {
         MARKET,
-        PROVIDER_NAME
+        PROVIDER_NAME,
+        INCLUDE_DESCRIPTIONS,
+        INCLUDE_EXAMPLES
     }
 }

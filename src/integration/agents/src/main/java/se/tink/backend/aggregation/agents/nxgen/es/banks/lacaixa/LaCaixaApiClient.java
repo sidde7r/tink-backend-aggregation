@@ -71,7 +71,7 @@ public class LaCaixaApiClient {
             int statusCode = e.getResponse().getStatus();
 
             if (statusCode == LaCaixaConstants.StatusCodes.INCORRECT_USERNAME_PASSWORD) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
 
             throw e;

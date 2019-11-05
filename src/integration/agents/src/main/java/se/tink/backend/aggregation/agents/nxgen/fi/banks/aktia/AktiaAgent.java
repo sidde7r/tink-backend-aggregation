@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.Akt
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.AktiaKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.entities.UserAccountInfo;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.AktiaTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -72,7 +72,8 @@ public class AktiaAgent extends NextGenerationAgent
                 new KeyCardAuthenticationController(
                         catalog,
                         supplementalInformationHelper,
-                        new AktiaKeyCardAuthenticator(apiClient, encapClient, instanceStorage)),
+                        new AktiaKeyCardAuthenticator(
+                                apiClient, encapClient, instanceStorage, credentials)),
                 new AktiaAutoAuthenticator(apiClient, encapClient, instanceStorage));
     }
 

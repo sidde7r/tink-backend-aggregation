@@ -14,7 +14,7 @@ Configuration:
   Loggers:
     logger:
       - name: se.tink.backend
-        level: debug
+        level: info
         additivity: false
         AppenderRef:
           ref: ConsoleJSONAppender

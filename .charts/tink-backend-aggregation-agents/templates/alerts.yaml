@@ -11,37 +11,37 @@ spec:
 
   - alert: TransferSuccessRateLow
     expr: |
-        # Failed attempts above 10%
+        # Failed attempts above 25%
         (sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', status=~"FAILED"}[30m])) by (provider)
-            / sum(increase(tink_transfer_count_total{transfer_type='bank-transfer'}[30m])) by (provider) > 0.1)
+            / sum(increase(tink_transfer_count_total{transfer_type='bank-transfer'}[30m])) by (provider) > 0.25)
         # At least this many attempts.
-        and sum(increase(tink_transfer_count_total{transfer_type='bank-transfer'}[30m])) by (provider)) > 2
+        and sum(increase(tink_transfer_count_total{transfer_type='bank-transfer'}[30m])) by (provider) > 2
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
-        description: Transfers failing more than 10% ( <{ $value }> ) for the last 30 minutes.
+        description: Transfers failing more than 25% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Transfers failing more than 10% ( <{ $value }> ) for <{ $labels.provider }>
+        summary: Transfers failing more than 25% ( <{ $value }> ) for <{ $labels.provider }>
             the last 30 minutes.
         tags: <{ $labels.provider }>
 
   - alert: PaymentSuccessRateLow
     expr: |
-        # Failed attempts above 10%
+        # Failed attempts above 25%
         (sum(increase(tink_transfer_count_total{transfer_type='payment', status=~"FAILED"}[30m])) by (provider)
-            / sum(increase(tink_transfer_count_total{transfer_type='payment'}[30m])) by (provider) > 0.1)
+            / sum(increase(tink_transfer_count_total{transfer_type='payment'}[30m])) by (provider) > 0.25)
         # At least this many attempts.
-        and sum(increase(tink_transfer_count_total{transfer_type='payment'}[30m])) by (provider)) > 2
+        and sum(increase(tink_transfer_count_total{transfer_type='payment'}[30m])) by (provider) > 2
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
-        description: Payments failing more than 10% ( <{ $value }> ) for the last 30 minutes.
+        description: Payments failing more than 25% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Payments failing more than 10% ( <{ $value }> ) for <{ $labels.provider }>
+        summary: Payments failing more than 25% ( <{ $value }> ) for <{ $labels.provider }>
             the last 30 minutes.
         tags: <{ $labels.provider }>
         
@@ -51,7 +51,7 @@ spec:
         (sum(increase(tink_transfer_count_total{transfer_type='einvoice', status=~"FAILED"}[30m])) by (provider)
             / sum(increase(tink_transfer_count_total{transfer_type='einvoice'}[30m])) by (provider) > 0.1)
         # At least this many attempts.
-        and sum(increase(tink_transfer_count_total{transfer_type='einvoice'}[30m])) by (provider)) > 2
+        and sum(increase(tink_transfer_count_total{transfer_type='einvoice'}[30m])) by (provider) > 2
     for: 5m
     labels:
         severity: urgent
@@ -328,37 +328,37 @@ spec:
         # ES
   - alert: LoginSuccessRateLowWithAttemptLimitES
     expr: |
-       # Successful/Cancelled attempts above 95%
+       # Successful/Cancelled attempts above 90%
        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="ES"}[30m])) by (action,className)
-           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[30m])) by (action,className) < 0.95)
+           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[30m])) by (action,className) < 0.90)
        # At least this many attempts.
        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[30m])) by (action,className) > 2
     for: 5m
     labels:
-        severity: ping
+        severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Login success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Login success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitES
     expr: |
-        # Successful attempts above 95%
+        # Successful attempts above 90%
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="ES"}[30m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="ES"}[30m])) by (className) < 0.95)
+            / sum(increase(tink_agent_refresh_total{market="ES"}[30m])) by (className) < 0.90)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="ES"}[30m])) by (className) > 8
     for: 5m
     labels:
-        severity: ping
+        severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
+        description: Refresh success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Refresh success rate is below 95% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
@@ -623,37 +623,37 @@ spec:
 
   - alert: BankServerUnavailableForLogin
     expr: |
-       # Unavailable outcome above 10%
+       # Unavailable outcome above 50%
        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable"}[30m])) by (action,className)
-           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 0.05)
+           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 0.50)
        # At least this many attempts.
-       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 2
+       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 5
     for: 5m
     labels:
         severity: ping
         who: integration
     annotations:
-        description: Login unavailable rate is above 10% ( <{ $value }> ) for the last 30 minutes.
+        description: Login unavailable rate is above 50% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Login unavailable rate is above 10% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
   - alert: BankServerUnavailableForRefresh
     expr: |
-        # Unavailable outcome above 10%
+        # Unavailable outcome above 50%
         (sum(increase(tink_agent_refresh_total{outcome=~"unavailable"}[30m])) by (className)
-            / sum(increase(tink_agent_refresh_total[30m])) by (className) > 0.05)
+            / sum(increase(tink_agent_refresh_total[30m])) by (className) > 0.50)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total[30m])) by (className) > 1
+        and sum(increase(tink_agent_refresh_total[30m])) by (className) > 5
     for: 5m
     labels:
         severity: ping
         who: integration
     annotations:
-        description: Refresh unavailable rate is above 10% ( <{ $value }> ) for the last 30 minutes.
+        description: Refresh unavailable rate is above 50% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Refresh unavailable rate is above 10% ( <{ $value }> ) for <{ $labels.className }>
+        summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
 
