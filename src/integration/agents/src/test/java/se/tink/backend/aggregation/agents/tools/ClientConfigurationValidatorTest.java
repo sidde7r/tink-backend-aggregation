@@ -101,6 +101,11 @@ public class ClientConfigurationValidatorTest {
         assertThat(response.getInvalidSensitiveSecretsNames()).isEmpty();
         assertThat(response.getMissingSecretsNames()).containsExactly("secret4");
         assertThat(response.getMissingSensitiveSecretsNames()).containsExactly("sensitiveSecret4");
+        assertThat(response.getValidationResultMessage())
+                .isEqualTo(
+                        "Secrets are wrong.\n"
+                                + "The following secrets are missing : [secret4]\n"
+                                + "The following sensitive secrets are missing : [sensitiveSecret4]\n");
     }
 
     @Test
@@ -117,6 +122,34 @@ public class ClientConfigurationValidatorTest {
         assertThat(response.getMissingSensitiveSecretsNames()).isEmpty();
         assertThat(response.getInvalidSecretsNames()).containsExactly("secret2");
         assertThat(response.getInvalidSensitiveSecretsNames()).containsExactly("sensitiveSecret2");
+        assertThat(response.getValidationResultMessage())
+                .isEqualTo(
+                        "Secrets are wrong.\n"
+                                + "The following secrets should not be present : [secret2]\n"
+                                + "The following sensitive secrets should not be present : [sensitiveSecret2]\n");
+    }
+
+    @Test
+    public void validateTestWithMissingAndInvalidFields() {
+        clientConfigurationValidator =
+                getClientConfigurationValidatorForValidateTestWithMissingAndInvalidFields();
+
+        SecretsNamesValidationRequest request = getSecretsNamesValidationRequest();
+
+        SecretsNamesValidationResponse response = clientConfigurationValidator.validate(request);
+
+        assertThat(response.isValid()).isEqualTo(false);
+        assertThat(response.getMissingSecretsNames()).containsExactly("secret4");
+        assertThat(response.getMissingSensitiveSecretsNames()).containsExactly("sensitiveSecret4");
+        assertThat(response.getInvalidSecretsNames()).containsExactly("secret2");
+        assertThat(response.getInvalidSensitiveSecretsNames()).containsExactly("sensitiveSecret2");
+        assertThat(response.getValidationResultMessage())
+                .isEqualTo(
+                        "Secrets are wrong.\n"
+                                + "The following secrets should not be present : [secret2]\n"
+                                + "The following secrets are missing : [secret4]\n"
+                                + "The following sensitive secrets should not be present : [sensitiveSecret2]\n"
+                                + "The following sensitive secrets are missing : [sensitiveSecret4]\n");
     }
 
     @Test
@@ -133,6 +166,8 @@ public class ClientConfigurationValidatorTest {
         assertThat(response.getMissingSensitiveSecretsNames()).isEmpty();
         assertThat(response.getInvalidSecretsNames()).isEmpty();
         assertThat(response.getInvalidSensitiveSecretsNames()).isEmpty();
+        assertThat(response.getValidationResultMessage())
+                .isEqualTo("Secrets names validated correctly.");
     }
 
     private SecretsNamesValidationRequest getSecretsNamesValidationRequest() {
@@ -144,8 +179,7 @@ public class ClientConfigurationValidatorTest {
                         .add("redirectUrls")
                         .build();
 
-        Set<String> excludedSecretsNames =
-                ImmutableSet.<String>builder().add("secret3").add("secret5").build();
+        Set<String> excludedSecretsNames = ImmutableSet.<String>builder().add("secret3").build();
 
         Set<String> sensitiveSecretsNames =
                 ImmutableSet.<String>builder()
@@ -156,10 +190,7 @@ public class ClientConfigurationValidatorTest {
                         .build();
 
         Set<String> excludedSensitiveSecretsNames =
-                ImmutableSet.<String>builder()
-                        .add("sensitiveSecret3")
-                        .add("sensitiveSecret5")
-                        .build();
+                ImmutableSet.<String>builder().add("sensitiveSecret3").build();
 
         return new SecretsNamesValidationRequest(
                 null,
@@ -258,6 +289,30 @@ public class ClientConfigurationValidatorTest {
                 .thenReturn(
                         ImmutableSet.<String>builder()
                                 .add("sensitiveSecret1")
+                                .add("redirectUrl")
+                                .build());
+        when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
+                .thenCallRealMethod();
+
+        return new ClientConfigurationValidator(mockClientConfigurationMetaInfoHandler);
+    }
+
+    private ClientConfigurationValidator
+            getClientConfigurationValidatorForValidateTestWithMissingAndInvalidFields() {
+        ClientConfigurationMetaInfoHandler mockClientConfigurationMetaInfoHandler =
+                mock(ClientConfigurationMetaInfoHandler.class);
+        when(mockClientConfigurationMetaInfoHandler.getSecretFieldsNames())
+                .thenReturn(
+                        ImmutableSet.<String>builder()
+                                .add("secret1")
+                                .add("secret4")
+                                .add("redirectUrl")
+                                .build());
+        when(mockClientConfigurationMetaInfoHandler.getSensitiveSecretFieldsNames())
+                .thenReturn(
+                        ImmutableSet.<String>builder()
+                                .add("sensitiveSecret1")
+                                .add("sensitiveSecret4")
                                 .add("redirectUrl")
                                 .build());
         when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))

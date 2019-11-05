@@ -44,4 +44,37 @@ public final class SecretsNamesValidationResponse {
     public Set<String> getMissingSensitiveSecretsNames() {
         return missingSensitiveSecretsNames;
     }
+
+    public String getValidationResultMessage() {
+        if (valid) {
+            return "Secrets names validated correctly.";
+        } else {
+            StringBuffer sb = new StringBuffer("Secrets are wrong.\n");
+            if (!invalidSecretsNames.isEmpty()) {
+                sb.append(
+                        "The following secrets should not be present : "
+                                + invalidSecretsNames.toString()
+                                + "\n");
+            }
+            if (!missingSecretsNames.isEmpty()) {
+                sb.append(
+                        "The following secrets are missing : "
+                                + missingSecretsNames.toString()
+                                + "\n");
+            }
+            if (!invalidSensitiveSecretsNames.isEmpty()) {
+                sb.append(
+                        "The following sensitive secrets should not be present : "
+                                + invalidSensitiveSecretsNames.toString()
+                                + "\n");
+            }
+            if (!missingSensitiveSecretsNames.isEmpty()) {
+                sb.append(
+                        "The following sensitive secrets are missing : "
+                                + missingSensitiveSecretsNames.toString()
+                                + "\n");
+            }
+            return sb.toString();
+        }
+    }
 }
