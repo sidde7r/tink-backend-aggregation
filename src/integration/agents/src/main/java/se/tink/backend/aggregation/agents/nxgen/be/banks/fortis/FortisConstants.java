@@ -129,4 +129,9 @@ public class FortisConstants {
         public static final LogTag TRANSACTION_VALIDATION_ERR =
                 LogTag.from("FORTIS_TRANSACTION_VALIDATION_ERR");
     }
+
+    static class HttpClient {
+        public static final int MAX_RETRIES = 4;
+        public static final int RETRY_SLEEP_MILLISECONDS = 1000;
+    }
 }
