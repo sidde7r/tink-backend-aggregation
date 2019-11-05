@@ -5,7 +5,7 @@ import java.util.List;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.types.timers.Timer;
 
-public class MetricAction {
+public class MetricAction implements MetricActionIface {
     private final AgentWorkerCommandMetricState state;
     private final MetricCacheLoader metricCacheLoader;
     private final MetricId metricPath;
