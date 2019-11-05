@@ -28,11 +28,11 @@ public class ClientConfigurationValidator {
                         request.getSecretsNames(), request.getExcludedSecretsNames());
 
         Set<String> invalidSensitiveSecretsFields =
-                getInvalidSecretsFields(
+                getInvalidSensitiveSecretsFields(
                         request.getSensitiveSecretsNames(),
                         request.getExcludedSensitiveSecretsNames());
         Set<String> missingSensitiveSecretsFields =
-                getMissingSecretsFields(
+                getMissingSensitiveSecretsFields(
                         request.getSensitiveSecretsNames(),
                         request.getExcludedSensitiveSecretsNames());
 
@@ -46,10 +46,53 @@ public class ClientConfigurationValidator {
     // Package private for testing.
     Set<String> getMissingSecretsFields(
             Set<String> secretsNames, Set<String> excludedSecretsNames) {
-        Set<String> mappedSecretsNames =
-                clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(secretsNames);
         Set<String> secretFieldsNamesFromConfigurationClass =
                 clientConfigurationMetaInfoHandler.getSecretFieldsNames();
+
+        return getMissingSecretsFields(
+                secretsNames, excludedSecretsNames, secretFieldsNamesFromConfigurationClass);
+    }
+
+    // Package private for testing.
+    Set<String> getMissingSensitiveSecretsFields(
+            Set<String> sensitiveSecretsNames, Set<String> excludedSensitiveSecretsNames) {
+        Set<String> sensitiveSecretFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getSensitiveSecretFieldsNames();
+
+        return getMissingSecretsFields(
+                sensitiveSecretsNames,
+                excludedSensitiveSecretsNames,
+                sensitiveSecretFieldsNamesFromConfigurationClass);
+    }
+
+    // Package private for testing.
+    Set<String> getInvalidSensitiveSecretsFields(
+            Set<String> sensitiveSecretsNames, Set<String> excludedSensitiveSecretsNames) {
+        Set<String> sensitiveSecretFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getSensitiveSecretFieldsNames();
+
+        return getInvalidSecretsFields(
+                sensitiveSecretsNames,
+                excludedSensitiveSecretsNames,
+                sensitiveSecretFieldsNamesFromConfigurationClass);
+    }
+
+    // Package private for testing.
+    Set<String> getInvalidSecretsFields(
+            Set<String> secretsNames, Set<String> excludedSecretsNames) {
+        Set<String> secretFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getSecretFieldsNames();
+
+        return getInvalidSecretsFields(
+                secretsNames, excludedSecretsNames, secretFieldsNamesFromConfigurationClass);
+    }
+
+    private Set<String> getMissingSecretsFields(
+            Set<String> secretsNames,
+            Set<String> excludedSecretsNames,
+            Set<String> secretFieldsNamesFromConfigurationClass) {
+        Set<String> mappedSecretsNames =
+                clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(secretsNames);
 
         return secretFieldsNamesFromConfigurationClass.stream()
                 // Just get the ones that are in the configuration class and not in the set that
@@ -65,13 +108,12 @@ public class ClientConfigurationValidator {
                 .collect(ImmutableSet.toImmutableSet());
     }
 
-    // Package private for testing.
-    Set<String> getInvalidSecretsFields(
-            Set<String> secretsNames, Set<String> excludedSecretsNames) {
+    private Set<String> getInvalidSecretsFields(
+            Set<String> secretsNames,
+            Set<String> excludedSecretsNames,
+            Set<String> secretFieldsNamesFromConfigurationClass) {
         Set<String> mappedSecretsNames =
                 clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(secretsNames);
-        Set<String> secretFieldsNamesFromConfigurationClass =
-                clientConfigurationMetaInfoHandler.getSecretFieldsNames();
 
         return mappedSecretsNames.stream()
                 // We pick those that we are trying to validate and are not found in the

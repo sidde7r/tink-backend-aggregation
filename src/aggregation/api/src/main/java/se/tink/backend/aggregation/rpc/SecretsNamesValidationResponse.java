@@ -24,4 +24,24 @@ public final class SecretsNamesValidationResponse {
         this.invalidSensitiveSecretsNames = invalidSensitiveSecretsNames;
         this.missingSensitiveSecretsNames = missingSensitiveSecretsNames;
     }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public Set<String> getInvalidSecretsNames() {
+        return invalidSecretsNames;
+    }
+
+    public Set<String> getMissingSecretsNames() {
+        return missingSecretsNames;
+    }
+
+    public Set<String> getInvalidSensitiveSecretsNames() {
+        return invalidSensitiveSecretsNames;
+    }
+
+    public Set<String> getMissingSensitiveSecretsNames() {
+        return missingSensitiveSecretsNames;
+    }
 }

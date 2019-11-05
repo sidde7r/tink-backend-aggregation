@@ -55,6 +55,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62",
     ],
     deps = [
+        "//src/aggregation/api",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
         "//src/integration/api",
         "//src/integration/lib:lib_test",

@@ -10,6 +10,19 @@ public final class SecretsNamesValidationRequest {
     private Set<String> sensitiveSecretsNames;
     private Set<String> excludedSensitiveSecretsNames;
 
+    public SecretsNamesValidationRequest(
+            Provider provider,
+            Set<String> secretsNames,
+            Set<String> excludedSecretsNames,
+            Set<String> sensitiveSecretsNames,
+            Set<String> excludedSensitiveSecretsNames) {
+        this.provider = provider;
+        this.secretsNames = secretsNames;
+        this.excludedSecretsNames = excludedSecretsNames;
+        this.sensitiveSecretsNames = sensitiveSecretsNames;
+        this.excludedSensitiveSecretsNames = excludedSensitiveSecretsNames;
+    }
+
     public Provider getProvider() {
         return provider;
     }
