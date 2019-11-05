@@ -8,10 +8,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccessConsentResponse {
 
-    public ResponseDataEntity data;
-    public LinksEntity links;
-    public MetaEntity meta;
-    public RiskEntity risk;
+    private ResponseDataEntity data;
+    private LinksEntity links;
+    private MetaEntity meta;
+    private RiskEntity risk;
 
     public ResponseDataEntity getData() {
         return data;

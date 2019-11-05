@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.CrosskeyBaseAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.CrosskeyBaseAuthCodeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment.CrossKeyPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.TransactionalAccountAccountFetcher;
@@ -20,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -57,27 +60,24 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
 
     protected abstract String getClientName();
 
-    protected abstract String getBaseAPIUrl();
-
-    protected abstract String getBaseAuthUrl();
-
     protected abstract String getxFapiFinancialId();
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         final CrosskeyBaseConfiguration crosskeyBaseConfiguration = getClientConfiguration();
-        apiClient.setConfiguration(crosskeyBaseConfiguration, configuration.getEidasProxy());
+        crosskeyBaseConfiguration.setxFapiFinancialId(getxFapiFinancialId());
+
+        apiClient.setConfiguration(
+                crosskeyBaseConfiguration,
+                configuration.getEidasProxy(),
+                getEidasIdentity(),
+                getxFapiFinancialId());
     }
 
     private CrosskeyBaseConfiguration getClientConfiguration() {
-        CrosskeyBaseConfiguration crosskeyBaseConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(CrosskeyBaseConfiguration.class);
-        crosskeyBaseConfiguration.setBaseAPIUrl(getBaseAPIUrl());
-        crosskeyBaseConfiguration.setBaseAuthUrl(getBaseAuthUrl());
-        crosskeyBaseConfiguration.setxFapiFinancialId(getxFapiFinancialId());
-        return crosskeyBaseConfiguration;
+        return getAgentConfigurationController()
+                .getAgentConfiguration(CrosskeyBaseConfiguration.class);
     }
 
     @Override
@@ -86,7 +86,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new CrosskeyBaseAuthenticator(apiClient),
+                        CrosskeyBaseAuthCodeAuthenticator.getInstanceForAis(apiClient),
                         credentials,
                         strongAuthenticationState);
 
@@ -139,5 +139,27 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+
+        final OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        CrosskeyBaseAuthCodeAuthenticator.getInstanceForPis(apiClient),
+                        credentials,
+                        strongAuthenticationState);
+
+        CrossKeyPaymentExecutor crossKeyPaymentExecutor =
+                new CrossKeyPaymentExecutor(
+                        apiClient,
+                        new ThirdPartyAppAuthenticationController<>(
+                                controller, supplementalInformationHelper),
+                        credentials,
+                        sessionStorage);
+
+        return Optional.of(new PaymentController(crossKeyPaymentExecutor, crossKeyPaymentExecutor));
     }
 }

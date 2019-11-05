@@ -23,16 +23,6 @@ public class ResursBankAgent extends CrosskeyBaseAgent {
     }
 
     @Override
-    protected String getBaseAPIUrl() {
-        return ResursBankConstants.BASE_API_URL;
-    }
-
-    @Override
-    protected String getBaseAuthUrl() {
-        return ResursBankConstants.BASE_AUTH_URL;
-    }
-
-    @Override
     protected String getxFapiFinancialId() {
         return ResursBankConstants.X_FAPI_FINANCIAL_ID;
     }
