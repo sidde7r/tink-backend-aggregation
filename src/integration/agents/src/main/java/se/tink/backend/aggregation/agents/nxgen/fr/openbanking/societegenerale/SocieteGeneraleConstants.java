@@ -7,11 +7,11 @@ public class SocieteGeneraleConstants {
     public static final String INTEGRATION_NAME = "societegenerale";
 
     public static class Urls {
-        private static final String BASE_URL =
-                "https://api.societegenerale.fr/sg/prod/pri/v1.4.2.4/psd2/xs2a";
         private static final String BASE_AUTH = "https://sg-signin.societegenerale.fr";
+        public static final String BASE_URL =
+                "https://api.societegenerale.fr/sg/prod/pri/v1.4.2.4/psd2/xs2a";
 
-        public static final String AUTHORTIZE_PATH = BASE_AUTH + "/oauth2/authorize";
+        public static final String AUTHORIZE_PATH = BASE_AUTH + "/oauth2/authorize";
         public static final String TOKEN_PATH =
                 "https://mtls.sg-signin.societegenerale.fr/oauth2/token";
 

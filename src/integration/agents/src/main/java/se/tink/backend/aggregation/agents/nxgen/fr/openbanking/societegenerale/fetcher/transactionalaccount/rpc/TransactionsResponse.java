@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.entities.LinksTransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.entities.TransactionsItemEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -35,6 +36,8 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<URL
 
     @Override
     public URL nextKey() {
-        return new URL(linksTransactionsEntity.getNextTransactionEntity().getHref());
+        return new URL(
+                SocieteGeneraleConstants.Urls.BASE_URL
+                        + linksTransactionsEntity.getNextTransactionEntity().getHref());
     }
 }

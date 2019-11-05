@@ -44,9 +44,7 @@ public class SocieteGeneraleAuthenticator implements OAuth2Authenticator {
                                 SocieteGeneraleConstants.QueryValues.RESPONSE_TYPE)
                         .build();
         return new URL(
-                SocieteGeneraleConstants.Urls.AUTHORTIZE_PATH
-                        .concat("?")
-                        .concat(params.toString()));
+                SocieteGeneraleConstants.Urls.AUTHORIZE_PATH.concat("?").concat(params.toString()));
     }
 
     @Override
