@@ -97,6 +97,12 @@ public final class SbabConstants {
         public static final String PSU_IP_ADDRESS = "192.160.0.1";
     }
 
+    public static class TransactionFetching {
+        // 4 is default in the TransactionDatePaginationController
+        public static final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
+        public static final int AMOUNT_TO_FETCH = 6;
+    }
+
     public static class Errors {
         public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
         public static final String KYC_QUESTIONS_NOT_COMPLETED = "kyc_questions_not_completed";

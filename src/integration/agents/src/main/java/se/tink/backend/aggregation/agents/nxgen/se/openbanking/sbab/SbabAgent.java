@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.TransactionFetching;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.SbabPaymentExecutor;
@@ -121,7 +122,10 @@ public final class SbabAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                transactionFetcher, 4, 6, ChronoUnit.MONTHS)));
+                                transactionFetcher,
+                                TransactionFetching.MAX_CONSECUTIVE_EMPTY_PAGES,
+                                TransactionFetching.AMOUNT_TO_FETCH,
+                                ChronoUnit.MONTHS)));
     }
 
     @Override
