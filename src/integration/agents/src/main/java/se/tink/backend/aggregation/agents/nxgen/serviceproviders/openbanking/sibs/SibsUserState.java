@@ -14,11 +14,11 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class SibsUserState {
 
-    static final String CONSENT_ID = "CONSENT_ID";
-    public static final String SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS =
+    private static final String CONSENT_ID = "CONSENT_ID";
+    private static final String SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS =
             "sibs_manual_authentication_in_progress";
     private static final int DAYS_BACK_TO_FETCH_TRANSACTIONS = 10;
-    public static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
+    private static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern(PAGINATION_DATE_FORMAT);
     private static final LocalDate TRANSACTIONS_FROM_BEGINNING = LocalDate.of(1970, 1, 1);
