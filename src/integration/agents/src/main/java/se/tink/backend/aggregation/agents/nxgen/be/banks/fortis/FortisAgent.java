@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis;
 
+import org.apache.http.NoHttpResponseException;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class FortisAgent extends NextGenerationAgent
@@ -32,6 +34,12 @@ public class FortisAgent extends NextGenerationAgent
         String[] payload = request.getProvider().getPayload().split(" ");
         String baseUrl = payload[0];
         String distributorId = payload[1];
+
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        FortisConstants.HttpClient.MAX_RETRIES,
+                        FortisConstants.HttpClient.RETRY_SLEEP_MILLISECONDS,
+                        NoHttpResponseException.class));
 
         this.apiClient = new FortisApiClient(client, baseUrl, distributorId);
 
