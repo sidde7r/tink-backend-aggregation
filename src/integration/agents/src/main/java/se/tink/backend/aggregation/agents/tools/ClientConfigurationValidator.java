@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.tools;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
@@ -20,15 +20,21 @@ public class ClientConfigurationValidator {
     }
 
     public SecretsNamesValidationResponse validate(SecretsNamesValidationRequest request) {
-        Set<String> invalidSecretsFields = getInvalidSecretsFields(request.getSecretsNames());
+        Set<String> invalidSecretsFields =
+                getInvalidSecretsFields(
+                        request.getSecretsNames(), request.getExcludedSecretsNames());
         Set<String> missingSecretsFields =
                 getMissingSecretsFields(
                         request.getSecretsNames(), request.getExcludedSecretsNames());
 
         Set<String> invalidSensitiveSecretsFields =
-                getInvalidSensitiveSecretsFields(request.getSensitiveSecretsNames());
+                getInvalidSecretsFields(
+                        request.getSensitiveSecretsNames(),
+                        request.getExcludedSensitiveSecretsNames());
         Set<String> missingSensitiveSecretsFields =
-                getMissingSensitiveSecretsFields(request.getSensitiveSecretsNames());
+                getMissingSecretsFields(
+                        request.getSensitiveSecretsNames(),
+                        request.getExcludedSensitiveSecretsNames());
 
         return new SecretsNamesValidationResponse(
                 invalidSecretsFields,
@@ -56,18 +62,28 @@ public class ClientConfigurationValidator {
                         missingSecretFieldNameFromConfiguration ->
                                 !excludedSecretsNames.contains(
                                         missingSecretFieldNameFromConfiguration))
-                .collect(Collectors.toSet());
+                .collect(ImmutableSet.toImmutableSet());
     }
 
-    private Set<String> getInvalidSecretsFields(Set<String> secretsNames) {
-        return null;
-    }
+    // Package private for testing.
+    Set<String> getInvalidSecretsFields(
+            Set<String> secretsNames, Set<String> excludedSecretsNames) {
+        Set<String> mappedSecretsNames =
+                clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(secretsNames);
+        Set<String> secretFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getSecretFieldsNames();
 
-    private Set<String> getMissingSensitiveSecretsFields(Set<String> sensitiveSecretsNames) {
-        return null;
-    }
-
-    private Set<String> getInvalidSensitiveSecretsFields(Set<String> sensitiveSecretsNames) {
-        return null;
+        return mappedSecretsNames.stream()
+                // We pick those that we are trying to validate and are not found in the
+                // ClientConfiguration class.
+                .filter(
+                        secretFieldNameToValidate ->
+                                !secretFieldsNamesFromConfigurationClass.contains(
+                                        secretFieldNameToValidate))
+                // Do not count as invalid those that are excluded from validation.
+                .filter(
+                        invalidSecretFieldName ->
+                                !excludedSecretsNames.contains(invalidSecretFieldName))
+                .collect(ImmutableSet.toImmutableSet());
     }
 }

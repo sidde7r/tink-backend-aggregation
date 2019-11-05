@@ -14,21 +14,8 @@ public class ClientConfigurationValidatorTest {
     private ClientConfigurationValidator clientConfigurationValidator;
 
     @Test
-    public void getMissingSecretsFieldsTest() {
-        ClientConfigurationMetaInfoHandler mockClientConfigurationMetaInfoHandler =
-                mock(ClientConfigurationMetaInfoHandler.class);
-        when(mockClientConfigurationMetaInfoHandler.getSecretFieldsNames())
-                .thenReturn(
-                        ImmutableSet.<String>builder()
-                                .add("secret1")
-                                .add("secret2")
-                                .add("redirectUrl")
-                                .build());
-        when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
-                .thenCallRealMethod();
-
-        clientConfigurationValidator =
-                new ClientConfigurationValidator(mockClientConfigurationMetaInfoHandler);
+    public void getMissingSecretsFieldsTestWithMissingFields() {
+        clientConfigurationValidator = getClientConfigurationValidatorForTestWithMissingFields();
 
         Set<String> secretsNames =
                 ImmutableSet.<String>builder().add("secret1").add("redirectUrls").build();
@@ -43,5 +30,86 @@ public class ClientConfigurationValidatorTest {
                         secretsNames, ImmutableSet.of("secret2"));
 
         assertThat(missingSecretsFieldsWithExcluded).isEmpty();
+    }
+
+    @Test
+    public void getMissingSecretsFieldsTestWithInvalidFields() {
+        clientConfigurationValidator = getClientConfigurationValidatorForTestWithInvalidFields();
+
+        Set<String> secretsNames =
+                ImmutableSet.<String>builder()
+                        .add("secret1")
+                        .add("secret2")
+                        .add("redirectUrls")
+                        .build();
+        Set<String> missingSecretsFields =
+                clientConfigurationValidator.getMissingSecretsFields(
+                        secretsNames, Collections.emptySet());
+
+        assertThat(missingSecretsFields).isEmpty();
+    }
+
+    @Test
+    public void getInvalidSecretsFieldsTestWithMissingFields() {
+        clientConfigurationValidator = getClientConfigurationValidatorForTestWithMissingFields();
+
+        Set<String> secretsNames =
+                ImmutableSet.<String>builder().add("secret1").add("redirectUrls").build();
+        Set<String> invalidSecretsFields =
+                clientConfigurationValidator.getInvalidSecretsFields(
+                        secretsNames, Collections.emptySet());
+
+        assertThat(invalidSecretsFields).isEmpty();
+    }
+
+    @Test
+    public void getInvalidSecretsFieldsTestWithInvalidFields() {
+        clientConfigurationValidator = getClientConfigurationValidatorForTestWithInvalidFields();
+
+        Set<String> secretsNames =
+                ImmutableSet.<String>builder()
+                        .add("secret1")
+                        .add("secret2")
+                        .add("redirectUrls")
+                        .build();
+        Set<String> invalidSecretsFields =
+                clientConfigurationValidator.getInvalidSecretsFields(
+                        secretsNames, Collections.emptySet());
+
+        assertThat(invalidSecretsFields).contains("secret2");
+
+        Set<String> invalidSecretsFieldsWithExcluded =
+                clientConfigurationValidator.getInvalidSecretsFields(
+                        secretsNames, ImmutableSet.of("secret2"));
+
+        assertThat(invalidSecretsFieldsWithExcluded).isEmpty();
+    }
+
+    private ClientConfigurationValidator getClientConfigurationValidatorForTestWithMissingFields() {
+        ClientConfigurationMetaInfoHandler mockClientConfigurationMetaInfoHandler =
+                mock(ClientConfigurationMetaInfoHandler.class);
+        when(mockClientConfigurationMetaInfoHandler.getSecretFieldsNames())
+                .thenReturn(
+                        ImmutableSet.<String>builder()
+                                .add("secret1")
+                                .add("secret2")
+                                .add("redirectUrl")
+                                .build());
+        when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
+                .thenCallRealMethod();
+
+        return new ClientConfigurationValidator(mockClientConfigurationMetaInfoHandler);
+    }
+
+    private ClientConfigurationValidator getClientConfigurationValidatorForTestWithInvalidFields() {
+        ClientConfigurationMetaInfoHandler mockClientConfigurationMetaInfoHandler =
+                mock(ClientConfigurationMetaInfoHandler.class);
+        when(mockClientConfigurationMetaInfoHandler.getSecretFieldsNames())
+                .thenReturn(
+                        ImmutableSet.<String>builder().add("secret1").add("redirectUrl").build());
+        when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
+                .thenCallRealMethod();
+
+        return new ClientConfigurationValidator(mockClientConfigurationMetaInfoHandler);
     }
 }
