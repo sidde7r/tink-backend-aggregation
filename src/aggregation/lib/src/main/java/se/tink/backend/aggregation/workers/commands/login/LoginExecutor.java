@@ -27,7 +27,7 @@ public class LoginExecutor {
             final SupplementalInformationController supplementalInformationController) {
         loginHandlerChain.add(
                 new ProgressiveAuthenticatorLoginHandler(supplementalInformationController));
-        loginHandlerChain.add(new NextGenerationAgentLoginController());
+        loginHandlerChain.add(new DefaultAgentLoginController());
         loginHandlerChain.add(new LoginFailedHandler());
     }
 

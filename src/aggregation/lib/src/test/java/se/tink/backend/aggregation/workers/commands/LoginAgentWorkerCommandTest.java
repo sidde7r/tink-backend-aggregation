@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -57,6 +58,20 @@ public class LoginAgentWorkerCommandTest {
     public void executeForNextGenerationAgentShouldLogin() throws Exception {
         // given
         NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
+        Mockito.when(agent.login()).thenReturn(true);
+        prepareStateForLogin(agent);
+        // when
+        AgentWorkerCommandResult result = objectUnderTest.execute();
+        // then
+        Mockito.verify(metricAction, Mockito.times(1)).completed();
+        Mockito.verify(metricActionLoginType, Mockito.times(1)).completed();
+        Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+    }
+
+    @Test
+    public void executeForAbstractAgentShouldLogin() throws Exception {
+        // given
+        AbstractAgent agent = Mockito.mock(AbstractAgent.class);
         Mockito.when(agent.login()).thenReturn(true);
         prepareStateForLogin(agent);
         // when
