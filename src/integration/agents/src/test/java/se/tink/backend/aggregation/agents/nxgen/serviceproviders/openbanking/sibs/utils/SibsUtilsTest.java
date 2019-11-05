@@ -1,16 +1,79 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentAccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAccountReferenceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc.SibsPaymentInitiationRequest;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class SibsUtilsTest {
 
-    private static final String EXPECTED_DIGEST = "LWFzxWAWcmfw7V0AsX2Tx4pNg3s0WCVJ7w5bO4zwJhs=";
+    private static final String EXPECTED_REAL_SCENARIO_CONSENT_DIGEST =
+            "qBQR5yVgrJPoj3VyEXRx95BshI3gCDrmClp+DxvLvHU=";
 
+    private static final String EXPECTED_REAL_SCENARIO_PAYMENT_DIGEST =
+            "eWyqmwv30yxXMtSvfbbJhDkvaSLd+m37lh0Jz12tcDs=";
+
+    /*
+    Log from real example:
+        Digest: SHA-256=eWyqmwv30yxXMtSvfbbJhDkvaSLd+m37lh0Jz12tcDs=
+    { "debtorAccount":{ "iban":"PT50001800033415092002025" }, "instructedAmount":{ "currency":"EUR", "content":"1.00" }, "creditorAccount":{ "iban":"PT50001800034257091102046" }, "creditorName":"José Neves" }
+     */
     @Test
-    public void shouldCalculateDigest() {
-        String signature = SibsUtils.getDigest("dummyBody");
+    public void shouldCalculateDigestSameAsInRealPaymentRequestScenario() {
+        SibsPaymentInitiationRequest sibsPaymentInitiationRequest =
+                getSibsPaymentInitiationRequest();
 
-        Assertions.assertThat(signature).isEqualTo(EXPECTED_DIGEST);
+        String signature = SibsUtils.getDigest(sibsPaymentInitiationRequest);
+
+        Assertions.assertThat(signature).isEqualTo(EXPECTED_REAL_SCENARIO_PAYMENT_DIGEST);
+    }
+
+    /*
+    Log from real example:
+        Digest: SHA-256=qBQR5yVgrJPoj3VyEXRx95BshI3gCDrmClp+DxvLvHU=
+        {"access":{"allPsd2":"all-accounts"},"recurringIndicator":true,"validUntil":"2019-12-25T05:27:21","frequencyPerDay":4,"combinedServiceIndicator":false}
+     */
+    @Test
+    public void shouldCalculateDigestSameAsInRealConsentRequestScenario() {
+        String signature = SibsUtils.getDigest(getConsentRequest());
+
+        Assertions.assertThat(signature).isEqualTo(EXPECTED_REAL_SCENARIO_CONSENT_DIGEST);
+    }
+
+    private ConsentRequest getConsentRequest() {
+        LocalDateTime now = LocalDateTime.of(2019, 12, 25, 5, 27, 21);
+        String date = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss").format(now);
+        return new ConsentRequest(
+                new ConsentAccessEntity(SibsConstants.FormValues.ALL_ACCOUNTS),
+                true,
+                date,
+                SibsConstants.FormValues.FREQUENCY_PER_DAY,
+                false);
+    }
+
+    private SibsPaymentInitiationRequest getSibsPaymentInitiationRequest() {
+        SibsAccountReferenceEntity debtor = new SibsAccountReferenceEntity();
+        debtor.setIban("PT50001800033415092002025");
+        SibsAccountReferenceEntity creditor = new SibsAccountReferenceEntity();
+        creditor.setIban("PT50001800034257091102046");
+
+        SibsPaymentInitiationRequest sibsPaymentRequest =
+                new SibsPaymentInitiationRequest.Builder()
+                        .withCreditorAccount(creditor)
+                        .withDebtorAccount(debtor)
+                        .withInstructedAmount(
+                                SibsAmountEntity.of(
+                                        new ExactCurrencyAmount(new BigDecimal("1.0"), "EUR")))
+                        .withCreditorName("José Neves")
+                        .build();
+        return sibsPaymentRequest;
     }
 }
