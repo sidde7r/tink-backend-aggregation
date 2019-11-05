@@ -1,33 +1,34 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.ErrorEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ErrorResponse {
+    private static Logger log = LoggerFactory.getLogger(ErrorResponse.class);
+
     private List<ErrorEntity> errors;
 
     @JsonIgnore
-    public ErrorEntity getError() {
-        if (errors == null || errors.isEmpty()) {
-            return null;
+    private List<ErrorEntity> getErrorsAndLogIfMultiple() {
+        if (errors == null) {
+            return Collections.emptyList();
         }
 
-        // Don't know when there would be more than one error, picking first because we need to
-        // pick something.
-        return errors.get(0);
+        if (errors.size() > 1) {
+            log.warn("Received multiple errors which is not expected, consult debug logs to investigate.");
+        }
+
+        return errors;
     }
 
     @JsonIgnore
     public boolean isInvalidDateError() {
-        ErrorEntity error = getError();
-
-        if (error == null) {
-            return false;
-        }
-
-        return error.isInvalidDate();
+        return getErrorsAndLogIfMultiple().stream().anyMatch(ErrorEntity::isInvalidDate);
     }
 }
