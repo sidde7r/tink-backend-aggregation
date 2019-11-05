@@ -29,7 +29,7 @@ public class IdentityDataV31Response {
     }
 
     protected boolean hasLink(String linkId) {
-        return links.containsKey(linkId);
+        return links != null && links.containsKey(linkId);
     }
 
     protected String getLink(String linkId) {
