@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.tools;
 
 import org.junit.Before;
+import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-public class ClientConfigurationValidatorTest {
+public class ClientConfigurationValidatorWithRealProviderTest {
     private ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private ClientConfigurationValidatorBuilderForTest clientConfigurationValidatorBuilderForTest;
 
@@ -16,7 +17,8 @@ public class ClientConfigurationValidatorTest {
                         .build();
     }
 
-
+    @Test
+    public void ClientConfigurationValidationTest() {}
 
     private enum Arg {
         MARKET,

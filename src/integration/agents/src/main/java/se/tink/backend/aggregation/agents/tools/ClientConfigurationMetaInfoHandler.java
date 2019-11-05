@@ -1,14 +1,17 @@
 package se.tink.backend.aggregation.agents.tools;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableSet;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import se.tink.backend.agents.rpc.Provider;
@@ -17,10 +20,14 @@ import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 
-public final class ClientConfigurationMetaInfoHandler {
+public class ClientConfigurationMetaInfoHandler {
     private static final AggregationLogger log =
             new AggregationLogger(ClientConfigurationMetaInfoHandler.class);
     private static final String AGENTS_PACKAGE_PREFIX = "se.tink.backend.aggregation.agents";
+    private static final ImmutableBiMap<String, String> specialFieldsMapper =
+            new ImmutableBiMap.Builder<String, String>().put("redirectUrl", "redirectUrls").build();
+    public final Function<Field, String> fieldToFieldName =
+            field -> specialFieldsMapper.getOrDefault(field.getName(), field.getName());
 
     private final Supplier<IllegalArgumentException> noConfigurationClassFoundExceptionSupplier;
 
@@ -39,36 +46,42 @@ public final class ClientConfigurationMetaInfoHandler {
         Class<? extends ClientConfiguration> clientConfigurationClassForProvider =
                 findClosestClientConfigurationClass();
 
-        Set<Field> fields =
-                Sets.newHashSet(clientConfigurationClassForProvider.getDeclaredFields());
+        Set<Field> secretFields =
+                Stream.of(clientConfigurationClassForProvider.getDeclaredFields())
+                        .filter(this::isFieldSecret)
+                        .collect(Collectors.toSet());
 
-        Set<Field> secretFieldsSet =
-                fields.stream().filter(this::isFieldSecret).collect(Collectors.toSet());
-
-        if (secretFieldsSet.stream().anyMatch(this::isFieldSensitiveSecret)) {
+        if (secretFields.stream().anyMatch(this::isFieldSensitiveSecret)) {
             throw new IllegalStateException(
                     "A secret cannot be both non-sensitive and sensitive, revise the annotations in your configuration class.");
         }
 
-        return secretFieldsSet;
+        return secretFields;
+    }
+
+    public Set<String> getSecretFieldsNames() {
+        return getSecretFields().stream().map(Field::getName).collect(Collectors.toSet());
     }
 
     public Set<Field> getSensitiveSecretFields() {
         Class<? extends ClientConfiguration> clientConfigurationClassForProvider =
                 findClosestClientConfigurationClass();
 
-        Set<Field> fields =
-                Sets.newHashSet(clientConfigurationClassForProvider.getDeclaredFields());
+        Set<Field> sensitiveSecretFields =
+                Stream.of(clientConfigurationClassForProvider.getDeclaredFields())
+                        .filter(this::isFieldSensitiveSecret)
+                        .collect(Collectors.toSet());
 
-        Set<Field> sensitiveSecretFieldsSet =
-                fields.stream().filter(this::isFieldSensitiveSecret).collect(Collectors.toSet());
-
-        if (sensitiveSecretFieldsSet.stream().anyMatch(this::isFieldSecret)) {
+        if (sensitiveSecretFields.stream().anyMatch(this::isFieldSecret)) {
             throw new IllegalStateException(
                     "A secret cannot be both non-sensitive and sensitive, revise the annotations in your configuration class.");
         }
 
-        return sensitiveSecretFieldsSet;
+        return sensitiveSecretFields;
+    }
+
+    public Set<String> getSensitiveSecretFieldsNames() {
+        return getSensitiveSecretFields().stream().map(Field::getName).collect(Collectors.toSet());
     }
 
     public Class<? extends ClientConfiguration> findClosestClientConfigurationClass() {
@@ -158,5 +171,19 @@ public final class ClientConfigurationMetaInfoHandler {
                         .filter(annotation -> annotation instanceof SensitiveSecret)
                         .count()
                 == 1;
+    }
+
+    // This maps special parameters that we know won't match (added to the specialFieldsMapper BiMap
+    // above) from the ones that are sent in to the ones found in the ClientConfiguration
+    // implementing class. An example would be when we send redirectUrls as part of validating the
+    // secrets to be uploaded. It should be mapped to redirectUrl as we know.
+    public Set<String> mapSpecialConfigClassFieldNames(Set<String> secretsNames) {
+        return secretsNames.stream()
+                .map(
+                        secretNameToValidate ->
+                                specialFieldsMapper
+                                        .inverse()
+                                        .getOrDefault(secretNameToValidate, secretNameToValidate))
+                .collect(ImmutableSet.toImmutableSet());
     }
 }

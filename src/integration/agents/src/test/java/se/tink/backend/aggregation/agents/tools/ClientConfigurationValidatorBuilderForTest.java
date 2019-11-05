@@ -7,34 +7,25 @@ import java.io.IOException;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 
-public class ClientConfigurationValidatorBuilderTest {
+public class ClientConfigurationValidatorBuilderForTest {
     private final Provider provider;
 
-    private ClientConfigurationValidatorBuilderTest(Builder builder) {
+    private ClientConfigurationValidatorBuilderForTest(Builder builder) {
         this.provider = builder.getProvider();
     }
 
     public ClientConfigurationValidator getClientConfigurationValidator() {
-        return new ClientConfigurationTemplateBuilder(
-                provider, includeDescriptions, includeExamples);
+        return new ClientConfigurationValidator(provider);
     }
 
     public static class Builder {
         private final Provider provider;
-        private final boolean includeDescriptions;
-        private final boolean includeExamples;
 
-        public Builder(
-                String market,
-                String providerName,
-                boolean includeDescriptions,
-                boolean includeExamples) {
+        public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
             this.provider.setMarket(marketProviders.getMarket());
             this.provider.setCurrency(marketProviders.getCurrency());
-            this.includeDescriptions = includeDescriptions;
-            this.includeExamples = includeExamples;
         }
 
         private static ProviderConfig readProvidersConfiguration(String market) {
@@ -57,17 +48,9 @@ public class ClientConfigurationValidatorBuilderTest {
             return provider;
         }
 
-        public boolean getIncludeDescriptions() {
-            return includeDescriptions;
-        }
-
-        public boolean getIncludeExamples() {
-            return includeExamples;
-        }
-
-        public ClientConfigurationValidatorBuilderTest build() {
+        public ClientConfigurationValidatorBuilderForTest build() {
             Preconditions.checkNotNull(provider, "Provider was not set.");
-            return new ClientConfigurationValidatorBuilderTest(this);
+            return new ClientConfigurationValidatorBuilderForTest(this);
         }
     }
 }
