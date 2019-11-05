@@ -43,51 +43,48 @@ public class ClientConfigurationValidator {
                 missingSensitiveSecretsFields);
     }
 
+    private Set<String> getMissingSecretsFields(
+            Set<String> secretsNames, Set<String> excludedSecretsNames) {
+        Set<String> secretFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getSecretFieldsNames();
+
+        return getMissingSecretsFields(
+                secretsNames, excludedSecretsNames, secretFieldsNamesFromConfigurationClass);
+    }
+
+    private Set<String> getMissingSensitiveSecretsFields(
+            Set<String> sensitiveSecretsNames, Set<String> excludedSensitiveSecretsNames) {
+        Set<String> sensitiveSecretFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getSensitiveSecretFieldsNames();
+
+        return getMissingSecretsFields(
+                sensitiveSecretsNames,
+                excludedSensitiveSecretsNames,
+                sensitiveSecretFieldsNamesFromConfigurationClass);
+    }
+
+    private Set<String> getInvalidSensitiveSecretsFields(
+            Set<String> sensitiveSecretsNames, Set<String> excludedSensitiveSecretsNames) {
+        Set<String> sensitiveSecretFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getSensitiveSecretFieldsNames();
+
+        return getInvalidSecretsFields(
+                sensitiveSecretsNames,
+                excludedSensitiveSecretsNames,
+                sensitiveSecretFieldsNamesFromConfigurationClass);
+    }
+
+    private Set<String> getInvalidSecretsFields(
+            Set<String> secretsNames, Set<String> excludedSecretsNames) {
+        Set<String> secretFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getSecretFieldsNames();
+
+        return getInvalidSecretsFields(
+                secretsNames, excludedSecretsNames, secretFieldsNamesFromConfigurationClass);
+    }
+
     // Package private for testing.
     Set<String> getMissingSecretsFields(
-            Set<String> secretsNames, Set<String> excludedSecretsNames) {
-        Set<String> secretFieldsNamesFromConfigurationClass =
-                clientConfigurationMetaInfoHandler.getSecretFieldsNames();
-
-        return getMissingSecretsFields(
-                secretsNames, excludedSecretsNames, secretFieldsNamesFromConfigurationClass);
-    }
-
-    // Package private for testing.
-    Set<String> getMissingSensitiveSecretsFields(
-            Set<String> sensitiveSecretsNames, Set<String> excludedSensitiveSecretsNames) {
-        Set<String> sensitiveSecretFieldsNamesFromConfigurationClass =
-                clientConfigurationMetaInfoHandler.getSensitiveSecretFieldsNames();
-
-        return getMissingSecretsFields(
-                sensitiveSecretsNames,
-                excludedSensitiveSecretsNames,
-                sensitiveSecretFieldsNamesFromConfigurationClass);
-    }
-
-    // Package private for testing.
-    Set<String> getInvalidSensitiveSecretsFields(
-            Set<String> sensitiveSecretsNames, Set<String> excludedSensitiveSecretsNames) {
-        Set<String> sensitiveSecretFieldsNamesFromConfigurationClass =
-                clientConfigurationMetaInfoHandler.getSensitiveSecretFieldsNames();
-
-        return getInvalidSecretsFields(
-                sensitiveSecretsNames,
-                excludedSensitiveSecretsNames,
-                sensitiveSecretFieldsNamesFromConfigurationClass);
-    }
-
-    // Package private for testing.
-    Set<String> getInvalidSecretsFields(
-            Set<String> secretsNames, Set<String> excludedSecretsNames) {
-        Set<String> secretFieldsNamesFromConfigurationClass =
-                clientConfigurationMetaInfoHandler.getSecretFieldsNames();
-
-        return getInvalidSecretsFields(
-                secretsNames, excludedSecretsNames, secretFieldsNamesFromConfigurationClass);
-    }
-
-    private Set<String> getMissingSecretsFields(
             Set<String> secretsNames,
             Set<String> excludedSecretsNames,
             Set<String> secretFieldsNamesFromConfigurationClass) {
@@ -108,7 +105,8 @@ public class ClientConfigurationValidator {
                 .collect(ImmutableSet.toImmutableSet());
     }
 
-    private Set<String> getInvalidSecretsFields(
+    // Package private for testing.
+    Set<String> getInvalidSecretsFields(
             Set<String> secretsNames,
             Set<String> excludedSecretsNames,
             Set<String> secretFieldsNamesFromConfigurationClass) {
