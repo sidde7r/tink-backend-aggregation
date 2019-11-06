@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.lloyds;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
