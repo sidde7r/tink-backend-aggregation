@@ -58,6 +58,7 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/danskebank
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/lloyds
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/halifax
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/bankofireland
   //src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/controllers/authentication/password/dk/nemid
 
   -//deb:all

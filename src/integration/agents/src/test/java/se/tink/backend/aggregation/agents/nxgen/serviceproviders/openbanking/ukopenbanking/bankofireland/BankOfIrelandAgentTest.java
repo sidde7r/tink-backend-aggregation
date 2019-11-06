@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.bankofireland;
 
 import org.junit.Ignore;
 import org.junit.Test;
