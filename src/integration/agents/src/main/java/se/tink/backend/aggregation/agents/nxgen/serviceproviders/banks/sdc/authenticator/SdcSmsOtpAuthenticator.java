@@ -125,7 +125,7 @@ public class SdcSmsOtpAuthenticator
     @Override
     public void authenticate(String otp, InitValues initValues)
             throws AuthenticationException, AuthorizationException {
-
+        credentials.setSensitivePayload(SdcConstants.Storage.OTP, otp);
         try {
             this.apiClient.signOTP(
                     initValues.transId, otp, this.credentials.getField(Field.Key.PASSWORD));
