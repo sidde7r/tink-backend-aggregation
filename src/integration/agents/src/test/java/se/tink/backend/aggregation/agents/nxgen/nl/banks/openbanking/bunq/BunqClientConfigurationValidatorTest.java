@@ -39,18 +39,14 @@ public class BunqClientConfigurationValidatorTest {
         Set<String> excludedSecretsNames = Collections.emptySet();
         Set<String> excludedSensitiveSecretsNames = Collections.emptySet();
 
-        SecretsNamesValidationRequest request =
-                new SecretsNamesValidationRequest(
-                        clientConfigurationValidatorBuilderForTest.getProvider(),
-                        secretsNames,
-                        excludedSecretsNames,
-                        sensitiveSecretsNames,
-                        excludedSensitiveSecretsNames);
-
         SecretsNamesValidationResponse response =
                 clientConfigurationValidatorBuilderForTest
                         .getClientConfigurationValidator()
-                        .validate(request);
+                        .validate(
+                                secretsNames,
+                                excludedSecretsNames,
+                                sensitiveSecretsNames,
+                                excludedSensitiveSecretsNames);
 
         assertThat(response.isValid()).isEqualTo(true);
         assertThat(response.getMissingSecretsNames()).isEmpty();
@@ -83,18 +79,14 @@ public class BunqClientConfigurationValidatorTest {
                         .add("invalidSensitiveSecret2")
                         .build();
 
-        SecretsNamesValidationRequest request =
-                new SecretsNamesValidationRequest(
-                        clientConfigurationValidatorBuilderForTest.getProvider(),
-                        secretsNames,
-                        excludedSecretsNames,
-                        sensitiveSecretsNames,
-                        excludedSensitiveSecretsNames);
-
         SecretsNamesValidationResponse response =
                 clientConfigurationValidatorBuilderForTest
                         .getClientConfigurationValidator()
-                        .validate(request);
+                        .validate(
+                                secretsNames,
+                                excludedSecretsNames,
+                                sensitiveSecretsNames,
+                                excludedSensitiveSecretsNames);
 
         assertThat(response.isValid()).isEqualTo(false);
         assertThat(response.getMissingSecretsNames()).containsExactly("psd2InstallationKeyPair");

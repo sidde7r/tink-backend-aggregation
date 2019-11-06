@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.configuration.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public class ClientConfigurationTemplateBuilder {
     private static final int NUM_SPACES_INDENT = 10;

@@ -14,15 +14,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
-import se.tink.backend.aggregation.configuration.ClientConfiguration;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public class ClientConfigurationMetaInfoHandler {
-    private static final AggregationLogger log =
-            new AggregationLogger(ClientConfigurationMetaInfoHandler.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(ClientConfigurationMetaInfoHandler.class);
     private static final String AGENTS_PACKAGE_PREFIX = "se.tink.backend.aggregation.agents";
     private static final ImmutableBiMap<String, String> specialFieldsMapper =
             new ImmutableBiMap.Builder<String, String>().put("redirectUrl", "redirectUrls").build();

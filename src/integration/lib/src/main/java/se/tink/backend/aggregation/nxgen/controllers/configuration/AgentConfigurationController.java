@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.Provider.AccessType;
 import se.tink.backend.agents.rpc.ProviderTypes;
+import se.tink.backend.aggregation.agents.tools.ClientConfigurationValidator;
+import se.tink.backend.aggregation.agents.tools.response.ClientConfigurationBlendedSecretsValidationResponse;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
@@ -50,6 +52,7 @@ public final class AgentConfigurationController {
     private Set<String> secretValues = Collections.emptySet();
     private final Subject<Collection<String>> secretValuesSubject =
             BehaviorSubject.<Collection<String>>create().toSerialized();
+    private final ClientConfigurationValidator clientConfigurationValidator;
 
     // Package private for testing purposes.
     AgentConfigurationController() {
@@ -62,6 +65,7 @@ public final class AgentConfigurationController {
         tppSecretsServiceEnabled = false;
         integrationsConfiguration = null;
         tppSecretsServiceClient = null;
+        clientConfigurationValidator = null;
     }
 
     public AgentConfigurationController(
@@ -106,6 +110,7 @@ public final class AgentConfigurationController {
         this.redirectUrl = redirectUrl;
         this.isOpenBankingAgent = AccessType.OPEN_BANKING == provider.getAccessType();
         this.isTestProvider = ProviderTypes.TEST == provider.getType();
+        this.clientConfigurationValidator = new ClientConfigurationValidator(provider);
 
         if (isTestProvider) {
             log.info(
@@ -145,6 +150,8 @@ public final class AgentConfigurationController {
                 }
 
                 allSecrets = allSecretsOpt.get();
+
+                validateSecrets();
             } catch (StatusRuntimeException e) {
                 Preconditions.checkNotNull(
                         e.getStatus(), "Status cannot be null for StatusRuntimeException: " + e);
@@ -162,6 +169,18 @@ public final class AgentConfigurationController {
             }
             initRedirectUrl();
             notifySecretValues(Sets.newHashSet(allSecrets.values()));
+        }
+    }
+
+    private void validateSecrets() {
+        Preconditions.checkNotNull(
+                allSecrets, "allSecrets cannot be null when trying to validate secrets.");
+
+        ClientConfigurationBlendedSecretsValidationResponse response =
+                clientConfigurationValidator.validate(allSecrets.keySet());
+
+        if (!response.isValid()) {
+            log.warn(response.getValidationResultMessage());
         }
     }
 

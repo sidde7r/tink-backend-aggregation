@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.tools;
 
 import com.google.common.collect.ImmutableSet;
+import java.util.Collections;
 import java.util.Set;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
+import se.tink.backend.aggregation.agents.tools.response.ClientConfigurationBlendedSecretsValidationResponse;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 
 public class ClientConfigurationValidator {
@@ -19,22 +20,49 @@ public class ClientConfigurationValidator {
         this.clientConfigurationMetaInfoHandler = clientConfigurationMetaInfoHandler;
     }
 
-    public SecretsNamesValidationResponse validate(SecretsNamesValidationRequest request) {
-        Set<String> invalidSecretsFields =
+    public ClientConfigurationBlendedSecretsValidationResponse validate(
+            Set<String> blendedSecrets) {
+        Set<String> secretFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getSecretFieldsNames();
+        Set<String> sensitiveSecretFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getSensitiveSecretFieldsNames();
+        Set<String> blendedSecretsNamesFromConfigurationClass =
+                ImmutableSet.<String>builder()
+                        .addAll(secretFieldsNamesFromConfigurationClass)
+                        .addAll(sensitiveSecretFieldsNamesFromConfigurationClass)
+                        .build();
+
+        Set<String> invalidBlendedSecretsFields =
                 getInvalidSecretsFields(
-                        request.getSecretsNames(), request.getExcludedSecretsNames());
-        Set<String> missingSecretsFields =
+                        blendedSecrets,
+                        Collections.emptySet(),
+                        blendedSecretsNamesFromConfigurationClass);
+        Set<String> missingBlendedSecretsFields =
                 getMissingSecretsFields(
-                        request.getSecretsNames(), request.getExcludedSecretsNames());
+                        blendedSecrets,
+                        Collections.emptySet(),
+                        blendedSecretsNamesFromConfigurationClass);
+
+        return new ClientConfigurationBlendedSecretsValidationResponse(
+                invalidBlendedSecretsFields, missingBlendedSecretsFields);
+    }
+
+    public SecretsNamesValidationResponse validate(
+            Set<String> secretsNames,
+            Set<String> excludedSecretsNames,
+            Set<String> sensitiveSecretsNames,
+            Set<String> excludedSensitiveSecretsNames) {
+        Set<String> invalidSecretsFields =
+                getInvalidSecretsFields(secretsNames, excludedSecretsNames);
+        Set<String> missingSecretsFields =
+                getMissingSecretsFields(secretsNames, excludedSecretsNames);
 
         Set<String> invalidSensitiveSecretsFields =
                 getInvalidSensitiveSecretsFields(
-                        request.getSensitiveSecretsNames(),
-                        request.getExcludedSensitiveSecretsNames());
+                        sensitiveSecretsNames, excludedSensitiveSecretsNames);
         Set<String> missingSensitiveSecretsFields =
                 getMissingSensitiveSecretsFields(
-                        request.getSensitiveSecretsNames(),
-                        request.getExcludedSensitiveSecretsNames());
+                        sensitiveSecretsNames, excludedSensitiveSecretsNames);
 
         return new SecretsNamesValidationResponse(
                 invalidSecretsFields,
