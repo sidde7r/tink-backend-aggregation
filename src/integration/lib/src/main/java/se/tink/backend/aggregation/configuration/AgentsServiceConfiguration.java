@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.configuration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
+import java.util.Map;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceConfiguration;
@@ -42,6 +45,8 @@ public class AgentsServiceConfiguration {
             new TppSecretsServiceConfiguration();
 
     @JsonProperty private TestConfiguration testConfiguration = new TestConfiguration();
+
+    @JsonProperty private Map<String, Boolean> featureFlags = new HashMap<>();
 
     public TppSecretsServiceConfiguration getTppSecretsServiceConfiguration() {
         return tppSecretsServiceConfiguration;
@@ -94,5 +99,10 @@ public class AgentsServiceConfiguration {
 
     public TestConfiguration getTestConfiguration() {
         return testConfiguration;
+    }
+
+    @JsonIgnore
+    public boolean isFeatureEnabled(String featureName) {
+        return featureFlags.getOrDefault(featureName, false);
     }
 }

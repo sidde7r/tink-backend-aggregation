@@ -594,6 +594,8 @@ agentsServiceConfiguration:
   testConfiguration:
     debugOutput: true
     censorSensitiveHeaders: false
+  featureFlags:
+    enableSpanishProxy: false
 
 transfers:
   enabled: true
