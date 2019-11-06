@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
 public class BancoMontepioAgentTest {
+
     private enum Arg {
         USERNAME,
         PASSWORD

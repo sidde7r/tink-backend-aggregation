@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.entities;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

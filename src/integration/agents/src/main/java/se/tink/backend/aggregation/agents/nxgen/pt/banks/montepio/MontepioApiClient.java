@@ -7,6 +7,10 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConstants.PropertyKeys;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConstants.URLs;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.PasswordEncryptionUtil;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.rpc.AuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.rpc.AuthenticationResponse;
@@ -15,7 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accoun
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchTransactionsResponse;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.investments.rpc.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -39,65 +44,69 @@ public class MontepioApiClient {
         return httpClient
                 .request(url)
                 .type(MediaType.APPLICATION_JSON)
-                .acceptLanguage(MontepioConstants.HeaderValues.ACCEPT_LANGUAGE)
-                .accept(MontepioConstants.HeaderValues.ACCEPT)
-                .header(HttpHeaders.ACCEPT_ENCODING, MontepioConstants.HeaderValues.ACCEPT_ENCODING)
-                .header(
-                        MontepioConstants.HeaderKeys.APP_VERSION,
-                        MontepioConstants.HeaderValues.APP_VERSION)
-                .header(MontepioConstants.HeaderKeys.APP_ID, MontepioConstants.HeaderValues.APP_ID)
-                .header(MontepioConstants.HeaderKeys.DEVICE, MontepioConstants.HeaderValues.DEVICE)
-                .header(MontepioConstants.HeaderKeys.LANG, MontepioConstants.HeaderValues.LANG)
-                .header(MontepioConstants.HeaderKeys.PSU_IP, MontepioConstants.HeaderValues.PSU_IP)
-                .header(
-                        MontepioConstants.HeaderKeys.IOS_VERSION,
-                        MontepioConstants.HeaderValues.IOS_VERSION)
-                .header(
-                        MontepioConstants.HeaderKeys.MGM_VERSION,
-                        MontepioConstants.HeaderValues.MGM_VERSION);
+                .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
+                .accept(HeaderValues.ACCEPT)
+                .header(HttpHeaders.ACCEPT_ENCODING, HeaderValues.ACCEPT_ENCODING)
+                .header(HeaderKeys.APP_VERSION, HeaderValues.APP_VERSION)
+                .header(HeaderKeys.APP_ID, HeaderValues.APP_ID)
+                .header(HeaderKeys.DEVICE, HeaderValues.DEVICE)
+                .header(HeaderKeys.LANG, HeaderValues.LANG)
+                .header(HeaderKeys.PSU_IP, HeaderValues.PSU_IP)
+                .header(HeaderKeys.IOS_VERSION, HeaderValues.IOS_VERSION)
+                .header(HeaderKeys.MGM_VERSION, HeaderValues.MGM_VERSION);
     }
 
     public void loginStep0(String username, String password) throws LoginException {
         String maskedPassword = PasswordEncryptionUtil.encryptPassword(username, password);
         AuthenticationRequest request = new AuthenticationRequest(username, maskedPassword);
         AuthenticationResponse response =
-                baseRequest(MontepioConstants.URLs.LOGIN)
-                        .post(AuthenticationResponse.class, request);
+                baseRequest(URLs.LOGIN).post(AuthenticationResponse.class, request);
         if (response.isWrongCredentials()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
 
     public void loginStep1() {
-        baseRequest(MontepioConstants.URLs.FINALIZE_LOGIN).post(EMPTY_JSON);
+        baseRequest(URLs.FINALIZE_LOGIN).post(EMPTY_JSON);
     }
 
     public FetchAccountsResponse fetchAccounts() {
-        return baseRequest(MontepioConstants.URLs.FETCH_ACCOUNTS)
-                .header(
-                        MontepioConstants.HeaderKeys.SCREEN_NAME,
-                        MontepioConstants.HeaderValues.ACCOUNTS_SCREEN_NAME)
+        return baseRequest(URLs.FETCH_ACCOUNTS)
+                .header(HeaderKeys.SCREEN_NAME, HeaderValues.ACCOUNTS_SCREEN_NAME)
                 .post(FetchAccountsResponse.class, EMPTY_JSON);
     }
 
     public FetchAccountDetailsResponse fetchAccountDetails(String handle) {
         FetchAccountDetailsRequest request = new FetchAccountDetailsRequest(handle);
-        return baseRequest(MontepioConstants.URLs.FETCH_ACCOUNT_DETAILS)
-                .header(
-                        MontepioConstants.HeaderKeys.SCREEN_NAME,
-                        MontepioConstants.HeaderValues.ACCOUNTS_SCREEN_NAME)
+        return baseRequest(URLs.FETCH_ACCOUNT_DETAILS)
+                .header(HeaderKeys.SCREEN_NAME, HeaderValues.ACCOUNTS_SCREEN_NAME)
                 .post(FetchAccountDetailsResponse.class, request);
     }
 
-    public FetchTransactionsResponse fetchTransactions(
-            TransactionalAccount account, int pageNumber, LocalDate from, LocalDate to) {
-        String handle = account.getFromTemporaryStorage(MontepioConstants.PropertyKeys.HANDLE);
+    public FetchTransactionsResponse fetchCheckingAccountTransactions(
+            Account account, int pageNumber, LocalDate from, LocalDate to) {
+        return fetchTransactions(URLs.FETCH_TRANSACTIONS, account, pageNumber, from, to);
+    }
+
+    public FetchInvestmentAccountsResponse fetchSavingsAccounts() {
+        return baseRequest(URLs.FETCH_SAVINGS_ACCOUNTS)
+                .header(HeaderKeys.SCREEN_NAME, HeaderValues.SAVINGS_ACCOUNTS_SCREEN_NAME)
+                .post(FetchInvestmentAccountsResponse.class, EMPTY_JSON);
+    }
+
+    public FetchTransactionsResponse fetchSavingsAccountTransactions(
+            Account account, int pageNumber, LocalDate from, LocalDate to) {
+        return fetchTransactions(
+                URLs.FETCH_SAVINGS_ACCOUNT_TRANSACTIONS, account, pageNumber, from, to);
+    }
+
+    private FetchTransactionsResponse fetchTransactions(
+            URL url, Account account, int pageNumber, LocalDate from, LocalDate to) {
+        String handle = account.getFromTemporaryStorage(PropertyKeys.HANDLE);
         FetchTransactionsRequest request =
                 new FetchTransactionsRequest(pageNumber, to, from, handle);
-        return baseRequest(MontepioConstants.URLs.FETCH_TRANSACTIONS)
-                .header(
-                        MontepioConstants.HeaderKeys.SCREEN_NAME,
-                        MontepioConstants.HeaderValues.TRANSACTIONS_SCREEN_NAME)
+        return baseRequest(url)
+                .header(HeaderKeys.SCREEN_NAME, HeaderValues.TRANSACTIONS_SCREEN_NAME)
                 .post(FetchTransactionsResponse.class, request);
     }
 }
