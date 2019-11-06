@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment;
 
 import com.google.common.base.Strings;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Currency;
@@ -47,7 +50,7 @@ public abstract class HandelsbankenBasePaymentExecutor
         final HandelsbankenPaymentType paymentProduct = getPaymentType(paymentRequest);
         final Creditor creditor = payment.getCreditor();
 
-        // TODO: payment execution date
+        validateExecutionDate(payment.getExecutionDate());
         final CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest(
                         getCreditorAccountEntity(creditor),
@@ -144,4 +147,14 @@ public abstract class HandelsbankenBasePaymentExecutor
     }
 
     public abstract Signer getSigner();
+
+    protected void validateExecutionDate(LocalDate date) throws DateValidationException {
+        if (Objects.isNull(date) || LocalDate.now().isEqual(date)) {
+            return;
+        }
+        throw new DateValidationException(
+                "Invalid payment execution date (is not today)",
+                "",
+                new NotImplementedException("Specifying execution date not supported."));
+    }
 }
