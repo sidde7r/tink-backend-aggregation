@@ -121,6 +121,14 @@ public class AgentWorkerOperation implements Runnable {
                     break;
                 }
 
+                if (commandResult == AgentWorkerCommandResult.REJECT) {
+                    log.info(
+                            String.format(
+                                    "Got REJECT from command '%s' for operation '%s'",
+                                    command.toString(), operationMetricName));
+                    break;
+                }
+
                 if (Thread.interrupted()) {
                     log.info(
                             String.format(
@@ -159,6 +167,13 @@ public class AgentWorkerOperation implements Runnable {
             handleTemporaryErrorStatusUpdateForAbortedCommand(credentials);
         }
 
+        if (commandResult == AgentWorkerCommandResult.REJECT) {
+            log.info(
+                    String.format(
+                            "Rejected command execution for operation '%s'", operationMetricName));
+            handleCredentialStatusUpdateForRejectedCommand(credentials);
+        }
+
         // Finalize executed commands
         while (!executedCommands.isEmpty()) {
             AgentWorkerCommand command = executedCommands.pop();
@@ -188,6 +203,12 @@ public class AgentWorkerOperation implements Runnable {
         log.info(
                 String.format(
                         "Done with command finalization for operation '%s'", operationMetricName));
+    }
+
+    private void handleCredentialStatusUpdateForRejectedCommand(Credentials credentials) {
+        credentials.setStatus(CredentialsStatus.UNCHANGED);
+        credentials.setStatusPayload(null);
+        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
     }
 
     private void handleTemporaryErrorStatusUpdateForAbortedCommand(Credentials credentials) {

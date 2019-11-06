@@ -39,7 +39,7 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
 
         if (!hasAcquiredLock) {
             log.info("Could not acquire lock for user: {} credentials: {}", userId, credentialsId);
-            return AgentWorkerCommandResult.ABORT;
+            return AgentWorkerCommandResult.REJECT;
         }
 
         return AgentWorkerCommandResult.CONTINUE;
