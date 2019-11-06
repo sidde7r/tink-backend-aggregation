@@ -173,12 +173,14 @@ public class BbvaAgent extends NextGenerationAgent
                         BbvaConstants.TimeoutFilter.NUM_TIMEOUT_RETRIES,
                         BbvaConstants.TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
 
-        // Setting proxy for Spain via TPP
-        PasswordBasedProxyConfiguration proxyConfiguration =
-                configuration.getCountryProxy(Proxy.COUNTRY);
-        client.setProductionProxy(
-                proxyConfiguration.getHost(),
-                proxyConfiguration.getUsername(),
-                proxyConfiguration.getPassword());
+        if (configuration.isFeatureEnabled(Proxy.ES_PROXY)) {
+            // Setting proxy for Spain via TPP
+            PasswordBasedProxyConfiguration proxyConfiguration =
+                    configuration.getCountryProxy(Proxy.COUNTRY);
+            client.setProductionProxy(
+                    proxyConfiguration.getHost(),
+                    proxyConfiguration.getUsername(),
+                    proxyConfiguration.getPassword());
+        }
     }
 }

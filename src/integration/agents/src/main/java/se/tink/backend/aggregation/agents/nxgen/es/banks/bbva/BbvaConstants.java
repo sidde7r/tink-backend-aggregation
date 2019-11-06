@@ -178,5 +178,6 @@ public final class BbvaConstants {
 
     public static class Proxy {
         public static final String COUNTRY = "es";
+        public static final String ES_PROXY = "esProxy";
     }
 }
