@@ -49,4 +49,4 @@ eventProducerServiceConfiguration:
   url: event-producer-service.event-producer-service:443
 
 featureFlags:
-  enableSpanishProxy: true
+  esProxy: true

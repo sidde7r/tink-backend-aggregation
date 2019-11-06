@@ -68,8 +68,8 @@ data:
         {{- end }}
 
       featureFlags:
-        {{- if $featureFlagsConfig.enableSpanishProxy }}
-          enableSpanishProxy: {{ $featureFlagsConfig.enableSpanishProxy | default false }}
+        {{- if $featureFlagsConfig.esProxy }}
+          esProxy: {{ $featureFlagsConfig.esProxy | default false }}
         {{- end }}
 
       integrations:
