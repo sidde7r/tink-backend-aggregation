@@ -71,6 +71,8 @@ public class VolksbankConstants {
         public static final Integer FREQUENCY_PER_DAY = 100;
         public static final boolean RECURRING_INDICATOR = true;
         public static final int REFRESH_TOKEN_EXPIRY_TIME = 90 * 24 * 3600;
+        public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
+        public static final String CONSENT_INVALID = "CONSENT_INVALID";
     }
 
     static class HttpClient {
