@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -26,7 +29,25 @@ public class PaymentController {
 
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        return paymentExecutor.sign(paymentMultiStepRequest);
+        try {
+            return paymentExecutor.sign(paymentMultiStepRequest);
+        } catch (BankIdException e) {
+
+            BankIdError bankIdError = e.getError();
+            switch (bankIdError) {
+                case CANCELLED:
+                    throw new PaymentAuthorizationException(PaymentConstants.BankId.CANCELLED, e);
+                case NO_CLIENT:
+                    throw new PaymentAuthorizationException(PaymentConstants.BankId.NO_CLIENT, e);
+                case TIMEOUT:
+                    throw new PaymentAuthorizationException(PaymentConstants.BankId.TIMEOUT, e);
+                case INTERRUPTED:
+                    throw new PaymentAuthorizationException(PaymentConstants.BankId.INTERRUPTED, e);
+                case UNKNOWN:
+                default:
+                    throw new PaymentAuthorizationException(PaymentConstants.BankId.UNKNOWN, e);
+            }
+        }
     }
 
     public CreateBeneficiaryMultiStepResponse createBeneficiary(

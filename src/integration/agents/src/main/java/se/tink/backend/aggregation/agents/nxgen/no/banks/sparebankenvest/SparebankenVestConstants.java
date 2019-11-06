@@ -176,4 +176,9 @@ public class SparebankenVestConstants {
     public static class HttpElements {
         public static final String VALUE = "value";
     }
+
+    public static class Storage {
+        public static final String DEVICE_TOKEN = "DeviceToken";
+        public static final String HARDWARE_ID = "HardwareId";
+    }
 }

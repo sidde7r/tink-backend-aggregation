@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FirstLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FirstLoginResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
@@ -30,6 +31,8 @@ public class HandelsbankenNOAutoAuthenticator implements AutoAuthenticator {
         apiClient.fetchAppInformation();
 
         String evryToken = encapClient.authenticateUser();
+        sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
+
         if (evryToken == null) {
             throw SessionError.SESSION_EXPIRED.exception();
         }

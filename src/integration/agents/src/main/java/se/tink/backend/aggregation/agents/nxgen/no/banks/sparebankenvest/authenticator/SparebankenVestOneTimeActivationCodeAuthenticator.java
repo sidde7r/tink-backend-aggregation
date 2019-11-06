@@ -3,25 +3,34 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authen
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestApiClient;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.entities.SecurityParamsRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.utils.SparebankenVestAuthUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.models.DeviceRegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SparebankenVestOneTimeActivationCodeAuthenticator implements PasswordAuthenticator {
     private final SparebankenVestApiClient apiClient;
     private final EncapClient encapClient;
+    private final SessionStorage sessionStorage;
 
     private SparebankenVestOneTimeActivationCodeAuthenticator(
-            SparebankenVestApiClient apiClient, EncapClient encapClient) {
+            SparebankenVestApiClient apiClient,
+            EncapClient encapClient,
+            SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.encapClient = encapClient;
+        this.sessionStorage = sessionStorage;
     }
 
     public static SparebankenVestOneTimeActivationCodeAuthenticator create(
-            SparebankenVestApiClient apiClient, EncapClient encapClient) {
-        return new SparebankenVestOneTimeActivationCodeAuthenticator(apiClient, encapClient);
+            SparebankenVestApiClient apiClient,
+            EncapClient encapClient,
+            SessionStorage sessionStorage) {
+        return new SparebankenVestOneTimeActivationCodeAuthenticator(
+                apiClient, encapClient, sessionStorage);
     }
 
     @Override
@@ -34,7 +43,7 @@ public class SparebankenVestOneTimeActivationCodeAuthenticator implements Passwo
 
             DeviceRegistrationResponse deviceRegistrationResponse =
                     encapClient.registerDevice(username, password);
-
+            sessionStorage.put(Storage.DEVICE_TOKEN, deviceRegistrationResponse.getDeviceToken());
             String htmlResponseString =
                     apiClient.activate(deviceRegistrationResponse.getDeviceToken());
 

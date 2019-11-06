@@ -94,8 +94,8 @@ public class SparebankenVestAgent extends NextGenerationAgent
                 systemUpdater,
                 new PasswordAuthenticationController(
                         SparebankenVestOneTimeActivationCodeAuthenticator.create(
-                                apiClient, encapClient)),
-                SparebankenVestAutoAuthenticator.create(apiClient, encapClient));
+                                apiClient, encapClient, sessionStorage)),
+                SparebankenVestAutoAuthenticator.create(apiClient, encapClient, sessionStorage));
     }
 
     @Override

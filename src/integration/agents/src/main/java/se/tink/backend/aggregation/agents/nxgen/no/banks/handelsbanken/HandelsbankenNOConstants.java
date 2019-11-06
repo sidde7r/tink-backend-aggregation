@@ -248,6 +248,11 @@ public class HandelsbankenNOConstants {
         public static final String STATUS_CLOSED = "AVSLUTTET";
     }
 
+    public static final class Storage {
+        public static final String EVRY_TOKEN = "evryToken";
+        public static final String ACTIVATE_EVRY_TOKEN = "activateEvryToken";
+    }
+
     public static final class EncapConstants {
 
         public static final String applicationVersion = "11402";

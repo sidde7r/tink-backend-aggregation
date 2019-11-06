@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.Spareban
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.ErrorText;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.HTMLTags;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FinalizeBankIdBody;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginResponse;
@@ -156,6 +157,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
 
     private void continueActivation() throws SupplementalInfoException {
         String evryToken = finalizeBankIdAuthentication();
+        sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
         executeLogin(evryToken);
 
         SendSmsRequest sendSmsRequest = SendSmsRequest.build(mobilenumber);
@@ -172,6 +174,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         evryToken =
                 encapClient.activateAndAuthenticateUser(
                         activationCodeResponse.get(ACTIVATION_CODE_FIELD_KEY));
+        sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
         executeLogin(evryToken);
     }
 

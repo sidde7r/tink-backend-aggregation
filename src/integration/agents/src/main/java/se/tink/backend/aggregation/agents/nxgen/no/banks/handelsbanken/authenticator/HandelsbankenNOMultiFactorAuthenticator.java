@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.ActivationCodeFieldConstants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FinalizeBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FirstLoginRequest;
@@ -123,6 +124,7 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
                         .first()
                         .val();
 
+        sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
         if (evryToken == null) {
             throw new IllegalStateException(
                     "can not retrieve every token, could it change field key? :"
@@ -149,6 +151,7 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
                 encapClient.activateAndAuthenticateUser(
                         activationCodeResponse.get(ActivationCodeFieldConstants.NAME));
 
+        sessionStorage.put(Storage.ACTIVATE_EVRY_TOKEN, activateEvryToken);
         if (activateEvryToken == null) {
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
         }

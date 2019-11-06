@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Keys;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Identity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.FinishAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.FinishAuthenticationResponse;
@@ -64,7 +65,8 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
     public String init(String nationalId, String dob, String mobilenumber)
             throws BankIdException, LoginException {
         pollWaitCounter = 0;
-
+        credentials.setSensitivePayload(Keys.DOB, dob);
+        credentials.setSensitivePayload(Keys.NATIONAL_ID, nationalId);
         apiClient.initActivation();
         String loginDispatcherHtmlString = apiClient.getLoginDispatcher();
         apiClient.postLoginInformation(loginDispatcherHtmlString, nationalId);

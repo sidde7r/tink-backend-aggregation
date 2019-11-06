@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Keys;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.Sparebank1Authenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.RestRootResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.FinancialInstitutionEntity;
@@ -57,6 +58,7 @@ public class Sparebank1Agent extends NextGenerationAgent
         configureHttpClient(client);
 
         String bankId = request.getProvider().getPayload();
+        sessionStorage.put(Keys.BANK_ID, bankId);
         apiClient = new Sparebank1ApiClient(client, bankId);
         FinancialInstitutionEntity financialInstitution = apiClient.getFinancialInstitution();
         restRootResponse = getRestRootResponse(financialInstitution);

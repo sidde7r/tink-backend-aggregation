@@ -391,8 +391,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     PaymentResponse fetchPaymentResponse =
                             paymentController.fetch(PaymentRequest.of(createPaymentResponse));
 
-                    Assert.assertEquals(
-                            PaymentStatus.PENDING, fetchPaymentResponse.getPayment().getStatus());
+                    PaymentStatus postCreateStatus = fetchPaymentResponse.getPayment().getStatus();
+
+                    // For payments between user's own accounts signing is rarely (never?) needed,
+                    // a payment can then have status signed immediately after the create.
+                    Assert.assertTrue(
+                            (PaymentStatus.PENDING.equals(postCreateStatus)
+                                    || PaymentStatus.SIGNED.equals(postCreateStatus)));
 
                     paymentRequests.add(PaymentRequest.of(fetchPaymentResponse));
                 } else {
