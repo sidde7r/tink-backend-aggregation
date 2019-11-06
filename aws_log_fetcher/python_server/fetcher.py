@@ -93,19 +93,18 @@ async def run(cookie,
 
             # If this log contains an AWS S3 link, get the link and save it and do not check other logs
             # (since we already find what we are looking for)
-            if "Flushed debug log for further investigation" in log.message:
+            if "AWS CLI" in log.message:
                 http_debug_log_link = log.message.split("AWS")[1].split("CLI: ")[1].strip()
                 metadata.append({
                     "log_path"  : http_debug_log_link,
                     "requestId" : request_id,
                     "userId"    : logs_for_session.find_user_id_by_request_id(request_id),
-                    "providerName": logs_for_session.find_provider_name_by_request_id(request_id),
+                    "providerName": log.providerName,
                     "timestamp": logs_for_session.get_timestamp_by_request_id(request_id)
                 })
                 download_requests.append(AWSRequest(http_debug_log_link,
                                                     os.path.join(output_folder, request_id + ".log")))
                 found_aws_log_link = True
-                break
 
         if found_aws_log_link:
             await send_message(ws, "Found AWS log link for request with ID = " + request_id, payload)
