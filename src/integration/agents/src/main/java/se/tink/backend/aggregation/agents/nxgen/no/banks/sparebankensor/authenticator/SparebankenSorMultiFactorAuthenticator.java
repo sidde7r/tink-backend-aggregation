@@ -27,7 +27,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenti
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.SendSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.VerifyCustomerResponse;
-import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.DeviceRegistrationResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -47,6 +48,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
     private final Catalog catalog;
     private final SessionStorage sessionStorage;
     private final String mobilenumber;
+    private String username;
     private int pollWaitCounter;
 
     public SparebankenSorMultiFactorAuthenticator(
@@ -68,6 +70,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
     public String init(String nationalId, String dob, String mobilenumber)
             throws AuthenticationException, AuthorizationException {
         pollWaitCounter = 0;
+        this.username = nationalId;
 
         apiClient.fetchAppInformation(); // only for getting a cookie, possible we must save this
         // cookie for later use in the first login request
@@ -124,34 +127,34 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         PollBankIdResponse pollBankIdResponse = apiClient.pollBankId();
         String pollStatus = pollBankIdResponse.getStatus();
 
-        if (Objects.equals(pollStatus.toLowerCase(), SparebankenSorConstants.BankIdStatus.NONE)) {
-            pollWaitCounter++;
-            return BankIdStatus.WAITING;
-        } else if (Objects.equals(
-                pollStatus.toLowerCase(), SparebankenSorConstants.BankIdStatus.COMPLETED)) {
-            continueActivation();
-            return BankIdStatus.DONE;
-        } else if (Objects.equals(
-                pollStatus.toLowerCase(), SparebankenSorConstants.BankIdStatus.ERROR)) {
-            // Sparebanken Sor keeps on polling until error status is returned even if user cancels
-            // bankId.
-            if (pollWaitCounter > 15) {
-                return BankIdStatus.TIMEOUT;
-            } else {
+        switch (pollStatus.toLowerCase()) {
+            case SparebankenSorConstants.BankIdStatus.NONE:
+                pollWaitCounter++;
+                return BankIdStatus.WAITING;
+            case SparebankenSorConstants.BankIdStatus.COMPLETED:
+                continueActivation();
+                return BankIdStatus.DONE;
+            case SparebankenSorConstants.BankIdStatus.ERROR:
+                // Sparebanken Sor keeps on polling until error status is returned even if user
+                // cancels
+                // bankId.
+                if (pollWaitCounter > 15) {
+                    return BankIdStatus.TIMEOUT;
+                } else {
+                    LOGGER.info(
+                            String.format(
+                                    "%s: Received error status when polling bankId",
+                                    SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString()));
+                    return BankIdStatus.FAILED_UNKNOWN;
+                }
+            default:
                 LOGGER.info(
                         String.format(
-                                "%s: Received error status when polling bankId",
-                                SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString()));
+                                "%s: Unknown poll status: %s. Number of polls: %s",
+                                SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString(),
+                                pollStatus,
+                                pollWaitCounter));
                 return BankIdStatus.FAILED_UNKNOWN;
-            }
-        } else {
-            LOGGER.info(
-                    String.format(
-                            "%s: Unknown poll status: %s. Number of polls: %s",
-                            SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString(),
-                            pollStatus,
-                            pollWaitCounter));
-            return BankIdStatus.FAILED_UNKNOWN;
         }
     }
 
@@ -171,9 +174,10 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         Map<String, String> activationCodeResponse =
                 supplementalInformationHelper.askSupplementalInformation(getActivationCodeField());
 
-        evryToken =
-                encapClient.activateAndAuthenticateUser(
-                        activationCodeResponse.get(ACTIVATION_CODE_FIELD_KEY));
+        DeviceRegistrationResponse deviceRegistrationResponse =
+                encapClient.registerDevice(
+                        username, activationCodeResponse.get(ACTIVATION_CODE_FIELD_KEY));
+        evryToken = deviceRegistrationResponse.getDeviceToken();
         sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
         executeLogin(evryToken);
     }

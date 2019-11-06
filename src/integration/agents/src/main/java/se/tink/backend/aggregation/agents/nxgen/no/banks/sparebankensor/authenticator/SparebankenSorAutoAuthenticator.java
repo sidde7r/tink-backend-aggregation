@@ -6,7 +6,9 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.Spareban
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginResponse;
-import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.enums.AuthenticationMethod;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.DeviceAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -29,7 +31,9 @@ public class SparebankenSorAutoAuthenticator implements AutoAuthenticator {
         apiClient.fetchAppInformation(); // only for getting a cookie, possible we must save this
         // cookie for later use in the first login request
 
-        String evryToken = encapClient.authenticateUser();
+        DeviceAuthenticationResponse deviceAuthenticationResponse =
+                encapClient.authenticateDevice(AuthenticationMethod.DEVICE);
+        String evryToken = deviceAuthenticationResponse.getDeviceToken();
         sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
         executeLogin(evryToken);
     }
