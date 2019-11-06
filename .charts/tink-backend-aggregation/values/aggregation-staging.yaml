@@ -17,6 +17,7 @@ s3StorageConfiguration:
 agents:
   icsConfiguration: true
   danskeBankDK: true
+  revolutPasswordUK: true
   demoFinancialInstitution:
     mobilebanking:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/mobilebanking

@@ -41,8 +41,9 @@ public class RevolutAgent extends NextGenerationAgent
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshInvestmentAccountsExecutor {
-    private final RevolutApiClient apiClient;
 
+    private static final String INTEGRATION_NAME = "revolut-pw-uk";
+    private final RevolutApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
 
@@ -50,7 +51,12 @@ public class RevolutAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
-        this.apiClient = new RevolutApiClient(client, persistentStorage);
+
+        RevolutConfiguration configuration =
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(INTEGRATION_NAME, RevolutConfiguration.class);
+
+        this.apiClient = new RevolutApiClient(client, persistentStorage, configuration);
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();

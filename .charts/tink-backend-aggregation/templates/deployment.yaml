@@ -231,6 +231,12 @@ spec:
               name: aggregation-secrets
               key: danskebank-dk-client-secret
               optional: true
+        - name: REVOLUT_PW_UK_APP_AUTHORIZATION
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: revolut-pw-uk-app-authorization
+              optional: true
 
       containers:
       - name: tink-backend-aggregation

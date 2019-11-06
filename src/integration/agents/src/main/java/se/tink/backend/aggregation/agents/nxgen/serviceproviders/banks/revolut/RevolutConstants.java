@@ -54,7 +54,6 @@ public class RevolutConstants {
         API_VERSION("X-Api-Version", "1"),
         APP_VERSION("X-Client-Version", "5.19"),
         MODEL("X-Device-Model", "iPhone8,1"),
-        APP_AUTHORIZATION("App", "S9WUnSFBy67gWan7"),
         USER_AGENT(
                 "User-Agent",
                 "Revolut/5.1 (iPhone; iOS 10.2; Scale/2.00;Tink (+https://www.tink.se/; noc@tink.se))");

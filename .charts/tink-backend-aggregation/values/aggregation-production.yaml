@@ -69,6 +69,8 @@ agents:
 
   danskeBankDK: true
 
+  revolutPasswordUK: true
+
 clients:
   avanza-production:
     aggregatorIdentifier: "Avanza"
