@@ -36,6 +36,8 @@ public class JyskeAgent extends NextGenerationAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
+
+    private static final String INTEGRATION_NAME = "jyskebank-dk";
     private final JyskeApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -44,7 +46,12 @@ public class JyskeAgent extends NextGenerationAgent
     public JyskeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient = new JyskeApiClient(client);
+
+        JyskeConfiguration configuration =
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(INTEGRATION_NAME, JyskeConfiguration.class);
+
+        this.apiClient = new JyskeApiClient(client, configuration);
         configureHttpClient(client);
         this.investmentRefreshController =
                 new InvestmentRefreshController(

@@ -18,6 +18,7 @@ agents:
   icsConfiguration: true
   danskeBankDK: true
   revolutPasswordUK: true
+  jyskeBankDK: true
   demoFinancialInstitution:
     mobilebanking:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/mobilebanking

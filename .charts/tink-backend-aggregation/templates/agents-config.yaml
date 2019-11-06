@@ -99,6 +99,13 @@ data:
           appAuthorization: "REVOLUT_PW_UK_APP_AUTHORIZATION"
         {{- end }}
 
+        {{- if $agentsConfig.jyskeBankDK }}
+        jyskebank-dk:
+          productNemIdPublicKeyB64: "JYSKEBANK_DK_PRODUCT_NEMID_PUBLIC_KEY_B64"
+          aesPadding: "JYSKEBANK_DK_AES_PADDING"
+          mobileServicePublicKeyB64: "JYSKEBANK_DK_MOBILE_SERVICE_PUBLIC_KEY_B64"
+        {{- end }}
+
         {{- if $agentsConfig.demoFinancialInstitution }}
         demoFinancialInstitution:
           mobilebanking:
