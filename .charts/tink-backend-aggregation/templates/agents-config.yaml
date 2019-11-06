@@ -1,5 +1,6 @@
 {{- $agentsConfig := .Values.agents | default dict }}
 {{- $tppSecretsServiceConfig := .Values.tppSecretsServiceConfiguration | default dict }}
+{{- $featureFlagsConfig := .Values.featureFlags | default dict}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -61,7 +62,9 @@ data:
         {{- end }}
 
       featureFlags:
-        enableSpanishProxy: {( .Values.featureFlags.enableSpanishProxy | default false}}
+        {{- if $featureFlagsConfig.enableSpanishProxy }}
+          enableSpanishProxy: {{ $featureFlagsConfig.enableSpanishProxy | default false }}
+        {{- end }}
 
       integrations:
         {{- if $agentsConfig.collectorSubscriptionKey }}
