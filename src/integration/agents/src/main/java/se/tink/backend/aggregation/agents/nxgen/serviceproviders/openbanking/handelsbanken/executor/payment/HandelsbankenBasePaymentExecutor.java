@@ -36,11 +36,9 @@ import se.tink.libraries.payment.rpc.Payment;
 public abstract class HandelsbankenBasePaymentExecutor
         implements PaymentExecutor, FetchablePaymentExecutor {
     protected final HandelsbankenBaseApiClient apiClient;
-    protected final List<PaymentResponse> createdPaymentList;
 
     public HandelsbankenBasePaymentExecutor(HandelsbankenBaseApiClient apiClient) {
         this.apiClient = apiClient;
-        createdPaymentList = new ArrayList<>();
     }
 
     @Override
@@ -63,8 +61,6 @@ public abstract class HandelsbankenBasePaymentExecutor
                 apiClient
                         .createPayment(createPaymentRequest, paymentProduct)
                         .toTinkPaymentResponse(payment, paymentProduct);
-
-        createdPaymentList.add(paymentResponse);
 
         return paymentResponse;
     }
@@ -111,9 +107,15 @@ public abstract class HandelsbankenBasePaymentExecutor
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentRequest) {
-        // The API doesn't support fetching of multiple payments
-        return new PaymentListResponse(createdPaymentList);
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
+            throws PaymentException {
+        List<PaymentResponse> response = new ArrayList<>();
+
+        for (PaymentRequest request : paymentListRequest.getPaymentRequestList()) {
+            response.add(fetch(request));
+        }
+
+        return new PaymentListResponse(response);
     }
 
     protected abstract HandelsbankenPaymentType getPaymentType(PaymentRequest paymentRequest)
