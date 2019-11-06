@@ -38,11 +38,14 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class BecApiClient {
 
     private static final ObjectMapper mapper = new ObjectMapper();
+    private BecSecurityHelper securityHelper;
     private final TinkHttpClient apiClient;
     private final BecUrlConfiguration agentUrl;
     private static final AggregationLogger LOGGER = new AggregationLogger(BecApiClient.class);
 
-    public BecApiClient(TinkHttpClient client, BecUrlConfiguration url) {
+    public BecApiClient(
+            BecSecurityHelper securityHelper, TinkHttpClient client, BecUrlConfiguration url) {
+        this.securityHelper = securityHelper;
         this.apiClient = client;
         this.agentUrl = url;
     }
@@ -61,7 +64,7 @@ public class BecApiClient {
 
         request.setLabel(BecConstants.Meta.LABEL);
         request.setCipher(BecConstants.Meta.CIPHER);
-        request.setKey(BecSecurityHelper.getKey());
+        request.setKey(securityHelper.getKey());
         request.setPayload(payloadAndroidEntity);
 
         createRequest(this.agentUrl.getAppSync())
@@ -88,9 +91,9 @@ public class BecApiClient {
 
             AppSyncAndroidRequest request = new AppSyncAndroidRequest();
             request.setLabel(BecConstants.Meta.LABEL);
-            request.setKey(BecSecurityHelper.getKey());
+            request.setKey(securityHelper.getKey());
             request.setEncryptedPayload(
-                    BecSecurityHelper.encrypt(
+                    securityHelper.encrypt(
                             mapper.writeValueAsString(payloadAndroidEntity).getBytes()));
             request.setCipher(BecConstants.Meta.CIPHER);
 

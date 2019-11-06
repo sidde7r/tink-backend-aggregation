@@ -109,6 +109,12 @@ data:
           mobileServicePublicKeyB64: "JYSKEBANK_DK_MOBILE_SERVICE_PUBLIC_KEY_B64"
         {{- end }}
 
+        {{- if $agentsConfig.becDK }}
+        bec-dk:
+          signingCertificateB64: "BEC_DK_SIGNING_CERTIFICATE_B64"
+          publicKeySalt: "BEC_DK_PUBLIC_KEY_SALT"
+        {{- end }}
+
         {{- if $agentsConfig.demoFinancialInstitution }}
         demoFinancialInstitution:
           mobilebanking:

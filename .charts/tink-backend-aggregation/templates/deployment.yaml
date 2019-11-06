@@ -255,6 +255,18 @@ spec:
               name: aggregation-secrets
               key: jyskebank-dk-mobile-service-public-key-b64
               optional: true
+        - name: BEC_DK_SIGNING_CERTIFICATE_B64
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bec-dk-signing-certificate-b64
+              optional: true
+        - name: BEC_DK_PUBLIC_KEY_SALT
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bec-dk-public-key-salt
+              optional: true
 
       containers:
       - name: tink-backend-aggregation
