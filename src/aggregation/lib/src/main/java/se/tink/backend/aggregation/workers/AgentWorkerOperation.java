@@ -4,6 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
 import se.tink.backend.agents.rpc.Credentials;
@@ -58,10 +59,6 @@ public class AgentWorkerOperation implements Runnable {
         this.state = state;
     }
 
-    public List<AgentWorkerCommand> getCommands() {
-        return commands;
-    }
-
     public AgentWorkerContext getContext() {
         return context;
     }
@@ -96,11 +93,10 @@ public class AgentWorkerOperation implements Runnable {
                         "Starting with command execution for operation '%s'", operationMetricName));
 
         AgentWorkerCommandResult commandResult = null;
+        Stack<AgentWorkerCommand> executedCommands = new Stack<>();
         int currentCommand = 0;
 
-        for (; currentCommand < commands.size(); currentCommand++) {
-            AgentWorkerCommand command = commands.get(currentCommand);
-
+        for (AgentWorkerCommand command : commands) {
             try {
                 log.info(
                         String.format(
@@ -112,6 +108,7 @@ public class AgentWorkerOperation implements Runnable {
                                 command, AgentWorkerOperationMetricType.EXECUTE_COMMAND);
 
                 commandResult = command.execute();
+                executedCommands.push(command);
 
                 stopCommandContexts(contexts);
 
@@ -162,11 +159,9 @@ public class AgentWorkerOperation implements Runnable {
             handleTemporaryErrorStatusUpdateForAbortedCommand(credentials);
         }
 
-        // Finalize all commands.
-
-        for (currentCommand = commands.size() - 1; currentCommand >= 0; currentCommand--) {
-            AgentWorkerCommand command = commands.get(currentCommand);
-
+        // Finalize executed commands
+        while (!executedCommands.isEmpty()) {
+            AgentWorkerCommand command = executedCommands.pop();
             try {
                 log.info(
                         String.format(
