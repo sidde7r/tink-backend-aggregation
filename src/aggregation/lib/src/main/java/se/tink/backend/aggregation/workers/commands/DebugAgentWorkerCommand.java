@@ -167,7 +167,11 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                                 + ") debug log for further investigation: "
                                 + storagePath);
             } else {
-                log.info("Flushed debug log for further investigation: " + storagePath);
+
+                log.info(
+                        "Credential Status: {} \nFlushed http log: {}",
+                        credentials.getStatus(),
+                        storagePath);
             }
 
         } catch (EmptyDebugLogException e) {
