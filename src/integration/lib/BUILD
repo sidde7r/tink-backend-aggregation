@@ -26,6 +26,7 @@ java_library(
         "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools/response",
         "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:demo",

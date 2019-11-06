@@ -8,7 +8,6 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationValidatorBuilderForTest;
-import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 
 public class BunqClientConfigurationValidatorTest {

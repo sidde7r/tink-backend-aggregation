@@ -9,10 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationTemplateBuilder;
+import se.tink.backend.aggregation.agents.tools.ClientConfigurationValidator;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
@@ -261,6 +263,27 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public SecretsNamesValidationResponse validateSecretsNames(
             SecretsNamesValidationRequest request) {
-        return null;
+        Preconditions.checkNotNull(request, "SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getProvider(), "Provider in SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getSecretsNames(),
+                "SecretsNames in SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getExcludedSecretsNames(),
+                "ExcludedSecretsNames in SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getSensitiveSecretsNames(),
+                "SensitiveSecretsNames in SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getExcludedSensitiveSecretsNames(),
+                "ExcludedSensitiveSecretsNames in SecretsNamesValidationRequest cannot be null.");
+
+        return new ClientConfigurationValidator(request.getProvider())
+                .validate(
+                        request.getSecretsNames(),
+                        request.getExcludedSecretsNames(),
+                        request.getSensitiveSecretsNames(),
+                        request.getExcludedSensitiveSecretsNames());
     }
 }
