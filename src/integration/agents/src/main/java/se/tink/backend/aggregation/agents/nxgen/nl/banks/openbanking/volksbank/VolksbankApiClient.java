@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.ConsentParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class VolksbankApiClient {
@@ -92,14 +94,24 @@ public class VolksbankApiClient {
 
         URL url = urlFactory.buildURL(Paths.ACCOUNTS);
 
-        String response =
-                client.request(url)
-                        .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.REQUEST_ID, getRequestId())
-                        .header(HeaderKeys.CONSENT_ID, consentId)
-                        .addBearerToken(oAuth2Token)
-                        .get(String.class);
-
+        String response = null;
+        try {
+            response =
+                    client.request(url)
+                            .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                            .header(HeaderKeys.REQUEST_ID, getRequestId())
+                            .header(HeaderKeys.CONSENT_ID, consentId)
+                            .addBearerToken(oAuth2Token)
+                            .get(String.class);
+        } catch (HttpResponseException e) {
+            if (e.getMessage().contains(ConsentParams.CONSENT_EXPIRED)) {
+                throw BankServiceError.CONSENT_EXPIRED.exception();
+            }
+            if (e.getMessage().contains(ConsentParams.CONSENT_INVALID)) {
+                throw BankServiceError.CONSENT_INVALID.exception();
+            }
+            throw e;
+        }
         return getResponse(response, AccountsResponse.class);
     }
 
