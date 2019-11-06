@@ -21,18 +21,18 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
-import se.tink.backend.aggregation.configuration.ClientConfiguration;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public class ClientConfigurationTemplateBuilder {
-
-    private static final AggregationLogger log =
-            new AggregationLogger(ClientConfigurationTemplateBuilder.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(ClientConfigurationTemplateBuilder.class);
     private static final String AGENTS_PACKAGE_PREFIX = "se.tink.backend.aggregation.agents";
     private static final int NUM_SPACES_INDENT = 10;
     private static final String PRETTY_PRINTING_INDENT_PADDING =

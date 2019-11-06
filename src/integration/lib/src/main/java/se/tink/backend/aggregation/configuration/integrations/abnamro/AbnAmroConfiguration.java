@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.configuration.integrations.abnamro;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
-import se.tink.backend.aggregation.configuration.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public class AbnAmroConfiguration implements ClientConfiguration {
     @JsonProperty @Deprecated private boolean downForMaintenance;

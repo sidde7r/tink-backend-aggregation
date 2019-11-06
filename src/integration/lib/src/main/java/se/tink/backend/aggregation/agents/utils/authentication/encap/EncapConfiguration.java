@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap;
 
-import se.tink.backend.aggregation.configuration.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public interface EncapConfiguration extends ClientConfiguration {
 

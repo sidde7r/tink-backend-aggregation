@@ -5,7 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditca
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants.Urls.TRANSACTIONS_ENDPOINT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants.Urls.USER_ENDPOINT;
 
-import se.tink.backend.aggregation.configuration.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public abstract class EnterCardConfiguration implements ClientConfiguration {

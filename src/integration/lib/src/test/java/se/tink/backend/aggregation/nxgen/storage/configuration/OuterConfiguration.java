@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.nxgen.storage.configuration;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
-public class OuterConfiguration implements ClientConfiguration {
+public class OuterConfiguration {
     private String stringLevel1;
     private int integerLevel1;
     private NestedConfigurationLevel1 nestedConfigurationLevel1;
