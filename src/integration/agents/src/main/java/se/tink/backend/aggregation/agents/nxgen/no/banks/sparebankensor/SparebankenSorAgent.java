@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.SparebankenSorTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.SparebankenSorTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.filters.AddRefererFilter;
-import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -48,6 +48,7 @@ public class SparebankenSorAgent extends NextGenerationAgent
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
     private final SparebankenSorApiClient apiClient;
+    private final EncapClient encapClient;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -57,6 +58,15 @@ public class SparebankenSorAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
         apiClient = new SparebankenSorApiClient(client, sessionStorage);
+
+        this.encapClient =
+                new EncapClient(
+                        context,
+                        request,
+                        signatureKeyPair,
+                        persistentStorage,
+                        new SparebankenSorEncapConfiguration(),
+                        SparebankenSorConstants.DEVICE_PROFILE);
 
         SparebankenSorLoanFetcher loanFetcher = new SparebankenSorLoanFetcher(apiClient);
         loanRefreshController =
@@ -75,14 +85,6 @@ public class SparebankenSorAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        SparebankenSorEncapConfiguration configuration = new SparebankenSorEncapConfiguration();
-        EncapClient encapClient =
-                new EncapClient(
-                        configuration,
-                        persistentStorage,
-                        client,
-                        true,
-                        credentials.getField(Field.Key.USERNAME));
 
         SparebankenSorMultiFactorAuthenticator multiFactorAuthenticator =
                 new SparebankenSorMultiFactorAuthenticator(

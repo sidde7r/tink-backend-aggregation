@@ -2,8 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor;
 
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
+import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 public class SparebankenSorConstants {
+    public static final DeviceProfile DEVICE_PROFILE = DeviceProfileConfiguration.IOS_STABLE;
 
     public static final class Url {
         static final String HOST = "https://nettbank.sor.no";
