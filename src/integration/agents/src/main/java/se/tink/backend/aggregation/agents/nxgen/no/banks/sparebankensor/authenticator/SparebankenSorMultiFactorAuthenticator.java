@@ -127,34 +127,34 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         PollBankIdResponse pollBankIdResponse = apiClient.pollBankId();
         String pollStatus = pollBankIdResponse.getStatus();
 
-        if (Objects.equals(pollStatus.toLowerCase(), SparebankenSorConstants.BankIdStatus.NONE)) {
-            pollWaitCounter++;
-            return BankIdStatus.WAITING;
-        } else if (Objects.equals(
-                pollStatus.toLowerCase(), SparebankenSorConstants.BankIdStatus.COMPLETED)) {
-            continueActivation();
-            return BankIdStatus.DONE;
-        } else if (Objects.equals(
-                pollStatus.toLowerCase(), SparebankenSorConstants.BankIdStatus.ERROR)) {
-            // Sparebanken Sor keeps on polling until error status is returned even if user cancels
-            // bankId.
-            if (pollWaitCounter > 15) {
-                return BankIdStatus.TIMEOUT;
-            } else {
+        switch (pollStatus.toLowerCase()) {
+            case SparebankenSorConstants.BankIdStatus.NONE:
+                pollWaitCounter++;
+                return BankIdStatus.WAITING;
+            case SparebankenSorConstants.BankIdStatus.COMPLETED:
+                continueActivation();
+                return BankIdStatus.DONE;
+            case SparebankenSorConstants.BankIdStatus.ERROR:
+                // Sparebanken Sor keeps on polling until error status is returned even if user
+                // cancels
+                // bankId.
+                if (pollWaitCounter > 15) {
+                    return BankIdStatus.TIMEOUT;
+                } else {
+                    LOGGER.info(
+                            String.format(
+                                    "%s: Received error status when polling bankId",
+                                    SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString()));
+                    return BankIdStatus.FAILED_UNKNOWN;
+                }
+            default:
                 LOGGER.info(
                         String.format(
-                                "%s: Received error status when polling bankId",
-                                SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString()));
+                                "%s: Unknown poll status: %s. Number of polls: %s",
+                                SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString(),
+                                pollStatus,
+                                pollWaitCounter));
                 return BankIdStatus.FAILED_UNKNOWN;
-            }
-        } else {
-            LOGGER.info(
-                    String.format(
-                            "%s: Unknown poll status: %s. Number of polls: %s",
-                            SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString(),
-                            pollStatus,
-                            pollWaitCounter));
-            return BankIdStatus.FAILED_UNKNOWN;
         }
     }
 
