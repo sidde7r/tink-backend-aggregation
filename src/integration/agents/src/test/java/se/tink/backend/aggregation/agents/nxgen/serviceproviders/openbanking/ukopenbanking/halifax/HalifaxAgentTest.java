@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.halifax;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,19 +15,19 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
 @Ignore
-public class LloydsAgentTest {
+public class HalifaxAgentTest {
 
     private final String SOURCE_IDENTIFIER = "";
     private final String DESTINATION_IDENTIFIER = "";
 
     @Test
     public void test() throws Exception {
-        new AgentIntegrationTest.Builder("uk", "uk-lloyds-oauth2")
+        new AgentIntegrationTest.Builder("uk", "uk-halifax-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("lloyds")
                 .setAppId("tink")
+                .setFinancialInstitutionId("halifax")
                 .build()
                 .testRefresh();
     }
@@ -35,12 +35,12 @@ public class LloydsAgentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("uk", "uk-lloyds-oauth2")
+                new AgentIntegrationTest.Builder("uk", "uk-halifax-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("lloyds")
-                        .setAppId("tink");
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("halifax");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }
