@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.Targoba
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
-import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.Environment;
+import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @JsonObject
 public class TargobankConfiguration implements ClientConfiguration {
