@@ -20,8 +20,8 @@ public final class SibsUtils {
     private SibsUtils() {}
 
     public static String getDigest(Object body) {
-        byte[] bytes =
-                SerializationUtils.serializeToString(body).getBytes(StandardCharsets.US_ASCII);
+        String stringBody = SerializationUtils.serializeToString(body);
+        byte[] bytes = stringBody.getBytes(StandardCharsets.UTF_8);
         return Hash.sha256Base64(bytes);
     }
 
