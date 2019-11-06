@@ -287,4 +287,8 @@ public class SdcConstants {
             return statusCode == HttpStatus.INTERNAL_SERVER_ERROR_500;
         }
     }
+
+    public static class Storage {
+        public static final String OTP = "otp";
+    }
 }
