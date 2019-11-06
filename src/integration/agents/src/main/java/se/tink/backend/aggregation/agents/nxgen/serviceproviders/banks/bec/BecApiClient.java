@@ -43,7 +43,8 @@ public class BecApiClient {
     private final BecUrlConfiguration agentUrl;
     private static final AggregationLogger LOGGER = new AggregationLogger(BecApiClient.class);
 
-    public BecApiClient(BecSecurityHelper securityHelper, TinkHttpClient client, BecUrlConfiguration url) {
+    public BecApiClient(
+            BecSecurityHelper securityHelper, TinkHttpClient client, BecUrlConfiguration url) {
         this.securityHelper = securityHelper;
         this.apiClient = client;
         this.agentUrl = url;
@@ -92,7 +93,7 @@ public class BecApiClient {
             request.setLabel(BecConstants.Meta.LABEL);
             request.setKey(securityHelper.getKey());
             request.setEncryptedPayload(
-                securityHelper.encrypt(
+                    securityHelper.encrypt(
                             mapper.writeValueAsString(payloadAndroidEntity).getBytes()));
             request.setCipher(BecConstants.Meta.CIPHER);
 

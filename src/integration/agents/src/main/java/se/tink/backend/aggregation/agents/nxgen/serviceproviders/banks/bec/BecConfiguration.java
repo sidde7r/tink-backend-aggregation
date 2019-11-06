@@ -8,16 +8,16 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public class BecConfiguration implements ClientConfiguration {
 
-  private static final Base64.Decoder BASE64_DECODER = Base64.getDecoder();
+    private static final Base64.Decoder BASE64_DECODER = Base64.getDecoder();
 
-  @JsonProperty @Secret private String signingCertificateB64;
-  @JsonProperty @Secret private String publicKeySalt;
+    @JsonProperty @Secret private String signingCertificateB64;
+    @JsonProperty @Secret private String publicKeySalt;
 
-  public String getSigningCertificate() {
-    return new String(BASE64_DECODER.decode(signingCertificateB64), StandardCharsets.UTF_8);
-  }
+    public String getSigningCertificate() {
+        return new String(BASE64_DECODER.decode(signingCertificateB64), StandardCharsets.UTF_8);
+    }
 
-  public String getPublicKeySalt() {
-    return publicKeySalt;
-  }
+    public String getPublicKeySalt() {
+        return publicKeySalt;
+    }
 }

@@ -47,16 +47,16 @@ public final class BecSecurityHelper {
     private PublicKey calculatePublicKey(String signingCertificate, String publicKeySalt) {
         try {
             X509Certificate x509Certificate =
-                (X509Certificate)
-                    CertificateFactory.getInstance(BecConstants.Crypto.X509)
-                        .generateCertificate(
-                            (new ByteArrayInputStream(
-                                signingCertificate
-                                    .getBytes())));
+                    (X509Certificate)
+                            CertificateFactory.getInstance(BecConstants.Crypto.X509)
+                                    .generateCertificate(
+                                            (new ByteArrayInputStream(
+                                                    signingCertificate.getBytes())));
             byte[] signatureBytes = x509Certificate.getPublicKey().getEncoded();
 
             X509EncodedKeySpec x509EncodedKeySpec =
-                new X509EncodedKeySpec(blend(Base64.decodeBase64(publicKeySalt), signatureBytes));
+                    new X509EncodedKeySpec(
+                            blend(Base64.decodeBase64(publicKeySalt), signatureBytes));
 
             return KeyFactory.getInstance("RSA").generatePublic(x509EncodedKeySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | CertificateException e) {
@@ -77,8 +77,7 @@ public final class BecSecurityHelper {
     }
 
     public String getKey() {
-            return toJsonString(
-                    RSA.encryptNonePkcs1((RSAPublicKey) publicKey, symmetricKey));
+        return toJsonString(RSA.encryptNonePkcs1((RSAPublicKey) publicKey, symmetricKey));
     }
 
     public String encrypt(byte[] paramArrayOfByte) {
@@ -108,8 +107,7 @@ public final class BecSecurityHelper {
         }
     }
 
-    private byte[] decryptPayload(byte[] key, byte[] dataToDec)
-            throws GeneralSecurityException {
+    private byte[] decryptPayload(byte[] key, byte[] dataToDec) throws GeneralSecurityException {
         SecretKeySpec localSecretKeySpec = new SecretKeySpec(key, BecConstants.Crypto.AES);
         Cipher localCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         byte[] arrayOfByte1 = new byte[16];

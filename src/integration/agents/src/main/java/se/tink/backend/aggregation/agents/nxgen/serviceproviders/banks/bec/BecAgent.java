@@ -53,13 +53,17 @@ public class BecAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
         this.client.addFilter(new BecFilter());
 
-        BecConfiguration configuration = getAgentConfigurationController()
-            .getAgentConfigurationFromK8s(INTEGRATION_NAME, BecConfiguration.class);
-        BecSecurityHelper securityHelper = BecSecurityHelper
-            .getInstance(configuration.getSigningCertificate(), configuration.getPublicKeySalt());
+        BecConfiguration configuration =
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(INTEGRATION_NAME, BecConfiguration.class);
+        BecSecurityHelper securityHelper =
+                BecSecurityHelper.getInstance(
+                        configuration.getSigningCertificate(), configuration.getPublicKeySalt());
         this.apiClient =
                 new BecApiClient(
-                    securityHelper, this.client, new BecUrlConfiguration(request.getProvider().getPayload()));
+                        securityHelper,
+                        this.client,
+                        new BecUrlConfiguration(request.getProvider().getPayload()));
 
         this.transactionFetcher = new BecAccountTransactionsFetcher(this.apiClient);
         this.investmentRefreshController =
