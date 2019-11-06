@@ -15,11 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.CreditorAgentEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.CreditorNameEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.RemittanceInformationEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -31,8 +29,8 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -80,20 +78,15 @@ public abstract class HandelsbankenBasePaymentExecutor
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        Payment payment = paymentMultiStepRequest.getPayment();
+        final HandelsbankenPaymentType paymentType = getPaymentType(paymentMultiStepRequest);
+        final Payment payment = paymentMultiStepRequest.getPayment();
+        final ConfirmPaymentResponse confirmPaymentResponse =
+                apiClient.confirmPayment(payment.getUniqueId(), paymentType);
 
-        ConfirmPaymentResponse confirmPaymentsResponse =
-                apiClient.confirmPayment(
-                        payment.getUniqueId(), getPaymentType(paymentMultiStepRequest));
-
-        PaymentStatus paymentStatus =
-                HandelsbankenPaymentStatus.fromString(
-                                confirmPaymentsResponse.getTransactionStatus())
-                        .getTinkPaymentStatus();
-
-        payment.setStatus(paymentStatus);
         return new PaymentMultiStepResponse(
-                payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+                confirmPaymentResponse.toTinkPaymentResponse(payment, paymentType),
+                SigningStepConstants.STEP_FINALIZE,
+                new ArrayList<>());
     }
 
     @Override

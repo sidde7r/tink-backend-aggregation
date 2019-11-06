@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.ex
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
@@ -24,12 +23,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.CreditorAgentEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.RemittanceInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
-import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -171,8 +168,9 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        String ssn = credentials.getField(CredentialKeys.USERNAME);
-        SessionResponse sessionResponse =
+        final String ssn = credentials.getField(CredentialKeys.USERNAME);
+        final HandelsbankenPaymentType paymentType = getPaymentType(paymentMultiStepRequest);
+        final SessionResponse sessionResponse =
                 apiClient.initDecoupledAuthorizationPis(
                         ssn, paymentMultiStepRequest.getPayment().getUniqueId());
         bankIdSigner.setAutoStartToken(sessionResponse);
@@ -203,16 +201,7 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
                 }
             }
         }
-        final ConfirmPaymentResponse confirmPaymentResponse =
-                apiClient.confirmPayment(
-                        paymentMultiStepRequest.getPayment().getUniqueId(),
-                        HandelsbankenPaymentType.SWEDISH_DOMESTIC_CREDIT_TRANSFER);
 
-        return new PaymentMultiStepResponse(
-                confirmPaymentResponse.toTinkPaymentResponse(
-                        paymentMultiStepRequest.getPayment(),
-                        HandelsbankenPaymentType.SWEDISH_DOMESTIC_CREDIT_TRANSFER),
-                SigningStepConstants.STEP_FINALIZE,
-                new ArrayList<>());
+        return super.sign(paymentMultiStepRequest);
     }
 }
