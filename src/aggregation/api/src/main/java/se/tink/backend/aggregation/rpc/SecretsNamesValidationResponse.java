@@ -8,6 +8,7 @@ public final class SecretsNamesValidationResponse {
     private Set<String> missingSecretsNames;
     private Set<String> invalidSensitiveSecretsNames;
     private Set<String> missingSensitiveSecretsNames;
+    private String validationResultMessage;
 
     public SecretsNamesValidationResponse(
             Set<String> invalidSecretsNames,
@@ -23,6 +24,7 @@ public final class SecretsNamesValidationResponse {
         this.missingSecretsNames = missingSecretsNames;
         this.invalidSensitiveSecretsNames = invalidSensitiveSecretsNames;
         this.missingSensitiveSecretsNames = missingSensitiveSecretsNames;
+        this.validationResultMessage = assembleValidationResultMessage();
     }
 
     public boolean isValid() {
@@ -46,6 +48,10 @@ public final class SecretsNamesValidationResponse {
     }
 
     public String getValidationResultMessage() {
+        return validationResultMessage;
+    }
+
+    private String assembleValidationResultMessage() {
         if (valid) {
             return "Secrets names validated correctly.";
         } else {

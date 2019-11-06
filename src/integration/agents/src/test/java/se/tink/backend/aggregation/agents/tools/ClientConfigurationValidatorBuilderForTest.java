@@ -18,6 +18,10 @@ public class ClientConfigurationValidatorBuilderForTest {
         return new ClientConfigurationValidator(provider);
     }
 
+    public Provider getProvider() {
+        return provider;
+    }
+
     public static class Builder {
         private final Provider provider;
 
