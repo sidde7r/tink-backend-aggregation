@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.base.Strings;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -19,8 +22,7 @@ public class TransactionEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date valueDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private Date executionDateTime;
+    private String executionDateTime;
 
     private TransactionAmountEntity transactionAmount;
     private String creditorName;
@@ -52,8 +54,24 @@ public class TransactionEntity {
                                         .map(TransactionAccountEntity::getIban)
                                         .orElse(""));
 
+        Date executionDate = null;
+        if (!Strings.isNullOrEmpty(executionDateTime)) {
+            try {
+                executionDate =
+                        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(executionDateTime);
+            } catch (ParseException e) {
+                try {
+                    executionDate =
+                            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                                    .parse(executionDateTime);
+                } catch (ParseException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+        }
+
         Date date =
-                Stream.of(bookingDate, executionDateTime, valueDate)
+                Stream.of(bookingDate, executionDate, valueDate)
                         .filter(Objects::nonNull)
                         .findFirst()
                         .orElse(new Date());
