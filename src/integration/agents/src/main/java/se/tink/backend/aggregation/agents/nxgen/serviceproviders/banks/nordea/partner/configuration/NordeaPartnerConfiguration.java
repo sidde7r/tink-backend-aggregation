@@ -5,7 +5,7 @@ import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
-import se.tink.backend.aggregation.configuration.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject

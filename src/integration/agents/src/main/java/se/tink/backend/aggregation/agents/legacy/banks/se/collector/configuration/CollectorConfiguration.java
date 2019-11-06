@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.se.collector.configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.configuration.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @JsonObject
 public class CollectorConfiguration implements ClientConfiguration {

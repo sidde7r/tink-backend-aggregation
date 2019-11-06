@@ -17,6 +17,8 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/v30",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/v31",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
         "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:demo",
