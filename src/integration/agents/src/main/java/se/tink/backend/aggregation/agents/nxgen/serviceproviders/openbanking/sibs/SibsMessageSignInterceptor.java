@@ -24,7 +24,7 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
     private static final String NEW_LINE = "\n";
     private static final String COLON_SPACE = ": ";
 
-    public static final List<String> SIGNATURE_HEADERS =
+    private static final List<String> SIGNATURE_HEADERS =
             ImmutableList.of(
                     HeaderKeys.DIGEST,
                     HeaderKeys.TPP_TRANSACTION_ID,
@@ -32,7 +32,7 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
                     HeaderKeys.DATE);
 
     private SibsConfiguration configuration;
-    protected EidasProxyConfiguration eidasConf;
+    private EidasProxyConfiguration eidasConf;
     private EidasIdentity eidasIdentity;
 
     public SibsMessageSignInterceptor(
