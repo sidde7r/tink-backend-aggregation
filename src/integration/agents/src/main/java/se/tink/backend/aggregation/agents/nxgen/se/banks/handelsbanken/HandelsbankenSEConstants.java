@@ -179,6 +179,7 @@ public class HandelsbankenSEConstants {
                 Pattern.compile(".*\\d{1,7}-\\d").asPredicate();
         public static final LogTag LOG_TAG = LogTag.from("#se_handelsbanken_payment_context");
         public static final String UNDER_16 = "10573";
+        public static final String INVALID_DESTINATION_ACCOUNT = "2024";
         public static final String BANKID_SIGN_NEEDED = "9";
         public static final int BANKID_MAX_ATTEMPTS = 90;
 

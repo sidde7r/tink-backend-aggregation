@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer;
 
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Transfers;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.payment.HandelsbankenSEPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.ComponentsEntity;
@@ -20,15 +23,19 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor {
+    private static final Logger log =
+            LoggerFactory.getLogger(HandelsbankenSEBankTransferExecutor.class);
 
     private final HandelsbankenSEApiClient client;
     private final HandelsbankenSessionStorage sessionStorage;
     private final ExecutorExceptionResolver exceptionResolver;
     private final TransferMessageFormatter transferMessageFormatter;
+    private final Catalog catalog;
     private final HandelsbankenSEPaymentExecutor paymentExecutor;
 
     public HandelsbankenSEBankTransferExecutor(
@@ -36,11 +43,13 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
             HandelsbankenSessionStorage sessionStorage,
             ExecutorExceptionResolver exceptionResolver,
             TransferMessageFormatter transferMessageFormatter,
+            Catalog catalog,
             HandelsbankenSEPaymentExecutor paymentExecutor) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.exceptionResolver = exceptionResolver;
         this.transferMessageFormatter = transferMessageFormatter;
+        this.catalog = catalog;
         this.paymentExecutor = paymentExecutor;
     }
 
@@ -104,7 +113,26 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
 
     private ValidateRecipientResponse addNewDestinationAccount(
             Transfer transfer, HandelsbankenSETransferContext transferContext) {
-        return client.validateRecipient(transferContext, ValidateRecipientRequest.create(transfer));
+
+        ValidateRecipientResponse validateRecipientResponse =
+                client.validateRecipient(
+                        transferContext, ValidateRecipientRequest.create(transfer));
+
+        if (validateRecipientResponse.getErrors().isEmpty()) {
+            return validateRecipientResponse;
+        }
+
+        if (Transfers.INVALID_DESTINATION_ACCOUNT.equalsIgnoreCase(
+                validateRecipientResponse.getCode())) {
+            throw transferCancelledWithMessage(EndUserMessage.INVALID_DESTINATION);
+        }
+
+        log.error(
+                "Adding of new recipient failed with error code {}, error detail: {}",
+                validateRecipientResponse.getCode(),
+                validateRecipientResponse.getDetail());
+
+        throw transferFailedWithMessage(EndUserMessage.NEW_RECIPIENT_FAILED);
     }
 
     private Optional<URL> getTransferUrl(
@@ -117,7 +145,10 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
     private void signTransfer(Optional<URL> url, TransferSignRequest request) {
         TransferSignResponse transferSignResponse =
                 url.map(requestUrl -> client.signTransfer(requestUrl, request))
-                        .orElseThrow(() -> exception(EndUserMessage.TRANSFER_EXECUTE_FAILED));
+                        .orElseThrow(
+                                () ->
+                                        transferFailedWithMessage(
+                                                EndUserMessage.TRANSFER_EXECUTE_FAILED));
 
         transferSignResponse.validateResponse(exceptionResolver);
 
@@ -146,10 +177,18 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
                 && transferContext.destinationIsOwned(transfer);
     }
 
-    private TransferExecutionException exception(
+    private TransferExecutionException transferFailedWithMessage(
             TransferExecutionException.EndUserMessage endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(endUserMessage)
+                .setMessage(endUserMessage.toString())
+                .build();
+    }
+
+    private TransferExecutionException transferCancelledWithMessage(
+            TransferExecutionException.EndUserMessage endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setEndUserMessage(catalog.getString(endUserMessage))
                 .setMessage(endUserMessage.toString())
                 .build();
     }

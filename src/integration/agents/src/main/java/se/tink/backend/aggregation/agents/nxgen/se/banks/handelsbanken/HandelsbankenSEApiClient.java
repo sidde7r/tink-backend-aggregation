@@ -304,8 +304,19 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     public ValidateRecipientResponse validateRecipient(
             HandelsbankenSETransferContext transferContext,
             ValidateRecipientRequest validateRecipient) {
-        return createPostRequest(transferContext.toValidateRecipient())
-                .post(ValidateRecipientResponse.class, validateRecipient);
+
+        try {
+            return createPostRequest(transferContext.toValidateRecipient())
+                    .post(ValidateRecipientResponse.class, validateRecipient);
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+
+            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                return response.getBody(ValidateRecipientResponse.class);
+            }
+
+            throw e;
+        }
     }
 
     public PaymentRecipient lookupRecipient(
