@@ -1,11 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
 import com.google.common.base.Preconditions;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.QueryKeys;
@@ -25,8 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -34,16 +30,12 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SibsBaseApiClient {
 
-    private static final AggregationLogger log = new AggregationLogger(SibsBaseApiClient.class);
-    private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
-            DateTimeFormatter.ofPattern(Formats.CONSENT_BODY_DATE_FORMAT);
     private static final String TRUE = "true";
     private static final String PSU_IP_ADDRESS = "127.0.0.1";
     private final String isPsuInvolved;
-    protected final TinkHttpClient client;
-    protected SibsConfiguration configuration;
-    protected EidasProxyConfiguration eidasConf;
     private final SibsUserState userState;
+    private final TinkHttpClient client;
+    private SibsConfiguration configuration;
 
     /*
     * TODO: remove this section after full AIS and PIS test:
@@ -62,10 +54,8 @@ public class SibsBaseApiClient {
         this.isPsuInvolved = String.valueOf(isRequestManual);
     }
 
-    protected void setConfiguration(
-            SibsConfiguration configuration, EidasProxyConfiguration eidasConf) {
+    protected void setConfiguration(SibsConfiguration configuration) {
         this.configuration = Preconditions.checkNotNull(configuration);
-        this.eidasConf = Preconditions.checkNotNull(eidasConf);
     }
 
     public AccountsResponse fetchAccounts() {
@@ -113,9 +103,7 @@ public class SibsBaseApiClient {
 
     public URL buildAuthorizeUrl(String state) {
         ConsentRequest consentRequest = getConsentRequest();
-
         URL createConsent = createUrl(SibsConstants.Urls.CREATE_CONSENT);
-
         ConsentResponse consentResponse =
                 client.request(createConsent)
                         .accept(MediaType.APPLICATION_JSON)
@@ -146,19 +134,13 @@ public class SibsBaseApiClient {
     }
 
     private ConsentRequest getConsentRequest() {
-        String valid90Days = get90DaysValidConsentStringDate();
+        String valid90Days = SibsUtils.get90DaysValidConsentStringDate();
         return new ConsentRequest(
                 new ConsentAccessEntity(SibsConstants.FormValues.ALL_ACCOUNTS),
                 true,
                 valid90Days,
                 SibsConstants.FormValues.FREQUENCY_PER_DAY,
                 false);
-    }
-
-    private String get90DaysValidConsentStringDate() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime days90Later = now.plusDays(90);
-        return CONSENT_BODY_DATE_FORMATTER.format(days90Later);
     }
 
     private URL createUrl(String path) {
@@ -188,7 +170,6 @@ public class SibsBaseApiClient {
     }
 
     public SibsGetPaymentResponse getPayment(String uniqueId, SibsPaymentType sibsPaymentType) {
-
         URL getPayment = createUrl(SibsConstants.Urls.GET_PAYMENT_REQUEST);
         return client.request(
                         getPayment
@@ -222,7 +203,6 @@ public class SibsBaseApiClient {
 
     public SibsPaymentUpdateResponse updatePaymentforPsuId(
             String updatePsuIdUrl, SibsPaymentUpdateRequest sibsPaymentUpdateRequest) {
-
         URL updatePaymentUrl = createUrl(updatePsuIdUrl);
 
         return client.request(updatePaymentUrl)

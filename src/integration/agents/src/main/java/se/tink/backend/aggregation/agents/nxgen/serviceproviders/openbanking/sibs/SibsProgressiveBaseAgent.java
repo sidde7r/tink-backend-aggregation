@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -69,11 +68,10 @@ public abstract class SibsProgressiveBaseAgent
         setConfiguration(configuration);
         apiClient = new SibsBaseApiClient(client, userState, request.isManual());
         clientName = request.getProvider().getPayload();
-        apiClient.setConfiguration(
-                getClientConfiguration(request.getCredentials()), configuration.getEidasProxy());
+        apiClient.setConfiguration(getClientConfiguration());
         client.setMessageSignInterceptor(
                 new SibsMessageSignInterceptor(
-                        getClientConfiguration(request.getCredentials()),
+                        getClientConfiguration(),
                         configuration.getEidasProxy(),
                         new EidasIdentity(
                                 context.getClusterId(), context.getAppId(), this.getAgentClass())));
@@ -94,7 +92,7 @@ public abstract class SibsProgressiveBaseAgent
 
     protected abstract String getIntegrationName();
 
-    SibsConfiguration getClientConfiguration(Credentials credentials) {
+    private SibsConfiguration getClientConfiguration() {
         return getAgentConfigurationController().getAgentConfiguration(SibsConfiguration.class);
     }
 

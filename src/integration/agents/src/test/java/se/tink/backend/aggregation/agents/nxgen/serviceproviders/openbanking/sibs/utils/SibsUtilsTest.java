@@ -21,6 +21,9 @@ public class SibsUtilsTest {
     private static final String EXPECTED_REAL_SCENARIO_PAYMENT_DIGEST =
             "eWyqmwv30yxXMtSvfbbJhDkvaSLd+m37lh0Jz12tcDs=";
 
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern(SibsConstants.Formats.CONSENT_BODY_DATE_FORMAT);
+
     /*
     Log from real example:
         Digest: SHA-256=eWyqmwv30yxXMtSvfbbJhDkvaSLd+m37lh0Jz12tcDs=
@@ -46,6 +49,15 @@ public class SibsUtilsTest {
         String signature = SibsUtils.getDigest(getConsentRequest());
 
         Assertions.assertThat(signature).isEqualTo(EXPECTED_REAL_SCENARIO_CONSENT_DIGEST);
+    }
+
+    @Test
+    public void shouldCreateDateStringForConsentsValidFor90Days() {
+        String date = SibsUtils.get90DaysValidConsentStringDate();
+
+        String expectedDate = DATE_FORMATTER.format(LocalDateTime.now().plusDays(90));
+
+        Assertions.assertThat(date).isEqualTo(expectedDate);
     }
 
     private ConsentRequest getConsentRequest() {
