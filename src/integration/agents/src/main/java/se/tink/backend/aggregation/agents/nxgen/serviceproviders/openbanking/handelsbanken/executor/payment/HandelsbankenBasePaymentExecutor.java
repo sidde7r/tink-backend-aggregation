@@ -1,12 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment;
 
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Currency;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.CreditorAgentEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.CreditorNameEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.RemittanceInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.ConfirmPaymentResponse;
@@ -25,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
 
 public abstract class HandelsbankenBasePaymentExecutor
@@ -39,19 +45,24 @@ public abstract class HandelsbankenBasePaymentExecutor
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        AccountEntity creditor = AccountEntity.creditorOf(paymentRequest);
-        AccountEntity debtor = AccountEntity.debtorOf(paymentRequest);
-        AmountEntity amount = AmountEntity.amountOf(paymentRequest);
+        final Payment payment = paymentRequest.getPayment();
+        final HandelsbankenPaymentType paymentProduct = getPaymentType(paymentRequest);
+        final Creditor creditor = payment.getCreditor();
 
-        CreatePaymentRequest createPaymentRequest =
-                new CreatePaymentRequest(creditor, debtor, amount);
+        // TODO: payment execution date
+        final CreatePaymentRequest createPaymentRequest =
+                new CreatePaymentRequest(
+                        getCreditorAccountEntity(creditor),
+                        getDebtorAccountEntity(payment),
+                        AmountEntity.amountOf(paymentRequest),
+                        getRemittanceInformationEntity(payment),
+                        CreditorNameEntity.of(creditor.getName()),
+                        getCreditorAgentEntity(creditor).orElse(null));
 
-        HandelsbankenPaymentType paymentProduct = getPaymentType(paymentRequest);
-
-        PaymentResponse paymentResponse =
+        final PaymentResponse paymentResponse =
                 apiClient
                         .createPayment(createPaymentRequest, paymentProduct)
-                        .toTinkPaymentResponse(paymentRequest.getPayment(), paymentProduct);
+                        .toTinkPaymentResponse(payment, paymentProduct);
 
         createdPaymentList.add(paymentResponse);
 
@@ -105,7 +116,21 @@ public abstract class HandelsbankenBasePaymentExecutor
         return new PaymentListResponse(createdPaymentList);
     }
 
-    protected abstract HandelsbankenPaymentType getPaymentType(PaymentRequest paymentRequest);
+    protected abstract HandelsbankenPaymentType getPaymentType(PaymentRequest paymentRequest)
+            throws PaymentException;
+
+    protected abstract AccountEntity getDebtorAccountEntity(Payment payment);
+
+    protected abstract AccountEntity getCreditorAccountEntity(Creditor creditor);
+
+    protected Optional<CreditorAgentEntity> getCreditorAgentEntity(Creditor creditor) {
+        return Optional.empty();
+    }
+
+    protected RemittanceInformationEntity getRemittanceInformationEntity(Payment payment) {
+        final String text = Strings.emptyToNull(payment.getReference().getValue());
+        return new RemittanceInformationEntity(text);
+    }
 
     protected HandelsbankenPaymentType getSepaOrCrossCurrencyPaymentType(
             PaymentRequest paymentRequest) {
