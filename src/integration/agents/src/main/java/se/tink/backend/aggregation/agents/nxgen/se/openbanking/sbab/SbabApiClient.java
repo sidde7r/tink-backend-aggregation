@@ -114,9 +114,7 @@ public final class SbabApiClient {
 
                 if (errorResponse.isInvalidDateError()) {
                     throw new DateValidationException(
-                            ErrorMessage.INVALID_DATE,
-                            "",
-                            new IllegalArgumentException());
+                            ErrorMessage.INVALID_DATE, "", new IllegalArgumentException());
                 }
             }
 

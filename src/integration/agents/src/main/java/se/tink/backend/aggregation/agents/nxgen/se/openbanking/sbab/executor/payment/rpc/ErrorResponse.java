@@ -21,7 +21,8 @@ public class ErrorResponse {
         }
 
         if (errors.size() > 1) {
-            log.warn("Received multiple errors which is not expected, consult debug logs to investigate.");
+            log.warn(
+                    "Received multiple errors which is not expected, consult debug logs to investigate.");
         }
 
         return errors;
