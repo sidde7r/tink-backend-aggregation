@@ -108,7 +108,6 @@ public class AgentWorkerOperation implements Runnable {
                                 command, AgentWorkerOperationMetricType.EXECUTE_COMMAND);
 
                 commandResult = command.execute();
-                executedCommands.push(command);
 
                 stopCommandContexts(contexts);
 
@@ -152,6 +151,8 @@ public class AgentWorkerOperation implements Runnable {
                 systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
                 break;
+            } finally {
+                executedCommands.push(command);
             }
         }
 
