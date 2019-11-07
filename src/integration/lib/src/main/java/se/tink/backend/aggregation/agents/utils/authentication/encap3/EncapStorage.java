@@ -170,6 +170,10 @@ public class EncapStorage {
         return deviceUuid;
     }
 
+    public void setHardwareId(String hardwareId) {
+        this.hardwareId = hardwareId;
+    }
+
     public String getHardwareId() {
         return hardwareId;
     }
