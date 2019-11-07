@@ -167,8 +167,6 @@ public class AgentWorkerOperation implements Runnable {
             log.info(
                     String.format(
                             "Aborted command execution for operation '%s'", operationMetricName));
-
-            handleTemporaryErrorStatusUpdateForAbortedCommand(credentials);
         }
 
         if (commandResult == AgentWorkerCommandResult.REJECT) {
@@ -211,22 +209,6 @@ public class AgentWorkerOperation implements Runnable {
 
     private void handleCredentialStatusUpdateForRejectedCommand(Credentials credentials) {
         credentials.setStatus(CredentialsStatus.UNCHANGED);
-        credentials.setStatusPayload(null);
-        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
-    }
-
-    private void handleTemporaryErrorStatusUpdateForAbortedCommand(Credentials credentials) {
-        // No need to update the credential status again as it has already been updated in these
-        // cases.
-        switch (credentials.getStatus()) {
-            case TEMPORARY_ERROR:
-            case AUTHENTICATION_ERROR:
-                return;
-            default:
-                log.info("Updating credentials status due to aborted command execution.");
-        }
-
-        credentials.setStatus(CredentialsStatus.TEMPORARY_ERROR);
         credentials.setStatusPayload(null);
         systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
     }
