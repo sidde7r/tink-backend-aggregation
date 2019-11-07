@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.BankIdException;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
@@ -24,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.TypePai
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -154,7 +151,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
      */
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentAuthorizationException {
+            throws PaymentAuthorizationException, AuthenticationException {
 
         PaymentStatus paymentStatus = fetch(paymentMultiStepRequest).getPayment().getStatus();
 
@@ -164,29 +161,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
             return getFinalisedPaymentResponse(paymentMultiStepRequest, paymentStatus);
         }
 
-        try {
-            getSigner().sign(paymentMultiStepRequest);
-        } catch (AuthenticationException e) {
-            if (e instanceof BankIdException) {
-                BankIdError bankIdError = ((BankIdException) e).getError();
-                switch (bankIdError) {
-                    case CANCELLED:
-                        throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.CANCELLED, e);
-                    case NO_CLIENT:
-                        throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.NO_CLIENT, e);
-                    case TIMEOUT:
-                        throw new PaymentAuthorizationException(PaymentConstants.BankId.TIMEOUT, e);
-                    case INTERRUPTED:
-                        throw new PaymentAuthorizationException(
-                                PaymentConstants.BankId.INTERRUPTED, e);
-                    case UNKNOWN:
-                    default:
-                        throw new PaymentAuthorizationException(PaymentConstants.BankId.UNKNOWN, e);
-                }
-            }
-        }
+        getSigner().sign(paymentMultiStepRequest);
 
         paymentStatus = fetch(paymentMultiStepRequest).getPayment().getStatus();
 
