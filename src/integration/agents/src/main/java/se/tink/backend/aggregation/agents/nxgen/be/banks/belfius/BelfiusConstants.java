@@ -346,4 +346,9 @@ public class BelfiusConstants {
     public static class Transfer {
         public static final LogTag LOGTAG = LogTag.from("#be_belfius_transfer");
     }
+
+    static class HttpClient {
+        public static final int MAX_RETRIES = 4;
+        public static final int RETRY_SLEEP_MILLISECONDS = 1000;
+    }
 }
