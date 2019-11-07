@@ -9,7 +9,6 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Collections;
 import java.util.Set;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.tools.response.ClientConfigurationBlendedSecretsValidationResponse;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 
 public class ClientConfigurationValidatorTest {
@@ -292,57 +291,6 @@ public class ClientConfigurationValidatorTest {
         assertThat(response.getInvalidSensitiveSecretsNames()).isEmpty();
         assertThat(response.getValidationResultMessage())
                 .isEqualTo("Secrets names validated correctly.");
-    }
-
-    @Test
-    public void validateTestWithCorrectFieldsAndBlendedSecrets() {
-        clientConfigurationValidator =
-                getClientConfigurationValidatorForValidateTestWithCorrectFields();
-
-        Set<String> secretsNames =
-                ImmutableSet.<String>builder()
-                        .add("secret1")
-                        .add("secret2")
-                        .add("redirectUrls")
-                        .add("sensitiveSecret1")
-                        .add("sensitiveSecret2")
-                        .build();
-
-        ClientConfigurationBlendedSecretsValidationResponse response =
-                clientConfigurationValidator.validate(secretsNames);
-
-        assertThat(response.isValid()).isEqualTo(true);
-        assertThat(response.getMissingBlendedSecretsNames()).isEmpty();
-        assertThat(response.getInvalidBlendedSecretsNames()).isEmpty();
-        assertThat(response.getValidationResultMessage())
-                .isEqualTo("Secrets names validated correctly.");
-    }
-
-    @Test
-    public void validateTestWithMissingAndInvalidFieldsAndBlendedSecrets() {
-        clientConfigurationValidator =
-                getClientConfigurationValidatorForValidateTestWithCorrectFields();
-
-        Set<String> secretsNames =
-                ImmutableSet.<String>builder()
-                        .add("secret1")
-                        .add("redirectUrls")
-                        .add("sensitiveSecret1")
-                        .add("sensitiveSecret2")
-                        .add("sensitiveSecret3")
-                        .build();
-
-        ClientConfigurationBlendedSecretsValidationResponse response =
-                clientConfigurationValidator.validate(secretsNames);
-
-        assertThat(response.isValid()).isEqualTo(false);
-        assertThat(response.getMissingBlendedSecretsNames()).containsExactly("secret2");
-        assertThat(response.getInvalidBlendedSecretsNames()).containsExactly("sensitiveSecret3");
-        assertThat(response.getValidationResultMessage())
-                .isEqualTo(
-                        "Secrets are wrong.\n"
-                                + "The following secrets should not be present : [sensitiveSecret3]\n"
-                                + "The following secrets are missing : [secret2]\n");
     }
 
     private ClientConfigurationValidator getClientConfigurationValidatorInternalMethodsTest() {
