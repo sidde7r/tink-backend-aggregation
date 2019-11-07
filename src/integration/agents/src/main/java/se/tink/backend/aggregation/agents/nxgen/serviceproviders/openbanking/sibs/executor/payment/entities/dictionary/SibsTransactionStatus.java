@@ -6,7 +6,7 @@ public enum SibsTransactionStatus {
     RCVD(PaymentStatus.PENDING),
     PDNG(PaymentStatus.PENDING),
     PATC(PaymentStatus.PENDING),
-    ACTC(PaymentStatus.PENDING),
+    ACTC(PaymentStatus.PAID),
     ACCP(PaymentStatus.PAID),
     ACFC(PaymentStatus.PAID),
     ACWC(PaymentStatus.PAID),
