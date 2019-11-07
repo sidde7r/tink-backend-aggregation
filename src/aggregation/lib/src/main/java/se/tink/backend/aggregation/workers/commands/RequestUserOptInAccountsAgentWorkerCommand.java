@@ -153,6 +153,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         // Abort is this is not correct.
         if (!isCorrect) {
             log.warn("The empty response from the bank was not correct. Aborting.");
+            statusUpdater.updateStatus(CredentialsStatus.UNCHANGED);
             return AgentWorkerCommandResult.ABORT;
         }
 
