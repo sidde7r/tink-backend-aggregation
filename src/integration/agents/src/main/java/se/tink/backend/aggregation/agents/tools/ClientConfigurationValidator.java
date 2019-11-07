@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.tools;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.Collections;
 import java.util.Set;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.tools.response.ClientConfigurationBlendedSecretsValidationResponse;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 
 public class ClientConfigurationValidator {
@@ -18,33 +16,6 @@ public class ClientConfigurationValidator {
     ClientConfigurationValidator(
             ClientConfigurationMetaInfoHandler clientConfigurationMetaInfoHandler) {
         this.clientConfigurationMetaInfoHandler = clientConfigurationMetaInfoHandler;
-    }
-
-    public ClientConfigurationBlendedSecretsValidationResponse validate(
-            Set<String> blendedSecrets) {
-        Set<String> secretFieldsNamesFromConfigurationClass =
-                clientConfigurationMetaInfoHandler.getSecretFieldsNames();
-        Set<String> sensitiveSecretFieldsNamesFromConfigurationClass =
-                clientConfigurationMetaInfoHandler.getSensitiveSecretFieldsNames();
-        Set<String> blendedSecretsNamesFromConfigurationClass =
-                ImmutableSet.<String>builder()
-                        .addAll(secretFieldsNamesFromConfigurationClass)
-                        .addAll(sensitiveSecretFieldsNamesFromConfigurationClass)
-                        .build();
-
-        Set<String> invalidBlendedSecretsFields =
-                getInvalidSecretsFields(
-                        blendedSecrets,
-                        Collections.emptySet(),
-                        blendedSecretsNamesFromConfigurationClass);
-        Set<String> missingBlendedSecretsFields =
-                getMissingSecretsFields(
-                        blendedSecrets,
-                        Collections.emptySet(),
-                        blendedSecretsNamesFromConfigurationClass);
-
-        return new ClientConfigurationBlendedSecretsValidationResponse(
-                invalidBlendedSecretsFields, missingBlendedSecretsFields);
     }
 
     public SecretsNamesValidationResponse validate(
