@@ -147,6 +147,10 @@ public class AgentWorkerOperation implements Runnable {
 
                 commandResult = AgentWorkerCommandResult.ABORT;
 
+                credentials.setStatus(CredentialsStatus.TEMPORARY_ERROR);
+                credentials.setStatusPayload(null);
+                systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
+
                 break;
             }
         }
