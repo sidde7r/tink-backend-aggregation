@@ -283,4 +283,9 @@ public class IngConstants {
         public static final String TRANSFER_ACCOUNTS_NOT_FOUND =
                 "Could not fetch users' accounts when for transfer.";
     }
+
+    static class HttpClient {
+        public static final int MAX_RETRIES = 4;
+        public static final int RETRY_SLEEP_MILLISECONDS = 1000;
+    }
 }
