@@ -12,6 +12,16 @@ import io.netty.handler.ssl.OpenSsl;
 import io.netty.handler.ssl.OpenSslX509KeyManagerFactory;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.secretservice.grpc.GetAllSecretsResponse;
+import se.tink.backend.secretservice.grpc.GetSecretsRequest;
+import se.tink.backend.secretservice.grpc.InternalSecretsServiceGrpc;
+import se.tink.backend.secretservice.grpc.PingMessage;
+import se.tink.backend.secretservice.grpc.TppSecret;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -29,15 +39,6 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.secretservice.grpc.GetAllSecretsResponse;
-import se.tink.backend.secretservice.grpc.GetSecretsRequest;
-import se.tink.backend.secretservice.grpc.InternalSecretsServiceGrpc;
-import se.tink.backend.secretservice.grpc.PingMessage;
-import se.tink.backend.secretservice.grpc.TppSecret;
 
 public final class TppSecretsServiceClientImpl implements TppSecretsServiceClient {
 
@@ -113,35 +114,65 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
         }
     }
 
-    @Override
-    public Optional<Map<String, String>> getAllSecrets(
+    private GetAllSecretsResponse getAllSecretsResponse(
             String financialInstitutionId, String appId, String clusterId) {
-
         if (!enabled) {
             log.warn(
                     "Trying to call getAllSecrets for an instance of TppSecretsServiceClientImpl when the configuration says it is not enabled.");
-            return Optional.empty();
+            return null;
         }
 
         // TODO: Remove this once Access team confirms there are no null appIds
         if (Strings.emptyToNull(appId) == null
                 || Strings.emptyToNull(financialInstitutionId) == null) {
-            return Optional.empty();
+            return null;
         }
 
         GetSecretsRequest getSecretsRequest =
                 buildRequest(financialInstitutionId, appId, clusterId);
 
-        GetAllSecretsResponse allSecretsResponse =
-                internalSecretsServiceStub.getAllSecrets(getSecretsRequest);
+        return internalSecretsServiceStub.getAllSecrets(getSecretsRequest);
+    }
+
+    @Override
+    public Optional<Map<String, String>> getAllSecrets(
+            String financialInstitutionId, String appId, String clusterId) {
+
+        GetAllSecretsResponse response =
+                getAllSecretsResponse(financialInstitutionId, appId, clusterId);
+        if (response == null) {
+            return Optional.empty();
+        }
 
         List<TppSecret> allSecretsList = new ArrayList<>();
-        allSecretsList.addAll(allSecretsResponse.getEncryptedSecretsList());
-        allSecretsList.addAll(allSecretsResponse.getSecretsList());
+        allSecretsList.addAll(response.getEncryptedSecretsList());
+        allSecretsList.addAll(response.getSecretsList());
 
         return Optional.of(
                 allSecretsList.stream()
                         .collect(Collectors.toMap(TppSecret::getKey, TppSecret::getValue)));
+    }
+
+    @Override
+    public Optional<List<String>> getRedirectUrls(
+            String financialInstitutionId, String appId, String clusterId) {
+        GetAllSecretsResponse response =
+                getAllSecretsResponse(financialInstitutionId, appId, clusterId);
+        if (response == null) {
+            return Optional.empty();
+        }
+        return Optional.of(response.getRedirectUrlsList());
+    }
+
+    @Override
+    public Optional<List<String>> getScopes(
+            String financialInstitutionId, String appId, String clusterId) {
+        GetAllSecretsResponse response =
+                getAllSecretsResponse(financialInstitutionId, appId, clusterId);
+        if (response == null) {
+            return Optional.empty();
+        }
+        return Optional.of(response.getScopesList());
     }
 
     @Override

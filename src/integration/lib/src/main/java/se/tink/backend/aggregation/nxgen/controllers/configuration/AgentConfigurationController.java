@@ -6,9 +6,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.reactivex.rxjava3.core.Observable;
@@ -16,13 +13,14 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
@@ -46,7 +44,7 @@ public final class AgentConfigurationController {
     private final String redirectUrl;
     private final boolean isOpenBankingAgent;
     private final boolean isTestProvider;
-    private Map<String, String> allSecrets;
+    private Map<String, Object> allSecretsMapObj = new HashMap<>();
     private Set<String> secretValues = Collections.emptySet();
     private final Subject<Collection<String>> secretValuesSubject =
             BehaviorSubject.<Collection<String>>create().toSerialized();
@@ -138,13 +136,32 @@ public final class AgentConfigurationController {
                         tppSecretsServiceClient.getAllSecrets(
                                 financialInstitutionId, appId, clusterId);
 
+                Optional<List<String>> redirectUrlsOpt =
+                        tppSecretsServiceClient.getRedirectUrls(
+                                financialInstitutionId, appId, clusterId);
+
+                Optional<List<String>> scopeOpt =
+                        tppSecretsServiceClient.getScopes(financialInstitutionId, appId, clusterId);
+
                 // TODO: Remove if once Access team confirms there are no null appIds around.
-                if (!allSecretsOpt.isPresent()) {
+                if (!allSecretsOpt.isPresent()
+                        || !redirectUrlsOpt.isPresent()
+                        || !scopeOpt.isPresent()) {
                     log.warn(
-                            "Could not fetch secrets due to null or empty appId/financialInstitutionId");
+                            "Could not fetch all secrets due to null or empty appId/financialInstitutionId");
                 }
 
-                allSecrets = allSecretsOpt.get();
+                Map<String, String> allSecrets = allSecretsOpt.get();
+                allSecretsMapObj =
+                        allSecrets.entrySet().stream()
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+                final String REDIRECT_URL_KEY = "redirectUrl";
+                allSecretsMapObj.put(REDIRECT_URL_KEY, redirectUrlsOpt.get().get(0));
+
+                final String SCOPES_KEY = "scopes";
+                allSecretsMapObj.put(SCOPES_KEY, scopeOpt.get());
+
             } catch (StatusRuntimeException e) {
                 Preconditions.checkNotNull(
                         e.getStatus(), "Status cannot be null for StatusRuntimeException: " + e);
@@ -160,8 +177,7 @@ public final class AgentConfigurationController {
                     throw e;
                 }
             }
-            initRedirectUrl();
-            notifySecretValues(Sets.newHashSet(allSecrets.values()));
+            notifySecretValues(Sets.newHashSet(allSecretsMapObj.values().toString()));
         }
     }
 
@@ -174,10 +190,10 @@ public final class AgentConfigurationController {
         }
 
         Preconditions.checkNotNull(
-                allSecrets,
+                allSecretsMapObj,
                 "Secrets were not fetched. Try to init() the AgentConfigurationController.");
 
-        T clientConfig = OBJECT_MAPPER.convertValue(allSecrets, clientConfigClass);
+        T clientConfig = OBJECT_MAPPER.convertValue(allSecretsMapObj, clientConfigClass);
 
         return Optional.ofNullable(clientConfig)
                 .orElseThrow(
@@ -211,62 +227,6 @@ public final class AgentConfigurationController {
                 + " and clusterId: "
                 + clusterId
                 + " ";
-    }
-
-    private void initRedirectUrl() {
-        Preconditions.checkNotNull(
-                allSecrets,
-                "allSecrets is null, make sure you fetched the secrets before you called initRedirectUrl.");
-
-        final String REDIRECT_URLS_KEY = "redirectUrls";
-        final String CHOSEN_REDIRECT_URL_KEY = "redirectUrl";
-
-        if (!allSecrets.containsKey(REDIRECT_URLS_KEY)) {
-            // We end up here when the secrets do not contain redirectUrls key.
-            throw new IllegalStateException(
-                    "Could not find redirectUrls in secrets " + getSecretsServiceParamsString());
-        }
-
-        Type listType = new TypeToken<List<String>>() {}.getType();
-
-        final List<String> redirectUrls;
-        try {
-            redirectUrls = new Gson().fromJson(allSecrets.get(REDIRECT_URLS_KEY), listType);
-        } catch (JsonSyntaxException e) {
-            throw new IllegalStateException(
-                    "Could not parse redirectUrls secret : "
-                            + allSecrets.get(REDIRECT_URLS_KEY)
-                            + getSecretsServiceParamsString(),
-                    e);
-        }
-
-        if (redirectUrls.isEmpty()) {
-            // We end up here when the secrets do contain redirectUrls key but it is an empty list.
-            log.info("Empty redirectUrls list in secrets" + getSecretsServiceParamsString());
-
-            return;
-        }
-
-        if (Strings.isNullOrEmpty(redirectUrl)) {
-            // No redirectUrl provided in the CredentialsRequest, pick the first one from
-            // the registered list.
-            allSecrets.put(CHOSEN_REDIRECT_URL_KEY, redirectUrls.get(0));
-        } else if (!redirectUrls.contains(redirectUrl)) {
-            // The redirectUrl provided in the CredentialsRequest is not among those
-            // registered.
-            throw new IllegalArgumentException(
-                    "Requested redirectUrl : "
-                            + redirectUrl
-                            + " is not registered"
-                            + getSecretsServiceParamsString());
-        } else {
-            // The redirectUrl provided in the CredentialsRequest is among those registered.
-            allSecrets.put(CHOSEN_REDIRECT_URL_KEY, redirectUrl);
-        }
-
-        // To avoid agents accessing the list of registered redirectUrls via their configuration
-        // classes. Declaring a member 'redirectUrls' for example.
-        allSecrets.remove(REDIRECT_URLS_KEY);
     }
 
     public <T extends ClientConfiguration> T getAgentConfigurationFromK8s(

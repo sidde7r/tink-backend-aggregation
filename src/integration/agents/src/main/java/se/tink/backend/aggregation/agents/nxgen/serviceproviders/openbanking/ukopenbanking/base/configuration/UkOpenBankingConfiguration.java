@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -23,7 +24,7 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     @JsonProperty @Secret private String signingKey;
     @JsonProperty @Secret private String signingKeyId;
     @JsonProperty @Secret private String softwareStatementAssertion;
-    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String softwareId;
     @JsonProperty @Secret private String transportKey;
     @JsonProperty @Secret private String transportKeyId;

@@ -22,7 +22,9 @@ public class ClientConfigurationValidator {
             Set<String> secretsNames,
             Set<String> excludedSecretsNames,
             Set<String> sensitiveSecretsNames,
-            Set<String> excludedSensitiveSecretsNames) {
+            Set<String> excludedSensitiveSecretsNames,
+            Set<String> agentConfigParamNames,
+            Set<String> excludedAgentConfigParamNames) {
         Set<String> invalidSecretsFields =
                 getInvalidSecretsFields(secretsNames, excludedSecretsNames);
         Set<String> missingSecretsFields =
@@ -35,11 +37,20 @@ public class ClientConfigurationValidator {
                 getMissingSensitiveSecretsFields(
                         sensitiveSecretsNames, excludedSensitiveSecretsNames);
 
+        Set<String> invalidAgentConfigParamFields =
+                getInvalidAgentConfigParamFields(
+                        agentConfigParamNames, excludedAgentConfigParamNames);
+        Set<String> missingAgentConfigParamFields =
+                getMissingAgentConfigParamFields(
+                        agentConfigParamNames, excludedAgentConfigParamNames);
+
         return new SecretsNamesValidationResponse(
                 invalidSecretsFields,
                 missingSecretsFields,
                 invalidSensitiveSecretsFields,
-                missingSensitiveSecretsFields);
+                missingSensitiveSecretsFields,
+                invalidAgentConfigParamFields,
+                missingAgentConfigParamFields);
     }
 
     private Set<String> getMissingSecretsFields(
@@ -62,6 +73,17 @@ public class ClientConfigurationValidator {
                 sensitiveSecretFieldsNamesFromConfigurationClass);
     }
 
+    private Set<String> getMissingAgentConfigParamFields(
+            Set<String> agentConfigParamNames, Set<String> excludedAgentConfigParamNames) {
+        Set<String> agentConfigParamFieldsFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getAgentConfigParamFieldsNames();
+
+        return getMissingSecretsFields(
+                agentConfigParamNames,
+                excludedAgentConfigParamNames,
+                agentConfigParamFieldsFieldsNamesFromConfigurationClass);
+    }
+
     private Set<String> getInvalidSensitiveSecretsFields(
             Set<String> sensitiveSecretsNames, Set<String> excludedSensitiveSecretsNames) {
         Set<String> sensitiveSecretFieldsNamesFromConfigurationClass =
@@ -80,6 +102,17 @@ public class ClientConfigurationValidator {
 
         return getInvalidSecretsFields(
                 secretsNames, excludedSecretsNames, secretFieldsNamesFromConfigurationClass);
+    }
+
+    private Set<String> getInvalidAgentConfigParamFields(
+            Set<String> agentConfigParamNames, Set<String> excludedAgentConfigParamNames) {
+        Set<String> agentConfigParamFieldsFieldsNamesFromConfigurationClass =
+                clientConfigurationMetaInfoHandler.getAgentConfigParamFieldsNames();
+
+        return getInvalidSecretsFields(
+                agentConfigParamNames,
+                excludedAgentConfigParamNames,
+                agentConfigParamFieldsFieldsNamesFromConfigurationClass);
     }
 
     // Package private for testing.

@@ -17,6 +17,7 @@ import org.reflections.scanners.SubTypesScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
@@ -52,9 +53,10 @@ public class ClientConfigurationMetaInfoHandler {
                         .filter(this::isFieldSecret)
                         .collect(Collectors.toSet());
 
-        if (secretFields.stream().anyMatch(this::isFieldSensitiveSecret)) {
+        if (secretFields.stream().anyMatch(this::isFieldSensitiveSecret)
+                || secretFields.stream().anyMatch(this::isFieldAgentConfigParam)) {
             throw new IllegalStateException(
-                    "A secret cannot be both non-sensitive and sensitive, revise the annotations in your configuration class.");
+                    "A secret cannot be in multiple fields, revise the annotations in your configuration class.");
         }
 
         return secretFields;
@@ -73,9 +75,10 @@ public class ClientConfigurationMetaInfoHandler {
                         .filter(this::isFieldSensitiveSecret)
                         .collect(Collectors.toSet());
 
-        if (sensitiveSecretFields.stream().anyMatch(this::isFieldSecret)) {
+        if (sensitiveSecretFields.stream().anyMatch(this::isFieldSecret)
+                || sensitiveSecretFields.stream().anyMatch(this::isFieldAgentConfigParam)) {
             throw new IllegalStateException(
-                    "A secret cannot be both non-sensitive and sensitive, revise the annotations in your configuration class.");
+                    "A secret cannot be in multiple fields, revise the annotations in your configuration class.");
         }
 
         return sensitiveSecretFields;
@@ -83,6 +86,28 @@ public class ClientConfigurationMetaInfoHandler {
 
     public Set<String> getSensitiveSecretFieldsNames() {
         return getSensitiveSecretFields().stream().map(Field::getName).collect(Collectors.toSet());
+    }
+
+    public Set<Field> getAgentConfigParamFields() {
+        Class<? extends ClientConfiguration> clientConfigurationClassForProvider =
+                findClosestClientConfigurationClass();
+
+        Set<Field> agentConfigParamFields =
+                Stream.of(clientConfigurationClassForProvider.getDeclaredFields())
+                        .filter(this::isFieldAgentConfigParam)
+                        .collect(Collectors.toSet());
+
+        if (agentConfigParamFields.stream().anyMatch(this::isFieldSecret)
+                || agentConfigParamFields.stream().anyMatch(this::isFieldSensitiveSecret)) {
+            throw new IllegalStateException(
+                    "A secret cannot be in multiple fields, revise the annotations in your configuration class.");
+        }
+
+        return agentConfigParamFields;
+    }
+
+    public Set<String> getAgentConfigParamFieldsNames() {
+        return getAgentConfigParamFields().stream().map(Field::getName).collect(Collectors.toSet());
     }
 
     public Class<? extends ClientConfiguration> findClosestClientConfigurationClass() {
@@ -170,6 +195,14 @@ public class ClientConfigurationMetaInfoHandler {
         List<Annotation> annotations = Arrays.asList(field.getDeclaredAnnotations());
         return annotations.stream()
                         .filter(annotation -> annotation instanceof SensitiveSecret)
+                        .count()
+                == 1;
+    }
+
+    private boolean isFieldAgentConfigParam(Field field) {
+        List<Annotation> annotations = Arrays.asList(field.getDeclaredAnnotations());
+        return annotations.stream()
+                        .filter(annotation -> annotation instanceof AgentConfigParam)
                         .count()
                 == 1;
     }
