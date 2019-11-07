@@ -115,15 +115,25 @@ public class FetchLoanDetailsResponse {
         if (!Objects.isNull(interest) && !Objects.isNull(interest.getRate())) {
             return interest;
         } else {
-            if (!isSubAgreementsInterestRatesSame()) {
-                throw new IllegalStateException(
-                        "Interest rates were different for sub loans. Could not map to loan model.");
-            }
-            return subAgreements.stream()
-                    .map(SubAgreementsItem::getInterest)
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("No interest rate found."));
+            return getInterestRateFromSubAgreements();
         }
+    }
+
+    @JsonIgnore
+    private InterestEntity getInterestRateFromSubAgreements() {
+        List<InterestEntity> interests =
+                subAgreements.stream()
+                        .filter(
+                                subAgreements ->
+                                        Objects.nonNull(subAgreements.getInterest().getBaseRate()))
+                        .map(SubAgreementsItem::getInterest)
+                        .collect(Collectors.toList());
+        if (interests.stream().map(InterestEntity::getRate).distinct().count() > 1) {
+            throw new IllegalStateException("Interest rates in sub parts does not match.");
+        }
+        return interests.stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No interest rate found."));
     }
 
     @JsonIgnore

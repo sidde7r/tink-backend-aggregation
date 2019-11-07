@@ -122,6 +122,68 @@ public class NordeaLoanFetcherTest {
                     + "    ]\n"
                     + "}";
 
+    private static final String LOAN_WITH_SUBLOAN_RESPONSE_MISSING_BASE_RATE =
+            "{\n"
+                    + "  \"loan_id\": \"11111111111\",\n"
+                    + "  \"loan_formatted_id\": \"1111 11 11111\",\n"
+                    + "  \"product_code\": \"SE9731\",\n"
+                    + "  \"currency\": \"SEK\",\n"
+                    + "  \"group\": \"mortgage\",\n"
+                    + "  \"repayment_status\": \"in_progress\",\n"
+                    + "  \"first_draw_down_date\": \"2012-12-13\",\n"
+                    + "  \"interest\": {},\n"
+                    + "  \"amount\": {\n"
+                    + "    \"granted\": 144816.00,\n"
+                    + "    \"paid\": 65205.00,\n"
+                    + "    \"balance\": 79611.00\n"
+                    + "  },\n"
+                    + "  \"following_payment\": {\n"
+                    + "    \"instalment\": 805.00,\n"
+                    + "    \"interest\": 137.00,\n"
+                    + "    \"fees\": 0,\n"
+                    + "    \"total\": 942.00,\n"
+                    + "    \"date\": \"2019-10-27\"\n"
+                    + "  },\n"
+                    + "  \"latest_payment\": {\n"
+                    + "    \"total\": 948.00,\n"
+                    + "    \"date\": \"2019-09-27\"\n"
+                    + "  },\n"
+                    + "  \"repayment_schedule\": {\n"
+                    + "    \"instalment_free_months\": [],\n"
+                    + "    \"period_between_instalments\": 1,\n"
+                    + "    \"initial_payment_date\": \"2012-12-13\",\n"
+                    + "    \"loan_account_number\": \"3997 23 31881\",\n"
+                    + "    \"debit_account_number\": \"810918-0235\"\n"
+                    + "  },\n"
+                    + "  \"owners\": [{\n"
+                    + "    \"name\": \"NAME SURNAME\"\n"
+                    + "  }],\n"
+                    + "  \"sub_agreements\": [{\n"
+                    + "    \"amount\": {\n"
+                    + "      \"granted\": 1.00,\n"
+                    + "      \"paid\": 0.00,\n"
+                    + "      \"balance\": 1.00\n"
+                    + "    },\n"
+                    + "    \"interest\": {\n"
+                    + "      \"rate\": 1.740,\n"
+                    + "      \"reference_rate_type\": \"other\",\n"
+                    + "      \"period_start_date\": \"2012-12-11\",\n"
+                    + "      \"base_rate\": 2.090\n"
+                    + "    }\n"
+                    + "  }, {\n"
+                    + "    \"amount\": {\n"
+                    + "      \"granted\": 144815.00,\n"
+                    + "      \"paid\": 65205.00,\n"
+                    + "      \"balance\": 79610.00\n"
+                    + "    },\n"
+                    + "    \"interest\": {\n"
+                    + "      \"rate\": 2.090,\n"
+                    + "      \"reference_rate_type\": \"other\",\n"
+                    + "      \"period_start_date\": \"2012-12-11\"\n"
+                    + "    }\n"
+                    + "  }]\n"
+                    + "}";
+
     private static final String LOAN_RESPONSE =
             "{\n"
                     + "  \"loan_id\": \"39961997727\",\n"
@@ -180,6 +242,22 @@ public class NordeaLoanFetcherTest {
                 loanAccount.getDetails().getInitialBalance());
         Assert.assertEquals(new HolderName("NAME SURNAME"), loanAccount.getHolderName());
         Assert.assertTrue(loanAccount.isUniqueIdentifierEqual("************8901"));
+        loanAccount =
+                SerializationUtils.deserializeFromString(
+                                LOAN_WITH_SUBLOAN_RESPONSE_MISSING_BASE_RATE,
+                                FetchLoanDetailsResponse.class)
+                        .toTinkLoanAccount();
+        Assert.assertEquals(new Double(1.740 / 100), loanAccount.getInterestRate());
+        Assert.assertEquals(
+                ExactCurrencyAmount.of(new BigDecimal(79611.0).negate(), "SEK"),
+                loanAccount.getExactBalance());
+        Assert.assertEquals(
+                ExactCurrencyAmount.of(new BigDecimal(65205.0), "SEK"),
+                loanAccount.getDetails().getExactAmortized());
+        Assert.assertEquals(
+                new Amount("SEK", 144816.0).negate(), loanAccount.getDetails().getInitialBalance());
+        Assert.assertEquals(new HolderName("NAME SURNAME"), loanAccount.getHolderName());
+        Assert.assertTrue(loanAccount.isUniqueIdentifierEqual("************1111"));
     }
 
     @Test
