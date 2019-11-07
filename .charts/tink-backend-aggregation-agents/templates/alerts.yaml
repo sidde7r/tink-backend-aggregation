@@ -468,9 +468,9 @@ spec:
         who: integration
     annotations:
         description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
-        Investigate immediately.
+            Investigate immediately.
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
-          the last hour.
+            the last hour.
         tags: <{ $labels.className }>
 
   - alert: BankServerUnavailableForLogin
