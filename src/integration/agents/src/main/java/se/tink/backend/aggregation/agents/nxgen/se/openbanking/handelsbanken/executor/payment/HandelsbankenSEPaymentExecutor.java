@@ -7,11 +7,8 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.BankIdException;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.AgentIdentificationType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
@@ -167,40 +164,13 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+            throws PaymentException, AuthenticationException {
         final String ssn = credentials.getField(CredentialKeys.USERNAME);
-        final HandelsbankenPaymentType paymentType = getPaymentType(paymentMultiStepRequest);
         final SessionResponse sessionResponse =
                 apiClient.initDecoupledAuthorizationPis(
                         ssn, paymentMultiStepRequest.getPayment().getUniqueId());
         bankIdSigner.setAutoStartToken(sessionResponse);
-        try {
-            getSigner().sign(paymentMultiStepRequest);
-        } catch (AuthenticationException e) {
-            if (e instanceof BankIdException) {
-                BankIdError bankIdError = ((BankIdException) e).getError();
-                switch (bankIdError) {
-                    case CANCELLED:
-                        throw new PaymentAuthorizationException(
-                                "BankId signing cancelled by the user.", e);
-
-                    case NO_CLIENT:
-                        throw new PaymentAuthorizationException(
-                                "No BankId client when trying to sign the payment.", e);
-
-                    case TIMEOUT:
-                        throw new PaymentAuthorizationException("BankId signing timed out.", e);
-
-                    case INTERRUPTED:
-                        throw new PaymentAuthorizationException("BankId signing interrupded.", e);
-
-                    case UNKNOWN:
-                    default:
-                        throw new PaymentAuthorizationException(
-                                "Unknown problem when signing payment with BankId.", e);
-                }
-            }
-        }
+        getSigner().sign(paymentMultiStepRequest);
 
         return super.sign(paymentMultiStepRequest);
     }

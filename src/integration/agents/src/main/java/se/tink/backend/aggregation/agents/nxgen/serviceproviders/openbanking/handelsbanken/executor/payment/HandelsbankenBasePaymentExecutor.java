@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
@@ -77,7 +78,7 @@ public abstract class HandelsbankenBasePaymentExecutor
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+            throws PaymentException, AuthenticationException {
         final HandelsbankenPaymentType paymentType = getPaymentType(paymentMultiStepRequest);
         final Payment payment = paymentMultiStepRequest.getPayment();
         final ConfirmPaymentResponse confirmPaymentResponse =
