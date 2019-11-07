@@ -175,4 +175,9 @@ public final class BbvaConstants {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
+
+    public static class Proxy {
+        public static final String COUNTRY = "es";
+        public static final String ES_PROXY = "esProxy";
+    }
 }

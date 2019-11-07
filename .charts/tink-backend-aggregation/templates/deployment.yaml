@@ -267,6 +267,12 @@ spec:
               name: aggregation-secrets
               key: bec-dk-public-key-salt
               optional: true
+        - name: PROXY_PASSWORD_ES
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: proxy-password-es
+              optional: true
 
       containers:
       - name: tink-backend-aggregation

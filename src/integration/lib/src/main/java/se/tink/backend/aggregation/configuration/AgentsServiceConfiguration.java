@@ -48,6 +48,9 @@ public class AgentsServiceConfiguration {
 
     @JsonProperty private Map<String, Boolean> featureFlags = new HashMap<>();
 
+    @JsonProperty
+    private Map<String, PasswordBasedProxyConfiguration> countryProxies = new HashMap<>();
+
     public TppSecretsServiceConfiguration getTppSecretsServiceConfiguration() {
         return tppSecretsServiceConfiguration;
     }
@@ -104,5 +107,10 @@ public class AgentsServiceConfiguration {
     @JsonIgnore
     public boolean isFeatureEnabled(String featureName) {
         return featureFlags.getOrDefault(featureName, false);
+    }
+
+    @JsonIgnore
+    public PasswordBasedProxyConfiguration getCountryProxy(String country) {
+        return countryProxies.get(country);
     }
 }
