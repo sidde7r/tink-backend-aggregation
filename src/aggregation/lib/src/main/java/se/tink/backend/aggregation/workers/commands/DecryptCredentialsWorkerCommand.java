@@ -35,7 +35,7 @@ public class DecryptCredentialsWorkerCommand extends AgentWorkerCommand {
 
         didDecryptCredential = credentialsCrypto.decrypt(request);
         if (!didDecryptCredential) {
-            return AgentWorkerCommandResult.ABORT;
+            throw new IllegalStateException("Could not decrypt credential");
         }
 
         return AgentWorkerCommandResult.CONTINUE;
