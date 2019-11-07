@@ -55,11 +55,16 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62",
     ],
     deps = [
+        "//src/aggregation/api",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools/response",
         "//src/integration/api",
         "//src/integration/lib:lib_test",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito3_mockito_core",
     ],
 )

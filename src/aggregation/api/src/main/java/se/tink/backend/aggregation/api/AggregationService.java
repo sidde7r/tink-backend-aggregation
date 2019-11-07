@@ -19,6 +19,8 @@ import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
+import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 import se.tink.backend.aggregation.rpc.SecretsTemplateRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -149,4 +151,11 @@ public interface AggregationService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     String getSecretsTemplate(SecretsTemplateRequest request);
+
+    @POST
+    @Path("validate-secrets")
+    @TeamOwnership(Team.INTEGRATION)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    SecretsNamesValidationResponse validateSecretsNames(SecretsNamesValidationRequest request);
 }

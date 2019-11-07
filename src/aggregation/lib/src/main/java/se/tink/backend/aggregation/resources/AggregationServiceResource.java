@@ -9,10 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationTemplateBuilder;
+import se.tink.backend.aggregation.agents.tools.ClientConfigurationValidator;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
@@ -23,6 +25,8 @@ import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
+import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 import se.tink.backend.aggregation.rpc.SecretsTemplateRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -254,5 +258,32 @@ public class AggregationServiceResource implements AggregationService {
                         request.getIncludeDescriptions(),
                         request.getIncludeExamples())
                 .buildTemplate();
+    }
+
+    @Override
+    public SecretsNamesValidationResponse validateSecretsNames(
+            SecretsNamesValidationRequest request) {
+        Preconditions.checkNotNull(request, "SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getProvider(), "Provider in SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getSecretsNames(),
+                "SecretsNames in SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getExcludedSecretsNames(),
+                "ExcludedSecretsNames in SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getSensitiveSecretsNames(),
+                "SensitiveSecretsNames in SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getExcludedSensitiveSecretsNames(),
+                "ExcludedSensitiveSecretsNames in SecretsNamesValidationRequest cannot be null.");
+
+        return new ClientConfigurationValidator(request.getProvider())
+                .validate(
+                        request.getSecretsNames(),
+                        request.getExcludedSecretsNames(),
+                        request.getSensitiveSecretsNames(),
+                        request.getExcludedSensitiveSecretsNames());
     }
 }

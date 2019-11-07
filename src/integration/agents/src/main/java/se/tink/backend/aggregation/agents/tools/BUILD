@@ -3,6 +3,8 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/aggregation/api",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools/response",
         "//src/integration/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
