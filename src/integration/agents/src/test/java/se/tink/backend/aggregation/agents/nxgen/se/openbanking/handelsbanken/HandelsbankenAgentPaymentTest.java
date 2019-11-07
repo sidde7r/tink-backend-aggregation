@@ -59,7 +59,7 @@ public class HandelsbankenAgentPaymentTest {
     private Payment createTestPayment(
             AccountIdentifier debtorAccount, AccountIdentifier creditorAccount) {
         Debtor debtor = new Debtor(debtorAccount);
-        Creditor creditor = new Creditor(creditorAccount);
+        Creditor creditor = new Creditor(creditorAccount, creditorAccount.getName().orElse(null));
 
         Amount amount = Amount.inSEK(1);
         LocalDate executionDate = LocalDate.now();
