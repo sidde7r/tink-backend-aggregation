@@ -22,11 +22,10 @@ public final class JyskeConstants {
 
         public static final URL NEMID_ENROLL = toBankDataUrl("/nemid/inroll");
         public static final URL NEMID_LOGIN = toBankDataUrl("/nemid/login_with_installid_prop");
-        public static final URL GET_ACCOUNTS_WITH_EXTERNALS =
-                toBankDataUrl("/accounts/withexternals");
+        public static final URL GET_ACCOUNTS_WITH_EXTERNALS = toBankDataUrl("/accounts");
 
         public static final URL GET_TRANSACTIONS_WITH_EXTERNALS =
-                toBankDataUrl("/pfm/transactions/withexternals");
+                toBankDataUrl("/pfm/transactions");
         public static final URL GET_FUTURE_TRANSACTIONS = toBankDataUrl("/pfm/transactions/future");
         public static final URL GET_INVESTMENT_GROUPS = toBankDataUrl("/investment/groups");
         public static final URL LOGOUT = toBankDataUrl("/invalidate");
