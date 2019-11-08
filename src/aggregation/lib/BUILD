@@ -50,6 +50,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/rabobank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/volksbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/creditcards/ICS",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/dnb",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/santander",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/nordea/v30",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/sbab",
