@@ -16,6 +16,7 @@ public class AccountEntity extends AccountBriefEntity {
     // account type might have something to do with shadow accounts according to the app, although
     // the json data is
     // not used there.
+    private boolean external;
     private Integer accountType;
     private Double balance;
     private String bicSwift;
@@ -90,5 +91,14 @@ public class AccountEntity extends AccountBriefEntity {
         accountBriefEntity.setAccountNo(accountNo);
         accountBriefEntity.setRegNo(regNo);
         return accountBriefEntity;
+    }
+
+    /**
+     * Account belongs to this bank and not one that this bank is aggregating
+     *
+     * @return true if account belongs to this bank
+     */
+    public boolean isInternalAccount() {
+        return !external;
     }
 }
