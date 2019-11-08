@@ -21,6 +21,7 @@ public class JyskeAccountFetcher implements AccountFetcher<TransactionalAccount>
         // The app does not use the account type data from json directly
         return apiClient.fetchAccounts().getAccounts().stream()
                 .filter(accountEntity -> accountEntity.getAccountType() == 0)
+                .filter(AccountEntity::isInternalAccount)
                 .map(AccountEntity::toTransactionalAccount)
                 .collect(Collectors.toList());
     }
