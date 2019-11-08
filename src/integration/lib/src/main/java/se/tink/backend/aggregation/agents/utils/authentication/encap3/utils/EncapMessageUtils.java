@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConfiguration;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.HttpHeaders;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Message;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Soap;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapStorage;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.ActivatedMethodEntity;
@@ -82,13 +83,13 @@ public class EncapMessageUtils {
 
         ActivatedMethodEntity methodWithoutPin =
                 new ActivatedMethodEntity(
-                        "DEVICE",
+                        Message.DEVICE,
                         storage.getAuthenticationKeyWithoutPin(),
                         b64challengeResponseWithoutPin);
 
         ActivatedMethodEntity methodWithPin =
                 new ActivatedMethodEntity(
-                        "DEVICE:PIN", storage.getAuthenticationKey(), b64challengeResponse);
+                        Message.DEVICE_PIN, storage.getAuthenticationKey(), b64challengeResponse);
 
         ActivatedMethodsRequest activatedMethods = new ActivatedMethodsRequest();
         activatedMethods.add(methodWithoutPin);
