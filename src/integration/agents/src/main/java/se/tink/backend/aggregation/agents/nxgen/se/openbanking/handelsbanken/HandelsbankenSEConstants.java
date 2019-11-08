@@ -11,11 +11,6 @@ public class HandelsbankenSEConstants {
                 new LocalizableKey("You need to activate your BankID in the Handelsbanken app.");
     }
 
-    public static class InitiatePaymentBodyValues {
-        public static final String IDENTIFICATION_CODE = "6156";
-        public static final String IDENTIFICATION_TYPE = "SESBA";
-    }
-
     public static class CredentialKeys {
         public static final String SCOPE = "scope";
         public static final String USERNAME = "username";
@@ -25,7 +20,14 @@ public class HandelsbankenSEConstants {
         public static final String BEARER = "Bearer";
     }
 
-    public static class AccountType {
+    public static class CreditorAgentIdentificationType {
+        public static final String SE_CLEARING_NUMBER = "SESBA";
+    }
+
+    public static class PaymentAccountType {
+        public static final String IBAN = "IBAN";
         public static final String BBAN = "BBAN";
+        public static final String PLUSGIRO = "PG";
+        public static final String BANKGIRO = "BG";
     }
 }

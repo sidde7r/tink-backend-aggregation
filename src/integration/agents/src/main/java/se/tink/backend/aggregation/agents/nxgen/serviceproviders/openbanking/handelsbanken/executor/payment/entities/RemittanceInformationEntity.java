@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Creditor {
-    private String name;
+public class RemittanceInformationEntity {
+    private String text;
 
-    public Creditor(String name) {
-        this.name = name;
+    public RemittanceInformationEntity(String text) {
+        this.text = text;
     }
 }

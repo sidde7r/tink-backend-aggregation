@@ -1,18 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
+import java.net.URI;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import org.junit.AfterClass;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -20,8 +18,18 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
 public class HandelsbankenAgentPaymentTest {
+    private enum Arg {
+        USERNAME, // 12 digit SSN
+        CREDITOR_ACCOUNT, // URL (se://ccccnnnnnnnnn, se-pg://nnnnnnn/ocr, se-bg://nnnnnnn/ocr)
+        DEBTOR_ACCOUNT, // URL (se://ccccnnnnnnnnn)
+    }
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Test
     public void testPayments() throws Exception {
@@ -37,45 +45,33 @@ public class HandelsbankenAgentPaymentTest {
                         .setAppId("tink")
                         .expectLoggedIn(false);
 
-        builder.build().testGenericPayment(createListMockedPayment(1));
+        AccountIdentifier debtorAccount =
+                AccountIdentifier.create(new URI(manager.get(Arg.DEBTOR_ACCOUNT)));
+        AccountIdentifier creditorAccount =
+                AccountIdentifier.create(new URI(manager.get(Arg.CREDITOR_ACCOUNT)));
+
+        builder.build()
+                .testGenericPayment(
+                        Collections.singletonList(
+                                createTestPayment(debtorAccount, creditorAccount)));
     }
 
-    private List<Payment> createListMockedPayment(int numberOfMockedPayments) {
-        List<Payment> listOfMockedPayments = new ArrayList<>();
+    private Payment createTestPayment(
+            AccountIdentifier debtorAccount, AccountIdentifier creditorAccount) {
+        Debtor debtor = new Debtor(debtorAccount);
+        Creditor creditor = new Creditor(creditorAccount, creditorAccount.getName().orElse(null));
 
-        for (int i = 0; i < numberOfMockedPayments; ++i) {
-            Debtor debtor = mock(Debtor.class);
-            doReturn(Type.BBAN).when(debtor).getAccountIdentifierType();
-            doReturn(manager.get(Arg.DEBTOR_ACCOUNT)).when(debtor).getAccountNumber();
+        Amount amount = Amount.inSEK(1);
+        LocalDate executionDate = LocalDate.now();
+        Reference reference = new Reference(null, "Testing PIS");
 
-            Creditor creditor = mock(Creditor.class);
-            doReturn(Type.BBAN).when(creditor).getAccountIdentifierType();
-            doReturn(manager.get(Arg.CREDITOR_ACCOUNT)).when(creditor).getAccountNumber();
-
-            Amount amount = Amount.inSEK(5);
-            LocalDate executionDate = LocalDate.now();
-            String currency = "SEK";
-
-            Reference reference = mock(Reference.class);
-            doReturn("Testing PIS").when(reference).getValue();
-
-            listOfMockedPayments.add(
-                    new Payment.Builder()
-                            .withCreditor(creditor)
-                            .withDebtor(debtor)
-                            .withAmount(amount)
-                            .withExecutionDate(executionDate)
-                            .withCurrency(currency)
-                            .withReference(reference)
-                            .build());
-        }
-
-        return listOfMockedPayments;
-    }
-
-    private enum Arg {
-        USERNAME,
-        CREDITOR_ACCOUNT,
-        DEBTOR_ACCOUNT,
+        return new Payment.Builder()
+                .withCreditor(creditor)
+                .withDebtor(debtor)
+                .withAmount(amount)
+                .withExecutionDate(executionDate)
+                .withCurrency(amount.getCurrency())
+                .withReference(reference)
+                .build();
     }
 }
