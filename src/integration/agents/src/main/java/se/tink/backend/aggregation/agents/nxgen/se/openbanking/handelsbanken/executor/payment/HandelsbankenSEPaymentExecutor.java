@@ -149,13 +149,13 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
                 paymentRequest.getPayment().getCreditor().getAccountIdentifierType();
         return PAYMENT_TYPE_MAPPER
                 .translate(creditorType)
-                .orElseThrow(
-                        () -> {
-                            final String errorMessage =
-                                    "Unsupported creditor account type " + creditorType;
-                            return new CreditorValidationException(
-                                    errorMessage, "", new IllegalArgumentException(errorMessage));
-                        });
+                .orElseThrow(() -> createCreditorTypeValidationException(creditorType));
+    }
+
+    private CreditorValidationException createCreditorTypeValidationException(Type creditorType) {
+        final String errorMessage = "Unsupported creditor account type " + creditorType;
+        return new CreditorValidationException(
+                errorMessage, "", new IllegalArgumentException(errorMessage));
     }
 
     @Override
