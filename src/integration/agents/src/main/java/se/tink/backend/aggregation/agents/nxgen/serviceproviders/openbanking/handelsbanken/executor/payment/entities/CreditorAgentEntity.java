@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -10,14 +12,15 @@ public class CreditorAgentEntity {
     private IdentificationEntity identification;
     private String bic;
 
-    public CreditorAgentEntity(IdentificationEntity identification) {
+    @JsonCreator
+    public CreditorAgentEntity(
+            @JsonProperty IdentificationEntity identification, @JsonProperty String bic) {
         this.identification = identification;
+        this.bic = bic;
     }
 
-    public CreditorAgentEntity() {}
-
     public static CreditorAgentEntity ofIdentification(String code, String type) {
-        return new CreditorAgentEntity(new IdentificationEntity(code, type));
+        return new CreditorAgentEntity(new IdentificationEntity(code, type), null);
     }
 
     public String getBic() {

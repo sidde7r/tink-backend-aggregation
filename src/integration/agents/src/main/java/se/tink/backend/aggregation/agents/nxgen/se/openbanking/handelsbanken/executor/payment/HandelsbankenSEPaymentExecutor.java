@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.AgentIdentificationType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CreditorAgentIdentificationType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.PaymentAccountType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
@@ -104,7 +104,8 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
             final SwedishIdentifier identifier = new SwedishIdentifier(creditor.getAccountNumber());
             return Optional.of(
                     CreditorAgentEntity.ofIdentification(
-                            identifier.getClearingNumber(), AgentIdentificationType.SESBA));
+                            identifier.getClearingNumber(),
+                            CreditorAgentIdentificationType.SE_CLEARING_NUMBER));
         }
 
         return Optional.empty();

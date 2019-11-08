@@ -20,9 +20,8 @@ public class HandelsbankenSEConstants {
         public static final String BEARER = "Bearer";
     }
 
-    public static class AgentIdentificationType {
-        // Identification type for swedish clearing number
-        public static final String SESBA = "SESBA";
+    public static class CreditorAgentIdentificationType {
+        public static final String SE_CLEARING_NUMBER = "SESBA";
     }
 
     public static class PaymentAccountType {
