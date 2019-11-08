@@ -28,7 +28,7 @@ public class OrderBankIdResponse {
     public boolean isError() {
         return Objects.nonNull(error)
                 || Objects.isNull(collectUrl)
-                || Strings.isNullOrEmpty(collectUrl.toString())
+                || Strings.isNullOrEmpty(collectUrl)
                 || Strings.isNullOrEmpty(orderRef);
     }
 
@@ -46,6 +46,10 @@ public class OrderBankIdResponse {
 
         public boolean isBankIdAlreadyInProgress() {
             return ErrorMessages.ALREADY_IN_PROGRESS.equalsIgnoreCase(code);
+        }
+
+        public boolean isInvalidSsn() {
+            return ErrorMessages.INVALID_SSN.equalsIgnoreCase(message);
         }
     }
 }

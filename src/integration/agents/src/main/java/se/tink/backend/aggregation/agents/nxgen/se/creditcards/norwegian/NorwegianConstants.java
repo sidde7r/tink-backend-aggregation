@@ -11,6 +11,7 @@ public final class NorwegianConstants {
     public static final String IDENTIFIER = "NORWEGIAN_CARD";
     public static final String SAVINGS_IDENTIFIER = "NORWEGIAN_SAVINGS_ACCOUNT";
     public static final String SAVINGS_ALIAS = "Norwegian Sparkonto";
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     private NorwegianConstants() {
         throw new AssertionError();
@@ -19,6 +20,8 @@ public final class NorwegianConstants {
     public static class ErrorMessages {
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String ALREADY_IN_PROGRESS = "ALREADY_IN_PROGRESS";
+        public static final String INVALID_SSN = "The provided ID number was invalid";
+        public static final String NOT_CUSTOMER = "hittade inte kunden";
     }
 
     public static class Urls {

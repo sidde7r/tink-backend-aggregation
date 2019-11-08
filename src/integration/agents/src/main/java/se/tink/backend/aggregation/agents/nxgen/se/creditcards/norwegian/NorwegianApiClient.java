@@ -174,7 +174,7 @@ public final class NorwegianApiClient {
 
     public List<TransactionEntity> fetchTransactions(
             String accountNumber, Date fromDate, Date toDate) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat(NorwegianConstants.DATE_FORMAT);
 
         return fetchTransactions(
                 accountNumber,

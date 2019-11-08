@@ -6,7 +6,9 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.NorwegianApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.authenticator.rpc.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.authenticator.rpc.CollectBankIdResponse;
@@ -26,7 +28,7 @@ public class NorwegianAuthenticator implements BankIdAuthenticator<OrderBankIdRe
     }
 
     @Override
-    public OrderBankIdResponse init(String ssn) throws BankIdException {
+    public OrderBankIdResponse init(String ssn) throws BankIdException, LoginException {
         String returnUrl = apiClient.fetchLoginReturnUrl();
 
         String initStartPage = apiClient.fetchBankIdInitPage(returnUrl);
@@ -39,6 +41,10 @@ public class NorwegianAuthenticator implements BankIdAuthenticator<OrderBankIdRe
 
             if (error.isBankIdAlreadyInProgress()) {
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            }
+
+            if (error.isInvalidSsn()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
             throw new IllegalStateException(
