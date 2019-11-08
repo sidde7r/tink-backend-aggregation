@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa;
 
 import java.time.format.DateTimeFormatter;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -16,6 +18,11 @@ public class CaixaConstants {
                     .put(TransactionalAccountType.SAVINGS, "TermSavingsAccount")
                     .build();
 
+    public static final GenericTypeMapper<InstrumentType, String> INSTRUMENT_TYPE_MAPPER =
+            GenericTypeMapper.<InstrumentType, String>genericBuilder()
+                    .put(InstrumentType.OTHER, "O10", "Bonds")
+                    .build();
+
     public static class Urls {
         public static final String BASE = "https://app.cgd.pt/pceApi/rest/v1";
 
@@ -23,12 +30,19 @@ public class CaixaConstants {
         public static final URL FETCH_ACCOUNTS = new URL(BASE.concat(Endpoints.FETCH_ACCOUNTS));
         public static final URL FETCH_ACCOUNT_DETAILS =
                 new URL(BASE.concat(Endpoints.FETCH_ACCOUNT_DETAILS));
+        public static final URL FETCH_INVESTMENT_DETAILS =
+                new URL(BASE.concat(Endpoints.FETCH_INVESTMENTS_DETAILS));
+        public static final URL FETCH_MARKET_DETAILS =
+                new URL(BASE.concat(Endpoints.FETCH_MARKET_DETAILS));
     }
 
     public static class Endpoints {
         public static final String AUTH = "/system/security/authentications/basic";
         public static final String FETCH_ACCOUNTS = "/business/accounts";
         public static final String FETCH_ACCOUNT_DETAILS = "/business/accounts/{accountKey}";
+        public static final String FETCH_INVESTMENTS_DETAILS =
+                "/business/investments/portfolio/byassettypes";
+        public static final String FETCH_MARKET_DETAILS = "/business/investments/quotes";
     }
 
     public static class Parameters {
@@ -36,16 +50,21 @@ public class CaixaConstants {
     }
 
     public static class QueryParams {
-        public static String USER = "u";
-        public static String TARGET_OPERATION_TYPE = "targetOperationType";
-        public static String INCLUDE_BALANCES = "includeBalancesInResponse";
-        public static String INCLUDE_TRANSACTIONS = "includeTransactionsInResponse";
-        public static String FROM = "fromBookDate";
-        public static String TO = "toBookDate";
+        public static final String USER = "u";
+        public static final String TARGET_OPERATION_TYPE = "targetOperationType";
+        public static final String INCLUDE_BALANCES = "includeBalancesInResponse";
+        public static final String INCLUDE_TRANSACTIONS = "includeTransactionsInResponse";
+        public static final String FROM = "fromBookDate";
+        public static final String TO = "toBookDate";
+        public static final String ASSET_TYPE_ID = "assetTypeId";
+        public static final String QUOTES_SEARCH_TYPE_ID = "quotesSearchTypeId";
+        public static final String FULL_ACCOUNT_KEY = "fullAccountKey";
     }
 
     public static class QueryValues {
-        public static String BALANCES_AND_TRANSACTIONS_OPERATION = "BALANCES_AND_TRANSACTIONS";
+        public static final String BALANCES_AND_TRANSACTIONS_OPERATION = "BALANCES_AND_TRANSACTIONS";
+        public static final String INVESTMENT_PORTFOLIO_OPERATION = "INVESTMENT_PORTFOLIO";
+        public static final String PORTFOLIO_MARKET_DETAILS_OPERATION = "PORTFOLIO";
     }
 
     public static class HeaderKeys {

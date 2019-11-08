@@ -11,6 +11,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
+        "//third_party:org_slf4j_slf4j_api",
         "@org_apache_commons_commons_collections4//jar",
     ],
 )
