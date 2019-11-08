@@ -18,20 +18,37 @@ These can be started from the tink-infrastructure repo:
 ./setup-minikube.sh --cert-manager
 ```
 
+From the tink-backend-aggregation root do:
+
 Set up aggregation-db:
 ```bash
-kubectl create -f kubernetes/development/aggregationdb.yml
+kubectl create -f ./kubernetes/development/aggregationdb.yml
 ```
 
 Set up cache:
 
 ```bash
-kubectl create -f kubernetes/development/cache.yml
+kubectl create -f ./kubernetes/development/cache.yml
 ```
 
 Set up coordination:
 ```bash
-kubectl create -f kubernetes/development/coordination.yml
+kubectl create -f ./kubernetes/development/coordination.yml
+```
+
+If you intend to run the provider configuration service, setup the providerdb:
+```bash
+kubectl create -f ./kubernetes/development/providerdb.yml
+```
+
+If you run into problems try deleting both the service and the deployment:
+```bash
+kubectl delete deployment.apps/coordination
+kubectl delete deployment.apps/cache
+kubectl delete deployment.apps/aggregationdb
+kubectl delete service -n default coordination
+kubectl delete service -n default cache
+kubectl delete service -n default aggregationdb
 ```
 
 ## Running aggregation locally

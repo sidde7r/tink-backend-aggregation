@@ -1081,7 +1081,7 @@
         },
         {
             "accessType": "OTHER",
-            "className": "banks.norwegian.NorwegianAgent",
+            "className": "nxgen.se.creditcards.norwegian.NorwegianAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Norwegian Bank",
