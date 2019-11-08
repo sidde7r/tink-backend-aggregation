@@ -41,6 +41,14 @@ filegroup(
 )
 
 filegroup(
+    name = "eidas_dev",
+    srcs = glob([
+        "eidas_dev_certificates/**",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
     name = "aggregation_test",
     srcs = glob([
         "aggregation/**",

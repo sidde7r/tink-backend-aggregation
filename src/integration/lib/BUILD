@@ -12,6 +12,7 @@ java_library(
         ["src/main/**/*.java"],
     ),
     data = [
+        "//data:eidas_dev",
         "//data:tesseract_training_set",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
