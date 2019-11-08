@@ -29,7 +29,7 @@ public class TransferData {
         this.amountToTransfer = builder.amountToTransfer;
         this.counterPartAccount = builder.counterPartAccount;
         this.currency = builder.currency;
-        this.statement = builder.statement;
+        this.counterPartStatement = builder.counterPartStatement;
         this.transferDate = builder.transferDate;
     }
 
@@ -41,7 +41,6 @@ public class TransferData {
     public static class Builder {
         private Number amountToTransfer;
         private String counterPartAccount;
-        private String statement;
         private String currency;
         private String counterPartStatement;
 
@@ -61,11 +60,6 @@ public class TransferData {
 
         public Builder withCurrency(String currency) {
             this.currency = currency;
-            return this;
-        }
-
-        public Builder withStatement(String statement) {
-            this.statement = statement;
             return this;
         }
 

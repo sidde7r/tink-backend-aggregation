@@ -1,32 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment;
 
-import com.github.rholder.retry.RetryException;
-import com.github.rholder.retry.Retryer;
-import com.github.rholder.retry.RetryerBuilder;
-import com.github.rholder.retry.StopStrategies;
-import com.github.rholder.retry.WaitStrategies;
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.CreditorEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.DebtorEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.PaymentRedirectInfoEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.SignOptionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessage;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.PaymentValue;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.TransferData;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.enums.SignMethod;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.TypePair;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -37,10 +29,11 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
@@ -50,12 +43,8 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    private static final long SLEEP_TIME = 10L;
-    private static final int RETRY_ATTEMPTS = 60;
-
     private final SbabApiClient apiClient;
-    private final SbabConfiguration clientConfiguration;
-    private final SessionStorage sessionStorage;
+    private final SupplementalRequester supplementalRequester;
 
     private static final GenericTypeMapper<PaymentType, TypePair>
             accountIdentifiersToPaymentTypeMapper =
@@ -63,24 +52,13 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                             .put(
                                     PaymentType.DOMESTIC,
                                     new TypePair(
-                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.SE),
-                                    new TypePair(
-                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.IBAN),
-                                    new TypePair(
-                                            AccountIdentifier.Type.SE,
-                                            AccountIdentifier.Type.SE_BG),
-                                    new TypePair(
-                                            AccountIdentifier.Type.SE,
-                                            AccountIdentifier.Type.SE_PG))
+                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.SE))
                             .build();
 
     public SbabPaymentExecutor(
-            SbabApiClient apiClient,
-            SbabConfiguration clientConfiguration,
-            SessionStorage sessionStorage) {
+            SbabApiClient apiClient, SupplementalRequester supplementalRequester) {
         this.apiClient = apiClient;
-        this.clientConfiguration = clientConfiguration;
-        this.sessionStorage = sessionStorage;
+        this.supplementalRequester = supplementalRequester;
     }
 
     private PaymentType getPaymentType(PaymentRequest paymentRequest) {
@@ -97,12 +75,9 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
 
         Payment payment = paymentRequest.getPayment();
-
-        CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest);
-        DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest);
 
         TransferData transferData =
                 new TransferData.Builder()
@@ -110,38 +85,44 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .withCounterPartAccount(payment.getCreditor().getAccountNumber())
                         .withCurrency(payment.getCurrency())
                         .withTransferDate(getExecutionDateOrCurrentDate(payment))
+                        .withCounterPartStatement(
+                                getCounterPartStatementIfValidOrThrow(
+                                        payment.getReference().getValue()))
                         .build();
-
-        String state = OAuthUtils.generateNonce();
-        URL redirectUrl =
-                new URL(clientConfiguration.getRedirectUrl())
-                        .queryParam(SbabConstants.QueryKeys.STATE, state);
 
         CreatePaymentRequest createPaymentRequest =
-                new CreatePaymentRequest.Builder()
-                        .withTransferData(transferData)
-                        .withSignOptionsData(
-                                new SignOptionsRequest(
-                                        SignMethod.MOBILE.toString(), redirectUrl.toString()))
-                        .withCreditor(creditorEntity)
-                        .withDebtor(debtorEntity)
-                        .build();
+                new CreatePaymentRequest.Builder().withTransferData(transferData).build();
 
         CreatePaymentResponse createPaymentResponse =
                 apiClient.createPayment(
                         createPaymentRequest, payment.getDebtor().getAccountNumber());
 
-        PaymentResponse paymentResponse =
-                createPaymentResponse.toTinkPaymentResponse(
-                        getPaymentType(paymentRequest),
-                        payment.getDebtor().getAccountNumber(),
-                        payment.getCreditor().getAccountNumber());
+        return createPaymentResponse.toTinkPaymentResponse(
+                getPaymentType(paymentRequest),
+                payment.getDebtor().getAccountNumber(),
+                payment.getCreditor().getAccountNumber());
+    }
 
-        sessionStorage.put(
-                paymentResponse.getPayment().getUniqueId(),
-                new PaymentRedirectInfoEntity(state, createPaymentResponse.getSignOptions()));
+    private String getCounterPartStatementIfValidOrThrow(String counterPartStatement)
+            throws PaymentException {
 
-        return paymentResponse;
+        if (Strings.isNullOrEmpty(counterPartStatement)) {
+            return counterPartStatement;
+        }
+
+        if (counterPartStatement.length() > PaymentValue.MAX_DEST_MSG_LEN) {
+            throw new ReferenceValidationException(
+                    String.format(ErrorMessage.PAYMENT_REF_TOO_LONG, PaymentValue.MAX_DEST_MSG_LEN),
+                    "",
+                    new IllegalArgumentException());
+        }
+
+        if (!PaymentValue.ALLOWED_CHARS_PATTERN.matcher(counterPartStatement).matches()) {
+            throw new ReferenceValidationException(
+                    ErrorMessage.PAYMENT_REF_ILLEGAL_CHARS, "", new IllegalArgumentException());
+        }
+
+        return counterPartStatement;
     }
 
     private String getExecutionDateOrCurrentDate(Payment payment) {
@@ -163,33 +144,37 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         payment.getCreditor().getAccountNumber());
     }
 
+    /**
+     * SBAB doesn't support multiple steps. After the payment has been initiated successfully there
+     * are two scenarios: 1. It's completed without user sign (payment between user's own accounts)
+     * 2. Requires user sign with mobile bankID, which is handled by the bankIdSigner.
+     */
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentAuthorizationException, AuthenticationException {
 
-        PaymentRequest payment = new PaymentRequest(paymentMultiStepRequest.getPayment());
+        PaymentStatus paymentStatus = fetch(paymentMultiStepRequest).getPayment().getStatus();
 
-        Retryer<PaymentResponse> paymentResponseRetryer =
-                RetryerBuilder.<PaymentResponse>newBuilder()
-                        .retryIfResult(
-                                paymentResponse ->
-                                        paymentResponse == null
-                                                || !paymentResponse.isStatus(PaymentStatus.SIGNED))
-                        .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
-                        .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
-                        .build();
-
-        try {
-            PaymentResponse paymentResponse = paymentResponseRetryer.call(() -> fetch(payment));
-
-            return new PaymentMultiStepResponse(
-                    paymentResponse.getPayment(),
-                    AuthenticationStepConstants.STEP_FINALIZE,
-                    new ArrayList<>());
-        } catch (RetryException e) {
-            throw new IllegalStateException("Max amount of retries exceeded!");
-        } catch (ExecutionException e) {
-            throw new IllegalStateException("Fetch api error!");
+        // Payment between user's own account can be "signed" on the first fetch as it doesn't
+        // require a user sign. Then we want to return immediately.
+        if (paymentStatus.equals(PaymentStatus.SIGNED)) {
+            return getFinalisedPaymentResponse(paymentMultiStepRequest, paymentStatus);
         }
+
+        getSigner().sign(paymentMultiStepRequest);
+
+        paymentStatus = fetch(paymentMultiStepRequest).getPayment().getStatus();
+
+        return getFinalisedPaymentResponse(paymentMultiStepRequest, paymentStatus);
+    }
+
+    private PaymentMultiStepResponse getFinalisedPaymentResponse(
+            PaymentMultiStepRequest paymentMultiStepRequest, PaymentStatus paymentStatus) {
+        Payment payment = paymentMultiStepRequest.getPayment();
+        payment.setStatus(paymentStatus);
+
+        return new PaymentMultiStepResponse(
+                payment, SigningStepConstants.STEP_FINALIZE, new ArrayList<>());
     }
 
     @Override
@@ -214,5 +199,9 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .orElseGet(Stream::empty)
                         .map(this::fetch)
                         .collect(Collectors.toList()));
+    }
+
+    private Signer getSigner() {
+        return new BankIdSigningController(supplementalRequester, new SbabBankIdSigner(this));
     }
 }

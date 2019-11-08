@@ -39,8 +39,4 @@ public class GetPaymentResponse {
 
         return new PaymentResponse(tinkPayment);
     }
-
-    public String getSigningUrl() {
-        return signOptions.getBankIdSignRedirectUrl();
-    }
 }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
 
+import java.util.regex.Pattern;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SbabConstants {
@@ -14,40 +15,26 @@ public final class SbabConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String UNKNOWN_ACCOUNT_TYPE = "Unknown account type.";
-        public static final String MISSING_PAYMENT_REDIRECT_INFO =
-                "Missing payment redirect information";
     }
 
     public static class Urls {
-        public static final URL ACCOUNTS = new URL(Endpoints.BASE_URL + Endpoints.ACCOUNTS);
-        public static final URL AUTHORIZATION =
-                new URL(Endpoints.BASE_URL + Endpoints.AUTHORIZATION);
-        public static final URL AUTHENTICATION =
-                new URL(Endpoints.BASE_URL + Endpoints.AUTHENTICATION);
-        public static final URL TRANSACTIONS = new URL(Endpoints.BASE_URL + Endpoints.TRANSFERS);
-        public static final URL CUSTOMERS = new URL(Endpoints.BASE_URL + Endpoints.CUSTOMERS);
-        public static final URL TOKEN = new URL(Endpoints.BASE_URL + Endpoints.TOKEN);
-        public static final URL INITIATE_PAYMENT =
-                new URL(Endpoints.BASE_URL + Endpoints.INITIATE_PAYMENT);
-        public static final URL GET_PAYMENT = new URL(Endpoints.BASE_URL + Endpoints.GET_PAYMENT);
-        public static final URL SIGN_PAYMENT = new URL(Endpoints.BASE_URL + Endpoints.SIGN_PAYMENT);
-    }
-
-    public static class Endpoints {
-        public static final String INITIATE_PAYMENT =
-                "/savings/2.0/accounts/{accountNumber}/transfers";
-        public static final String GET_PAYMENT =
-                "/savings/2.0/accounts/{accountNumber}/transfers/status/{referenceId}";
-        public static final String SIGN_PAYMENT =
-                "/savings/2.0/accounts/transfers/sign/{referenceId}";
         public static final String BASE_URL = "https://psd.sbab.se/psd2";
-        public static final String AUTHORIZATION = "/auth/1.0/authorize";
-        public static final String AUTHENTICATION = "/auth/1.0/authenticate";
-        public static final String TRANSFERS = "/savings/2.0/accounts/{accountNumber}/transfers";
-        public static final String CUSTOMERS = "/customer/1.0/customers";
-        public static final String ACCOUNTS = "/savings/2.0/accounts";
-        public static final String TOKEN = "/auth/1.0/token";
+
+        public static final URL AUTHORIZATION = new URL(BASE_URL + "/auth/1.0/authorize");
+        public static final URL AUTHENTICATION = new URL(BASE_URL + "/auth/1.0/authenticate");
+        public static final URL TOKEN = new URL(BASE_URL + "/auth/1.0/token");
+
+        public static final URL CUSTOMERS = new URL(BASE_URL + "/customer/1.0/customers");
+        public static final URL ACCOUNTS = new URL(BASE_URL + "/savings/2.0/accounts");
+        public static final URL TRANSACTIONS =
+                new URL(BASE_URL + "/savings/2.0/accounts/{accountNumber}/transfers");
+
+        public static final URL INITIATE_PAYMENT =
+                new URL(BASE_URL + "/savings/2.0/accounts/{accountNumber}/transfers");
+        public static final URL GET_PAYMENT =
+                new URL(
+                        BASE_URL
+                                + "/savings/2.0/accounts/{accountNumber}/transfers/status/{referenceId}");
     }
 
     public static class StorageKeys {
@@ -61,7 +48,6 @@ public final class SbabConstants {
     public static class QueryKeys {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String GRANT_TYPE = "grant_type";
-        public static final String REDIRECT_CODE = "pending_code";
         public static final String START_DATE = "startDate";
         public static final String END_DATE = "endDate";
         public static final String USER_ID = "user_id";
@@ -77,13 +63,11 @@ public final class SbabConstants {
         public static final String SCOPE = "AIS,PIS";
         public static final String PENDING_AUTHORIZATION_CODE = "pending_authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String REDIRECT_CODE = "code";
     }
 
     public static class HeaderKeys {
         public static final String AUTHORIZATION = "Authorization";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
-        public static final String CLIENT_CERTIFICATE = "X-PSD2-CLIENT-TEST-CERT";
     }
 
     public static class Format {
@@ -113,8 +97,36 @@ public final class SbabConstants {
         public static final String PSU_IP_ADDRESS = "192.160.0.1";
     }
 
+    public static class TransactionFetching {
+        // 4 is default in the TransactionDatePaginationController
+        public static final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
+        public static final int AMOUNT_TO_FETCH = 6;
+    }
+
     public static class Errors {
         public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
         public static final String KYC_QUESTIONS_NOT_COMPLETED = "kyc_questions_not_completed";
+    }
+
+    public static class ErrorMessage {
+        public static final String PAYMENT_REF_TOO_LONG =
+                "Supplied payment reference is too long, max is %s characters.";
+        public static final String PAYMENT_REF_ILLEGAL_CHARS =
+                "Supplied destination message contains illegal characters.";
+        // Keeping the error message vague (and unfortunately unhelpful) since we're currently
+        // waiting for more details from SBAB support.
+        public static final String INVALID_DATE =
+                "Supplied date is not valid, ensure it's not set to a non business day and try again.";
+    }
+
+    public static class PaymentValue {
+        // From SBAB documentation
+        public static final Pattern ALLOWED_CHARS_PATTERN =
+                Pattern.compile("^[a-zA-Z0-9 åäöÅÄÖ!\\-+%\"/?,.§]+$");
+        public static final int MAX_DEST_MSG_LEN = 12;
+
+        // Invalid payment date
+        public static final String TRANSACTION_DATE = "transactionDate";
+        public static final String UNKNOWN = "UNKNOWN";
     }
 }
