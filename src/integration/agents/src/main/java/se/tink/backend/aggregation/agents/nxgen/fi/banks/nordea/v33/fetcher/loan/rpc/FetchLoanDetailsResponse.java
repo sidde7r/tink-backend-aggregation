@@ -48,7 +48,7 @@ public class FetchLoanDetailsResponse {
     @JsonProperty("repayment_status")
     private String repaymentStatus;
 
-    @JsonProperty private String nickname;
+    @JsonProperty private String nickname = "Nordea loan";
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("first_draw_down_date")
