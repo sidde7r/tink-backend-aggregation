@@ -252,6 +252,8 @@ public class NordeaSEConstants {
                 "Not allowed to update e-invoice destination";
         public static final String DUPLICATE_PAYMENT =
                 "This payment seems to be duplicate. Please check your outgoing payments in the banks app.";
+        public static final String BANKSIDE_ERROR_WHEN_SEARCHING_OUTBOX =
+                "Error from bank when trying to fetch details about payment outbox";
     }
 
     public static class TransactionalAccounts {
@@ -290,6 +292,7 @@ public class NordeaSEConstants {
         public static final String UNREGISTERED_RECIPIENT =
                 "Recipient accounts missing from accounts ledger";
         public static final String NOT_ENOUGH_FUNDS = "Not enough funds";
+        public static final String EXTERNAL_SERVICE_CALL_FAILED = "External service call failed";
     }
 
     public static class LogTags {

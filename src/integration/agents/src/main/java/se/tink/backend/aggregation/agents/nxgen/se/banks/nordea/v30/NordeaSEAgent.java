@@ -71,7 +71,7 @@ public class NordeaSEAgent extends NextGenerationAgent
     public NordeaSEAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new NordeaSEApiClient(client, sessionStorage);
+        apiClient = new NordeaSEApiClient(client, sessionStorage, catalog);
 
         investmentRefreshController =
                 new InvestmentRefreshController(

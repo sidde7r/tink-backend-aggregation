@@ -74,4 +74,10 @@ public class ErrorResponse {
     public boolean isNotEnoughFunds() {
         return NordeaSEConstants.ErrorCodes.NOT_ENOUGH_FUNDS.equalsIgnoreCase(errorDescription);
     }
+
+    @JsonIgnore
+    public boolean isExternalServiceCallFailed() {
+        return NordeaSEConstants.ErrorCodes.EXTERNAL_SERVICE_CALL_FAILED.equalsIgnoreCase(
+                errorDescription);
+    }
 }
