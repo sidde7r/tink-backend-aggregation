@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 import io.vavr.control.Option;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.IdTags;
@@ -47,14 +49,19 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class NordeaSEApiClient {
     private final TinkHttpClient httpClient;
     private final SessionStorage sessionStorage;
+    private final Catalog catalog;
 
-    public NordeaSEApiClient(TinkHttpClient httpClient, SessionStorage sessionStorage) {
+    public NordeaSEApiClient(
+            TinkHttpClient httpClient, SessionStorage sessionStorage, Catalog catalog) {
         this.httpClient = httpClient;
         this.sessionStorage = sessionStorage;
+        this.catalog = catalog;
     }
 
     public BankIdResponse formInitBankIdLogin(String ssn) {
@@ -186,8 +193,22 @@ public class NordeaSEApiClient {
                                 NordeaSEConstants.Urls.FETCH_PAYMENT_DETAILS.parameter(
                                         NordeaSEConstants.IdTags.PAYMENT_ID, paymentId))
                         .accept(MediaType.APPLICATION_JSON_TYPE);
+        try {
+            return requestRefreshableGet(request, PaymentEntity.class);
+        } catch (HttpResponseException hre) {
+            ErrorResponse error = ErrorResponse.of(hre);
 
-        return requestRefreshableGet(request, PaymentEntity.class);
+            if (error.isExternalServiceCallFailed()) {
+                throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                        .setMessage(
+                                NordeaSEConstants.LogMessages.BANKSIDE_ERROR_WHEN_SEARCHING_OUTBOX)
+                        .setEndUserMessage(
+                                catalog.getString(EndUserMessage.TRANSFER_EXECUTE_FAILED))
+                        .build();
+            }
+
+            throw hre;
+        }
     }
 
     public FetchBeneficiariesResponse fetchBeneficiaries() {
