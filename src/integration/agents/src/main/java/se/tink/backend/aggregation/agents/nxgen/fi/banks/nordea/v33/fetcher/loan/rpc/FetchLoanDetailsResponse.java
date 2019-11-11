@@ -79,7 +79,7 @@ public class FetchLoanDetailsResponse {
                 .build();
     }
 
-    public ExactCurrencyAmount getBalance() {
+    private ExactCurrencyAmount getBalance() {
         BigDecimal balance =
                 Optional.ofNullable(credit)
                         .map(CreditEntity::getAvailable)
@@ -87,19 +87,19 @@ public class FetchLoanDetailsResponse {
         return new ExactCurrencyAmount(balance, NordeaFIConstants.CURRENCY);
     }
 
-    public ExactCurrencyAmount getInitialBalance() {
+    private ExactCurrencyAmount getInitialBalance() {
         BigDecimal initialBalance =
                 Optional.ofNullable(credit).map(CreditEntity::getLimit).orElse(amount.getGranted());
         return new ExactCurrencyAmount(initialBalance, NordeaFIConstants.CURRENCY);
     }
 
-    public ExactCurrencyAmount getPaid() {
+    private ExactCurrencyAmount getPaid() {
         BigDecimal paid =
                 Optional.ofNullable(credit).map(CreditEntity::getSpent).orElse(amount.getPaid());
         return new ExactCurrencyAmount(paid, NordeaFIConstants.CURRENCY);
     }
 
-    public List<String> getApplicants() {
+    private List<String> getApplicants() {
         return owners.stream().map(Object::toString).collect(Collectors.toList());
     }
 
