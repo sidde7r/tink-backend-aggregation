@@ -3,10 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loa
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Preconditions;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan.entities.InterestEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan.entities.OwnersEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -28,10 +24,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
-
-    @JsonIgnore
-    private static final AggregationLogger LOG =
-            new AggregationLogger(FetchLoanDetailsResponse.class);
 
     @JsonProperty("loan_id")
     private String loanId;
@@ -114,11 +106,6 @@ public class FetchLoanDetailsResponse {
 
     public List<String> getApplicants() {
         return owners.stream().map(Object::toString).collect(Collectors.toList());
-    }
-
-    private LocalDateTime convertDateToLocalDate(Date dateToConvert) {
-        Preconditions.checkNotNull(dateToConvert);
-        return LocalDateTime.ofInstant(dateToConvert.toInstant(), ZoneId.systemDefault());
     }
 
     @JsonIgnore
