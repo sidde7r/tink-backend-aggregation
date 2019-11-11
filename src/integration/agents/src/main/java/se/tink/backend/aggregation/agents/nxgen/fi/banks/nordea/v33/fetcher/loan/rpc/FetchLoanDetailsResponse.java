@@ -24,6 +24,13 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
+    @JsonProperty private String currency;
+    @JsonProperty private String group;
+    @JsonProperty private InterestEntity interest;
+    @JsonProperty private AmountEntity amount;
+    @JsonProperty private CreditEntity credit;
+    @JsonProperty private List<OwnersEntity> owners;
+    @JsonProperty private String nickname = "Nordea loan";
 
     @JsonProperty("loan_id")
     private String loanId;
@@ -34,29 +41,17 @@ public class FetchLoanDetailsResponse {
     @JsonProperty("product_code")
     private String productCode;
 
-    @JsonProperty private String currency;
-    @JsonProperty private String group;
-
     @JsonProperty("repayment_status")
     private String repaymentStatus;
 
-    @JsonProperty private String nickname = "Nordea loan";
+    @JsonProperty("following_payment")
+    private FollowingPaymentEntity followingPayment;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("first_draw_down_date")
     private Date firstDrawDownDate;
 
-    @JsonProperty private InterestEntity interest;
-    @JsonProperty private AmountEntity amount;
-    @JsonProperty private CreditEntity credit;
-
-    @JsonProperty("following_payment")
-    private FollowingPaymentEntity followingPayment;
-
-    @JsonProperty private List<OwnersEntity> owners;
-
     public LoanAccount toTinkLoanAccount() {
-
         return LoanAccount.nxBuilder()
                 .withLoanDetails(getLoanModule())
                 .withId(
