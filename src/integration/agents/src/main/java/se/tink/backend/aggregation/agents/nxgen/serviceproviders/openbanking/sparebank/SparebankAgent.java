@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -108,7 +109,10 @@ public class SparebankAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                transactionFetcher, TransactionsResponse.CONSECUTIVE_EMPTY_PAGES)));
+                                transactionFetcher,
+                                TransactionsResponse.CONSECUTIVE_EMPTY_PAGES,
+                                TransactionsResponse.NO_OF_DAYS,
+                                ChronoUnit.DAYS)));
     }
 
     @Override
