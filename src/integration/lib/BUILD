@@ -71,7 +71,6 @@ java_library(
         "//src/libraries/metrics:timers",
         "//src/libraries/net",
         "//src/libraries/pair",
-        "//src/libraries/queue_sqs",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",
