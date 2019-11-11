@@ -105,6 +105,26 @@ public class Field {
         return checkbox;
     }
 
+    public static Field of(se.tink.backend.aggregation.rpc.entities.Field field) {
+        return builder()
+                .additionalInfo(field.getAdditionalInfo())
+                .checkbox(field.isCheckbox())
+                .description(field.getDescription())
+                .helpText(field.getHelpText())
+                .hint(field.getHint())
+                .immutable(field.isImmutable())
+                .masked(field.isMasked())
+                .maxLength(field.getMaxLength())
+                .minLength(field.getMinLength())
+                .name(field.getName())
+                .numeric(field.isNumeric())
+                .optional(field.isOptional())
+                .pattern(field.getPattern())
+                .patternError(field.getPatternError())
+                .value(field.getValue())
+                .build();
+    }
+
     public static class Builder {
         private String description;
         private String helpText;

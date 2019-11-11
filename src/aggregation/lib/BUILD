@@ -89,6 +89,7 @@ java_library(
     deps = [
         "//src/aggregation/aggregationcontroller_api",
         "//src/aggregation/api",
+        "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/rpc/entities",
         "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client:module",
@@ -123,6 +124,7 @@ java_library(
         "//src/libraries/i18n",
         "//src/libraries/jersey_guice",
         "//src/libraries/jersey_log",
+        "//src/libraries/jersey_utils",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",
         "//src/libraries/metrics:core",

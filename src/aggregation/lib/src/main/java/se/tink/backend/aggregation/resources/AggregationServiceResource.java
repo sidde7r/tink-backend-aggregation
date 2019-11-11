@@ -13,9 +13,11 @@ import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationTemplateBuilder;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationValidator;
 import se.tink.backend.aggregation.api.AggregationService;
+import se.tink.backend.aggregation.api.ProviderConfigurationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
@@ -56,6 +58,7 @@ public class AggregationServiceResource implements AggregationService {
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private SupplementalInformationController supplementalInformationController;
     private ApplicationDrainMode applicationDrainMode;
+    private ProviderConfigurationService providerConfigurationService;
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
 
     @Inject
@@ -64,12 +67,14 @@ public class AggregationServiceResource implements AggregationService {
             QueueProducer producer,
             AgentWorkerOperationFactory agentWorkerOperationFactory,
             SupplementalInformationController supplementalInformationController,
-            ApplicationDrainMode applicationDrainMode) {
+            ApplicationDrainMode applicationDrainMode,
+            ProviderConfigurationService providerConfigurationService) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;
         this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
+        this.providerConfigurationService = providerConfigurationService;
     }
 
     @Override
@@ -253,10 +258,11 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public String getSecretsTemplate(SecretsTemplateRequest request) {
+        Provider provider =
+                Provider.of(
+                        providerConfigurationService.getProviderByName(request.getProviderName()));
         return new ClientConfigurationTemplateBuilder(
-                        request.getProvider(),
-                        request.getIncludeDescriptions(),
-                        request.getIncludeExamples())
+                        provider, request.getIncludeDescriptions(), request.getIncludeExamples())
                 .buildTemplate();
     }
 

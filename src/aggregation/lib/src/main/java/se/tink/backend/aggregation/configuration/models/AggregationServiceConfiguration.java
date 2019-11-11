@@ -40,6 +40,10 @@ public class AggregationServiceConfiguration extends Configuration {
 
     @JsonProperty private EndpointsConfiguration endpoints = new EndpointsConfiguration();
 
+    @JsonProperty
+    private ProviderConfigurationServiceConfiguration providerConfigurationServiceConfiguration =
+            new ProviderConfigurationServiceConfiguration();
+
     public AgentsServiceConfiguration getAgentsServiceConfiguration() {
         return agentsServiceConfiguration;
     }
@@ -94,5 +98,10 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public EndpointsConfiguration getEndpoints() {
         return endpoints;
+    }
+
+    public ProviderConfigurationServiceConfiguration
+            getProviderConfigurationServiceConfiguration() {
+        return providerConfigurationServiceConfiguration;
     }
 }

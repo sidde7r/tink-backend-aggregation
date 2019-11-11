@@ -1,5 +1,6 @@
 {{- $aggregationdb := .Values.aggregationdb | default dict }}
-{{ $eventProducerServiceConfiguration := .Values.eventProducerServiceConfiguration | default dict }}
+  {{- $eventProducerServiceConfiguration := .Values.eventProducerServiceConfiguration | default dict }}
+  {{- $providerConfigurationServiceConfiguration := .Values.providerConfigurationServiceConfiguration | default dict }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -92,6 +93,15 @@ data:
       clients:{{ .Values.clients | toYaml | trimSuffix "\n" | nindent 8 }}
     {{- end }}
 
+    {{- if $providerConfigurationServiceConfiguration }}
+    providerConfigurationServiceConfiguration:
+      host: provider-configuration-api.provider-configuration.svc.cluster.local
+      port: 443
+      caPath: /etc/client-certificate/ca.crt
+      tlsCrtPath: /etc/client-certificate/tls.crt
+      tlsKeyPath: /etc/client-certificate/tls.key
+      enabled: {{ $providerConfigurationServiceConfiguration.enabled }}
+    {{- end }}
 
     {{- if eq "local" .Values.Cluster }}
     developmentMode: true
