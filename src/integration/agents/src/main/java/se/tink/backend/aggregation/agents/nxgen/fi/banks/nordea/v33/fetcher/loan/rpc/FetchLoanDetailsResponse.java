@@ -51,6 +51,7 @@ public class FetchLoanDetailsResponse {
     @JsonProperty("first_draw_down_date")
     private Date firstDrawDownDate;
 
+    @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
         return LoanAccount.nxBuilder()
                 .withLoanDetails(getLoanModule())
@@ -79,6 +80,7 @@ public class FetchLoanDetailsResponse {
                 .build();
     }
 
+    @JsonIgnore
     private ExactCurrencyAmount getBalance() {
         final BigDecimal balance =
                 Optional.ofNullable(credit)
@@ -87,18 +89,21 @@ public class FetchLoanDetailsResponse {
         return new ExactCurrencyAmount(balance, NordeaFIConstants.CURRENCY);
     }
 
+    @JsonIgnore
     private ExactCurrencyAmount getInitialBalance() {
         final BigDecimal initialBalance =
                 Optional.ofNullable(credit).map(CreditEntity::getLimit).orElse(amount.getGranted());
         return new ExactCurrencyAmount(initialBalance, NordeaFIConstants.CURRENCY);
     }
 
+    @JsonIgnore
     private ExactCurrencyAmount getPaid() {
         final BigDecimal paid =
                 Optional.ofNullable(credit).map(CreditEntity::getSpent).orElse(amount.getPaid());
         return new ExactCurrencyAmount(paid, NordeaFIConstants.CURRENCY);
     }
 
+    @JsonIgnore
     private List<String> getApplicants() {
         return owners.stream().map(Object::toString).collect(Collectors.toList());
     }
