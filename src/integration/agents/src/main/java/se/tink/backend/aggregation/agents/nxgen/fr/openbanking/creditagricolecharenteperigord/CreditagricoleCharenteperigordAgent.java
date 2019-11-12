@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CreditagricoleCharenteperigordAgent extends CreditAgricoleBaseAgent {
-    public CreditagricoleCharenteperigordAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public CreditagricoleCharenteperigordAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, BankEnum.CHARENTE_PERIGORD);
     }
 }

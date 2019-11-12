@@ -11,23 +11,17 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @JsonObject
 public class CreditAgricoleBaseConfiguration implements ClientConfiguration {
 
-    @SensitiveSecret
-    private String token;
+    @SensitiveSecret private String token;
 
-    @Secret
-    private String redirectUrl;
+    @Secret private String redirectUrl;
 
-    @Secret
-    private String clientId;
+    @Secret private String clientId;
 
-    @Secret
-    private String certificateId;
+    @Secret private String certificateId;
 
-    @Secret
-    private String clientSigningCertificateSerialNumber;
+    @Secret private String clientSigningCertificateSerialNumber;
 
-    @Secret
-    private String psuIpAddress;
+    @Secret private String psuIpAddress;
 
     public String getToken() {
         Preconditions.checkNotNull(
@@ -52,22 +46,22 @@ public class CreditAgricoleBaseConfiguration implements ClientConfiguration {
 
     public String getCertificateId() {
         Preconditions.checkNotNull(
-            Strings.emptyToNull(certificateId),
-            String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate id"));
+                Strings.emptyToNull(certificateId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate id"));
         return certificateId;
     }
 
     public String getClientSigningCertificateSerialNumber() {
         Preconditions.checkNotNull(
-            Strings.emptyToNull(clientSigningCertificateSerialNumber),
-            String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate serial"));
+                Strings.emptyToNull(clientSigningCertificateSerialNumber),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate serial"));
         return clientSigningCertificateSerialNumber;
     }
 
     public String getPsuIpAddress() {
         Preconditions.checkNotNull(
-            Strings.emptyToNull(psuIpAddress),
-            String.format(ErrorMessages.INVALID_CONFIGURATION, "psuIpAddress"));
+                Strings.emptyToNull(psuIpAddress),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "psuIpAddress"));
         return psuIpAddress;
     }
 }

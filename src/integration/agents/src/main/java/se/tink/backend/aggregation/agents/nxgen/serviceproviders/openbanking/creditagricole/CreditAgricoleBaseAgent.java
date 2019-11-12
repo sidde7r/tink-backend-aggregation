@@ -18,84 +18,91 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CreditAgricoleBaseAgent extends NextGenerationAgent
-    implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-  private final String clientName;
-  private final CreditAgricoleBaseApiClient apiClient;
-  private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-  private CreditAgricoleBaseConfiguration creditAgricoleConfiguration;
+    private final String clientName;
+    private final CreditAgricoleBaseApiClient apiClient;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private CreditAgricoleBaseConfiguration creditAgricoleConfiguration;
 
-  public CreditAgricoleBaseAgent(CredentialsRequest request,
-                                 AgentContext context,
-                                 SignatureKeyPair signatureKeyPair,
-                                 BankEnum bank) {
-    super(request, context, signatureKeyPair, true);
+    public CreditAgricoleBaseAgent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
+            BankEnum bank) {
+        super(request, context, signatureKeyPair, true);
 
-    persistentStorage.put(CreditAgricoleBaseConstants.StorageKeys.BANK_ENUM, bank);
+        persistentStorage.put(CreditAgricoleBaseConstants.StorageKeys.BANK_ENUM, bank);
 
-    this.clientName = request.getProvider().getPayload();
-    this.apiClient = new CreditAgricoleBaseApiClient(client, persistentStorage);
-    this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-  }
+        this.clientName = request.getProvider().getPayload();
+        this.apiClient = new CreditAgricoleBaseApiClient(client, persistentStorage);
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
 
-  @Override
-  public void setConfiguration(AgentsServiceConfiguration configuration) {
-    super.setConfiguration(configuration);
-    creditAgricoleConfiguration = CreditAgricoleBaseClientConfigurationService.getInstance()
-        .getConfiguration(configuration, clientName, apiClient, client,
-            context, this.getAgentClass(), getAgentConfigurationController());
-  }
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        creditAgricoleConfiguration =
+                CreditAgricoleBaseClientConfigurationService.getInstance()
+                        .getConfiguration(
+                                configuration,
+                                clientName,
+                                apiClient,
+                                client,
+                                context,
+                                this.getAgentClass(),
+                                getAgentConfigurationController());
+    }
 
-  @Override
-  public FetchAccountsResponse fetchCheckingAccounts() {
-    return transactionalAccountRefreshController.fetchCheckingAccounts();
-  }
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
 
-  @Override
-  public FetchTransactionsResponse fetchCheckingTransactions() {
-    return transactionalAccountRefreshController.fetchCheckingTransactions();
-  }
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
 
-  @Override
-  public FetchAccountsResponse fetchSavingsAccounts() {
-    return transactionalAccountRefreshController.fetchSavingsAccounts();
-  }
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
 
-  @Override
-  public FetchTransactionsResponse fetchSavingsTransactions() {
-    return transactionalAccountRefreshController.fetchSavingsTransactions();
-  }
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
 
-  @Override
-  protected Authenticator constructAuthenticator() {
-    final OAuth2AuthenticationController controller =
-        new OAuth2AuthenticationController(
-            persistentStorage,
-            supplementalInformationHelper,
-            new CreditAgricoleBaseAuthenticator(
-                apiClient, persistentStorage, creditAgricoleConfiguration),
-            credentials,
-            strongAuthenticationState);
+    @Override
+    protected Authenticator constructAuthenticator() {
+        final OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new CreditAgricoleBaseAuthenticator(
+                                apiClient, persistentStorage, creditAgricoleConfiguration),
+                        credentials,
+                        strongAuthenticationState);
 
-    return new AutoAuthenticationController(
-        request,
-        systemUpdater,
-        new ThirdPartyAppAuthenticationController<>(
-            controller, supplementalInformationHelper),
-        controller);
-  }
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
+    }
 
-  @Override
-  protected SessionHandler constructSessionHandler() {
-    return SessionHandler.alwaysFail();
-  }
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
+    }
 
-  private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-    final CreditAgricoleBaseTransactionalAccountFetcher accountFetcher =
-        new CreditAgricoleBaseTransactionalAccountFetcher(apiClient);
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        final CreditAgricoleBaseTransactionalAccountFetcher accountFetcher =
+                new CreditAgricoleBaseTransactionalAccountFetcher(apiClient);
 
-    return new TransactionalAccountRefreshController(
-        metricRefreshController, updateController, accountFetcher, accountFetcher);
-  }
-
+        return new TransactionalAccountRefreshController(
+                metricRefreshController, updateController, accountFetcher, accountFetcher);
+    }
 }

@@ -8,7 +8,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CreditagricoleAtlantiquevendeeAgent extends CreditAgricoleBaseAgent {
 
-    public CreditagricoleAtlantiquevendeeAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public CreditagricoleAtlantiquevendeeAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, BankEnum.ATLANTIQUE_VENDÉE);
     }
 }

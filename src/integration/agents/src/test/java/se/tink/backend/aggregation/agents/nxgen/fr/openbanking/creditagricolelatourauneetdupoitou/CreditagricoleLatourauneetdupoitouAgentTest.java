@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricolela
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseIntegrationTest;
 
-//@Ignore
+@Ignore
 public class CreditagricoleLatourauneetdupoitouAgentTest extends CreditAgricoleBaseIntegrationTest {
     public CreditagricoleLatourauneetdupoitouAgentTest() {
         super("fr-creditagricolelatourauneetdupoitou-ob");

@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole;
 
 import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.utils.jersey.MessageSignInterceptor;
@@ -12,10 +15,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 @FilterOrder(category = FilterPhases.SECURITY, order = 0)
 public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterceptor {
 
@@ -23,19 +22,19 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
     private static final String COLON_SPACE = ": ";
 
     public static final List<String> SIGNATURE_HEADERS =
-        ImmutableList.of(
-            CreditAgricoleBaseConstants.HeaderKeys.DIGEST,
-            CreditAgricoleBaseConstants.HeaderKeys.AUTHORIZATION,
-            CreditAgricoleBaseConstants.HeaderKeys.X_REQUEST_ID);
+            ImmutableList.of(
+                    CreditAgricoleBaseConstants.HeaderKeys.DIGEST,
+                    CreditAgricoleBaseConstants.HeaderKeys.AUTHORIZATION,
+                    CreditAgricoleBaseConstants.HeaderKeys.X_REQUEST_ID);
 
     private CreditAgricoleBaseConfiguration configuration;
     protected EidasProxyConfiguration eidasConf;
     private EidasIdentity eidasIdentity;
 
     public CreditAgricoleBaseMessageSignInterceptor(
-        CreditAgricoleBaseConfiguration configuration,
-        EidasProxyConfiguration eidasConf,
-        EidasIdentity eidasIdentity) {
+            CreditAgricoleBaseConfiguration configuration,
+            EidasProxyConfiguration eidasConf,
+            EidasIdentity eidasIdentity) {
         this.configuration = configuration;
         this.eidasConf = eidasConf;
         this.eidasIdentity = eidasIdentity;
@@ -43,7 +42,10 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
 
     @Override
     protected void appendAdditionalHeaders(HttpRequest request) {
-    request.getHeaders().add(CreditAgricoleBaseConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString());
+        request.getHeaders()
+                .add(
+                        CreditAgricoleBaseConstants.HeaderKeys.X_REQUEST_ID,
+                        UUID.randomUUID().toString());
     }
 
     @Override
@@ -56,15 +58,15 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
                 headersIncludedInSignature.add(key);
                 if (request.getHeaders().get(key).size() > 1) {
                     throw new IllegalArgumentException(
-                        "Unable to provide more than one value in signature");
+                            "Unable to provide more than one value in signature");
                 }
                 serializedHeaders.add(
-                    serializedHeader(key, request.getHeaders().get(key).get(0).toString()));
+                        serializedHeader(key, request.getHeaders().get(key).get(0).toString()));
             }
         }
 
         String headersIncludedInSignatureString =
-            StringUtils.join(headersIncludedInSignature, StringUtils.SPACE);
+                StringUtils.join(headersIncludedInSignature, StringUtils.SPACE);
         String serializedHeadersString = StringUtils.join(serializedHeaders, NEW_LINE);
         String signatureBase64Sha = signMessage(serializedHeadersString);
         String signature = formSignature(signatureBase64Sha, headersIncludedInSignatureString);
@@ -73,11 +75,11 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
 
     private String formSignature(String signatureBase64Sha, String headers) {
         return String.format(
-            CreditAgricoleBaseConstants.Formats.SIGNATURE_STRING_FORMAT,
-            configuration.getClientSigningCertificateSerialNumber(),
-            CreditAgricoleBaseConstants.SignatureValues.RSA_SHA256,
-            headers,
-            signatureBase64Sha);
+                CreditAgricoleBaseConstants.Formats.SIGNATURE_STRING_FORMAT,
+                configuration.getClientSigningCertificateSerialNumber(),
+                CreditAgricoleBaseConstants.SignatureValues.RSA_SHA256,
+                headers,
+                signatureBase64Sha);
     }
 
     @Override
@@ -86,9 +88,9 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
             String digest = CreditAgricoleBaseSignatureUtils.getDigest(request.getBody());
 
             request.getHeaders()
-                .add(
-                    CreditAgricoleBaseConstants.HeaderKeys.DIGEST,
-                    CreditAgricoleBaseConstants.HeaderValues.DIGEST_PREFIX + digest);
+                    .add(
+                            CreditAgricoleBaseConstants.HeaderKeys.DIGEST,
+                            CreditAgricoleBaseConstants.HeaderValues.DIGEST_PREFIX + digest);
         }
     }
 
@@ -98,12 +100,11 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
 
     private String signMessage(String toSignString) {
         QsealcSigner signer =
-            QsealcSigner.build(
-                eidasConf.toInternalConfig(),
-                QsealcAlg.EIDAS_RSA_SHA256,
-                eidasIdentity,
-                configuration.getCertificateId());
+                QsealcSigner.build(
+                        eidasConf.toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        eidasIdentity,
+                        configuration.getCertificateId());
         return signer.getSignatureBase64(toSignString.getBytes());
     }
-
 }

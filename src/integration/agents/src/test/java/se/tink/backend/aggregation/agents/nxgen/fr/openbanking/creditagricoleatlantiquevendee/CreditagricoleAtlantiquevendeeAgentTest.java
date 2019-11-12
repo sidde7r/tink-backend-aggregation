@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 @Ignore
 public class CreditagricoleAtlantiquevendeeAgentTest extends CreditAgricoleBaseIntegrationTest {
 
-
     public CreditagricoleAtlantiquevendeeAgentTest() {
         super("fr-creditagricoleatlantiquevendee-ob");
     }

@@ -6,24 +6,26 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 class StorageService {
 
-  private static StorageService instance;
+    private static StorageService instance;
 
-  private StorageService() {}
+    private StorageService() {}
 
-  static StorageService getInstance() {
-    if (instance == null) {
-      instance = new StorageService();
+    static StorageService getInstance() {
+        if (instance == null) {
+            instance = new StorageService();
+        }
+        return instance;
     }
-    return instance;
-  }
 
-  String getTokenFromStorage(final PersistentStorage persistentStorage) {
-    OAuth2Token oAuth2Token =
-        persistentStorage
-            .get(CreditAgricoleBaseConstants.StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-            .orElseThrow(() -> new IllegalStateException(
-                    CreditAgricoleBaseConstants.ErrorMessages.UNABLE_LOAD_OAUTH_TOKEN));
-    return oAuth2Token.getAccessToken();
-  }
-
+    String getTokenFromStorage(final PersistentStorage persistentStorage) {
+        OAuth2Token oAuth2Token =
+                persistentStorage
+                        .get(CreditAgricoleBaseConstants.StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                CreditAgricoleBaseConstants.ErrorMessages
+                                                        .UNABLE_LOAD_OAUTH_TOKEN));
+        return oAuth2Token.getAccessToken();
+    }
 }
