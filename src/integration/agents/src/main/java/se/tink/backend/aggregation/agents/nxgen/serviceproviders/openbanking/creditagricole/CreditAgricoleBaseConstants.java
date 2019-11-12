@@ -28,12 +28,10 @@ public final class CreditAgricoleBaseConstants {
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String INVALID_BALANCE_TYPE = "Balance type is not valid";
         public static final String UNABLE_LOAD_OAUTH_TOKEN = "Unable to load oauth_2_token";
-        public static final String UNABLE_RECOGNIZE_BANK = "Unable to recognize correct bank url";
         public static final String UNABLE_LOAD_BANK_URL = "Unable to load correct bank url";
     }
 
     public static class Urls {
-        //        public static final String BASE_URL = "https://sandbox-api.credit-agricole.fr";
         public static final String BASE_URL = "https://api.credit-agricole.fr";
     }
 
