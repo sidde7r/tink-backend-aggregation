@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.BankEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
@@ -28,7 +29,7 @@ public class CreditAgricoleBaseAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        return AuthorizeUrlService.getInstance().getUrl(persistentStorage, configuration, state);
+        return getAuthorizeUrl(state);
     }
 
     @Override
@@ -46,5 +47,30 @@ public class CreditAgricoleBaseAuthenticator implements OAuth2Authenticator {
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
         persistentStorage.put(CreditAgricoleBaseConstants.StorageKeys.OAUTH_TOKEN, accessToken);
+    }
+
+    private URL getAuthorizeUrl(final String state) {
+        final BankEnum bank =
+                persistentStorage
+                        .get(CreditAgricoleBaseConstants.StorageKeys.BANK_ENUM, BankEnum.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                CreditAgricoleBaseConstants.ErrorMessages
+                                                        .UNABLE_LOAD_BANK_URL));
+
+        final String clientId = configuration.getClientId();
+        final String redirectUri = configuration.getRedirectUrl();
+
+        return new URL(bank.getAuthUrl())
+                .queryParam(CreditAgricoleBaseConstants.QueryKeys.CLIENT_ID, clientId)
+                .queryParam(
+                        CreditAgricoleBaseConstants.QueryKeys.RESPONSE_TYPE,
+                        CreditAgricoleBaseConstants.QueryValues.CODE)
+                .queryParam(
+                        CreditAgricoleBaseConstants.QueryKeys.SCOPE,
+                        CreditAgricoleBaseConstants.QueryValues.SCOPE)
+                .queryParam(CreditAgricoleBaseConstants.QueryKeys.REDIRECT_URI, redirectUri)
+                .queryParam(CreditAgricoleBaseConstants.QueryKeys.STATE, state);
     }
 }
