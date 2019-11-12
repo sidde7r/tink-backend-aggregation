@@ -21,6 +21,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@ch_qos_logback_logback_classic//jar",
+    ],
+    runtime_deps = [
         "@ch_qos_logback_logback_core//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
@@ -38,8 +40,18 @@ java_library(
     name = "ch_qos_logback_contrib_logback_json_classic",
     visibility = ["//visibility:public"],
     exports = [
-        "@ch_qos_logback_contrib_logback_jackson//jar",
         "@ch_qos_logback_contrib_logback_json_classic//jar",
+    ],
+    runtime_deps = [
+        "@ch_qos_logback_contrib_logback_jackson//jar",
+        "@ch_qos_logback_contrib_logback_json_core//jar",
+    ],
+)
+
+java_library(
+    name = "ch_qos_logback_contrib_logback_json_core",
+    visibility = ["//visibility:public"],
+    exports = [
         "@ch_qos_logback_contrib_logback_json_core//jar",
     ],
 )
@@ -48,10 +60,12 @@ java_library(
     name = "com_amazonaws_aws_java_sdk_s3",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_amazonaws_aws_java_sdk_s3//jar",
+    ],
+    runtime_deps = [
         "@com_amazonaws_aws_java_sdk_code_generator//jar",
         "@com_amazonaws_aws_java_sdk_core//jar",
         "@com_amazonaws_aws_java_sdk_kms//jar",
-        "@com_amazonaws_aws_java_sdk_s3//jar",
         "@com_amazonaws_jmespath_java//jar",
     ],
 )
