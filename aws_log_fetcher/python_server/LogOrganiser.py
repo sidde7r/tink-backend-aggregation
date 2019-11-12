@@ -15,7 +15,7 @@ def organise(output_folder):
         provider_name = m["providerName"]
         if provider_name not in provider_issues:
             provider_issues[provider_name] = []
-        provider_issues[provider_name].append(request_id)
+        provider_issues[provider_name].append(request_id + "_" + provider_name)
 
     folders = {}
 
@@ -23,9 +23,9 @@ def organise(output_folder):
         provider_folder = os.path.join(output_folder, provider)
         os.mkdir(provider_folder)
         folders[provider_folder] = []
-        for request_id in provider_issues[provider]:
-            old_file = os.path.join(output_folder, request_id + ".log")
-            new_file = os.path.join(output_folder, provider, request_id + ".log")
+        for file_name in provider_issues[provider]:
+            old_file = os.path.join(output_folder, file_name + ".log")
+            new_file = os.path.join(output_folder, provider, file_name + ".log")
             if os.path.exists(old_file):
                 os.rename(old_file, new_file)
                 folders[provider_folder].append(new_file)
@@ -46,7 +46,7 @@ def organise(output_folder):
                     break
             last = temp.replace("<num>", str(index - 1))
             data = data[data.index(last):]
-            last_endpoint = [x for x in data.split("\n") if " GET http" in x or " POST http" in x][0]
+            last_endpoint = [x for x in data.split("\n") if " GET " in x or " POST " in x][0]
             if "POST" in last_endpoint:
                 last_endpoint = last_endpoint.split("POST")[1].strip()
             else:

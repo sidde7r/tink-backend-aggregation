@@ -7,8 +7,7 @@ from constants import requestid_query
 import websockets
 import asyncio
 import aws_google_auth
-import keyring
-from datetime import datetime, timedelta
+from datetime import timedelta
 from LogOrganiser import organise
 from datetime import datetime
 
@@ -96,6 +95,7 @@ async def run(cookie,
             if "AWS CLI" in log.message:
                 http_debug_log_link = log.message.split("AWS")[1].split("CLI: ")[1].strip()
                 metadata.append({
+                    "unique_name": request_id + "_" + log.providerName,
                     "log_path"  : http_debug_log_link,
                     "requestId" : request_id,
                     "userId"    : logs_for_session.find_user_id_by_request_id(request_id),
@@ -103,7 +103,8 @@ async def run(cookie,
                     "timestamp": logs_for_session.get_timestamp_by_request_id(request_id)
                 })
                 download_requests.append(AWSRequest(http_debug_log_link,
-                                                    os.path.join(output_folder, request_id + ".log")))
+                                                    os.path.join(output_folder, request_id + "_" +
+                                                                 log.providerName + ".log")))
                 found_aws_log_link = True
 
         if found_aws_log_link:
