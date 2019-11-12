@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc.entities;
+package se.tink.backend.aggregation.client.provider_configuration.rpc;
 
 import static io.vavr.Predicates.not;
 
@@ -13,9 +13,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.rpc.enums.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.enums.ProviderStatuses;
-import se.tink.backend.aggregation.rpc.enums.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 // FIXME: remove all code that has JSON IGNORE

@@ -17,8 +17,8 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationTemplateBuilder;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationValidator;
 import se.tink.backend.aggregation.api.AggregationService;
-import se.tink.backend.aggregation.api.ProviderConfigurationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
+import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigurationService;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
-import se.tink.backend.aggregation.rpc.SecretsTemplateRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.AgentWorker;
@@ -257,18 +256,21 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public String getSecretsTemplate(SecretsTemplateRequest request) {
+    public String getSecretsTemplate(
+            String providerName,
+            boolean includeDescriptions,
+            boolean includeExamples,
+            ClientInfo clientInfo) {
         Provider provider =
-                Provider.of(
-                        providerConfigurationService.getProviderByName(request.getProviderName()));
+                Provider.of(providerConfigurationService.getProviderByName(providerName));
         return new ClientConfigurationTemplateBuilder(
-                        provider, request.getIncludeDescriptions(), request.getIncludeExamples())
+                        provider, includeDescriptions, includeExamples)
                 .buildTemplate();
     }
 
     @Override
     public SecretsNamesValidationResponse validateSecretsNames(
-            SecretsNamesValidationRequest request) {
+            SecretsNamesValidationRequest request, ClientInfo clientInfo) {
         Preconditions.checkNotNull(request, "SecretsNamesValidationRequest cannot be null.");
         Preconditions.checkNotNull(
                 request.getProvider(), "Provider in SecretsNamesValidationRequest cannot be null.");

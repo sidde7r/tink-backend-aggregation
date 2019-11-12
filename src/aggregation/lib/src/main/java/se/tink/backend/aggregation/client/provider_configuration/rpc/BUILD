@@ -1,9 +1,8 @@
 java_library(
-    name = "entities",
+    name = "rpc",
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/rpc/enums",
         "//src/libraries/date",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

@@ -121,3 +121,8 @@ provisionClientsConfig:
       aggregatorIdentifier: "Provision Job Testing"
     provisioning-job2-testing:
       aggregatorIdentifier: "Local provisioning"
+
+providerConfigurationServiceConfiguration:
+  host: http://provider-configuration-api.provider-configuration.svc.cluster.local
+  port: 9047
+  enabled: true

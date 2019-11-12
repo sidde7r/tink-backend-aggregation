@@ -1,5 +1,5 @@
 java_library(
-    name = "enums",
+    name = "annotations",
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
 )

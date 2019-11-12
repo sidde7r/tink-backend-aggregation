@@ -4,7 +4,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/api",
-        "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/rpc/entities",
         "//src/integration/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",

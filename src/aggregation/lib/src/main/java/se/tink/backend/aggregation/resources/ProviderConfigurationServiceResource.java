@@ -7,9 +7,9 @@ import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.api.ProviderConfigurationService;
+import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigurationService;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderConfigurationServiceConfiguration;
-import se.tink.backend.aggregation.rpc.entities.ProviderConfiguration;
 import se.tink.libraries.http.client.WebResourceFactory;
 import se.tink.libraries.jersey.utils.JerseyUtils;
 
@@ -51,7 +51,9 @@ public class ProviderConfigurationServiceResource implements ProviderConfigurati
 
     @Override
     public List<ProviderConfiguration> list() {
-        return getProviderConfigurationService().list();
+        List<ProviderConfiguration> providerConfigurations =
+                getProviderConfigurationService().list();
+        return providerConfigurations;
     }
 
     @Override

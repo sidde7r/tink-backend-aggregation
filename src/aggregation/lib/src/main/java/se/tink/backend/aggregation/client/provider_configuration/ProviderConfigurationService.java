@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.api;
+package se.tink.backend.aggregation.client.provider_configuration;
 
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -9,7 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
-import se.tink.backend.aggregation.rpc.entities.ProviderConfiguration;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
 
 @Path("/providers")
 @Consumes(MediaType.APPLICATION_JSON)

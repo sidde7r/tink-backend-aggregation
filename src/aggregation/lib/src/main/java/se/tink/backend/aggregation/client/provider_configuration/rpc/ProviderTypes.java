@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc.enums;
+package se.tink.backend.aggregation.client.provider_configuration.rpc;
 
 public enum ProviderTypes {
     BANK,

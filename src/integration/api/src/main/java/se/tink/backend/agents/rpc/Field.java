@@ -105,7 +105,8 @@ public class Field {
         return checkbox;
     }
 
-    public static Field of(se.tink.backend.aggregation.rpc.entities.Field field) {
+    public static Field of(
+            se.tink.backend.aggregation.client.provider_configuration.rpc.Field field) {
         return builder()
                 .additionalInfo(field.getAdditionalInfo())
                 .checkbox(field.isCheckbox())

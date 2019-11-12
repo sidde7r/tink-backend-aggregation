@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.rpc.entities.ProviderConfiguration;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonInclude(Include.NON_NULL)

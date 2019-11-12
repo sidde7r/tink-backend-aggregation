@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc.entities;
+package se.tink.backend.aggregation.client.provider_configuration.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

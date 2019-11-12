@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc.enums;
+package se.tink.backend.aggregation.client.provider_configuration.rpc;
 
 public enum ProviderStatuses {
     ENABLED, // Provider is refreshed and shown in providers list.
