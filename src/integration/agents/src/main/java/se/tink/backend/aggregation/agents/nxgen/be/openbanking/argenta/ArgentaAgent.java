@@ -38,11 +38,7 @@ public final class ArgentaAgent extends NextGenerationAgent
         String clientName = request.getProvider().getPayload();
 
         ArgentaConfiguration argentaConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfigurationFromK8s(
-                                ArgentaConstants.INTEGRATION_NAME,
-                                clientName,
-                                ArgentaConfiguration.class);
+                getAgentConfigurationController().getAgentConfiguration(ArgentaConfiguration.class);
         super.setConfiguration(agentsServiceConfiguration);
 
         this.apiClient =
