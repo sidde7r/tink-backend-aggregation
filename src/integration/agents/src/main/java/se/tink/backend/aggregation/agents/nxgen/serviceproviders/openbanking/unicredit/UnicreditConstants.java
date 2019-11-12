@@ -1,8 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.pair.Pair;
+import se.tink.libraries.payment.enums.PaymentType;
 
 public final class UnicreditConstants {
+
+    public static final GenericTypeMapper<PaymentType, Pair<Type, Type>> PAYMENT_TYPE_MAPPER =
+            GenericTypeMapper.<PaymentType, Pair<Type, Type>>genericBuilder()
+                    .put(PaymentType.SEPA, new Pair<>(Type.IBAN, Type.IBAN))
+                    .build();
 
     private UnicreditConstants() {
         throw new AssertionError();
@@ -18,6 +27,7 @@ public final class UnicreditConstants {
         public static final String ACCOUNT_BALANCE_NOT_FOUND = "Account balance not found";
         public static final String UNDEFINED_BALANCE_TYPE =
                 "There is balanceType of value '%s' defined in Enum %s";
+        public static final String MISSING_LINKS_ENTITY = "Response missing links entity";
     }
 
     public static class Endpoints {
@@ -28,17 +38,22 @@ public final class UnicreditConstants {
         public static final String ACCOUNTS = "/v1/accounts";
         public static final String BALANCES = "/v1/accounts/{account-id}/balances";
         public static final String TRANSACTIONS = "/v1/accounts/{account-id}/transactions";
+        public static final String PAYMENT_INITIATION = "/v1/payments/{payment-product}";
+        public static final String FETCH_PAYMENT = "/v1/payments/{payment-product}/{paymentId}";
     }
 
     public static class PathParameters {
 
         public static final String CONSENT_ID = "consent-id";
         public static final String ACCOUNT_ID = "account-id";
+        public static final String PAYMENT_PRODUCT = "payment-product";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CONSENT_ID = "CONSENT_ID";
+        public static final String STATE = "STATE";
     }
 
     public static class QueryKeys {
@@ -87,5 +102,6 @@ public final class UnicreditConstants {
     public static class ConsentStatusStates {
 
         public static final String VALID = "valid";
+        public static final String VALID_PIS = "ACCP";
     }
 }
