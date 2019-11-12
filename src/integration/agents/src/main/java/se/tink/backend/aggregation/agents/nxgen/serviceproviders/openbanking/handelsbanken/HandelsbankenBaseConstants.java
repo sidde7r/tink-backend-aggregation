@@ -135,6 +135,8 @@ public final class HandelsbankenBaseConstants {
         public static final String NOT_SHB_ACTIVATED = "mbid_not_shb_activated";
         public static final String MBID_MAX_POLLING = "mbid_max_polling";
         public static final String TOKEN_NOT_ACTIVE = "Token is not active";
+        public static final String PROXY_ERROR = "proxyError";
+        public static final String SOCKET_EXCEPTION = "java.net.SocketException";
     }
 
     public static class Status {
