@@ -5,6 +5,7 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,14 +36,14 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
     private final NordeaSeApiClient apiClient;
     private static final Logger log = LoggerFactory.getLogger(NordeaSeBankIdAuthenticator.class);
     private final String language;
-    private final String scopeFromPayload;
+    private final List<String> scopes;
     private OAuth2Token oAuth2Token;
 
     public NordeaSeBankIdAuthenticator(
-            NordeaSeApiClient apiClient, String language, String scopeFromPayload) {
+            NordeaSeApiClient apiClient, String language, List<String> scopes) {
         this.apiClient = apiClient;
         this.language = language;
-        this.scopeFromPayload = scopeFromPayload;
+        this.scopes = scopes;
     }
 
     @Override
@@ -153,21 +154,20 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
                 ssn,
                 apiClient.getConfiguration().getRedirectUrl(),
                 NordeaSeConstants.FormValues.RESPONSE_TYPE,
-                getScopesBasedOnPayload(),
+                getScopes(),
                 NordeaSeConstants.FormValues.STATE);
     }
 
     /**
-     * Considers the payload of the provider to determine the scopes we should send to the bank.
-     * This is a hacky fix for Kirkby staging where the payload will be AIS, in all other cases
-     * we'll ask for full scope.
+     * Considers the scopes we should send to the bank.
      *
      * @return List of scopes based on provider payload.
      */
-    private List<String> getScopesBasedOnPayload() {
+    private List<String> getScopes() {
 
         // Return only AIS scopes
-        if (Scopes.AIS.equalsIgnoreCase(scopeFromPayload)) {
+        if (CollectionUtils.isNotEmpty(scopes)
+                && scopes.stream().anyMatch(scope -> Scopes.AIS.equalsIgnoreCase(scope))) {
             return Arrays.asList(
                     FormValues.ACCOUNTS_BALANCES,
                     FormValues.ACCOUNTS_BASIC,
