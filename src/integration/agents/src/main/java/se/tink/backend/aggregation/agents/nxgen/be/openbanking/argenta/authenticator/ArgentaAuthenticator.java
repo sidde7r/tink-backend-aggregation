@@ -95,12 +95,12 @@ public class ArgentaAuthenticator implements OAuth2Authenticator {
                 IntStream.range(0, maxNumber)
                         .mapToObj(
                                 i -> String.format("(%d) %s", i + 1, scaMethods.get(i).toString()))
-                        .collect(Collectors.joining(";\n"));
+                        .collect(Collectors.joining("\n"));
         String regexForRangePattern = RangeRegexUtils.regexForRange(1, maxNumber);
 
         return Field.builder()
-                .description(this.catalog.getString(description))
-                .helpText("Please select SCA method")
+                .description("Enter number of selected SCA method\n")
+                .helpText(this.catalog.getString(description) + "\nPlease select SCA method")
                 .name(QueryKeys.CHOSEN_SCA_METHOD)
                 .numeric(true)
                 .minLength(1)

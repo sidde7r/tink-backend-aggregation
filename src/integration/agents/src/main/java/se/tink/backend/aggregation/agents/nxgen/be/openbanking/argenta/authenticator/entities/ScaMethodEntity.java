@@ -14,7 +14,10 @@ public class ScaMethodEntity {
         return authenticationMethodId;
     }
 
+    /* 1. display option for SCA method
+       2. remove "_" in option "NO_PREFERENCE"
+    */
     public String toString() {
-        return "Name: " + name + ", Type: " + authenticationType;
+        return authenticationType.replaceAll("_", " ");
     }
 }
