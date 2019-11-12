@@ -90,9 +90,11 @@ java_library(
     name = "com_fasterxml_jackson_core_jackson_databind",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_fasterxml_jackson_core_jackson_databind//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
     ],
 )
 
@@ -100,11 +102,13 @@ java_library(
     name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_base//jar",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
         "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
     ],
 )
@@ -113,8 +117,10 @@ java_library(
     name = "com_fasterxml_jackson_dataformat_jackson_dataformat_smile",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_smile//jar",
+    ],
+    runtime_deps = [
+        "@com_fasterxml_jackson_core_jackson_core//jar",
     ],
 )
 
@@ -122,10 +128,12 @@ java_library(
     name = "com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_fasterxml_jackson_dataformat_jackson_dataformat_xml//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@com_fasterxml_jackson_dataformat_jackson_dataformat_xml//jar",
         "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
         "@javax_xml_stream_stax_api//jar",
         "@org_codehaus_woodstox_stax2_api//jar",
@@ -137,8 +145,10 @@ java_library(
     name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_datatype_jackson_datatype_joda//jar",
+    ],
+    runtime_deps = [
+        "@com_fasterxml_jackson_core_jackson_annotations//jar",
     ],
 )
 
@@ -147,6 +157,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_github_detro_ghostdriver_phantomjsdriver//jar",
+    ],
+    runtime_deps = [
         "@commons_codec_commons_codec//jar",
         "@mx4j_mx4j_tools//jar",
         "@net_jcip_jcip_annotations//jar",
