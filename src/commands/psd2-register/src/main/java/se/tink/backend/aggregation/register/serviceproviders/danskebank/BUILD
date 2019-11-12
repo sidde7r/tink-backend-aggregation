@@ -8,6 +8,7 @@ java_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register:psd2-register",
+        "//src/integration/agents",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
@@ -22,6 +23,5 @@ java_binary(
         "//third_party:commons_io_commons_io",
         "//third_party:org_apache_commons_commons_cli",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
-        "//third_party:org_bouncycastle_bcprov_jdk15on",
     ],
 )

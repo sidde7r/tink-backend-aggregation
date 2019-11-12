@@ -13,22 +13,25 @@ import com.google.common.base.Strings;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
-// This is a copy of auth0.JWTCreator with the addition of `Builder.withClaim(String name, Object
-// value)`.
-// It depends on auth0.jwt for, among other things, the Algorithm class.
 public final class QsealcJwtCreator {
+
+    private static final String EIDAS_PROXY_URL =
+            "https://eidas-proxy.staging.aggregation.tink.network";
 
     private final QsealcSigner signer;
     private final String headerJson;
-    private final String body;
+    private final String bodyJson;
 
-    private QsealcJwtCreator(QsealcSigner signer, Map<String, Object> headerClaims, String body)
+    private QsealcJwtCreator(
+            QsealcSigner signer, Map<String, Object> headerClaims, Map<String, Object> bodyClaims)
             throws JWTCreationException {
         this.signer = signer;
         try {
@@ -38,7 +41,7 @@ public final class QsealcJwtCreator {
             mapper.registerModule(module);
             mapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
             headerJson = mapper.writeValueAsString(headerClaims);
-            this.body = body;
+            bodyJson = mapper.writeValueAsString(bodyClaims);
         } catch (JsonProcessingException e) {
             throw new JWTCreationException(
                     "Some of the Claims couldn't be converted to a valid JSON format.", e);
@@ -52,8 +55,11 @@ public final class QsealcJwtCreator {
     private String sign() throws SignatureGenerationException {
         String header =
                 Base64.encodeBase64URLSafeString(headerJson.getBytes(StandardCharsets.UTF_8));
+        String body = Base64.encodeBase64URLSafeString(bodyJson.getBytes(StandardCharsets.UTF_8));
         String content = String.format("%s.%s", header, body);
-        String signature = signer.getSignatureBase64(content.getBytes(StandardCharsets.UTF_8));
+        String signature =
+                Base64.encodeBase64URLSafeString(
+                        signer.getSignature(content.getBytes(StandardCharsets.UTF_8)));
 
         return String.format("%s.%s", content, signature);
     }
@@ -62,6 +68,7 @@ public final class QsealcJwtCreator {
 
         private String body;
         private Map<String, Object> headerClaims;
+        private Map<String, Object> bodyClaims;
 
         Builder() {
             this.headerClaims = new HashMap<>();
@@ -69,6 +76,9 @@ public final class QsealcJwtCreator {
 
         public Builder withBody(final String base64Body) {
             body = base64Body;
+            bodyClaims =
+                    SerializationUtils.deserializeFromString(
+                            new String(Base64.decodeBase64(body)), HashMap.class);
             return this;
         }
 
@@ -94,15 +104,20 @@ public final class QsealcJwtCreator {
 
             QsealcSigner signer =
                     QsealcSigner.build(
-                            EidasProxyConfiguration.createLocal("").toInternalConfig(),
-                            QsealcAlg.EIDAS_RSA_SHA256,
-                            new EidasIdentity("oxford-staging", "", ""));
+                            EidasProxyConfiguration.createLocal(EIDAS_PROXY_URL).toInternalConfig(),
+                            QsealcAlg.EIDAS_PSS_SHA256,
+                            new EidasIdentity(
+                                    "oxford-staging", "5f98e87106384b2981c0354a33b51590", ""));
 
-            headerClaims.put(PublicClaims.ALGORITHM, "RS256");
+            headerClaims.put(PublicClaims.ALGORITHM, "PS256");
             headerClaims.put(PublicClaims.TYPE, "JWT");
             headerClaims.put(PublicClaims.KEY_ID, signingKeyId);
 
-            return new QsealcJwtCreator(signer, headerClaims, body).sign();
+            long timestampNow = System.currentTimeMillis() / 1000;
+            bodyClaims.put(PublicClaims.ISSUED_AT, timestampNow);
+            bodyClaims.put(PublicClaims.EXPIRES_AT, timestampNow + TimeUnit.MINUTES.toSeconds(5));
+
+            return new QsealcJwtCreator(signer, headerClaims, bodyClaims).sign();
         }
     }
 }
