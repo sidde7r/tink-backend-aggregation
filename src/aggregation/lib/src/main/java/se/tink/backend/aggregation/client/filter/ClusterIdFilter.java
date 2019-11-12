@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.client.filter;
 
+import com.google.common.base.Preconditions;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.filter.ClientFilter;
+import java.util.Arrays;
 
 public class ClusterIdFilter extends ClientFilter {
     private static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";
@@ -14,6 +16,16 @@ public class ClusterIdFilter extends ClientFilter {
     public ClusterIdFilter(String clusterName, String clusterEnvironment) {
         this.clusterName = clusterName;
         this.clusterEnvironment = clusterEnvironment;
+    }
+
+    public ClusterIdFilter(String clusterId) {
+        String[] split = clusterId.split("-");
+        System.out.println("here is the split - " + Arrays.toString(split));
+        Preconditions.checkState(
+                split.length == 2,
+                "Trying to create a ClusterIdFilter from an invalid clusterId : " + clusterId);
+        this.clusterName = split[0];
+        this.clusterEnvironment = split[1];
     }
 
     @Override

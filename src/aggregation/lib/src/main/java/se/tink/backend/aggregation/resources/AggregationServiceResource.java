@@ -261,8 +261,10 @@ public class AggregationServiceResource implements AggregationService {
             boolean includeDescriptions,
             boolean includeExamples,
             ClientInfo clientInfo) {
+        ProviderConfigurationServiceDecorator decoratedProviderConfigurationService =
+                ProviderConfigurationServiceDecorator.of(providerConfigurationService, clientInfo);
         Provider provider =
-                Provider.of(providerConfigurationService.getProviderByName(providerName));
+                Provider.of(decoratedProviderConfigurationService.getProviderByName(providerName));
         return new ClientConfigurationTemplateBuilder(
                         provider, includeDescriptions, includeExamples)
                 .buildTemplate();

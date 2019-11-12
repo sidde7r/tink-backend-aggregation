@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.resources;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.filter.ClientFilter;
 import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
@@ -64,5 +65,15 @@ public class ProviderConfigurationServiceResource implements ProviderConfigurati
     @Override
     public ProviderConfiguration getProviderByName(String providerName) {
         return getProviderConfigurationService().getProviderByName(providerName);
+    }
+
+    @Override
+    public void addClientFilter(ClientFilter filter) {
+        client.addFilter(filter);
+    }
+
+    @Override
+    public void removeClientFilter(ClientFilter filter) {
+        client.removeFilter(filter);
     }
 }

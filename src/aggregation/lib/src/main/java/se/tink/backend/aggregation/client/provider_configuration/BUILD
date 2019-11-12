@@ -7,6 +7,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
         "//src/libraries/api_annotations",
         "//src/libraries/http:http_annotations",
+        "//third_party:com_sun_jersey_jersey_client",
         "//third_party:io_dropwizard_dropwizard_core",
     ],
 )

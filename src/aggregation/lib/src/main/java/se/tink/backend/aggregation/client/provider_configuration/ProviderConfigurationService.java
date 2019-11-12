@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.client.provider_configuration;
 
+import com.sun.jersey.api.client.filter.ClientFilter;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -29,4 +30,8 @@ public interface ProviderConfigurationService {
     @GET
     @TeamOwnership(Team.INTEGRATION)
     ProviderConfiguration getProviderByName(@PathParam("providerName") String providerName);
+
+    void addClientFilter(ClientFilter filter);
+
+    void removeClientFilter(ClientFilter filter);
 }
