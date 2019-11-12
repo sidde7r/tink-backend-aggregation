@@ -196,6 +196,11 @@ public class HandelsbankenSEConstants {
     public static class ErrorMessage {
         public static final String ERROR_OCCURRED_TRY_AGAIN_LATER =
                 "Ett fel har tyvärr inträffat. Försök igen senare.";
+        public static final String SERVICE_NOT_AVAILABLE = "Tjänsten kan inte nås för tillfället.";
+    }
+
+    public static class ResponseCodes {
+        public static final String SERVICE_NOT_AVAILABLE = "666";
     }
 
     public static class Executor {
