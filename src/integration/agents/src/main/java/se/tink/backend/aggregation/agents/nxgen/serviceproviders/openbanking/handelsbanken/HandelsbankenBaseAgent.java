@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
@@ -28,6 +29,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
     public HandelsbankenBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        client.addFilter(new TimeoutFilter());
         apiClient = new HandelsbankenBaseApiClient(client, persistentStorage, getMarket());
 
         setMaxPeriodTransactions();
