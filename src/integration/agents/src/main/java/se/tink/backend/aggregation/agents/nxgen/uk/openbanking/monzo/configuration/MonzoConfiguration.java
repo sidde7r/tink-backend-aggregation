@@ -4,14 +4,16 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @JsonObject
 public class MonzoConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
-    private String redirectUrl;
+    private @Secret String clientId;
+    private @SensitiveSecret String clientSecret;
+    private @Secret String redirectUrl;
 
     public String getClientId() {
         Preconditions.checkNotNull(
