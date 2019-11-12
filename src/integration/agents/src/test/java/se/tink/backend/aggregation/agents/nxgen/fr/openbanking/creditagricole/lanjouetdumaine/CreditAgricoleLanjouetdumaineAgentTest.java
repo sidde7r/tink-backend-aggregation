@@ -1,12 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.lanjouetdumaine;
 
+import org.junit.Before;
 import org.junit.Ignore;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseIntegrationTest;
+import org.junit.Test;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 @Ignore
-public class CreditAgricoleLanjouetdumaineAgentTest extends CreditAgricoleBaseIntegrationTest {
+public final class CreditAgricoleLanjouetdumaineAgentTest {
 
-    public CreditAgricoleLanjouetdumaineAgentTest() {
-        super("fr-creditagricolelanjouetdumaine-ob");
+    private AgentIntegrationTest.Builder builder;
+
+    @Before
+    public void setup() {
+        builder =
+                new AgentIntegrationTest.Builder("fr", "fr-creditagricolelanjouetdumaine-ob")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
+    }
+
+    @Test
+    public void testRefresh() throws Exception {
+        builder.build().testRefresh();
     }
 }

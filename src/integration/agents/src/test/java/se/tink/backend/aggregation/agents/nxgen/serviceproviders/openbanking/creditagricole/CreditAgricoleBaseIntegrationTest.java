@@ -6,7 +6,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 @Ignore
-public class CreditAgricoleBaseIntegrationTest {
+public final class CreditAgricoleBaseIntegrationTest {
 
     private final String integrationNameFromProviders;
     private AgentIntegrationTest.Builder builder;

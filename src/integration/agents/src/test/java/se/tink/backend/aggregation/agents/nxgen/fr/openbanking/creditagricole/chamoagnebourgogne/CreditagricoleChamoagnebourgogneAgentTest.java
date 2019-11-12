@@ -1,11 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.chamoagnebourgogne;
 
+import org.junit.Before;
 import org.junit.Ignore;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseIntegrationTest;
+import org.junit.Test;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 @Ignore
-public class CreditagricoleChamoagnebourgogneAgentTest extends CreditAgricoleBaseIntegrationTest {
-    public CreditagricoleChamoagnebourgogneAgentTest() {
-        super("fr-creditagricolechamoagnebourgogne-ob");
+public final class CreditagricoleChamoagnebourgogneAgentTest {
+
+    private AgentIntegrationTest.Builder builder;
+
+    @Before
+    public void setup() {
+        builder =
+                new AgentIntegrationTest.Builder("fr", "fr-creditagricolechamoagnebourgogne-ob")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
+    }
+
+    @Test
+    public void testRefresh() throws Exception {
+        builder.build().testRefresh();
     }
 }
