@@ -10,7 +10,7 @@ class ElasticSearchRequestHandler:
     request_prefix = {
         "index": "logstash*",
         "ignore_unavailable": True,
-        "preference": 1572434766103
+        "preference": 1573550270374
     }
 
     def __init__(self, cookie, host):
