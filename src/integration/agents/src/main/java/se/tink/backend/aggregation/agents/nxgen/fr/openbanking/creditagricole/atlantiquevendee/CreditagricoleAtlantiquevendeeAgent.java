@@ -10,6 +10,6 @@ public class CreditagricoleAtlantiquevendeeAgent extends CreditAgricoleBaseAgent
 
     public CreditagricoleAtlantiquevendeeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, BankEnum.ATLANTIQUE_VENDÉE);
+        super(request, context, signatureKeyPair, BankEnum.ATLANTIQUE_VENDEE);
     }
 }

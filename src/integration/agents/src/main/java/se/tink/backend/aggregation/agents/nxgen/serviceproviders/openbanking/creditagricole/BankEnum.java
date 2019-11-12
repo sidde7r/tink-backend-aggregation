@@ -13,7 +13,7 @@ public enum BankEnum {
             "CAM Alsace Vosges",
             "https://psd2-portal.credit-agricole.fr/ca-alsace-vosges/authorize",
             "https://psd2-api.ca-alsace-vosges.fr"),
-    ATLANTIQUE_VENDÉE(
+    ATLANTIQUE_VENDEE(
             "CAM Atlantique Vendée",
             "https://psd2-portal.credit-agricole.fr/ca-atlantiquevendee/authorize",
             "https://psd2-api.ca-atlantique-vendee.fr"),
