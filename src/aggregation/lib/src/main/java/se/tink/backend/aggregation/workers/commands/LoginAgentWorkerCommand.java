@@ -137,16 +137,23 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                         state.LOAD_PERSISTENT_SESSION_TIMER_NAME, credentials.getType());
 
         PersistentLogin persistentAgent = (PersistentLogin) agent;
-
+        long timeLoadingSession = 0;
+        long timeAgentIsLoggedIn = 0;
+        boolean result = false;
         try {
+            long beforeLoad = System.nanoTime();
             persistentAgent.loadLoginSession();
+            timeLoadingSession = System.nanoTime() - beforeLoad;
 
+            long beforeIsLoggedIn = System.nanoTime();
             if (persistentAgent.isLoggedIn()) {
+                timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
                 log.info("We're already logged in. Moving along.");
 
-                return true;
+                result = true;
             } else {
+                timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
                 log.debug("We're not logged in. Clear Session and Login in again.");
 
@@ -158,8 +165,17 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         } finally {
             stopCommandContexts(loadPersistentSessionTimerContexts);
         }
-
-        return false;
+        if (timeAgentIsLoggedIn > 0 && timeLoadingSession > 0) {
+            long timeAgentIsLoggedInSeconds =
+                    TimeUnit.SECONDS.convert(timeAgentIsLoggedIn, TimeUnit.NANOSECONDS);
+            long timeLoadingSessionSeconds =
+                    TimeUnit.SECONDS.convert(timeLoadingSession, TimeUnit.NANOSECONDS);
+            log.info(
+                    String.format(
+                            "Time loading session: %d s, time agent isLoggedIn: %d s",
+                            timeLoadingSessionSeconds, timeAgentIsLoggedInSeconds));
+        }
+        return result;
     }
 
     private boolean acquireLock() throws Exception {
