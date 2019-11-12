@@ -114,36 +114,37 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
         }
     }
 
-    private GetAllSecretsResponse getAllSecretsResponse(
+    private Optional<GetAllSecretsResponse> getAllSecretsResponse(
             String financialInstitutionId, String appId, String clusterId) {
         if (!enabled) {
             log.warn(
                     "Trying to call getAllSecrets for an instance of TppSecretsServiceClientImpl when the configuration says it is not enabled.");
-            return null;
+            return Optional.empty();
         }
 
         // TODO: Remove this once Access team confirms there are no null appIds
         if (Strings.emptyToNull(appId) == null
                 || Strings.emptyToNull(financialInstitutionId) == null) {
-            return null;
+            return Optional.empty();
         }
 
         GetSecretsRequest getSecretsRequest =
                 buildRequest(financialInstitutionId, appId, clusterId);
 
-        return internalSecretsServiceStub.getAllSecrets(getSecretsRequest);
+        return Optional.ofNullable(internalSecretsServiceStub.getAllSecrets(getSecretsRequest));
     }
 
     @Override
     public Optional<Map<String, String>> getAllSecrets(
             String financialInstitutionId, String appId, String clusterId) {
 
-        GetAllSecretsResponse response =
+        Optional<GetAllSecretsResponse> responseOpt =
                 getAllSecretsResponse(financialInstitutionId, appId, clusterId);
-        if (response == null) {
+        if (!responseOpt.isPresent()) {
             return Optional.empty();
         }
 
+        GetAllSecretsResponse response = responseOpt.get();
         List<TppSecret> allSecretsList = new ArrayList<>();
         allSecretsList.addAll(response.getEncryptedSecretsList());
         allSecretsList.addAll(response.getSecretsList());
@@ -156,22 +157,26 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
     @Override
     public Optional<List<String>> getRedirectUrls(
             String financialInstitutionId, String appId, String clusterId) {
-        GetAllSecretsResponse response =
+        Optional<GetAllSecretsResponse> responseOpt =
                 getAllSecretsResponse(financialInstitutionId, appId, clusterId);
-        if (response == null) {
+        if (!responseOpt.isPresent()) {
             return Optional.empty();
         }
+
+        GetAllSecretsResponse response = responseOpt.get();
         return Optional.of(response.getRedirectUrlsList());
     }
 
     @Override
     public Optional<List<String>> getScopes(
             String financialInstitutionId, String appId, String clusterId) {
-        GetAllSecretsResponse response =
+        Optional<GetAllSecretsResponse> responseOpt =
                 getAllSecretsResponse(financialInstitutionId, appId, clusterId);
-        if (response == null) {
+        if (!responseOpt.isPresent()) {
             return Optional.empty();
         }
+
+        GetAllSecretsResponse response = responseOpt.get();
         return Optional.of(response.getScopesList());
     }
 

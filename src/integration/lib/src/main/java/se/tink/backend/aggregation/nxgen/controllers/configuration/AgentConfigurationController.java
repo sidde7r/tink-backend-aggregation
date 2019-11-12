@@ -156,11 +156,44 @@ public final class AgentConfigurationController {
                         allSecrets.entrySet().stream()
                                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-                final String REDIRECT_URL_KEY = "redirectUrl";
-                allSecretsMapObj.put(REDIRECT_URL_KEY, redirectUrlsOpt.get().get(0));
+                final List<String> redirectUrls = redirectUrlsOpt.get();
+                if (redirectUrls.isEmpty()) {
+                    // We end up here when the secrets do contain redirectUrls key but it is an
+                    // empty list.
+                    log.info(
+                            "Empty redirectUrls list in secrets" + getSecretsServiceParamsString());
 
+                    return;
+                }
+
+                final String REDIRECT_URL_KEY = "redirectUrl";
+                if (Strings.isNullOrEmpty(redirectUrl)) {
+                    // No redirectUrl provided in the CredentialsRequest, pick the first one from
+                    // the registered list.
+                    allSecretsMapObj.put(REDIRECT_URL_KEY, redirectUrls.get(0));
+                } else if (!redirectUrls.contains(redirectUrl)) {
+                    // The redirectUrl provided in the CredentialsRequest is not among those
+                    // registered.
+                    throw new IllegalArgumentException(
+                            "Requested redirectUrl : "
+                                    + redirectUrl
+                                    + " is not registered"
+                                    + getSecretsServiceParamsString());
+                } else {
+                    // The redirectUrl provided in the CredentialsRequest is among those registered.
+                    allSecretsMapObj.put(REDIRECT_URL_KEY, redirectUrl);
+                }
+
+                final List<String> scopes = scopeOpt.get();
+                if (scopes.isEmpty()) {
+                    // We end up here when the secrets do contain scopes key but it is an empty
+                    // list.
+                    log.info("Empty scopes list in secrets" + getSecretsServiceParamsString());
+
+                    return;
+                }
                 final String SCOPES_KEY = "scopes";
-                allSecretsMapObj.put(SCOPES_KEY, scopeOpt.get());
+                allSecretsMapObj.put(SCOPES_KEY, scopes);
 
             } catch (StatusRuntimeException e) {
                 Preconditions.checkNotNull(
