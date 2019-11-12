@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -52,7 +52,7 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final UkOpenBankingPisConfig pisConfig;
-    private final SoftwareStatement softwareStatement;
+    private final SoftwareStatementAssertion softwareStatement;
     private final ProviderConfiguration providerConfiguration;
     private final UkOpenBankingApiClient apiClient;
     private final UkOpenBankingPis ukOpenBankingPis;
@@ -63,7 +63,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
     public UKOpenbankingV31Executor(
             UkOpenBankingPisConfig pisConfig,
-            SoftwareStatement softwareStatement,
+            SoftwareStatementAssertion softwareStatement,
             ProviderConfiguration providerConfiguration,
             UkOpenBankingApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
@@ -83,7 +83,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
     public UKOpenbankingV31Executor(
             UkOpenBankingPisConfig pisConfig,
-            SoftwareStatement softwareStatement,
+            SoftwareStatementAssertion softwareStatement,
             ProviderConfiguration providerConfiguration,
             UkOpenBankingApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,

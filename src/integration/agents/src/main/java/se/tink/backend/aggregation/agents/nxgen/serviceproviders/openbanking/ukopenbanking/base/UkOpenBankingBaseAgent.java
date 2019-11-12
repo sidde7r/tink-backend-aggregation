@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -17,6 +16,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingAccountFetcher;
@@ -27,16 +27,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SignatureKey;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.TransportKey;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationAdapter;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -44,7 +41,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -58,11 +54,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     private final Provider tinkProvider;
     private final URL wellKnownURL;
-    // Separate httpClient used for payments since PIS and AIS are two different
-    // authenticated flows.
-    private final TinkHttpClient paymentsHttpClient;
+
     protected UkOpenBankingApiClient apiClient;
-    protected SoftwareStatement softwareStatement;
+    protected SoftwareStatementAssertion softwareStatement;
     protected ProviderConfiguration providerConfiguration;
     private boolean disableSslVerification;
 
@@ -93,86 +87,50 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
         this.disableSslVerification = disableSslVerification;
 
-        this.paymentsHttpClient =
-                new LegacyTinkHttpClient(
-                        context.getAggregatorInfo(),
-                        metricContext.getMetricRegistry(),
-                        context.getLogOutputStream(),
-                        signatureKeyPair,
-                        request.getProvider(),
-                        context.getLogMasker(),
-                        LogMasker.shouldLog(request.getProvider()));
         tinkProvider = request.getProvider();
         this.wellKnownURL = aisConfig.getWellKnownURL();
         this.agentConfig = aisConfig;
     }
 
     // Different part between UkOpenBankingBaseAgent and this class
-    public UkOpenBankingConfiguration getClientConfiguration() {
+    public UkOpenBankingClientConfigurationAdapter getClientConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfiguration(UkOpenBankingConfiguration.class);
+                .getAgentConfiguration(getClientConfigurationFormat());
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        UkOpenBankingConfiguration ukOpenBankingConfiguration = getClientConfiguration();
+        UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration =
+                getClientConfiguration();
 
         SoftwareStatementAssertion softwareStatementAssertion =
-                new SoftwareStatementAssertion(
-                        ukOpenBankingConfiguration.getSoftwareStatementAssertion(),
-                        ukOpenBankingConfiguration.getSoftwareId(),
-                        ukOpenBankingConfiguration.getRedirectUrl());
-        SignatureKey signingKey =
-                new SignatureKey(
-                        ukOpenBankingConfiguration.getSigningKeyId(),
-                        ukOpenBankingConfiguration.getSigningKey(),
-                        ukOpenBankingConfiguration.getSigningKeyPassword());
-        TransportKey transportKey =
-                new TransportKey(
-                        ukOpenBankingConfiguration.getTransportKeyId(),
-                        ukOpenBankingConfiguration.getTransportKey(),
-                        ukOpenBankingConfiguration.getTransportKeyPassword());
+                ukOpenBankingConfiguration.getSoftwareStatementAssertion();
 
-        softwareStatement =
-                new SoftwareStatement(softwareStatementAssertion, signingKey, transportKey);
-
-        providerConfiguration =
-                new ProviderConfiguration(
-                        ukOpenBankingConfiguration.getOrganizationId(),
-                        new ClientInfo(
-                                ukOpenBankingConfiguration.getClientId(),
-                                ukOpenBankingConfiguration.getClientSecret()));
+        providerConfiguration = ukOpenBankingConfiguration.getProviderConfiguration();
 
         // Different part between UkOpenBankingBaseAgent and this class are ended here
 
         if (this.disableSslVerification) {
             client.disableSslVerification();
-            paymentsHttpClient.disableSslVerification();
         } else {
             client.trustRootCaCertificate(
                     ukOpenBankingConfiguration.getRootCAData(),
                     ukOpenBankingConfiguration.getRootCAPassword());
-
-            paymentsHttpClient.trustRootCaCertificate(
-                    ukOpenBankingConfiguration.getRootCAData(),
-                    ukOpenBankingConfiguration.getRootCAPassword());
         }
 
-        apiClient = createApiClient(client, softwareStatement, providerConfiguration);
-
-        // -    We cannot configure the paymentsHttpClient from `configureHttpClient()` because it
-        // will be null
-        //      at that stage.
-        // -    Some banks are extremely slow at PIS operations (esp. the payment submission step),
-        // increase the the
-        //      timeout on that http client.
-        int timeoutInMilliseconds = (int) TimeUnit.SECONDS.toMillis(120);
-        paymentsHttpClient.setTimeout(timeoutInMilliseconds);
+        apiClient =
+                createApiClient(
+                        client,
+                        ukOpenBankingConfiguration.getSigner(),
+                        ukOpenBankingConfiguration.getTlsConfigurationAdapter(),
+                        softwareStatementAssertion,
+                        providerConfiguration);
 
         configureAisHttpClient(client);
-        configurePisHttpClient(paymentsHttpClient);
+
+        client.setDebugOutput(true);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
@@ -184,10 +142,14 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     protected UkOpenBankingApiClient createApiClient(
             TinkHttpClient httpClient,
-            SoftwareStatement softwareStatement,
+            JwtSigner signer,
+            TlsConfigurationAdapter tlsConfigurationAdapter,
+            SoftwareStatementAssertion softwareStatement,
             ProviderConfiguration providerConfiguration) {
         return new UkOpenBankingApiClient(
                 httpClient,
+                signer,
+                tlsConfigurationAdapter,
                 softwareStatement,
                 providerConfiguration,
                 wellKnownURL,
@@ -323,4 +285,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected abstract void configureAisHttpClient(TinkHttpClient httpClient);
 
     protected abstract void configurePisHttpClient(TinkHttpClient httpClient);
+
+    protected Class<? extends UkOpenBankingClientConfigurationAdapter>
+            getClientConfigurationFormat() {
+        return UkOpenBankingConfiguration.class;
+    }
 }

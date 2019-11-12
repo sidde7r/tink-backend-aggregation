@@ -1,14 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
-import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.LocalKeySigner;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.LocalCertificateTlsConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationAdapter;
 
 @JsonObject
-public class UkOpenBankingConfiguration implements ClientConfiguration {
+public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurationAdapter {
 
     @JsonProperty @Secret private String organizationId;
     @JsonProperty @SensitiveSecret private String clientId;
@@ -41,10 +48,6 @@ public class UkOpenBankingConfiguration implements ClientConfiguration {
         return signingKeyId;
     }
 
-    public String getSoftwareStatementAssertion() {
-        return softwareStatementAssertion;
-    }
-
     public String getRedirectUrl() {
         return redirectUrl;
     }
@@ -61,6 +64,7 @@ public class UkOpenBankingConfiguration implements ClientConfiguration {
         return transportKeyId;
     }
 
+    @Override
     public byte[] getRootCAData() {
         return EncodingUtils.decodeBase64String(rootCAData);
     }
@@ -77,7 +81,31 @@ public class UkOpenBankingConfiguration implements ClientConfiguration {
         return signingKeyPassword;
     }
 
+    @Override
     public String getRootCAPassword() {
         return rootCAPassword;
+    }
+
+    @Override
+    public ProviderConfiguration getProviderConfiguration() {
+        return new ProviderConfiguration(organizationId, new ClientInfo(clientId, clientSecret));
+    }
+
+    @Override
+    public SoftwareStatementAssertion getSoftwareStatementAssertion() {
+        return new SoftwareStatementAssertion(softwareStatementAssertion, softwareId, redirectUrl);
+    }
+
+    @Override
+    public TlsConfigurationAdapter getTlsConfigurationAdapter() {
+        return new LocalCertificateTlsConfiguration(
+                transportKeyId, transportKey, transportKeyPassword);
+    }
+
+    @Override
+    public JwtSigner getSigner() {
+        return new LocalKeySigner(
+                signingKeyId,
+                RSA.getPrivateKeyFromBytes(EncodingUtils.decodeBase64String(signingKey)));
     }
 }

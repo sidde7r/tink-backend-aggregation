@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UkOpenBankingPisAuthenticator implements OpenIdAuthenticator {
     private final UkOpenBankingApiClient apiClient;
-    private final SoftwareStatement softwareStatement;
+    private final SoftwareStatementAssertion softwareStatement;
     private final ProviderConfiguration providerConfiguration;
     private final UkOpenBankingPis ukOpenBankingPis;
     private PaymentResponse paymentResponse;
@@ -26,7 +26,7 @@ public class UkOpenBankingPisAuthenticator implements OpenIdAuthenticator {
 
     public UkOpenBankingPisAuthenticator(
             UkOpenBankingApiClient apiClient,
-            SoftwareStatement softwareStatement,
+            SoftwareStatementAssertion softwareStatement,
             ProviderConfiguration providerConfiguration,
             UkOpenBankingPis ukOpenBankingPis,
             PaymentRequest paymentRequest) {
@@ -64,7 +64,7 @@ public class UkOpenBankingPisAuthenticator implements OpenIdAuthenticator {
                         .withNonce(nonce)
                         .withWellknownConfiguration(wellKnownConfiguration)
                         .withIntentId(intentId)
-                        .build());
+                        .build(apiClient.getSigner()));
     }
 
     @Override

@@ -41,7 +41,10 @@ public class UkobRegisterCommand {
         TinkHttpClient httpClient = createHttpClient(config);
         String res =
                 OpenIdApiClient.registerClient(
-                        config.getSoftwareStatement(), new URL(wellKnown), httpClient);
+                        config.getSoftwareStatement(),
+                        new URL(wellKnown),
+                        httpClient,
+                        config.getSigner());
 
         System.out.println("\n### RESPONSE ###\n\n" + res + "\n\n################\n");
         String outFile = saveResponse(res);
@@ -83,12 +86,7 @@ public class UkobRegisterCommand {
                     configuration.getRootCAData(), configuration.getRootCAPassword());
         }
 
-        // Softw. Transp. key
-        httpClient.setSslClientCertificate(
-                configuration.getSoftwareStatement().getTransportKeyP12(),
-                configuration.getSoftwareStatement().getTransportKeyPassword());
-
-        return httpClient;
+        return configuration.getTlsConfigurationAdapter().applyConfiguration(httpClient);
     }
 
     private static String saveResponse(String response) throws IOException {

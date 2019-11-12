@@ -214,7 +214,10 @@ public class UkOpenBankingApiDefinitions {
                 ACCOUNT_IDENTIFIER_TYPE_MAPPER =
                         GenericTypeMapper
                                 .<ExternalAccountIdentification4Code, String>genericBuilder()
-                                .put(ExternalAccountIdentification4Code.BBAN, "UK.OBIE.BBAN")
+                                .put(
+                                        ExternalAccountIdentification4Code.BBAN,
+                                        "UK.OBIE.BBAN",
+                                        "DK.DanskeBank.AccountNumber")
                                 .put(ExternalAccountIdentification4Code.IBAN, "UK.OBIE.IBAN")
                                 .put(ExternalAccountIdentification4Code.PAYM, "UK.OBIE.Paym")
                                 .put(

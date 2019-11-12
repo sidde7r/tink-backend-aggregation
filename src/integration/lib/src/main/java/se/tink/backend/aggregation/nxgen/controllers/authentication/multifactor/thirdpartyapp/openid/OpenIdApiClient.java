@@ -11,11 +11,14 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.ClientRegistration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.JsonWebKeySet;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenRequestForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationAdapter;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -25,8 +28,9 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class OpenIdApiClient {
 
     protected final TinkHttpClient httpClient;
-    protected final SoftwareStatement softwareStatement;
+    protected final SoftwareStatementAssertion softwareStatement;
     protected final ProviderConfiguration providerConfiguration;
+    protected final JwtSigner signer;
     private final URL wellKnownURL;
 
     // Internal caching. Do not use these fields directly, always use the getters!
@@ -38,18 +42,30 @@ public class OpenIdApiClient {
 
     public OpenIdApiClient(
             TinkHttpClient httpClient,
-            SoftwareStatement softwareStatement,
+            JwtSigner signer,
+            TlsConfigurationAdapter tlsConfigurationAdapter,
+            SoftwareStatementAssertion softwareStatement,
             ProviderConfiguration providerConfiguration,
             URL wellKnownURL) {
-        this.httpClient = httpClient;
+        this.httpClient = tlsConfigurationAdapter.applyConfiguration(httpClient);
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
         this.wellKnownURL = wellKnownURL;
+        this.signer = signer;
 
         // Softw. Transp. key
-        httpClient.setSslClientCertificate(
-                softwareStatement.getTransportKeyP12(),
-                softwareStatement.getTransportKeyPassword());
+        //        httpClient.setSslClientCertificate(
+        //                softwareStatement.getTransportKeyP12(),
+        //                softwareStatement.getTransportKeyPassword());
+        //
+        //        httpClient.setDebugOutput(true);
+        //
+        //        httpClient.setEidasProxy(
+        //                EidasProxyConfiguration.createLocal(
+        //                        "https://eidas-proxy.staging.aggregation.tink.network"));
+        //        httpClient.setEidasIdentity(
+        //                new EidasIdentity("oxford-staging", "5f98e87106384b2981c0354a33b51590",
+        // ""));
     }
 
     public WellKnownResponse getWellKnownConfiguration() {
@@ -80,8 +96,12 @@ public class OpenIdApiClient {
         return pisAuthFilter;
     }
 
-    public SoftwareStatement getSoftwareStatement() {
+    public SoftwareStatementAssertion getSoftwareStatement() {
         return softwareStatement;
+    }
+
+    public JwtSigner getSigner() {
+        return signer;
     }
 
     public ProviderConfiguration getProviderConfiguration() {
@@ -135,8 +155,7 @@ public class OpenIdApiClient {
                 break;
 
             case private_key_jwt:
-                requestForm.withPrivateKeyJwt(
-                        softwareStatement, wellknownConfiguration, clientInfo);
+                requestForm.withPrivateKeyJwt(signer, wellknownConfiguration, clientInfo);
                 break;
 
             case client_secret_basic:
@@ -186,7 +205,8 @@ public class OpenIdApiClient {
                 break;
             case tls_client_auth:
                 // `tls_client_auth` needs clientId in the header.
-                requestBuilder = requestBuilder.addBasicAuth(clientInfo.getClientId());
+                //                requestBuilder =
+                // requestBuilder.addBasicAuth(clientInfo.getClientId());
                 break;
 
             case private_key_jwt:
@@ -276,7 +296,10 @@ public class OpenIdApiClient {
     }
 
     public static String registerClient(
-            SoftwareStatement softwareStatement, URL wellKnownURL, TinkHttpClient httpClient) {
+            SoftwareStatement softwareStatement,
+            URL wellKnownURL,
+            TinkHttpClient httpClient,
+            JwtSigner signer) {
 
         WellKnownResponse wellKnownResponse =
                 SerializationUtils.deserializeFromString(
@@ -289,7 +312,7 @@ public class OpenIdApiClient {
                         .withWellknownConfiguration(wellKnownResponse)
                         .withAccountsScope()
                         .withPaymentsScope()
-                        .build();
+                        .build(signer);
 
         return httpClient
                 .request(registrationEndpoint)

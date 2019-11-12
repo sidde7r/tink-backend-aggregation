@@ -6,13 +6,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.LocalKeySigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.LocalCertificateTlsConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -27,10 +30,15 @@ public class OpenIdApiClientTest {
     private String providerConfigurationData = "{}";
     private String rootCAData = "";
     private String rootCAPassword = "";
+    private String transportKeyId = "";
+    private String transportKey = "";
+    private String transportPassword = "";
+    private String signingKeyId = "";
+    private String signingKey = "";
 
-    private final SoftwareStatement softwareStatement =
+    private final SoftwareStatementAssertion softwareStatement =
             SerializationUtils.deserializeFromString(
-                    softwareStatementData, SoftwareStatement.class);
+                    softwareStatementData, SoftwareStatementAssertion.class);
 
     private final ProviderConfiguration providerConfiguration =
             SerializationUtils.deserializeFromString(
@@ -47,6 +55,12 @@ public class OpenIdApiClientTest {
         apiClient =
                 new OpenIdApiClient(
                         httpClient,
+                        new LocalKeySigner(
+                                signingKeyId,
+                                RSA.getPrivateKeyFromBytes(
+                                        EncodingUtils.decodeBase64String(signingKey))),
+                        new LocalCertificateTlsConfiguration(
+                                transportKeyId, transportKey, transportPassword),
                         softwareStatement,
                         providerConfiguration,
                         new URL(
