@@ -21,7 +21,6 @@ public abstract class UkOpenBankingAisAuthenticatorConstants {
                             "ReadBalances",
                             "ReadBeneficiariesDetail",
                             "ReadDirectDebits",
-                            "ReadProducts",
                             "ReadStandingOrdersDetail",
                             "ReadTransactionsCredits",
                             "ReadTransactionsDebits",
