@@ -31,6 +31,7 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/hvb
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/santander
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bbva
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bankinter
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/creditcards/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/op
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/creditcards/amex
