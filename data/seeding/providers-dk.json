@@ -422,10 +422,24 @@
             "type": "BANK"
         },
         {
-            "accessType": "OTHER",
+            "className": "nxgen.dk.openbanking.danskebank.DanskebankV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Danske Bank",
+            "fields": [],
+            "multiFactor": false,
+            "name": "dk-danskebank-ob",
+            "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK",
+            "accessType": "OTHER"
+        },
+        {
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Den Jyske Sparekasse",
+            "accessType": "OTHER",
             "fields": [
                 {
                     "description": "CPR no./User no.",
