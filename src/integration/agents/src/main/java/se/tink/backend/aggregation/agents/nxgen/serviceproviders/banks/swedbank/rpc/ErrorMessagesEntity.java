@@ -5,10 +5,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ErrorMessagesEntity {
-    private List<GeneralEntity> general;
+    private List<ErrorDetailsEntity> general;
     private List<FieldsEntity> fields;
 
-    public List<GeneralEntity> getGeneral() {
+    public List<ErrorDetailsEntity> getGeneral() {
         return general;
     }
 
