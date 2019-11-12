@@ -16,6 +16,8 @@ public enum LoginError implements AgentError {
             new LocalizableKey("Incorrect challenge response. Please try again.")),
     CREDENTIALS_VERIFICATION_ERROR(
             new LocalizableKey("Your credentials could not be verified. Please try again.")),
+    WRONG_PHONENUMBER(
+            new LocalizableKey("Please ensure that you have entered the correct mobile number")),
     WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE(
             new LocalizableKey(
                     "Please ensure that you have entered the correct mobile number and date of birth. Also make sure that you have activated bankID on mobile in your internet bank.")), // NO
