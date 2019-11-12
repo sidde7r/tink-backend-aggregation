@@ -23,20 +23,17 @@ class AuthorizeUrlService {
             final PersistentStorage persistentStorage,
             final CreditAgricoleBaseConfiguration configuration,
             final String state) {
-        // TODO refactor exception
         final BankEnum bank =
                 persistentStorage
                         .get(CreditAgricoleBaseConstants.StorageKeys.BANK_ENUM, BankEnum.class)
-                        .orElseThrow(() -> new RuntimeException("Unable to load correct bank url"));
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                CreditAgricoleBaseConstants.ErrorMessages
+                                                        .UNABLE_LOAD_BANK_URL));
 
         final String clientId = configuration.getClientId();
         final String redirectUri = configuration.getRedirectUrl();
-
-        System.out.println(
-                "https://127.0.0.1:7357/api/v1/thirdparty/callback?state="
-                        + state
-                        + "&code="
-                        + state);
 
         return new URL(bank.getAuthUrl())
                 .queryParam(CreditAgricoleBaseConstants.QueryKeys.CLIENT_ID, clientId)

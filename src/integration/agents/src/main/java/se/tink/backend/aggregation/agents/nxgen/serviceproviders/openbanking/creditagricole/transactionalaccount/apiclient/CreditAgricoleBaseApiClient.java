@@ -84,7 +84,7 @@ public class CreditAgricoleBaseApiClient {
                                 () ->
                                         new IllegalStateException(
                                                 CreditAgricoleBaseConstants.ErrorMessages
-                                                        .UNABLE_RECOGNIZE_BANK));
+                                                        .UNABLE_LOAD_BANK_URL));
         return bank.getBaseUrl();
     }
 }
