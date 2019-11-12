@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -122,9 +123,16 @@ public class GenericCardEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkCard(ExactCurrencyAmount balance) {
+        final ExactCurrencyAmount availableCredit;
+        if (isPrepaidCard()) {
+            availableCredit = ExactCurrencyAmount.of(BigDecimal.ZERO, LaCaixaConstants.CURRENCY);
+        } else {
+            availableCredit = getAvailableCredit();
+        }
+
         return CreditCardAccount.builderFromFullNumber(cardNumber, description)
                 .setExactBalance(balance)
-                .setExactAvailableCredit(getAvailableCredit())
+                .setExactAvailableCredit(availableCredit)
                 .setBankIdentifier(refValNumtarjeta)
                 .build();
     }
@@ -136,6 +144,11 @@ public class GenericCardEntity {
         // D = debit
         // C = credit
         return "C".equalsIgnoreCase(cardType) || "P".equalsIgnoreCase(cardType);
+    }
+
+    @JsonInclude
+    public boolean isPrepaidCard() {
+        return "P".equalsIgnoreCase(cardType);
     }
 
     @JsonIgnore
