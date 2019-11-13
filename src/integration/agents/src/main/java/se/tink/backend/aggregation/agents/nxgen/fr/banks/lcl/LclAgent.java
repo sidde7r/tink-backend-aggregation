@@ -29,7 +29,7 @@ public class LclAgent extends NextGenerationAgent
 
     public LclAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         configureHttpClient(client);
         this.lclPersistentStorage = new LclPersistentStorage(persistentStorage);
         this.apiClient = new LclApiClient(client, lclPersistentStorage);

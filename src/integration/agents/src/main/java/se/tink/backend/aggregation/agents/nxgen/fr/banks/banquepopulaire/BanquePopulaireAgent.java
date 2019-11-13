@@ -38,7 +38,7 @@ public class BanquePopulaireAgent extends NextGenerationAgent
 
     public BanquePopulaireAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         configureHttpClient(client);
 
         apiClient =
