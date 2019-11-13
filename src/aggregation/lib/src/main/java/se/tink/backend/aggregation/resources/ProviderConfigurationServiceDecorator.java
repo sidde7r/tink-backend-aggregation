@@ -26,28 +26,35 @@ public class ProviderConfigurationServiceDecorator implements ProviderConfigurat
 
     @Override
     public List<ProviderConfiguration> list() {
-        providerConfigurationService.addClientFilter(clusterIdFilter);
-        List<ProviderConfiguration> providerConfigurations = providerConfigurationService.list();
-        providerConfigurationService.removeClientFilter(clusterIdFilter);
-        return providerConfigurations;
+        synchronized (providerConfigurationService) {
+            providerConfigurationService.addClientFilter(clusterIdFilter);
+            List<ProviderConfiguration> providerConfigurations =
+                    providerConfigurationService.list();
+            providerConfigurationService.removeClientFilter(clusterIdFilter);
+            return providerConfigurations;
+        }
     }
 
     @Override
     public List<ProviderConfiguration> listByMarket(String market) {
-        providerConfigurationService.addClientFilter(clusterIdFilter);
-        List<ProviderConfiguration> providerConfigurations =
-                providerConfigurationService.listByMarket(market);
-        providerConfigurationService.removeClientFilter(clusterIdFilter);
-        return providerConfigurations;
+        synchronized (providerConfigurationService) {
+            providerConfigurationService.addClientFilter(clusterIdFilter);
+            List<ProviderConfiguration> providerConfigurations =
+                    providerConfigurationService.listByMarket(market);
+            providerConfigurationService.removeClientFilter(clusterIdFilter);
+            return providerConfigurations;
+        }
     }
 
     @Override
     public ProviderConfiguration getProviderByName(String providerName) {
-        providerConfigurationService.addClientFilter(clusterIdFilter);
-        ProviderConfiguration providerConfiguration =
-                providerConfigurationService.getProviderByName(providerName);
-        providerConfigurationService.removeClientFilter(clusterIdFilter);
-        return providerConfiguration;
+        synchronized (providerConfigurationService) {
+            providerConfigurationService.addClientFilter(clusterIdFilter);
+            ProviderConfiguration providerConfiguration =
+                    providerConfigurationService.getProviderByName(providerName);
+            providerConfigurationService.removeClientFilter(clusterIdFilter);
+            return providerConfiguration;
+        }
     }
 
     @Override

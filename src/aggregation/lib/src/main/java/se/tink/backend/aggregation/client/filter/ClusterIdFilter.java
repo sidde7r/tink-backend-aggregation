@@ -5,7 +5,6 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.filter.ClientFilter;
-import java.util.Arrays;
 
 public class ClusterIdFilter extends ClientFilter {
     private static final String CLUSTER_NAME_HEADER = "x-tink-cluster-name";
@@ -20,7 +19,6 @@ public class ClusterIdFilter extends ClientFilter {
 
     public ClusterIdFilter(String clusterId) {
         String[] split = clusterId.split("-");
-        System.out.println("here is the split - " + Arrays.toString(split));
         Preconditions.checkState(
                 split.length == 2,
                 "Trying to create a ClusterIdFilter from an invalid clusterId : " + clusterId);
