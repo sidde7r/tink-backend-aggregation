@@ -99,8 +99,8 @@ public class ArgentaAuthenticator implements OAuth2Authenticator {
         String regexForRangePattern = RangeRegexUtils.regexForRange(1, maxNumber);
 
         return Field.builder()
-                .description("Enter number of selected SCA method\n")
-                .helpText(this.catalog.getString(description) + "\nPlease select SCA method")
+                .description("Enter number of selected SCA method")
+                .helpText("SCA methods:\n" + this.catalog.getString(description))
                 .name(QueryKeys.CHOSEN_SCA_METHOD)
                 .numeric(true)
                 .minLength(1)

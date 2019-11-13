@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.entities;
 
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -18,6 +19,6 @@ public class ScaMethodEntity {
        2. remove "_" in option "NO_PREFERENCE"
     */
     public String toString() {
-        return authenticationType.replaceAll("_", " ");
+        return StringUtils.capitalize(authenticationType.replaceAll("_", " ").toLowerCase());
     }
 }
