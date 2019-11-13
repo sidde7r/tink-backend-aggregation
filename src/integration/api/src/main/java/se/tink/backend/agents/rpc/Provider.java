@@ -10,8 +10,6 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonInclude(Include.NON_NULL)
@@ -170,33 +168,5 @@ public class Provider implements Cloneable {
     @JsonIgnore
     public boolean isOpenBanking() {
         return accessType == AccessType.OPEN_BANKING;
-    }
-
-    public static Provider of(ProviderConfiguration providerConfiguration) {
-        Provider provider = new Provider();
-
-        provider.setAccessType(
-                Provider.AccessType.valueOf(providerConfiguration.getAccessType().name()));
-        provider.setClassName(providerConfiguration.getClassName());
-        provider.setCredentialsType(
-                CredentialsTypes.valueOf(providerConfiguration.getCredentialsType().name()));
-        provider.setCurrency(providerConfiguration.getCurrency());
-        provider.setDisplayName(providerConfiguration.getDisplayName());
-        provider.setFields(
-                providerConfiguration.getFields().stream()
-                        .map(Field::of)
-                        .collect(Collectors.toList()));
-        provider.setFinancialInstitutionId(providerConfiguration.getFinancialInstitutionId());
-        provider.setMarket(providerConfiguration.getMarket());
-        provider.setName(providerConfiguration.getName());
-        provider.setPayload(providerConfiguration.getPayload());
-        provider.setStatus(ProviderStatuses.valueOf(providerConfiguration.getStatus().name()));
-        provider.setSupplementalFields(
-                providerConfiguration.getSupplementalFields().stream()
-                        .map(Field::of)
-                        .collect(Collectors.toList()));
-        provider.setType(ProviderTypes.valueOf(providerConfiguration.getType().name()));
-
-        return provider;
     }
 }

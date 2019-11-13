@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
-import se.tink.backend.aggregation.configuration.models.ProviderConfigurationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.S3StorageConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceConfiguration;
 import se.tink.libraries.discovery.CoordinationConfiguration;
@@ -52,8 +51,6 @@ public class AggregationConfigurationModule extends AbstractModule {
                         configuration
                                 .getAgentsServiceConfiguration()
                                 .getTppSecretsServiceConfiguration());
-        bind(ProviderConfigurationServiceConfiguration.class)
-                .toInstance(configuration.getProviderConfigurationServiceConfiguration());
 
         if (configuration.isDevelopmentMode()
                 && configuration.getDevelopmentConfiguration().isValid()) {

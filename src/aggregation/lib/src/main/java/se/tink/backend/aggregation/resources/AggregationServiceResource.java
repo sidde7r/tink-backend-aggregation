@@ -13,12 +13,10 @@ import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationTemplateBuilder;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationValidator;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
-import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigurationService;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
@@ -29,6 +27,7 @@ import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
+import se.tink.backend.aggregation.rpc.SecretsTemplateRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.AgentWorker;
@@ -57,7 +56,6 @@ public class AggregationServiceResource implements AggregationService {
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private SupplementalInformationController supplementalInformationController;
     private ApplicationDrainMode applicationDrainMode;
-    private ProviderConfigurationService providerConfigurationService;
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
 
     @Inject
@@ -66,14 +64,12 @@ public class AggregationServiceResource implements AggregationService {
             QueueProducer producer,
             AgentWorkerOperationFactory agentWorkerOperationFactory,
             SupplementalInformationController supplementalInformationController,
-            ApplicationDrainMode applicationDrainMode,
-            ProviderConfigurationService providerConfigurationService) {
+            ApplicationDrainMode applicationDrainMode) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;
         this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
-        this.providerConfigurationService = providerConfigurationService;
     }
 
     @Override
@@ -256,23 +252,17 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public String getSecretsTemplate(
-            String providerName,
-            boolean includeDescriptions,
-            boolean includeExamples,
-            ClientInfo clientInfo) {
-        ProviderConfigurationServiceDecorator decoratedProviderConfigurationService =
-                ProviderConfigurationServiceDecorator.of(providerConfigurationService, clientInfo);
-        Provider provider =
-                Provider.of(decoratedProviderConfigurationService.getProviderByName(providerName));
+    public String getSecretsTemplate(SecretsTemplateRequest request) {
         return new ClientConfigurationTemplateBuilder(
-                        provider, includeDescriptions, includeExamples)
+                        request.getProvider(),
+                        request.getIncludeDescriptions(),
+                        request.getIncludeExamples())
                 .buildTemplate();
     }
 
     @Override
     public SecretsNamesValidationResponse validateSecretsNames(
-            SecretsNamesValidationRequest request, ClientInfo clientInfo) {
+            SecretsNamesValidationRequest request) {
         Preconditions.checkNotNull(request, "SecretsNamesValidationRequest cannot be null.");
         Preconditions.checkNotNull(
                 request.getProvider(), "Provider in SecretsNamesValidationRequest cannot be null.");
