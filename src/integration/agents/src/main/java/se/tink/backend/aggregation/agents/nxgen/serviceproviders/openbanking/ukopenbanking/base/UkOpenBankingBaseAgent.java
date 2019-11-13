@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationAdapter;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -83,7 +82,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             SignatureKeyPair signatureKeyPair,
             UkOpenBankingAisConfig aisConfig,
             boolean disableSslVerification) {
-
         super(request, context, signatureKeyPair);
         this.disableSslVerification = disableSslVerification;
 
@@ -110,8 +108,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         providerConfiguration = ukOpenBankingConfiguration.getProviderConfiguration();
 
-        // Different part between UkOpenBankingBaseAgent and this class are ended here
-
         if (this.disableSslVerification) {
             client.disableSslVerification();
         } else {
@@ -120,11 +116,15 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                     ukOpenBankingConfiguration.getRootCAPassword());
         }
 
+        ukOpenBankingConfiguration
+                .getTlsConfigurationOverride()
+                .orElse(this::useEidasProxy)
+                .applyConfiguration(client);
+
         apiClient =
                 createApiClient(
                         client,
                         ukOpenBankingConfiguration.getSigner(),
-                        ukOpenBankingConfiguration.getTlsConfigurationAdapter(),
                         softwareStatementAssertion,
                         providerConfiguration);
 
@@ -136,16 +136,18 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 constructTransactionalAccountRefreshController();
     }
 
+    private void useEidasProxy(TinkHttpClient httpClient) {
+        httpClient.setEidasProxy(configuration.getEidasProxy());
+    }
+
     protected UkOpenBankingApiClient createApiClient(
             TinkHttpClient httpClient,
             JwtSigner signer,
-            TlsConfigurationAdapter tlsConfigurationAdapter,
             SoftwareStatementAssertion softwareStatement,
             ProviderConfiguration providerConfiguration) {
         return new UkOpenBankingApiClient(
                 httpClient,
                 signer,
-                tlsConfigurationAdapter,
                 softwareStatement,
                 providerConfiguration,
                 wellKnownURL,

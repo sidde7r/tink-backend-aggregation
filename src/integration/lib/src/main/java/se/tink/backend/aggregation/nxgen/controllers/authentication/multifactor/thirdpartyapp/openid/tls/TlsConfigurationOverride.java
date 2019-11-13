@@ -2,6 +2,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
-public interface TlsConfigurationAdapter {
-    TinkHttpClient applyConfiguration(final TinkHttpClient client);
+public interface TlsConfigurationOverride {
+    void applyConfiguration(final TinkHttpClient client);
 }

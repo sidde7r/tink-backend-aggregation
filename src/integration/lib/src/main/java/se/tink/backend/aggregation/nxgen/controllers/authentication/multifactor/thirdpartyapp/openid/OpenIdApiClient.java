@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenRequestForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationAdapter;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -43,11 +42,10 @@ public class OpenIdApiClient {
     public OpenIdApiClient(
             TinkHttpClient httpClient,
             JwtSigner signer,
-            TlsConfigurationAdapter tlsConfigurationAdapter,
             SoftwareStatementAssertion softwareStatement,
             ProviderConfiguration providerConfiguration,
             URL wellKnownURL) {
-        this.httpClient = tlsConfigurationAdapter.applyConfiguration(httpClient);
+        this.httpClient = httpClient;
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
         this.wellKnownURL = wellKnownURL;

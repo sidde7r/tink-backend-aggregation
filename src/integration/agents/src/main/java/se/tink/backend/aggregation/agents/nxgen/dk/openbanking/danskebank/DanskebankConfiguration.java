@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -13,8 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.EidasJwtSigner.EidasSigningKey;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner.Algorithm;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.EidasTlsConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationAdapter;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationOverride;
 
 public class DanskebankConfiguration implements UkOpenBankingClientConfigurationAdapter {
 
@@ -46,8 +46,8 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
     }
 
     @Override
-    public TlsConfigurationAdapter getTlsConfigurationAdapter() {
-        return new EidasTlsConfiguration();
+    public Optional<TlsConfigurationOverride> getTlsConfigurationOverride() {
+        return Optional.empty();
     }
 
     @Override

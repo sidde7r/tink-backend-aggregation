@@ -31,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner.Algorithm;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationAdapter;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -44,18 +43,11 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     public UkOpenBankingApiClient(
             TinkHttpClient httpClient,
             JwtSigner signer,
-            TlsConfigurationAdapter tlsConfigurationAdapter,
             SoftwareStatementAssertion softwareStatement,
             ProviderConfiguration providerConfiguration,
             URL wellKnownURL,
             PersistentStorage persistentStorage) {
-        super(
-                httpClient,
-                signer,
-                tlsConfigurationAdapter,
-                softwareStatement,
-                providerConfiguration,
-                wellKnownURL);
+        super(httpClient, signer, softwareStatement, providerConfiguration, wellKnownURL);
         this.persistentStorage = persistentStorage;
     }
 

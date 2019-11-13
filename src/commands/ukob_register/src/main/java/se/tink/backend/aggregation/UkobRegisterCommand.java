@@ -86,7 +86,17 @@ public class UkobRegisterCommand {
                     configuration.getRootCAData(), configuration.getRootCAPassword());
         }
 
-        return configuration.getTlsConfigurationAdapter().applyConfiguration(httpClient);
+        configuration
+                .getTlsConfigurationOverride()
+                .orElse(UkobRegisterCommand::useEidasProxy)
+                .applyConfiguration(httpClient);
+
+        return httpClient;
+    }
+
+    private static void useEidasProxy(final TinkHttpClient client) {
+        throw new UnsupportedOperationException(
+                "Ukob registration command does not support default tls configuration yet.");
     }
 
     private static String saveResponse(String response) throws IOException {

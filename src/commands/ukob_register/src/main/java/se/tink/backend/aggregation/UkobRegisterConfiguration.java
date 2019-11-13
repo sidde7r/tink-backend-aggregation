@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -11,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.LocalKeySigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.LocalCertificateTlsConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationAdapter;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationOverride;
 
 @JsonObject
 public class UkobRegisterConfiguration implements UkOpenBankingClientConfigurationAdapter {
@@ -45,8 +46,8 @@ public class UkobRegisterConfiguration implements UkOpenBankingClientConfigurati
     }
 
     @Override
-    public TlsConfigurationAdapter getTlsConfigurationAdapter() {
-        return new LocalCertificateTlsConfiguration(transportKey);
+    public Optional<TlsConfigurationOverride> getTlsConfigurationOverride() {
+        return Optional.of(new LocalCertificateTlsConfiguration(transportKey));
     }
 
     @Override

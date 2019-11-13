@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.TransportKey;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
-public class LocalCertificateTlsConfiguration implements TlsConfigurationAdapter {
+public class LocalCertificateTlsConfiguration implements TlsConfigurationOverride {
 
     private TransportKey transportKey;
 
@@ -17,9 +17,8 @@ public class LocalCertificateTlsConfiguration implements TlsConfigurationAdapter
     }
 
     @Override
-    public TinkHttpClient applyConfiguration(final TinkHttpClient client) {
+    public void applyConfiguration(final TinkHttpClient client) {
 
         client.setSslClientCertificate(transportKey.getP12Key(), transportKey.getPassword());
-        return client;
     }
 }
