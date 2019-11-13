@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.creditcard.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,18 +8,18 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-public class TransactionEntity {
+public class CreditCardTransactionEntity {
     @JsonProperty("Currency")
     private String currency;
 
-    @JsonProperty("DateTime")
+    @JsonProperty("Date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date transactionDate;
 
     @JsonProperty("Description")
     private String description;
 
-    @JsonProperty("Value")
+    @JsonProperty("Amount")
     private double value;
 
     public Transaction toTinkTransaction() {

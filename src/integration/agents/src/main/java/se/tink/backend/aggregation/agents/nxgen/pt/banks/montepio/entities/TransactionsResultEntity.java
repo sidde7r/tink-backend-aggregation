@@ -3,15 +3,23 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.creditcard.entity.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TransactionsResultEntity extends PaginableResultEntity {
 
     @JsonProperty("AccountTransactions")
-    private List<TransactionEntity> transactions;
+    private List<AccountTransactionEntity> accountTransactions;
 
-    public Optional<List<TransactionEntity>> getTransactions() {
-        return Optional.ofNullable(transactions);
+    @JsonProperty("CardTransactions")
+    private List<CreditCardTransactionEntity> cardTransactions;
+
+    public Optional<List<AccountTransactionEntity>> getAccountTransactions() {
+        return Optional.ofNullable(accountTransactions);
+    }
+
+    public Optional<List<CreditCardTransactionEntity>> getCardTransactions() {
+        return Optional.ofNullable(cardTransactions);
     }
 }

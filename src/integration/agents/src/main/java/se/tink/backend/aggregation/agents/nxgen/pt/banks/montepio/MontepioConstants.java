@@ -7,6 +7,7 @@ public class MontepioConstants {
     public static final int MAX_TRANSACTION_HISTORY_MONTHS = 6;
     public static final String TRANSACTIONS_FETCH_ERROR_FORMAT =
             "Cannot fetch transactions, bank returned error with [code=%s, message=%s]";
+    public static final String DEFAULT_CURRENCY = "EUR";
 
     public static class URLs {
         public static final URL LOGIN = new URL(Endpoints.LOGIN);
@@ -17,6 +18,11 @@ public class MontepioConstants {
         public static final URL FETCH_SAVINGS_ACCOUNT_TRANSACTIONS =
                 new URL(Endpoints.FETCH_SAVINGS_ACCOUNT_TRANSACTIONS);
         public static final URL FETCH_ACCOUNT_DETAILS = new URL(Endpoints.FETCH_ACCOUNT_DETAILS);
+        public static final URL FETCH_CREDIT_CARDS = new URL(Endpoints.FETCH_CREDIT_CARDS);
+        public static final URL FETCH_CREDIT_CARD_TRANSACTIONS =
+                new URL(Endpoints.FETCH_CREDIT_CARD_TRANSACTIONS);
+        public static final URL FETCH_CREDIT_CARD_DETAILS =
+                new URL(Endpoints.FETCH_CREDIT_CARD_DETAILS);
     }
 
     public static class Endpoints {
@@ -34,6 +40,12 @@ public class MontepioConstants {
                 BASE + "privateMG/savingAccount/SavingAccountWithdrawStep0";
         public static final String FETCH_SAVINGS_ACCOUNT_TRANSACTIONS =
                 BASE + "privateMG/savingAccount/SavingAccountTransactionsTransaction";
+        public static final String FETCH_CREDIT_CARDS =
+                BASE + "privateMG/card/CreditCardsTransaction";
+        public static final String FETCH_CREDIT_CARD_TRANSACTIONS =
+                BASE + "privateMG/card/CreditCardTransactionsTransaction";
+        public static final String FETCH_CREDIT_CARD_DETAILS =
+                BASE + "privateMG/card/CreditCardDetailsTransaction";
     }
 
     public static class Crypto {

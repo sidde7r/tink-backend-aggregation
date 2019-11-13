@@ -14,12 +14,14 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConsta
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.PasswordEncryptionUtil;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.rpc.AuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.rpc.AuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchAccountDetailsRequest;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchAccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities.FetchAccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchTransactionsRequest;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.creditcard.rpc.FetchCreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.investments.rpc.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchAccountDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchAccountTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchCreditCardTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -83,9 +85,20 @@ public class MontepioApiClient {
                 .post(FetchAccountDetailsResponse.class, request);
     }
 
+    public FetchCreditCardResponse fetchCreditCards() {
+        return baseRequest(URLs.FETCH_CREDIT_CARDS).post(FetchCreditCardResponse.class);
+    }
+
+    public FetchAccountDetailsResponse fetchCreditCardDetails(String handle) {
+        FetchAccountDetailsRequest request = new FetchAccountDetailsRequest(handle);
+        return baseRequest(URLs.FETCH_CREDIT_CARD_DETAILS)
+                .header(HeaderKeys.SCREEN_NAME, HeaderValues.ACCOUNTS_SCREEN_NAME)
+                .post(FetchAccountDetailsResponse.class, request);
+    }
+
     public FetchTransactionsResponse fetchCheckingAccountTransactions(
             Account account, int pageNumber, LocalDate from, LocalDate to) {
-        return fetchTransactions(URLs.FETCH_TRANSACTIONS, account, pageNumber, from, to);
+        return fetchAccountTransactions(URLs.FETCH_TRANSACTIONS, account, pageNumber, from, to);
     }
 
     public FetchInvestmentAccountsResponse fetchSavingsAccounts() {
@@ -96,15 +109,25 @@ public class MontepioApiClient {
 
     public FetchTransactionsResponse fetchSavingsAccountTransactions(
             Account account, int pageNumber, LocalDate from, LocalDate to) {
-        return fetchTransactions(
+        return fetchAccountTransactions(
                 URLs.FETCH_SAVINGS_ACCOUNT_TRANSACTIONS, account, pageNumber, from, to);
     }
 
-    private FetchTransactionsResponse fetchTransactions(
+    public FetchTransactionsResponse fetchCreditCardTransactions(
+            Account account, int pageNumber, LocalDate from, LocalDate to) {
+        String handle = account.getFromTemporaryStorage(PropertyKeys.HANDLE);
+        FetchCreditCardTransactionsRequest request =
+                new FetchCreditCardTransactionsRequest(pageNumber, to, from, handle);
+        return baseRequest(URLs.FETCH_CREDIT_CARD_TRANSACTIONS)
+                .header(HeaderKeys.SCREEN_NAME, HeaderValues.TRANSACTIONS_SCREEN_NAME)
+                .post(FetchTransactionsResponse.class, request);
+    }
+
+    private FetchTransactionsResponse fetchAccountTransactions(
             URL url, Account account, int pageNumber, LocalDate from, LocalDate to) {
         String handle = account.getFromTemporaryStorage(PropertyKeys.HANDLE);
-        FetchTransactionsRequest request =
-                new FetchTransactionsRequest(pageNumber, to, from, handle);
+        FetchAccountTransactionsRequest request =
+                new FetchAccountTransactionsRequest(pageNumber, to, from, handle);
         return baseRequest(url)
                 .header(HeaderKeys.SCREEN_NAME, HeaderValues.TRANSACTIONS_SCREEN_NAME)
                 .post(FetchTransactionsResponse.class, request);

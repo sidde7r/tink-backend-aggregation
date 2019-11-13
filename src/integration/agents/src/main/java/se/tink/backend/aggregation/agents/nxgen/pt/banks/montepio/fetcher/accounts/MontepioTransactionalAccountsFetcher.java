@@ -11,10 +11,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConstants;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities.AccountTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities.FetchAccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchAccountDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -64,9 +64,9 @@ public class MontepioTransactionalAccountsFetcher
                         });
 
         List<Transaction> transactions =
-                response.getResultEntity().getTransactions().orElseGet(Collections::emptyList)
-                        .stream()
-                        .map(TransactionEntity::toTinkTransaction)
+                response.getResultEntity().getAccountTransactions()
+                        .orElseGet(Collections::emptyList).stream()
+                        .map(AccountTransactionEntity::toTinkTransaction)
                         .collect(Collectors.toList());
         return PaginatorResponseImpl.create(
                 transactions, response.getResultEntity().hasMorePages());

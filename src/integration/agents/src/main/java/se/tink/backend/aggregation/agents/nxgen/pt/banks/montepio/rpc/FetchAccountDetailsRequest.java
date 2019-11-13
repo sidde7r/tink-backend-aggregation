@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
