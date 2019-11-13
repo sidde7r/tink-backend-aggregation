@@ -14,6 +14,8 @@ public final class CreditAgricoleAlpesprovenceAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("fr", "fr-creditagricolealpesprovence-ob")
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("creditagricolealpesprovence")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

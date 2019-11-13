@@ -20,7 +20,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class CreditAgricoleBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final CreditAgricoleBaseApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private CreditAgricoleBaseConfiguration creditAgricoleConfiguration;
@@ -34,7 +33,6 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
 
         persistentStorage.put(CreditAgricoleBaseConstants.StorageKeys.BANK_ENUM, bank);
 
-        this.clientName = request.getProvider().getPayload();
         this.apiClient = new CreditAgricoleBaseApiClient(client, persistentStorage);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -45,12 +43,12 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
         creditAgricoleConfiguration =
                 CreditAgricoleBaseClientConfigurationUtils.getConfiguration(
                         configuration,
-                        clientName,
                         apiClient,
                         client,
                         context,
                         this.getAgentClass(),
-                        getAgentConfigurationController());
+                        getAgentConfigurationController(),
+                        CreditAgricoleBaseConfiguration.class);
     }
 
     @Override

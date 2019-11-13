@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class CreditAgricoleAlpesprovenceAgent extends CreditAgricoleBaseAgent {
+public final class CreditAgricoleAlpesprovenceAgent extends CreditAgricoleBaseAgent {
     public CreditAgricoleAlpesprovenceAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, BankEnum.ALPES_PROVENCE);
