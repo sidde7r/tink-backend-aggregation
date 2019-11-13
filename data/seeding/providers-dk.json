@@ -433,7 +433,7 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK",
-            "accessType": "OTHER"
+            "accessType": "OPEN_BANKING"
         },
         {
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
