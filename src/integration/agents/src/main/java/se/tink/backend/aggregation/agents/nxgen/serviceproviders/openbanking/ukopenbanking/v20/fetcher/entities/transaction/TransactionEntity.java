@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -73,7 +73,7 @@ public class TransactionEntity {
                 .build();
     }
 
-    private Amount getSignedAmount() {
+    private ExactCurrencyAmount getSignedAmount() {
         if (UkOpenBankingApiDefinitions.CreditDebitIndicator.DEBIT == creditDebitIndicator) {
             return amount.negate();
         }

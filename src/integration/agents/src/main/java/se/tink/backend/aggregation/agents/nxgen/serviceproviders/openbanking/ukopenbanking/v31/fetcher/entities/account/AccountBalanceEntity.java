@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.entities.CreditLineEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountBalanceEntity {
@@ -35,9 +35,9 @@ public class AccountBalanceEntity {
         return accountId;
     }
 
-    public Amount getBalance() {
+    public ExactCurrencyAmount getBalance() {
 
-        Amount total = getSignedAmount();
+        ExactCurrencyAmount total = getSignedAmount();
 
         // If no credit line is present the balance is already calculated.
         return Optional.ofNullable(creditLine).orElseGet(Collections::emptyList).stream()
@@ -59,14 +59,14 @@ public class AccountBalanceEntity {
                 .orElse(total);
     }
 
-    public Optional<Amount> getAvailableCredit() {
+    public Optional<ExactCurrencyAmount> getAvailableCredit() {
         return ExternalLimitType.getPreferredCreditLineEntity(creditLine)
                 .map(CreditLineEntity::getAmount);
     }
 
-    private Amount getSignedAmount() {
+    private ExactCurrencyAmount getSignedAmount() {
         // Remove sign included in balance value
-        Amount unsignedAmount = balance.stripSign();
+        ExactCurrencyAmount unsignedAmount = balance.abs();
 
         // Apply sign based on credit/debit indicator
         return creditDebitIndicator == UkOpenBankingApiDefinitions.CreditDebitIndicator.CREDIT
