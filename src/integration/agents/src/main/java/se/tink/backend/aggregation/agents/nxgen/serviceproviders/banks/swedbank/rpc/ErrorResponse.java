@@ -12,7 +12,9 @@ public class ErrorResponse {
     public boolean hasErrorCode(String errorCode) {
         if (errorMessages != null && errorMessages.getGeneral() != null) {
             return errorMessages.getGeneral().stream()
-                    .anyMatch(errorDetailsEntity -> errorDetailsEntity.getCode().equalsIgnoreCase(errorCode));
+                    .anyMatch(
+                            errorDetailsEntity ->
+                                    errorDetailsEntity.getCode().equalsIgnoreCase(errorCode));
         }
 
         return false;

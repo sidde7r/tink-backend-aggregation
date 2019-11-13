@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSecurityTokenSignTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisterTransferResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
@@ -156,13 +157,30 @@ public class SwedbankTransferHelper {
 
     public void confirmSuccessfulTransferOrThrow(
             ConfirmTransferResponse confirmTransferResponse, String idToConfirm) {
-        if (!confirmTransferResponse.isTransferConfirmed(idToConfirm)) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED)
-                    .build();
+
+        if (confirmTransferResponse.isTransferConfirmed(idToConfirm)) {
+            return;
         }
+
+        TransactionEntity rejectedTransfer =
+                confirmTransferResponse
+                        .getRejectedTransfer(idToConfirm)
+                        .orElseThrow(
+                                () ->
+                                        transferFailedWithMessage(
+                                                TransferExecutionException.EndUserMessage
+                                                        .TRANSFER_CONFIRM_FAILED));
+
+        TransferExecutionException.EndUserMessage endUserMessage =
+                rejectedTransfer
+                        .getMessageBasedOnRejectionCause()
+                        .orElseThrow(
+                                () ->
+                                        transferCancelledWithMessage(
+                                                TransferExecutionException.EndUserMessage
+                                                        .TRANSFER_REJECTED));
+
+        throw transferCancelledWithMessage(endUserMessage);
     }
 
     public static AccountIdentifier getDestinationAccount(Transfer transfer) {
@@ -318,6 +336,22 @@ public class SwedbankTransferHelper {
         } catch (SupplementalInfoException e) {
             return Optional.empty();
         }
+    }
+
+    private TransferExecutionException transferFailedWithMessage(
+            TransferExecutionException.EndUserMessage endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setEndUserMessage(endUserMessage)
+                .setMessage(endUserMessage.getKey().get())
+                .build();
+    }
+
+    private TransferExecutionException transferCancelledWithMessage(
+            TransferExecutionException.EndUserMessage endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setEndUserMessage(endUserMessage)
+                .setMessage(endUserMessage.getKey().get())
+                .build();
     }
 
     public LinksEntity tokenSignTransfer(LinksEntity links) {
