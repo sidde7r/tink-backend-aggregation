@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import se.tink.backend.aggregation.agents.*;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleBaseAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseClientConfigurationService;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseClientConfigurationUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
@@ -43,15 +43,14 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         creditAgricoleConfiguration =
-                CreditAgricoleBaseClientConfigurationService.getInstance()
-                        .getConfiguration(
-                                configuration,
-                                clientName,
-                                apiClient,
-                                client,
-                                context,
-                                this.getAgentClass(),
-                                getAgentConfigurationController());
+                CreditAgricoleBaseClientConfigurationUtils.getConfiguration(
+                        configuration,
+                        clientName,
+                        apiClient,
+                        client,
+                        context,
+                        this.getAgentClass(),
+                        getAgentConfigurationController());
     }
 
     @Override

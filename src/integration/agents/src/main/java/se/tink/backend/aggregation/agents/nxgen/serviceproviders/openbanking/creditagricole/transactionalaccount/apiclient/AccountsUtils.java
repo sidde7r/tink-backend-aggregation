@@ -8,27 +8,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-class AccountsService {
+class AccountsUtils {
 
-    private static AccountsService instance;
-
-    private AccountsService() {}
-
-    static AccountsService getInstance() {
-        if (instance == null) {
-            instance = new AccountsService();
-        }
-        return instance;
-    }
-
-    GetAccountsResponse get(
+    static GetAccountsResponse get(
             final String baseUrl,
             final PersistentStorage persistentStorage,
             final TinkHttpClient client,
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration) {
 
-        final String authToken =
-                "Bearer " + StorageService.getInstance().getTokenFromStorage(persistentStorage);
+        final String authToken = "Bearer " + StorageUtils.getTokenFromStorage(persistentStorage);
         return client.request(getUrl(baseUrl))
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
@@ -37,7 +25,7 @@ class AccountsService {
                 .get(GetAccountsResponse.class);
     }
 
-    private String getUrl(final String baseUrl) {
+    private static String getUrl(final String baseUrl) {
         return baseUrl + ApiServices.ACCOUNTS;
     }
 }

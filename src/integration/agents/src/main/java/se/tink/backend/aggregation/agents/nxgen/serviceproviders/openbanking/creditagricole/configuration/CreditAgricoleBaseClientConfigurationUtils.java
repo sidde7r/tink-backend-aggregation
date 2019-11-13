@@ -9,20 +9,9 @@ import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
-public class CreditAgricoleBaseClientConfigurationService {
+public class CreditAgricoleBaseClientConfigurationUtils {
 
-    private static CreditAgricoleBaseClientConfigurationService instance;
-
-    private CreditAgricoleBaseClientConfigurationService() {}
-
-    public static CreditAgricoleBaseClientConfigurationService getInstance() {
-        if (instance == null) {
-            instance = new CreditAgricoleBaseClientConfigurationService();
-        }
-        return instance;
-    }
-
-    public CreditAgricoleBaseConfiguration getConfiguration(
+    public static CreditAgricoleBaseConfiguration getConfiguration(
             final AgentsServiceConfiguration configuration,
             final String clientName,
             final CreditAgricoleBaseApiClient apiClient,

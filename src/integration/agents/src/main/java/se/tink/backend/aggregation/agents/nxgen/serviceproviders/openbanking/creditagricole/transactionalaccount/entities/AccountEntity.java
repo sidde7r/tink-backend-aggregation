@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.AccountTypeMapperBuilder;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -45,7 +45,7 @@ public class AccountEntity {
 
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
-                        CreditAgricoleBaseConstants.ACCOUNT_TYPE_MAPPER,
+                        AccountTypeMapperBuilder.build(),
                         cashAccountType,
                         TransactionalAccountType.OTHER)
                 .withBalance(BalanceModule.of(getAvailableBalance()))

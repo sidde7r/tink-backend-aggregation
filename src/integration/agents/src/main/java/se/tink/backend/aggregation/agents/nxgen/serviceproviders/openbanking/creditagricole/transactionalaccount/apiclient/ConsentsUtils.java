@@ -10,28 +10,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-class ConsentsService {
+class ConsentsUtils {
 
-    private static ConsentsService instance;
-
-    private ConsentsService() {}
-
-    static ConsentsService getInstance() {
-        if (instance == null) {
-            instance = new ConsentsService();
-        }
-        return instance;
-    }
-
-    void put(
+    static void put(
             final String baseUrl,
             final PersistentStorage persistentStorage,
             final TinkHttpClient client,
             final List<AccountIdEntity> listOfNecessaryConstents,
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration) {
 
-        final String authToken =
-                "Bearer " + StorageService.getInstance().getTokenFromStorage(persistentStorage);
+        final String authToken = "Bearer " + StorageUtils.getTokenFromStorage(persistentStorage);
 
         client.request(getUrl(baseUrl))
                 .accept(MediaType.APPLICATION_JSON)
@@ -41,11 +29,12 @@ class ConsentsService {
                 .put(buildBody(listOfNecessaryConstents));
     }
 
-    private String getUrl(final String baseUrl) {
+    private static String getUrl(final String baseUrl) {
         return baseUrl + ApiServices.CONSENTS;
     }
 
-    private PutConsentsRequest buildBody(final List<AccountIdEntity> listOfNecessaryConstents) {
+    private static PutConsentsRequest buildBody(
+            final List<AccountIdEntity> listOfNecessaryConstents) {
         return new PutConsentsRequest(
                 listOfNecessaryConstents, listOfNecessaryConstents, false, false);
     }

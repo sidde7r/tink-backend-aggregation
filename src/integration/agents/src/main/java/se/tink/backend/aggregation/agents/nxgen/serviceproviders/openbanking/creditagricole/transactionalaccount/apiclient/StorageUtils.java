@@ -4,20 +4,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-class StorageService {
+class StorageUtils {
 
-    private static StorageService instance;
-
-    private StorageService() {}
-
-    static StorageService getInstance() {
-        if (instance == null) {
-            instance = new StorageService();
-        }
-        return instance;
-    }
-
-    String getTokenFromStorage(final PersistentStorage persistentStorage) {
+    static String getTokenFromStorage(final PersistentStorage persistentStorage) {
         OAuth2Token oAuth2Token =
                 persistentStorage
                         .get(CreditAgricoleBaseConstants.StorageKeys.OAUTH_TOKEN, OAuth2Token.class)

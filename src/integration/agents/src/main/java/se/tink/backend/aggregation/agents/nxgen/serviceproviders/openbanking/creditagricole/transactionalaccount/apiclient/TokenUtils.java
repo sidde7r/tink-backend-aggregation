@@ -12,20 +12,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
-class TokenService {
+class TokenUtils {
 
-    private static TokenService instance;
-
-    private TokenService() {}
-
-    static TokenService getInstance() {
-        if (instance == null) {
-            instance = new TokenService();
-        }
-        return instance;
-    }
-
-    TokenResponse get(
+    static TokenResponse get(
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration,
             final TinkHttpClient client,
             final String baseUrl,
@@ -52,7 +41,7 @@ class TokenService {
                 .post(TokenResponse.class, request.toData());
     }
 
-    TokenResponse refresh(
+    static TokenResponse refresh(
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration,
             final TinkHttpClient client,
             final String baseUrl,
@@ -79,7 +68,7 @@ class TokenService {
                 .post(TokenResponse.class, request.toData());
     }
 
-    private String getUrl(final String baseUrl) {
+    private static String getUrl(final String baseUrl) {
         return baseUrl + ApiServices.TOKEN;
     }
 }

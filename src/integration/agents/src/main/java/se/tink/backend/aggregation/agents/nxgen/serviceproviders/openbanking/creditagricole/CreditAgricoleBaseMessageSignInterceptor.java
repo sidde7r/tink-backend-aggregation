@@ -28,7 +28,7 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
                     CreditAgricoleBaseConstants.HeaderKeys.X_REQUEST_ID);
 
     private CreditAgricoleBaseConfiguration configuration;
-    protected EidasProxyConfiguration eidasConf;
+    private EidasProxyConfiguration eidasConf;
     private EidasIdentity eidasIdentity;
 
     public CreditAgricoleBaseMessageSignInterceptor(

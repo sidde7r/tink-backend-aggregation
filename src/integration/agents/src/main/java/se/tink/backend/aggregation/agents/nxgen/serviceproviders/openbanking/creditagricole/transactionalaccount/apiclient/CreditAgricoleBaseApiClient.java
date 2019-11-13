@@ -40,36 +40,28 @@ public class CreditAgricoleBaseApiClient {
     }
 
     public TokenResponse getToken(final String code) {
-        return TokenService.getInstance().get(getConfiguration(), client, getBaseUrl(), code);
+        return TokenUtils.get(getConfiguration(), client, getBaseUrl(), code);
     }
 
     public OAuth2Token refreshToken(final String refreshToken) {
         final TokenResponse tokenResponse =
-                TokenService.getInstance()
-                        .refresh(getConfiguration(), client, getBaseUrl(), refreshToken);
+                TokenUtils.refresh(getConfiguration(), client, getBaseUrl(), refreshToken);
         final OAuth2Token oAuth2Token = tokenResponse.toTinkToken();
         setTokenToSession(oAuth2Token);
         return oAuth2Token;
     }
 
     public GetAccountsResponse getAccounts() {
-        return AccountsService.getInstance()
-                .get(getBaseUrl(), persistentStorage, client, configuration);
+        return AccountsUtils.get(getBaseUrl(), persistentStorage, client, configuration);
     }
 
     public void putConsents(final List<AccountIdEntity> listOfNecessaryConstents) {
-        ConsentsService.getInstance()
-                .put(
-                        getBaseUrl(),
-                        persistentStorage,
-                        client,
-                        listOfNecessaryConstents,
-                        configuration);
+        ConsentsUtils.put(
+                getBaseUrl(), persistentStorage, client, listOfNecessaryConstents, configuration);
     }
 
     public GetTransactionsResponse getTransactions(final String id) {
-        return TransactionsService.getInstance()
-                .get(id, getBaseUrl(), persistentStorage, client, configuration);
+        return TransactionsUtils.get(id, getBaseUrl(), persistentStorage, client, configuration);
     }
 
     private void setTokenToSession(OAuth2Token token) {
