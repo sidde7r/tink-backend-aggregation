@@ -8,14 +8,12 @@ import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAg
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.api.MonitoringService;
-import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigurationService;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClientProvider;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
 import se.tink.backend.aggregation.resources.MonitoringServiceResource;
-import se.tink.backend.aggregation.resources.ProviderConfigurationServiceResource;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
@@ -66,9 +64,6 @@ public class AggregationModule extends AbstractModule {
         bind(AggregationService.class).to(AggregationServiceResource.class).in(Scopes.SINGLETON);
         bind(CreditSafeService.class).to(CreditSafeServiceResource.class).in(Scopes.SINGLETON);
         bind(MonitoringService.class).to(MonitoringServiceResource.class).in(Scopes.SINGLETON);
-        bind(ProviderConfigurationService.class)
-                .to(ProviderConfigurationServiceResource.class)
-                .in(Scopes.SINGLETON);
 
         JerseyResourceRegistrar.build()
                 .binder(binder())

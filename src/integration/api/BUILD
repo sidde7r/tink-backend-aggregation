@@ -5,7 +5,6 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
         "//src/integration/account:enums",
         "//src/integration/amount",
         "//src/integration/credentials:demo",

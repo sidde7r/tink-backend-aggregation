@@ -382,6 +382,3 @@ eventProducerServiceConfiguration:
 
 featureFlags:
   esProxy: false
-
-providerConfigurationServiceConfiguration:
-  enabled: true

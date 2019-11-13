@@ -2,14 +2,11 @@ package se.tink.backend.aggregation.api;
 
 import java.util.List;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
@@ -24,6 +21,7 @@ import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
+import se.tink.backend.aggregation.rpc.SecretsTemplateRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.libraries.credentials.service.BatchMigrateCredentialsRequest;
@@ -147,21 +145,17 @@ public interface AggregationService {
     List<Credentials> batchMigrateCredentials(
             BatchMigrateCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 
-    @GET
-    @Path("secrets-template/{providerName}")
+    @POST
+    @Path("secrets-template")
     @TeamOwnership(Team.INTEGRATION)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    String getSecretsTemplate(
-            @PathParam("providerName") String providerName,
-            @DefaultValue("true") @QueryParam("includeDescriptions") boolean includeDescriptions,
-            @DefaultValue("true") @QueryParam("includeExamples") boolean includeExamples,
-            @ClientContext ClientInfo clientInfo);
+    String getSecretsTemplate(SecretsTemplateRequest request);
 
     @POST
     @Path("validate-secrets")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    SecretsNamesValidationResponse validateSecretsNames(
-            SecretsNamesValidationRequest request, @ClientContext ClientInfo clientInfo);
+    SecretsNamesValidationResponse validateSecretsNames(SecretsNamesValidationRequest request);
 }
