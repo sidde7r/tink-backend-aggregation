@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -29,6 +30,7 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
         this.persistentStorage = persistentStorage;
 
         this.client.addFilter(new NordeaSeFilter());
+        this.client.addFilter(new TimeoutFilter());
     }
 
     private RequestBuilder createRequestWithTppToken(URL url, String token) {
