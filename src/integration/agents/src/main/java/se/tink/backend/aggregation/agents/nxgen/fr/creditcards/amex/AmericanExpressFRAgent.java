@@ -9,6 +9,6 @@ public class AmericanExpressFRAgent extends AmericanExpressV62Agent {
 
     public AmericanExpressFRAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new AmericanExpressFRConfiguration());
+        super(request, context, signatureKeyPair, new AmericanExpressFRConfiguration(), true);
     }
 }

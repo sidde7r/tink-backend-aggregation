@@ -30,7 +30,7 @@ public class BnpParibasAgent extends NextGenerationAgent
 
     public BnpParibasAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         configureHttpClient(client);
         this.apiClient = new BnpParibasApiClient(client);
         this.bnpParibasPersistentStorage = new BnpParibasPersistentStorage(persistentStorage);

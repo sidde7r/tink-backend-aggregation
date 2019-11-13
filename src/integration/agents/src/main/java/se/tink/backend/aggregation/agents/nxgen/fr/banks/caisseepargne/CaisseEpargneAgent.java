@@ -27,7 +27,7 @@ public class CaisseEpargneAgent extends NextGenerationAgent
     public CaisseEpargneAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
 
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
 
         apiClient = new CaisseEpargneApiClient(client);
 
