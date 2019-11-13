@@ -31,6 +31,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenSEAccountTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenSEUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transferdestination.HandelsbankenSETransferDestinationFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.filters.HandelsbankenSEBankSideErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.filters.HandelsbankenSEContentTypeFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
@@ -94,6 +96,7 @@ public class HandelsbankenSEAgent
     protected HandelsbankenSEApiClient constructApiClient(
             HandelsbankenSEConfiguration handelsbankenConfiguration) {
         client.addFilter(new HandelsbankenSEContentTypeFilter());
+        client.addFilter(new HandelsbankenSEBankSideErrorFilter());
         return new HandelsbankenSEApiClient(client, handelsbankenConfiguration);
     }
 
