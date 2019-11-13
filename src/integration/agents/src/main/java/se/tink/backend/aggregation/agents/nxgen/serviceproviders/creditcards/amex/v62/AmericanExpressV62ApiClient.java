@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.session.rpc.ExtendResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.session.rpc.LogoffResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Utils;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -65,9 +66,9 @@ public class AmericanExpressV62ApiClient {
     }
 
     public LogonResponse logon(LogonRequest request) {
-
-        return createRequest(AmericanExpressV62Constants.Urls.LOG_ON)
-                .post(LogonResponse.class, request);
+        String rawResponse =
+                createRequest(AmericanExpressV62Constants.Urls.LOG_ON).post(String.class, request);
+        return AmericanExpressV62Utils.fromJson(rawResponse, LogonResponse.class);
     }
 
     public TimelineResponse requestTimeline(TimelineRequest request) {

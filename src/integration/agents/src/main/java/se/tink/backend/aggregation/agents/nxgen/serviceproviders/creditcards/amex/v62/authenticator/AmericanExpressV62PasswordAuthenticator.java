@@ -75,6 +75,7 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
                 case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_ACCOUNT_BLOCKED:
                     throw AuthorizationError.ACCOUNT_BLOCKED.exception();
                 case AmericanExpressV62Constants.ReportingCode.BANKSIDE_TEMPORARY_ERROR:
+                case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_CONTENT_ERROR:
                     throw BankServiceError.BANK_SIDE_FAILURE.exception();
                 case AmericanExpressV62Constants.ReportingCode.UNSUPPORTED_MARKET:
                     // Using the message sent from Amex as user message as it will be in the local
