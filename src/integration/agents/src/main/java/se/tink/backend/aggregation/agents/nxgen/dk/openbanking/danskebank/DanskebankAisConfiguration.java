@@ -1,10 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_BALANCE_REQUEST;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_BULK_REQUEST;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_TRANSACTIONS_REQUEST;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST;
-
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +7,7 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.authenticator.rpc.AccountPermissionResponseV31;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -91,12 +87,12 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
 
     @Override
     public URL getBulkAccountRequestURL() {
-        return apiBaseURL.concat(ACCOUNT_BULK_REQUEST);
+        return apiBaseURL.concat(ApiServices.ACCOUNT_BULK_REQUEST);
     }
 
     @Override
     public URL getAccountBalanceRequestURL(String accountId) {
-        return apiBaseURL.concat(String.format(ACCOUNT_BALANCE_REQUEST, accountId));
+        return apiBaseURL.concat(String.format(ApiServices.ACCOUNT_BALANCE_REQUEST, accountId));
     }
 
     @Override
@@ -108,12 +104,13 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
 
     @Override
     public URL getUpcomingTransactionRequestURL(String accountId) {
-        return apiBaseURL.concat(String.format(ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST, accountId));
+        return apiBaseURL.concat(
+                String.format(ApiServices.ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST, accountId));
     }
 
     @Override
     public String getInitialTransactionsPaginationKey(String accountId) {
-        return String.format(ACCOUNT_TRANSACTIONS_REQUEST, accountId);
+        return String.format(ApiServices.ACCOUNT_TRANSACTIONS_REQUEST, accountId);
     }
 
     public URL getApiBaseURL() {
