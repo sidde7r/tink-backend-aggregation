@@ -16,11 +16,11 @@ public final class AmericanExpressV62Constants {
     public enum ConstantValueHeaders implements HeaderEnum {
         CHARSET("charset", "UTF-8"),
         CLIENT_TYPE("X-AXP-ClientType", "iPhone"),
-        APP_VERSION("X-AXP-AppVersion", "6.21.1"),
+        APP_VERSION("X-AXP-AppVersion", "6.23.0"),
         DEVICE_MODEL("X-AXP-DeviceModel", "iPhone8,1"),
         DEVICE_OS("X-AXP-DeviceOS", "iOS"),
         HARDWARE_ID("X-AXP-HardwareID", ""),
-        OS_VERSION("X-AXP-OSVersion", "10.2"),
+        OS_VERSION("X-AXP-OSVersion", "12.2"),
         TIMEZONE_OFFSET("X-AXP-TimeZoneOffset", "7200000");
 
         private final String headerName;
