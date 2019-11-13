@@ -381,4 +381,4 @@ eventProducerServiceConfiguration:
   url: event-producer-service.event-producer-service:443
 
 featureFlags:
-  esProxy: false
+  esProxy: true
