@@ -89,6 +89,11 @@ java_library(
     deps = [
         "//src/aggregation/aggregationcontroller_api",
         "//src/aggregation/api",
+        "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/annotations",
+        "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/filter",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
         "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client:module",
@@ -123,6 +128,7 @@ java_library(
         "//src/libraries/i18n",
         "//src/libraries/jersey_guice",
         "//src/libraries/jersey_log",
+        "//src/libraries/jersey_utils",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",
         "//src/libraries/metrics:core",
@@ -208,6 +214,7 @@ junit_test(
     deps = [
         "//src/aggregation/aggregationcontroller_api",
         "//src/aggregation/api",
+        "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
         "//src/aggregation/lib",
         "//src/integration/api",
         "//src/integration/credentials:service",
