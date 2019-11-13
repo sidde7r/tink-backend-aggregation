@@ -20,6 +20,10 @@ public class CreditAgricoleBaseConfiguration implements ClientConfiguration {
 
     @Secret private String psuIpAddress;
 
+    @Secret private String authorizeUrl;
+
+    @Secret private String baseUrl;
+
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUrl),
@@ -53,5 +57,19 @@ public class CreditAgricoleBaseConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(psuIpAddress),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "psuIpAddress"));
         return psuIpAddress;
+    }
+
+    public String getAuthorizeUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(authorizeUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Authorize Url"));
+        return authorizeUrl;
+    }
+
+    public String getBaseUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(baseUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base Url"));
+        return baseUrl;
     }
 }
