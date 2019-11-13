@@ -52,20 +52,6 @@ public class OpenIdApiClient {
         this.providerConfiguration = providerConfiguration;
         this.wellKnownURL = wellKnownURL;
         this.signer = signer;
-
-        // Softw. Transp. key
-        //        httpClient.setSslClientCertificate(
-        //                softwareStatement.getTransportKeyP12(),
-        //                softwareStatement.getTransportKeyPassword());
-        //
-        //        httpClient.setDebugOutput(true);
-        //
-        //        httpClient.setEidasProxy(
-        //                EidasProxyConfiguration.createLocal(
-        //                        "https://eidas-proxy.staging.aggregation.tink.network"));
-        //        httpClient.setEidasIdentity(
-        //                new EidasIdentity("oxford-staging", "5f98e87106384b2981c0354a33b51590",
-        // ""));
     }
 
     public WellKnownResponse getWellKnownConfiguration() {
@@ -204,9 +190,6 @@ public class OpenIdApiClient {
                                 clientInfo.getClientId(), clientInfo.getClientSecret());
                 break;
             case tls_client_auth:
-                // `tls_client_auth` needs clientId in the header.
-                //                requestBuilder =
-                // requestBuilder.addBasicAuth(clientInfo.getClientId());
                 break;
 
             case private_key_jwt:
