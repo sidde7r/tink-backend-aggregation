@@ -59,7 +59,9 @@ public class CaixaApiClient {
     public MarketDetailsResponse fetchMarketDetails(String assetTypeId) {
         return createBaseRequest(Urls.FETCH_MARKET_DETAILS)
                 .queryParam(QueryParams.ASSET_TYPE_ID, assetTypeId)
-                .queryParam(QueryParams.QUOTES_SEARCH_TYPE_ID, QueryValues.PORTFOLIO_MARKET_DETAILS_OPERATION)
+                .queryParam(
+                        QueryParams.QUOTES_SEARCH_TYPE_ID,
+                        QueryValues.PORTFOLIO_MARKET_DETAILS_OPERATION)
                 .get(MarketDetailsResponse.class);
     }
 

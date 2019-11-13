@@ -62,7 +62,8 @@ public class CaixaConstants {
     }
 
     public static class QueryValues {
-        public static final String BALANCES_AND_TRANSACTIONS_OPERATION = "BALANCES_AND_TRANSACTIONS";
+        public static final String BALANCES_AND_TRANSACTIONS_OPERATION =
+                "BALANCES_AND_TRANSACTIONS";
         public static final String INVESTMENT_PORTFOLIO_OPERATION = "INVESTMENT_PORTFOLIO";
         public static final String PORTFOLIO_MARKET_DETAILS_OPERATION = "PORTFOLIO";
     }

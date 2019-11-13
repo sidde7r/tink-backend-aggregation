@@ -103,7 +103,7 @@ public class CaixaInvestmentAccountFetcher implements AccountFetcher<InvestmentA
                         // assets are grouped into porfolios by asset type, so asset type id
                         // is a proper unique identifier
                         assetsByTypeContainerEntity.getAssetType().getAssetTypeId())
-                .withCashValue(0) //not supported
+                .withCashValue(0) // not supported
                 .withTotalProfit(totalProfit)
                 .withTotalValue(totalValue)
                 .withInstruments(instruments)
