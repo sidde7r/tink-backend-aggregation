@@ -29,7 +29,7 @@ public class CardEntity {
         return CreditCardAccount.builder(
                         cardNumberDisplay,
                         ExactCurrencyAmount.of(getTotalBalance(), config.getCurrency()).negate(),
-                        ExactCurrencyAmount.of(getAvailableCredit(), config.getCurrency()).negate())
+                        ExactCurrencyAmount.of(getAvailableCredit(), config.getCurrency()))
                 .setAccountNumber(cardNumberDisplay)
                 .setName(
                         cardProductName
