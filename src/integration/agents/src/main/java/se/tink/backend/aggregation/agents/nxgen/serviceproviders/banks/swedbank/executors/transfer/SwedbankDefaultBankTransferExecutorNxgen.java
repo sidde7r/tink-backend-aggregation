@@ -139,7 +139,7 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
                 SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED);
 
         confirmTransferResponse = apiClient.confirmTransfer(links.getNextOrThrow());
-        SwedbankTransferHelper.confirmSuccessfulTransfer(
+        transferHelper.confirmSuccessfulTransferOrThrow(
                 confirmTransferResponse, registeredTransfersResponse.getIdToConfirm().orElse(""));
     }
 

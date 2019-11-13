@@ -154,7 +154,7 @@ public class SwedbankTransferHelper {
                 : SwedbankBaseConstants.ReferenceType.MESSAGE;
     }
 
-    public static void confirmSuccessfulTransfer(
+    public void confirmSuccessfulTransferOrThrow(
             ConfirmTransferResponse confirmTransferResponse, String idToConfirm) {
         if (!confirmTransferResponse.isTransferConfirmed(idToConfirm)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
