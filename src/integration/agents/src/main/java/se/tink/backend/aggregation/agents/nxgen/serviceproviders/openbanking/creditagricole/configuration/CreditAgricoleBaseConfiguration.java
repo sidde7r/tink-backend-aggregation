@@ -11,8 +11,6 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @JsonObject
 public class CreditAgricoleBaseConfiguration implements ClientConfiguration {
 
-    @SensitiveSecret private String token;
-
     @Secret private String redirectUrl;
 
     @Secret private String clientId;
@@ -22,13 +20,6 @@ public class CreditAgricoleBaseConfiguration implements ClientConfiguration {
     @Secret private String clientSigningCertificateSerialNumber;
 
     @Secret private String psuIpAddress;
-
-    public String getToken() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(token),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Token"));
-        return token;
-    }
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
