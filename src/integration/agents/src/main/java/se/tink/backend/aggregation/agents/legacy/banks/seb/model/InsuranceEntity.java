@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants;
+import se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants.PortfolioType;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.strings.StringUtils;
@@ -72,12 +72,14 @@ public class InsuranceEntity {
         }
 
         switch (type.toLowerCase()) {
-            case SEBApiConstants.PortfolioType.ENDOWMENT_INSURANCE:
-            case SEBApiConstants.PortfolioType.PENSION_SAVINGS_FUND:
-            case SEBApiConstants.PortfolioType.SAFE_PENSION_INSURANCE:
-            case SEBApiConstants.PortfolioType.PENSION_INSURANCE:
+            case PortfolioType.ENDOWMENT_INSURANCE:
+            case PortfolioType.PENSION_SAVINGS_FUND:
+            case PortfolioType.SAFE_PENSION_INSURANCE:
+            case PortfolioType.PENSION_INSURANCE:
+            case PortfolioType.KAPITAL_PENSION:
                 return Portfolio.Type.KF;
-            case SEBApiConstants.PortfolioType.OCCUPATIONAL_PENSION:
+            case PortfolioType.OCCUPATIONAL_PENSION:
+            case PortfolioType.IPS:
                 return Portfolio.Type.PENSION;
             default:
                 log.warn(String.format("Unknown insurance type: %s", type));
