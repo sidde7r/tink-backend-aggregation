@@ -128,10 +128,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         softwareStatementAssertion,
                         providerConfiguration);
 
-        configureAisHttpClient(client);
-
-        client.setDebugOutput(true);
-
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
@@ -281,10 +277,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     protected abstract UkOpenBankingAis makeAis();
-
-    protected abstract void configureAisHttpClient(TinkHttpClient httpClient);
-
-    protected abstract void configurePisHttpClient(TinkHttpClient httpClient);
 
     protected Class<? extends UkOpenBankingClientConfigurationAdapter>
             getClientConfigurationFormat() {
