@@ -12,5 +12,6 @@ java_library(
         "//src/libraries/account_identifier",
         "//third_party:com_sun_jersey_jersey_core",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
+        "@com_google_guava_guava//jar",
     ],
 )
