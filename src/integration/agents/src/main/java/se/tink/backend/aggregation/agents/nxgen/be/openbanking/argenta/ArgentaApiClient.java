@@ -175,16 +175,24 @@ public final class ArgentaApiClient {
     }
 
     public TransactionsResponse getTransactions(String apiIdentifier, Date fromDate, Date toDate) {
-        return createRequestInSession(
-                        Urls.TRANSACTIONS.parameter(PathVariables.ACCOUNT_ID, apiIdentifier))
-                .header(HeaderKeys.DATE, getFormattedDate())
-                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                .queryParam(
-                        QueryKeys.DATE_FROM,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                                TimeUtils.get90DaysDate(toDate)))
-                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                .get(TransactionsResponse.class);
+        TransactionsResponse transactionsResponse = new TransactionsResponse();
+        if (checkWithin90Days(toDate)) {
+            transactionsResponse =
+                    createRequestInSession(
+                                    Urls.TRANSACTIONS.parameter(
+                                            PathVariables.ACCOUNT_ID, apiIdentifier))
+                            .header(HeaderKeys.DATE, getFormattedDate())
+                            .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
+                            .queryParam(
+                                    QueryKeys.DATE_FROM,
+                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                                            TimeUtils.get90DaysDate(toDate)))
+                            .queryParam(
+                                    QueryKeys.DATE_TO,
+                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                            .get(TransactionsResponse.class);
+        }
+        return transactionsResponse;
     }
 
     private String getFormattedDate() {
@@ -245,5 +253,11 @@ public final class ArgentaApiClient {
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, refreshTokenRequest.toData())
                 .toTinkToken();
+    }
+
+    private boolean checkWithin90Days(Date toDate) {
+        Date last90DaysFromNow = TimeUtils.get90DaysDate(new Date());
+        Date fromDate = TimeUtils.get90DaysDate(toDate);
+        return fromDate.equals(last90DaysFromNow) || fromDate.after(last90DaysFromNow);
     }
 }
