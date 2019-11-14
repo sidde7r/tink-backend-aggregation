@@ -62,7 +62,7 @@ public class ArgentaConstants {
 
     public static class Application {
         // Probably also want to change User-Agent
-        public static final String APPLICATION_VERSION = "5.0";
+        public static final String APPLICATION_VERSION = "5.2";
     }
 
     public static class Device {
