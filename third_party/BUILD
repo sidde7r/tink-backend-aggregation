@@ -534,9 +534,9 @@ java_library(
         "@io_dropwizard_dropwizard_servlets//jar",
         "@io_dropwizard_dropwizard_util//jar",
         "@io_dropwizard_dropwizard_validation//jar",
-        "@javax_el_javax_el_api//jar",
     ],
     runtime_deps = [
+        "@javax_el_javax_el_api//jar",
         "@javax_validation_validation_api//jar",
         "@net_sourceforge_argparse4j_argparse4j//jar",
         "@org_eclipse_jetty_jetty_continuation//jar",
