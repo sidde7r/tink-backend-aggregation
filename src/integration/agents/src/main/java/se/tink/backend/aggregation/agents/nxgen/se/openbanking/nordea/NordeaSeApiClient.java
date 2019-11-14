@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -17,17 +16,11 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class NordeaSeApiClient extends NordeaBaseApiClient {
-    private final PersistentStorage persistentStorage;
 
-    public NordeaSeApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
-        super(client, sessionStorage);
-        this.persistentStorage = persistentStorage;
+    public NordeaSeApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+        super(client, persistentStorage);
 
         this.client.addFilter(new NordeaSeFilter());
         this.client.addFilter(new TimeoutFilter());
@@ -58,17 +51,10 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
     }
 
     @Override
-    public OAuth2Token refreshToken(RefreshTokenForm form) {
+    public OAuth2Token refreshToken(String refreshToken) {
         return createRequest(NordeaSeConstants.Urls.GET_TOKEN)
-                .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .body(RefreshTokenForm.of(refreshToken), MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(GetTokenResponse.class)
                 .toTinkToken();
-    }
-
-    @Override
-    public OAuth2Token getStoredToken() {
-        return persistentStorage
-                .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
     }
 }

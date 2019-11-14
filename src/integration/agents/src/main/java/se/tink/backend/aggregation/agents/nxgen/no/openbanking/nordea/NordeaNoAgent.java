@@ -32,7 +32,7 @@ public final class NordeaNoAgent extends NordeaBaseAgent
     public NordeaNoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new NordeaNoApiClient(client, sessionStorage);
+        apiClient = new NordeaNoApiClient(client, persistentStorage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -40,7 +40,7 @@ public final class NordeaNoAgent extends NordeaBaseAgent
     @Override
     protected Authenticator constructAuthenticator() {
         NordeaBaseAuthenticator authenticator =
-                new NordeaNoAuthenticator((NordeaNoApiClient) apiClient, sessionStorage);
+                new NordeaNoAuthenticator((NordeaNoApiClient) apiClient);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,

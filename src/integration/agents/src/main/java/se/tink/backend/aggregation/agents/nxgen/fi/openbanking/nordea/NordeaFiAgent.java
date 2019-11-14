@@ -29,7 +29,7 @@ public final class NordeaFiAgent extends NordeaBaseAgent
     public NordeaFiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new NordeaFiApiClient(client, sessionStorage);
+        apiClient = new NordeaFiApiClient(client, persistentStorage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -37,7 +37,7 @@ public final class NordeaFiAgent extends NordeaBaseAgent
     @Override
     protected Authenticator constructAuthenticator() {
         NordeaBaseAuthenticator authenticator =
-                new NordeaFiAuthenticator((NordeaFiApiClient) apiClient, sessionStorage);
+                new NordeaFiAuthenticator((NordeaFiApiClient) apiClient);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,

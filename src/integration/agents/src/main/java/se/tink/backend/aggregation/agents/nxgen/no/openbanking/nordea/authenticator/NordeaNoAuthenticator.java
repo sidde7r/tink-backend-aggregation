@@ -4,12 +4,11 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.NordeaNoAp
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.NordeaNoConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class NordeaNoAuthenticator extends NordeaBaseAuthenticator {
 
-    public NordeaNoAuthenticator(NordeaNoApiClient apiClient, SessionStorage sessionStorage) {
-        super(apiClient, sessionStorage);
+    public NordeaNoAuthenticator(NordeaNoApiClient apiClient) {
+        super(apiClient);
     }
 
     @Override
