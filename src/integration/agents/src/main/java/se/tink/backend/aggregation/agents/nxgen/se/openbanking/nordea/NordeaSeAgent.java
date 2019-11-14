@@ -44,7 +44,7 @@ public final class NordeaSeAgent extends NordeaBaseAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new NordeaSeApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new NordeaSeApiClient(client, persistentStorage);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         scopeFromPayload = request.getProvider().getPayload();
     }

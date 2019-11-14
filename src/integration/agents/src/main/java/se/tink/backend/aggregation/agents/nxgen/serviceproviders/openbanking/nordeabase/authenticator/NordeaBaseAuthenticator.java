@@ -8,15 +8,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public abstract class NordeaBaseAuthenticator implements OAuth2Authenticator {
     protected final NordeaBaseApiClient apiClient;
-    protected final SessionStorage sessionStorage;
 
-    public NordeaBaseAuthenticator(NordeaBaseApiClient apiClient, SessionStorage sessionStorage) {
+    public NordeaBaseAuthenticator(NordeaBaseApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -38,12 +35,9 @@ public abstract class NordeaBaseAuthenticator implements OAuth2Authenticator {
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
         OAuth2Token token = apiClient.refreshToken(refreshToken);
-        apiClient.storeToken(token);
         return token;
     }
 
     @Override
-    public void useAccessToken(OAuth2Token accessToken) {
-        apiClient.storeToken(accessToken);
-    }
+    public void useAccessToken(OAuth2Token accessToken) {}
 }

@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -28,17 +29,17 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public class NordeaBaseApiClient implements TokenInterface {
     protected final TinkHttpClient client;
-    protected final SessionStorage sessionStorage;
+    protected final PersistentStorage persistentStorage;
     protected NordeaBaseConfiguration configuration;
 
-    public NordeaBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public NordeaBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
 
         this.client.addFilter(new BankSideFailureFilter());
     }
@@ -148,15 +149,16 @@ public class NordeaBaseApiClient implements TokenInterface {
     }
 
     @Override
-    public OAuth2Token getStoredToken() {
-        return sessionStorage
-                .get(NordeaBaseConstants.StorageKeys.ACCESS_TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
+    public void storeToken(OAuth2Token token) {
+        persistentStorage.rotateStorageValue(
+                OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, token);
     }
 
     @Override
-    public void storeToken(OAuth2Token token) {
-        sessionStorage.put(NordeaBaseConstants.StorageKeys.ACCESS_TOKEN, token);
+    public OAuth2Token getStoredToken() {
+        return persistentStorage
+                .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
+                .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
     }
 
     public CreatePaymentResponse createPayment(
