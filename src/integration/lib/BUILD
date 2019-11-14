@@ -77,6 +77,7 @@ java_library(
         "//src/libraries/uuid",
         "//third_party:com_amazonaws_aws_java_sdk_s3",
         "//third_party:com_auth0_java_jwt",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "//third_party:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "//third_party:com_github_detro_ghostdriver_phantomjsdriver",
