@@ -105,6 +105,12 @@ public class NordeaExecutorHelper {
             throw invalidDestError();
         }
 
+        // Transfer source and destination must not be the same
+        if (isAccountIdentifierEquals(transfer.getDestination(), transfer.getSource())) {
+            throw transferCancelledWithMessage(
+                    TransferExecutionException.EndUserMessage.DESTINATION_CANT_BE_SAME_AS_SOURCE);
+        }
+
         return accountResponse.getAccounts().stream()
                 .filter(account -> account.getPermissions().isCanTransferToAccount())
                 .filter(
@@ -273,6 +279,14 @@ public class NordeaExecutorHelper {
                                 apiClient.fetchPaymentDetails(paymentEntity.getApiIdentifier()))
                 .filter(paymentEntity -> paymentEntity.isEqualToTransfer(transfer))
                 .findFirst();
+    }
+
+    private TransferExecutionException transferCancelledWithMessage(
+            TransferExecutionException.EndUserMessage endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(endUserMessage.getKey().get())
+                .setEndUserMessage(this.catalog.getString(endUserMessage))
+                .build();
     }
 
     protected TransferExecutionException invalidDestError() {

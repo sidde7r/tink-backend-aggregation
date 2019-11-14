@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2019-11-01 13:40+0000\n"
-"PO-Revision-Date: 2019-11-01 13:40+0000\n"
+"POT-Creation-Date: 2019-11-14 13:23+0000\n"
+"PO-Revision-Date: 2019-11-14 13:23+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: sv\n"
@@ -786,3 +786,6 @@ msgstr "Mottagarkonton saknas i kontolistan"
 
 msgid "Transfer rejected by the Bank"
 msgstr "Överföringen nekades av banken"
+
+msgid "Source and destination account must not be the same."
+msgstr "Avsändarkonto och mottagarkonto kan inte vara samma."

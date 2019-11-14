@@ -141,6 +141,8 @@ public class TransferExecutionException extends RuntimeException {
                 new LocalizableKey(
                         "The transfer has been sent to your bank and will be executed when funds are available")),
         INVALID_DESTINATION(new LocalizableKey("Invalid destination account")),
+        DESTINATION_CANT_BE_SAME_AS_SOURCE(
+                new LocalizableKey("Source and destination account must not be the same.")),
         INVALID_DUEDATE_NOT_BUSINESSDAY(
                 new LocalizableKey("The payment date is not a business day")),
         INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY(
