@@ -70,6 +70,11 @@ public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
         return new ExactCurrencyAmount(this.getExactValue().negate(), this.getCurrencyCode());
     }
 
+    public ExactCurrencyAmount subtract(ExactCurrencyAmount amount) {
+        return new ExactCurrencyAmount(
+                this.getExactValue().subtract(amount.getExactValue()), this.getCurrencyCode());
+    }
+
     @Override
     public int compareTo(ExactCurrencyAmount other) {
         return compareTo(other.value);

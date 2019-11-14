@@ -38,14 +38,14 @@ public class CreditCalculation {
 
             Assert.assertEquals(
                     creditTest.getExpectedBalance(),
-                    creditTest.getBalance().toBigDecimal().doubleValue(),
+                    creditTest.getBalance().getExactValue().doubleValue(),
                     0);
 
             if (creditTest.getAvailableCredit().isPresent()) {
                 Assert.assertTrue(creditTest.getExpectedAvailableCredit().isPresent());
                 Assert.assertEquals(
                         creditTest.getExpectedAvailableCredit().get(),
-                        creditTest.getAvailableCredit().get().toBigDecimal().doubleValue(),
+                        creditTest.getAvailableCredit().get().getExactValue().doubleValue(),
                         0);
             } else {
                 Assert.assertFalse(creditTest.getExpectedAvailableCredit().isPresent());
@@ -60,14 +60,14 @@ public class CreditCalculation {
 
             Assert.assertEquals(
                     creditTest.getExpectedBalance(),
-                    creditTest.getBalance().toBigDecimal().doubleValue(),
+                    creditTest.getBalance().getExactValue().doubleValue(),
                     0);
 
             if (creditTest.getAvailableCredit().isPresent()) {
                 Assert.assertTrue(creditTest.getExpectedAvailableCredit().isPresent());
                 Assert.assertEquals(
                         creditTest.getExpectedAvailableCredit().get(),
-                        creditTest.getAvailableCredit().get().toBigDecimal().doubleValue(),
+                        creditTest.getAvailableCredit().get().getExactValue().doubleValue(),
                         0);
             } else {
                 Assert.assertFalse(creditTest.getExpectedAvailableCredit().isPresent());

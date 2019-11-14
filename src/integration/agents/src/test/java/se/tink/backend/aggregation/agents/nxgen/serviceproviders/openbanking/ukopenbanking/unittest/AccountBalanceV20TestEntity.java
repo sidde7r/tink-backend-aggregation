@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.fetcher.entities.account.AccountBalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountBalanceV20TestEntity {
@@ -12,11 +12,11 @@ public class AccountBalanceV20TestEntity {
     private double expectedBalance;
     private Double expectedAvailableCredit;
 
-    public Amount getBalance() {
+    public ExactCurrencyAmount getBalance() {
         return accountBalanceEntity.getBalance();
     }
 
-    Optional<Amount> getAvailableCredit() {
+    Optional<ExactCurrencyAmount> getAvailableCredit() {
         return accountBalanceEntity.getAvailableCredit();
     }
 
