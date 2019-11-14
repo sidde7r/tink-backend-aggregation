@@ -38,4 +38,16 @@ public class ConfirmTransferResponse {
                 .map(TransactionEntity::getId)
                 .anyMatch(confirmedId -> Objects.equals(idToConfirm, confirmedId));
     }
+
+    public Optional<TransactionEntity> getRejectedTransfer(String transferId) {
+        if (Strings.isNullOrEmpty(transferId)) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(rejectedTransactions).orElseGet(Collections::emptyList).stream()
+                .map(TransferTransactionEntity::getTransactions)
+                .flatMap(Collection::stream)
+                .filter(transactionEntity -> transactionEntity.getId().equalsIgnoreCase(transferId))
+                .findFirst();
+    }
 }

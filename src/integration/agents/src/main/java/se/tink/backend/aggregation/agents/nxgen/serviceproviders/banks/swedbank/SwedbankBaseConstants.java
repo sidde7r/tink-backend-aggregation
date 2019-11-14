@@ -338,6 +338,7 @@ public class SwedbankBaseConstants {
         public static final String LOGIN_FAILED = "LOGIN_FAILED";
         public static final String NOT_ALLOWED = "NOT_ALLOWED";
         public static final String AUTHORIZATION_FAILED = "AUTHORIZATION_FAILED";
+        public static final String INSUFFICIENT_FUNDS = "INSUFFICIENT_FUNDS";
     }
 
     public static class ErrorField {
