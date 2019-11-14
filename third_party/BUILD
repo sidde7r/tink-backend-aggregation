@@ -190,8 +190,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_github_tomakehurst_wiremock//jar",
-        "@org_apache_httpcomponents_httpclient//jar",
-        "@org_apache_httpcomponents_httpcore//jar",
     ],
     runtime_deps = [
         "@asm_asm//jar",
@@ -210,6 +208,8 @@ java_library(
         "@net_sf_jopt_simple_jopt_simple//jar",
         "@org_apache_commons_commons_collections4//jar",
         "@org_apache_commons_commons_lang3//jar",
+        "@org_apache_httpcomponents_httpclient//jar",
+        "@org_apache_httpcomponents_httpcore//jar",
         "@org_eclipse_jetty_jetty_continuation//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",

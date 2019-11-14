@@ -109,6 +109,7 @@ java_library(
         "//third_party:org_apache_commons_commons_math3",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",
+        "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_apache_lucene_lucene_core",
         "//third_party:org_apache_pdfbox_fontbox",
         "//third_party:org_apache_pdfbox_pdfbox",
