@@ -164,6 +164,7 @@ java_library(
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_vavr",
         "//third_party:javax_inject_javax_inject",
+        "//third_party:javax_validation_validation_api",
         "//third_party:joda_time_joda_time",
         "//third_party:net_sourceforge_argparse4j_argparse4j",
         "//third_party:net_sourceforge_cssparser_cssparser",
