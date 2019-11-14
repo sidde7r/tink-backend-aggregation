@@ -15,6 +15,9 @@ java_library(
         # Dropwizard
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:org_apache_httpcomponents_httpclient",
+
+        # Javax inject
+        "//third_party:javax_inject_javax_inject",
     ],
 )
 
@@ -28,6 +31,7 @@ junit_test(
     ],
     deps = [
         "//src/libraries/jersey_guice",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_netflix_governator",
         "//third_party:io_dropwizard_dropwizard_jersey",
         "//third_party:org_mockito_mockito_core",

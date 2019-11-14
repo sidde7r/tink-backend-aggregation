@@ -19,6 +19,7 @@ java_library(
         "//src/libraries/metrics:timers",
         "//third_party:bouncycastle",
         "//third_party:com_google_inject_extensions_guice_multibindings",
+        "//third_party:com_google_inject_guice",
         "//third_party:log",
         "//third_party:netty",
         "//third_party:prometheus",

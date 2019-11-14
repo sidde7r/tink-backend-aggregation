@@ -262,8 +262,10 @@ java_library(
     name = "com_google_http_client_google_http_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_code_findbugs_jsr305//jar",
         "@com_google_http_client_google_http_client//jar",
+    ],
+    runtime_deps = [
+        "@com_google_code_findbugs_jsr305//jar",
         "@org_apache_httpcomponents_httpclient//jar",
     ],
 )
@@ -273,6 +275,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_google_inject_extensions_guice_multibindings//jar",
+    ],
+    runtime_deps = [
         "@com_google_inject_guice//jar",
     ],
 )
@@ -281,9 +285,19 @@ java_library(
     name = "com_google_inject_guice",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_google_inject_guice//jar",
+    ],
+    runtime_deps = [
         "@aopalliance_aopalliance//jar",
         "@com_google_guava_guava//jar",
-        "@com_google_inject_guice//jar",
+        "@javax_inject_javax_inject//jar",
+    ],
+)
+
+java_library(
+    name = "javax_inject_javax_inject",
+    visibility = ["//visibility:public"],
+    exports = [
         "@javax_inject_javax_inject//jar",
     ],
 )
@@ -300,12 +314,14 @@ java_library(
     name = "com_netflix_governator",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_netflix_governator//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_google_inject_extensions_guice_assistedinject//jar",
         "@com_google_inject_extensions_guice_grapher//jar",
         "@com_google_inject_extensions_guice_multibindings//jar",
         "@com_google_inject_guice//jar",
-        "@com_netflix_governator//jar",
         "@com_netflix_governator_api//jar",
         "@com_netflix_governator_core//jar",
         "@javax_inject_javax_inject//jar",
@@ -316,8 +332,10 @@ java_library(
     name = "com_google_instrumentation_instrumentation_api",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_code_findbugs_jsr305//jar",
         "@com_google_instrumentation_instrumentation_api//jar",
+    ],
+    runtime_deps = [
+        "@com_google_code_findbugs_jsr305//jar",
     ],
 )
 
@@ -342,20 +360,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_lambdaworks_scrypt//jar",
-    ],
-)
-
-java_library(
-    # TODO check is it used??
-    name = "com_maxmind_geoip2_geoip2",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_http_client_google_http_client//jar",
-        "@com_maxmind_db_maxmind_db//jar",
-        "@com_maxmind_geoip2_geoip2//jar",
-        "@org_apache_httpcomponents_httpclient//jar",
     ],
 )
 

@@ -20,6 +20,7 @@ java_library(
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
+        "//third_party:javax_inject_javax_inject",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_slf4j_slf4j_api",
     ],

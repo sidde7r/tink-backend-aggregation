@@ -11,6 +11,7 @@ java_library(
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
+        "//third_party:javax_inject_javax_inject",
         "//third_party:javax_validation_validation_api",
         "//third_party:org_hibernate_hibernate_annotations",
         "//third_party:org_hibernate_hibernate_entitymanager",
