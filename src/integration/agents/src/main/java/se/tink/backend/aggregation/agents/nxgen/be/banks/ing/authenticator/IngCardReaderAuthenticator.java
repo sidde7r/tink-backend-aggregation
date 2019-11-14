@@ -7,6 +7,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
@@ -140,6 +141,10 @@ public class IngCardReaderAuthenticator {
             }
             if (IngConstants.ErrorCodes.ACCOUNT_CANCELLED.equalsIgnoreCase(errorCode)) {
                 throw LoginError.NOT_CUSTOMER.exception();
+            }
+            if (IngConstants.ErrorCodes.SMARTBANKING_SERVER_IS_NOT_RESPONDING_CODE.equalsIgnoreCase(
+                    errorCode)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
             String errormsg =
                     String.format(
