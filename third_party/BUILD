@@ -189,12 +189,14 @@ java_library(
     name = "com_github_tomakehurst_wiremock",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_github_tomakehurst_wiremock//jar",
+    ],
+    runtime_deps = [
         "@asm_asm//jar",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
-        "@com_github_tomakehurst_wiremock//jar",
         "@com_google_guava_guava//jar",
         "@com_jayway_jsonpath_json_path//jar",
         "@commons_codec_commons_codec//jar",
@@ -221,6 +223,14 @@ java_library(
         "@org_slf4j_slf4j_api//jar",
         "@org_xmlunit_xmlunit_core//jar",
         "@org_xmlunit_xmlunit_legacy//jar",
+    ],
+)
+
+java_library(
+    name = "org_apache_commons_commons_collections4",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@org_apache_commons_commons_collections4//jar",
     ],
 )
 
