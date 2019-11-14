@@ -208,6 +208,8 @@ java_library(
         "@org_apache_commons_commons_lang3//jar",
         "@org_apache_httpcomponents_httpclient//jar",
         "@org_apache_httpcomponents_httpcore//jar",
+    ],
+    runtime_deps = [
         "@org_eclipse_jetty_jetty_continuation//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",
@@ -219,8 +221,6 @@ java_library(
         "@org_eclipse_jetty_jetty_webapp//jar",
         "@org_eclipse_jetty_jetty_xml//jar",
         "@org_slf4j_slf4j_api//jar",
-    ],
-    runtime_deps = [
         "@org_xmlunit_xmlunit_core//jar",
         "@org_xmlunit_xmlunit_legacy//jar",
     ],
