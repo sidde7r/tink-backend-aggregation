@@ -11,9 +11,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConstants;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConstants.PropertyKeys;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities.AccountTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities.FetchAccountDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -26,8 +27,6 @@ public class MontepioTransactionalAccountsFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionPagePaginator<TransactionalAccount> {
 
-    private static final String IBAN_DETAILS_KEY = "Iban";
-
     private final MontepioApiClient client;
 
     public MontepioTransactionalAccountsFetcher(final MontepioApiClient client) {
@@ -36,8 +35,7 @@ public class MontepioTransactionalAccountsFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return client.fetchAccounts().getResultEntity().getAccounts().orElseGet(ArrayList::new)
-                .stream()
+        return client.fetchAccounts().getResult().getAccounts().orElseGet(ArrayList::new).stream()
                 .map(this::mapAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -77,13 +75,13 @@ public class MontepioTransactionalAccountsFetcher
                 client.fetchAccountDetails(accountEntity.getHandle());
         String iban =
                 detailsResponse.getResult().getAccountDetails().stream()
-                        .filter(a -> IBAN_DETAILS_KEY.equals(a.getKey()))
+                        .filter(a -> PropertyKeys.IBAN_DETAILS_KEY.equals(a.getKey()))
                         .findAny()
                         .orElseThrow(
                                 () ->
                                         new IllegalArgumentException(
                                                 "Did not find IBAN account in accountDetails"))
                         .getValue();
-        return accountEntity.toTinkAccount(iban);
+        return accountEntity.toCheckingAccount(iban);
     }
 }
