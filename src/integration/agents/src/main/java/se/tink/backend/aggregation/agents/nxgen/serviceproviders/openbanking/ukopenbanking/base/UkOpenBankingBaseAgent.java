@@ -107,8 +107,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration =
                 getClientConfiguration();
 
-        SoftwareStatementAssertion softwareStatementAssertion =
-                ukOpenBankingConfiguration.getSoftwareStatementAssertion();
+        softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertion();
 
         providerConfiguration = ukOpenBankingConfiguration.getProviderConfiguration();
 
@@ -128,8 +127,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         JwtSigner signer =
                 ukOpenBankingConfiguration.getSignerOverride().orElseGet(this::getQsealSigner);
 
-        apiClient =
-                createApiClient(client, signer, softwareStatementAssertion, providerConfiguration);
+        apiClient = createApiClient(client, signer, softwareStatement, providerConfiguration);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 

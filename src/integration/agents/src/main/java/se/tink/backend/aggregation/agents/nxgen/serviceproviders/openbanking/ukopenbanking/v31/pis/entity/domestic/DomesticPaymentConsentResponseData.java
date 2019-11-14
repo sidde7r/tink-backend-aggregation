@@ -32,11 +32,11 @@ public class DomesticPaymentConsentResponseData {
     public PaymentResponse toTinkPaymentResponse() {
         Payment payment =
                 new Builder()
-                        .withAmount(initiation.toTinkAmount())
+                        .withExactCurrencyAmount(initiation.toTinkAmount())
                         .withStatus(getPaymentStatus())
                         .withDebtor(initiation.getDebtor())
                         .withCreditor(initiation.getCreditor())
-                        .withCurrency(initiation.toTinkAmount().getCurrency())
+                        .withCurrency(initiation.toTinkAmount().getCurrencyCode())
                         .withReference(initiation.getReference())
                         .withUniqueId(initiation.getInstructionIdentification())
                         .build();

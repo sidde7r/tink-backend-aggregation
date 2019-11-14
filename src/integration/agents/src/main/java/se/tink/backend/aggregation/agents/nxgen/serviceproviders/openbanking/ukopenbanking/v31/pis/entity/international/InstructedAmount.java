@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -12,11 +12,11 @@ public class InstructedAmount {
 
     public InstructedAmount() {}
 
-    public InstructedAmount(Amount amount) {
+    public InstructedAmount(ExactCurrencyAmount amount) {
         this.amount = new AmountEntity(amount);
     }
 
-    public Amount toTinkAmount() {
+    public ExactCurrencyAmount toTinkAmount() {
         return amount.toTinkAmount();
     }
 }

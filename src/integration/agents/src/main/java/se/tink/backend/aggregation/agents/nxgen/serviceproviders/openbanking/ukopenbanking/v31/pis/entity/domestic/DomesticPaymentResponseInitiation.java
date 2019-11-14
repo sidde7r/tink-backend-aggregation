@@ -30,7 +30,7 @@ public class DomesticPaymentResponseInitiation {
                 new Builder()
                         .withReference(remittanceInformation.createTinkReference())
                         .withCreditor(creditorAccount.toCreditor())
-                        .withAmount(instructedAmount.toTinkAmount())
+                        .withExactCurrencyAmount(instructedAmount.toTinkAmount())
                         .withDebtor(
                                 Objects.nonNull(debtorAccount) ? debtorAccount.toDebtor() : null)
                         .withStatus(UkOpenBankingV31Constants.toPaymentStatus(status))

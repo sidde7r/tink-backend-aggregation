@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public interface UkOpenBankingPis {
     // Some banks do not allow us to specify a source account.
@@ -23,7 +23,7 @@ public interface UkOpenBankingPis {
             String intentId,
             @Nullable AccountIdentifier sourceIdentifier,
             AccountIdentifier destinationIdentifier,
-            Amount amount,
+            ExactCurrencyAmount amount,
             String referenceText)
             throws TransferExecutionException;
 }

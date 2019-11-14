@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.danskebank;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -25,7 +26,7 @@ public class DanskebankAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-danskebank-oauth2")
-                .loadCredentialsBefore(true)
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
@@ -53,7 +54,9 @@ public class DanskebankAgentTest {
 
         List<Payment> payments = new ArrayList<>();
 
-        Amount amount = Amount.valueOf("GBP", 100, 2);
+        BigDecimal d = new BigDecimal(1);
+
+        ExactCurrencyAmount amount = new ExactCurrencyAmount(d, "GBP");
         LocalDate executionDate = LocalDate.now();
         String currency = "GBP";
 
@@ -68,7 +71,7 @@ public class DanskebankAgentTest {
                                 new Debtor(
                                         AccountIdentifier.create(
                                                 Type.SORT_CODE, SOURCE_IDENTIFIER)))
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
                         .withReference(new Reference("TRANSFER", "test Tink"))
