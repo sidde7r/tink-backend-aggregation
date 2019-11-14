@@ -523,7 +523,6 @@ java_library(
         "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
-        "@commons_lang_commons_lang//jar",
         "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_core//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
@@ -536,6 +535,7 @@ java_library(
         "@io_dropwizard_dropwizard_validation//jar",
     ],
     runtime_deps = [
+        "@commons_lang_commons_lang//jar",
         "@javax_el_javax_el_api//jar",
         "@javax_validation_validation_api//jar",
         "@net_sourceforge_argparse4j_argparse4j//jar",
