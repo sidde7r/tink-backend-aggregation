@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -91,6 +92,7 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
                 new TimeoutRetryFilter(
                         IngConstants.HttpClient.MAX_RETRIES,
                         IngConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new TimeoutFilter());
     }
 
     @Override
