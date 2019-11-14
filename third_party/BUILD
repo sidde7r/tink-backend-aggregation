@@ -178,6 +178,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_github_rholder_guava_retrying//jar",
+    ],
+    runtime_deps = [
         "@com_google_code_findbugs_jsr305//jar",
         "@com_google_guava_guava//jar",
     ],
