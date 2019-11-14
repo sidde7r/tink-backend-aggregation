@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.configuration.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -13,9 +14,7 @@ public class ProviderConfigurationServiceConfiguration {
 
     private String host;
     private int port;
-    private String caPath;
-    private String tlsCrtPath;
-    private String tlsKeyPath;
+    private List<String> pinnedCertificates;
     private boolean enabled;
 
     public String getHost() {
@@ -33,16 +32,8 @@ public class ProviderConfigurationServiceConfiguration {
         return port;
     }
 
-    public String getCaPath() {
-        return caPath;
-    }
-
-    public String getTlsCrtPath() {
-        return tlsCrtPath;
-    }
-
-    public String getTlsKeyPath() {
-        return tlsKeyPath;
+    public List<String> getPinnedCertificates() {
+        return pinnedCertificates;
     }
 
     public boolean isEnabled() {
