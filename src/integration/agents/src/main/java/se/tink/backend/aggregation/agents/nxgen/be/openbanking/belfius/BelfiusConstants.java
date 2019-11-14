@@ -24,6 +24,7 @@ public final class BelfiusConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final int INTERNAL_SERVER_ERROR = 500;
         public static final ImmutableList<Integer> TRANSACTION_ERROR_CODES =
                 ImmutableList.of(403, 404, 429);
     }
