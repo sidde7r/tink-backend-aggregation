@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -328,8 +327,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     }
 
     private void addQsealcSignatureByGetingWholeJwsToken(HttpRequest request) {
-        log.info("Using new qsealc signature method");
-        long startNs = System.nanoTime();
         // TODO: adding the info header once verified
         JwtBodyEntity jwtBody = new JwtBodyEntity();
         RequestLine requestLine = request.getRequestLine();
@@ -365,12 +362,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                         eidasProxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_JWT_RSA_SHA256,
                         eidasIdentity);
-        long delta = System.nanoTime() - startNs;
-        log.info("Prepare signing took {}", TimeUnit.NANOSECONDS.toMillis(delta));
         String jwt = signer.getJWSToken(baseTokenString.getBytes());
-        delta = System.nanoTime() - startNs - delta;
-        log.info("Signing took {}", TimeUnit.NANOSECONDS.toMillis(delta));
-        log.info("jwt token from new method is {}", jwt);
         request.addHeader(SIGNATURE_HEADER_KEY, jwt);
     }
 
