@@ -190,8 +190,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_github_tomakehurst_wiremock//jar",
-        "@org_apache_commons_commons_collections4//jar",
-        "@org_apache_commons_commons_lang3//jar",
         "@org_apache_httpcomponents_httpclient//jar",
         "@org_apache_httpcomponents_httpcore//jar",
     ],
@@ -210,6 +208,8 @@ java_library(
         "@net_minidev_asm//jar",
         "@net_minidev_json_smart//jar",
         "@net_sf_jopt_simple_jopt_simple//jar",
+        "@org_apache_commons_commons_collections4//jar",
+        "@org_apache_commons_commons_lang3//jar",
         "@org_eclipse_jetty_jetty_continuation//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",
@@ -223,6 +223,14 @@ java_library(
         "@org_slf4j_slf4j_api//jar",
         "@org_xmlunit_xmlunit_core//jar",
         "@org_xmlunit_xmlunit_legacy//jar",
+    ],
+)
+
+java_library(
+    name = "org_apache_commons_commons_collections4",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@org_apache_commons_commons_collections4//jar",
     ],
 )
 
