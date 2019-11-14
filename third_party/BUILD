@@ -537,6 +537,8 @@ java_library(
         "@javax_el_javax_el_api//jar",
         "@javax_validation_validation_api//jar",
         "@net_sourceforge_argparse4j_argparse4j//jar",
+    ],
+    runtime_deps = [
         "@org_eclipse_jetty_jetty_continuation//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",
@@ -547,8 +549,6 @@ java_library(
         "@org_eclipse_jetty_jetty_util//jar",
         "@org_eclipse_jetty_orbit_javax_servlet//jar",
         "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
-    ],
-    runtime_deps = [
         "@org_glassfish_web_javax_el//jar",
         "@org_hibernate_hibernate_validator//jar",
         "@org_jboss_logging_jboss_logging//jar",
