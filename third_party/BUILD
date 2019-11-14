@@ -193,7 +193,6 @@ java_library(
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_github_tomakehurst_wiremock//jar",
-        "@com_google_guava_guava//jar",
         "@org_apache_commons_commons_collections4//jar",
         "@org_apache_commons_commons_lang3//jar",
         "@org_apache_httpcomponents_httpclient//jar",
@@ -202,6 +201,7 @@ java_library(
     runtime_deps = [
         "@asm_asm//jar",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
+        "@com_google_guava_guava//jar",
         "@com_jayway_jsonpath_json_path//jar",
         "@commons_codec_commons_codec//jar",
         "@commons_logging_commons_logging//jar",
