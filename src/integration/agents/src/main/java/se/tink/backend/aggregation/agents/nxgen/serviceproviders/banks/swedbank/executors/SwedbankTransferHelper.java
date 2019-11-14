@@ -88,7 +88,9 @@ public class SwedbankTransferHelper {
                 case CANCELLED:
                     throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                             .setEndUserMessage(
-                                    TransferExecutionException.EndUserMessage.BANKID_CANCELLED)
+                                    catalog.getString(
+                                            TransferExecutionException.EndUserMessage
+                                                    .BANKID_CANCELLED))
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
                             .build();
                 case TIMEOUT:
