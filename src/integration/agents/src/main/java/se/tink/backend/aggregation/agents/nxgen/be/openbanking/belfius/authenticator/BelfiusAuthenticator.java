@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenti
 import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.QueryKeys;
@@ -16,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.utils.Cry
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -87,9 +90,18 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
                         .build()
                         .serialize();
 
-        TokenResponse tokenResponse =
-                apiClient.postToken(
-                        new URL(configuration.getBaseUrl() + Urls.TOKEN_PATH), refreshTokenEntity);
+        TokenResponse tokenResponse = new TokenResponse();
+        try {
+            tokenResponse =
+                    apiClient.postToken(
+                            new URL(configuration.getBaseUrl() + Urls.TOKEN_PATH),
+                            refreshTokenEntity);
+        } catch (HttpResponseException h) {
+            if (h.getResponse().getStatus()
+                    == BelfiusConstants.ErrorMessages.INTERNAL_SERVER_ERROR) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+        }
         persistentStorage.put(StorageKeys.ID_TOKEN, tokenResponse.getIdToken());
         persistentStorage.put(StorageKeys.LOGICAL_ID, tokenResponse.getLogicalId());
         return OAuth2Token.create(
