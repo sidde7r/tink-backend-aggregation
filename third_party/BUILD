@@ -377,6 +377,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_sun_jersey_jersey_client//jar",
+    ],
+    runtime_deps = [
         "@com_sun_jersey_jersey_core//jar",
     ],
 )
@@ -393,8 +395,10 @@ java_library(
     name = "com_sun_jersey_jersey_server",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
+    ],
+    runtime_deps = [
+        "@com_sun_jersey_jersey_core//jar",
     ],
 )
 
@@ -403,6 +407,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_yubico_yubico_validation_client2//jar",
+    ],
+    runtime_deps = [
         "@commons_codec_commons_codec//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
@@ -437,6 +443,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@de_jollyday_jollyday//jar",
+    ],
+    runtime_deps = [
         "@javax_xml_bind_jaxb_api//jar",
         "@joda_time_joda_time//jar",
     ],
@@ -454,12 +462,14 @@ java_library(
     name = "io_dropwizard_dropwizard_client",
     visibility = ["//visibility:public"],
     exports = [
+        "@io_dropwizard_dropwizard_client//jar",
+    ],
+    runtime_deps = [
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_httpclient//jar",
         "@com_sun_jersey_contribs_jersey_apache_client4//jar",
         "@com_sun_jersey_jersey_client//jar",
         "@commons_codec_commons_codec//jar",
-        "@io_dropwizard_dropwizard_client//jar",
         "@io_dropwizard_dropwizard_core//jar",
         "@org_apache_httpcomponents_httpclient//jar",
         "@org_apache_httpcomponents_httpcore//jar",
@@ -470,10 +480,12 @@ java_library(
     name = "io_dropwizard_dropwizard_configuration",
     visibility = ["//visibility:public"],
     exports = [
+        "@io_dropwizard_dropwizard_configuration//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@commons_lang_commons_lang//jar",
-        "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_validation//jar",
     ],
@@ -934,6 +946,14 @@ java_library(
 )
 
 java_library(
+    name = "org_apache_commons_commons_lang",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@commons_lang_commons_lang//jar",
+    ],
+)
+
+java_library(
     name = "org_apache_commons_commons_lang3",
     visibility = ["//visibility:public"],
     exports = [
@@ -953,11 +973,13 @@ java_library(
     name = "org_apache_curator_curator_client",
     visibility = ["//visibility:public"],
     exports = [
+        "@org_apache_curator_curator_client//jar",
+    ],
+    runtime_deps = [
         ":io_netty_netty_all",
         "@com_google_guava_guava//jar",
         "@jline_jline//jar",
         "@log4j_log4j//jar",
-        "@org_apache_curator_curator_client//jar",
         "@org_apache_zookeeper_zookeeper//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
