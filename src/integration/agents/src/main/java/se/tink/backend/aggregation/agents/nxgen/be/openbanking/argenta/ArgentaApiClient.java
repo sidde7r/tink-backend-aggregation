@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authentic
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configuration.ArgentaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.TimeUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -179,7 +180,9 @@ public final class ArgentaApiClient {
                 .header(HeaderKeys.DATE, getFormattedDate())
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .queryParam(
-                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                        QueryKeys.DATE_FROM,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                                TimeUtils.get90DaysDate(toDate)))
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(TransactionsResponse.class);
     }
