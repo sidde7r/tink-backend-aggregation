@@ -1,45 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc;
 
-import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class RefreshTokenForm extends AbstractForm {
-    private RefreshTokenForm(String grantType, String redirectUri, String refreshToken) {
-        put(NordeaBaseConstants.FormKeys.GRANT_TYPE, grantType);
-        // Redirect uri is optional.
-        if (!Strings.isNullOrEmpty(redirectUri)) {
-            put(NordeaBaseConstants.FormKeys.REDIRECT_URI, redirectUri);
-        }
+    private RefreshTokenForm(String refreshToken) {
+        put(NordeaBaseConstants.FormKeys.GRANT_TYPE, NordeaBaseConstants.FormValues.REFRESH_TOKEN);
         put(NordeaBaseConstants.FormKeys.REFRESH_TOKEN, refreshToken);
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-        private String grantType;
-        private String redirectUri;
-        private String refreshToken;
-
-        public Builder setGrantType(String grantType) {
-            this.grantType = grantType;
-            return this;
-        }
-
-        public Builder setRedirectUri(String redirectUri) {
-            this.redirectUri = redirectUri;
-            return this;
-        }
-
-        public Builder setRefreshToken(String refreshToken) {
-            this.refreshToken = refreshToken;
-            return this;
-        }
-
-        public RefreshTokenForm build() {
-            return new RefreshTokenForm(this.grantType, this.redirectUri, this.refreshToken);
-        }
+    public static RefreshTokenForm of(String refreshToken) {
+        return new RefreshTokenForm(refreshToken);
     }
 }

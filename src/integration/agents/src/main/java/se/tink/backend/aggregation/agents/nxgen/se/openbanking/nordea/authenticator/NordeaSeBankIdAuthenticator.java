@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authentica
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.GetCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -124,14 +123,8 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
 
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
-        RefreshTokenForm form =
-                RefreshTokenForm.builder()
-                        .setRefreshToken(refreshToken)
-                        .setGrantType(NordeaBaseConstants.FormValues.REFRESH_TOKEN)
-                        .build();
-
         try {
-            return Optional.ofNullable(apiClient.refreshToken(form));
+            return Optional.ofNullable(apiClient.refreshToken(refreshToken));
         } catch (HttpResponseException e) {
             // If these conditions are true, this will result in a session expired.
             if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
