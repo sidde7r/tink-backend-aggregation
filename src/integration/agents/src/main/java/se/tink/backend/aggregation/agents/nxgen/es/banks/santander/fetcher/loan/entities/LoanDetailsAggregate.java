@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -11,11 +9,8 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LoanDetailsAggregate {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoanDetailsAggregate.class);
-
     private final LoanEntity loanEntity;
     private final LoanDetailsEntity loanDetailsResponse;
 
@@ -25,15 +20,10 @@ public class LoanDetailsAggregate {
     }
 
     public LoanAccount toTinkLoanAccount() {
-        final LoanAccount loanAccount =
-                LoanAccount.nxBuilder()
-                        .withLoanDetails(getLoanDetails())
-                        .withId(getLoanId())
-                        .build();
-
-        logLoanData(loanAccount, loanEntity, loanDetailsResponse);
-
-        return loanAccount;
+        return LoanAccount.nxBuilder()
+                .withLoanDetails(getLoanDetails())
+                .withId(getLoanId())
+                .build();
     }
 
     private LoanModule getLoanDetails() {
@@ -62,16 +52,5 @@ public class LoanDetailsAggregate {
     private LoanDetails.Type getLoanType() {
         return SantanderEsConstants.LOAN_TYPES.getOrDefault(
                 loanEntity.getGeneralInfo().getContractId().getProduct(), LoanDetails.Type.OTHER);
-    }
-
-    // logging method to discover different types of loans than mortgage
-    private void logLoanData(
-            LoanAccount loanAccount, LoanEntity loanEntity, LoanDetailsEntity loanDetailsResponse) {
-        if (LoanDetails.Type.OTHER == loanAccount.getDetails().getType()) {
-            LOGGER.info(
-                    "Unknown loan type: {} {}",
-                    SerializationUtils.serializeToString(loanEntity),
-                    SerializationUtils.serializeToString(loanDetailsResponse));
-        }
     }
 }
