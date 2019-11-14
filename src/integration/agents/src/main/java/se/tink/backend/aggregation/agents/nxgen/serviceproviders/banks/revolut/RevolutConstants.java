@@ -52,7 +52,7 @@ public class RevolutConstants {
 
     public enum AppAuthenticationValues {
         API_VERSION("X-Api-Version", "1"),
-        APP_VERSION("X-Client-Version", "5.19"),
+        APP_VERSION("X-Client-Version", "6.16"),
         MODEL("X-Device-Model", "iPhone8,1"),
         USER_AGENT(
                 "User-Agent",
