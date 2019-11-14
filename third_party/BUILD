@@ -498,15 +498,6 @@ java_library(
         ":io_dropwizard_dropwizard_jersey",
         "@ch_qos_logback_logback_classic//jar",
         "@ch_qos_logback_logback_core//jar",
-        "@com_codahale_metrics_metrics_annotation//jar",
-        "@com_codahale_metrics_metrics_core//jar",
-        "@com_codahale_metrics_metrics_healthchecks//jar",
-        "@com_codahale_metrics_metrics_jersey//jar",
-        "@com_codahale_metrics_metrics_jetty9//jar",
-        "@com_codahale_metrics_metrics_json//jar",
-        "@com_codahale_metrics_metrics_jvm//jar",
-        "@com_codahale_metrics_metrics_logback//jar",
-        "@com_codahale_metrics_metrics_servlets//jar",
         "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_core//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
@@ -519,6 +510,15 @@ java_library(
         "@io_dropwizard_dropwizard_validation//jar",
     ],
     runtime_deps = [
+        "@com_codahale_metrics_metrics_annotation//jar",
+        "@com_codahale_metrics_metrics_core//jar",
+        "@com_codahale_metrics_metrics_healthchecks//jar",
+        "@com_codahale_metrics_metrics_jersey//jar",
+        "@com_codahale_metrics_metrics_jetty9//jar",
+        "@com_codahale_metrics_metrics_json//jar",
+        "@com_codahale_metrics_metrics_jvm//jar",
+        "@com_codahale_metrics_metrics_logback//jar",
+        "@com_codahale_metrics_metrics_servlets//jar",
         "@com_fasterxml_classmate//jar",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
@@ -556,6 +556,14 @@ java_library(
         "@org_slf4j_jul_to_slf4j//jar",
         "@org_slf4j_slf4j_api//jar",
         "@org_yaml_snakeyaml//jar",
+    ],
+)
+
+java_library(
+    name = "com_codahale_metrics_metrics_healthchecks",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_codahale_metrics_metrics_healthchecks//jar",
     ],
 )
 
