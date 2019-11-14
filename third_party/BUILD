@@ -501,7 +501,6 @@ java_library(
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_jetty//jar",
         "@io_dropwizard_dropwizard_lifecycle//jar",
-        "@io_dropwizard_dropwizard_servlets//jar",
     ],
     runtime_deps = [
         "@ch_qos_logback_logback_classic//jar",
@@ -534,6 +533,7 @@ java_library(
         "@commons_lang_commons_lang//jar",
         "@io_dropwizard_dropwizard_logging//jar",
         "@io_dropwizard_dropwizard_metrics//jar",
+        "@io_dropwizard_dropwizard_servlets//jar",
         "@io_dropwizard_dropwizard_util//jar",
         "@io_dropwizard_dropwizard_validation//jar",
         "@javax_el_javax_el_api//jar",
@@ -556,6 +556,20 @@ java_library(
         "@org_slf4j_jul_to_slf4j//jar",
         "@org_slf4j_slf4j_api//jar",
         "@org_yaml_snakeyaml//jar",
+    ],
+)
+
+java_library(
+    name = "io_dropwizard_dropwizard_servlets",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_dropwizard_dropwizard_servlets//jar",
+    ],
+    runtime_deps = [
+        "@ch_qos_logback_logback_classic//jar",
+        "@com_codahale_metrics_metrics_core//jar",
+        "@org_eclipse_jetty_jetty_servlet//jar",
+        "@org_eclipse_jetty_orbit_javax_servlet//jar",
     ],
 )
 
