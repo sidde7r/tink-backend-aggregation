@@ -53,6 +53,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String RESOLVED_APPID_PLACE_HOLDER = "RESOLVEDAPPIDPLACEHOLDER";
     private static final Logger log = LoggerFactory.getLogger(TinkApacheHttpRequestExecutor.class);
     private static final String SIGNATURE_HEADER_KEY = "X-Signature";
+    private static final String SIGNATURE_INFO_HEADER_KEY = "X-Signature-Info";
     private static final String EIDAS_CLUSTER_ID_HEADER = "X-Tink-QWAC-ClusterId";
     private static final String EIDAS_APPID_HEADER = "X-Tink-QWAC-AppId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
@@ -376,7 +377,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         // This header needs to be added before we fetch the headers to create the signature.
         // Note: This header can be removed if this URL is added to the JWT.
         request.addHeader(
-                "X-Signature-Info",
+                SIGNATURE_INFO_HEADER_KEY,
                 "Visit https://cdn.tink.se/aggregation-signature/how-to-verify.txt for more info.");
 
         RequestLine requestLine = request.getRequestLine();
