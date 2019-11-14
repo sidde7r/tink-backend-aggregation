@@ -197,9 +197,11 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
 
     private String finalizeBankIdAuthentication() {
         FinalizeBankIdBody finalizeBankIdBody = FinalizeBankIdBody.build();
-        String finalizehBankIdResponseString = apiClient.finalizeBankId(finalizeBankIdBody);
-        Document doc = Jsoup.parse(finalizehBankIdResponseString);
-        return doc.getElementsByAttributeValue("name", "so").first().val();
+        String finalizedBankIdResponseString = apiClient.finalizeBankId(finalizeBankIdBody);
+        Document doc = Jsoup.parse(finalizedBankIdResponseString);
+        Element scriptTag = doc.getElementsByTag("script").get(0);
+        String scriptData = scriptTag.dataNodes().get(0).getWholeData();
+        return StringUtils.substringBetween(scriptData, "?so=", "&");
     }
 
     private Field getActivationCodeField() {
