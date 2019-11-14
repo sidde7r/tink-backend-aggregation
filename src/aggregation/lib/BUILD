@@ -153,6 +153,7 @@ java_library(
         "//third_party:com_amazonaws_aws_java_sdk_s3",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
         "//third_party:com_auth0_java_jwt",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "//third_party:com_github_detro_ghostdriver_phantomjsdriver",
