@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken;
 
+import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.EntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.KeepAliveResponse;
@@ -26,7 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -35,8 +37,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public abstract class HandelsbankenApiClient {
 
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(HandelsbankenApiClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HandelsbankenApiClient.class);
 
     private final TinkHttpClient client;
     protected final HandelsbankenConfiguration<?> handelsbankenConfiguration;
@@ -98,6 +99,7 @@ public abstract class HandelsbankenApiClient {
     }
 
     public KeepAliveResponse keepAlive(ApplicationEntryPointResponse applicationEntryPoint) {
+        long start = System.nanoTime();
         try {
             // it's 'only' a ping so Handelsbanken doesn't return anything when alive but returns
             // XML if not...
@@ -105,16 +107,27 @@ public abstract class HandelsbankenApiClient {
                     createRequest(applicationEntryPoint.toKeepAlive()).get(HttpResponse.class);
 
             if (httpResponse.hasBody()) {
-
+                long stop = System.nanoTime();
+                long total = stop - start;
+                long notAliveTime = TimeUnit.SECONDS.convert(total, TimeUnit.NANOSECONDS);
+                LOGGER.info("Time in keepAlive when session is not alive: {} s", notAliveTime);
                 return httpResponse.getBody(KeepAliveResponse.class);
             }
 
+            long stop = System.nanoTime();
+            long total = stop - start;
+            long whenAliveTime = TimeUnit.SECONDS.convert(total, TimeUnit.NANOSECONDS);
+            LOGGER.info("Time in keepAlive when session is alive: {} s", whenAliveTime);
             return KeepAliveResponse.aliveEntryPoint();
         } catch (HttpResponseException e) {
             LOGGER.warn(
                     HandelsbankenConstants.URLS.KeepAlive.LOG_TAG
                             + " - Keeping session alive failed",
                     e);
+            long stop = System.nanoTime();
+            long total = stop - start;
+            long exceptionTime = TimeUnit.SECONDS.convert(total, TimeUnit.NANOSECONDS);
+            LOGGER.info("Time in keepAlive with exception: {} s", exceptionTime);
             return KeepAliveResponse.deadEntryPoint();
         }
     }
