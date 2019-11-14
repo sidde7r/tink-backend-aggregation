@@ -189,7 +189,6 @@ java_library(
     name = "com_github_tomakehurst_wiremock",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_github_tomakehurst_wiremock//jar",
         "@org_apache_commons_commons_collections4//jar",
         "@org_apache_commons_commons_lang3//jar",
@@ -200,6 +199,7 @@ java_library(
         "@asm_asm//jar",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
+        "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
         "@com_google_guava_guava//jar",
         "@com_jayway_jsonpath_json_path//jar",
