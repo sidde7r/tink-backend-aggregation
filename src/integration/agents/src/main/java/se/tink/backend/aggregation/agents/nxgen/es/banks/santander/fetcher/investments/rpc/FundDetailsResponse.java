@@ -59,8 +59,8 @@ public class FundDetailsResponse {
 
     public List<Instrument> toTinkInstruments() {
         Instrument instrument = new Instrument();
-        instrument.setCurrency(marketValue.getTinkAmount().getCurrency());
-        instrument.setMarketValue(marketValue.getTinkAmount().doubleValue());
+        instrument.setCurrency(marketValue.getTinkAmount().getCurrencyCode());
+        instrument.setMarketValue(marketValue.getTinkAmount().getDoubleValue());
         instrument.setPrice(marketPrice.getTinkAmount().doubleValue());
         instrument.setType(Instrument.Type.FUND);
         instrument.setQuantity(quantity);

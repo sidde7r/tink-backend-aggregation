@@ -78,7 +78,7 @@ public class PortfolioDetailsResponse {
         Portfolio tinkPortfolio = new Portfolio();
         tinkPortfolio.setUniqueIdentifier(portfolio.getContractId().getAccountNumber());
         tinkPortfolio.setInstruments(instruments);
-        tinkPortfolio.setTotalValue(portfolio.getTotalValue().getTinkAmount().doubleValue());
+        tinkPortfolio.setTotalValue(portfolio.getTotalValue().getTinkAmount().getDoubleValue());
         tinkPortfolio.setType(Portfolio.Type.DEPOT);
         tinkPortfolio.setCashValue(0.0);
 

@@ -46,7 +46,7 @@ public class FundEntity {
                 .setAccountNumber(generalInfo.getAlias())
                 .setHolderName(getHolderName(fundDetailsResponse))
                 .setPortfolios(getPortfolios(fundDetailsResponse))
-                .setCashBalance(new Amount(totalValue.getTinkAmount().getCurrency(), 0.0))
+                .setCashBalance(new Amount(totalValue.getTinkAmount().getCurrencyCode(), 0.0))
                 .build();
     }
 
@@ -57,7 +57,7 @@ public class FundEntity {
         Portfolio portfolio = new Portfolio();
         portfolio.setCashValue(0.0);
         portfolio.setInstruments(instruments);
-        portfolio.setTotalValue(totalValue.getTinkAmount().doubleValue());
+        portfolio.setTotalValue(totalValue.getAmountAsDouble());
         portfolio.setType(Portfolio.Type.DEPOT);
         portfolio.setUniqueIdentifier(getPortfolioUniqueId());
 

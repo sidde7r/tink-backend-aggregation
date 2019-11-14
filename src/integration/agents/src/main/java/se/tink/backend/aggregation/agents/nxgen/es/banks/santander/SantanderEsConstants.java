@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.List;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SantanderEsConstants {
@@ -61,6 +64,12 @@ public class SantanderEsConstants {
         public static final String DEBIT_CARD_TYPE = "débito";
     }
 
+    public static final ImmutableMap<String, Type> LOAN_TYPES =
+            ImmutableMap.<String, LoanDetails.Type>builder()
+                    .put("143", Type.MORTGAGE)
+                    .put("103", Type.OTHER)
+                    .build();
+
     public static final class Tags {
         public static final LogTag UNKNOWN_ENGAGEMENT_TYPE =
                 LogTag.from("es_santander_unknown_engagement_type");
@@ -98,4 +107,7 @@ public class SantanderEsConstants {
         public static final String NOT_CUSTOMER =
                 "NO EXISTEN CONTRATOS VISIBLES ASOCIADOS A LA PERSONA INDICADA";
     }
+
+    public static final String DEFAULT_CURRENCY = "EUR";
+    public static final String DEFAULT_LOAN_AMOUNT = "0";
 }
