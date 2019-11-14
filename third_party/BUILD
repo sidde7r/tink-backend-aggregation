@@ -518,7 +518,6 @@ java_library(
         "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
         "@com_fasterxml_jackson_module_jackson_module_afterburner//jar",
         "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
-        "@com_google_code_findbugs_jsr305//jar",
         "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_core//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
@@ -531,6 +530,7 @@ java_library(
         "@io_dropwizard_dropwizard_validation//jar",
     ],
     runtime_deps = [
+        "@com_google_code_findbugs_jsr305//jar",
         "@com_google_guava_guava//jar",
         "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",

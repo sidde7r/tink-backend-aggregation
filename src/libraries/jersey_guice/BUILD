@@ -8,6 +8,9 @@ java_library(
         # Guava
         "//third_party:com_google_guava_guava",
 
+        # javax.annotation
+        "//third_party:com_google_code_findbugs_jsr305",
+
         # Guice
         "//third_party:com_google_inject_guice",
         "//third_party:com_google_inject_extensions_guice_multibindings",
