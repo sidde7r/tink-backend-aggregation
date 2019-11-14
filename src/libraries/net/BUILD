@@ -4,6 +4,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         # todo, don't have dependency on dropwizard

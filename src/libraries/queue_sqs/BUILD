@@ -19,6 +19,7 @@ java_library(
         "//src/libraries/queue_lib",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
