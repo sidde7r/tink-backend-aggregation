@@ -110,7 +110,7 @@ spec:
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="BE"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[60m])) by (action,className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[60m])) by (action,className) > 5
     for: 5m
     labels:
         severity: urgent
@@ -128,7 +128,7 @@ spec:
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="BE"}[60m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="BE"}[60m])) by (className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="BE"}[60m])) by (className) > 25
+        and sum(increase(tink_agent_refresh_total{market="BE"}[60m])) by (className) > 10
     for: 5m
     labels:
         severity: urgent
@@ -147,7 +147,7 @@ spec:
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="GB"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[60m])) by (action,className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[60m])) by (action,className) > 5
     for: 5m
     labels:
         severity: urgent
@@ -165,7 +165,7 @@ spec:
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="GB"}[60m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="GB"}[60m])) by (className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="GB"}[60m])) by (className) > 25
+        and sum(increase(tink_agent_refresh_total{market="GB"}[60m])) by (className) > 10
     for: 5m
     labels:
         severity: urgent
@@ -184,7 +184,7 @@ spec:
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="AT"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="AT"}[60m])) by (action,className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="AT"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="AT"}[60m])) by (action,className) > 5
     for: 5m
     labels:
         severity: ping
@@ -202,7 +202,7 @@ spec:
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="AT"}[60m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="AT"}[60m])) by (className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="AT"}[60m])) by (className) > 25
+        and sum(increase(tink_agent_refresh_total{market="AT"}[60m])) by (className) > 10
     for: 5m
     labels:
         severity: ping
@@ -221,7 +221,7 @@ spec:
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="DE"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DE"}[60m])) by (action,className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DE"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DE"}[60m])) by (action,className) > 5
     for: 5m
     labels:
         severity: ping
@@ -239,7 +239,7 @@ spec:
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="DE"}[60m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="DE"}[60m])) by (className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="DE"}[60m])) by (className) > 25
+        and sum(increase(tink_agent_refresh_total{market="DE"}[60m])) by (className) > 10
     for: 5m
     labels:
         severity: ping
@@ -258,7 +258,7 @@ spec:
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="DK"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[60m])) by (action,className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[60m])) by (action,className) > 5
     for: 5m
     labels:
         severity: urgent
@@ -295,7 +295,7 @@ spec:
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="ES"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[60m])) by (action,className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[60m])) by (action,className) > 5
     for: 5m
     labels:
         severity: urgent
@@ -313,7 +313,7 @@ spec:
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="ES"}[60m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="ES"}[60m])) by (className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="ES"}[60m])) by (className) > 25
+        and sum(increase(tink_agent_refresh_total{market="ES"}[60m])) by (className) > 10
     for: 5m
     labels:
         severity: urgent
@@ -332,7 +332,7 @@ spec:
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="FI"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI"}[60m])) by (action,className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI"}[60m])) by (action,className) > 5
     for: 5m
     labels:
         severity: ping
@@ -350,7 +350,7 @@ spec:
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI"}[60m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="FI"}[60m])) by (className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="FI"}[60m])) by (className) > 25
+        and sum(increase(tink_agent_refresh_total{market="FI"}[60m])) by (className) > 10
     for: 5m
     labels:
         severity: ping
@@ -369,7 +369,7 @@ spec:
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="FR"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FR"}[60m])) by (action,className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FR"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FR"}[60m])) by (action,className) > 5
     for: 5m
     labels:
         severity: ping
@@ -387,7 +387,7 @@ spec:
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FR"}[60m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="FR"}[60m])) by (className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="FR"}[60m])) by (className) > 25
+        and sum(increase(tink_agent_refresh_total{market="FR"}[60m])) by (className) > 10
     for: 5m
     labels:
         severity: ping
@@ -443,7 +443,7 @@ spec:
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="NO"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[60m])) by (action,className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[60m])) by (action,className) > 5
     for: 5m
     labels:
         severity: urgent
@@ -461,7 +461,7 @@ spec:
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NO"}[60m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="NO"}[60m])) by (className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="NO"}[60m])) by (className) > 25
+        and sum(increase(tink_agent_refresh_total{market="NO"}[60m])) by (className) > 10
     for: 5m
     labels:
         severity: urgent
@@ -553,7 +553,7 @@ spec:
         (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="IT"}[60m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="IT"}[60m])) by (action,className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="IT"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="IT"}[60m])) by (action,className) > 5
     for: 5m
     labels:
         severity: ping
@@ -571,7 +571,7 @@ spec:
         (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="IT"}[60m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="IT"}[60m])) by (className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="IT"}[60m])) by (className) > 22
+        and sum(increase(tink_agent_refresh_total{market="IT"}[60m])) by (className) > 10
     for: 5m
     labels:
         severity: ping
