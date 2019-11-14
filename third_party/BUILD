@@ -219,6 +219,8 @@ java_library(
         "@org_eclipse_jetty_jetty_webapp//jar",
         "@org_eclipse_jetty_jetty_xml//jar",
         "@org_slf4j_slf4j_api//jar",
+    ],
+    runtime_deps = [
         "@org_xmlunit_xmlunit_core//jar",
         "@org_xmlunit_xmlunit_legacy//jar",
     ],
