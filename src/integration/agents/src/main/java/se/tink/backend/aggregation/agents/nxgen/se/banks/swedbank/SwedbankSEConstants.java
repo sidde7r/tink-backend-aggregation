@@ -27,4 +27,10 @@ public class SwedbankSEConstants {
                             "savingsbank-youth",
                             new ProfileParameters("savingsbank-youth", "LFQP9KuzqNBJOosw", true))
                     .build();
+
+    public class Errors {
+        public static final String INTERNAL_TECHNICAL_ERROR =
+                "det har uppstått ett internt tekniskt fel. var god försök senare.";
+        public static final String INTERNAL_SERVER_ERROR = "internal_server_error";
+    }
 }
