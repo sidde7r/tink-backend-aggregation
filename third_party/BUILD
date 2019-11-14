@@ -548,9 +548,9 @@ java_library(
         "@org_eclipse_jetty_orbit_javax_servlet//jar",
         "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
         "@org_glassfish_web_javax_el//jar",
-        "@org_hibernate_hibernate_validator//jar",
     ],
     runtime_deps = [
+        "@org_hibernate_hibernate_validator//jar",
         "@org_jboss_logging_jboss_logging//jar",
         "@org_slf4j_jcl_over_slf4j//jar",
         "@org_slf4j_jul_to_slf4j//jar",
