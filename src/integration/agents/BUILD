@@ -82,6 +82,7 @@ java_library(
         "//third_party:io_netty_netty_codec_http",
         "//third_party:io_protostuff_protostuff_api",
         "//third_party:io_vavr",
+        "//third_party:net_minidev_json_smart",
         "//third_party:net_sourceforge_tess4j",
         "//third_party:oauth_signpost_signpost_core",
         "//third_party:org_apache_commons_commons_csv",

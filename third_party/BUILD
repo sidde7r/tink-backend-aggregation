@@ -202,7 +202,6 @@ java_library(
         "@javax_servlet_javax_servlet_api//jar",
         "@junit_junit//jar",
         "@net_minidev_asm//jar",
-        "@net_minidev_json_smart//jar",
         "@net_sf_jopt_simple_jopt_simple//jar",
         "@org_apache_commons_commons_collections4//jar",
         "@org_apache_commons_commons_lang3//jar",
@@ -210,6 +209,7 @@ java_library(
         "@org_apache_httpcomponents_httpcore//jar",
     ],
     runtime_deps = [
+        "@net_minidev_json_smart//jar",
         "@org_eclipse_jetty_jetty_continuation//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",

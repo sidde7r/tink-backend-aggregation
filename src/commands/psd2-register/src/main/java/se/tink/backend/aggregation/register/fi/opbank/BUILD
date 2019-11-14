@@ -15,6 +15,7 @@ java_binary(
         "//third_party:com_google_code_gson_gson",
         "//third_party:com_nimbusds_nimbus_jose_jwt",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:net_minidev_json_smart",
         "//third_party:org_apache_commons_commons_cli",
     ],
 )
