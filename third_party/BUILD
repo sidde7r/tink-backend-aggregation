@@ -496,8 +496,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         ":io_dropwizard_dropwizard_jersey",
-        "@ch_qos_logback_logback_classic//jar",
-        "@ch_qos_logback_logback_core//jar",
         "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_core//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
@@ -510,6 +508,8 @@ java_library(
         "@io_dropwizard_dropwizard_validation//jar",
     ],
     runtime_deps = [
+        "@ch_qos_logback_logback_classic//jar",
+        "@ch_qos_logback_logback_core//jar",
         "@com_codahale_metrics_metrics_annotation//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_healthchecks//jar",
