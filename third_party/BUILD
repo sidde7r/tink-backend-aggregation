@@ -536,9 +536,9 @@ java_library(
         "@io_dropwizard_dropwizard_validation//jar",
         "@javax_el_javax_el_api//jar",
         "@javax_validation_validation_api//jar",
-        "@net_sourceforge_argparse4j_argparse4j//jar",
     ],
     runtime_deps = [
+        "@net_sourceforge_argparse4j_argparse4j//jar",
         "@org_eclipse_jetty_jetty_continuation//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",
@@ -556,6 +556,14 @@ java_library(
         "@org_slf4j_jul_to_slf4j//jar",
         "@org_slf4j_slf4j_api//jar",
         "@org_yaml_snakeyaml//jar",
+    ],
+)
+
+java_library(
+    name = "net_sourceforge_argparse4j_argparse4j",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@net_sourceforge_argparse4j_argparse4j//jar",
     ],
 )
 
