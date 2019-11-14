@@ -7,8 +7,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.UkOpenBankingV30Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
 @JsonObject
 public class AccountEntity implements IdentifiableAccount {
@@ -35,16 +40,28 @@ public class AccountEntity implements IdentifiableAccount {
         String accountNumber = account.getUniqueIdentifier();
         String accountName = account.getDisplayName();
 
-        TransactionalAccount.Builder accountBuilder =
-                TransactionalAccount.builder(
-                                account.getAccountType(), accountNumber, balance.getBalance())
-                        .setAccountNumber(accountNumber)
-                        .setName(accountName)
-                        .setBankIdentifier(account.getAccountId());
+        IdBuildStep idModuleBuilder =
+                IdModule.builder()
+                        .withUniqueIdentifier(accountNumber)
+                        .withAccountNumber(accountNumber)
+                        .withAccountName(accountName)
+                        .addIdentifier(new SortCodeIdentifier(accountNumber));
 
-        account.toAccountIdentifier(accountName).ifPresent(accountBuilder::addIdentifier);
+        if (account.toAccountIdentifier(accountName).isPresent()) {
+            idModuleBuilder.addIdentifier(account.toAccountIdentifier(accountName).get());
+        }
 
-        return accountBuilder.build();
+        TransactionalAccount transactionalAccount =
+                TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.from(account.getAccountType()).get())
+                        .withoutFlags()
+                        .withBalance(BalanceModule.of(balance.getBalance()))
+                        .withId(idModuleBuilder.build())
+                        .setApiIdentifier(account.getAccountId())
+                        .build()
+                        .get();
+
+        return transactionalAccount;
     }
 
     public static CreditCardAccount toCreditCardAccount(
