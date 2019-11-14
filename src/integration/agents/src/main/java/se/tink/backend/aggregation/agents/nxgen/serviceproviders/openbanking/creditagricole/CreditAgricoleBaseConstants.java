@@ -17,7 +17,6 @@ public final class CreditAgricoleBaseConstants {
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String INVALID_BALANCE_TYPE = "Balance type is not valid";
         public static final String UNABLE_LOAD_OAUTH_TOKEN = "Unable to load oauth_2_token";
-        public static final String UNABLE_LOAD_BANK_URL = "Unable to load correct bank url";
     }
 
     public static class Urls {
@@ -37,7 +36,6 @@ public final class CreditAgricoleBaseConstants {
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String STATE = "STATE";
-        public static final String BANK_ENUM = "BANK_ENUM";
     }
 
     public static class HeaderKeys {

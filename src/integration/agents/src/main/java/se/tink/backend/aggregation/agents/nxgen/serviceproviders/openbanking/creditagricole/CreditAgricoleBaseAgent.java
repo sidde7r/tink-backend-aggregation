@@ -25,13 +25,8 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
     private CreditAgricoleBaseConfiguration creditAgricoleConfiguration;
 
     public CreditAgricoleBaseAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            BankEnum bank) {
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, true);
-
-        persistentStorage.put(CreditAgricoleBaseConstants.StorageKeys.BANK_ENUM, bank);
 
         this.apiClient = new CreditAgricoleBaseApiClient(client, persistentStorage);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();

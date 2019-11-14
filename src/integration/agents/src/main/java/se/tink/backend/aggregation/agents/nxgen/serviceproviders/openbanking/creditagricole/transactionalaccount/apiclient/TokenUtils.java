@@ -17,7 +17,6 @@ class TokenUtils {
     static TokenResponse get(
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration,
             final TinkHttpClient client,
-            final String baseUrl,
             final String code) {
         final String clientId = creditAgricoleConfiguration.getClientId();
         final String redirectUri = creditAgricoleConfiguration.getRedirectUrl();
@@ -31,7 +30,7 @@ class TokenUtils {
                         .clientId(clientId)
                         .build();
 
-        return client.request(getUrl(baseUrl))
+        return client.request(getUrl(creditAgricoleConfiguration.getBaseUrl()))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.CORRELATION_ID, UUID.randomUUID().toString())
@@ -44,7 +43,6 @@ class TokenUtils {
     static TokenResponse refresh(
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration,
             final TinkHttpClient client,
-            final String baseUrl,
             final String refreshToken) {
         final String clientId = creditAgricoleConfiguration.getClientId();
         final String redirectUri = creditAgricoleConfiguration.getRedirectUrl();
@@ -58,7 +56,7 @@ class TokenUtils {
                         .clientId(clientId)
                         .build();
 
-        return client.request(getUrl(baseUrl))
+        return client.request(getUrl(creditAgricoleConfiguration.getBaseUrl()))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.CORRELATION_ID, UUID.randomUUID().toString())

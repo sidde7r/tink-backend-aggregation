@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.parisetdiledefrance;
 
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.BankEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseAgent;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -10,6 +9,6 @@ public class CreditAgricoleParisetdiledefranceAgent extends CreditAgricoleBaseAg
 
     public CreditAgricoleParisetdiledefranceAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, BankEnum.PARIS_ET_D_ILE_DE_FRANCE);
+        super(request, context, signatureKeyPair);
     }
 }

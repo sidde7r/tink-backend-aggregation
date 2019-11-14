@@ -14,13 +14,12 @@ class TransactionsUtils {
 
     static GetTransactionsResponse get(
             final String id,
-            final String baseUrl,
             final PersistentStorage persistentStorage,
             final TinkHttpClient client,
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration) {
 
         final String authToken = "Bearer " + StorageUtils.getTokenFromStorage(persistentStorage);
-        return client.request(getUrl(baseUrl, id))
+        return client.request(getUrl(creditAgricoleConfiguration.getBaseUrl(), id))
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.AUTHORIZATION, authToken)

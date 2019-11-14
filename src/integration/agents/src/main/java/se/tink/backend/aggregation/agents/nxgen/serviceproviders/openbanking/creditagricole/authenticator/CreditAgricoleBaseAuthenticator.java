@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.BankEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
@@ -50,19 +49,10 @@ public class CreditAgricoleBaseAuthenticator implements OAuth2Authenticator {
     }
 
     private URL getAuthorizeUrl(final String state) {
-        final BankEnum bank =
-                persistentStorage
-                        .get(CreditAgricoleBaseConstants.StorageKeys.BANK_ENUM, BankEnum.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                CreditAgricoleBaseConstants.ErrorMessages
-                                                        .UNABLE_LOAD_BANK_URL));
-
         final String clientId = configuration.getClientId();
         final String redirectUri = configuration.getRedirectUrl();
 
-        return new URL(bank.getAuthUrl())
+        return new URL(configuration.getAuthorizeUrl())
                 .queryParam(CreditAgricoleBaseConstants.QueryKeys.CLIENT_ID, clientId)
                 .queryParam(
                         CreditAgricoleBaseConstants.QueryKeys.RESPONSE_TYPE,

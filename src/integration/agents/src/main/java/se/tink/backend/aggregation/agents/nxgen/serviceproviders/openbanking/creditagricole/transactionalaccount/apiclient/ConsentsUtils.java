@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 class ConsentsUtils {
 
     static void put(
-            final String baseUrl,
             final PersistentStorage persistentStorage,
             final TinkHttpClient client,
             final List<AccountIdEntity> listOfNecessaryConstents,
@@ -21,7 +20,7 @@ class ConsentsUtils {
 
         final String authToken = "Bearer " + StorageUtils.getTokenFromStorage(persistentStorage);
 
-        client.request(getUrl(baseUrl))
+        client.request(getUrl(creditAgricoleConfiguration.getBaseUrl()))
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.AUTHORIZATION, authToken)

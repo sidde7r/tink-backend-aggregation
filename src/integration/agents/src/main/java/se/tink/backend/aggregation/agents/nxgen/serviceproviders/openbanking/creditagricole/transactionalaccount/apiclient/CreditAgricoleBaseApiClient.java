@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.BankEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
@@ -40,43 +39,30 @@ public class CreditAgricoleBaseApiClient {
     }
 
     public TokenResponse getToken(final String code) {
-        return TokenUtils.get(getConfiguration(), client, getBaseUrl(), code);
+        return TokenUtils.get(getConfiguration(), client, code);
     }
 
     public OAuth2Token refreshToken(final String refreshToken) {
         final TokenResponse tokenResponse =
-                TokenUtils.refresh(getConfiguration(), client, getBaseUrl(), refreshToken);
+                TokenUtils.refresh(getConfiguration(), client, refreshToken);
         final OAuth2Token oAuth2Token = tokenResponse.toTinkToken();
         setTokenToSession(oAuth2Token);
         return oAuth2Token;
     }
 
     public GetAccountsResponse getAccounts() {
-        return AccountsUtils.get(getBaseUrl(), persistentStorage, client, configuration);
+        return AccountsUtils.get(persistentStorage, client, configuration);
     }
 
     public void putConsents(final List<AccountIdEntity> listOfNecessaryConstents) {
-        ConsentsUtils.put(
-                getBaseUrl(), persistentStorage, client, listOfNecessaryConstents, configuration);
+        ConsentsUtils.put(persistentStorage, client, listOfNecessaryConstents, configuration);
     }
 
     public GetTransactionsResponse getTransactions(final String id) {
-        return TransactionsUtils.get(id, getBaseUrl(), persistentStorage, client, configuration);
+        return TransactionsUtils.get(id, persistentStorage, client, configuration);
     }
 
     private void setTokenToSession(OAuth2Token token) {
         persistentStorage.put(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, token);
-    }
-
-    private String getBaseUrl() {
-        final BankEnum bank =
-                persistentStorage
-                        .get(CreditAgricoleBaseConstants.StorageKeys.BANK_ENUM, BankEnum.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                CreditAgricoleBaseConstants.ErrorMessages
-                                                        .UNABLE_LOAD_BANK_URL));
-        return bank.getBaseUrl();
     }
 }
