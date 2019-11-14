@@ -342,10 +342,7 @@ public class NextGenRequestBuilder extends NextGenFilterable<RequestBuilder>
         }
     }
 
-    /**
-     * Remove the X-Aggregator header from the request. There exist scenarios where it is necessary
-     * to conceal the aggregator's identity.
-     */
+    @Override
     public RequestBuilder removeAggregatorHeader() {
         shouldAddAggregatorHeader = false;
         return this;

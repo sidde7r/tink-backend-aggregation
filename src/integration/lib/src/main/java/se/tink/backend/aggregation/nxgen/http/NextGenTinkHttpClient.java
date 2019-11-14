@@ -109,6 +109,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private SSLContextBuilder internalSslContextBuilder;
     private String userAgent;
     private final AggregatorInfo aggregator;
+    private boolean shouldAddAggregatorHeader = true;
 
     private List<String> cipherSuites;
 
@@ -505,6 +506,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     }
 
     @Override
+    public void disableAggregatorHeader() {
+        this.shouldAddAggregatorHeader = false;
+    }
+
+    @Override
     public void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration) {
         requestExecutor.setEidasProxyConfiguration(eidasProxyConfiguration);
     }
@@ -777,8 +783,16 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     }
 
     public RequestBuilder request(URL url) {
-        return new NextGenRequestBuilder(
-                this.getFilters(), url, getHeaderAggregatorIdentifier(), responseStatusHandler);
+        final RequestBuilder builder =
+                new NextGenRequestBuilder(
+                        this.getFilters(),
+                        url,
+                        getHeaderAggregatorIdentifier(),
+                        responseStatusHandler);
+        if (!shouldAddAggregatorHeader) {
+            builder.removeAggregatorHeader();
+        }
+        return builder;
     }
 
     public <T> T request(Class<T> c, HttpRequest request)

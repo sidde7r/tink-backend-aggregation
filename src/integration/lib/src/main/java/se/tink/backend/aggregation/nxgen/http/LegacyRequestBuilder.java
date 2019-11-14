@@ -16,6 +16,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -333,6 +334,11 @@ public class LegacyRequestBuilder extends LegacyFilterable<RequestBuilder>
 
     public RequestBuilder addBearerToken(OAuth2Token token) {
         return header(HttpHeaders.AUTHORIZATION, token.toAuthorizeHeader());
+    }
+
+    @Override
+    public RequestBuilder removeAggregatorHeader() {
+        throw new NotImplementedException("Use NextGenTiinkHttpCllient instead");
     }
 
     private void addCookiesToHeader() {
