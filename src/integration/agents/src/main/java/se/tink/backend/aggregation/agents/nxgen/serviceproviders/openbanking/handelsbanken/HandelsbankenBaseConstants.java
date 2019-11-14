@@ -137,6 +137,9 @@ public final class HandelsbankenBaseConstants {
         public static final String TOKEN_NOT_ACTIVE = "Token is not active";
         public static final String PROXY_ERROR = "proxyError";
         public static final String SOCKET_EXCEPTION = "java.net.SocketException";
+        public static final String REQUEST_REJECTED = "Request Rejected";
+        public static final String REQUEST_REJECTED_MESSAGE =
+                "The requested URL was rejected. Please consult with your administrator.";
     }
 
     public static class Status {
