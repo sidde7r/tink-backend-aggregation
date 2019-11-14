@@ -31,6 +31,7 @@ public class NextGenRequestBuilder extends NextGenFilterable<RequestBuilder>
     private MultivaluedMap<String, Object> headers;
     private List<String> cookies = new ArrayList<>();
     private HttpResponseStatusHandler responseStatusHandler;
+    private boolean shouldAddAggregatorHeader = true;
 
     public NextGenRequestBuilder(
             List<Filter> filters,
@@ -341,11 +342,24 @@ public class NextGenRequestBuilder extends NextGenFilterable<RequestBuilder>
         }
     }
 
+    /**
+     * Remove the X-Aggregator header from the request. There exist scenarios where it is necessary
+     * to conceal the aggregator's identity.
+     */
+    public RequestBuilder removeAggregatorHeader() {
+        shouldAddAggregatorHeader = false;
+        return this;
+    }
+
     private <T> T handle(Class<T> c, HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
 
         addCookiesToHeader();
-        addAggregatorToHeader();
+
+        if (shouldAddAggregatorHeader) {
+            addAggregatorToHeader();
+        }
+
         reorderFilters();
         HttpResponse httpResponse = getFilterHead().handle(httpRequest);
 
@@ -363,7 +377,11 @@ public class NextGenRequestBuilder extends NextGenFilterable<RequestBuilder>
     private void voidHandle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
         addCookiesToHeader();
-        addAggregatorToHeader();
+
+        if (shouldAddAggregatorHeader) {
+            addAggregatorToHeader();
+        }
+
         reorderFilters();
         HttpResponse httpResponse = handle(HttpResponse.class, httpRequest);
 
