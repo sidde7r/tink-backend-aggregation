@@ -28,7 +28,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class BelfiusAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final BelfiusApiClient apiClient;
     private final BelfiusConfiguration belfiusConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -38,8 +37,6 @@ public final class BelfiusAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-
-        this.clientName = request.getProvider().getPayload();
 
         this.belfiusConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(BelfiusConfiguration.class);
