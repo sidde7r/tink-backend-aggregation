@@ -225,6 +225,7 @@ public class IngConstants {
     }
 
     public static final class ErrorCodes {
+        public static final String SMARTBANKING_SERVER_IS_NOT_RESPONDING_CODE = "ews/01/L103-000";
         public static final String FETCHED_TRANSACTIONS_OUTSIDE_RANGE_CODE = "ews/01/l130-000";
         public static final String TRANSFER_AMOUNT_EXCEEDS_LIMIT_CODE = "e51/trsg048-000";
         public static final String TRANSFER_AMOUNT_EXCEEDS_BALANCE = "e52/trsg014-000";
