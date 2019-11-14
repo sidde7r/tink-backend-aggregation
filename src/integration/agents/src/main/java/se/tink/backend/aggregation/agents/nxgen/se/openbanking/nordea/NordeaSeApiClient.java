@@ -66,6 +66,11 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
     }
 
     @Override
+    public void storeToken(OAuth2Token token) {
+        persistentStorage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, token);
+    }
+
+    @Override
     public OAuth2Token getStoredToken() {
         return persistentStorage
                 .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)

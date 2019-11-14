@@ -118,6 +118,11 @@ public final class NordeaBaseConstants {
         public static final String PAYMENT_TYPE_NOT_FOUND =
                 "No PaymentType found for your AccountIdentifiers pair ";
         public static final String UNKNOWN_AGENT_TYPE = "Unknown agent type.";
+        public static final String TOKEN_EXPIRED = "Bearer token is not valid anymore";
+    }
+
+    public static final class ErrorCodes {
+        public static final String TOKEN_EXPIRED = "error.token.expired";
     }
 
     public static final class StatusResponse {

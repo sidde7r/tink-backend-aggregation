@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
 import java.util.Optional;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
@@ -19,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
@@ -108,8 +112,9 @@ public class NordeaBaseApiClient implements TokenInterface {
     }
 
     public GetAccountsResponse getAccounts() {
-        return createRequestInSession(NordeaBaseConstants.Urls.GET_ACCOUNTS)
-                .get(GetAccountsResponse.class);
+        return requestRefreshableGet(
+                createRequestInSession(NordeaBaseConstants.Urls.GET_ACCOUNTS),
+                GetAccountsResponse.class);
     }
 
     public GetAccountsResponse getCorporateAccounts() {
@@ -138,7 +143,8 @@ public class NordeaBaseApiClient implements TokenInterface {
                                         NordeaBaseConstants.IdTags.ACCOUNT_ID,
                                         account.getApiIdentifier()));
 
-        return createRequestInSession(url).get(GetTransactionsResponse.class);
+        RequestBuilder request = createRequestInSession(url);
+        return requestRefreshableGet(request, GetTransactionsResponse.class);
     }
 
     @Override
@@ -225,5 +231,45 @@ public class NordeaBaseApiClient implements TokenInterface {
                 throw httpResponseException;
             }
         }
+    }
+
+    protected <T> T requestRefreshableGet(RequestBuilder request, Class<T> responseType) {
+        try {
+            return request.get(responseType);
+
+        } catch (HttpResponseException hre) {
+
+            validateIsAccessTokenEpiredOrElseThrow(hre);
+
+            OAuth2Token oAuth2Token =
+                    this.refreshToken(
+                            getStoredToken()
+                                    .getRefreshToken()
+                                    .orElseThrow(
+                                            () ->
+                                                    new IllegalStateException(
+                                                            "Could not find refresh token to refresh.",
+                                                            hre)));
+            this.storeToken(oAuth2Token);
+
+            request.overrideHeader(HttpHeaders.AUTHORIZATION, oAuth2Token.toAuthorizeHeader());
+            // retry request with new token
+            return requestRefreshableGet(request, responseType);
+        }
+    }
+
+    private void validateIsAccessTokenEpiredOrElseThrow(HttpResponseException hre) {
+        HttpResponse response = hre.getResponse();
+        if (response.getStatus() == HttpStatus.SC_UNAUTHORIZED && response.hasBody()) {
+            String body = response.getBody(String.class);
+            if (!Strings.isNullOrEmpty(body)
+                    && body.toLowerCase()
+                            .contains(NordeaBaseConstants.ErrorMessages.TOKEN_EXPIRED.toLowerCase())
+                    && body.toLowerCase()
+                            .contains(NordeaBaseConstants.ErrorCodes.TOKEN_EXPIRED.toLowerCase())) {
+                return;
+            }
+        }
+        throw hre;
     }
 }
