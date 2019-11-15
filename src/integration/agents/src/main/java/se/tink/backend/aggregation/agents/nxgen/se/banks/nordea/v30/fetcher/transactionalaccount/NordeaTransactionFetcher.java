@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class NordeaTransactionFetcher
@@ -52,42 +54,51 @@ public class NordeaTransactionFetcher
         try {
             return apiClient.fetchAccountTransactions(
                     startIndex, numberOfTransactions, account.getApiIdentifier());
-        } catch (HttpResponseException hre) {
-            return fetchWithBackoffAndRetry(
-                    hre, account, numberOfTransactions, startIndex, attempt);
+        } catch (HttpResponseException | BankServiceException e) {
+            return fetchWithBackoffAndRetry(e, account, numberOfTransactions, startIndex, attempt);
         }
     }
 
     private PaginatorResponse fetchWithBackoffAndRetry(
-            HttpResponseException hre,
+            RuntimeException e,
             TransactionalAccount account,
             int numberOfTransactions,
             int startIndex,
             int attempt) {
 
-        if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                || hre.getResponse().getStatus() == HttpStatus.SC_GATEWAY_TIMEOUT) {
-            if (attempt <= MAX_RETRY_ATTEMPTS) {
-                backoffAWhile();
-                LOG.debug(
-                        String.format(
-                                "Retry [%d] fetch transactions account[%s], offset[%d], numTrans[%d] after backoff ",
-                                attempt,
-                                account.getAccountNumber(),
-                                startIndex,
-                                numberOfTransactions),
-                        hre);
+        validateIsBankSideErrorOrElseThrow(e);
 
-                return fetchTransactions(account, numberOfTransactions, startIndex, ++attempt);
-            }
-            // this is an ugly fix for Nordea since they tend to throw INTERNAL SERVER ERROR after
-            // 500 tx fetched
-            if (startIndex > GOOD_ENOUGH_NUMBER_OF_TRANSACTIONS) {
-                return PaginatorResponseImpl.createEmpty(false);
-            }
+        if (attempt <= MAX_RETRY_ATTEMPTS) {
+            backoffAWhile();
+            LOG.debug(
+                    String.format(
+                            "Retry [%d] fetch transactions account[%s], offset[%d], numTrans[%d] after backoff ",
+                            attempt, account.getAccountNumber(), startIndex, numberOfTransactions),
+                    e);
+
+            return fetchTransactions(account, numberOfTransactions, startIndex, ++attempt);
+        }
+        // this is an ugly fix for Nordea since they tend to throw INTERNAL SERVER ERROR after
+        // 500 tx fetched
+        if (startIndex > GOOD_ENOUGH_NUMBER_OF_TRANSACTIONS) {
+            return PaginatorResponseImpl.createEmpty(false);
         }
 
-        throw hre;
+        throw e;
+    }
+
+    private boolean validateIsBankSideErrorOrElseThrow(RuntimeException e) {
+        if (e instanceof BankServiceException) {
+            return true;
+        }
+        if (e instanceof HttpResponseException) {
+            HttpResponse response = ((HttpResponseException) e).getResponse();
+            if (response.getStatus() == HttpStatus.SC_GATEWAY_TIMEOUT
+                    || response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                return true;
+            }
+        }
+        throw e;
     }
 
     private void backoffAWhile() {

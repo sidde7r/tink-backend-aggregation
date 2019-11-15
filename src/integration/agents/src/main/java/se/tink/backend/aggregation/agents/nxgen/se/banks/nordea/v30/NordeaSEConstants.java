@@ -293,6 +293,9 @@ public class NordeaSEConstants {
                 "Recipient accounts missing from accounts ledger";
         public static final String NOT_ENOUGH_FUNDS = "Not enough funds";
         public static final String EXTERNAL_SERVICE_CALL_FAILED = "External service call failed";
+        public static final String INTERNAL_SERVER_ERROR = "internal_server_error";
+        public static final String INTERNAL_SERVER_ERROR_MESSAGE =
+                "Something went wrong. Please try again later.";
     }
 
     public static class LogTags {
