@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.abnamro.ics;
 
 import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroIcsCredentials;
+import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.libraries.uuid.UUIDUtils;
 

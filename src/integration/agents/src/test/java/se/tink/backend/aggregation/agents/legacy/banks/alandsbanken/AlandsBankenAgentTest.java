@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.alandsbanken;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.banks.se.alandsbanken.AlandsBankenAgent;
+import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
 
 public class AlandsBankenAgentTest extends AbstractAgentTest<AlandsBankenAgent> {
 
