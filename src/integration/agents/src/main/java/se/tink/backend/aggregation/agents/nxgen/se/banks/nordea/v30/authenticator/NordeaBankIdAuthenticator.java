@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
@@ -34,7 +35,7 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
 
     @Override
     public BankIdResponse init(String ssn)
-            throws BankIdException, BankServiceException, AuthorizationException {
+            throws BankIdException, BankServiceException, AuthorizationException, LoginException {
         sessionStorage.put(StorageKeys.SSN, ssn);
         try {
             return apiClient.formInitBankIdLogin(ssn);
@@ -44,9 +45,12 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
     }
 
     private BankIdResponse handleBankIdInitErrors(final HttpResponseException responseException)
-            throws BankIdException, HttpResponseException {
+            throws BankIdException, HttpResponseException, LoginException {
         if (isAlreadyInProgressException(responseException)) {
             throw BankIdError.ALREADY_IN_PROGRESS.exception(responseException);
+        }
+        if (isAuthenticationFailedException(responseException)) {
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(responseException);
         }
         if (shouldKeepPolling(responseException)) {
             return responseException.getResponse().getBody(BankIdResponse.class);
@@ -63,6 +67,15 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
             return true;
         }
         log.warn("Unhandled BankID error: {}", resp.getError());
+        return false;
+    }
+
+    private boolean isAuthenticationFailedException(final HttpResponseException responseException) {
+        BankIdResponse resp = responseException.getResponse().getBody(BankIdResponse.class);
+        if (ErrorCodes.AUTHENTICATION_COLLISION.equalsIgnoreCase(resp.getError())) {
+            return true;
+        }
+        log.warn("Unhandled authentication error: {}", resp.getError());
         return false;
     }
 
