@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.client.provider_configuration;
 
-import com.sun.jersey.api.client.filter.ClientFilter;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -19,19 +19,23 @@ public interface ProviderConfigurationService {
     @Path("/list")
     @GET
     @TeamOwnership(Team.INTEGRATION)
-    List<ProviderConfiguration> list();
+    List<ProviderConfiguration> list(
+            @HeaderParam("x-tink-cluster-name") String clusterName,
+            @HeaderParam("x-tink-cluster-environment") String clusterEnvironment);
 
     @Path("/{market}/list")
     @GET
     @TeamOwnership(Team.INTEGRATION)
-    List<ProviderConfiguration> listByMarket(@PathParam("market") String market);
+    List<ProviderConfiguration> listByMarket(
+            @HeaderParam("x-tink-cluster-name") String clusterName,
+            @HeaderParam("x-tink-cluster-environment") String clusterEnvironment,
+            @PathParam("market") String market);
 
     @Path("/{providerName}")
     @GET
     @TeamOwnership(Team.INTEGRATION)
-    ProviderConfiguration getProviderByName(@PathParam("providerName") String providerName);
-
-    void addClientFilter(ClientFilter filter);
-
-    void removeClientFilter(ClientFilter filter);
+    ProviderConfiguration getProviderByName(
+            @HeaderParam("x-tink-cluster-name") String clusterName,
+            @HeaderParam("x-tink-cluster-environment") String clusterEnvironment,
+            @PathParam("providerName") String providerName);
 }

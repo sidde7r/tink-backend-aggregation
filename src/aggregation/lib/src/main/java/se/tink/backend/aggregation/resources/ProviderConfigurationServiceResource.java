@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.resources;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.filter.ClientFilter;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,29 +49,23 @@ public class ProviderConfigurationServiceResource implements ProviderConfigurati
     }
 
     @Override
-    public List<ProviderConfiguration> list() {
+    public List<ProviderConfiguration> list(String clusterName, String clusterEnvironment) {
         List<ProviderConfiguration> providerConfigurations =
-                getProviderConfigurationService().list();
+                getProviderConfigurationService().list(clusterName, clusterEnvironment);
         return providerConfigurations;
     }
 
     @Override
-    public List<ProviderConfiguration> listByMarket(String market) {
-        return getProviderConfigurationService().listByMarket(market);
+    public List<ProviderConfiguration> listByMarket(
+            String clusterName, String clusterEnvironment, String market) {
+        return getProviderConfigurationService()
+                .listByMarket(clusterName, clusterEnvironment, market);
     }
 
     @Override
-    public ProviderConfiguration getProviderByName(String providerName) {
-        return getProviderConfigurationService().getProviderByName(providerName);
-    }
-
-    @Override
-    public void addClientFilter(ClientFilter filter) {
-        client.addFilter(filter);
-    }
-
-    @Override
-    public void removeClientFilter(ClientFilter filter) {
-        client.removeFilter(filter);
+    public ProviderConfiguration getProviderByName(
+            String clusterName, String clusterEnvironment, String providerName) {
+        return getProviderConfigurationService()
+                .getProviderByName(clusterName, clusterEnvironment, providerName);
     }
 }

@@ -93,7 +93,6 @@ java_library(
         "//src/aggregation/api",
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/annotations",
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/filter",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
         "//src/integration/account:rpc",
