@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.buil
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
 @JsonObject
 public class AccountEntity implements IdentifiableAccount {
@@ -75,11 +74,12 @@ public class AccountEntity implements IdentifiableAccount {
                         .withUniqueIdentifier(uniqueIdentifier)
                         .withAccountNumber(accountNumber)
                         .withAccountName(accountName)
-                        .addIdentifier(new SortCodeIdentifier(accountNumber));
-
-        if (account.toAccountIdentifier(accountName).isPresent()) {
-            idModuleBuilder.addIdentifier(account.toAccountIdentifier(accountName).get());
-        }
+                        .addIdentifier(
+                                account.toAccountIdentifier(accountName)
+                                        .orElseThrow(
+                                                () ->
+                                                        new IllegalStateException(
+                                                                "Unable to set identifier")));
 
         TransactionalAccount transactionalAccount =
                 TransactionalAccount.nxBuilder()
