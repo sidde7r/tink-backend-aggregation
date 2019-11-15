@@ -2,10 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.entities
 
 import java.math.BigDecimal;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CardTransactionEntity {
+
+    private static final int VALUE_DECIMAL_PLACES = 2;
 
     private Date bookDate;
     private String cardDescription;
@@ -17,39 +22,15 @@ public class CardTransactionEntity {
     private String transactionId;
     private Date valueDate;
 
-    public Date getBookDate() {
-        return bookDate;
-    }
+    public Transaction toTinkTransaction(String currency) {
+        BigDecimal amount = creditAmount.subtract(debitAmount).movePointLeft(VALUE_DECIMAL_PLACES);
 
-    public String getCardDescription() {
-        return cardDescription;
-    }
-
-    public BigDecimal getCreditAmount() {
-        return creditAmount;
-    }
-
-    public BigDecimal getDebitAmount() {
-        return debitAmount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Boolean getFractionedPayment() {
-        return fractionedPayment;
-    }
-
-    public String getMaskedCardNumber() {
-        return maskedCardNumber;
-    }
-
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public Date getValueDate() {
-        return valueDate;
+        return Transaction.builder()
+                .setType(TransactionTypes.CREDIT_CARD)
+                .setAmount(ExactCurrencyAmount.of(amount, currency))
+                .setDate(bookDate)
+                .setDescription(description)
+                .setRawDetails(cardDescription)
+                .build();
     }
 }

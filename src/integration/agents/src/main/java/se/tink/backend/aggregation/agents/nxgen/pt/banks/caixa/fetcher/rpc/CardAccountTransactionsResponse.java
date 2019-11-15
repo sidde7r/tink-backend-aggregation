@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.entities.
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CardAccountDetailsResponse {
+public class CardAccountTransactionsResponse {
 
     private CardAccountTransactionsEntity cardAccountTransactions;
     private List<CardEntity> cards;

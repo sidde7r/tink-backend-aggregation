@@ -2,7 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.entities
 
 import java.math.BigDecimal;
 import java.util.List;
+import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CardEntity {
@@ -31,95 +38,48 @@ public class CardEntity {
     private BigDecimal totalOutstandingBalance;
     private List<CardTransactionEntity> transactions;
 
-    public Boolean getActive() {
-        return active;
+    public String getCardAccountId() {
+        return cardAccountId;
     }
 
-    public Boolean getCancelled() {
-        return cancelled;
+    public List<CardTransactionEntity> getTransactions() {
+        return transactions;
     }
 
     public String getCardAccountCurrency() {
         return cardAccountCurrency;
     }
 
-    public String getCardAccountDescription() {
-        return cardAccountDescription;
+    public CreditCardAccount toTinkAccount(
+            CardAccountTransactionsEntity balances, CreditBalancesEntity limits) {
+
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(buildCardDetails(balances, limits))
+                .withInferredAccountFlags()
+                .withId(buildCardAccountId())
+                .addHolderName(printedName)
+                .setApiIdentifier(cardAccountId)
+                .build();
     }
 
-    public String getCardAccountId() {
-        return cardAccountId;
+    private CreditCardModule buildCardDetails(
+            CardAccountTransactionsEntity balances, CreditBalancesEntity limits) {
+
+        return CreditCardModule.builder()
+                .withCardNumber(maskedCardNumber)
+                .withBalance(ExactCurrencyAmount.of(balances.getCreditTotal(), cardAccountCurrency))
+                .withAvailableCredit(
+                        ExactCurrencyAmount.of(limits.getAvailableCredit(), limits.getCurrency()))
+                .withCardAlias(ObjectUtils.firstNonNull(cardAlias, cardAccountDescription))
+                .build();
     }
 
-    public String getCardAccountNumber() {
-        return cardAccountNumber;
-    }
-
-    public String getCardAlias() {
-        return cardAlias;
-    }
-
-    public String getCardKey() {
-        return cardKey;
-    }
-
-    public String getCardNumberServiceMBWAY() {
-        return cardNumberServiceMBWAY;
-    }
-
-    public String getDepositAccount() {
-        return depositAccount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getExpirationDate() {
-        return expirationDate;
-    }
-
-    public String getExpirationDateMessage() {
-        return expirationDateMessage;
-    }
-
-    public String getMaskedCardNumber() {
-        return maskedCardNumber;
-    }
-
-    public Boolean getMbNetIndicator() {
-        return mbNetIndicator;
-    }
-
-    public String getMobileNumberMBWAY() {
-        return mobileNumberMBWAY;
-    }
-
-    public Integer getMobilePrefixMBWAY() {
-        return mobilePrefixMBWAY;
-    }
-
-    public Boolean getPrePaidCard() {
-        return prePaidCard;
-    }
-
-    public Boolean getPrePaidDualCreditCard() {
-        return prePaidDualCreditCard;
-    }
-
-    public String getPrintedName() {
-        return printedName;
-    }
-
-    public String getServiceIdentifierNumberMBWAY() {
-        return serviceIdentifierNumberMBWAY;
-    }
-
-    public BigDecimal getTotalOutstandingBalance() {
-        return totalOutstandingBalance;
-    }
-
-    public List<CardTransactionEntity> getTransactions() {
-        return transactions;
+    private IdModule buildCardAccountId() {
+        return IdModule.builder()
+                .withUniqueIdentifier(cardKey)
+                .withAccountNumber(cardAccountNumber)
+                .withAccountName(cardAccountDescription)
+                .addIdentifier(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, maskedCardNumber))
+                .build();
     }
 }

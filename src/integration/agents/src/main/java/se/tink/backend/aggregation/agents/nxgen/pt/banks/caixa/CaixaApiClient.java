@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.CaixaConstants.Qu
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.CaixaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.CardAccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.CardAccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.CardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.CardAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.InvestmentAccountsResponse;
@@ -101,7 +101,7 @@ public class CaixaApiClient {
                 .get(CardAccountResponse.class);
     }
 
-    public CardAccountDetailsResponse fetchCardAccountTransactions(
+    public CardAccountTransactionsResponse fetchCardAccountTransactions(
             String cardAccountId, YearMonth statementDate) {
         return createBaseRequest(
                         Urls.FETCH_CARD_ACCOUNT_TRANSACTIONS.parameter(
@@ -109,7 +109,7 @@ public class CaixaApiClient {
                 .queryParam(
                         QueryParams.STATEMENT_DATE,
                         statementDate.format(CaixaConstants.YEARMONTH_FORMATTER))
-                .get(CardAccountDetailsResponse.class);
+                .get(CardAccountTransactionsResponse.class);
     }
 
     private URL buildFetchAccountDetailsUrl(String accountKey) {
