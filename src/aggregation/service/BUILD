@@ -16,6 +16,7 @@ java_library(
         "//src/integration/tpp_secrets_service/client",
         "//src/libraries/draining",
         "//src/libraries/dropwizard_utils",
+        "//third_party:com_codahale_metrics_metrics_healthchecks",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:com_netflix_governator",
