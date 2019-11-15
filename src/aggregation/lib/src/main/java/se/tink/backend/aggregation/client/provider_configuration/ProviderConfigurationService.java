@@ -20,22 +20,22 @@ public interface ProviderConfigurationService {
     @GET
     @TeamOwnership(Team.INTEGRATION)
     List<ProviderConfiguration> list(
-            @HeaderParam("x-tink-cluster-name") String clusterName,
-            @HeaderParam("x-tink-cluster-environment") String clusterEnvironment);
+            @HeaderParam(Headers.CLUSTER_NAME) String clusterName,
+            @HeaderParam(Headers.CLUSTER_ENVIRONMENT) String clusterEnvironment);
 
     @Path("/{market}/list")
     @GET
     @TeamOwnership(Team.INTEGRATION)
     List<ProviderConfiguration> listByMarket(
-            @HeaderParam("x-tink-cluster-name") String clusterName,
-            @HeaderParam("x-tink-cluster-environment") String clusterEnvironment,
+            @HeaderParam(Headers.CLUSTER_NAME) String clusterName,
+            @HeaderParam(Headers.CLUSTER_ENVIRONMENT) String clusterEnvironment,
             @PathParam("market") String market);
 
     @Path("/{providerName}")
     @GET
     @TeamOwnership(Team.INTEGRATION)
     ProviderConfiguration getProviderByName(
-            @HeaderParam("x-tink-cluster-name") String clusterName,
-            @HeaderParam("x-tink-cluster-environment") String clusterEnvironment,
+            @HeaderParam(Headers.CLUSTER_NAME) String clusterName,
+            @HeaderParam(Headers.CLUSTER_ENVIRONMENT) String clusterEnvironment,
             @PathParam("providerName") String providerName);
 }
