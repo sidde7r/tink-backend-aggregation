@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.rpc;
 
 import java.util.Set;
-import se.tink.backend.agents.rpc.Provider;
 
 public final class SecretsNamesValidationRequest {
     private String financialInstitutionId;
