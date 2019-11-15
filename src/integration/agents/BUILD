@@ -188,6 +188,7 @@ junit_test(
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:de_jollyday_jollyday",
+        "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_vavr",
         "//third_party:jfree_jcommon",
