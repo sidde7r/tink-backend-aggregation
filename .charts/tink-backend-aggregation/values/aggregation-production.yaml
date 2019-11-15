@@ -146,6 +146,10 @@ clients:
     aggregatorIdentifier: "Sparekassen Vendsyssel"
   dk-stadil-sparekasse:
     aggregatorIdentifier: "Stadil Sparekasse"
+  es-evobanco-testing:
+    aggregatorIdentifier: "Evo Banco"
+  es-evobanco-production:
+    aggregatorIdentifier: "Evo Banco"
   evobanco-testing:
     aggregatorIdentifier: "Evo Banco"
   fintonic-production:
