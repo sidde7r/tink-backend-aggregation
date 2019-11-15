@@ -6,11 +6,13 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.authenticator.SantanderSessionHandler;
@@ -43,10 +45,8 @@ public class SantanderAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshCreditCardAccountsExecutor
-/*,
-    Temporarily disabled because of https://tinkab.atlassian.net/browse/ASS-804
-RefreshLoanAccountsExecutor*/ {
+                RefreshCreditCardAccountsExecutor,
+                RefreshLoanAccountsExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
@@ -164,7 +164,6 @@ RefreshLoanAccountsExecutor*/ {
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    /*
     @Override
     public FetchLoanAccountsResponse fetchLoanAccounts() {
         return loanRefreshController.fetchLoanAccounts();
@@ -173,5 +172,5 @@ RefreshLoanAccountsExecutor*/ {
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return loanRefreshController.fetchLoanTransactions();
-    }*/
+    }
 }
