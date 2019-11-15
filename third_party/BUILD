@@ -498,7 +498,6 @@ java_library(
         ":io_dropwizard_dropwizard_jersey",
         "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_core//jar",
-        "@io_dropwizard_dropwizard_jackson//jar",
     ],
     runtime_deps = [
         "@ch_qos_logback_logback_classic//jar",
@@ -529,6 +528,7 @@ java_library(
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
         "@commons_lang_commons_lang//jar",
+        "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_jetty//jar",
         "@io_dropwizard_dropwizard_lifecycle//jar",
         "@io_dropwizard_dropwizard_logging//jar",
