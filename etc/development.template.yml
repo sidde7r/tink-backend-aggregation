@@ -597,6 +597,11 @@ agentsServiceConfiguration:
   featureFlags:
     esProxy: false
 
+providerConfigurationServiceConfiguration:
+  host: provider-configuration-api.provider-configuration.svc.cluster.local # add to your /etc/hosts with 127.0.0.1
+  port: 9048
+  enabled: false
+
 transfers:
   enabled: true
   duplicateTime: 1
