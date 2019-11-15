@@ -4,24 +4,27 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaTypeMap
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.vavr.control.Option;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 
 @JsonObject
 public class ConsumerLoanEntity extends BaseLoanEntity {
+    private static final Logger log = LoggerFactory.getLogger(ConsumerLoanEntity.class);
+
     private AmountEntity awardedAmount;
     private AmountEntity pendingamount;
     private LoanTypeEntity loanType;
     private String digit;
 
-    public String getDigit() {
-        return digit;
-    }
-
     @JsonIgnore
-    public LoanDetails.Type getTinkLoanType() {
+    private LoanDetails.Type getTinkLoanType() {
         return Option.of(loanType)
                 .map(LoanTypeEntity::getId)
                 .map(LOAN_TYPE_MAPPER::translate)
@@ -30,33 +33,17 @@ public class ConsumerLoanEntity extends BaseLoanEntity {
     }
 
     @JsonIgnore
-    private LoanAccount.Builder buildTinkLoanAccount() {
-        return LoanAccount.builder(digit)
-                .setExactBalance(pendingamount.toTinkAmount().negate())
-                .setBankIdentifier(digit)
-                .setAccountNumber(digit)
-                .setName(getProduct().getDescription());
-    }
+    public Optional<LoanAccount> toTinkConsumerLoan(LoanDetailsResponse loanDetails) {
 
-    @JsonIgnore
-    public LoanAccount toTinkLoanAccount() {
-        final LoanDetails loanDetails =
-                LoanDetails.builder(getTinkLoanType())
-                        .setInitialBalance(awardedAmount.toTinkAmount())
-                        .setLoanNumber(digit)
-                        .setMonthlyAmortization(getNextFee().toTinkAmount())
-                        .setAmortized(getRedeemedBalance().toTinkAmount())
-                        .build();
+        Optional<LoanModule> loanModule =
+                loanDetails.getLoanModuleWithTypeAndLoanNumber(getTinkLoanType(), digit);
 
-        return (LoanAccount) buildTinkLoanAccount().setDetails(loanDetails).build();
-    }
-
-    @JsonIgnore
-    public LoanAccount toTinkLoanAccount(double interestRate, LoanDetails loanDetails) {
-        return (LoanAccount)
-                buildTinkLoanAccount()
-                        .setInterestRate(interestRate)
-                        .setDetails(loanDetails)
-                        .build();
+        return loanModule.map(
+                module ->
+                        LoanAccount.nxBuilder()
+                                .withLoanDetails(module)
+                                .withId(getIdModuleWithUniqueIdentifier(digit))
+                                .setApiIdentifier(digit)
+                                .build());
     }
 }

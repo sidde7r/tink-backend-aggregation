@@ -11,4 +11,8 @@ public class InstallmentsEntity {
     private Date installmentDate;
 
     private AmountEntity installmentAmount;
+
+    public AmountEntity getInstallmentAmount() {
+        return installmentAmount;
+    }
 }

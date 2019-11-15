@@ -7,8 +7,10 @@ import static io.vavr.control.Try.run;
 
 import io.vavr.control.Try;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
@@ -16,8 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.BaseLoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.BaseLoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.ConsumerLoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -41,16 +43,17 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
                 .getPositions()
                 .map(PositionEntity::getContract)
                 .flatMap(ContractEntity::getLoan)
-                .map(this::enrichConsumerLoanWithDetails)
-                .asJava();
+                .map(this::getConsumerLoanFromDetails)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
-    private LoanAccount enrichConsumerLoanWithDetails(ConsumerLoanEntity loan) {
+    private Optional<LoanAccount> getConsumerLoanFromDetails(ConsumerLoanEntity loan) {
+
         return Try.of(() -> apiClient.fetchLoanDetails(loan.getId()))
                 .onFailure(HttpResponseException.class, handleFetchLoanDetailsException(loan))
-                .fold(
-                        error -> loan.toTinkLoanAccount(),
-                        loanDetails -> loanDetails.toTinkConsumerLoan(loan));
+                .fold(error -> Optional.empty(), loan::toTinkConsumerLoan);
     }
 
     private Consumer<HttpResponseException> handleFetchLoanDetailsException(BaseLoanEntity loan) {
@@ -59,7 +62,7 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
             Match(res.getStatus())
                     .of(
                             Case($(409), run(() -> logLoanDetailsError(res, loan))),
-                            Case($(500), run(() -> handleBankServiceError(res))),
+                            Case($(500), run(() -> handleBankServiceError(res, e))),
                             // Throw e if we have no match.
                             Case(
                                     $(),
@@ -69,9 +72,9 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
         };
     }
 
-    private void handleBankServiceError(HttpResponse res) {
+    private void handleBankServiceError(HttpResponse res, HttpResponseException e) {
         if (findTempUnavailableText(res)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
         }
     }
 
