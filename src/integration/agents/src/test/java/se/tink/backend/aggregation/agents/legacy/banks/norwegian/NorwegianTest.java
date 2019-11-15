@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.banks.norwegian;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils;
+import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
 
 public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {
 
