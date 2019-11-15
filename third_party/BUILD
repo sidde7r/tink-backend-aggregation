@@ -496,7 +496,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         ":io_dropwizard_dropwizard_jersey",
-        "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_core//jar",
     ],
     runtime_deps = [
@@ -528,6 +527,7 @@ java_library(
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
         "@commons_lang_commons_lang//jar",
+        "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_jetty//jar",
         "@io_dropwizard_dropwizard_lifecycle//jar",
