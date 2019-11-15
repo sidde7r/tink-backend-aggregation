@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.LoansEntity;
@@ -24,6 +25,8 @@ public class NordeaLoanFetcher implements AccountFetcher<LoanAccount> {
                 .map(LoansEntity::getLoanId)
                 .map(apiClient::fetchLoanDetails)
                 .map(FetchLoanDetailsResponse::toTinkLoanAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

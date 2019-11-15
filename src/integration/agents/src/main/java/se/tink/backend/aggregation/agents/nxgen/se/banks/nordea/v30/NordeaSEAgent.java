@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.NordeaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.NordeaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.NordeaTransferDestinationFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.filters.NordeaInternalServerErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.filters.NordeaSEServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.session.NordeaSESessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -95,6 +96,7 @@ public class NordeaSEAgent extends NextGenerationAgent
 
     private void configureHttpClient(final TinkHttpClient client) {
         client.addFilter(new NordeaSEServiceUnavailableFilter());
+        client.addFilter(new NordeaInternalServerErrorFilter());
     }
 
     @Override
