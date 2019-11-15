@@ -14,15 +14,19 @@ import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiConstants.Error;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserErrorException;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.CardList;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class IkanoApiAgent extends AbstractAgent
         implements RefreshCreditCardAccountsExecutor, RefreshIdentityDataExecutor {
@@ -164,10 +168,16 @@ public class IkanoApiAgent extends AbstractAgent
         supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
-    private void stopLoginAttempt(UserErrorException e) {
+    private void stopLoginAttempt(UserErrorException e) throws LoginException {
         String message = e.getMessage();
+        if (IkanoApiConstants.Error.TECHNICAL_ISSUES.equalsIgnoreCase(message)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    new LocalizableKey("Error message: " + message));
+        } else if (Error.WRONG_SSN.equalsIgnoreCase(message)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
         log.info("Ikano agent user error: " + message, e);
-        statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, message);
+        throw new IllegalStateException("Ikano agent user error: " + message);
     }
 
     public static class AccountRelationNotFoundException extends Exception {}
