@@ -24,14 +24,14 @@ public class BnlAgent extends CbiGlobeAgent {
     @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
-            CbiGlobeTransactionalAccountFetcher.createFromBooked(apiClient, persistentStorage);
+                CbiGlobeTransactionalAccountFetcher.createFromBooked(apiClient, persistentStorage);
 
         return new TransactionalAccountRefreshController(
-            metricRefreshController,
-            updateController,
-            accountFetcher,
-            new TransactionFetcherController<>(
-                transactionPaginationHelper,
-                new TransactionDatePaginationController<>(accountFetcher)));
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(accountFetcher)));
     }
 }
