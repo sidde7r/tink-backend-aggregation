@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,13 +23,15 @@ public class TransactionsResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-
-        return Stream.concat(
-                        transactions.getBooked().stream()
-                                .map(TransactionEntity::toTinkBookedTransaction),
-                        transactions.getPending().stream()
-                                .map(TransactionEntity::toTinkPendingTransaction))
-                .collect(Collectors.toList());
+        if (links != null) {
+            return Stream.concat(
+                            transactions.getBooked().stream()
+                                    .map(TransactionEntity::toTinkBookedTransaction),
+                            transactions.getPending().stream()
+                                    .map(TransactionEntity::toTinkPendingTransaction))
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 
     @Override
