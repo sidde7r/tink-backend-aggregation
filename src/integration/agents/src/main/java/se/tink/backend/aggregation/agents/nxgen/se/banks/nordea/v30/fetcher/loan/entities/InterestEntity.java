@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -41,5 +42,17 @@ public class InterestEntity {
 
     public Date getDiscountedRateEndDate() {
         return discountedRateEndDate;
+    }
+
+    public void setBaseRate(BigDecimal rate) {
+        this.baseRate = rate;
+    }
+
+    public BigDecimal getBaseRateOrRateIfBaseRateIsNull() {
+        return baseRate != null ? baseRate : rate;
+    }
+
+    public Optional<BigDecimal> getRateIfBaseRateIsNotNull() {
+        return baseRate != null ? Optional.of(rate) : Optional.empty();
     }
 }

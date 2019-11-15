@@ -75,72 +75,122 @@ public class FetchLoanDetailsResponse {
     private RepaymentSchedule repaymentSchedule;
 
     @JsonIgnore
-    public LoanAccount toTinkLoanAccount() {
-        return LoanAccount.nxBuilder()
-                .withLoanDetails(getLoanModule())
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(maskAccountNumber())
-                                .withAccountNumber(loanFormattedId)
-                                .withAccountName(getAccountName())
-                                .addIdentifier(new SwedishIdentifier(loanId))
-                                .setProductName(productCode)
-                                .build())
-                .addHolderName(getHolderName())
-                .build();
+    public Optional<LoanAccount> toTinkLoanAccount() {
+        Optional<LoanModule> loanModule = getLoanModule();
+        if (!loanModule.isPresent()) {
+            return Optional.empty();
+        }
+        return Optional.of(
+                LoanAccount.nxBuilder()
+                        .withLoanDetails(loanModule.get())
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(maskAccountNumber())
+                                        .withAccountNumber(loanFormattedId)
+                                        .withAccountName(getAccountName())
+                                        .addIdentifier(new SwedishIdentifier(loanId))
+                                        .setProductName(productCode)
+                                        .build())
+                        .addHolderName(getHolderName())
+                        .build());
     }
 
     @JsonIgnore
-    private LoanModule getLoanModule() {
+    private Optional<LoanModule> getLoanModule() {
+        Optional<InterestEntity> interestEntity = getInterest();
+        if (!interestEntity.isPresent()) {
+            return Optional.empty();
+        }
+
         LoanModuleBuildStep builder =
                 LoanModule.builder()
                         .withType(getLoanType())
                         .withBalance(getBalance())
-                        .withInterestRate(getInterestRate().doubleValue())
+                        .withInterestRate(getInterestRate().get().doubleValue())
                         .setAmortized(getPaid())
                         .setInitialBalance(getInitialBalance())
                         .setApplicants(getApplicants())
                         .setCoApplicant(getApplicants().size() > 1)
                         .setInitialDate(convertDateToLocalDate(firstDrawDownDate))
                         .setLoanNumber(loanId);
-        if (!Objects.isNull(getInterest().getDiscountedRateEndDate())) {
+        if (!Objects.isNull(getInterest().get().getDiscountedRateEndDate())) {
             builder.setNextDayOfTermsChange(
-                    convertDateToLocalDate(getInterest().getDiscountedRateEndDate()));
+                    convertDateToLocalDate(getInterest().get().getDiscountedRateEndDate()));
         }
-        return builder.build();
+        return Optional.of(builder.build());
     }
 
     @JsonIgnore
-    private InterestEntity getInterest() {
+    private Optional<InterestEntity> getInterest() {
         if (!Objects.isNull(interest) && !Objects.isNull(interest.getRate())) {
-            return interest;
+            return Optional.of(interest);
         } else {
             return getInterestRateFromSubAgreements();
         }
     }
 
     @JsonIgnore
-    private InterestEntity getInterestRateFromSubAgreements() {
+    private Optional<InterestEntity> getInterestRateFromSubAgreements() {
         List<InterestEntity> interests =
                 subAgreements.stream()
-                        .filter(
-                                subAgreements ->
-                                        Objects.nonNull(subAgreements.getInterest().getBaseRate()))
                         .map(SubAgreementsItem::getInterest)
                         .collect(Collectors.toList());
-        if (interests.stream().map(InterestEntity::getRate).distinct().count() > 1) {
-            throw new IllegalStateException("Interest rates in sub parts does not match.");
+
+        if (subLoanRatesMismatch(interests)) {
+            return Optional.empty();
         }
+
+        if (allRatesMatch(interests)) {
+            return interests.stream().findFirst();
+        }
+
+        if (allRatesMatchWhenBaseRateMissingAreIgnored(interests)) {
+            return interests.stream()
+                    .filter(interest -> interest.getBaseRate() != null)
+                    .findFirst();
+        }
+        throw new IllegalStateException("No interest rate found.");
+    }
+
+    // When base rate is missing, the rate is the base rate, so we filter them out and check that
+    // the remaining ones have the same rate.
+    private boolean allRatesMatchWhenBaseRateMissingAreIgnored(List<InterestEntity> interests) {
         return interests.stream()
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No interest rate found."));
+                        .filter(interest -> interest.getBaseRate() != null)
+                        .map(InterestEntity::getRate)
+                        .distinct()
+                        .count()
+                == 1;
+    }
+
+    private boolean allRatesMatch(List<InterestEntity> interests) {
+        return interests.stream().map(InterestEntity::getRate).distinct().count() == 1;
+    }
+
+    private boolean subLoanRatesMismatch(List<InterestEntity> interests) {
+        List<BigDecimal> baseRates =
+                interests.stream()
+                        .map(InterestEntity::getBaseRateOrRateIfBaseRateIsNull)
+                        .collect(Collectors.toList());
+        List<BigDecimal> rates =
+                interests.stream()
+                        .map(InterestEntity::getRateIfBaseRateIsNotNull)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
+        return baseRates.stream().distinct().count() > 1 && rates.stream().distinct().count() > 1;
     }
 
     @JsonIgnore
-    private BigDecimal getInterestRate() {
-        InterestEntity interest = getInterest();
-        if (!Objects.isNull(interest.getRate())) {
-            return AgentParsingUtils.parsePercentageFormInterest(interest.getRate());
+    private Optional<BigDecimal> getInterestRate() {
+        Optional<InterestEntity> interest = getInterest();
+        if (!interest.isPresent()) {
+            return Optional.empty();
+        }
+
+        if (!Objects.isNull(interest.get().getRate())) {
+            return Optional.of(
+                    AgentParsingUtils.parsePercentageFormInterest(interest.get().getRate()));
         } else {
             throw new IllegalStateException("No interest rate found.");
         }
