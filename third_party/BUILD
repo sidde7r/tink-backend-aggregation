@@ -519,11 +519,6 @@ java_library(
         "@com_fasterxml_jackson_module_jackson_module_afterburner//jar",
         "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
         "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_guava_guava//jar",
-        "@com_sun_jersey_jersey_core//jar",
-        "@com_sun_jersey_jersey_server//jar",
-        "@com_sun_jersey_jersey_servlet//jar",
-        "@commons_lang_commons_lang//jar",
         "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_core//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
@@ -534,6 +529,13 @@ java_library(
         "@io_dropwizard_dropwizard_servlets//jar",
         "@io_dropwizard_dropwizard_util//jar",
         "@io_dropwizard_dropwizard_validation//jar",
+    ],
+    runtime_deps = [
+        "@com_google_guava_guava//jar",
+        "@com_sun_jersey_jersey_core//jar",
+        "@com_sun_jersey_jersey_server//jar",
+        "@com_sun_jersey_jersey_servlet//jar",
+        "@commons_lang_commons_lang//jar",
         "@javax_el_javax_el_api//jar",
         "@javax_validation_validation_api//jar",
         "@net_sourceforge_argparse4j_argparse4j//jar",
@@ -554,6 +556,14 @@ java_library(
         "@org_slf4j_jul_to_slf4j//jar",
         "@org_slf4j_slf4j_api//jar",
         "@org_yaml_snakeyaml//jar",
+    ],
+)
+
+java_library(
+    name = "net_sourceforge_argparse4j_argparse4j",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@net_sourceforge_argparse4j_argparse4j//jar",
     ],
 )
 
