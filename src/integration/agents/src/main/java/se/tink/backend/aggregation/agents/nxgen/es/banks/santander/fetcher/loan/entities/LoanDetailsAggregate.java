@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -30,7 +31,9 @@ public class LoanDetailsAggregate {
         return LoanModule.builder()
                 .withType(getLoanType())
                 .withBalance(loanDetailsResponse.getInitialAmount().getTinkAmount())
-                .withInterestRate(Double.valueOf(loanDetailsResponse.getInterest()))
+                .withInterestRate(
+                        AgentParsingUtils.parsePercentageFormInterest(
+                                loanDetailsResponse.getInterest()))
                 .setInitialDate(LocalDate.parse(loanDetailsResponse.getStartDate()))
                 .setApplicants(Arrays.asList(loanDetailsResponse.getMainHolder()))
                 .build();
@@ -40,7 +43,7 @@ public class LoanDetailsAggregate {
         return IdModule.builder()
                 .withUniqueIdentifier(
                         loanEntity.getGeneralInfo().getContractId().getContractNumber())
-                .withAccountNumber(loanDetailsResponse.getAssociateAccountNumber())
+                .withAccountNumber(loanEntity.getGeneralInfo().getContractDescription())
                 .withAccountName(loanEntity.getGeneralInfo().getAlias())
                 .addIdentifier(
                         AccountIdentifier.create(
