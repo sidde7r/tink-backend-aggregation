@@ -20,7 +20,7 @@ public class CaixaConstants {
 
     public static final GenericTypeMapper<InstrumentType, String> INSTRUMENT_TYPE_MAPPER =
             GenericTypeMapper.<InstrumentType, String>genericBuilder()
-                    .put(InstrumentType.OTHER, "O10", "Bonds")
+                    .put(InstrumentType.OTHER, "O10", "Bonds") // O10 - bonds
                     .build();
 
     public static class Urls {
@@ -47,6 +47,7 @@ public class CaixaConstants {
 
     public static class Parameters {
         public static final String ACCOUNT_KEY = "accountKey";
+        public static final String CARD_ACCOUNT_ID = "cardAccountId";
     }
 
     public static class QueryParams {

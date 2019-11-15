@@ -94,8 +94,6 @@ public class CaixaInvestmentAccountFetcher implements AccountFetcher<InvestmentA
             AssetsByTypeContainerEntity assetsByTypeContainerEntity) {
 
         List<InstrumentModule> instruments = mapToInstruments(assetsByTypeContainerEntity);
-        Double totalProfit = calculateInstrumentsProfit(instruments);
-        Double totalValue = calculateInstrumentsTotalValue(instruments);
 
         return PortfolioModule.builder()
                 .withType(PortfolioType.DEPOT)
@@ -104,8 +102,8 @@ public class CaixaInvestmentAccountFetcher implements AccountFetcher<InvestmentA
                         // is a proper unique identifier
                         assetsByTypeContainerEntity.getAssetType().getAssetTypeId())
                 .withCashValue(0) // not supported
-                .withTotalProfit(totalProfit)
-                .withTotalValue(totalValue)
+                .withTotalProfit(calculateInstrumentsProfit(instruments))
+                .withTotalValue(calculateInstrumentsTotalValue(instruments))
                 .withInstruments(instruments)
                 .setRawType(assetsByTypeContainerEntity.getAssetType().getDescription())
                 .build();
