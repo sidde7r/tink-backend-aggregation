@@ -34,7 +34,8 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent {
         deutscheBankDEConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(DeutscheBankConfiguration.class);
-        apiClient = new DeutscheBankApiClient(client, sessionStorage, deutscheBankDEConfiguration);
+        apiClient =
+                new DeutscheBankDEApiClient(client, sessionStorage, deutscheBankDEConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
