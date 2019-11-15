@@ -16,8 +16,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.LoanEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.BaseLoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.ConsumerLoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -40,19 +41,19 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
                 .getPositions()
                 .map(PositionEntity::getContract)
                 .flatMap(ContractEntity::getLoan)
-                .map(this::enrichLoanAccountWithDetails)
+                .map(this::enrichConsumerLoanWithDetails)
                 .asJava();
     }
 
-    private LoanAccount enrichLoanAccountWithDetails(LoanEntity loan) {
+    private LoanAccount enrichConsumerLoanWithDetails(ConsumerLoanEntity loan) {
         return Try.of(() -> apiClient.fetchLoanDetails(loan.getId()))
                 .onFailure(HttpResponseException.class, handleFetchLoanDetailsException(loan))
                 .fold(
                         error -> loan.toTinkLoanAccount(),
-                        loanDetails -> loanDetails.toTinkLoanAccount(loan));
+                        loanDetails -> loanDetails.toTinkConsumerLoan(loan));
     }
 
-    private Consumer<HttpResponseException> handleFetchLoanDetailsException(LoanEntity loan) {
+    private Consumer<HttpResponseException> handleFetchLoanDetailsException(BaseLoanEntity loan) {
         return e -> {
             final HttpResponse res = e.getResponse();
             Match(res.getStatus())
@@ -83,7 +84,7 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
                 .find();
     }
 
-    private void logLoanDetailsError(HttpResponse res, LoanEntity loan) {
+    private void logLoanDetailsError(HttpResponse res, BaseLoanEntity loan) {
         final BbvaErrorResponse errorResponse = res.getBody(BbvaErrorResponse.class);
 
         LOGGER.warn(

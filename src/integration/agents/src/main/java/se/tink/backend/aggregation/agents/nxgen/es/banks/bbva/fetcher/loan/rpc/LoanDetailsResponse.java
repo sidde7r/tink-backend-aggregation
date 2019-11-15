@@ -9,8 +9,8 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.FormatsEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.RelatedContractEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.ConsumerLoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities.AmortizationScheduleEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities.InstallmentsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities.InterestEntity;
@@ -139,7 +139,7 @@ public class LoanDetailsResponse {
         return pendingAmount;
     }
 
-    public LoanAccount toTinkLoanAccount(LoanEntity loan) {
+    public LoanAccount toTinkConsumerLoan(ConsumerLoanEntity loan) {
         final double interestRate =
                 getFirstInterestEntity().map(InterestEntity::getPercentage).getOrElse(0.0);
 
