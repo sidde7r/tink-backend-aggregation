@@ -37,6 +37,6 @@ public class CaixaCreditCardAccountFetcher implements AccountFetcher<CreditCardA
         CreditBalancesEntity limits =
                 apiClient.fetchCardAccountDetails(card.getCardAccountId()).getAccountBalances();
 
-        return card.toTinkAccount( balances, limits);
+        return card.toTinkAccount(balances, limits);
     }
 }
