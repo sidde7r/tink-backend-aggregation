@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.models.Instrument;
@@ -57,6 +58,7 @@ public class DepositEntity {
         return valueChange;
     }
 
+    @JsonIgnore
     public Instrument toTinkInstrument(
             PositionDetailsResponse positionDetailsResponse, Map<String, String> contractToCode) {
         return positionDetailsResponse.toTinkInstrument(name, contractToCode);

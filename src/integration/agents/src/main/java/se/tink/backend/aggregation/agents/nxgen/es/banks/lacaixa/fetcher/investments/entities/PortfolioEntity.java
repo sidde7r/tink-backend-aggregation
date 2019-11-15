@@ -78,8 +78,8 @@ public class PortfolioEntity {
         portfolio.setCashValue(0.0);
         portfolio.setInstruments(instruments);
         portfolio.setType(Portfolio.Type.DEPOT);
-        portfolio.setTotalProfit(valueChange.doubleValue());
-        portfolio.setTotalValue(currentValue.doubleValue());
+        portfolio.setTotalProfit(valueChange.getAmount());
+        portfolio.setTotalValue(currentValue.getAmount());
 
         return Lists.newArrayList(portfolio);
     }

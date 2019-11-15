@@ -83,7 +83,7 @@ public class FundsListEntity {
         portfolio.setType(Portfolio.Type.DEPOT);
         portfolio.setTotalProfit(getTotalProfit(instruments));
         portfolio.setUniqueIdentifier(sanitizeUniqueIdentifier());
-        portfolio.setTotalValue(totalBalance.doubleValue());
+        portfolio.setTotalValue(totalBalance.getAmount());
         portfolio.setInstruments(instruments);
         portfolio.setCashValue(0.0);
         return portfolio;
