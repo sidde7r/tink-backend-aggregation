@@ -283,6 +283,7 @@ public class NordeaSEConstants {
         // refresh token has expired
         public static final String INVALID_GRANT = "invalid_grant";
         public static final String AUTHENTICATION_COLLISION = "authentication_collision";
+        public static final String AUTHENTICATION_FAILED = "authentication_failed";
         public static final String UNABLE_TO_FETCH_ACCOUNTS = "Could not retrieve accounts.";
         public static final String DUPLICATE_PAYMENT =
                 "Duplicate payment. Technical code. Please try again.";
