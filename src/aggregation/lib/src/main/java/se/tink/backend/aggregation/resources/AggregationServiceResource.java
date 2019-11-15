@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.resources;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
@@ -9,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -19,6 +20,8 @@ import se.tink.backend.aggregation.agents.tools.ClientConfigurationValidator;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigurationService;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration.AccessType;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
@@ -276,8 +279,12 @@ public class AggregationServiceResource implements AggregationService {
     public SecretsNamesValidationResponse validateSecretsNames(
             SecretsNamesValidationRequest request, ClientInfo clientInfo) {
         Preconditions.checkNotNull(request, "SecretsNamesValidationRequest cannot be null.");
+
+        String financialInstitutionId = request.getFinancialInstitutionId();
+
         Preconditions.checkNotNull(
-                request.getProvider(), "Provider in SecretsNamesValidationRequest cannot be null.");
+                Strings.emptyToNull(financialInstitutionId),
+                "FinancialInstitutionId in SecretsNamesValidationRequest cannot be null.");
         Preconditions.checkNotNull(
                 request.getSecretsNames(),
                 "SecretsNames in SecretsNamesValidationRequest cannot be null.");
@@ -291,7 +298,27 @@ public class AggregationServiceResource implements AggregationService {
                 request.getExcludedSensitiveSecretsNames(),
                 "ExcludedSensitiveSecretsNames in SecretsNamesValidationRequest cannot be null.");
 
-        return new ClientConfigurationValidator(request.getProvider())
+        List<ProviderConfiguration> allProviders =
+                providerConfigurationService.list(
+                        clientInfo.getClusterName(), clientInfo.getClusterEnvironment());
+
+        List<ProviderConfiguration> filteredProviders =
+                allProviders.stream()
+                        .filter(
+                                prv ->
+                                        Objects.equals(
+                                                financialInstitutionId,
+                                                prv.getFinancialInstitutionId()))
+                        .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
+                        .collect(Collectors.toList());
+
+        Preconditions.checkState(
+                filteredProviders.size() == 1,
+                String.format(
+                        "Trying to validate secrets. Could not find an open banking provider for financialInstituionId : %s.",
+                        financialInstitutionId));
+
+        return new ClientConfigurationValidator(Provider.of(filteredProviders.get(0)))
                 .validate(
                         request.getSecretsNames(),
                         request.getExcludedSecretsNames(),

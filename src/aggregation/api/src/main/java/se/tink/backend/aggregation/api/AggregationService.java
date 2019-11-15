@@ -158,7 +158,7 @@ public interface AggregationService {
             @ClientContext ClientInfo clientInfo);
 
     @POST
-    @Path("validate-secrets")
+    @Path("validate-secrets-names")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
