@@ -62,8 +62,8 @@ public class CreditCardDetailsResponse {
     @JsonIgnore
     public CreditCardAccount toTinkCreditCard(String userDataXml, CardEntity card) {
         return CreditCardAccount.builderFromFullNumber(card.getCardNumber())
-                .setBalance(balance.getTinkAmount())
-                .setAvailableCredit(availableBalance.getTinkAmount())
+                .setExactBalance(balance.getTinkAmount())
+                .setExactAvailableCredit(availableBalance.getTinkAmount())
                 .setHolderName(new HolderName(getCardHolder()))
                 .setName(card.getGeneralInfo().getAlias())
                 .putInTemporaryStorage(SantanderEsConstants.Storage.USER_DATA_XML, userDataXml)

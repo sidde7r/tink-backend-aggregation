@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.List;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SantanderEsConstants {
@@ -61,18 +64,17 @@ public class SantanderEsConstants {
         public static final String DEBIT_CARD_TYPE = "débito";
     }
 
+    public static final ImmutableMap<String, Type> LOAN_TYPES =
+            ImmutableMap.<String, LoanDetails.Type>builder()
+                    .put("143", Type.MORTGAGE)
+                    .put("103", Type.OTHER)
+                    .build();
+
     public static final class Tags {
-        public static final LogTag UNKNOWN_ENGAGEMENT_TYPE =
-                LogTag.from("es_santander_unknown_engagement_type");
         public static final LogTag UNKNOWN_ACCOUNT_TYPE =
                 LogTag.from("es_santander_unknown_account_type");
-        public static final LogTag CREDIT_CARD_ACCOUNT =
-                LogTag.from("es_santander_credit_card_account_log");
         public static final LogTag LOAN_ACCOUNT = LogTag.from("es_santander_loan");
         public static final LogTag INVESTMENT_ACCOUNT = LogTag.from("es_santander_investment");
-        public static final LogTag CREDIT_CARD_TRANSACTION =
-                LogTag.from("es_santander_credit_card_transaction");
-        public static final LogTag ES_SANTANDER_ALL = LogTag.from("es_santander_all");
     }
 
     public static final class LogMessages {
@@ -81,7 +83,6 @@ public class SantanderEsConstants {
     }
 
     public static final class Indicators {
-        public static final String ERROR_CODE_OK = "0";
         public static final String YES = "S";
         public static final String NO = "N";
     }
@@ -89,13 +90,10 @@ public class SantanderEsConstants {
     public static final class SoapErrorMessages {
         public static final String NO_MORE_TRANSACTIONS =
                 "no existen movimientos asociados a esta consulta";
-        public static final String NO_MOVEMENTS_IN_INTERVAL =
-                "no hay movimientos en el intervalo indicado";
-        public static final String NO_PERMISSION_TO_PERFORM_OPERATION =
-                "no dispone de los permisos necesarios para realizar esta operación";
-        public static final String PROVIDE_VALID_INITIAL_DATE =
-                "por favor, introduzca una fecha inicial válida";
         public static final String NOT_CUSTOMER =
                 "NO EXISTEN CONTRATOS VISIBLES ASOCIADOS A LA PERSONA INDICADA";
     }
+
+    public static final String DEFAULT_CURRENCY = "EUR";
+    public static final String DEFAULT_LOAN_AMOUNT = "0";
 }
