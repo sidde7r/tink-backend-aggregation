@@ -15,11 +15,10 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.rpc.AuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities.FetchAccountDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.creditcard.rpc.FetchCreditCardResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.investments.rpc.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchAccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchAccountTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchCreditCardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -101,10 +100,10 @@ public class MontepioApiClient {
         return fetchAccountTransactions(URLs.FETCH_TRANSACTIONS, account, pageNumber, from, to);
     }
 
-    public FetchInvestmentAccountsResponse fetchSavingsAccounts() {
+    public FetchAccountsResponse fetchSavingsAccounts() {
         return baseRequest(URLs.FETCH_SAVINGS_ACCOUNTS)
                 .header(HeaderKeys.SCREEN_NAME, HeaderValues.SAVINGS_ACCOUNTS_SCREEN_NAME)
-                .post(FetchInvestmentAccountsResponse.class, EMPTY_JSON);
+                .post(FetchAccountsResponse.class, EMPTY_JSON);
     }
 
     public FetchTransactionsResponse fetchSavingsAccountTransactions(
@@ -131,5 +130,14 @@ public class MontepioApiClient {
         return baseRequest(url)
                 .header(HeaderKeys.SCREEN_NAME, HeaderValues.TRANSACTIONS_SCREEN_NAME)
                 .post(FetchTransactionsResponse.class, request);
+    }
+
+    public FetchAccountsResponse fetchLoans() {
+        return baseRequest(URLs.FETCH_LOAN_ACCOUNTS).post(FetchAccountsResponse.class, EMPTY_JSON);
+    }
+
+    public FetchAccountDetailsResponse fetchLoanDetails(String handle) {
+        return baseRequest(URLs.FETCH_LOAN_ACCOUNT_DETAILS)
+                .post(FetchAccountDetailsResponse.class, new FetchAccountDetailsRequest(handle));
     }
 }

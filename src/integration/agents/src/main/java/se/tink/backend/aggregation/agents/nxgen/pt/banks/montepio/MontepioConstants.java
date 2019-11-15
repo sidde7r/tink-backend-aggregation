@@ -23,6 +23,9 @@ public class MontepioConstants {
                 new URL(Endpoints.FETCH_CREDIT_CARD_TRANSACTIONS);
         public static final URL FETCH_CREDIT_CARD_DETAILS =
                 new URL(Endpoints.FETCH_CREDIT_CARD_DETAILS);
+        public static final URL FETCH_LOAN_ACCOUNTS = new URL(Endpoints.FETCH_LOAN_ACCOUNTS);
+        public static final URL FETCH_LOAN_ACCOUNT_DETAILS =
+                new URL(Endpoints.FETCH_LOAN_ACCOUNT_DETAILS);
     }
 
     public static class Endpoints {
@@ -46,6 +49,10 @@ public class MontepioConstants {
                 BASE + "privateMG/card/CreditCardTransactionsTransaction";
         public static final String FETCH_CREDIT_CARD_DETAILS =
                 BASE + "privateMG/card/CreditCardDetailsTransaction";
+        public static final String FETCH_LOAN_ACCOUNTS =
+                BASE + "/privateMG/loanAccount/LoanAccountsTransaction";
+        public static final String FETCH_LOAN_ACCOUNT_DETAILS =
+                BASE + "/privateMG/loanAccount/LoanAccountDetailsTransaction";
     }
 
     public static class Crypto {
@@ -99,5 +106,15 @@ public class MontepioConstants {
 
     public class PropertyKeys {
         public static final String HANDLE = "handle";
+        public static final String IBAN_DETAILS_KEY = "Iban";
+        public static final String LOAN_INTEREST_DETAILS_KEY = "Taxa Líquida";
+        public static final String LOAN_HOLDER_NAME_DETAILS_KEY = "Titular";
+        public static final String LOAN_INITIAL_BALANCE_DETAILS_KEY = "Montante contratação";
+    }
+
+    public class LoanTypes {
+        public static final String MORTGAGE = "M HABITAÇÃO";
+        public static final String INDIVUDUAL_CREDIT = "MONTEPIO CRÉDITO INDIVIDUAL";
+        public static final String MORTGAGE_ADDON = "MONTEPIO LAR MAIS EUR 3M";
     }
 }

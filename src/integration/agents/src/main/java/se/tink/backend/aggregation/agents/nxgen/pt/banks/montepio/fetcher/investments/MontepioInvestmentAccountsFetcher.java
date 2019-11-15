@@ -8,8 +8,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.MontepioConstants;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.entities.AccountTransactionEntity;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.investments.entities.InvestmentAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -29,8 +29,9 @@ public class MontepioInvestmentAccountsFetcher
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        return apiClient.fetchSavingsAccounts().getResult().getAccounts().stream()
-                .map(InvestmentAccountEntity::toTinkAccount)
+        return apiClient.fetchSavingsAccounts().getResult().getAccounts()
+                .orElseGet(Collections::emptyList).stream()
+                .map(AccountEntity::toInvestmentAccount)
                 .collect(Collectors.toList());
     }
 

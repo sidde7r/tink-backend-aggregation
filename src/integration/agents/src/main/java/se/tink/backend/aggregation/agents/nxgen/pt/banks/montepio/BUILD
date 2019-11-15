@@ -13,5 +13,6 @@ java_library(
         "//third_party:com_sun_jersey_jersey_core",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_google_guava_guava//jar",
+        "@org_slf4j_slf4j_api//jar",
     ],
 )

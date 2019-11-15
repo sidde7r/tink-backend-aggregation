@@ -3,20 +3,24 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.authenticator.MontepioAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accounts.MontepioTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.creditcard.MontepioCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.investments.MontepioInvestmentAccountsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.loans.MontepioLoansFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -26,12 +30,14 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class MontepioAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshLoanAccountsExecutor {
 
     private final MontepioApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final LoanRefreshController loanRefreshController;
 
     public MontepioAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -40,6 +46,7 @@ public class MontepioAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController = constructAccountRefreshController();
         this.investmentRefreshController = constructInvestmentRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.loanRefreshController = constructLoanRefreshController();
     }
 
     @Override
@@ -51,6 +58,11 @@ public class MontepioAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
+    }
+
+    private LoanRefreshController constructLoanRefreshController() {
+        MontepioLoansFetcher fetcher = new MontepioLoansFetcher(apiClient);
+        return new LoanRefreshController(metricRefreshController, updateController, fetcher);
     }
 
     private TransactionalAccountRefreshController constructAccountRefreshController() {
@@ -117,5 +129,15 @@ public class MontepioAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 }
