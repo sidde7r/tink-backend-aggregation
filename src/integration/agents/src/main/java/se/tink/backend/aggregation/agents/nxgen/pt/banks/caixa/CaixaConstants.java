@@ -12,6 +12,9 @@ public class CaixaConstants {
     public static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    public static final DateTimeFormatter YEARMONTH_FORMATTER =
+            DateTimeFormatter.ofPattern("MM-yyyy");
+
     public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<TransactionalAccountType>builder()
                     .put(TransactionalAccountType.CHECKING, "DepositAccount")
@@ -34,6 +37,10 @@ public class CaixaConstants {
                 new URL(BASE.concat(Endpoints.FETCH_INVESTMENTS_DETAILS));
         public static final URL FETCH_MARKET_DETAILS =
                 new URL(BASE.concat(Endpoints.FETCH_MARKET_DETAILS));
+        public static final URL FETCH_CARD_ACCOUNTS =
+                new URL(BASE.concat(Endpoints.FETCH_CARD_ACCOUNTS));
+        public static final URL FETCH_CARD_ACCOUNT_TRANSACTIONS =
+                new URL(BASE.concat(Endpoints.FETCH_CARD_ACCOUNT_TRANSACTIONS));
     }
 
     public static class Endpoints {
@@ -43,6 +50,9 @@ public class CaixaConstants {
         public static final String FETCH_INVESTMENTS_DETAILS =
                 "/business/investments/portfolio/byassettypes";
         public static final String FETCH_MARKET_DETAILS = "/business/investments/quotes";
+        public static final String FETCH_CARD_ACCOUNTS = "/business/cards/customercarddata";
+        public static final String FETCH_CARD_ACCOUNT_TRANSACTIONS =
+                "/business/cards/accounts/{cardAccountId}/transactions";
     }
 
     public static class Parameters {
@@ -60,6 +70,9 @@ public class CaixaConstants {
         public static final String ASSET_TYPE_ID = "assetTypeId";
         public static final String QUOTES_SEARCH_TYPE_ID = "quotesSearchTypeId";
         public static final String FULL_ACCOUNT_KEY = "fullAccountKey";
+        public static final String TARGET_CARD_OPERATION_TYPE = "targetCardOperationType";
+        public static final String STATEMENT_DATE = "statementDate";
+        public static final String CARD_ACCOUNT_ID = "cardAccountId";
     }
 
     public static class QueryValues {

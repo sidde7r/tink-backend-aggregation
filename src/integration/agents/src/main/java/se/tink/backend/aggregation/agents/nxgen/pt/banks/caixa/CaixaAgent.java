@@ -5,15 +5,19 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.authenticator.CaixaPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.CaixaCreditCardAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.CaixaCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.CaixaInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.CaixaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
@@ -24,10 +28,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class CaixaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshInvestmentAccountsExecutor {
+                RefreshInvestmentAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
     private final CaixaApiClient apiClient;
 
     public CaixaAgent(
@@ -37,12 +43,15 @@ public class CaixaAgent extends NextGenerationAgent
         this.apiClient = new CaixaApiClient(client);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+        this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.investmentRefreshController = constructInvestmentRefreshController();
+    }
 
-        this.investmentRefreshController =
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new CaixaInvestmentAccountFetcher(apiClient));
+    private InvestmentRefreshController constructInvestmentRefreshController() {
+        return new InvestmentRefreshController(
+                metricRefreshController,
+                updateController,
+                new CaixaInvestmentAccountFetcher(apiClient));
     }
 
     @Override
@@ -62,6 +71,17 @@ public class CaixaAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionPagePaginationController<>(
                                 transactionalAccountsFetcher, 1)));
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new CaixaCreditCardAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(
+                                new CaixaCreditCardTransactionFetcher(apiClient), 0)));
     }
 
     @Override
@@ -97,5 +117,15 @@ public class CaixaAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
         return investmentRefreshController.fetchInvestmentTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
     }
 }

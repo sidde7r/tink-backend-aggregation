@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.CaixaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.CaixaConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.CaixaConstants.Parameters;
@@ -9,6 +10,9 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.CaixaConstants.Qu
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.CaixaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.CardAccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.CardAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.CardAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.InvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.MarketDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.PortfolioDetailsResponse;
@@ -78,6 +82,34 @@ public class CaixaApiClient {
                 .queryParam(QueryParams.FROM, CaixaConstants.DATE_FORMATTER.format(from))
                 .queryParam(QueryParams.TO, CaixaConstants.DATE_FORMATTER.format(to))
                 .get(AccountDetailsResponse.class);
+    }
+
+    public CardAccountsResponse fetchCardAccounts() {
+        return createBaseRequest(Urls.FETCH_CARD_ACCOUNTS)
+                .queryParam(
+                        QueryParams.TARGET_CARD_OPERATION_TYPE,
+                        QueryValues.BALANCES_AND_TRANSACTIONS_OPERATION)
+                .get(CardAccountsResponse.class);
+    }
+
+    public CardAccountResponse fetchCardAccountDetails(String cardAccountId) {
+        return createBaseRequest(Urls.FETCH_CARD_ACCOUNTS)
+                .queryParam(
+                        QueryParams.TARGET_CARD_OPERATION_TYPE,
+                        QueryValues.BALANCES_AND_TRANSACTIONS_OPERATION)
+                .queryParam(QueryParams.CARD_ACCOUNT_ID, cardAccountId)
+                .get(CardAccountResponse.class);
+    }
+
+    public CardAccountDetailsResponse fetchCardAccountTransactions(
+            String cardAccountId, YearMonth statementDate) {
+        return createBaseRequest(
+                        Urls.FETCH_CARD_ACCOUNT_TRANSACTIONS.parameter(
+                                Parameters.CARD_ACCOUNT_ID, cardAccountId))
+                .queryParam(
+                        QueryParams.STATEMENT_DATE,
+                        statementDate.format(CaixaConstants.YEARMONTH_FORMATTER))
+                .get(CardAccountDetailsResponse.class);
     }
 
     private URL buildFetchAccountDetailsUrl(String accountKey) {
