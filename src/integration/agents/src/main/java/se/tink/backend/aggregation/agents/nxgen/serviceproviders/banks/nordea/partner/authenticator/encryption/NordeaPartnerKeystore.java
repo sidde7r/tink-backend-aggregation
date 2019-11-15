@@ -1,18 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.encryption;
 
 import com.google.common.base.Preconditions;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.InvalidKeyException;
 import java.security.Key;
-import java.security.KeyFactory;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import javax.crypto.EncryptedPrivateKeyInfo;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.configuration.NordeaPartnerConfiguration;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -34,32 +34,48 @@ public class NordeaPartnerKeystore {
         nordeaEncryptionPublicKey =
                 getPubKeyFromBase64(configuration.getNordeaEncryptionPublicKey());
 
+        KeyStore keystore =
+                loadKeyStore(
+                        NordeaPartnerConstants.Keystore.KEYSTORE_PATH,
+                        configuration.getPartnerKeystorePassword());
         tinkSigningKey =
-                getPrivateKeyFromBase64(
-                        configuration.getTinkSingingPrivateKey(),
-                        configuration.getTinkSingingKeyPassword());
+                getPrivateKeyFromKeystore(
+                        keystore,
+                        NordeaPartnerConstants.Keystore.SIGNING_KEY_ALIAS,
+                        configuration.getPartnerKeystorePassword());
 
         tinkEncryptionKey =
-                getPrivateKeyFromBase64(
-                        configuration.getTinkEncryptionPrivateKey(),
-                        configuration.getTinkEncryptionKeyPassword());
+                getPrivateKeyFromKeystore(
+                        keystore,
+                        NordeaPartnerConstants.Keystore.ENCRYPTION_KEY_ALIAS,
+                        configuration.getPartnerKeystorePassword());
     }
 
-    private RSAPrivateKey getPrivateKeyFromBase64(String privateKeyString, String passphrase) {
+    private KeyStore loadKeyStore(String keyStorePath, String password) {
         try {
-            PBEKeySpec pbeKeySpec = new PBEKeySpec(passphrase.toCharArray());
-            EncryptedPrivateKeyInfo encryptedPrivKeyInfo =
-                    new EncryptedPrivateKeyInfo(EncodingUtils.decodeBase64String(privateKeyString));
-            SecretKeyFactory secretKeyFactory =
-                    SecretKeyFactory.getInstance(encryptedPrivKeyInfo.getAlgName());
-            Key secret = secretKeyFactory.generateSecret(pbeKeySpec);
-            PKCS8EncodedKeySpec pkcs8PrivKeySpec = encryptedPrivKeyInfo.getKeySpec(secret);
-            return (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(pkcs8PrivKeySpec);
-        } catch (NoSuchAlgorithmException
-                | InvalidKeySpecException
-                | InvalidKeyException
-                | IOException e) {
-            throw new IllegalStateException(e.getMessage(), e);
+            FileInputStream is = new FileInputStream(keyStorePath);
+            KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+            ks.load(is, password.toCharArray());
+            return ks;
+        } catch (KeyStoreException
+                | IOException
+                | NoSuchAlgorithmException
+                | CertificateException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private RSAPrivateKey getPrivateKeyFromKeystore(
+            KeyStore keyStore, String alias, String password) {
+        try {
+            Key key = keyStore.getKey(alias, password.toCharArray());
+            if (key instanceof PrivateKey) {
+                return (RSAPrivateKey) key;
+            } else {
+                throw new IllegalStateException("Unrecoverable Key: Not a private key " + alias);
+            }
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
+            throw new IllegalStateException(e);
         }
     }
 

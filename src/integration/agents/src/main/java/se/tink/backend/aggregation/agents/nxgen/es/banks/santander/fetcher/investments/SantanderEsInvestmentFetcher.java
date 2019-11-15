@@ -93,7 +93,7 @@ public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAc
                             apiClient, userDataXml, portfolio, portfolioContent, holderName));
         } catch (Exception e) {
             // if amount is zero it looks like we cannot ask for details, we get a 500
-            if (!portfolio.getTotalValue().getTinkAmount().isZero()) {
+            if (!portfolio.getTotalValue().getAmount().equalsIgnoreCase("0")) {
                 LOG.info(
                         "Could not fetch investments "
                                 + SantanderEsConstants.Tags.INVESTMENT_ACCOUNT,

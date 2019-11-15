@@ -11,6 +11,7 @@ java_library(
         "//third_party:de_jollyday_jollyday",
         "//third_party:org_pojava_pojava",
         "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:joda_time_joda_time",
 
         # Annotations
         "//third_party:com_google_code_findbugs_jsr305",

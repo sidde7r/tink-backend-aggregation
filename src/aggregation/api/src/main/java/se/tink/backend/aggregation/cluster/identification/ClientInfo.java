@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.cluster.identification;
 
+import com.google.common.base.Preconditions;
+
 public class ClientInfo {
     private String clientName;
     private String clusterId;
@@ -32,5 +34,21 @@ public class ClientInfo {
 
     public String getAppId() {
         return appId;
+    }
+
+    public String getClusterName() {
+        String[] split = clusterId.split("-");
+        Preconditions.checkState(
+                split.length == 2,
+                "Trying to get the cluster name from an invalid clusterId : " + clusterId);
+        return split[0];
+    }
+
+    public String getClusterEnvironment() {
+        String[] split = clusterId.split("-");
+        Preconditions.checkState(
+                split.length == 2,
+                "Trying to get the cluster environment from an invalid clusterId : " + clusterId);
+        return split[1];
     }
 }

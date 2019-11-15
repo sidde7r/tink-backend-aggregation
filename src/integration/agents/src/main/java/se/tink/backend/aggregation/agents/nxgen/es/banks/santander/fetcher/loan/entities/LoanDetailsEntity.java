@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities.AmountEntity;
@@ -28,9 +30,8 @@ public class LoanDetailsEntity {
     @JsonProperty("fechaVencimientoActual")
     private Date currentEndDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("fechaApertura")
-    private Date startDate;
+    private String startDate;
 
     @JsonProperty("descTipoDeInteres")
     private String typeOfIntresetDescription;
@@ -64,7 +65,7 @@ public class LoanDetailsEntity {
         return currentEndDate;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
@@ -77,14 +78,15 @@ public class LoanDetailsEntity {
     }
 
     public String getMainHolder() {
-        return mainHolder;
+        return Strings.nullToEmpty(mainHolder).trim();
     }
 
     public String getAssociateAccountNumber() {
         return associateAccountNumber;
     }
 
-    public String getInterestl() {
+    @JsonIgnore
+    public String getInterest() {
         return interestl;
     }
 }

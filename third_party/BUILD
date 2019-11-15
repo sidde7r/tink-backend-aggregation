@@ -189,12 +189,14 @@ java_library(
     name = "com_github_tomakehurst_wiremock",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_github_tomakehurst_wiremock//jar",
+    ],
+    runtime_deps = [
         "@asm_asm//jar",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
-        "@com_github_tomakehurst_wiremock//jar",
         "@com_google_guava_guava//jar",
         "@com_jayway_jsonpath_json_path//jar",
         "@commons_codec_commons_codec//jar",
@@ -221,6 +223,14 @@ java_library(
         "@org_slf4j_slf4j_api//jar",
         "@org_xmlunit_xmlunit_core//jar",
         "@org_xmlunit_xmlunit_legacy//jar",
+    ],
+)
+
+java_library(
+    name = "org_apache_commons_commons_collections4",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@org_apache_commons_commons_collections4//jar",
     ],
 )
 
@@ -252,8 +262,10 @@ java_library(
     name = "com_google_http_client_google_http_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_code_findbugs_jsr305//jar",
         "@com_google_http_client_google_http_client//jar",
+    ],
+    runtime_deps = [
+        "@com_google_code_findbugs_jsr305//jar",
         "@org_apache_httpcomponents_httpclient//jar",
     ],
 )
@@ -263,6 +275,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_google_inject_extensions_guice_multibindings//jar",
+    ],
+    runtime_deps = [
         "@com_google_inject_guice//jar",
     ],
 )
@@ -271,9 +285,19 @@ java_library(
     name = "com_google_inject_guice",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_google_inject_guice//jar",
+    ],
+    runtime_deps = [
         "@aopalliance_aopalliance//jar",
         "@com_google_guava_guava//jar",
-        "@com_google_inject_guice//jar",
+        "@javax_inject_javax_inject//jar",
+    ],
+)
+
+java_library(
+    name = "javax_inject_javax_inject",
+    visibility = ["//visibility:public"],
+    exports = [
         "@javax_inject_javax_inject//jar",
     ],
 )
@@ -290,12 +314,14 @@ java_library(
     name = "com_netflix_governator",
     visibility = ["//visibility:public"],
     exports = [
+        "@com_netflix_governator//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_google_inject_extensions_guice_assistedinject//jar",
         "@com_google_inject_extensions_guice_grapher//jar",
         "@com_google_inject_extensions_guice_multibindings//jar",
         "@com_google_inject_guice//jar",
-        "@com_netflix_governator//jar",
         "@com_netflix_governator_api//jar",
         "@com_netflix_governator_core//jar",
         "@javax_inject_javax_inject//jar",
@@ -306,8 +332,10 @@ java_library(
     name = "com_google_instrumentation_instrumentation_api",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_code_findbugs_jsr305//jar",
         "@com_google_instrumentation_instrumentation_api//jar",
+    ],
+    runtime_deps = [
+        "@com_google_code_findbugs_jsr305//jar",
     ],
 )
 
@@ -336,20 +364,6 @@ java_library(
 )
 
 java_library(
-    # TODO check is it used??
-    name = "com_maxmind_geoip2_geoip2",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_http_client_google_http_client//jar",
-        "@com_maxmind_db_maxmind_db//jar",
-        "@com_maxmind_geoip2_geoip2//jar",
-        "@org_apache_httpcomponents_httpclient//jar",
-    ],
-)
-
-java_library(
     name = "com_sun_jersey_contribs_jersey_apache_client4",
     visibility = ["//visibility:public"],
     exports = [
@@ -363,6 +377,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_sun_jersey_jersey_client//jar",
+    ],
+    runtime_deps = [
         "@com_sun_jersey_jersey_core//jar",
     ],
 )
@@ -379,8 +395,10 @@ java_library(
     name = "com_sun_jersey_jersey_server",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
+    ],
+    runtime_deps = [
+        "@com_sun_jersey_jersey_core//jar",
     ],
 )
 
@@ -389,6 +407,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_yubico_yubico_validation_client2//jar",
+    ],
+    runtime_deps = [
         "@commons_codec_commons_codec//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
@@ -423,6 +443,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@de_jollyday_jollyday//jar",
+    ],
+    runtime_deps = [
         "@javax_xml_bind_jaxb_api//jar",
         "@joda_time_joda_time//jar",
     ],
@@ -440,12 +462,14 @@ java_library(
     name = "io_dropwizard_dropwizard_client",
     visibility = ["//visibility:public"],
     exports = [
+        "@io_dropwizard_dropwizard_client//jar",
+    ],
+    runtime_deps = [
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_httpclient//jar",
         "@com_sun_jersey_contribs_jersey_apache_client4//jar",
         "@com_sun_jersey_jersey_client//jar",
         "@commons_codec_commons_codec//jar",
-        "@io_dropwizard_dropwizard_client//jar",
         "@io_dropwizard_dropwizard_core//jar",
         "@org_apache_httpcomponents_httpclient//jar",
         "@org_apache_httpcomponents_httpcore//jar",
@@ -456,10 +480,12 @@ java_library(
     name = "io_dropwizard_dropwizard_configuration",
     visibility = ["//visibility:public"],
     exports = [
+        "@io_dropwizard_dropwizard_configuration//jar",
+    ],
+    runtime_deps = [
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@commons_lang_commons_lang//jar",
-        "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_validation//jar",
     ],
@@ -470,6 +496,18 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         ":io_dropwizard_dropwizard_jersey",
+        "@io_dropwizard_dropwizard_configuration//jar",
+        "@io_dropwizard_dropwizard_core//jar",
+        "@io_dropwizard_dropwizard_jackson//jar",
+        "@io_dropwizard_dropwizard_jetty//jar",
+        "@io_dropwizard_dropwizard_lifecycle//jar",
+        "@io_dropwizard_dropwizard_logging//jar",
+        "@io_dropwizard_dropwizard_metrics//jar",
+        "@io_dropwizard_dropwizard_servlets//jar",
+        "@io_dropwizard_dropwizard_util//jar",
+        "@io_dropwizard_dropwizard_validation//jar",
+    ],
+    runtime_deps = [
         "@ch_qos_logback_logback_classic//jar",
         "@ch_qos_logback_logback_core//jar",
         "@com_codahale_metrics_metrics_annotation//jar",
@@ -498,16 +536,6 @@ java_library(
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
         "@commons_lang_commons_lang//jar",
-        "@io_dropwizard_dropwizard_configuration//jar",
-        "@io_dropwizard_dropwizard_core//jar",
-        "@io_dropwizard_dropwizard_jackson//jar",
-        "@io_dropwizard_dropwizard_jetty//jar",
-        "@io_dropwizard_dropwizard_lifecycle//jar",
-        "@io_dropwizard_dropwizard_logging//jar",
-        "@io_dropwizard_dropwizard_metrics//jar",
-        "@io_dropwizard_dropwizard_servlets//jar",
-        "@io_dropwizard_dropwizard_util//jar",
-        "@io_dropwizard_dropwizard_validation//jar",
         "@javax_el_javax_el_api//jar",
         "@javax_validation_validation_api//jar",
         "@net_sourceforge_argparse4j_argparse4j//jar",
@@ -528,6 +556,22 @@ java_library(
         "@org_slf4j_jul_to_slf4j//jar",
         "@org_slf4j_slf4j_api//jar",
         "@org_yaml_snakeyaml//jar",
+    ],
+)
+
+java_library(
+    name = "com_codahale_metrics_metrics_healthchecks",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_codahale_metrics_metrics_healthchecks//jar",
+    ],
+)
+
+java_library(
+    name = "net_sourceforge_argparse4j_argparse4j",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@net_sourceforge_argparse4j_argparse4j//jar",
     ],
 )
 
@@ -920,6 +964,14 @@ java_library(
 )
 
 java_library(
+    name = "org_apache_commons_commons_lang",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@commons_lang_commons_lang//jar",
+    ],
+)
+
+java_library(
     name = "org_apache_commons_commons_lang3",
     visibility = ["//visibility:public"],
     exports = [
@@ -939,11 +991,13 @@ java_library(
     name = "org_apache_curator_curator_client",
     visibility = ["//visibility:public"],
     exports = [
+        "@org_apache_curator_curator_client//jar",
+    ],
+    runtime_deps = [
         ":io_netty_netty_all",
         "@com_google_guava_guava//jar",
         "@jline_jline//jar",
         "@log4j_log4j//jar",
-        "@org_apache_curator_curator_client//jar",
         "@org_apache_zookeeper_zookeeper//jar",
         "@org_slf4j_slf4j_api//jar",
     ],

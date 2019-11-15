@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class CaixaAgentTest {
 
@@ -34,7 +35,8 @@ public class CaixaAgentTest {
                         .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(false)
-                        .loadCredentialsBefore(false);
+                        .loadCredentialsBefore(false)
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray());
     }
 
     @Test

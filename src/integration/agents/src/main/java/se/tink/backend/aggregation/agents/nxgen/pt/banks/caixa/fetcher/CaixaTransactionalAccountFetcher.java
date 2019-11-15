@@ -49,7 +49,7 @@ public class CaixaTransactionalAccountFetcher
         LocalDate to = LocalDate.now();
 
         AccountDetailsResponse response =
-                apiClient.fetchTransactions(account.getApiIdentifier(), page, from, to);
+                apiClient.fetchTransactions(account.getApiIdentifier(), from, to);
         List<Transaction> transactions =
                 response.getTransactions().stream()
                         .map(

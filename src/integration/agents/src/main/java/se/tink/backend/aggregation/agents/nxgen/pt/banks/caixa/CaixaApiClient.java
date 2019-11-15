@@ -9,6 +9,9 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.CaixaConstants.Qu
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.CaixaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.InvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.MarketDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.PortfolioDetailsResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -20,7 +23,7 @@ public class CaixaApiClient {
 
     private static final String ENCODED_SPACE = "%20";
 
-    public CaixaApiClient(TinkHttpClient httpClient) {
+    CaixaApiClient(TinkHttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
@@ -39,6 +42,29 @@ public class CaixaApiClient {
                 .get(AccountsResponse.class);
     }
 
+    public InvestmentAccountsResponse fetchInvestmentAccounts() {
+        return createBaseRequest(Urls.FETCH_ACCOUNTS)
+                .queryParam(
+                        QueryParams.TARGET_OPERATION_TYPE,
+                        QueryValues.INVESTMENT_PORTFOLIO_OPERATION)
+                .get(InvestmentAccountsResponse.class);
+    }
+
+    public PortfolioDetailsResponse fetchInvestmentPortfolio(String accountKey) {
+        return createBaseRequest(Urls.FETCH_INVESTMENT_DETAILS)
+                .queryParam(QueryParams.FULL_ACCOUNT_KEY, accountKey)
+                .get(PortfolioDetailsResponse.class);
+    }
+
+    public MarketDetailsResponse fetchMarketDetails(String assetTypeId) {
+        return createBaseRequest(Urls.FETCH_MARKET_DETAILS)
+                .queryParam(QueryParams.ASSET_TYPE_ID, assetTypeId)
+                .queryParam(
+                        QueryParams.QUOTES_SEARCH_TYPE_ID,
+                        QueryValues.PORTFOLIO_MARKET_DETAILS_OPERATION)
+                .get(MarketDetailsResponse.class);
+    }
+
     public AccountDetailsResponse fetchBalance(String accountKey) {
         return createBaseRequest(buildFetchAccountDetailsUrl(accountKey))
                 .queryParam(QueryParams.INCLUDE_BALANCES, Boolean.TRUE.toString())
@@ -46,7 +72,7 @@ public class CaixaApiClient {
     }
 
     public AccountDetailsResponse fetchTransactions(
-            String accountKey, int page, LocalDate from, LocalDate to) {
+            String accountKey, LocalDate from, LocalDate to) {
         return createBaseRequest(buildFetchAccountDetailsUrl(accountKey))
                 .queryParam(QueryParams.INCLUDE_TRANSACTIONS, Boolean.TRUE.toString())
                 .queryParam(QueryParams.FROM, CaixaConstants.DATE_FORMATTER.format(from))

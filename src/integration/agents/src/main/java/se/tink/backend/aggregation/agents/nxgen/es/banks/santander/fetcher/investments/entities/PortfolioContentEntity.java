@@ -38,7 +38,7 @@ public class PortfolioContentEntity {
 
         Instrument instrument = new Instrument();
         instrument.setUniqueIdentifier(emissionCode.getCombinedCode());
-        instrument.setMarketValue(marketValue.getTinkAmount().doubleValue());
+        instrument.setMarketValue(marketValue.getAmountAsDouble());
         instrument.setName(instrumentDetails.getName());
         instrument.setQuantity((double) quantity);
         instrument.setType(Instrument.Type.STOCK);

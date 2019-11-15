@@ -253,12 +253,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_maxmind_geoip2_geoip2",
-    artifact = "com.maxmind.geoip2:geoip2:0.7.0",
-    sha1 = "6997435a72ae4f6e4bc298ac5b1ae67e18715bc0",
-)
-
-maven_jar(
     name = "io_dropwizard_dropwizard_core",
     artifact = "io.dropwizard:dropwizard-core:0.7.1",
     sha1 = "569cd6181d5fea4b033cf3a0eca632c8931a1a3a",
