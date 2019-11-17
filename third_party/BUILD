@@ -63,8 +63,8 @@ java_library(
         "@com_amazonaws_aws_java_sdk_s3//jar",
     ],
     runtime_deps = [
+        "//third_party/aws_java_sdk_core",
         "@com_amazonaws_aws_java_sdk_code_generator//jar",
-        "@com_amazonaws_aws_java_sdk_core//jar",
         "@com_amazonaws_aws_java_sdk_kms//jar",
         "@com_amazonaws_jmespath_java//jar",
     ],
@@ -1086,11 +1086,13 @@ java_import(
     visibility = ["//visibility:public"],
     exports = [
         "@com_amazonaws_aws_java_sdk_code_generator//jar",
-        "@com_amazonaws_aws_java_sdk_core//jar",
         "@com_amazonaws_aws_java_sdk_sqs//jar",
         "@com_amazonaws_jmespath_java//jar",
         "@tink_httpclient_4_5_5",
         "@tink_httpcore_4_4_9",
+    ],
+    runtime_deps = [
+        "//third_party/aws_java_sdk_core",
     ],
 )
 

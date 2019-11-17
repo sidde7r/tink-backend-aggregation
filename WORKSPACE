@@ -1291,12 +1291,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_amazonaws_aws_java_sdk_core",
-    artifact = "com.amazonaws:aws-java-sdk-core:1.11.381",
-    sha1 = "7540dfa848acd7770e21ef982d67fbb612b33d7f",
-)
-
-maven_jar(
     name = "com_amazonaws_aws_java_sdk_code_generator",
     artifact = "com.amazonaws:aws-java-sdk-code-generator:1.11.381",
     sha1 = "d8ed76e95c0313e3b9898c7cc5cc40b935d0c32b",
