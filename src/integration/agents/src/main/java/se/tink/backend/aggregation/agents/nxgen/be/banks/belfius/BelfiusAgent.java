@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.BelfiusSessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -45,8 +46,10 @@ public class BelfiusAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BelfiusAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, true);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), true);
         this.belfiusSessionStorage = new BelfiusSessionStorage(this.sessionStorage);
 
         client.addFilter(
@@ -69,6 +72,10 @@ public class BelfiusAgent extends NextGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+
+        final MultiIpGateway gateway =
+                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
+        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
     }
 
     @Override

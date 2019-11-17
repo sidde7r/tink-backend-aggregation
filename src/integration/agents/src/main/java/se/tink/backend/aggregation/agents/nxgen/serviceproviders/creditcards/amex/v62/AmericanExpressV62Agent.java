@@ -50,7 +50,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
         this.apiClient =
                 new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
         this.config = config;
-        this.gateway = new MultiIpGateway(client, credentials);
+        this.gateway = new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
         this.instanceStorage = new AmericanExpressV62Storage();
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
@@ -69,7 +69,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
         this.apiClient =
                 new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
         this.config = config;
-        this.gateway = new MultiIpGateway(client, credentials);
+        this.gateway = new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
         this.instanceStorage = new AmericanExpressV62Storage();
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
