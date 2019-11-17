@@ -54,6 +54,11 @@ public class BelfiusAgent extends NextGenerationAgent
                         BelfiusConstants.HttpClient.MAX_RETRIES,
                         BelfiusConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
 
+        // Disables X-Signature + X-SignatureInfo
+        client.disableSignatureRequestHeader();
+        // Disables X-Aggregator
+        client.disableAggregatorHeader();
+
         this.apiClient =
                 new BelfiusApiClient(
                         this.client,

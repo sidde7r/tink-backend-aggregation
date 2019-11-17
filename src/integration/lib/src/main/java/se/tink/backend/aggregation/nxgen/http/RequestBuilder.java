@@ -506,4 +506,10 @@ public interface RequestBuilder extends Filterable<RequestBuilder> {
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
     public RequestBuilder addBearerToken(OAuth2Token token);
+
+    /**
+     * Remove the X-Aggregator header from the request. There exist scenarios where it is necessary
+     * to conceal the aggregator's identity.
+     */
+    RequestBuilder removeAggregatorHeader();
 }

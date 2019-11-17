@@ -54,6 +54,8 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient> {
 
     void disableSignatureRequestHeader();
 
+    void disableAggregatorHeader();
+
     void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration);
 
     void setTimeout(int milliseconds);
