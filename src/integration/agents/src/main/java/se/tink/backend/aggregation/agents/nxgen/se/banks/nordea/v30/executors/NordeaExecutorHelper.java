@@ -326,7 +326,7 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    private TransferExecutionException bankIdAlreadyInProgressError(Exception e) {
+    protected TransferExecutionException bankIdAlreadyInProgressError(Exception e) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(
                         TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS
