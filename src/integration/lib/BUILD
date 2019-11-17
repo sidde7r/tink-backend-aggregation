@@ -70,7 +70,6 @@ java_library(
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",
-        "//third_party:com_amazonaws_aws_java_sdk_s3",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
