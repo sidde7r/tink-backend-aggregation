@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.OAuth2Type;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Psu;
@@ -328,16 +330,12 @@ public class HandelsbankenBaseApiClient {
      */
     private <T> T requestRefreshableGet(RequestBuilder request, Class<T> responseType) {
         try {
-            return request.get(responseType);
-
+            return get(request, responseType);
         } catch (HttpResponseException hre) {
             verifyIsTokenNotActiveErrorOrThrow(hre);
-
             refreshAndStoreOauthToken();
-
             request.overrideHeader(HttpHeaders.AUTHORIZATION, getOauthToken().toAuthorizeHeader());
         }
-
         // retry request with new token
         return get(request, responseType);
     }
@@ -379,12 +377,20 @@ public class HandelsbankenBaseApiClient {
 
     private void handleException(HttpResponseException e) {
         if (e.getResponse().getStatus() == HttpStatus.SC_BAD_GATEWAY) {
-            String response = e.getResponse().getBody(String.class);
-            if (response.contains(HandelsbankenBaseConstants.Errors.PROXY_ERROR)
-                    && response.contains(HandelsbankenBaseConstants.Errors.SOCKET_EXCEPTION)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            if (isBankServiceError(e.getResponse())) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
             }
         }
+    }
+
+    private boolean isBankServiceError(HttpResponse response) {
+        String body = response.getBody(String.class);
+        return Pattern.compile(Pattern.quote(Errors.PROXY_ERROR), Pattern.CASE_INSENSITIVE)
+                        .matcher(body)
+                        .find()
+                && Pattern.compile(Pattern.quote(Errors.SOCKET_EXCEPTION), Pattern.CASE_INSENSITIVE)
+                        .matcher(body)
+                        .find();
     }
 
     /**
