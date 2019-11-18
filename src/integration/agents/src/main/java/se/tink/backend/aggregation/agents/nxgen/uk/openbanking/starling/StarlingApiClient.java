@@ -7,6 +7,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.UrlParams;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.CodeExchangeForm;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.OAuthTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.TokenRefreshForm;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.JointAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -90,9 +92,17 @@ public class StarlingApiClient {
                 .get(AccountBalanceResponse.class);
     }
 
-    public TransactionsResponse fetchTransactions(Date from, Date to) {
+    public TransactionsResponse fetchTransactions(
+            Date from, Date to, TransactionalAccount account) {
 
-        return request(StarlingConstants.Url.GET_ANY_TRANSACTIONS)
+        URL targetURL =
+                Url.GET_ANY_TRANSACTIONS
+                        .parameter(UrlParams.ACCOUNT_UID, account.getApiIdentifier())
+                        .parameter(
+                                UrlParams.CATEGORY_UID,
+                                account.getFromTemporaryStorage(UrlParams.CATEGORY_UID));
+
+        return request(targetURL)
                 .queryParam(StarlingConstants.RequestKey.FROM, toFormattedDate(from))
                 .queryParam(StarlingConstants.RequestKey.TO, toFormattedDate(to))
                 .get(TransactionsResponse.class);

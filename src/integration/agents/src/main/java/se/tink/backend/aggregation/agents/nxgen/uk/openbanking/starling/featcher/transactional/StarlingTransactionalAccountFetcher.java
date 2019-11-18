@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.AccountHolderType;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.UrlParams;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountHolderResponse;
@@ -23,11 +24,8 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
 
-        String accountHolderName = getAccountHolderName();
-
         return apiClient.fetchAccounts().stream()
-                .map(AccountEntity::getAccountUid)
-                .map(uid -> constructAccount(uid, accountHolderName))
+                .map(account -> constructAccount(account))
                 .collect(Collectors.toList());
     }
 
@@ -44,8 +42,11 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
         }
     }
 
-    private TransactionalAccount constructAccount(
-            final String accountUid, final String holderName) {
+    private TransactionalAccount constructAccount(AccountEntity account) {
+
+        String holderName = getAccountHolderName();
+        String accountUid = account.getAccountUid();
+        String defaultCategoryId = account.getDefaultCategory();
 
         AccountIdentifiersResponse identifiers = apiClient.fetchAccountIdentifiers(accountUid);
         AccountBalanceResponse balance = apiClient.fetchAccountBalance(accountUid);
@@ -59,6 +60,7 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
                 .addAccountIdentifier(identifiers.getSortCodeIdentifier())
                 .setApiIdentifier(accountUid)
                 .addHolderName(holderName)
+                .putInTemporaryStorage(UrlParams.CATEGORY_UID, defaultCategoryId)
                 .build();
     }
 }
