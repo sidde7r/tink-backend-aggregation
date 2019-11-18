@@ -60,7 +60,8 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
         // Only for the case where this is the first session we create after registration, we need
         // to store the client auth token from the registration process as well as add the correct
         // key to sign the create session request's header
-        if (!persistentStorage.containsKey(BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN)) {
+        if (!persistentStorage.containsKey(BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN)
+                || !sessionStorage.containsKey(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN)) {
             persistentStorage.put(
                     StorageKeys.PSD2_DEVICE_RSA_SIGNING_KEY_PAIR,
                     agentConfiguration.getPsd2InstallationKeyPair());
