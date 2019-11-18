@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors;
 
 import java.util.EnumSet;
 import java.util.Optional;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -154,11 +155,25 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                         transfer, sourceAccount, destinationAccount, transferMessageFormatter);
 
         // execute external transfer
-        BankPaymentResponse transferResponse = apiClient.executeBankPayment(transferRequest);
-
-        String transferId = transferResponse.getApiIdentifier();
-        // confirm external transfer
-        executorHelper.confirm(transferId);
+        try {
+            BankPaymentResponse transferResponse = apiClient.executeBankPayment(transferRequest);
+            String transferId = transferResponse.getApiIdentifier();
+            // confirm external transfer
+            executorHelper.confirm(transferId);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+                if (errorResponse.isDuplicatePayment()) {
+                    throw executorHelper.duplicatePaymentError(e);
+                }
+                if (errorResponse.isWrongToAccountLengthError()) {
+                    throw executorHelper.wrongToAccountLengthError();
+                }
+                log.warn("Payment execution failed", e);
+                throw executorHelper.paymentFailedError(e);
+            }
+            throw e;
+        }
     }
 
     private PaymentRequest createPaymentRequest(

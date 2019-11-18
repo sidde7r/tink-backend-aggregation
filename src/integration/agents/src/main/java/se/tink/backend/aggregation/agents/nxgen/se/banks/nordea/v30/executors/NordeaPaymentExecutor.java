@@ -135,6 +135,9 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
                 if (errorResponse.isDuplicatePayment()) {
                     throw executorHelper.duplicatePaymentError(e);
                 }
+                if (errorResponse.isWrongToAccountLengthError()) {
+                    throw executorHelper.wrongToAccountLengthError();
+                }
                 log.warn("Payment execution failed", e);
                 throw executorHelper.paymentFailedError(e);
             }

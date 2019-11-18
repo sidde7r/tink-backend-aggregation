@@ -446,4 +446,11 @@ public class NordeaExecutorHelper {
                 .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION))
                 .build();
     }
+
+    public TransferExecutionException wrongToAccountLengthError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.WRONG_TO_ACCOUNT_LENGTH)
+                .setEndUserMessage(EndUserMessage.INVALID_DESTINATION)
+                .build();
+    }
 }
