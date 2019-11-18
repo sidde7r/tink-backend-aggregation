@@ -187,6 +187,6 @@ public class StarlingApiClient {
     }
 
     private static String toFormattedDate(final Date date) {
-        return ThreadSafeDateFormat.FORMATTER_DAILY.format(date);
+        return ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITHOUT_TIMEZONE.format(date);
     }
 }

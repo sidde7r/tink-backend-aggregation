@@ -58,6 +58,8 @@ public class ThreadSafeDateFormat {
             new ThreadSafeDateFormat("yyyy-MM-dd HH:mmZ");
     public static final ThreadSafeDateFormat FORMATTER_MILLISECONDS_WITH_TIMEZONE =
             new ThreadSafeDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    public static final ThreadSafeDateFormat FORMATTER_MILLISECONDS_WITHOUT_TIMEZONE =
+            new ThreadSafeDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     public static final ThreadSafeDateFormat FORMATTER_TIME_MILLIS =
             new ThreadSafeDateFormat("HH:mm:ss,SSS");
     public static final ThreadSafeDateFormat FORMATTER_FILENAME_SAFE =
