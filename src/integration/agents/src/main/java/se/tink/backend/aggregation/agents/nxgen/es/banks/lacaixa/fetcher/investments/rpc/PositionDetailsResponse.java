@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.models.Instrument;
@@ -33,6 +34,7 @@ public class PositionDetailsResponse {
     @JsonProperty("cotizacion")
     private BalanceEntity price;
 
+    @JsonIgnore
     public Instrument toTinkInstrument(String name, Map<String, String> contractToCode) {
         String productCode = contractToCode.getOrDefault(contractNumber, "");
         Instrument.Type type =
@@ -43,14 +45,14 @@ public class PositionDetailsResponse {
         Instrument instrument = new Instrument();
 
         instrument.setMarketPlace(market);
-        instrument.setPrice(price.doubleValue());
-        instrument.setMarketValue(currentValue.doubleValue());
+        instrument.setPrice(price.getAmount());
+        instrument.setMarketValue(currentValue.getAmount());
         instrument.setName(name);
         instrument.setCurrency(price.getCurrency());
         instrument.setQuantity(quantityAvailable);
         instrument.setType(type);
         instrument.setIsin(isin);
-        instrument.setProfit(valueChange.doubleValue());
+        instrument.setProfit(valueChange.getAmount());
         instrument.setUniqueIdentifier(market + isin);
 
         return instrument;

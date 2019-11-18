@@ -25,7 +25,7 @@ public class BalanceEntity {
     }
 
     @JsonIgnore
-    public double doubleValue() {
-        return amount.doubleValue();
+    public Double getAmount() {
+        return amount == null ? null : amount.doubleValue();
     }
 }

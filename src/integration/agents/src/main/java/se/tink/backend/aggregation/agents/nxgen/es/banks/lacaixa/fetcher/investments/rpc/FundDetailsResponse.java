@@ -56,13 +56,13 @@ public class FundDetailsResponse {
     @JsonIgnore
     public Instrument toTinkInstruments() {
         Instrument instrument = new Instrument();
-        instrument.setProfit(valueChange.doubleValue());
-        instrument.setPrice(marketPrice.doubleValue());
+        instrument.setProfit(valueChange.getAmount());
+        instrument.setPrice(marketPrice.getAmount());
         instrument.setCurrency(marketPrice.getCurrency());
         instrument.setType(Instrument.Type.FUND);
         instrument.setQuantity(quantity);
         instrument.setName(fundName);
-        instrument.setMarketValue(currentBalance.doubleValue());
+        instrument.setMarketValue(currentBalance.getAmount());
         instrument.setUniqueIdentifier(getUniqueIdentifier());
 
         return instrument;
