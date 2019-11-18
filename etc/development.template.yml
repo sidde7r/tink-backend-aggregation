@@ -101,6 +101,11 @@ notifications:
         apiKey: AIzaSyBbD-9t5m3EnL9U8vxD-3qrg9OKUrVZ92g
 
 agentsServiceConfiguration:
+  countryProxies:
+    es:
+      host: "http://zproxy.lum-superproxy.io:22225"
+      username: "lum-customer-tink_ab-zone-spain-country-es"
+      password: "dummyPassword"
   integrations:
     icsConfiguration:
       abn:

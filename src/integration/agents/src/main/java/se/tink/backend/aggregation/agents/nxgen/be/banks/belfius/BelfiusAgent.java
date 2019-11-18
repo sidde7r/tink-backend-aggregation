@@ -62,7 +62,7 @@ public class BelfiusAgent extends NextGenerationAgent
         // Disables X-Aggregator
         client.disableAggregatorHeader();
 
-        if (agentsServiceConfiguration.isFeatureEnabled("es-proxy")) {
+        if (agentsServiceConfiguration.isFeatureEnabled("esProxy")) {
             // Setting proxy for Spain via TPP
             PasswordBasedProxyConfiguration proxyConfiguration =
                     agentsServiceConfiguration.getCountryProxy("es");
