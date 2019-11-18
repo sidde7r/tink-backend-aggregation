@@ -163,11 +163,8 @@ public final class AgentConfigurationController {
                 List<String> redirectUrls = allSecrets.getRedirectUrls();
 
                 if (secretsMap.containsKey(REDIRECT_URLS_KEY)) {
+                    log.warn("Got legacy secrets " + getSecretsServiceParamsString());
                     initRedirectUrl(allSecrets.getSecrets());
-                } else if (CollectionUtils.isEmpty(redirectUrls)) {
-                    throw new IllegalStateException(
-                            "Could not find redirectUrls in secrets "
-                                    + getSecretsServiceParamsString());
                 } else {
                     initRedirectUrl(redirectUrls);
                     initScopes(allSecrets.getScopes());
@@ -235,6 +232,10 @@ public final class AgentConfigurationController {
     }
 
     private void initRedirectUrl(List<String> redirectUrls) {
+        if (CollectionUtils.isEmpty(redirectUrls)) {
+            throw new IllegalStateException(
+                    "Could not find redirectUrls in secrets " + getSecretsServiceParamsString());
+        }
 
         final String REDIRECT_URL_KEY = "redirectUrl";
         if (Strings.isNullOrEmpty(redirectUrl)) {
