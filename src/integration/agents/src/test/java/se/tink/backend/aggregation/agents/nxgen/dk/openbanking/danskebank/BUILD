@@ -17,6 +17,7 @@ junit_test(
     ],
     deps = [
         "//src/integration/lib:lib_test",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
     ],
 )
