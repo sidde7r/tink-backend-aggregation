@@ -9,6 +9,8 @@ public final class SecretsNamesValidationRequest {
     private Set<String> sensitiveSecretsNames;
     private Set<String> excludedSensitiveSecretsNames;
 
+    public SecretsNamesValidationRequest() {}
+
     public SecretsNamesValidationRequest(
             String financialInstitutionId,
             Set<String> secretsNames,
