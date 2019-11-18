@@ -41,7 +41,14 @@ public class UkobRegisterCommand {
         TinkHttpClient httpClient = createHttpClient(config);
         String res =
                 OpenIdApiClient.registerClient(
-                        config.getSoftwareStatement(), new URL(wellKnown), httpClient);
+                        config.getSoftwareStatement(),
+                        new URL(wellKnown),
+                        httpClient,
+                        config.getSignerOverride()
+                                .orElseThrow(
+                                        () ->
+                                                new UnsupportedOperationException(
+                                                        "Default signer not implemented for ukob register.")));
 
         System.out.println("\n### RESPONSE ###\n\n" + res + "\n\n################\n");
         String outFile = saveResponse(res);
@@ -83,12 +90,17 @@ public class UkobRegisterCommand {
                     configuration.getRootCAData(), configuration.getRootCAPassword());
         }
 
-        // Softw. Transp. key
-        httpClient.setSslClientCertificate(
-                configuration.getSoftwareStatement().getTransportKeyP12(),
-                configuration.getSoftwareStatement().getTransportKeyPassword());
+        configuration
+                .getTlsConfigurationOverride()
+                .orElse(UkobRegisterCommand::useEidasProxy)
+                .applyConfiguration(httpClient);
 
         return httpClient;
+    }
+
+    private static void useEidasProxy(final TinkHttpClient client) {
+        throw new UnsupportedOperationException(
+                "Ukob registration command does not support default tls configuration yet.");
     }
 
     private static String saveResponse(String response) throws IOException {

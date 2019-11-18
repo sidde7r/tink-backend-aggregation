@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.ClientAssertion;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class TokenRequestForm extends AbstractForm {
@@ -34,18 +34,15 @@ public class TokenRequestForm extends AbstractForm {
     }
 
     public TokenRequestForm withPrivateKeyJwt(
-            SoftwareStatement softwareStatement,
-            WellKnownResponse wellknownConfiguration,
-            ClientInfo clientInfo) {
+            JwtSigner signer, WellKnownResponse wellknownConfiguration, ClientInfo clientInfo) {
         this.put("client_id", clientInfo.getClientId());
         this.put("client_assertion_type", OpenIdConstants.CLIENT_ASSERTION_TYPE);
         this.put(
                 "client_assertion",
                 ClientAssertion.create()
-                        .withSoftwareStatement(softwareStatement)
                         .withWellknownConfiguration(wellknownConfiguration)
                         .withClientInfo(clientInfo)
-                        .build());
+                        .build(signer));
         return this;
     }
 

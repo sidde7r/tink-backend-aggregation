@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.lloyds.authentica
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LloydsV31Agent extends UkOpenBankingBaseAgent {
@@ -42,12 +41,6 @@ public class LloydsV31Agent extends UkOpenBankingBaseAgent {
     protected UkOpenBankingAis makeAis() {
         return new UkOpenBankingV31Ais(aisConfig, persistentStorage);
     }
-
-    @Override
-    protected void configureAisHttpClient(TinkHttpClient httpClient) {}
-
-    @Override
-    protected void configurePisHttpClient(TinkHttpClient httpClient) {}
 
     @Override
     protected Authenticator constructAuthenticator() {

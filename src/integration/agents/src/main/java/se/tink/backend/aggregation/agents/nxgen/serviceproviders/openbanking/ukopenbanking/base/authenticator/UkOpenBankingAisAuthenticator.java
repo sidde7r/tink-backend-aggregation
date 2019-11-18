@@ -6,14 +6,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
 
     private final UkOpenBankingApiClient apiClient;
-    private final SoftwareStatement softwareStatement;
     private final ProviderConfiguration providerConfiguration;
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
 
@@ -21,7 +19,6 @@ public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
             UkOpenBankingApiClient apiClient, UkOpenBankingAisConfig ukOpenBankingAisConfig) {
         this.apiClient = apiClient;
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
-        this.softwareStatement = apiClient.getSoftwareStatement();
         this.providerConfiguration = apiClient.getProviderConfiguration();
     }
 
@@ -37,13 +34,13 @@ public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
                 AuthorizeRequest.create()
                         .withAccountsScope()
                         .withClientInfo(providerConfiguration.getClientInfo())
-                        .withSoftwareStatement(softwareStatement)
+                        .withSoftwareStatement(apiClient.getSoftwareStatement())
                         .withState(state)
                         .withNonce(nonce)
                         .withCallbackUri(callbackUri)
                         .withWellknownConfiguration(wellKnownConfiguration)
                         .withIntentId(intentId)
-                        .build());
+                        .build(apiClient.getSigner()));
     }
 
     @Override

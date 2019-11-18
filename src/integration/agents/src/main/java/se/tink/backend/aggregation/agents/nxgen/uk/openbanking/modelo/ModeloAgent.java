@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.modelo.ModeloConstants.Urls.V31;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class ModeloAgent extends UkOpenBankingBaseAgent {
@@ -41,17 +40,5 @@ public class ModeloAgent extends UkOpenBankingBaseAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return super.constructAuthenticator(aisConfig);
-    }
-
-    @Override
-    protected void configureAisHttpClient(TinkHttpClient httpClient) {
-        // SSL verification must be disabled, otherwise the test will fail
-        httpClient.disableSslVerification();
-    }
-
-    @Override
-    protected void configurePisHttpClient(TinkHttpClient httpClient) {
-        // SSL verification must be disabled, otherwise the test will fail
-        httpClient.disableSslVerification();
     }
 }

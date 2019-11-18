@@ -132,12 +132,14 @@ public class AccountEntity implements IdentifiableAccount {
                                         || e.getIdentifierType()
                                                 .equals(ExternalAccountIdentification4Code.IBAN)
                                         || e.getIdentifierType()
-                                                .equals(ExternalAccountIdentification4Code.PAN))
+                                                .equals(ExternalAccountIdentification4Code.PAN)
+                                        || e.getIdentifierType()
+                                                .equals(ExternalAccountIdentification4Code.BBAN))
                 .findFirst()
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
-                                        "Account details did not specify any SORT_CODE_ACCOUNT_NUMBER or IBAN or PAN identifier."));
+                                        "Account details did not specify any SORT_CODE_ACCOUNT_NUMBER, BBAN, IBAN or PAN identifier."));
     }
 
     public String getUniqueIdentifier() {

@@ -5,6 +5,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
@@ -54,6 +55,8 @@ public class AccountIdentifierEntity {
                 return Optional.of(sortCodeIdentifier);
             case PAN:
                 return Optional.empty();
+            case BBAN:
+                return Optional.of(new BbanIdentifier(identification));
             default:
                 throw new IllegalStateException(
                         String.format("Unknown identifier type: %s", identifierType));
