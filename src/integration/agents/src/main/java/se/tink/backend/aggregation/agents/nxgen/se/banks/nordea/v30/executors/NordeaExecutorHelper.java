@@ -285,14 +285,14 @@ public class NordeaExecutorHelper {
             TransferExecutionException.EndUserMessage endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(endUserMessage.getKey().get())
-                .setEndUserMessage(this.catalog.getString(endUserMessage))
+                .setEndUserMessage(catalog.getString(endUserMessage))
                 .build();
     }
 
     protected TransferExecutionException invalidDestError() {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(
-                        this.catalog.getString(
+                        catalog.getString(
                                 TransferExecutionException.EndUserMessage.INVALID_DESTINATION))
                 .build();
     }
@@ -306,7 +306,7 @@ public class NordeaExecutorHelper {
     public TransferExecutionException paymentFailedError(Exception e) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
-                .setEndUserMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
+                .setEndUserMessage(catalog.getString(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR))
                 .setException(e)
                 .build();
     }
@@ -314,8 +314,7 @@ public class NordeaExecutorHelper {
     private TransferExecutionException invalidSourceAccountError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(
-                        this.catalog.getString(
-                                TransferExecutionException.EndUserMessage.INVALID_SOURCE))
+                        catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE))
                 .build();
     }
 
@@ -380,7 +379,8 @@ public class NordeaExecutorHelper {
 
     protected TransferExecutionException duplicatePaymentError(HttpResponseException e) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setEndUserMessage(NordeaSEConstants.LogMessages.DUPLICATE_PAYMENT)
+                .setEndUserMessage(
+                        catalog.getString(NordeaSEConstants.LogMessages.DUPLICATE_PAYMENT))
                 .setException(e)
                 .build();
     }
@@ -389,7 +389,7 @@ public class NordeaExecutorHelper {
             String errorMessage, String endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(errorMessage)
-                .setEndUserMessage(endUserMessage)
+                .setEndUserMessage(catalog.getString(endUserMessage))
                 .build();
     }
 
@@ -450,7 +450,7 @@ public class NordeaExecutorHelper {
     public TransferExecutionException wrongToAccountLengthError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.LogMessages.WRONG_TO_ACCOUNT_LENGTH)
-                .setEndUserMessage(EndUserMessage.INVALID_DESTINATION)
+                .setEndUserMessage(catalog.getString(EndUserMessage.INVALID_DESTINATION))
                 .build();
     }
 }
