@@ -17,7 +17,7 @@ public class BbanIdentifier extends AccountIdentifier {
 
     @Override
     public String getIdentifier() {
-        return identifier;
+        return accountNumber;
     }
 
     @Override
