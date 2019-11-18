@@ -80,4 +80,11 @@ public class ErrorResponse {
         return NordeaSEConstants.ErrorCodes.EXTERNAL_SERVICE_CALL_FAILED.equalsIgnoreCase(
                 errorDescription);
     }
+
+    @JsonIgnore
+    public boolean isSigningCollision() {
+        return NordeaSEConstants.ErrorCodes.SIGNING_COLLISION.equalsIgnoreCase(error)
+                && NordeaSEConstants.ErrorCodes.SIGNING_COLLISION_MESSAGE.equalsIgnoreCase(
+                        errorDescription);
+    }
 }

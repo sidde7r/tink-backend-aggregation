@@ -210,6 +210,9 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                     ErrorCodes.UNREGISTERED_RECIPIENT,
                     catalog.getString(EndUserMessage.UNREGISTERED_RECIPIENT));
         }
+        if (errorResponse.isSigningCollision()) {
+            throw executorHelper.bankIdAlreadyInProgressError(e);
+        }
         log.warn("Transfer execution failed", e);
         throw executorHelper.transferFailedError(e);
     }

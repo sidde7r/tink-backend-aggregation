@@ -297,6 +297,8 @@ public class NordeaSEConstants {
         public static final String INTERNAL_SERVER_ERROR = "internal_server_error";
         public static final String INTERNAL_SERVER_ERROR_MESSAGE =
                 "Something went wrong. Please try again later.";
+        public static final String SIGNING_COLLISION = "signing_collision";
+        public static final String SIGNING_COLLISION_MESSAGE = "A signing collision has occurred.";
     }
 
     public static class LogTags {
