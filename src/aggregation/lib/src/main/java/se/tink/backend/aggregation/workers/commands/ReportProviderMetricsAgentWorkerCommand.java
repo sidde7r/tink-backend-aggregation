@@ -35,6 +35,7 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
         return new MetricId.MetricLabels()
                 .add("provider_type", provider.getType().name().toLowerCase())
                 .add("provider", cleanMetricName(provider.getName()))
+                .add("market", provider.getMarket())
                 .add("operation", operationName);
     }
 
