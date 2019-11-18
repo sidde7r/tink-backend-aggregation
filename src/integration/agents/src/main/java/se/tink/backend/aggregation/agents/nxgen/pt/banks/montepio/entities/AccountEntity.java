@@ -65,7 +65,7 @@ public class AccountEntity {
                         .build();
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
-                .withoutFlags()
+                .withInferredAccountFlags()
                 .withBalance(balanceModule)
                 .withId(idModule)
                 .putInTemporaryStorage(PropertyKeys.HANDLE, handle)
@@ -92,13 +92,18 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public LoanAccount toLoanAccount(Map<String, String> details) {
+    public Optional<LoanAccount> toLoanAccount(Map<String, String> details) {
+
+        if (!loanType(name).isPresent()) {
+            return Optional.empty();
+        }
+
         double interest = getInterestRate(details);
         Double initialBalance = getInitialBalance(details);
         String holder = getHolderName(details);
         LoanModule loanModule =
                 LoanModule.builder()
-                        .withType(loanType(name))
+                        .withType(loanType(name).get())
                         .withBalance(balance())
                         .withInterestRate(interest)
                         .setInitialBalance(ExactCurrencyAmount.of(initialBalance, currency))
@@ -113,11 +118,12 @@ public class AccountEntity {
                                 AccountIdentifier.create(
                                         AccountIdentifier.Type.COUNTRY_SPECIFIC, number))
                         .build();
-        return LoanAccount.nxBuilder()
-                .withLoanDetails(loanModule)
-                .withId(idModule)
-                .addHolderName(holder)
-                .build();
+        return Optional.of(
+                LoanAccount.nxBuilder()
+                        .withLoanDetails(loanModule)
+                        .withId(idModule)
+                        .addHolderName(holder)
+                        .build());
     }
 
     @JsonIgnore
@@ -149,15 +155,15 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private LoanDetails.Type loanType(String productName) {
+    private Optional<LoanDetails.Type> loanType(String productName) {
         LoanDetails.Type resultType = productNameToLoanType.get(productName);
         if (resultType == null) {
             log.warn(
-                    "Loan type mapping for product >>>{}<<< not found, defaulting to type OTHER",
+                    "Loan type mapping for product >>>{}<<< not found, skipping mapping",
                     productName);
-            return LoanDetails.Type.OTHER;
+            return Optional.empty();
         }
-        return resultType;
+        return Optional.of(resultType);
     }
 
     @JsonIgnore
