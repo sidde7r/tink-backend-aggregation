@@ -4,6 +4,9 @@
 java_library(
     name = "aws_java_sdk_core",
     srcs = glob(["src/main/java/**/*.java"]),
+    resources = [
+        "aws_java_sdk_core_resources",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
@@ -16,4 +19,10 @@ java_library(
         "@tink_httpclient_4_5_5",
         "@tink_httpcore_4_4_9",
     ],
+)
+
+filegroup(
+    name = "aws_java_sdk_core_resources",
+    srcs = glob(["src/main/resources/com/amazonaws/**/*"]),
+    visibility = ["//visibility:public"],
 )
