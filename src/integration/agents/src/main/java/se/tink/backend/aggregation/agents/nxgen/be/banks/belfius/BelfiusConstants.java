@@ -9,7 +9,7 @@ public class BelfiusConstants {
 
     public static final ImmutableMap<String, String> HEADERS =
             ImmutableMap.<String, String>builder()
-                    .put("User-Agent", "I/PHONE/BDM/09120/PRD")
+                    .put("User-Agent", "I/PHONE/BDM/09310/PRD")
                     .build();
     public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES =
             ImmutableMap.<String, AccountTypes>builder()
