@@ -31,7 +31,12 @@ public class StarlingConstants {
                 "/api/v2/accounts/{" + UrlParams.ACCOUNT_UID + "}/identifiers";
         static final String GET_ACCOUNT_BALANCE =
                 "/api/v2/accounts/{" + UrlParams.ACCOUNT_UID + "}/balance";
-        static final String GET_ANY_TRANSACTIONS = "/api/v1/transactions";
+        static final String GET_ANY_TRANSACTIONS =
+                "/api/v2/feed/account/{"
+                        + UrlParams.ACCOUNT_UID
+                        + "}/category/{"
+                        + UrlParams.CATEGORY_UID
+                        + "}/transactions-between";
         static final String GET_PAYEES = "/api/v2/payees";
 
         static final String PUT_PAYMENT =
@@ -81,8 +86,8 @@ public class StarlingConstants {
     }
 
     public class RequestKey {
-        public static final String FROM = "from";
-        public static final String TO = "to";
+        public static final String FROM = "minTransactionTimestamp";
+        public static final String TO = "maxTransactionTimestamp";
         public static final String CLIENT_ID = "client_id";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String RESPONSE_TYPE = "response_type";

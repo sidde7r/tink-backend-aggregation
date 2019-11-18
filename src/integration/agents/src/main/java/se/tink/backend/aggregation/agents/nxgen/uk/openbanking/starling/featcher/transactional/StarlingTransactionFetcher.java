@@ -17,6 +17,6 @@ public class StarlingTransactionFetcher implements TransactionDatePaginator<Tran
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        return apiClient.fetchTransactions(fromDate, toDate).getTransactionList();
+        return apiClient.fetchTransactions(fromDate, toDate, account).getTransactionList();
     }
 }
