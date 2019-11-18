@@ -87,4 +87,11 @@ public class ErrorResponse {
                 && NordeaSEConstants.ErrorCodes.SIGNING_COLLISION_MESSAGE.equalsIgnoreCase(
                         errorDescription);
     }
+
+    @JsonIgnore
+    public boolean isWrongToAccountLengthError() {
+        return NordeaSEConstants.ErrorCodes.WRONG_TO_ACCOUNT_LENGTH.equalsIgnoreCase(error)
+                && NordeaSEConstants.ErrorCodes.WRONG_TO_ACCOUNT_LENGHT_MESSAGE.equalsIgnoreCase(
+                        errorDescription);
+    }
 }

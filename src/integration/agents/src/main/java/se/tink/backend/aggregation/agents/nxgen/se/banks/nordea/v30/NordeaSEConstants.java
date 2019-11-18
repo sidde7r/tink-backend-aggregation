@@ -254,6 +254,8 @@ public class NordeaSEConstants {
                 "This payment seems to be duplicate. Please check your outgoing payments in the banks app.";
         public static final String BANKSIDE_ERROR_WHEN_SEARCHING_OUTBOX =
                 "Error from bank when trying to fetch details about payment outbox";
+        public static final String WRONG_TO_ACCOUNT_LENGTH =
+                "Invalid destination account number, it is too long.";
     }
 
     public static class TransactionalAccounts {
@@ -299,6 +301,9 @@ public class NordeaSEConstants {
                 "Something went wrong. Please try again later.";
         public static final String SIGNING_COLLISION = "signing_collision";
         public static final String SIGNING_COLLISION_MESSAGE = "A signing collision has occurred.";
+        public static final String WRONG_TO_ACCOUNT_LENGTH = "BESE112";
+        public static final String WRONG_TO_ACCOUNT_LENGHT_MESSAGE =
+                "Wrong To account length for the chosen bank";
     }
 
     public static class LogTags {
