@@ -104,7 +104,6 @@ public class LoanDetailsResponse {
                         .setLoanNumber(loanNumber)
                         .setInitialDate(getValidityDateAsLocalDate())
                         .setNextDayOfTermsChange(getFirstInterestReviewDate())
-                        .setNumMonthsBound(installmentTotalCount)
                         .build());
     }
 }
