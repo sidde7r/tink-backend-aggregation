@@ -65,7 +65,7 @@ public class BelfiusAgent extends NextGenerationAgent
         if (agentsServiceConfiguration.isFeatureEnabled("es")) {
             // Setting proxy for Spain via TPP
             PasswordBasedProxyConfiguration proxyConfiguration =
-                    configuration.getCountryProxy("es");
+                    agentsServiceConfiguration.getCountryProxy("es");
             client.setProductionProxy(
                     proxyConfiguration.getHost(),
                     proxyConfiguration.getUsername(),
