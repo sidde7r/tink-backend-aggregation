@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.EidasJwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -121,12 +122,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 .orElse(this::useEidasProxy)
                 .applyConfiguration(client);
 
+        JwtSigner signer =
+                ukOpenBankingConfiguration.getSignerOverride().orElseGet(this::getQsealSigner);
+
         apiClient =
-                createApiClient(
-                        client,
-                        ukOpenBankingConfiguration.getSigner(),
-                        softwareStatementAssertion,
-                        providerConfiguration);
+                createApiClient(client, signer, softwareStatementAssertion, providerConfiguration);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
@@ -138,6 +138,12 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     private void useEidasProxy(TinkHttpClient httpClient) {
         httpClient.setEidasProxy(configuration.getEidasProxy());
+    }
+
+    private JwtSigner getQsealSigner() {
+
+        return new EidasJwtSigner(
+                configuration.getEidasProxy().toInternalConfig(), getEidasIdentity());
     }
 
     protected UkOpenBankingApiClient createApiClient(

@@ -1,19 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.EidasJwtSigner;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.EidasJwtSigner.EidasSigningKey;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner.Algorithm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.tls.TlsConfigurationOverride;
 
 public class DanskebankConfiguration implements UkOpenBankingClientConfigurationAdapter {
@@ -51,16 +46,7 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
     }
 
     @Override
-    public JwtSigner getSigner() {
-        return new EidasJwtSigner(
-                ImmutableMap.<Algorithm, EidasSigningKey>builder()
-                        .put(
-                                Algorithm.PS256,
-                                EidasSigningKey.of("PSDSE-FINA-44059", QsealcAlg.EIDAS_PSS_SHA256))
-                        .put(
-                                Algorithm.RS256,
-                                EidasSigningKey.of(
-                                        "PSDSE-FINA-44059-RSA", QsealcAlg.EIDAS_RSA_SHA256))
-                        .build());
+    public Optional<JwtSigner> getSignerOverride() {
+        return Optional.empty();
     }
 }

@@ -19,5 +19,5 @@ public interface UkOpenBankingClientConfigurationAdapter extends ClientConfigura
 
     Optional<TlsConfigurationOverride> getTlsConfigurationOverride();
 
-    JwtSigner getSigner();
+    Optional<JwtSigner> getSignerOverride();
 }

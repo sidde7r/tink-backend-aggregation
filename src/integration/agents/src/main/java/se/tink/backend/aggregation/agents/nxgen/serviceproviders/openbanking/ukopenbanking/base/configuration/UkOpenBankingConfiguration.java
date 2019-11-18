@@ -105,9 +105,10 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     }
 
     @Override
-    public JwtSigner getSigner() {
-        return new LocalKeySigner(
-                signingKeyId,
-                RSA.getPrivateKeyFromBytes(EncodingUtils.decodeBase64String(signingKey)));
+    public Optional<JwtSigner> getSignerOverride() {
+        return Optional.of(
+                new LocalKeySigner(
+                        signingKeyId,
+                        RSA.getPrivateKeyFromBytes(EncodingUtils.decodeBase64String(signingKey))));
     }
 }

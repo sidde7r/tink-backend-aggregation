@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt;
 
-import com.google.common.collect.ImmutableMap;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import java.text.ParseException;
@@ -9,9 +8,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.EidasJwtSigner.EidasSigningKey;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.JwtSigner.Algorithm;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 
 @Ignore
 public class EidasJwtKeySignerTest {
@@ -25,16 +23,11 @@ public class EidasJwtKeySignerTest {
     public void setup() {
         JwtSigner signer =
                 new EidasJwtSigner(
-                        ImmutableMap.<Algorithm, EidasSigningKey>builder()
-                                .put(
-                                        Algorithm.PS256,
-                                        EidasSigningKey.of(
-                                                "PSDSE-FINA-44059", QsealcAlg.EIDAS_PSS_SHA256))
-                                .put(
-                                        Algorithm.RS256,
-                                        EidasSigningKey.of(
-                                                "PSDSE-FINA-44059-RSA", QsealcAlg.EIDAS_RSA_SHA256))
-                                .build());
+                        EidasProxyConfiguration.createLocal(
+                                        "https://eidas-proxy.staging.aggregation.tink.network")
+                                .toInternalConfig(),
+                        new EidasIdentity(
+                                "oxford-staging", "5f98e87106384b2981c0354a33b51590", ""));
 
         RSASSAVerifier verifier =
                 new RSASSAVerifier(

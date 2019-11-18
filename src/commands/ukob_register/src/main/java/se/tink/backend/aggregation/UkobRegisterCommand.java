@@ -44,7 +44,11 @@ public class UkobRegisterCommand {
                         config.getSoftwareStatement(),
                         new URL(wellKnown),
                         httpClient,
-                        config.getSigner());
+                        config.getSignerOverride()
+                                .orElseThrow(
+                                        () ->
+                                                new UnsupportedOperationException(
+                                                        "Default signer not implemented for ukob register.")));
 
         System.out.println("\n### RESPONSE ###\n\n" + res + "\n\n################\n");
         String outFile = saveResponse(res);

@@ -51,7 +51,8 @@ public class UkobRegisterConfiguration implements UkOpenBankingClientConfigurati
     }
 
     @Override
-    public JwtSigner getSigner() {
-        return new LocalKeySigner(signingKey.getKeyId(), signingKey.getRSAPrivateKey());
+    public Optional<JwtSigner> getSignerOverride() {
+        return Optional.of(
+                new LocalKeySigner(signingKey.getKeyId(), signingKey.getRSAPrivateKey()));
     }
 }

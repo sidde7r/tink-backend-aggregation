@@ -7,11 +7,12 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
-import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
+import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -41,20 +42,32 @@ public class EidasJwtSigner implements JwtSigner {
         }
     }
 
-    private static final String EIDAS_PROXY_URL =
-            "https://eidas-proxy.staging.aggregation.tink.network";
+    private final InternalEidasProxyConfiguration eidasProxyConfiguration;
+    private final EidasIdentity eidasIdentity;
 
     private final Map<Algorithm, EidasSigningKey> signingKeyMap;
     private final ObjectMapper objectMapper;
 
-    public EidasJwtSigner(Map<Algorithm, EidasSigningKey> signingKeyMap) {
-        this.signingKeyMap = signingKeyMap;
+    public EidasJwtSigner(InternalEidasProxyConfiguration configuration, EidasIdentity identity) {
+        this.signingKeyMap =
+                ImmutableMap.<Algorithm, EidasSigningKey>builder()
+                        .put(
+                                Algorithm.PS256,
+                                EidasSigningKey.of("PSDSE-FINA-44059", QsealcAlg.EIDAS_PSS_SHA256))
+                        .put(
+                                Algorithm.RS256,
+                                EidasSigningKey.of(
+                                        "PSDSE-FINA-44059-RSA", QsealcAlg.EIDAS_RSA_SHA256))
+                        .build();
 
-        objectMapper = new ObjectMapper();
+        this.eidasProxyConfiguration = configuration;
+        this.eidasIdentity = identity;
+
+        this.objectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addSerializer(ClaimsHolder.class, new PayloadSerializer());
-        objectMapper.registerModule(module);
-        objectMapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
+        this.objectMapper.registerModule(module);
+        this.objectMapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
     }
 
     @Override
@@ -72,11 +85,7 @@ public class EidasJwtSigner implements JwtSigner {
         headerClaims.put("alg", algorithm.toString());
 
         QsealcSigner signer =
-                QsealcSigner.build(
-                        EidasProxyConfiguration.createLocal(EIDAS_PROXY_URL).toInternalConfig(),
-                        key.getAlg(),
-                        new EidasIdentity(
-                                "oxford-staging", "5f98e87106384b2981c0354a33b51590", ""));
+                QsealcSigner.build(eidasProxyConfiguration, key.getAlg(), eidasIdentity);
 
         final String headerJson = mapToJson(headerClaims);
         final String payloadJson = mapToJson(payloadClaims);
