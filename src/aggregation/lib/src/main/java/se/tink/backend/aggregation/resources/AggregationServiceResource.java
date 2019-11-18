@@ -315,8 +315,8 @@ public class AggregationServiceResource implements AggregationService {
         Preconditions.checkState(
                 filteredProviders.size() == 1,
                 String.format(
-                        "Trying to validate secrets. Could not find an open banking provider for financialInstituionId : %s.",
-                        financialInstitutionId));
+                        "Trying to validate secrets. Should find 1 provider for financialInstituionId : %s, but found instead : %d",
+                        financialInstitutionId, filteredProviders.size()));
 
         return new ClientConfigurationValidator(Provider.of(filteredProviders.get(0)))
                 .validate(
