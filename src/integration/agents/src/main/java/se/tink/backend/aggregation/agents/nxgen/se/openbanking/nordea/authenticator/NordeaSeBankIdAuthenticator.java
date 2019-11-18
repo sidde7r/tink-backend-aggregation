@@ -5,7 +5,6 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -165,23 +164,31 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
      */
     private List<String> getScopes() {
 
-        // Return only AIS scopes
-        if (CollectionUtils.isNotEmpty(scopes)
-                && scopes.stream().anyMatch(scope -> Scopes.AIS.equalsIgnoreCase(scope))) {
+        if (scopes.stream().allMatch(scope -> Scopes.AIS.equalsIgnoreCase(scope))) {
+            // Return only AIS scopes
             return Arrays.asList(
                     FormValues.ACCOUNTS_BALANCES,
                     FormValues.ACCOUNTS_BASIC,
                     FormValues.ACCOUNTS_DETAILS,
                     FormValues.ACCOUNTS_TRANSACTIONS);
+        } else if (scopes.stream()
+                .allMatch(
+                        scope ->
+                                Scopes.AIS.equalsIgnoreCase(scope)
+                                        || Scopes.PIS.equalsIgnoreCase(scope))) {
+            // Return AIS + PIS scopes
+            return Arrays.asList(
+                    FormValues.ACCOUNTS_BALANCES,
+                    FormValues.ACCOUNTS_BASIC,
+                    FormValues.ACCOUNTS_DETAILS,
+                    FormValues.ACCOUNTS_TRANSACTIONS,
+                    FormValues.PAYMENTS_MULTIPLE);
+        } else {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "%s contain invalid scope(s), only support scopes AIS and PIS",
+                            scopes.toString()));
         }
-
-        // Return AIS + PIS scopes
-        return Arrays.asList(
-                FormValues.ACCOUNTS_BALANCES,
-                FormValues.ACCOUNTS_BASIC,
-                FormValues.ACCOUNTS_DETAILS,
-                FormValues.ACCOUNTS_TRANSACTIONS,
-                FormValues.PAYMENTS_MULTIPLE);
     }
 
     public BankIdStatus getBankIdErrorStatus(ErrorResponse errorResponse) throws BankIdException {
