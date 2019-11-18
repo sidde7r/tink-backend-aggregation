@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
 import io.vavr.control.Option;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.ConsumerLoanEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.MortgageEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -12,6 +13,7 @@ public class ContractEntity {
     private InsuranceEntity insurance;
     private PrepaidCardEntity prepaidCard;
     private ConsumerLoanEntity loan;
+    private MortgageEntity mortgage;
     private AccountEntity account;
     private SecuritiesPortfolioEntity securitiesPortfolio;
 
@@ -37,6 +39,10 @@ public class ContractEntity {
 
     public Option<ConsumerLoanEntity> getLoan() {
         return Option.of(loan);
+    }
+
+    public Option<MortgageEntity> getMortgage() {
+        return Option.of(mortgage);
     }
 
     public Option<AccountEntity> getAccount() {

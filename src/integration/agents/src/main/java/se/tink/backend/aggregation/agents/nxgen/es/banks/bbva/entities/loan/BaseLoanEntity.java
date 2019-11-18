@@ -49,6 +49,10 @@ public class BaseLoanEntity {
         return id;
     }
 
+    public FormatsEntity getFormats() {
+        return formats;
+    }
+
     @JsonIgnore
     protected IdModule getIdModuleWithUniqueIdentifier(String uniqueIdentifier) {
         return IdModule.builder()

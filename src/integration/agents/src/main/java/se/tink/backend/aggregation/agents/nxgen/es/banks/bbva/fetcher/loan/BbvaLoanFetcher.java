@@ -5,7 +5,9 @@ import static io.vavr.API.Case;
 import static io.vavr.API.Match;
 import static io.vavr.control.Try.run;
 
+import io.vavr.collection.List;
 import io.vavr.control.Try;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -21,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractE
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.BaseLoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.ConsumerLoanEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.MortgageEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -38,15 +41,32 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        return apiClient
-                .fetchFinancialDashboard()
-                .getPositions()
-                .map(PositionEntity::getContract)
-                .flatMap(ContractEntity::getLoan)
-                .map(this::getConsumerLoanFromDetails)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        ArrayList<LoanAccount> loans = new ArrayList<>();
+
+        List<PositionEntity> positions = apiClient.fetchFinancialDashboard().getPositions();
+
+        java.util.List<LoanAccount> consumerLoans =
+                positions
+                        .map(PositionEntity::getContract)
+                        .flatMap(ContractEntity::getLoan)
+                        .map(this::getConsumerLoanFromDetails)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
+
+        java.util.List<LoanAccount> mortgages =
+                positions
+                        .map(PositionEntity::getContract)
+                        .flatMap(ContractEntity::getMortgage)
+                        .map(this::getMortgageFromDetails)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
+
+        loans.addAll(consumerLoans);
+        loans.addAll(mortgages);
+
+        return loans;
     }
 
     private Optional<LoanAccount> getConsumerLoanFromDetails(ConsumerLoanEntity loan) {
@@ -54,6 +74,12 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
         return Try.of(() -> apiClient.fetchLoanDetails(loan.getId()))
                 .onFailure(HttpResponseException.class, handleFetchLoanDetailsException(loan))
                 .fold(error -> Optional.empty(), loan::toTinkConsumerLoan);
+    }
+
+    private Optional<LoanAccount> getMortgageFromDetails(MortgageEntity loan) {
+        return Try.of(() -> apiClient.fetchLoanDetails(loan.getId()))
+                .onFailure(HttpResponseException.class, handleFetchLoanDetailsException(loan))
+                .fold(error -> Optional.empty(), loan::toTinkMortgage);
     }
 
     private Consumer<HttpResponseException> handleFetchLoanDetailsException(BaseLoanEntity loan) {
