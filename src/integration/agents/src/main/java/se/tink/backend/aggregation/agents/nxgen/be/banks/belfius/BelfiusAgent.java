@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.Belfiu
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.BelfiusSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -61,6 +62,16 @@ public class BelfiusAgent extends NextGenerationAgent
         client.disableSignatureRequestHeader();
         // Disables X-Aggregator
         client.disableAggregatorHeader();
+
+        if (agentsServiceConfiguration.isFeatureEnabled("es")) {
+            // Setting proxy for Spain via TPP
+            PasswordBasedProxyConfiguration proxyConfiguration =
+                    configuration.getCountryProxy("es");
+            client.setProductionProxy(
+                    proxyConfiguration.getHost(),
+                    proxyConfiguration.getUsername(),
+                    proxyConfiguration.getPassword());
+        }
 
         this.apiClient =
                 new BelfiusApiClient(
