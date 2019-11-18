@@ -106,6 +106,7 @@ public class AccountEntity {
                 balance); // this is a guessing game, will probably need to be revised.
         portfolio.setTotalValue(
                 disposed); // this is a guessing game, will probably need to be revised.
+        portfolio.setInstruments(Collections.emptyList());
 
         return portfolio;
     }

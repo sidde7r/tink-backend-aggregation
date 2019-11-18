@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja;
 
+import com.google.common.base.Strings;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class IberCajaSessionStorage {
@@ -20,18 +22,6 @@ public class IberCajaSessionStorage {
         sessionStorage.put(IberCajaConstants.Storage.USERNAME, username);
     }
 
-    public void saveTicket(String ticket) {
-        sessionStorage.put(IberCajaConstants.Storage.TICKET, ticket);
-    }
-
-    public void saveFullName(String name) {
-        sessionStorage.put(IberCajaConstants.Storage.FULL_NAME, name);
-    }
-
-    public void saveDocumentNumber(String documentNumber) {
-        sessionStorage.put(IberCajaConstants.Storage.DOCUMENT_NUMBER, documentNumber);
-    }
-
     public String getUsername() {
         return sessionStorage.get(IberCajaConstants.Storage.USERNAME);
     }
@@ -48,7 +38,35 @@ public class IberCajaSessionStorage {
         return sessionStorage.get(IberCajaConstants.Storage.DOCUMENT_NUMBER);
     }
 
-    public void saveNici(int nici) {
+    public void saveNici(String nici) {
         sessionStorage.put(IberCajaConstants.Storage.NICI, nici);
+    }
+
+    public String getNici() {
+        return sessionStorage.get(IberCajaConstants.Storage.NICI);
+    }
+
+    public void saveInitSessionResponse(SessionResponse sessionResponse) {
+        sessionStorage.put(IberCajaConstants.Storage.TICKET, sessionResponse.getTicket());
+        sessionStorage.put(IberCajaConstants.Storage.FULL_NAME, sessionResponse.getName());
+
+        if (!Strings.isNullOrEmpty(sessionResponse.getNif())) {
+            sessionStorage.put(IberCajaConstants.Storage.DOCUMENT_NUMBER, sessionResponse.getNif());
+        }
+        // store NICI in the session storage to be masked in the logs
+        // remove this if the NICI should not be considered as sensitive ifo
+        sessionStorage.put(IberCajaConstants.Storage.NICI, sessionResponse.getNici());
+
+        sessionStorage.put(
+                IberCajaConstants.Storage.CONTRACT, sessionResponse.getContractInCourse());
+        sessionStorage.put(IberCajaConstants.Storage.NIP, sessionResponse.getNip());
+    }
+
+    public String getContractInCourse() {
+        return sessionStorage.get(IberCajaConstants.Storage.CONTRACT);
+    }
+
+    public String getNip() {
+        return sessionStorage.get(IberCajaConstants.Storage.NIP);
     }
 }
