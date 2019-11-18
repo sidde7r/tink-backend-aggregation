@@ -172,7 +172,7 @@ public final class AgentConfigurationController {
                     initRedirectUrl(redirectUrls);
                     initScopes(allSecrets.getScopes());
                 }
-
+                extractSensitiveValues(allSecretsMapObj);
             } catch (StatusRuntimeException e) {
                 Preconditions.checkNotNull(
                         e.getStatus(), "Status cannot be null for StatusRuntimeException: " + e);
@@ -188,7 +188,6 @@ public final class AgentConfigurationController {
                     throw e;
                 }
             }
-            extractSensitiveValues(allSecretsMapObj);
         }
     }
 
