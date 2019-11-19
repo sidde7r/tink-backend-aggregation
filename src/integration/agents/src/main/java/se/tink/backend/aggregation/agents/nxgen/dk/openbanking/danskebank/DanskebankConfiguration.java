@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.annotations.Secret;
-import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
@@ -14,11 +13,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public class DanskebankConfiguration implements UkOpenBankingClientConfigurationAdapter {
 
     @JsonProperty @Secret private String organizationId;
-    @JsonProperty @SensitiveSecret private String clientId;
+    @JsonProperty @Secret private String clientId;
     @JsonProperty @Secret private String softwareStatementAssertion;
     @JsonProperty @Secret private String redirectUrl;
     @JsonProperty @Secret private String softwareId;
-    @JsonProperty @SensitiveSecret private String signingKeyId;
 
     @Override
     public byte[] getRootCAData() {
