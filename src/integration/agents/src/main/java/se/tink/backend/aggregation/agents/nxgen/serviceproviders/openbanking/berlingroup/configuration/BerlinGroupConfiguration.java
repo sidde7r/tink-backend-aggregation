@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -18,7 +19,7 @@ public class BerlinGroupConfiguration implements ClientConfiguration {
     @JsonProperty @Secret private String baseUrl;
     @JsonProperty @Secret private String clientId;
     @JsonProperty @SensitiveSecret private String clientSecret;
-    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String psuIpAddress;
 
     public String getClientId() {

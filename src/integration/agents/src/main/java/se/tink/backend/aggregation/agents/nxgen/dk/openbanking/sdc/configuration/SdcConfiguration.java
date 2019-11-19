@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sdc.configuratio
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sdc.SdcConstants.ErrorMessages;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -12,7 +13,7 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 public class SdcConfiguration implements ClientConfiguration {
 
     @Secret private String clientId;
-    @Secret private String redirectUrl;
+    @AgentConfigParam private String redirectUrl;
     @SensitiveSecret private String clientSecret;
     @SensitiveSecret private String ocpApimSubscriptionKey;
 

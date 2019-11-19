@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.configurat
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.ErrorMessages;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -18,7 +19,7 @@ public class FidorConfiguration implements ClientConfiguration {
     @Secret private String clientKeyStorePath;
     @SensitiveSecret private String clinetKeyStorePassword;
     @Secret private String baseUrl;
-    @Secret private String redirectUrl;
+    @AgentConfigParam private String redirectUrl;
 
     private String certificateId;
 

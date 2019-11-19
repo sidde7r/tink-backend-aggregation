@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
@@ -14,7 +15,7 @@ public class RedsysConfiguration implements ClientConfiguration {
     @Secret private String baseAuthUrl;
     @Secret private String baseAPIUrl;
     @Secret private String clientId;
-    @Secret private String redirectUrl;
+    @AgentConfigParam private String redirectUrl;
     private String clientSigningKeyPath;
     private String clientSigningKeyPassword;
     private String clientSigningCertificate;

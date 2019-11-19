@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ErrorMessages;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
@@ -12,7 +13,7 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 public class Xs2aDevelopersConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String clientId;
-    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String baseUrl;
     private String certificateId;
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorMessages;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -13,7 +14,7 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 public class BelfiusConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String clientId;
-    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String baseUrl;
     private String certificateId;
     @JsonProperty @SensitiveSecret private String clientSecret;

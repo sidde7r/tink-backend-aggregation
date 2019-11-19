@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration;
 
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -10,7 +11,7 @@ public class SocieteGeneraleConfiguration implements ClientConfiguration {
 
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
-    @Secret private String redirectUrl;
+    @AgentConfigParam private String redirectUrl;
     @Secret private String eidasQwac;
     @Secret private String eidasOrgNmr;
     @Secret private String keyId;
