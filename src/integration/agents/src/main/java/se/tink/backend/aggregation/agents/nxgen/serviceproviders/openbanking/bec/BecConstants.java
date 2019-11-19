@@ -77,7 +77,7 @@ public abstract class BecConstants {
                             "LLSV")
                     .build();
 
-    public enum HeadersToSign {
+    enum HeadersToSign {
         X_REQUEST_ID("x-request-id"),
         TPP_REDIRECT_URI("tpp-redirect-uri"),
         DIGEST("digest");
