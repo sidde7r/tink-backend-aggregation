@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.brokers.nordnet;
 
+import static se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Patterns.FIND_BANKID_URL;
+import static se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Patterns.FIND_SAMLART_FROM_URI;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.sun.jersey.api.client.ClientResponse;
@@ -16,7 +19,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -32,6 +34,9 @@ import org.eclipse.jetty.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Patterns;
+import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.QueryParamValues;
+import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Urls;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AnonymousLoginPasswordResponse;
@@ -64,47 +69,12 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 
 public class NordnetApiClient {
-    private static final Pattern FIND_CODE_FROM_URI = Pattern.compile("\\?code=([a-zA-Z\\d]*)$");
-    private static final Pattern FIND_SAMLART_FROM_URI = Pattern.compile("SAMLart=([^&]*)");
-    private static final Pattern FIND_BANKID_URL =
-            Pattern.compile("https://nneid\\.nordnet\\.se/std/method/nordnet\\.se/[a-zA-Z\\d]*/");
-
-    private static final String BASE_URL = "https://classic.nordnet.se";
-    private static final String CLIENT_ID = "MOBILE_IOS_2";
-
-    private static final String AUTHENTICATION_BASIC_LOGIN_URL =
-            BASE_URL + "/api/2/authentication/basic/login";
-    private static final String AUTHENTICATION_SAML_ARTIFACT =
-            BASE_URL + "/api/2/authentication/eid/saml/artifact";
-    private static final String OAUTH2_AUTHORIZE_URL =
-            BASE_URL
-                    + "/oauth2/authorize?client_id="
-                    + CLIENT_ID
-                    + "&response_type=code&redirect_uri=https://www.nordnet.se/now/mobile/token.html";
-    private static final String INIT_LOGIN_SESSION_URL_PASSWORD = BASE_URL + "/api/2/login";
-    private static final String INIT_LOGIN_SESSION_URL_BANKID =
-            INIT_LOGIN_SESSION_URL_PASSWORD + "/anonymous";
-    private static final String LOGIN_PAGE_URL =
-            BASE_URL
-                    + "/oauth2/authorize?authType=signin&client_id="
-                    + CLIENT_ID
-                    + "&response_type=code&redirect_uri=nordnet-react://oauth2/authorize-callback";
-    private static final String LOGIN_BANKID_PAGE_URL =
-            BASE_URL + "/api/2/authentication/eid/saml/request?eid_method=sbidAnother";
-    private static final String FETCH_TOKEN_URL = BASE_URL + "/oauth2/token";
-    private static final String GET_ACCOUNTS_SUMMARY_URL = BASE_URL + "/api/2/accounts/summary";
-    private static final String GET_ACCOUNTS_URL = BASE_URL + "/api/2/accounts";
-    private static final String GET_ACCOUNTS_INFO_URL = BASE_URL + "/api/2/accounts/%s/info";
-    private static final String GET_POSITIONS_URL = BASE_URL + "/api/2/accounts/%s/positions";
-    private static final String GET_CUSTOMER_INFO_URL = BASE_URL + "/api/2/customers/contact_info";
-
     private static final AggregationLogger log = new AggregationLogger(NordnetApiClient.class);
     private static final LogTag LOG_ACCOUNT_INFO = LogTag.from("Nordnet-account-info");
 
     private String bankIdUrl;
 
     private TinkApacheHttpClient4 client;
-    private static final String CLIENT_SECRET = "6C2B9862-7FEE-CBACE053-3757570ADDEF";
 
     private String referrer;
     private String accessToken;
@@ -132,7 +102,7 @@ public class NordnetApiClient {
         String nextReferrer = headers.getFirst("NextReferrer");
 
         if (!Strings.isNullOrEmpty(nextReferrer)) {
-            referrer = BASE_URL + nextReferrer;
+            referrer = Urls.BASE_URL + nextReferrer;
         }
     }
 
@@ -144,7 +114,7 @@ public class NordnetApiClient {
     }
 
     private ClientResponse loadLoginPage() {
-        return get(LOGIN_PAGE_URL);
+        return get(Urls.LOGIN_PAGE_URL);
     }
 
     public Optional<String> loginWithPassword(String username, String password)
@@ -157,14 +127,16 @@ public class NordnetApiClient {
 
     private void authorizeSession() {
         // This request will set ENDPOINT_URL cookie
-        ClientResponse response = createClientRequest(LOGIN_PAGE_URL).get(ClientResponse.class);
+        ClientResponse response =
+                createClientRequest(Urls.LOGIN_PAGE_URL).get(ClientResponse.class);
 
         URI redirectLocation = response.getLocation();
         Preconditions.checkNotNull(
                 redirectLocation, "Expected redirect to /mux/login/startSE.html");
 
         // This request will set NOW, LOL and TUX-COOKIE
-        createClientRequest(BASE_URL + redirectLocation.toASCIIString()).get(ClientResponse.class);
+        createClientRequest(Urls.BASE_URL + redirectLocation.toASCIIString())
+                .get(ClientResponse.class);
     }
 
     private AnonymousLoginPasswordResponse anonymousLoginForPassword() throws LoginException {
@@ -172,12 +144,12 @@ public class NordnetApiClient {
         MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
         formData.add("username", "<<anonymous>>");
         formData.add("password", "<<anonymous>>");
-        formData.add("service", CLIENT_ID);
+        formData.add("service", QueryParamValues.CLIENT_ID);
         formData.add("country", "SE");
         formData.add("session_lang", "en");
         ClientResponse response =
                 createClientRequest(
-                                INIT_LOGIN_SESSION_URL_PASSWORD,
+                                Urls.INIT_LOGIN_SESSION_URL_PASSWORD,
                                 MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .post(ClientResponse.class, formData);
 
@@ -196,7 +168,7 @@ public class NordnetApiClient {
         // This request will set the NOW cookie needed for subsequent requests
         ClientResponse response =
                 createClientRequest(
-                                INIT_LOGIN_SESSION_URL_BANKID,
+                                Urls.INIT_LOGIN_SESSION_URL_BANKID,
                                 MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .post(ClientResponse.class);
 
@@ -225,7 +197,9 @@ public class NordnetApiClient {
                 new AuthenticateBasicLoginRequest(username, password);
 
         ClientResponse response =
-                createClientRequest(AUTHENTICATION_BASIC_LOGIN_URL, MediaType.APPLICATION_JSON_TYPE)
+                createClientRequest(
+                                Urls.AUTHENTICATION_BASIC_LOGIN_URL,
+                                MediaType.APPLICATION_JSON_TYPE)
                         .header(
                                 HttpHeaders.AUTHORIZATION,
                                 anonymousLoginPasswordResponse.toBasicAuthHeader())
@@ -252,12 +226,12 @@ public class NordnetApiClient {
     }
 
     private String authorizeUser() {
-        ClientResponse response = get(LOGIN_PAGE_URL);
+        ClientResponse response = get(Urls.LOGIN_PAGE_URL);
         URI location = response.getLocation();
 
         // The redirect location holds an auth code needed for requesting a token
         Preconditions.checkNotNull(location);
-        Matcher matcher = FIND_CODE_FROM_URI.matcher(location.toASCIIString());
+        Matcher matcher = Patterns.FIND_CODE_FROM_URI.matcher(location.toASCIIString());
         Preconditions.checkState(matcher.find(), "Expected auth code to be present");
 
         return matcher.group(1);
@@ -266,7 +240,7 @@ public class NordnetApiClient {
     public String initBankID(String username) throws BankIdException {
         loadLoginPage();
         BankIdInitSamlResponse bankIdInitSamlResponse =
-                get(LOGIN_BANKID_PAGE_URL, BankIdInitSamlResponse.class);
+                get(Urls.LOGIN_BANKID_PAGE_URL, BankIdInitSamlResponse.class);
 
         String html = get(bankIdInitSamlResponse.getRequestUrl(), String.class);
         Matcher matcher = FIND_BANKID_URL.matcher(html);
@@ -354,7 +328,7 @@ public class NordnetApiClient {
 
         try {
             artifactResponse =
-                    createClientRequest(AUTHENTICATION_SAML_ARTIFACT)
+                    createClientRequest(Urls.AUTHENTICATION_SAML_ARTIFACT)
                             .header("ntag", ntag)
                             .type(MediaType.APPLICATION_FORM_URLENCODED)
                             .post(ArtifactResponse.class, artifactMap);
@@ -374,7 +348,9 @@ public class NordnetApiClient {
         }
 
         URI location =
-                createClientRequest(OAUTH2_AUTHORIZE_URL).get(ClientResponse.class).getLocation();
+                createClientRequest(Urls.OAUTH2_AUTHORIZE_URL)
+                        .get(ClientResponse.class)
+                        .getLocation();
 
         String authCode = getAuthCodeFrom(location);
         return fetchToken(authCode);
@@ -386,7 +362,7 @@ public class NordnetApiClient {
     }
 
     private String getAuthCodeFrom(URI location) {
-        Matcher matcher = FIND_CODE_FROM_URI.matcher(location.toASCIIString());
+        Matcher matcher = Patterns.FIND_CODE_FROM_URI.matcher(location.toASCIIString());
         return matcher.find() ? matcher.group(1) : null;
     }
 
@@ -395,8 +371,10 @@ public class NordnetApiClient {
             return Optional.empty();
         }
 
-        FetchTokenRequest tokenRequest = FetchTokenRequest.from(CLIENT_ID, CLIENT_SECRET, authCode);
-        TokenResponse response = postForm(FETCH_TOKEN_URL, tokenRequest, TokenResponse.class);
+        FetchTokenRequest tokenRequest =
+                FetchTokenRequest.from(
+                        QueryParamValues.CLIENT_ID, QueryParamValues.CLIENT_SECRET, authCode);
+        TokenResponse response = postForm(Urls.FETCH_TOKEN_URL, tokenRequest, TokenResponse.class);
 
         String accessToken = response.getAccessToken();
         setAccessToken(accessToken);
@@ -406,14 +384,14 @@ public class NordnetApiClient {
 
     public AccountResponse fetchAccounts() {
 
-        String uri = UriBuilder.fromUri(GET_ACCOUNTS_URL).build().toASCIIString();
+        String uri = UriBuilder.fromUri(Urls.GET_ACCOUNTS_URL).build().toASCIIString();
         AccountResponse accounts = this.get(uri, AccountResponse.class);
 
         accountBankIds =
                 accounts.stream().map(a -> a.getAccountId()).collect(Collectors.joining(","));
         AccountInfoResponse infos =
                 this.get(
-                        String.format(GET_ACCOUNTS_INFO_URL, accountBankIds),
+                        String.format(Urls.GET_ACCOUNTS_INFO_URL, accountBankIds),
                         AccountInfoResponse.class);
 
         for (AccountEntity accountEntity : accounts) {
@@ -434,7 +412,8 @@ public class NordnetApiClient {
     }
 
     public IdentityData fetchIdentityData() {
-        CustomerInfoResponse customerInfo = get(GET_CUSTOMER_INFO_URL, CustomerInfoResponse.class);
+        CustomerInfoResponse customerInfo =
+                get(Urls.GET_CUSTOMER_INFO_URL, CustomerInfoResponse.class);
 
         return customerInfo.toTinkIdentity();
     }
@@ -518,7 +497,7 @@ public class NordnetApiClient {
 
     private String getBasicAuthHeader() {
         return "Basic "
-            + Base64.getEncoder().encodeToString((sessionKey + ":" + sessionKey).getBytes());
+                + Base64.getEncoder().encodeToString((sessionKey + ":" + sessionKey).getBytes());
     }
 
     public static final RedirectStrategy REDIRECT_STRATEGY =
@@ -552,7 +531,8 @@ public class NordnetApiClient {
     public Optional<PositionsResponse> getPositions() {
         // Always fetches positions for all accounts/portfolios, but called once for each.
         try {
-            ClientResponse clientResponse = get(String.format(GET_POSITIONS_URL, accountBankIds));
+            ClientResponse clientResponse =
+                    get(String.format(Urls.GET_POSITIONS_URL, accountBankIds));
             PositionsResponse response = clientResponse.getEntity(PositionsResponse.class);
             return Optional.of(response);
         } catch (UniformInterfaceException e) {
