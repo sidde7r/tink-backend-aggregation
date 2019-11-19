@@ -95,7 +95,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         apiClient.authenticateWithCode(code);
 
         final String deviceBrand = aggregator;
-        final String deviceName = BelfiusConstants.NOT_AVAILABLE;
+        final String deviceName = BelfiusConstants.MODEL;
 
         challenge = apiClient.prepareDeviceRegistration(deviceToken, deviceBrand, deviceName);
         String sign = supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);

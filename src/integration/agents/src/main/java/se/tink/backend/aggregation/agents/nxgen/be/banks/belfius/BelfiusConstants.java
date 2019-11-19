@@ -24,6 +24,8 @@ public class BelfiusConstants {
     public static final String NOT_AVAILABLE = "N/A";
 
     public static final String TINK_FRENCH = "fr";
+    public static final String BRAND = "Apple iPhone 6S";
+    public static final String MODEL = "iPhone6S";
 
     public static class UrlParameter {
         public static final String MACHINE_IDENTIFIER = "machineIdentifier";

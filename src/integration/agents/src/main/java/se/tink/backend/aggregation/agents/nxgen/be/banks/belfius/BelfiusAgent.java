@@ -94,7 +94,7 @@ public class BelfiusAgent extends NextGenerationAgent
                         persistentStorage,
                         belfiusSessionStorage,
                         supplementalInformationHelper,
-                        getAggregator());
+                        BelfiusConstants.BRAND);
 
         return new AutoAuthenticationController(
                 request,
