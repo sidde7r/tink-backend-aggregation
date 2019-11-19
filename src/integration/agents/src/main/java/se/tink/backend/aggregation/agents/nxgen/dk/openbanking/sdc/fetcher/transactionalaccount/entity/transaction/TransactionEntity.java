@@ -39,7 +39,7 @@ public class TransactionEntity {
     public Transaction toTinkTransaction(boolean isPending) {
         return Transaction.builder()
                 .setAmount(transactionAmount.toAmount())
-                .setDate(valueDate)
+                .setDate(bookingDate)
                 .setDescription(remittanceInformationUnstructured)
                 .setPending(isPending)
                 .build();
