@@ -5,12 +5,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ClientEntity {
-  @JsonProperty("IDPN")
-  private String idpn;
+    @JsonProperty("IDPN")
+    private String idpn;
 
-  @JsonProperty("Nome")
-  private String name;
+    @JsonProperty("Nome")
+    private String name;
 
-  @JsonProperty("NomeAbrev")
-  private String nameAbbrev;
+    @JsonProperty("NomeAbrev")
+    private String nameAbbrev;
 }

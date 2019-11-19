@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco;
 
 import java.util.UUID;
-
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class NovoBancoConstants {
@@ -20,10 +19,12 @@ public class NovoBancoConstants {
         public static final String API_BASE = "https://sec.novobanco.pt/";
         public static final String LOGIN0 = API_BASE + "mv2/api2/Security/Login0";
         public static final String GET_ACCOUNTS = API_BASE + "mv2/api2/Movimentos/ObterLista";
-        public static final String GET_ALL_TRANSACTIONS = API_BASE + "mv2/api2/Movimentos/ObterMais";
+        public static final String GET_ALL_TRANSACTIONS =
+                API_BASE + "mv2/api2/Movimentos/ObterMais";
         public static final String GET_DETAILS = API_BASE + "mv2/api2/PosicaoIntegrada/Obter";
         public static final String GET_LOANS = API_BASE + "mv2/api2/PosicaoIntegrada/ObterSeccao";
-        public static final String GET_LOAN_DETAILS = API_BASE + "mv2/api2/PosicaoIntegrada/ObterDetalheCreditoHabitacao";
+        public static final String GET_LOAN_DETAILS =
+                API_BASE + "mv2/api2/PosicaoIntegrada/ObterDetalheCreditoHabitacao";
     }
 
     public static class Secrets {
@@ -53,7 +54,8 @@ public class NovoBancoConstants {
         public static final String ENCODING_VALUE = "br, gzip, deflate";
 
         public static final String USER_AGENT_KEY = "User-Agent";
-        public static final String USER_AGENT_VALUE = "NovoMobile/3.4.5 (iPhone; iOS 12.4; Scale/2.00)";
+        public static final String USER_AGENT_VALUE =
+                "NovoMobile/3.4.5 (iPhone; iOS 12.4; Scale/2.00)";
 
         public static final String NB_SIGNATURE_KEY = "X-NB-Signature";
     }
@@ -71,7 +73,6 @@ public class NovoBancoConstants {
         public static final int LOGIN_MODE = 1;
         public static final String CTX_ACCOUNTS = "contas";
         public static final int LOANS_SECTION_TYPE = 15;
-
 
         public static final String APP_VERSION = "3.4.5";
         public static final String APP_BUILD = "5466";

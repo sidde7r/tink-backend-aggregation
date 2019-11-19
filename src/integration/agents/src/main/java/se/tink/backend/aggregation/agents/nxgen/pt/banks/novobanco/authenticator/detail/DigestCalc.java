@@ -2,13 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticato
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants;
 
 public class DigestCalc {

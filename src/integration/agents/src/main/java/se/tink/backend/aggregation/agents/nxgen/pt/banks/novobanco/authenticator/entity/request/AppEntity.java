@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AppEntity {
-  @JsonProperty("Version")
-  private String version = FieldValues.APP_VERSION;
+    @JsonProperty("Version")
+    private String version = FieldValues.APP_VERSION;
 
-  @JsonProperty("Build")
-  private String build = FieldValues.APP_BUILD;
+    @JsonProperty("Build")
+    private String build = FieldValues.APP_BUILD;
 }

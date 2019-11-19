@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.entity.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.annotations.JsonObject;
-
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ContextEntity {
@@ -26,7 +25,9 @@ public class ContextEntity {
     public Optional<AccountDetailsEntity> getAccountDetails(String accountId) {
         return Optional.ofNullable(accounts)
                 .map(AccountsEntity::getList)
-                .map(Collection::stream).orElse(Stream.empty())
-                .filter(acc -> accountId.equals(acc.getId())).findFirst();
+                .map(Collection::stream)
+                .orElse(Stream.empty())
+                .filter(acc -> accountId.equals(acc.getId()))
+                .findFirst();
     }
 }

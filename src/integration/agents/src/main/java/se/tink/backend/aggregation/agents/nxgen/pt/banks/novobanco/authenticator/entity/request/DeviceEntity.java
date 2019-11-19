@@ -6,33 +6,33 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class DeviceEntity {
-  @JsonProperty("Resolution")
-  private int resolution = 1;
+    @JsonProperty("Resolution")
+    private int resolution = 1;
 
-  @JsonProperty("Latitude")
-  private double latitude = FieldValues.LATITUDE;
+    @JsonProperty("Latitude")
+    private double latitude = FieldValues.LATITUDE;
 
-  @JsonProperty("SecureElement")
-  private boolean secureElement = true;
+    @JsonProperty("SecureElement")
+    private boolean secureElement = true;
 
-  @JsonProperty("OSVersion")
-  private String osVersion = FieldValues.OS_VERSION;
+    @JsonProperty("OSVersion")
+    private String osVersion = FieldValues.OS_VERSION;
 
-  @JsonProperty("Id")
-  private String id = FieldValues.DEFAULT_DEVICE_ID;
+    @JsonProperty("Id")
+    private String id = FieldValues.DEFAULT_DEVICE_ID;
 
-  @JsonProperty("Longitude")
-  private double longitude = FieldValues.LONGITUDE;
+    @JsonProperty("Longitude")
+    private double longitude = FieldValues.LONGITUDE;
 
-  @JsonProperty("OS")
-  private String you = FieldValues.OS;
+    @JsonProperty("OS")
+    private String you = FieldValues.OS;
 
-  @JsonProperty("Jailbroken")
-  private boolean jailbroken = false;
+    @JsonProperty("Jailbroken")
+    private boolean jailbroken = false;
 
-  @JsonProperty("Name")
-  private String yam = FieldValues.DEVICE_NAME;
+    @JsonProperty("Name")
+    private String yam = FieldValues.DEVICE_NAME;
 
-  @JsonProperty("Model")
-  private String model = FieldValues.MODEL;
+    @JsonProperty("Model")
+    private String model = FieldValues.MODEL;
 }

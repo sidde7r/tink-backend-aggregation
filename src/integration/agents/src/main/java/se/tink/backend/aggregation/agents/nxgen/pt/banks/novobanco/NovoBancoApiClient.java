@@ -4,13 +4,12 @@ import static java.util.Objects.requireNonNull;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.FieldValues.DEFAULT_DEVICE_ID;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.ACCOUNT_GENERAL_INFO_ID;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.*;
@@ -33,15 +32,15 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.l
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.rpc.GenericResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
 
 public class NovoBancoApiClient {
 
     private final TinkHttpClient httpClient;
     private final SessionStorage sessionStorage;
-    private final static DigestCalc digestCalc = new DigestCalc();
+    private static final DigestCalc digestCalc = new DigestCalc();
 
     public NovoBancoApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.httpClient = requireNonNull(client);
@@ -58,8 +57,10 @@ public class NovoBancoApiClient {
         if (!response.isValidCredentials()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-        sessionStorage.put(SessionKeys.AUTH_COOKIE_KEY, response.getBody().getSession().getAuthCookie());
-        sessionStorage.put(SessionKeys.SESSION_COOKIE_KEY, response.getBody().getSession().getSessionCookie());
+        sessionStorage.put(
+                SessionKeys.AUTH_COOKIE_KEY, response.getBody().getSession().getAuthCookie());
+        sessionStorage.put(
+                SessionKeys.SESSION_COOKIE_KEY, response.getBody().getSession().getSessionCookie());
         sessionStorage.put(SessionKeys.DEVICE_ID_KEY, response.getBody().getDevice().getId());
 
         return response;
@@ -88,48 +89,70 @@ public class NovoBancoApiClient {
 
     public List<LoanAggregatedData> getLoanAccounts() {
         List<LoanAggregatedData> loans = new ArrayList<>();
-        getAccountDetails().forEach(accountDetails -> {
-            GetLoanAccountsResponse loanAccountDetails = buildRequest(
-                    prepareGetLoansRequest(accountDetails.getId()), URLs.GET_LOANS)
-                    .post(GetLoanAccountsResponse.class);
+        getAccountDetails()
+                .forEach(
+                        accountDetails -> {
+                            GetLoanAccountsResponse loanAccountDetails =
+                                    buildRequest(
+                                                    prepareGetLoansRequest(accountDetails.getId()),
+                                                    URLs.GET_LOANS)
+                                            .post(GetLoanAccountsResponse.class);
 
-            String opToken = loanAccountDetails.getHeader().getOpToken();
-            loanAccountDetails.getLoanDetails().forEach(loanDetails -> {
-                GetLoanDetailsResponse loanDetailsResponse = buildRequest(
-                        prepareGetLoanDetailsRequest(loanDetails.getContract(), opToken), URLs.GET_LOAN_DETAILS)
-                        .post(GetLoanDetailsResponse.class);
-                loans.add(
-                        new LoanAggregatedData(accountDetails, loanDetails.getContract(),
-                                 loanDetailsResponse));
-            });
-        });
+                            String opToken = loanAccountDetails.getHeader().getOpToken();
+                            loanAccountDetails
+                                    .getLoanDetails()
+                                    .forEach(
+                                            loanDetails -> {
+                                                GetLoanDetailsResponse loanDetailsResponse =
+                                                        buildRequest(
+                                                                        prepareGetLoanDetailsRequest(
+                                                                                loanDetails
+                                                                                        .getContract(),
+                                                                                opToken),
+                                                                        URLs.GET_LOAN_DETAILS)
+                                                                .post(GetLoanDetailsResponse.class);
+                                                loans.add(
+                                                        new LoanAggregatedData(
+                                                                accountDetails,
+                                                                loanDetails.getContract(),
+                                                                loanDetailsResponse));
+                                            });
+                        });
         return loans;
     }
 
     public Pair<List<MovementsEntity>, String> getTransactions(String accountId) {
         GetAccountsResponse details = getAccount(accountId);
-        String currency = Optional.of(details)
-                .map(GetAccountsResponse::getBody)
-                .map(BodyEntity::getCurrency)
-                .orElseThrow(() -> new IllegalStateException("No information about currency available"));
-        List<MovementsEntity> movements = Optional.of(details)
-                .map(GetAccountsResponse::getBody)
-                .map(BodyEntity::getMovements)
-                .orElse(Collections.emptyList());
+        String currency =
+                Optional.of(details)
+                        .map(GetAccountsResponse::getBody)
+                        .map(BodyEntity::getCurrency)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "No information about currency available"));
+        List<MovementsEntity> movements =
+                Optional.of(details)
+                        .map(GetAccountsResponse::getBody)
+                        .map(BodyEntity::getMovements)
+                        .orElse(Collections.emptyList());
 
         return Pair.of(movements, currency);
     }
 
     public boolean isAlive() {
-        GenericResponse response = buildRequest(prepareGetAccountsRequest(null), URLs.KEEP_ALIVE)
-                .post(GenericResponse.class);
+        GenericResponse response =
+                buildRequest(prepareGetAccountsRequest(null), URLs.KEEP_ALIVE)
+                        .post(GenericResponse.class);
         return !response.isSessionExpired();
     }
 
     private void saveAccountsInSessionStorage(GetAccountsResponse response) {
-        List<AccountDetailsEntity> accounts = Optional.of(response.getAccountDetailsEntities())
-                .map(Collection::stream).orElse(Stream.empty())
-                .collect(Collectors.toList());
+        List<AccountDetailsEntity> accounts =
+                Optional.of(response.getAccountDetailsEntities())
+                        .map(Collection::stream)
+                        .orElse(Stream.empty())
+                        .collect(Collectors.toList());
         sessionStorage.put(ACCOUNT_GENERAL_INFO_ID, accounts);
     }
 
@@ -174,7 +197,8 @@ public class NovoBancoApiClient {
 
     private GetLoanAccountsRequest prepareGetLoansRequest(String accountId) {
         HeaderEntity header = getHeaderEntity(FieldValues.CTX_ACCOUNTS, ServiceIds.LOANS_ID);
-        GetLoanAccountsEntity body = new GetLoanAccountsEntity(FieldValues.LOANS_SECTION_TYPE, accountId);
+        GetLoanAccountsEntity body =
+                new GetLoanAccountsEntity(FieldValues.LOANS_SECTION_TYPE, accountId);
         return new GetLoanAccountsRequest(header, body);
     }
 
@@ -189,8 +213,8 @@ public class NovoBancoApiClient {
         if (!sessionStorage.containsKey(ACCOUNT_GENERAL_INFO_ID)) {
             getAccounts();
         }
-        return sessionStorage.get(ACCOUNT_GENERAL_INFO_ID,
-                new TypeReference<List<AccountDetailsEntity>>() {})
+        return sessionStorage
+                .get(ACCOUNT_GENERAL_INFO_ID, new TypeReference<List<AccountDetailsEntity>>() {})
                 .orElse(Collections.emptyList());
     }
 
@@ -199,8 +223,10 @@ public class NovoBancoApiClient {
         private String loanContractId;
         private GetLoanDetailsResponse loanDetails;
 
-        LoanAggregatedData(AccountDetailsEntity accountDetails, String loanContractId,
-                           GetLoanDetailsResponse loanDetails) {
+        LoanAggregatedData(
+                AccountDetailsEntity accountDetails,
+                String loanContractId,
+                GetLoanDetailsResponse loanDetails) {
             this.accountDetails = accountDetails;
             this.loanContractId = loanContractId;
             this.loanDetails = loanDetails;

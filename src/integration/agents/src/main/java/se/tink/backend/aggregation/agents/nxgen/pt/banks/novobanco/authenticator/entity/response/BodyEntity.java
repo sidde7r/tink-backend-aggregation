@@ -5,24 +5,24 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BodyEntity {
-  public SessionEntity getSession() {
-    return session;
-  }
+    public SessionEntity getSession() {
+        return session;
+    }
 
-  public ClientEntity getClient() {
-    return client;
-  }
+    public ClientEntity getClient() {
+        return client;
+    }
 
-  public DeviceEntity getDevice() {
-    return device;
-  }
+    public DeviceEntity getDevice() {
+        return device;
+    }
 
-  @JsonProperty("Session")
-  private SessionEntity session;
+    @JsonProperty("Session")
+    private SessionEntity session;
 
-  @JsonProperty("Client")
-  private ClientEntity client;
+    @JsonProperty("Client")
+    private ClientEntity client;
 
-  @JsonProperty("Device")
-  private DeviceEntity device;
+    @JsonProperty("Device")
+    private DeviceEntity device;
 }

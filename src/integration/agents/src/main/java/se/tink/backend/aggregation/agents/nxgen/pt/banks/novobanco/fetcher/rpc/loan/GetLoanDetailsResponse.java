@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants;
@@ -8,8 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.GetLoanDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.Optional;
 
 @JsonObject
 public class GetLoanDetailsResponse {
@@ -31,9 +30,10 @@ public class GetLoanDetailsResponse {
 
     public boolean isSuccessful() {
         Integer resultCode = getResultCode();
-        boolean isSuccessful = Optional.ofNullable(resultCode)
-                .map(code -> NovoBancoConstants.ResponseCodes.OK == code)
-                .orElse(false);
+        boolean isSuccessful =
+                Optional.ofNullable(resultCode)
+                        .map(code -> NovoBancoConstants.ResponseCodes.OK == code)
+                        .orElse(false);
         if (!isSuccessful) {
             logger.warn("GetLoanDetails Response ended up with failure code: " + resultCode);
         }
@@ -42,7 +42,6 @@ public class GetLoanDetailsResponse {
     }
 
     private Integer getResultCode() {
-        return Optional.ofNullable(getHeader())
-                .map(HeaderEntity::getResultCode).orElse(null);
+        return Optional.ofNullable(getHeader()).map(HeaderEntity::getResultCode).orElse(null);
     }
 }

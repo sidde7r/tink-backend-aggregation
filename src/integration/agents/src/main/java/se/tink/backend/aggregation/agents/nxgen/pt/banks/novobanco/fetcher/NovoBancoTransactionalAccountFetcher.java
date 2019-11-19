@@ -1,5 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.entity.response.AccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.entity.response.ContextEntity;
@@ -14,13 +20,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.pair.Pair;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import static java.util.Objects.requireNonNull;
-
 public class NovoBancoTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final NovoBancoApiClient apiClient;
@@ -34,31 +33,38 @@ public class NovoBancoTransactionalAccountFetcher implements AccountFetcher<Tran
         Collection<TransactionalAccount> accounts = new ArrayList<>();
         GetAccountsResponse response = apiClient.getAccounts();
 
-        Optional.of(response).map(GetAccountsResponse::getHeader).map(HeaderEntity::getContext).
-                map(ContextEntity::getAccounts).map(AccountsEntity::getList)
-                .map(Collection::stream).orElseGet(Stream::empty)
-                .forEach(listEntity -> {
-                    String internalAccountId = listEntity.getId();
-                    GetAccountsResponse accountResponse = apiClient.getAccount(internalAccountId);
-                    String iban = listEntity.getIban();
-                    String desc = listEntity.getDesc();
-                    double balance = accountResponse.getBody().getBalance().getAccounting();
-                    String currency = accountResponse.getBody().getBalance().getCurrency();
+        Optional.of(response)
+                .map(GetAccountsResponse::getHeader)
+                .map(HeaderEntity::getContext)
+                .map(ContextEntity::getAccounts)
+                .map(AccountsEntity::getList)
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
+                .forEach(
+                        listEntity -> {
+                            String internalAccountId = listEntity.getId();
+                            GetAccountsResponse accountResponse =
+                                    apiClient.getAccount(internalAccountId);
+                            String iban = listEntity.getIban();
+                            String desc = listEntity.getDesc();
+                            double balance = accountResponse.getBody().getBalance().getAccounting();
+                            String currency = accountResponse.getBody().getBalance().getCurrency();
 
-                    mapToTinkAccount(internalAccountId, iban, desc, balance, currency).ifPresent(accounts::add);
-                });
+                            mapToTinkAccount(internalAccountId, iban, desc, balance, currency)
+                                    .ifPresent(accounts::add);
+                        });
         return accounts;
     }
 
-    private Optional<TransactionalAccount> mapToTinkAccount(String internalAccountId,
-                                                            String iban, String name,
-                                                            double balance, String currency) {
+    private Optional<TransactionalAccount> mapToTinkAccount(
+            String internalAccountId, String iban, String name, double balance, String currency) {
         BalanceModule balanceModule =
                 BalanceModule.builder()
                         .withBalance(ExactCurrencyAmount.of(balance, currency))
                         .build();
 
-        Pair<String, AccountIdentifier.Type> accountId = getAccountIdentifier(iban, internalAccountId);
+        Pair<String, AccountIdentifier.Type> accountId =
+                getAccountIdentifier(iban, internalAccountId);
 
         IdModule idModule =
                 IdModule.builder()
@@ -76,7 +82,8 @@ public class NovoBancoTransactionalAccountFetcher implements AccountFetcher<Tran
                 .build();
     }
 
-    private Pair<String, AccountIdentifier.Type> getAccountIdentifier(String iban, String internalAccountId) {
+    private Pair<String, AccountIdentifier.Type> getAccountIdentifier(
+            String iban, String internalAccountId) {
         return Optional.ofNullable(iban)
                 .map(s -> Pair.of(iban, AccountIdentifier.Type.IBAN))
                 .orElse(Pair.of(internalAccountId, AccountIdentifier.Type.COUNTRY_SPECIFIC));

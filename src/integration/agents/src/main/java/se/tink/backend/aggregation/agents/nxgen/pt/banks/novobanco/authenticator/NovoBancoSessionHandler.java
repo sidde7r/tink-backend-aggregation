@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator;
 
+import static java.util.Objects.requireNonNull;
+
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-
-import static java.util.Objects.requireNonNull;
 
 public class NovoBancoSessionHandler implements SessionHandler {
 
@@ -26,7 +26,7 @@ public class NovoBancoSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-         if (!apiClient.isAlive()) {
+        if (!apiClient.isAlive()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

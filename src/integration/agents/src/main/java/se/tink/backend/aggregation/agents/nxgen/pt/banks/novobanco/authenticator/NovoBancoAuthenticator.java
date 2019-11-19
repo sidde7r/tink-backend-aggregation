@@ -8,15 +8,15 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoApiC
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 
 public class NovoBancoAuthenticator implements PasswordAuthenticator {
-  private final NovoBancoApiClient apiClient;
+    private final NovoBancoApiClient apiClient;
 
-  public NovoBancoAuthenticator(final NovoBancoApiClient apiClient) {
-    this.apiClient = requireNonNull(apiClient);
-  }
+    public NovoBancoAuthenticator(final NovoBancoApiClient apiClient) {
+        this.apiClient = requireNonNull(apiClient);
+    }
 
-  @Override
-  public void authenticate(String username, String password)
-      throws AuthenticationException, AuthorizationException {
-    apiClient.loginStep0(username, password);
-  }
+    @Override
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
+        apiClient.loginStep0(username, password);
+    }
 }

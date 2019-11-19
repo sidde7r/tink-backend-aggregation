@@ -14,7 +14,8 @@ public class NovoBancoAgentTest {
         PASSWORD
     }
 
-    private final ArgumentManager<NovoBancoAgentTest.Arg> helper = new ArgumentManager<>(NovoBancoAgentTest.Arg.values());
+    private final ArgumentManager<NovoBancoAgentTest.Arg> helper =
+            new ArgumentManager<>(NovoBancoAgentTest.Arg.values());
 
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("pt", "pt-novobanco-password")

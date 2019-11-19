@@ -7,7 +7,10 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoCons
 public class Login0SecretProvider {
 
     public String getSecret(String pin) {
-        return new RSAEncryptor().encrypt(getDataToEncrypt(pin, Secrets.INSTANCE_KEY), new RSAPublicServerKey().getKey());
+        return new RSAEncryptor()
+                .encrypt(
+                        getDataToEncrypt(pin, Secrets.INSTANCE_KEY),
+                        new RSAPublicServerKey().getKey());
     }
 
     private String getTimestamp() {
@@ -20,6 +23,11 @@ public class Login0SecretProvider {
 
     private String getDataToEncrypt(final String pin, final String instanceKey) {
         return String.format(
-                Locale.US, "%s|%s|%d|%s", pin, getTimestamp(), generateSecureRandomInt(), instanceKey);
+                Locale.US,
+                "%s|%s|%d|%s",
+                pin,
+                getTimestamp(),
+                generateSecureRandomInt(),
+                instanceKey);
     }
 }

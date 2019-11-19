@@ -6,17 +6,17 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class StatusEntity {
 
-  public int getSeverity() {
-    return severity;
-  }
+    public int getSeverity() {
+        return severity;
+    }
 
-  public int getCode() {
-    return code;
-  }
+    public int getCode() {
+        return code;
+    }
 
-  @JsonProperty("Severidade")
-  private int severity;
+    @JsonProperty("Severidade")
+    private int severity;
 
-  @JsonProperty("Codigo")
-  private int code;
+    @JsonProperty("Codigo")
+    private int code;
 }

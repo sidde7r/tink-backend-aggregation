@@ -6,6 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class EnvEntity {
-  @JsonProperty("Language")
-  private String language = FieldValues.LANGUAGE;
+    @JsonProperty("Language")
+    private String language = FieldValues.LANGUAGE;
 }

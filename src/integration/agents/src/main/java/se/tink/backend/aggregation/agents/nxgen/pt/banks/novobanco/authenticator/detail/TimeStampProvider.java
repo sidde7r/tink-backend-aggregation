@@ -6,14 +6,14 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class TimeStampProvider {
-  private static final SimpleDateFormat SIMPLE_DATE_FORMAT =
-      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT =
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
 
-  static {
-    SIMPLE_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-  }
+    static {
+        SIMPLE_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
 
-  public static String getTimestamp() {
-    return SIMPLE_DATE_FORMAT.format(new Date());
-  }
+    public static String getTimestamp() {
+        return SIMPLE_DATE_FORMAT.format(new Date());
+    }
 }

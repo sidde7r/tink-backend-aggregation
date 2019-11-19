@@ -1,5 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher;
 
+import static java.util.Objects.requireNonNull;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.MovementsEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -10,15 +18,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.pair.Pair;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.Objects.requireNonNull;
-
 public class NovoBancoTransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
     private final NovoBancoApiClient apiClient;
 
@@ -28,13 +27,16 @@ public class NovoBancoTransactionFetcher implements TransactionPagePaginator<Tra
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        Pair<List<MovementsEntity>, String> movementsDetails = apiClient.getTransactions(account.getAccountNumber());
+        Pair<List<MovementsEntity>, String> movementsDetails =
+                apiClient.getTransactions(account.getAccountNumber());
         String currency = movementsDetails.second;
 
-        List<Transaction> transactions = Optional.ofNullable(movementsDetails.first)
-                .map(Collection::stream).orElse(Stream.empty())
-                .map(movement -> mapToTinkTransaction(movement, currency))
-                .collect(Collectors.toList());
+        List<Transaction> transactions =
+                Optional.ofNullable(movementsDetails.first)
+                        .map(Collection::stream)
+                        .orElse(Stream.empty())
+                        .map(movement -> mapToTinkTransaction(movement, currency))
+                        .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(transactions, false);
     }
@@ -42,10 +44,7 @@ public class NovoBancoTransactionFetcher implements TransactionPagePaginator<Tra
     private Transaction mapToTinkTransaction(MovementsEntity movement, String currency) {
         LocalDate dateOfOperation = LocalDate.parse(movement.getDateOfOperation());
         return Transaction.builder()
-                .setAmount(
-                        ExactCurrencyAmount.of(
-                                movement.getSum(),
-                                currency))
+                .setAmount(ExactCurrencyAmount.of(movement.getSum(), currency))
                 .setDate(dateOfOperation)
                 .setDescription(movement.getDescription())
                 .build();

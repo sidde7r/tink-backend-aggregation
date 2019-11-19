@@ -5,10 +5,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class DeviceEntity {
-  @JsonProperty("Id")
-  private String id;
+    @JsonProperty("Id")
+    private String id;
 
-  public String getId() {
-    return id;
-  }
+    public String getId() {
+        return id;
+    }
 }

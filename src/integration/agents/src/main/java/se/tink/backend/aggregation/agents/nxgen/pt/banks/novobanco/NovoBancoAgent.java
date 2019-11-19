@@ -17,10 +17,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class NovoBancoAgent extends NextGenerationAgent implements
-        RefreshCheckingAccountsExecutor,
-        RefreshSavingsAccountsExecutor,
-        RefreshLoanAccountsExecutor {
+public class NovoBancoAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshLoanAccountsExecutor {
 
     private final NovoBancoApiClient apiClient;
     private final NovoBancoAuthenticator authenticator;
@@ -47,7 +47,8 @@ public class NovoBancoAgent extends NextGenerationAgent implements
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        NovoBancoTransactionalAccountFetcher accountFetcher = new NovoBancoTransactionalAccountFetcher(apiClient);
+        NovoBancoTransactionalAccountFetcher accountFetcher =
+                new NovoBancoTransactionalAccountFetcher(apiClient);
         NovoBancoTransactionFetcher transactionFetcher = new NovoBancoTransactionFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
@@ -56,15 +57,13 @@ public class NovoBancoAgent extends NextGenerationAgent implements
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(
-                                transactionFetcher, 1)));
+                        new TransactionPagePaginationController<>(transactionFetcher, 1)));
     }
 
-
-  private LoanRefreshController constructLoanRefreshController() {
-    NovoBancoLoanAccountFetcher accountFetcher = new NovoBancoLoanAccountFetcher(apiClient);
-      return new LoanRefreshController(metricRefreshController, updateController, accountFetcher);
-  }
+    private LoanRefreshController constructLoanRefreshController() {
+        NovoBancoLoanAccountFetcher accountFetcher = new NovoBancoLoanAccountFetcher(apiClient);
+        return new LoanRefreshController(metricRefreshController, updateController, accountFetcher);
+    }
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
@@ -83,7 +82,7 @@ public class NovoBancoAgent extends NextGenerationAgent implements
 
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
-      return loanRefreshController.fetchLoanTransactions();
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override
