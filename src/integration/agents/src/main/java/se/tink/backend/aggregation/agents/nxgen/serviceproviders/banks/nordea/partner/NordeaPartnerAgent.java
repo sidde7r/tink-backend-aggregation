@@ -35,7 +35,7 @@ public class NordeaPartnerAgent extends NextGenerationAgent
     public NordeaPartnerAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, true);
-        apiClient = new NordeaPartnerApiClient(client, sessionStorage);
+        apiClient = new NordeaPartnerApiClient(client, sessionStorage, credentials);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
@@ -72,11 +72,7 @@ public class NordeaPartnerAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         NordeaPartnerAuthenticator authenticator =
-                new NordeaPartnerAuthenticator(
-                        supplementalInformationController,
-                        persistentStorage,
-                        sessionStorage,
-                        jweHelper);
+                new NordeaPartnerAuthenticator(credentials, sessionStorage, jweHelper);
         return new AutoAuthenticationController(
                 request, systemUpdater, authenticator, authenticator);
     }

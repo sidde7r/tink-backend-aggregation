@@ -9,29 +9,23 @@ import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.Payload;
-import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jose.crypto.RSAEncrypter;
 import com.nimbusds.jose.crypto.RSASSASigner;
-import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.util.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.encryption.NordeaPartnerKeystore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.configuration.NordeaPartnerConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class NordeaPartnerJweHelper {
-    private static final Logger logger = LoggerFactory.getLogger(NordeaPartnerAuthenticator.class);
+
     private final NordeaPartnerKeystore keystore;
     private final NordeaPartnerConfiguration configuration;
 
@@ -39,27 +33,6 @@ public class NordeaPartnerJweHelper {
             NordeaPartnerKeystore keystore, NordeaPartnerConfiguration configuration) {
         this.keystore = keystore;
         this.configuration = configuration;
-    }
-
-    public Optional<String> extractTokenSubject(String token) {
-        Preconditions.checkState(
-                !Strings.isNullOrEmpty(token), "Nordea token can not be null or empty");
-        try {
-            JWEObject jwe = JWEObject.parse(token);
-            jwe.decrypt(new RSADecrypter(keystore.getTinkEncryptionKey()));
-            SignedJWT signedJWT = jwe.getPayload().toSignedJWT();
-            boolean verified =
-                    signedJWT.verify(new RSASSAVerifier(keystore.getNordeaSigningPublicKey()));
-
-            if (!verified) {
-                logger.error("could not verify JWT token");
-                return Optional.empty();
-            }
-            return Optional.ofNullable(signedJWT.getJWTClaimsSet()).map(JWTClaimsSet::getSubject);
-        } catch (ParseException | JOSEException e) {
-            logger.error("couldn't read JWT token", e);
-            return Optional.empty();
-        }
     }
 
     public OAuth2Token createToken(String partnerUid) {

@@ -2921,7 +2921,13 @@
             "credentialsType": "THIRD_PARTY_APP",
             "currency": "SEK",
             "displayName": "Nordea",
-            "fields": [],
+            "fields": [
+                {
+                    "description": "Partner User Id",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
             "financialInstitutionId": "dde2463acf40501389de4fca5a3693a4",
             "financialInstitutionName": "Nordea",
             "groupDisplayName": "Nordea",

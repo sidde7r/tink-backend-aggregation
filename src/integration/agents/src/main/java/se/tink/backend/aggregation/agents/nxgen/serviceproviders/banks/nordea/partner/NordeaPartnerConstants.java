@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner;
 
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
@@ -36,26 +35,10 @@ public class NordeaPartnerConstants {
         public static final String ACCEPT_LANGUAGE = "en-SE";
     }
 
-    public class StorageKeys {
-        public static final String PARTNER_USER_ID = "partner-user-id";
-    }
-
-    public class SupplementalInfoKeys {
-        public static final String TOKEN = "token";
-    }
-
     public class Jwt {
         public static final String ISSUER = "Tink";
         public static final String JWT_CONTENT_TYPE = "JWT";
         public static final long TOKEN_LIFETIME_SECONDS = 300;
-    }
-
-    public static class SupplementalFields {
-        public static final Field TOKEN =
-                Field.builder()
-                        .name(SupplementalInfoKeys.TOKEN)
-                        .description("Nordea JWE token")
-                        .build();
     }
 
     public static class HttpFilters {
@@ -63,15 +46,9 @@ public class NordeaPartnerConstants {
         public static final int MAX_NUM_RETRIES = 3;
     }
 
-    public static class LocalizationKeys {
-
-        public static final String IVALID_TOKEN = "Invalid token.";
-    }
-
     public static class Keystore {
         public static final String KEYSTORE_PATH =
                 "data/agents/serviceprovider/nordea/partner/TinkKeystore.jks";
         public static final String SIGNING_KEY_ALIAS = "tinksign";
-        public static final String ENCRYPTION_KEY_ALIAS = "tinkencrypt";
     }
 }

@@ -19,10 +19,8 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class NordeaPartnerKeystore {
 
-    private RSAPublicKey nordeaSigningPublicKey;
     private RSAPublicKey nordeaEncryptionPublicKey;
     private RSAPrivateKey tinkSigningKey;
-    private RSAPrivateKey tinkEncryptionKey;
 
     public NordeaPartnerKeystore(NordeaPartnerConfiguration configuration) {
         this.loadFrom(configuration);
@@ -30,7 +28,6 @@ public class NordeaPartnerKeystore {
 
     private void loadFrom(NordeaPartnerConfiguration configuration) {
         Preconditions.checkNotNull(configuration, "Agent configuration is missing!");
-        nordeaSigningPublicKey = getPubKeyFromBase64(configuration.getNordeaSigningPublicKey());
         nordeaEncryptionPublicKey =
                 getPubKeyFromBase64(configuration.getNordeaEncryptionPublicKey());
 
@@ -42,12 +39,6 @@ public class NordeaPartnerKeystore {
                 getPrivateKeyFromKeystore(
                         keystore,
                         NordeaPartnerConstants.Keystore.SIGNING_KEY_ALIAS,
-                        configuration.getPartnerKeystorePassword());
-
-        tinkEncryptionKey =
-                getPrivateKeyFromKeystore(
-                        keystore,
-                        NordeaPartnerConstants.Keystore.ENCRYPTION_KEY_ALIAS,
                         configuration.getPartnerKeystorePassword());
     }
 
@@ -83,19 +74,11 @@ public class NordeaPartnerKeystore {
         return RSA.getPubKeyFromBytes(EncodingUtils.decodeBase64String(publicKeyString));
     }
 
-    public RSAPublicKey getNordeaSigningPublicKey() {
-        return nordeaSigningPublicKey;
-    }
-
     public RSAPublicKey getNordeaEncryptionPublicKey() {
         return nordeaEncryptionPublicKey;
     }
 
     public RSAPrivateKey getTinkSigningKey() {
         return tinkSigningKey;
-    }
-
-    public RSAPrivateKey getTinkEncryptionKey() {
-        return tinkEncryptionKey;
     }
 }
