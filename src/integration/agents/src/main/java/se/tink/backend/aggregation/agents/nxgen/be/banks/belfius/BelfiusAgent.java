@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
 import com.google.common.base.Strings;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -93,13 +94,26 @@ public class BelfiusAgent extends NextGenerationAgent
                         persistentStorage,
                         belfiusSessionStorage,
                         supplementalInformationHelper,
-                        context.getAggregatorInfo().getAggregatorIdentifier());
+                        getAggregator());
 
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
                 new PasswordAuthenticationController(authenticator),
                 authenticator);
+    }
+
+    private String getAggregator() {
+        final String aggregator = context.getAggregatorInfo().getAggregatorIdentifier();
+
+        // Belfius are blocking manual authentications from Kerry (KBC) at the time of writing.
+        // Most likely because we are sending "KBC" in one of our requests.
+        // Unfortunately, this means we have to put some aggregator-specific logic here to hide
+        // KBC's presence.
+        if (Objects.equals(aggregator, "KBC")) {
+            return "Incognito";
+        }
+        return aggregator;
     }
 
     @Override
