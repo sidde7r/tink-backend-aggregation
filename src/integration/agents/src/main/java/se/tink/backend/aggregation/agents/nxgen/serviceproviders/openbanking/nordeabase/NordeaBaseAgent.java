@@ -28,7 +28,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        NordeaBaseConfiguration nordeaConfiguration =
+        final NordeaBaseConfiguration nordeaConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(NordeaBaseConfiguration.class);
 

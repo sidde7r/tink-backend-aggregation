@@ -35,14 +35,14 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
     private final NordeaSeApiClient apiClient;
     private static final Logger log = LoggerFactory.getLogger(NordeaSeBankIdAuthenticator.class);
     private final String language;
-    private final String scopeFromPayload;
+    private final List<String> scopes;
     private OAuth2Token oAuth2Token;
 
     public NordeaSeBankIdAuthenticator(
-            NordeaSeApiClient apiClient, String language, String scopeFromPayload) {
+            NordeaSeApiClient apiClient, String language, List<String> scopes) {
         this.apiClient = apiClient;
         this.language = language;
-        this.scopeFromPayload = scopeFromPayload;
+        this.scopes = scopes;
     }
 
     @Override
@@ -153,35 +153,42 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
                 ssn,
                 apiClient.getConfiguration().getRedirectUrl(),
                 NordeaSeConstants.FormValues.RESPONSE_TYPE,
-                getScopesBasedOnPayload(),
+                getScopes(),
                 NordeaSeConstants.FormValues.STATE);
     }
 
     /**
-     * Considers the payload of the provider to determine the scopes we should send to the bank.
-     * This is a hacky fix for Kirkby staging where the payload will be AIS, in all other cases
-     * we'll ask for full scope.
+     * Considers the scopes we should send to the bank.
      *
      * @return List of scopes based on provider payload.
      */
-    private List<String> getScopesBasedOnPayload() {
+    private List<String> getScopes() {
 
-        // Return only AIS scopes
-        if (Scopes.AIS.equalsIgnoreCase(scopeFromPayload)) {
+        if (scopes.stream().allMatch(scope -> Scopes.AIS.equalsIgnoreCase(scope))) {
+            // Return only AIS scopes
             return Arrays.asList(
                     FormValues.ACCOUNTS_BALANCES,
                     FormValues.ACCOUNTS_BASIC,
                     FormValues.ACCOUNTS_DETAILS,
                     FormValues.ACCOUNTS_TRANSACTIONS);
+        } else if (scopes.stream()
+                .allMatch(
+                        scope ->
+                                Scopes.AIS.equalsIgnoreCase(scope)
+                                        || Scopes.PIS.equalsIgnoreCase(scope))) {
+            // Return AIS + PIS scopes
+            return Arrays.asList(
+                    FormValues.ACCOUNTS_BALANCES,
+                    FormValues.ACCOUNTS_BASIC,
+                    FormValues.ACCOUNTS_DETAILS,
+                    FormValues.ACCOUNTS_TRANSACTIONS,
+                    FormValues.PAYMENTS_MULTIPLE);
+        } else {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "%s contain invalid scope(s), only support scopes AIS and PIS",
+                            scopes.toString()));
         }
-
-        // Return AIS + PIS scopes
-        return Arrays.asList(
-                FormValues.ACCOUNTS_BALANCES,
-                FormValues.ACCOUNTS_BASIC,
-                FormValues.ACCOUNTS_DETAILS,
-                FormValues.ACCOUNTS_TRANSACTIONS,
-                FormValues.PAYMENTS_MULTIPLE);
     }
 
     public BankIdStatus getBankIdErrorStatus(ErrorResponse errorResponse) throws BankIdException {

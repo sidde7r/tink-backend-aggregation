@@ -45,6 +45,7 @@ public final class NordeaSeConstants {
 
     public class Scopes {
         public static final String AIS = "AIS";
+        public static final String PIS = "PIS";
     }
 
     public static class ErrorCode {

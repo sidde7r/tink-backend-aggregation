@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authentica
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.NordeaSePaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.fetcher.transactionalaccount.NordeaSeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -38,7 +39,6 @@ public final class NordeaSeAgent extends NordeaBaseAgent
                 RefreshTransferDestinationExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final String scopeFromPayload;
 
     public NordeaSeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -46,17 +46,22 @@ public final class NordeaSeAgent extends NordeaBaseAgent
 
         apiClient = new NordeaSeApiClient(client, persistentStorage);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        scopeFromPayload = request.getProvider().getPayload();
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
 
+        final NordeaBaseConfiguration nordeaConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(NordeaBaseConfiguration.class);
+
         BankIdAuthenticationController bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalRequester,
                         new NordeaSeBankIdAuthenticator(
-                                (NordeaSeApiClient) apiClient, language, scopeFromPayload),
+                                (NordeaSeApiClient) apiClient,
+                                language,
+                                nordeaConfiguration.getScopes()),
                         persistentStorage,
                         credentials);
 

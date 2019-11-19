@@ -20,7 +20,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
@@ -55,7 +54,7 @@ import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
 public final class TargobankAgentIntegrationTest extends AbstractConfigurationBase {
-    private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
+    private static final Logger log = LoggerFactory.getLogger(TargobankAgentIntegrationTest.class);
     private final Provider provider;
     private final User user;
     private final boolean loadCredentialsBefore;
