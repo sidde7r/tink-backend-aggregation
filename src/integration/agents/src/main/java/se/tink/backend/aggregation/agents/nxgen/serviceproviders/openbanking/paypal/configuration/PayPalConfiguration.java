@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pa
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.ErrorMessages;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -13,7 +14,7 @@ public class PayPalConfiguration implements ClientConfiguration {
 
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
-    @Secret private String redirectUrl;
+    @AgentConfigParam private String redirectUrl;
 
     public String getClientId() {
         Preconditions.checkNotNull(
