@@ -37,10 +37,10 @@ public class CaixaLoanAccountFetcher
     private List<LoanAccount> fetchMortgages() {
         return apiClient.fetchMortgageLoanAccounts().getAccounts().stream()
                 .map(
-                        loanAcc ->
-                                loanAcc.mortgageToTinkAccount(
+                        loanAccount ->
+                                loanAccount.mortgageToTinkAccount(
                                         apiClient.fetchMortgageDetails(
-                                                loanAcc.getFullAccountKey())))
+                                                loanAccount.getFullAccountKey())))
                 .collect(Collectors.toList());
     }
 

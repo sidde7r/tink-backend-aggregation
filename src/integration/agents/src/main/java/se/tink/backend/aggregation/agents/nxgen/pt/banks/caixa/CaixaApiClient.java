@@ -129,40 +129,34 @@ public class CaixaApiClient {
 
     public MortgageDetailsResponse fetchMortgageDetails(String fullAccountKey) {
         return createBaseRequest(
-                        new URL(
-                                Urls.FETCH_MORTGAGE_DETAILS
-                                        .parameter(Parameters.ACCOUNT_KEY, fullAccountKey)
-                                        .get()
-                                        .replace("+", ENCODED_SPACE)))
+                        Urls.FETCH_MORTGAGE_DETAILS.parameter(
+                                Parameters.ACCOUNT_KEY, fullAccountKey))
                 .get(MortgageDetailsResponse.class);
     }
 
     public MortgageInstallmentsResponse fetchMortgageInstallments(
             String fullAccountKey, String pageKey) {
         return createBaseRequest(
-                        new URL(
-                                Urls.FETCH_MORTGAGE_INSTALLMENTS
-                                        .parameter(Parameters.ACCOUNT_KEY, fullAccountKey)
-                                        .get()
-                                        .replace("+", ENCODED_SPACE)))
+                        Urls.FETCH_MORTGAGE_INSTALLMENTS.parameter(
+                                Parameters.ACCOUNT_KEY, fullAccountKey))
                 .queryParam(QueryParams.PAGE_KEY, pageKey)
                 .get(MortgageInstallmentsResponse.class);
     }
 
     private URL buildFetchAccountDetailsUrl(String accountKey) {
-        return new URL(
-                Urls.FETCH_ACCOUNT_DETAILS
-                        .parameter(Parameters.ACCOUNT_KEY, accountKey)
-                        .get()
-                        .replace("+", ENCODED_SPACE));
+        return Urls.FETCH_ACCOUNT_DETAILS.parameter(Parameters.ACCOUNT_KEY, accountKey);
     }
 
     private RequestBuilder createBaseRequest(URL url) {
         return httpClient
-                .request(url)
+                .request(encodeUrl(url))
                 .accept(HeaderValues.ACCEPT)
                 .header(HeaderKeys.X_CGD_APP_DEVICE, HeaderValues.DEVICE_NAME)
                 .header(HeaderKeys.X_CGD_APP_NAME, HeaderValues.APP_NAME)
                 .header(HeaderKeys.X_CGD_APP_VERSION, HeaderValues.APP_VERSION);
+    }
+
+    private URL encodeUrl(URL originalUrl) {
+        return new URL(originalUrl.get().replace("+", ENCODED_SPACE));
     }
 }
