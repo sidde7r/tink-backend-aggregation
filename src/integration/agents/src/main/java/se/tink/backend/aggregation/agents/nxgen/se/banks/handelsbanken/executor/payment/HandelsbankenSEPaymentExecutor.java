@@ -78,7 +78,7 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                 sessionStorage
                         .applicationEntryPoint()
                         .map(client::paymentContext)
-                        .orElseThrow(() -> exception(PAYMENT_CREATE_FAILED));
+                        .orElseThrow(() -> paymentFailedException(PAYMENT_CREATE_FAILED));
         verifySourceAccount(transfer.getSource(), context);
 
         PaymentRecipient paymentRecipient = verifyRecipient(transfer.getDestination(), context);
@@ -92,7 +92,8 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
         PaymentDetails paymentDetails =
                 fetchPaymentDetails(
                         transfer.getOriginalTransfer()
-                                .orElseThrow((() -> exception(PAYMENT_UPDATE_FAILED))));
+                                .orElseThrow(
+                                        (() -> paymentFailedException(PAYMENT_UPDATE_FAILED))));
 
         updateIfChanged(transfer, paymentDetails);
     }
@@ -116,7 +117,7 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                             return accountNumber.equals(sourceNumber);
                         })
                 .findFirst()
-                .orElseThrow(() -> exception(PAYMENT_UPDATE_FAILED));
+                .orElseThrow(() -> paymentFailedException(PAYMENT_UPDATE_FAILED));
     }
 
     private PaymentRecipient verifyRecipient(
@@ -146,13 +147,15 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
 
         switch (validationResult.getAllowedType()) {
             case OCR:
-                validationResult.getValidOcr().orElseThrow(() -> exception(INVALID_OCR));
+                validationResult
+                        .getValidOcr()
+                        .orElseThrow(() -> paymentFailedException(INVALID_OCR));
                 break;
             case MESSAGE: // Intentional fallthrough
             default:
                 validationResult
                         .getValidOcr()
-                        .orElseThrow(() -> exception(INVALID_DESTINATION_MESSAGE));
+                        .orElseThrow(() -> paymentFailedException(INVALID_DESTINATION_MESSAGE));
         }
     }
 
@@ -160,7 +163,7 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
         return sessionStorage
                 .applicationEntryPoint()
                 .map(client::pendingTransactions)
-                .orElseThrow((() -> exception(PAYMENT_UPDATE_FAILED)))
+                .orElseThrow((() -> paymentFailedException(PAYMENT_UPDATE_FAILED)))
                 .getPendingTransactionStream()
                 .map(client::paymentDetails)
                 .filter(Optional::isPresent)
@@ -171,17 +174,17 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                                         originalTransfer.getHash(),
                                         paymentDetails1.toTransfer().getHash()))
                 .findFirst()
-                .orElseThrow(() -> exception(PAYMENT_NO_MATCHES));
+                .orElseThrow(() -> paymentFailedException(PAYMENT_NO_MATCHES));
     }
 
     private void signTransfer(Optional<URL> url, PaymentSignRequest paymentSignRequest) {
 
         TransferSignResponse transferSignResponse =
                 url.map(requestUrl -> client.signTransfer(requestUrl, paymentSignRequest))
-                        .orElseThrow(() -> exception(PAYMENT_CREATE_FAILED));
+                        .orElseThrow(() -> paymentFailedException(PAYMENT_CREATE_FAILED));
 
         if (!transferSignResponse.getErrors().isEmpty()) {
-            exception(PAYMENT_CREATE_FAILED);
+            paymentFailedException(PAYMENT_CREATE_FAILED);
         }
 
         confirmTransfer(transferSignResponse, null);
@@ -265,7 +268,8 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
         }
 
         Transfer originalTransfer =
-                transfer.getOriginalTransfer().orElseThrow(() -> exception(PAYMENT_UPDATE_FAILED));
+                transfer.getOriginalTransfer()
+                        .orElseThrow(() -> paymentFailedException(PAYMENT_UPDATE_FAILED));
 
         if (!Objects.equals(originalTransfer.getHash(), transfer.getHash())) {
             isUpdated = true;
@@ -280,7 +284,7 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
 
             TransferSignResponse response =
                     client.updatePayment(updatablePayment, UpdatePaymentRequest.create(transfer))
-                            .orElseThrow(() -> exception(PAYMENT_UPDATE_FAILED));
+                            .orElseThrow(() -> paymentFailedException(PAYMENT_UPDATE_FAILED));
 
             confirmTransfer(response, null);
         }
@@ -296,50 +300,50 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
         }
 
         if (!updatablePayment.isChangeAllowed()) {
-            throw exception(PAYMENT_UPDATE_NOT_ALLOWED);
+            throw paymentFailedException(PAYMENT_UPDATE_NOT_ALLOWED);
         }
 
         DetailedPermissions permissions = updatablePayment.getDetailedPermissions();
 
         if (!permissions.isChangeAmount()
                 && !transfer.getAmount().equals(originalTransfer.getAmount())) {
-            throw exception(PAYMENT_UPDATE_AMOUNT);
+            throw paymentFailedException(PAYMENT_UPDATE_AMOUNT);
         }
 
         String newDueDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(transfer.getDueDate());
         String originalDueDate =
                 ThreadSafeDateFormat.FORMATTER_DAILY.format(originalTransfer.getDueDate());
         if (!permissions.isChangeDate() && !newDueDate.equals(originalDueDate)) {
-            throw exception(PAYMENT_UPDATE_DUEDATE);
+            throw paymentFailedException(PAYMENT_UPDATE_DUEDATE);
         }
 
         if (!permissions.isChangeMessage()
                 && !Objects.equals(
                         transfer.getDestinationMessage(),
                         originalTransfer.getDestinationMessage())) {
-            throw exception(PAYMENT_UPDATE_DESTINATION_MESSAGE);
+            throw paymentFailedException(PAYMENT_UPDATE_DESTINATION_MESSAGE);
         }
 
         if (!permissions.isChangeFromAccount()
                 && !Objects.equals(transfer.getSource(), originalTransfer.getSource())) {
-            throw exception(PAYMENT_UPDATE_SOURCE);
+            throw paymentFailedException(PAYMENT_UPDATE_SOURCE);
         }
 
         // Source message never editable in SHB API, therefore we always fail if user tries to edit.
         if (!Objects.equals(transfer.getSourceMessage(), originalTransfer.getSourceMessage())) {
-            throw exception(PAYMENT_UPDATE_SOURCE_MESSAGE);
+            throw paymentFailedException(PAYMENT_UPDATE_SOURCE_MESSAGE);
         }
 
         // Destination never editable in SHB API, therefore we always fail if user tries to edit.
         if (!Objects.equals(
                 transfer.getDestination().getIdentifier(),
                 originalTransfer.getDestination().getIdentifier())) {
-            throw exception(PAYMENT_UPDATE_DESTINATION);
+            throw paymentFailedException(PAYMENT_UPDATE_DESTINATION);
         }
     }
 
     // A lot of exceptions are thrown in this executor, this method saves us a lot of lines
-    private TransferExecutionException exception(
+    private TransferExecutionException paymentFailedException(
             TransferExecutionException.EndUserMessage endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(endUserMessage)
