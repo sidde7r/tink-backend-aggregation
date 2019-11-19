@@ -8,6 +8,8 @@ public final class SecretsNamesValidationRequest {
     private Set<String> excludedSecretsNames;
     private Set<String> sensitiveSecretsNames;
     private Set<String> excludedSensitiveSecretsNames;
+    private Set<String> agentConfigParamNames;
+    private Set<String> excludedAgentConfigParamNames;
 
     public SecretsNamesValidationRequest() {}
 
@@ -16,12 +18,16 @@ public final class SecretsNamesValidationRequest {
             Set<String> secretsNames,
             Set<String> excludedSecretsNames,
             Set<String> sensitiveSecretsNames,
-            Set<String> excludedSensitiveSecretsNames) {
+            Set<String> excludedSensitiveSecretsNames,
+            Set<String> agentConfigParamNames,
+            Set<String> excludedAgentConfigParamNames) {
         this.financialInstitutionId = financialInstitutionId;
         this.secretsNames = secretsNames;
         this.excludedSecretsNames = excludedSecretsNames;
         this.sensitiveSecretsNames = sensitiveSecretsNames;
         this.excludedSensitiveSecretsNames = excludedSensitiveSecretsNames;
+        this.agentConfigParamNames = agentConfigParamNames;
+        this.excludedAgentConfigParamNames = excludedAgentConfigParamNames;
     }
 
     public String getFinancialInstitutionId() {
@@ -42,5 +48,13 @@ public final class SecretsNamesValidationRequest {
 
     public Set<String> getExcludedSensitiveSecretsNames() {
         return excludedSensitiveSecretsNames;
+    }
+
+    public Set<String> getAgentConfigParamNames() {
+        return agentConfigParamNames;
+    }
+
+    public Set<String> getExcludedAgentConfigParamNames() {
+        return excludedAgentConfigParamNames;
     }
 }

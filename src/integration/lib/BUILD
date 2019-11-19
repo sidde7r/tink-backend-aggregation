@@ -45,6 +45,7 @@ java_library(
         "//src/integration/payment:rpc",
         "//src/integration/signableoperation:enums",
         "//src/integration/tpp_secrets_service/client",
+        "//src/integration/tpp_secrets_service/client:entities",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",

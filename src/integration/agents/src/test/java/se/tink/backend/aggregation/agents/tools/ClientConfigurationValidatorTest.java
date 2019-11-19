@@ -140,23 +140,39 @@ public class ClientConfigurationValidatorTest {
         Set<String> excludedSensitiveSecretsNames =
                 ImmutableSet.<String>builder().add("sensitiveSecret3").build();
 
+        Set<String> agentConfigParamNames =
+                ImmutableSet.<String>builder()
+                        .add("agentConfigParam1")
+                        .add("agentConfigParam2")
+                        .add("agentConfigParam3")
+                        .add("redirectUrls")
+                        .build();
+
+        Set<String> excludedAgentConfigParamNames =
+                ImmutableSet.<String>builder().add("agentConfigParam3").build();
+
         SecretsNamesValidationResponse response =
                 clientConfigurationValidator.validate(
                         secretsNames,
                         excludedSecretsNames,
                         sensitiveSecretsNames,
-                        excludedSensitiveSecretsNames);
+                        excludedSensitiveSecretsNames,
+                        agentConfigParamNames,
+                        excludedAgentConfigParamNames);
 
         assertThat(response.isValid()).isEqualTo(false);
         assertThat(response.getInvalidSecretsNames()).isEmpty();
         assertThat(response.getInvalidSensitiveSecretsNames()).isEmpty();
+        assertThat(response.getInvalidAgentConfigParamNames()).isEmpty();
         assertThat(response.getMissingSecretsNames()).containsExactly("secret4");
         assertThat(response.getMissingSensitiveSecretsNames()).containsExactly("sensitiveSecret4");
+        assertThat(response.getMissingAgentConfigParamNames()).containsExactly("agentConfigParam4");
         assertThat(response.getValidationResultMessage())
                 .isEqualTo(
                         "Secrets are wrong.\n"
                                 + "The following secrets are missing : [secret4]\n"
-                                + "The following sensitive secrets are missing : [sensitiveSecret4]\n");
+                                + "The following sensitive secrets are missing : [sensitiveSecret4]\n"
+                                + "The following agent config parameters are missing : [agentConfigParam4]\n");
     }
 
     @Test
@@ -185,23 +201,39 @@ public class ClientConfigurationValidatorTest {
         Set<String> excludedSensitiveSecretsNames =
                 ImmutableSet.<String>builder().add("sensitiveSecret3").build();
 
+        Set<String> agentConfigParamNames =
+                ImmutableSet.<String>builder()
+                        .add("agentConfigParam1")
+                        .add("agentConfigParam2")
+                        .add("agentConfigParam3")
+                        .add("redirectUrls")
+                        .build();
+
+        Set<String> excludedAgentConfigParamNames =
+                ImmutableSet.<String>builder().add("agentConfigParam3").build();
+
         SecretsNamesValidationResponse response =
                 clientConfigurationValidator.validate(
                         secretsNames,
                         excludedSecretsNames,
                         sensitiveSecretsNames,
-                        excludedSensitiveSecretsNames);
+                        excludedSensitiveSecretsNames,
+                        agentConfigParamNames,
+                        excludedAgentConfigParamNames);
 
         assertThat(response.isValid()).isEqualTo(false);
         assertThat(response.getMissingSecretsNames()).isEmpty();
         assertThat(response.getMissingSensitiveSecretsNames()).isEmpty();
+        assertThat(response.getMissingAgentConfigParamNames()).isEmpty();
         assertThat(response.getInvalidSecretsNames()).containsExactly("secret2");
         assertThat(response.getInvalidSensitiveSecretsNames()).containsExactly("sensitiveSecret2");
+        assertThat(response.getInvalidAgentConfigParamNames()).containsExactly("agentConfigParam2");
         assertThat(response.getValidationResultMessage())
                 .isEqualTo(
                         "Secrets are wrong.\n"
                                 + "The following secrets should not be present : [secret2]\n"
-                                + "The following sensitive secrets should not be present : [sensitiveSecret2]\n");
+                                + "The following sensitive secrets should not be present : [sensitiveSecret2]\n"
+                                + "The following agent config parameters should not be present : [agentConfigParam2]\n");
     }
 
     @Test
@@ -230,25 +262,42 @@ public class ClientConfigurationValidatorTest {
         Set<String> excludedSensitiveSecretsNames =
                 ImmutableSet.<String>builder().add("sensitiveSecret3").build();
 
+        Set<String> agentConfigParamNames =
+                ImmutableSet.<String>builder()
+                        .add("agentConfigParam1")
+                        .add("agentConfigParam2")
+                        .add("agentConfigParam3")
+                        .add("redirectUrls")
+                        .build();
+
+        Set<String> excludedAgentConfigParamNames =
+                ImmutableSet.<String>builder().add("agentConfigParam3").build();
+
         SecretsNamesValidationResponse response =
                 clientConfigurationValidator.validate(
                         secretsNames,
                         excludedSecretsNames,
                         sensitiveSecretsNames,
-                        excludedSensitiveSecretsNames);
+                        excludedSensitiveSecretsNames,
+                        agentConfigParamNames,
+                        excludedAgentConfigParamNames);
 
         assertThat(response.isValid()).isEqualTo(false);
         assertThat(response.getMissingSecretsNames()).containsExactly("secret4");
         assertThat(response.getMissingSensitiveSecretsNames()).containsExactly("sensitiveSecret4");
+        assertThat(response.getMissingAgentConfigParamNames()).containsExactly("agentConfigParam4");
         assertThat(response.getInvalidSecretsNames()).containsExactly("secret2");
         assertThat(response.getInvalidSensitiveSecretsNames()).containsExactly("sensitiveSecret2");
+        assertThat(response.getInvalidAgentConfigParamNames()).containsExactly("agentConfigParam2");
         assertThat(response.getValidationResultMessage())
                 .isEqualTo(
                         "Secrets are wrong.\n"
                                 + "The following secrets should not be present : [secret2]\n"
                                 + "The following secrets are missing : [secret4]\n"
                                 + "The following sensitive secrets should not be present : [sensitiveSecret2]\n"
-                                + "The following sensitive secrets are missing : [sensitiveSecret4]\n");
+                                + "The following sensitive secrets are missing : [sensitiveSecret4]\n"
+                                + "The following agent config parameters should not be present : [agentConfigParam2]\n"
+                                + "The following agent config parameters are missing : [agentConfigParam4]\n");
     }
 
     @Test
@@ -277,18 +326,33 @@ public class ClientConfigurationValidatorTest {
         Set<String> excludedSensitiveSecretsNames =
                 ImmutableSet.<String>builder().add("sensitiveSecret3").build();
 
+        Set<String> agentConfigParamNames =
+                ImmutableSet.<String>builder()
+                        .add("agentConfigParam1")
+                        .add("agentConfigParam2")
+                        .add("agentConfigParam3")
+                        .add("redirectUrls")
+                        .build();
+
+        Set<String> excludedAgentConfigParamNames =
+                ImmutableSet.<String>builder().add("agentConfigParam3").build();
+
         SecretsNamesValidationResponse response =
                 clientConfigurationValidator.validate(
                         secretsNames,
                         excludedSecretsNames,
                         sensitiveSecretsNames,
-                        excludedSensitiveSecretsNames);
+                        excludedSensitiveSecretsNames,
+                        agentConfigParamNames,
+                        excludedAgentConfigParamNames);
 
         assertThat(response.isValid()).isEqualTo(true);
         assertThat(response.getMissingSecretsNames()).isEmpty();
         assertThat(response.getMissingSensitiveSecretsNames()).isEmpty();
+        assertThat(response.getMissingAgentConfigParamNames()).isEmpty();
         assertThat(response.getInvalidSecretsNames()).isEmpty();
         assertThat(response.getInvalidSensitiveSecretsNames()).isEmpty();
+        assertThat(response.getInvalidAgentConfigParamNames()).isEmpty();
         assertThat(response.getValidationResultMessage())
                 .isEqualTo("Secrets names validated correctly.");
     }
@@ -321,6 +385,13 @@ public class ClientConfigurationValidatorTest {
                                 .add("sensitiveSecret2")
                                 .add("redirectUrl")
                                 .build());
+        when(mockClientConfigurationMetaInfoHandler.getAgentConfigParamFieldsNames())
+                .thenReturn(
+                        ImmutableSet.<String>builder()
+                                .add("agentConfigParam1")
+                                .add("agentConfigParam2")
+                                .add("redirectUrl")
+                                .build());
         when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
                 .thenCallRealMethod();
 
@@ -347,6 +418,14 @@ public class ClientConfigurationValidatorTest {
                                 .add("sensitiveSecret4")
                                 .add("redirectUrl")
                                 .build());
+        when(mockClientConfigurationMetaInfoHandler.getAgentConfigParamFieldsNames())
+                .thenReturn(
+                        ImmutableSet.<String>builder()
+                                .add("agentConfigParam1")
+                                .add("agentConfigParam2")
+                                .add("agentConfigParam4")
+                                .add("redirectUrl")
+                                .build());
         when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
                 .thenCallRealMethod();
 
@@ -364,6 +443,12 @@ public class ClientConfigurationValidatorTest {
                 .thenReturn(
                         ImmutableSet.<String>builder()
                                 .add("sensitiveSecret1")
+                                .add("redirectUrl")
+                                .build());
+        when(mockClientConfigurationMetaInfoHandler.getAgentConfigParamFieldsNames())
+                .thenReturn(
+                        ImmutableSet.<String>builder()
+                                .add("agentConfigParam1")
                                 .add("redirectUrl")
                                 .build());
         when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
@@ -388,6 +473,13 @@ public class ClientConfigurationValidatorTest {
                         ImmutableSet.<String>builder()
                                 .add("sensitiveSecret1")
                                 .add("sensitiveSecret4")
+                                .add("redirectUrl")
+                                .build());
+        when(mockClientConfigurationMetaInfoHandler.getAgentConfigParamFieldsNames())
+                .thenReturn(
+                        ImmutableSet.<String>builder()
+                                .add("agentConfigParam1")
+                                .add("agentConfigParam4")
                                 .add("redirectUrl")
                                 .build());
         when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))

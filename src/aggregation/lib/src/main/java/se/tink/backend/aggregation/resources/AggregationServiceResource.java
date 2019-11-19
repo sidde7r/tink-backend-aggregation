@@ -297,6 +297,12 @@ public class AggregationServiceResource implements AggregationService {
         Preconditions.checkNotNull(
                 request.getExcludedSensitiveSecretsNames(),
                 "ExcludedSensitiveSecretsNames in SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getAgentConfigParamNames(),
+                "AgentConfigParamNames in SecretsNamesValidationRequest cannot be null.");
+        Preconditions.checkNotNull(
+                request.getExcludedAgentConfigParamNames(),
+                "ExcludedAgentConfigParamNames in SecretsNamesValidationRequest cannot be null.");
 
         List<ProviderConfiguration> allProviders =
                 providerConfigurationService.list(
@@ -323,6 +329,8 @@ public class AggregationServiceResource implements AggregationService {
                         request.getSecretsNames(),
                         request.getExcludedSecretsNames(),
                         request.getSensitiveSecretsNames(),
-                        request.getExcludedSensitiveSecretsNames());
+                        request.getExcludedSensitiveSecretsNames(),
+                        request.getAgentConfigParamNames(),
+                        request.getExcludedAgentConfigParamNames());
     }
 }

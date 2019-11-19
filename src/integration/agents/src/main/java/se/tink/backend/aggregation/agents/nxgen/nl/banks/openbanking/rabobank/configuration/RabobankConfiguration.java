@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -18,7 +19,7 @@ public final class RabobankConfiguration implements ClientConfiguration {
     @JsonProperty @SensitiveSecret private String clientSecret;
     @JsonProperty @Secret private String clientSSLKeyPassword;
     @JsonProperty @Secret private String clientSSLP12;
-    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String qsealcPem;
     private String certificateId;
 

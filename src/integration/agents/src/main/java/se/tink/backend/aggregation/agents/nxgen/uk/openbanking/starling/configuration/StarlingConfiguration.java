@@ -7,6 +7,7 @@ import java.security.PrivateKey;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -23,7 +24,7 @@ public class StarlingConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String keyUid;
     @JsonProperty @Secret private String signingKey;
-    @JsonProperty @Secret private String redirectUrl;
+    @JsonProperty @AgentConfigParam private String redirectUrl;
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(

@@ -20,7 +20,7 @@ redirectUrls-description: |2
     request, the first one from the list will be used.
 
 redirectUrls-example: |2
-    "[\"https://api.tink.se/api/v1/credentials/third-party/callback\", \"https://main.staging.fakeenvironment.tink.se/api/v1/credentials/third-party/callback\"]"
+    ["https://api.tink.se/api/v1/credentials/third-party/callback", "https://main.staging.fakeenvironment.tink.se/api/v1/credentials/third-party/callback"]
 
 clientId-description: |2
     From https://www.oauth.com/oauth2-servers/client-registration/client-id-secret/: The
@@ -44,3 +44,11 @@ clientSecret-description: |2
 
 clientSecret-example: |2
     "042cfdf1234567890ad83d622d7563aa2412345678900d8fd891c490f183c6da"
+
+scopes-description: |2
+    These are the service scopes that PSD2 regulates.
+    From https://ec.europa.eu/newsroom/fisma/item-detail.cfm?item_id=607684&newsletter_id=166&utm_source=fisma_newsletter&utm_medium=email&utm_campaign=Finance%20&utm_content=PSD&lang=en:
+    The new services that PSD2 regulates are payment initiation services (PIS) and account information services (AIS).
+
+scopes-example: |2
+    ["AIS", "PIS"]

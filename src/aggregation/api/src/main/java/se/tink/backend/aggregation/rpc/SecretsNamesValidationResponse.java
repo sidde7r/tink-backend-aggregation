@@ -8,22 +8,30 @@ public final class SecretsNamesValidationResponse {
     private Set<String> missingSecretsNames;
     private Set<String> invalidSensitiveSecretsNames;
     private Set<String> missingSensitiveSecretsNames;
+    private Set<String> invalidAgentConfigParamNames;
+    private Set<String> missingAgentConfigParamNames;
     private String validationResultMessage;
 
     public SecretsNamesValidationResponse(
             Set<String> invalidSecretsNames,
             Set<String> missingSecretsNames,
             Set<String> invalidSensitiveSecretsNames,
-            Set<String> missingSensitiveSecretsNames) {
+            Set<String> missingSensitiveSecretsNames,
+            Set<String> invalidAgentConfigParamNames,
+            Set<String> missingAgentConfigParamNames) {
         this.valid =
                 invalidSecretsNames.isEmpty()
                         && missingSecretsNames.isEmpty()
                         && invalidSecretsNames.isEmpty()
-                        && missingSensitiveSecretsNames.isEmpty();
+                        && missingSensitiveSecretsNames.isEmpty()
+                        && invalidAgentConfigParamNames.isEmpty()
+                        && missingAgentConfigParamNames.isEmpty();
         this.invalidSecretsNames = invalidSecretsNames;
         this.missingSecretsNames = missingSecretsNames;
         this.invalidSensitiveSecretsNames = invalidSensitiveSecretsNames;
         this.missingSensitiveSecretsNames = missingSensitiveSecretsNames;
+        this.invalidAgentConfigParamNames = invalidAgentConfigParamNames;
+        this.missingAgentConfigParamNames = missingAgentConfigParamNames;
         this.validationResultMessage = assembleValidationResultMessage();
     }
 
@@ -49,6 +57,14 @@ public final class SecretsNamesValidationResponse {
 
     public String getValidationResultMessage() {
         return validationResultMessage;
+    }
+
+    public Set<String> getInvalidAgentConfigParamNames() {
+        return invalidAgentConfigParamNames;
+    }
+
+    public Set<String> getMissingAgentConfigParamNames() {
+        return missingAgentConfigParamNames;
     }
 
     private String assembleValidationResultMessage() {
@@ -78,6 +94,18 @@ public final class SecretsNamesValidationResponse {
                 sb.append(
                         "The following sensitive secrets are missing : "
                                 + missingSensitiveSecretsNames.toString()
+                                + "\n");
+            }
+            if (!invalidAgentConfigParamNames.isEmpty()) {
+                sb.append(
+                        "The following agent config parameters should not be present : "
+                                + invalidAgentConfigParamNames.toString()
+                                + "\n");
+            }
+            if (!missingAgentConfigParamNames.isEmpty()) {
+                sb.append(
+                        "The following agent config parameters are missing : "
+                                + missingAgentConfigParamNames.toString()
                                 + "\n");
             }
             return sb.toString();

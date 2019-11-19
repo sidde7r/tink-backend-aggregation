@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.agents.tools;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -134,8 +136,15 @@ public class ClientConfigurationTemplateBuilder {
 
         JsonObject jsonSecrets = getSecretFields(fieldsDescriptionsAndExamples);
         JsonObject jsonSensitive = getSensitiveFields(fieldsDescriptionsAndExamples);
+        JsonObject jsonAgentConfigParam = getAgentConfigParamFields(fieldsDescriptionsAndExamples);
         jsonConfigurationTemplate.add("secrets", jsonSecrets);
         jsonConfigurationTemplate.add("sensitive", jsonSensitive);
+        jsonAgentConfigParam.entrySet().stream()
+                .forEach(
+                        agentConfigParamEntry ->
+                                jsonConfigurationTemplate.add(
+                                        agentConfigParamEntry.getKey(),
+                                        agentConfigParamEntry.getValue()));
 
         return jsonConfigurationTemplates;
     }
@@ -173,6 +182,33 @@ public class ClientConfigurationTemplateBuilder {
                                                 secretField, fieldsDescriptionsAndExamples)));
 
         return secretFieldsJson;
+    }
+
+    private JsonObject getAgentConfigParamFields(
+            Map<String, String> fieldsDescriptionsAndExamples) {
+        JsonObject agentConfigParamJson = new JsonObject();
+
+        Set<Field> agentConfigParamFieldsSet =
+                clientConfigurationMetaInfoHandler.getAgentConfigParamFields();
+
+        for (Field field : agentConfigParamFieldsSet) {
+            String descriptionAndExample =
+                    getDescriptionAndExample(field, fieldsDescriptionsAndExamples);
+            try {
+                List<String> examples = (new Gson()).fromJson(descriptionAndExample, List.class);
+                JsonArray examplesJson = new JsonArray();
+                examples.stream().forEach(example -> examplesJson.add(new JsonPrimitive(example)));
+                agentConfigParamJson.add(
+                        clientConfigurationMetaInfoHandler.fieldToFieldName.apply(field),
+                        examplesJson);
+            } catch (Exception e) {
+                agentConfigParamJson.addProperty(
+                        clientConfigurationMetaInfoHandler.fieldToFieldName.apply(field),
+                        descriptionAndExample);
+            }
+        }
+
+        return agentConfigParamJson;
     }
 
     private String getDescriptionAndExample(

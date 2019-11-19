@@ -24,7 +24,6 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,6 +32,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
 import se.tink.backend.secretservice.grpc.GetAllSecretsResponse;
 import se.tink.backend.secretservice.grpc.GetSecretsRequest;
 import se.tink.backend.secretservice.grpc.InternalSecretsServiceGrpc;
@@ -114,7 +114,7 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
     }
 
     @Override
-    public Optional<Map<String, String>> getAllSecrets(
+    public Optional<SecretsEntityCore> getAllSecrets(
             String financialInstitutionId, String appId, String clusterId) {
 
         if (!enabled) {
@@ -132,16 +132,23 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
         GetSecretsRequest getSecretsRequest =
                 buildRequest(financialInstitutionId, appId, clusterId);
 
-        GetAllSecretsResponse allSecretsResponse =
+        GetAllSecretsResponse response =
                 internalSecretsServiceStub.getAllSecrets(getSecretsRequest);
 
         List<TppSecret> allSecretsList = new ArrayList<>();
-        allSecretsList.addAll(allSecretsResponse.getEncryptedSecretsList());
-        allSecretsList.addAll(allSecretsResponse.getSecretsList());
+        allSecretsList.addAll(response.getEncryptedSecretsList());
+        allSecretsList.addAll(response.getSecretsList());
 
         return Optional.of(
-                allSecretsList.stream()
-                        .collect(Collectors.toMap(TppSecret::getKey, TppSecret::getValue)));
+                new SecretsEntityCore.Builder()
+                        .setSecrets(
+                                allSecretsList.stream()
+                                        .collect(
+                                                Collectors.toMap(
+                                                        TppSecret::getKey, TppSecret::getValue)))
+                        .setRedirectUrls(response.getRedirectUrlsList())
+                        .setScopes(response.getScopesList())
+                        .build());
     }
 
     @Override
