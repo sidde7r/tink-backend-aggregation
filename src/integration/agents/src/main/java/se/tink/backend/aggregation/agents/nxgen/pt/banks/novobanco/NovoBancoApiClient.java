@@ -1,8 +1,35 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco;
 
+import static java.util.Objects.requireNonNull;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.FieldValues.DEFAULT_DEVICE_ID;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header.CONNECTION_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header.CONNECTION_VALUE;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header.ENCODING_VALUE;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header.NB_SIGNATURE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header.USER_AGENT_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header.USER_AGENT_VALUE;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.ACCOUNT_GENERAL_INFO_ID;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.AUTH_COOKIE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.DEVICE_ID_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.SESSION_COOKIE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOANS;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOAN_DETAILS;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.KEEP_ALIVE;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.LOGIN;
+
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.FieldValues;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.ServiceIds;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.detail.DigestCalc;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.detail.Login0SecretProvider;
@@ -28,31 +55,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
-
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.Objects.requireNonNull;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.FieldValues.DEFAULT_DEVICE_ID;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header.ENCODING_VALUE;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header.NB_SIGNATURE_KEY;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.ACCOUNT_GENERAL_INFO_ID;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.AUTH_COOKIE_KEY;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.DEVICE_ID_KEY;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.SESSION_COOKIE_KEY;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_ACCOUNTS;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOANS;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOAN_DETAILS;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.KEEP_ALIVE;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.LOGIN;
 
 public class NovoBancoApiClient {
 
@@ -201,9 +203,9 @@ public class NovoBancoApiClient {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.WILDCARD)
                 .acceptLanguage(Locale.UK)
-                .header(Header.CONNECTION_KEY, Header.CONNECTION_VALUE)
+                .header(CONNECTION_KEY, CONNECTION_VALUE)
                 .header(HttpHeaders.ACCEPT_ENCODING, ENCODING_VALUE)
-                .header(Header.USER_AGENT_KEY, Header.USER_AGENT_VALUE)
+                .header(USER_AGENT_KEY, USER_AGENT_VALUE)
                 .header(NB_SIGNATURE_KEY, digestCalc.calculateRequestDigest(requestPayload))
                 .body(requestPayload);
     }
