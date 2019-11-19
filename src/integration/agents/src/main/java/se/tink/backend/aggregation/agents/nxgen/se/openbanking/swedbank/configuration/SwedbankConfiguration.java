@@ -14,8 +14,8 @@ public class SwedbankConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
     @Secret private String redirectUrl;
-    private String qSealc;
-    private String keyIdBase64;
+    @Secret private String qSealc;
+    @Secret private String keyIdBase64;
 
     public String getQSealc() {
         Preconditions.checkNotNull(
