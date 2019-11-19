@@ -38,107 +38,11 @@ public class QuoteEntity {
     private MarketEntity market;
     private AssetType assetType;
 
-    public Long getAbsoluteVariation() {
-        return absoluteVariation;
-    }
-
-    public BigDecimal getAsk() {
-        return ask;
-    }
-
-    public Long getAvailableAmount() {
-        return availableAmount;
-    }
-
-    public Long getAvailableQuantity() {
-        return availableQuantity;
-    }
-
-    public Long getBid() {
-        return bid;
-    }
-
-    public Long getChange() {
-        return change;
-    }
-
-    public BigDecimal getClose() {
-        return close;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
     public Integer getDecimalPlaces() {
         return decimalPlaces;
     }
 
-    public Long getHigh() {
-        return high;
-    }
-
-    public String getIsin() {
-        return isin;
-    }
-
     public BigDecimal getLast() {
         return last;
-    }
-
-    public Long getLow() {
-        return low;
-    }
-
-    public Long getOpen() {
-        return open;
-    }
-
-    public String getPriceParametrization() {
-        return priceParametrization;
-    }
-
-    public Integer getPricePrecision() {
-        return pricePrecision;
-    }
-
-    public Integer getQuantityDecimalPlaces() {
-        return quantityDecimalPlaces;
-    }
-
-    public Date getQuoteDateTime() {
-        return quoteDateTime;
-    }
-
-    public Date getQuoteEndTime() {
-        return quoteEndTime;
-    }
-
-    public Date getQuoteStartTime() {
-        return quoteStartTime;
-    }
-
-    public Boolean getRealtimeValues() {
-        return realtimeValues;
-    }
-
-    public String getReutersId() {
-        return reutersId;
-    }
-
-    public Long getRiskClass() {
-        return riskClass;
-    }
-
-    public Long getSecuritiesId() {
-        return securitiesId;
-    }
-
-    public String getSecuritiesName() {
-        return securitiesName;
-    }
-
-    public Long getVolume() {
-        return volume;
     }
 }

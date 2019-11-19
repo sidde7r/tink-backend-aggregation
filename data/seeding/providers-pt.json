@@ -492,6 +492,39 @@
             "transactional": true,
             "tutorialUrl": null,
             "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
+            "className": "nxgen.pt.banks.novobanco.NovoBancoAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Novo Banco",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionName": "Novo Banco",
+            "groupDisplayName": "Novo Banco",
+            "multiFactor": false,
+            "name": "pt-novobanco-password",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "payload": "tink",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
         }
     ]
 }

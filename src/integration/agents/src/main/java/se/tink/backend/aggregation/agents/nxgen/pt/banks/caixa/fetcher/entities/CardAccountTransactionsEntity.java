@@ -14,28 +14,8 @@ public class CardAccountTransactionsEntity {
     private BigDecimal previousBalance;
     private List<CardTransactionEntity> transactions;
 
-    public BigDecimal getAutomaticDebit() {
-        return automaticDebit;
-    }
-
-    public BigDecimal getBalanceAfterStatementIssuance() {
-        return balanceAfterStatementIssuance;
-    }
-
     public BigDecimal getCreditTotal() {
         return creditTotal;
-    }
-
-    public BigDecimal getDebitTotal() {
-        return debitTotal;
-    }
-
-    public BigDecimal getMinimumPaymentAmount() {
-        return minimumPaymentAmount;
-    }
-
-    public BigDecimal getPreviousBalance() {
-        return previousBalance;
     }
 
     public List<CardTransactionEntity> getTransactions() {
