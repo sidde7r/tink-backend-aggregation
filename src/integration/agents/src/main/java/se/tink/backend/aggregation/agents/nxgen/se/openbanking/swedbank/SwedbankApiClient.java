@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -401,10 +400,8 @@ public final class SwedbankApiClient {
 
         return new HashMap<String, Object>() {
             {
-                put(BecConstants.HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
-                put(
-                        BecConstants.HeaderKeys.CONSENT_ID,
-                        persistentStorage.get(BecConstants.StorageKeys.CONSENT_ID));
+                put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
+                put(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT));
                 put(HeaderKeys.X_REQUEST_ID, requestId);
                 put(HeaderKeys.DATE, getFormattedDate(date));
                 put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
