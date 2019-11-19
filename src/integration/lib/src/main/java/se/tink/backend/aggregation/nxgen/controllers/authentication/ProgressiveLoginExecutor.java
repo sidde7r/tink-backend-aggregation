@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Field;
@@ -21,23 +20,24 @@ public final class ProgressiveLoginExecutor {
     }
 
     public void login() throws Exception {
-        SteppableAuthenticationResponse response =
+        SteppableAuthenticationResponse stepResponse =
                 agent.login(SteppableAuthenticationRequest.initialRequest());
-        while (response.getStep().isPresent()) {
-            response = agent.login(handleResponse(response.getStep().get(), response.getPayload()));
+        while (stepResponse.getStepIdentifier().isPresent()) {
+            stepResponse = agent.login(handleSupplementInformationRequest(stepResponse));
         }
     }
 
-    private SteppableAuthenticationRequest handleResponse(
-            final Class<? extends AuthenticationStep> step, final AuthenticationResponse payload)
-            throws Exception {
-
+    private SteppableAuthenticationRequest handleSupplementInformationRequest(
+            SteppableAuthenticationResponse stepResponse) throws Exception {
+        SupplementInformationRequester payload = stepResponse.getSupplementInformationRequester();
         if (payload.getThirdPartyAppPayload().isPresent()) {
             supplementalInformationController.openThirdPartyApp(
                     payload.getThirdPartyAppPayload().get());
 
             return SteppableAuthenticationRequest.subsequentRequest(
-                    step, AuthenticationRequest.empty());
+                    stepResponse.getStepIdentifier().get(),
+                    AuthenticationRequest.empty(),
+                    stepResponse.getPersistentData());
         }
 
         if (payload.getSupplementalWaitRequest().isPresent()) {
@@ -54,7 +54,9 @@ public final class ProgressiveLoginExecutor {
                                             ::exception); // todo: change this exception
 
             return SteppableAuthenticationRequest.subsequentRequest(
-                    step, AuthenticationRequest.fromCallbackData(callbackData));
+                    stepResponse.getStepIdentifier().get(),
+                    AuthenticationRequest.fromCallbackData(callbackData),
+                    stepResponse.getPersistentData());
         }
 
         if (payload.getFields().isPresent()) {
@@ -64,7 +66,9 @@ public final class ProgressiveLoginExecutor {
                             fields.toArray(new Field[fields.size()]));
 
             return SteppableAuthenticationRequest.subsequentRequest(
-                    step, AuthenticationRequest.fromUserInputs(new ArrayList<>(map.values())));
+                    stepResponse.getStepIdentifier().get(),
+                    AuthenticationRequest.fromUserInputs(map),
+                    stepResponse.getPersistentData());
         }
 
         throw new IllegalStateException("The authentication response payload contained nothing");

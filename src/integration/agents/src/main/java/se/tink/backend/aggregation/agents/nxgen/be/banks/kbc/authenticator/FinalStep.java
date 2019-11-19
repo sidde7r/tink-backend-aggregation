@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator;
 
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -10,8 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcDevice;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.EnrollDeviceRoundTwoResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 final class FinalStep implements AuthenticationStep {
@@ -29,7 +30,7 @@ final class FinalStep implements AuthenticationStep {
     }
 
     @Override
-    public AuthenticationResponse respond(final AuthenticationRequest request)
+    public SupplementInformationRequester respond(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         final String panNr =
                 kbcAuthenticator.verifyCredentialsNotNullOrEmpty(
@@ -40,7 +41,7 @@ final class FinalStep implements AuthenticationStep {
                         sessionStorage.get(KbcConstants.Encryption.AES_SESSION_KEY_KEY));
 
         final String signResponseCode =
-                request.getUserInputs().stream()
+                request.getUserInputsAsList().stream()
                         .filter(input -> !input.contains(" "))
                         .findAny()
                         .orElseThrow(IllegalStateException::new);
@@ -58,6 +59,13 @@ final class FinalStep implements AuthenticationStep {
 
         kbcAuthenticator.login(device);
 
-        return AuthenticationResponse.empty();
+        return SupplementInformationRequester.empty();
+    }
+
+    @Override
+    public Optional<SupplementInformationRequester> execute(
+            AuthenticationRequest request, Object persistentData)
+            throws AuthenticationException, AuthorizationException {
+        throw new AssertionError("Not yet implemented");
     }
 }

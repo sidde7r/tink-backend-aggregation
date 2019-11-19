@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator;
 
+import java.util.Optional;
 import java.util.UUID;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
@@ -15,8 +16,8 @@ import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.Di
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.DecryptActivationDataResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.InitializeRegistrationDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 
 final class FinalStep implements AuthenticationStep {
 
@@ -29,7 +30,7 @@ final class FinalStep implements AuthenticationStep {
     }
 
     @Override
-    public AuthenticationResponse respond(final AuthenticationRequest request)
+    public SupplementInformationRequester respond(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         final Credentials credentials = request.getCredentials();
 
@@ -54,7 +55,7 @@ final class FinalStep implements AuthenticationStep {
         final UUID deviceId = UUID.randomUUID();
         final String ucrid = storage.getUcrid().orElseThrow(IllegalStateException::new);
         final String responseCode =
-                request.getUserInputs().stream()
+                request.getUserInputsAsList().stream()
                         .filter(input -> !input.contains(" "))
                         .findAny()
                         .orElseThrow(IllegalStateException::new);
@@ -125,6 +126,13 @@ final class FinalStep implements AuthenticationStep {
 
         AxaCommonAuthenticator.authenticate(apiClient, storage);
 
-        return AuthenticationResponse.empty();
+        return SupplementInformationRequester.empty();
+    }
+
+    @Override
+    public Optional<SupplementInformationRequester> execute(
+            AuthenticationRequest request, Object persistentData)
+            throws AuthenticationException, AuthorizationException {
+        throw new AssertionError("Not yet implemented");
     }
 }

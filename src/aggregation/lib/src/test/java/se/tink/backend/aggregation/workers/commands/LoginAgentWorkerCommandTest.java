@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -100,7 +99,7 @@ public class LoginAgentWorkerCommandTest {
     public void executeForProgressiveAuthAgentShouldLogin() throws Exception {
         // given
         SteppableAuthenticationResponse steppableAuthenticationResponse =
-                SteppableAuthenticationResponse.finalResponse(AuthenticationResponse.empty());
+                SteppableAuthenticationResponse.finalResponse("");
         ProgressiveAuthAgent agent = Mockito.mock(ProgressiveAuthAgent.class);
         Mockito.when(agent.login(Mockito.any())).thenReturn(steppableAuthenticationResponse);
         prepareStateForLogin(agent);
