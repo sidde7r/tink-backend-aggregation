@@ -29,66 +29,6 @@ public class CardAccountEntity {
         return cards;
     }
 
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public String getCardCodeType() {
-        return cardCodeType;
-    }
-
-    public String getControlCardAccount() {
-        return controlCardAccount;
-    }
-
-    public Boolean getCorporateCardAccount() {
-        return corporateCardAccount;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getDepositAccount() {
-        return depositAccount;
-    }
-
-    public String getDepositAccountDescription() {
-        return depositAccountDescription;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Date getNextAnnuityDate() {
-        return nextAnnuityDate;
-    }
-
-    public String getPaymentOptionDescription() {
-        return paymentOptionDescription;
-    }
-
-    public String getProductDescription() {
-        return productDescription;
-    }
-
-    public String getProductImageUrl() {
-        return productImageUrl;
-    }
-
-    public String getStatementIssueDateDescription() {
-        return statementIssueDateDescription;
-    }
-
-    public String getStatementPaymentLimitDescription() {
-        return statementPaymentLimitDescription;
-    }
-
     public String getType() {
         return type;
     }

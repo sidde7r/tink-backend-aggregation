@@ -81,40 +81,8 @@ public class MortgageDetailsResponse {
     private String utilizationTermTypeDesc;
     private String warrantyCode;
 
-    public String getAccountOA() {
-        return accountOA;
-    }
-
-    public BigDecimal getActualInterestRate() {
-        return actualInterestRate;
-    }
-
-    public BigDecimal getAmountCharged() {
-        return amountCharged;
-    }
-
-    public BigDecimal getAmountCommissionPayed() {
-        return amountCommissionPayed;
-    }
-
     public BigDecimal getAmountContracted() {
         return amountContracted;
-    }
-
-    public BigDecimal getAmountDeferred() {
-        return amountDeferred;
-    }
-
-    public BigDecimal getAmountExpensesPayed() {
-        return amountExpensesPayed;
-    }
-
-    public BigDecimal getAmountExtraAmortizations() {
-        return amountExtraAmortizations;
-    }
-
-    public BigDecimal getAmountInterestPayed() {
-        return amountInterestPayed;
     }
 
     public BigDecimal getAmountNextInstallment() {
@@ -125,208 +93,16 @@ public class MortgageDetailsResponse {
         return amountOverdue;
     }
 
-    public BigDecimal getAmountPayed() {
-        return amountPayed;
-    }
-
-    public BigDecimal getAmountUsed() {
-        return amountUsed;
-    }
-
     public BigDecimal getAnualRate() {
         return anualRate;
-    }
-
-    public BigDecimal getAvailableAmount() {
-        return availableAmount;
-    }
-
-    public String getBonusClass() {
-        return bonusClass;
-    }
-
-    public Integer getBonusCode() {
-        return bonusCode;
-    }
-
-    public String getBonusCodeDesc() {
-        return bonusCodeDesc;
-    }
-
-    public BigDecimal getBonusRate() {
-        return bonusRate;
-    }
-
-    public String getBranchName() {
-        return branchName;
-    }
-
-    public Integer getDeferrementTermType() {
-        return deferrementTermType;
-    }
-
-    public String getDeferrementTermTypeDesc() {
-        return deferrementTermTypeDesc;
-    }
-
-    public String getFinancialSituation() {
-        return financialSituation;
-    }
-
-    public Integer getInstallmentPeriodicity() {
-        return installmentPeriodicity;
-    }
-
-    public String getInstallmentPeriodicityDesc() {
-        return installmentPeriodicityDesc;
-    }
-
-    public Integer getInstallmentsPeriodicity() {
-        return installmentsPeriodicity;
-    }
-
-    public String getIntallmentType() {
-        return intallmentType;
-    }
-
-    public Integer getLoanFinalityCode() {
-        return loanFinalityCode;
-    }
-
-    public String getLoanFinalityCodeDesc() {
-        return loanFinalityCodeDesc;
-    }
-
-    public String getLoanICPTStatus() {
-        return loanICPTStatus;
-    }
-
-    public String getLoanStatusOPCR() {
-        return loanStatusOPCR;
     }
 
     public String getLoanType() {
         return loanType;
     }
 
-    public String getLoanTypeOPRC() {
-        return loanTypeOPRC;
-    }
-
-    public BigDecimal getNominalTermInterestRate() {
-        return nominalTermInterestRate;
-    }
-
-    public Integer getNumberInstallmentsCollection() {
-        return numberInstallmentsCollection;
-    }
-
-    public Integer getNumberInstallmentsDebt() {
-        return numberInstallmentsDebt;
-    }
-
-    public Integer getNumberPayedInstallments() {
-        return numberPayedInstallments;
-    }
-
-    public Integer getOverdueInstallmentsNumber() {
-        return overdueInstallmentsNumber;
-    }
-
-    public Integer getPaymentTerm() {
-        return paymentTerm;
-    }
-
-    public String getPaymentTermType() {
-        return paymentTermType;
-    }
-
-    public String getPaymentTermTypeDesc() {
-        return paymentTermTypeDesc;
-    }
-
-    public BigDecimal getPercentageAmountDeferred() {
-        return percentageAmountDeferred;
-    }
-
-    public BigDecimal getPeriodicityInstallmentValue() {
-        return periodicityInstallmentValue;
-    }
-
-    public String getProduct() {
-        return product;
-    }
-
-    public BigDecimal getRateStampAmountPayed() {
-        return rateStampAmountPayed;
-    }
-
-    public String getRateType() {
-        return rateType;
-    }
-
-    public String getReferenceInterestRate() {
-        return referenceInterestRate;
-    }
-
-    public String getRefundTerm() {
-        return refundTerm;
-    }
-
-    public Integer getRefundTermType() {
-        return refundTermType;
-    }
-
-    public String getRefundTermTypeDesc() {
-        return refundTermTypeDesc;
-    }
-
-    public BigDecimal getSpread() {
-        return spread;
-    }
-
-    public String getSpreadSignal() {
-        return spreadSignal;
-    }
-
-    public Integer getTermDefferement() {
-        return termDefferement;
-    }
-
-    public Integer getTotalNumberInstallments() {
-        return totalNumberInstallments;
-    }
-
-    public Integer getUseTerm() {
-        return useTerm;
-    }
-
-    public Integer getUtilizationTermType() {
-        return utilizationTermType;
-    }
-
-    public String getUtilizationTermTypeDesc() {
-        return utilizationTermTypeDesc;
-    }
-
-    public String getWarrantyCode() {
-        return warrantyCode;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
     public Date getDateCreated() {
         return dateCreated;
-    }
-
-    public Date getDateNextInstallment() {
-        return dateNextInstallment;
-    }
-
-    public Date getDateNextInterestInstallment() {
-        return dateNextInterestInstallment;
     }
 
     public Date getLoanEndDate() {

@@ -16,39 +16,11 @@ public class CreditBalancesEntity {
     private String currency;
     private BigDecimal usedCredit;
 
-    public String getAssociatedFullDepositAccountKey() {
-        return associatedFullDepositAccountKey;
-    }
-
-    public BigDecimal getAuthorizations() {
-        return authorizations;
-    }
-
     public BigDecimal getAvailableCredit() {
         return availableCredit;
     }
 
-    public BigDecimal getBookBalance() {
-        return bookBalance;
-    }
-
-    public BigDecimal getCashAdvanceAvailableAmount() {
-        return cashAdvanceAvailableAmount;
-    }
-
-    public String getControlAccountNumber() {
-        return controlAccountNumber;
-    }
-
-    public BigDecimal getCreditLimit() {
-        return creditLimit;
-    }
-
     public String getCurrency() {
         return currency;
-    }
-
-    public BigDecimal getUsedCredit() {
-        return usedCredit;
     }
 }

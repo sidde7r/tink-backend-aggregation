@@ -29,10 +29,6 @@ public class AssetEntity {
     private BigDecimal totalBuyingAmount;
     private String tradingLocation;
 
-    public Integer getAccountingValuation() {
-        return accountingValuation;
-    }
-
     public String getAssetISIN() {
         return assetISIN;
     }
@@ -43,10 +39,6 @@ public class AssetEntity {
 
     public String getAssetName() {
         return assetName;
-    }
-
-    public String getAssetNumber() {
-        return assetNumber;
     }
 
     public AssetType getAssetType() {
@@ -69,51 +61,11 @@ public class AssetEntity {
         return quantityDecimalPlaces;
     }
 
-    public BigDecimal getQuote() {
-        return quote;
-    }
-
-    public String getQuoteDate() {
-        return quoteDate;
-    }
-
-    public String getTradingLocation() {
-        return tradingLocation;
-    }
-
     public MarketEntity getMarket() {
         return market;
     }
 
-    public BigDecimal getAccountingValuationCounterValue() {
-        return accountingValuationCounterValue;
-    }
-
-    public BigDecimal getAvailableAmount() {
-        return availableAmount;
-    }
-
-    public BigDecimal getAvailableValuationCounterValue() {
-        return availableValuationCounterValue;
-    }
-
     public BigDecimal getAverageBuyingUnitaryAmount() {
         return averageBuyingUnitaryAmount;
-    }
-
-    public Integer getQuoteDecimalPlaces() {
-        return quoteDecimalPlaces;
-    }
-
-    public BigDecimal getSettledAmount() {
-        return settledAmount;
-    }
-
-    public BigDecimal getSettledQuantity() {
-        return settledQuantity;
-    }
-
-    public BigDecimal getTotalBuyingAmount() {
-        return totalBuyingAmount;
     }
 }

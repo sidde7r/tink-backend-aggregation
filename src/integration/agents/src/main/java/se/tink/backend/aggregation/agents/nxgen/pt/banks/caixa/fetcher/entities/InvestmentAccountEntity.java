@@ -19,14 +19,6 @@ public final class InvestmentAccountEntity {
         return accountNumber;
     }
 
-    public String getIban() {
-        return iban;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
     public String getCurrency() {
         return currency;
     }
