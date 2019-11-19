@@ -9,6 +9,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.HttpHeaders;
 import org.eclipse.jetty.http.HttpStatus;
+import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.AnonymousLoginFormKeys;
+import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.AnonymousLoginFormValues;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.QueryParamValues;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Urls;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AnonymousLoginPasswordResponse;
@@ -36,11 +38,11 @@ public class NordnetPasswordAuthentication {
     private AnonymousLoginPasswordResponse anonymousLoginForPassword() throws LoginException {
         // This request will set the NOW cookie needed for subsequent requests
         MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
-        formData.add("username", "<<anonymous>>");
-        formData.add("password", "<<anonymous>>");
-        formData.add("service", QueryParamValues.CLIENT_ID);
-        formData.add("country", "SE");
-        formData.add("session_lang", "en");
+        formData.add(AnonymousLoginFormKeys.USERNAME, AnonymousLoginFormValues.ANONYMOUS);
+        formData.add(AnonymousLoginFormKeys.PASSWORD, AnonymousLoginFormValues.ANONYMOUS);
+        formData.add(AnonymousLoginFormKeys.SERVICE, QueryParamValues.CLIENT_ID);
+        formData.add(AnonymousLoginFormKeys.COUNTRY, AnonymousLoginFormValues.COUNTRY_SE);
+        formData.add(AnonymousLoginFormKeys.SESSION_LANGUAGE, AnonymousLoginFormValues.LANG_EN);
         ClientResponse response =
                 apiClient
                         .createClientRequest(
@@ -80,7 +82,9 @@ public class NordnetPasswordAuthentication {
         AuthenticateBasicLoginResponse loginResponse =
                 response.getEntity(AuthenticateBasicLoginResponse.class);
 
-        if (Objects.equals(loginResponse.getCode(), "NEXT_LOGIN_INVALID_LOGIN_PARAMETER")) {
+        if (Objects.equals(
+                loginResponse.getCode(),
+                NordnetConstants.Errors.NEXT_LOGIN_INVALID_LOGIN_PARAMETER)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
@@ -88,10 +92,12 @@ public class NordnetPasswordAuthentication {
 
         Preconditions.checkState(loginResponse.isLoggedIn(), "Expected user to be logged in");
         Preconditions.checkState(
-                Objects.equals(loginResponse.getSessionType(), "authenticated"),
+                Objects.equals(
+                        loginResponse.getSessionType(),
+                        NordnetConstants.Session.TYPE_AUTHENTICATED),
                 "Expected session to be of type authenticated");
 
-        String ntag = response.getHeaders().getFirst("ntag");
+        String ntag = response.getHeaders().getFirst(NordnetConstants.HeaderKeys.NTAG);
         Preconditions.checkNotNull(ntag, "Expected ntag header to exist for subsequent requests");
         Preconditions.checkNotNull(
                 loginResponse.getSessionKey(),

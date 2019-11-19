@@ -16,7 +16,25 @@ public class NordnetConstants {
                         "https://nneid\\.nordnet\\.se/std/method/nordnet\\.se/[a-zA-Z\\d]*/");
     }
 
+    static class AnonymousLoginFormKeys {
+        static final String USERNAME = "username";
+        static final String PASSWORD = "password";
+        static final String SERVICE = "service";
+        static final String COUNTRY = "country";
+        static final String SESSION_LANGUAGE = "session_lang";
+    }
+
+    static class AnonymousLoginFormValues {
+        static final String ANONYMOUS = "<<anonymous>>";
+        static final String COUNTRY_SE = "SE";
+        static final String LANG_EN = "en";
+    }
+
     static class Urls {
+
+        public static final String BANKID_ORDER_SUFFIX = "order";
+        public static final String BANKID_COLLECT_SUFFIX = "collect";
+        public static final String BANKID_COMPLETE_SUFFIX = "complete";
         static final String BASE_URL = "https://classic.nordnet.se";
         static final String AUTHENTICATION_BASIC_LOGIN_URL =
                 BASE_URL + "/api/2/authentication/basic/login";
@@ -43,5 +61,26 @@ public class NordnetConstants {
         static final String GET_ACCOUNTS_INFO_URL = BASE_URL + "/api/2/accounts/%s/info";
         static final String GET_POSITIONS_URL = BASE_URL + "/api/2/accounts/%s/positions";
         static final String GET_CUSTOMER_INFO_URL = BASE_URL + "/api/2/customers/contact_info";
+    }
+
+    static final class Errors {
+        static final String NEXT_LOGIN_INVALID_LOGIN_PARAMETER =
+                "NEXT_LOGIN_INVALID_LOGIN_PARAMETER";
+    }
+
+    static final class Session {
+
+        static final String TYPE_ANONYMOUS = "anonymous";
+        static final String TYPE_AUTHENTICATED = "authenticated";
+    }
+
+    static final class HeaderKeys {
+
+        public static final String NEXT_REFERRER = "NextReferrer";
+        static final String NTAG = "ntag";
+    }
+
+    static final class Saml {
+        static final String ARTIFACT = "artifact";
     }
 }

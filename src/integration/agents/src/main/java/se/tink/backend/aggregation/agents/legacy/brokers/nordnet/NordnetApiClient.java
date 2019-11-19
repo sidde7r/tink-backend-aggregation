@@ -24,6 +24,7 @@ import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Urls;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountInfoEntity;
@@ -75,7 +76,7 @@ public class NordnetApiClient {
     }
 
     private void setNextReferrer(MultivaluedMap<String, String> headers) {
-        String nextReferrer = headers.getFirst("NextReferrer");
+        String nextReferrer = headers.getFirst(NordnetConstants.HeaderKeys.NEXT_REFERRER);
 
         if (!Strings.isNullOrEmpty(nextReferrer)) {
             referrer = Urls.BASE_URL + nextReferrer;
@@ -169,7 +170,7 @@ public class NordnetApiClient {
             String url, MediaType contentType, Map<String, String> headers) {
         WebResource.Builder requestBuilder =
                 client.resource(url)
-                        .header("User-Agent", aggregator)
+                        .header(HttpHeaders.USER_AGENT, aggregator)
                         .accept(
                                 "text/html",
                                 "application/xhtml+xml",
@@ -186,10 +187,11 @@ public class NordnetApiClient {
             requestBuilder.header(header, headers.get(header));
         }
 
-        referrer.ifPresent(s -> requestBuilder.header("Referer", s));
+        referrer.ifPresent(s -> requestBuilder.header(HttpHeaders.REFERER, s));
 
         if (!Strings.isNullOrEmpty(accessToken)) {
-            requestBuilder.header("Authorization", String.format("Bearer %s", accessToken));
+            requestBuilder.header(
+                    HttpHeaders.AUTHORIZATION, String.format("Bearer %s", accessToken));
         }
 
         return requestBuilder;
@@ -206,7 +208,7 @@ public class NordnetApiClient {
                 public boolean isRedirected(
                         HttpRequest request, HttpResponse response, HttpContext context) {
                     String referrer = request.getRequestLine().getUri();
-                    response.setHeader("NextReferrer", referrer);
+                    response.setHeader(HeaderKeys.NEXT_REFERRER, referrer);
 
                     String location = getLocationUri(response);
                     return location != null
@@ -216,7 +218,7 @@ public class NordnetApiClient {
                 }
 
                 private String getLocationUri(HttpResponse response) {
-                    Header header = response.getFirstHeader("Location");
+                    Header header = response.getFirstHeader(HttpHeaders.LOCATION);
 
                     if (header == null) {
                         return null;

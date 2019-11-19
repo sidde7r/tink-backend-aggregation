@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Patterns;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.QueryParamValues;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Urls;
@@ -72,7 +73,7 @@ public class NordnetBankIdAuthentication {
         for (int i = 0; i < 2; i++) {
             initBankIdResponse =
                     apiClient.post(
-                            bankIdUrl + "order",
+                            bankIdUrl + NordnetConstants.Urls.BANKID_ORDER_SUFFIX,
                             new InitBankIdRequest(username),
                             InitBankIdResponse.class);
 
@@ -112,7 +113,7 @@ public class NordnetBankIdAuthentication {
     public BankIdStatus collectBankId(String orderRef) {
         CollectBankIdResponse response =
                 apiClient.post(
-                        bankIdUrl + "collect",
+                        bankIdUrl + NordnetConstants.Urls.BANKID_COLLECT_SUFFIX,
                         new CollectBankIdRequest(orderRef),
                         CollectBankIdResponse.class);
 
@@ -122,7 +123,9 @@ public class NordnetBankIdAuthentication {
     public Optional<String> completeBankId(String orderRef) throws LoginException {
         String html =
                 apiClient.post(
-                        bankIdUrl + "complete", new CollectBankIdRequest(orderRef), String.class);
+                        bankIdUrl + NordnetConstants.Urls.BANKID_COMPLETE_SUFFIX,
+                        new CollectBankIdRequest(orderRef),
+                        String.class);
         CompleteBankIdPage completePage = new CompleteBankIdPage(html);
 
         SAMLRequest request = SAMLRequest.from(completePage);
@@ -138,7 +141,7 @@ public class NordnetBankIdAuthentication {
         anonymousLoginForBankId();
 
         MultivaluedMapImpl artifactMap = new MultivaluedMapImpl();
-        artifactMap.putSingle("artifact", samlArtifact);
+        artifactMap.putSingle(NordnetConstants.Saml.ARTIFACT, samlArtifact);
 
         ArtifactResponse artifactResponse;
 
@@ -146,7 +149,7 @@ public class NordnetBankIdAuthentication {
             artifactResponse =
                     apiClient
                             .createClientRequest(Urls.AUTHENTICATION_SAML_ARTIFACT)
-                            .header("ntag", apiClient.getNtag())
+                            .header(HeaderKeys.NTAG, apiClient.getNtag())
                             .type(MediaType.APPLICATION_FORM_URLENCODED)
                             .post(ArtifactResponse.class, artifactMap);
 
@@ -221,7 +224,7 @@ public class NordnetBankIdAuthentication {
                                 MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .post(ClientResponse.class);
 
-        String ntag = response.getHeaders().getFirst("ntag");
+        String ntag = response.getHeaders().getFirst(HeaderKeys.NTAG);
         Preconditions.checkNotNull(ntag, "Expected ntag header to exist for subsequent requests");
         apiClient.setNtag(ntag);
 
@@ -232,7 +235,8 @@ public class NordnetBankIdAuthentication {
         Preconditions.checkState(
                 loginResponse.getExpiresIn() > 0, "Expecting expiry to be larger than 0");
         Preconditions.checkState(
-                Objects.equals(loginResponse.getSessionType(), "anonymous"),
+                Objects.equals(
+                        loginResponse.getSessionType(), NordnetConstants.Session.TYPE_ANONYMOUS),
                 "Expecting session type to be anonymous");
     }
 
