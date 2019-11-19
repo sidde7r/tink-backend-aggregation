@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.brokers;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
@@ -28,6 +27,8 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetApiClient;
+import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetBankIdAuthentication;
+import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetPasswordAuthentication;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.PositionEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.PositionsResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.AccountResponse;
@@ -49,6 +50,8 @@ public class NordnetAgent extends AbstractAgent
     private static final int MAX_ATTEMPTS = 60;
 
     private final Credentials credentials;
+    private final NordnetPasswordAuthentication nordnetPasswordAuthentication;
+    private final NordnetBankIdAuthentication nordnetBankIdAuthentication;
     private final NordnetApiClient apiClient;
 
     private AccountResponse accounts = null;
@@ -62,8 +65,9 @@ public class NordnetAgent extends AbstractAgent
                 new NordnetApiClient(
                         clientFactory.createClientWithRedirectHandler(
                                 context.getLogOutputStream(), NordnetApiClient.REDIRECT_STRATEGY),
-                        CommonHeaders.DEFAULT_USER_AGENT,
-                        credentials);
+                        CommonHeaders.DEFAULT_USER_AGENT);
+        nordnetPasswordAuthentication = new NordnetPasswordAuthentication(apiClient);
+        nordnetBankIdAuthentication = new NordnetBankIdAuthentication(apiClient, credentials);
     }
 
     /**
@@ -94,19 +98,14 @@ public class NordnetAgent extends AbstractAgent
     }
 
     private boolean loginWithPassword() throws LoginException {
-//        Optional<String> accessToken =
-                apiClient.loginWithPassword(
-                        credentials.getField(Field.Key.USERNAME),
-                        credentials.getField(Field.Key.PASSWORD));
-
-        //Preconditions.checkState(accessToken.isPresent());
-
+        nordnetPasswordAuthentication.loginWithPassword(
+                credentials.getField(Field.Key.USERNAME), credentials.getField(Field.Key.PASSWORD));
         return true;
     }
 
     private Optional<String> collectBankID(String orderRef) throws BankIdException, LoginException {
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            BankIdStatus status = apiClient.collectBankId(orderRef);
+            BankIdStatus status = nordnetBankIdAuthentication.collectBankId(orderRef);
 
             log.info(String.format("Collecting BankID, status: %s", status));
 
@@ -114,7 +113,7 @@ public class NordnetAgent extends AbstractAgent
                 case WAITING:
                     break;
                 case DONE:
-                    return apiClient.completeBankId(orderRef);
+                    return nordnetBankIdAuthentication.completeBankId(orderRef);
                 case NO_CLIENT:
                     throw BankIdError.NO_CLIENT.exception();
                 default:
@@ -130,7 +129,8 @@ public class NordnetAgent extends AbstractAgent
     }
 
     private boolean loginWithBankID() throws BankIdException, LoginException {
-        String orderRef = apiClient.initBankID(credentials.getField(Field.Key.USERNAME));
+        String orderRef =
+                nordnetBankIdAuthentication.initBankID(credentials.getField(Field.Key.USERNAME));
         openBankID();
 
         Optional<String> accessToken = collectBankID(orderRef);

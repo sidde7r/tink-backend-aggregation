@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.brokers.nordnet;
 
-import static se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Patterns.FIND_BANKID_URL;
-import static se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Patterns.FIND_SAMLART_FROM_URI;
-
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
@@ -11,14 +7,10 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.io.PrintStream;
-import java.net.URI;
-import java.net.URLDecoder;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -30,71 +22,55 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.RedirectStrategy;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
-import org.eclipse.jetty.http.HttpStatus;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.BankIdStatus;
-import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Patterns;
-import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.QueryParamValues;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Urls;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountInfoEntity;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.AnonymousLoginPasswordResponse;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.AuthenticateBasicLoginRequest;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.AuthenticateBasicLoginResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.CustomerInfoResponse;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.ErrorEntity;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.LoginAnonymousPostResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.PositionsResponse;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.Request.CollectBankIdRequest;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.Request.FetchTokenRequest;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.Request.InitBankIdRequest;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.Request.SAMLRequest;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.AccountInfoResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.AccountResponse;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.ArtifactResponse;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.BankIdInitSamlResponse;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.CollectBankIdResponse;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.InitBankIdResponse;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.TokenResponse;
-import se.tink.backend.aggregation.agents.brokers.nordnet.model.html.CompleteBankIdPage;
-import se.tink.backend.aggregation.agents.exceptions.BankIdException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 
 public class NordnetApiClient {
-    private static final AggregationLogger log = new AggregationLogger(NordnetApiClient.class);
-    private static final LogTag LOG_ACCOUNT_INFO = LogTag.from("Nordnet-account-info");
-
-    private String bankIdUrl;
+    private static final Logger log = LoggerFactory.getLogger(NordnetApiClient.class);
 
     private TinkApacheHttpClient4 client;
 
     private String referrer;
-    private String accessToken;
-    private String ntag;
     private final String aggregator;
     /** A concatenated string of account's bank-id (seems to be a simple client specific index) */
     private String accountBankIds;
 
-    private Credentials credentials;
     private String sessionKey;
+    private String accessToken;
+    private String ntag;
 
-    public NordnetApiClient(
-            TinkApacheHttpClient4 client, String aggregator, Credentials credentials) {
+    public String getNtag() {
+        return ntag;
+    }
+
+    public void setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public void setNtag(String ntag) {
+        this.ntag = ntag;
+    }
+
+    public NordnetApiClient(TinkApacheHttpClient4 client, String aggregator) {
         this.aggregator = aggregator;
         this.client = client;
         this.client.addFilter(new LoggingFilter(new PrintStream(System.out)));
-        this.credentials = credentials;
     }
 
-    private Optional<String> getReferrer() {
+    Optional<String> getReferrer() {
         return Optional.ofNullable(Strings.emptyToNull(referrer));
     }
 
@@ -104,282 +80,6 @@ public class NordnetApiClient {
         if (!Strings.isNullOrEmpty(nextReferrer)) {
             referrer = Urls.BASE_URL + nextReferrer;
         }
-    }
-
-    private void setAccessToken(String accessToken) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(accessToken), "No accessToken provided");
-        // Store tokens in sensitive payload, so it will be masked from logs
-        credentials.setSensitivePayload(Key.ACCESS_TOKEN, accessToken);
-        this.accessToken = accessToken;
-    }
-
-    private ClientResponse loadLoginPage() {
-        return get(Urls.LOGIN_PAGE_URL);
-    }
-
-    public Optional<String> loginWithPassword(String username, String password)
-            throws LoginException {
-        AnonymousLoginPasswordResponse response = anonymousLoginForPassword();
-        authenticate(username, password, response);
-        // String authCode = authorizeUser();
-        return Optional.empty(); // fetchToken(authCode);
-    }
-
-    private void authorizeSession() {
-        // This request will set ENDPOINT_URL cookie
-        ClientResponse response =
-                createClientRequest(Urls.LOGIN_PAGE_URL).get(ClientResponse.class);
-
-        URI redirectLocation = response.getLocation();
-        Preconditions.checkNotNull(
-                redirectLocation, "Expected redirect to /mux/login/startSE.html");
-
-        // This request will set NOW, LOL and TUX-COOKIE
-        createClientRequest(Urls.BASE_URL + redirectLocation.toASCIIString())
-                .get(ClientResponse.class);
-    }
-
-    private AnonymousLoginPasswordResponse anonymousLoginForPassword() throws LoginException {
-        // This request will set the NOW cookie needed for subsequent requests
-        MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
-        formData.add("username", "<<anonymous>>");
-        formData.add("password", "<<anonymous>>");
-        formData.add("service", QueryParamValues.CLIENT_ID);
-        formData.add("country", "SE");
-        formData.add("session_lang", "en");
-        ClientResponse response =
-                createClientRequest(
-                                Urls.INIT_LOGIN_SESSION_URL_PASSWORD,
-                                MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                        .post(ClientResponse.class, formData);
-
-        AnonymousLoginPasswordResponse loginResponse =
-                response.getEntity(AnonymousLoginPasswordResponse.class);
-        Preconditions.checkState(
-                loginResponse.getExpiresIn() > 0, "Expecting expiry to be larger than 0");
-        if (response.getStatus() != HttpStatus.OK_200) {
-            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                    new LocalizableKey("Could not initiate login session."));
-        }
-        return loginResponse;
-    }
-
-    private void anonymousLoginForBankId() {
-        // This request will set the NOW cookie needed for subsequent requests
-        ClientResponse response =
-                createClientRequest(
-                                Urls.INIT_LOGIN_SESSION_URL_BANKID,
-                                MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                        .post(ClientResponse.class);
-
-        String ntag = response.getHeaders().getFirst("ntag");
-        Preconditions.checkNotNull(ntag, "Expected ntag header to exist for subsequent requests");
-
-        this.ntag = ntag;
-
-        LoginAnonymousPostResponse loginResponse =
-                response.getEntity(LoginAnonymousPostResponse.class);
-
-        Preconditions.checkState(loginResponse.getLoggedIn(), "Anonymous login should be true");
-        Preconditions.checkState(
-                loginResponse.getExpiresIn() > 0, "Expecting expiry to be larger than 0");
-        Preconditions.checkState(
-                Objects.equals(loginResponse.getSessionType(), "anonymous"),
-                "Expecting session type to be anonymous");
-    }
-
-    private void authenticate(
-            String username,
-            String password,
-            AnonymousLoginPasswordResponse anonymousLoginPasswordResponse)
-            throws LoginException {
-        AuthenticateBasicLoginRequest loginRequest =
-                new AuthenticateBasicLoginRequest(username, password);
-
-        ClientResponse response =
-                createClientRequest(
-                                Urls.AUTHENTICATION_BASIC_LOGIN_URL,
-                                MediaType.APPLICATION_JSON_TYPE)
-                        .header(
-                                HttpHeaders.AUTHORIZATION,
-                                anonymousLoginPasswordResponse.toBasicAuthHeader())
-                        .post(ClientResponse.class, loginRequest);
-
-        AuthenticateBasicLoginResponse loginResponse =
-                response.getEntity(AuthenticateBasicLoginResponse.class);
-
-        if (Objects.equals(loginResponse.getCode(), "NEXT_LOGIN_INVALID_LOGIN_PARAMETER")) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
-
-        manage(response);
-
-        Preconditions.checkState(loginResponse.isLoggedIn(), "Expected user to be logged in");
-        Preconditions.checkState(
-                Objects.equals(loginResponse.getSessionType(), "authenticated"),
-                "Expected session to be of type authenticated");
-
-        String ntag = response.getHeaders().getFirst("ntag");
-        Preconditions.checkNotNull(ntag, "Expected ntag header to exist for subsequent requests");
-        this.ntag = ntag;
-        this.sessionKey = loginResponse.getSessionKey();
-    }
-
-    private String authorizeUser() {
-        ClientResponse response = get(Urls.LOGIN_PAGE_URL);
-        URI location = response.getLocation();
-
-        // The redirect location holds an auth code needed for requesting a token
-        Preconditions.checkNotNull(location);
-        Matcher matcher = Patterns.FIND_CODE_FROM_URI.matcher(location.toASCIIString());
-        Preconditions.checkState(matcher.find(), "Expected auth code to be present");
-
-        return matcher.group(1);
-    }
-
-    public String initBankID(String username) throws BankIdException {
-        loadLoginPage();
-        BankIdInitSamlResponse bankIdInitSamlResponse =
-                get(Urls.LOGIN_BANKID_PAGE_URL, BankIdInitSamlResponse.class);
-
-        String html = get(bankIdInitSamlResponse.getRequestUrl(), String.class);
-        Matcher matcher = FIND_BANKID_URL.matcher(html);
-
-        Preconditions.checkState(matcher.find(), "Couldn't find url to initiate BankID");
-        bankIdUrl = matcher.group();
-
-        // Try to initiate the bankid auth twice (if the first one fails). It will fail the first
-        // time if the customer
-        // has an already active authentication (both authentications will be cancelled by bankid)
-        InitBankIdResponse initBankIdResponse = null;
-
-        for (int i = 0; i < 2; i++) {
-            initBankIdResponse =
-                    post(
-                            bankIdUrl + "order",
-                            new InitBankIdRequest(username),
-                            InitBankIdResponse.class);
-
-            String orderRef = initBankIdResponse.getOrderRef();
-
-            if (!Strings.isNullOrEmpty(orderRef)) {
-                return orderRef;
-            }
-        }
-
-        handleKnownBankIdInitError(initBankIdResponse);
-
-        throw new IllegalStateException("Missing BankID order ref");
-    }
-
-    /**
-     * A user can get ALREADY_IN_PROGRESS error on both bankID initiation tries. Logging other
-     * errors as well.
-     */
-    private void handleKnownBankIdInitError(InitBankIdResponse initBankIdResponse)
-            throws BankIdException {
-        ErrorEntity error = initBankIdResponse.getError();
-
-        if (error == null) {
-            return;
-        }
-
-        if (error.isBankIdAlreadyInProgressError()) {
-            throw BankIdError.ALREADY_IN_PROGRESS.exception();
-        }
-
-        if (!Strings.isNullOrEmpty(error.getCode())) {
-            log.error(
-                    String.format("BankID initiation failed with error code: %s", error.getCode()));
-        }
-    }
-
-    public BankIdStatus collectBankId(String orderRef) {
-        CollectBankIdResponse response =
-                post(
-                        bankIdUrl + "collect",
-                        new CollectBankIdRequest(orderRef),
-                        CollectBankIdResponse.class);
-
-        return response.getStatus();
-    }
-
-    public Optional<String> completeBankId(String orderRef) throws LoginException {
-        String html =
-                post(bankIdUrl + "complete", new CollectBankIdRequest(orderRef), String.class);
-        CompleteBankIdPage completePage = new CompleteBankIdPage(html);
-
-        SAMLRequest request = SAMLRequest.from(completePage);
-        postForm(completePage.getTarget(), request);
-
-        if (!getReferrer().isPresent()) {
-            return Optional.empty();
-        }
-
-        String samlArtifact = URLDecoder.decode(getSamlArtifact(getReferrer().get()));
-
-        // do anonymous login to populate `ntag`
-        anonymousLoginForBankId();
-
-        MultivaluedMapImpl artifactMap = new MultivaluedMapImpl();
-        artifactMap.putSingle("artifact", samlArtifact);
-
-        ArtifactResponse artifactResponse;
-
-        try {
-            artifactResponse =
-                    createClientRequest(Urls.AUTHENTICATION_SAML_ARTIFACT)
-                            .header("ntag", ntag)
-                            .type(MediaType.APPLICATION_FORM_URLENCODED)
-                            .post(ArtifactResponse.class, artifactMap);
-
-        } catch (UniformInterfaceException e) {
-            ClientResponse response = e.getResponse();
-
-            if (response != null && response.getStatus() == HttpStatus.FORBIDDEN_403) {
-                throw LoginError.NOT_CUSTOMER.exception(e);
-            }
-
-            throw e;
-        }
-
-        if (!artifactResponse.isLogged_in()) {
-            return Optional.empty();
-        }
-
-        URI location =
-                createClientRequest(Urls.OAUTH2_AUTHORIZE_URL)
-                        .get(ClientResponse.class)
-                        .getLocation();
-
-        String authCode = getAuthCodeFrom(location);
-        return fetchToken(authCode);
-    }
-
-    private String getSamlArtifact(String location) {
-        Matcher matcher = FIND_SAMLART_FROM_URI.matcher(location);
-        return matcher.find() ? matcher.group(1) : null;
-    }
-
-    private String getAuthCodeFrom(URI location) {
-        Matcher matcher = Patterns.FIND_CODE_FROM_URI.matcher(location.toASCIIString());
-        return matcher.find() ? matcher.group(1) : null;
-    }
-
-    private Optional<String> fetchToken(String authCode) {
-        if (Strings.isNullOrEmpty(authCode)) {
-            return Optional.empty();
-        }
-
-        FetchTokenRequest tokenRequest =
-                FetchTokenRequest.from(
-                        QueryParamValues.CLIENT_ID, QueryParamValues.CLIENT_SECRET, authCode);
-        TokenResponse response = postForm(Urls.FETCH_TOKEN_URL, tokenRequest, TokenResponse.class);
-
-        String accessToken = response.getAccessToken();
-        setAccessToken(accessToken);
-
-        return Optional.ofNullable(accessToken);
     }
 
     public AccountResponse fetchAccounts() {
@@ -401,7 +101,7 @@ public class NordnetApiClient {
                 String infoId = infoEntity.getAccountId();
 
                 if (accId.equalsIgnoreCase(infoId)) {
-                    log.info(LOG_ACCOUNT_INFO + ": " + infoEntity.toString());
+                    log.info("Nordnet-account-info : {}", infoEntity.toString());
                     accountEntity.setInfo(infoEntity);
                     break;
                 }
@@ -418,17 +118,17 @@ public class NordnetApiClient {
         return customerInfo.toTinkIdentity();
     }
 
-    private <T> T post(String url, Object request, Class<T> responseEntity) {
+    <T> T post(String url, Object request, Class<T> responseEntity) {
         return createClientRequest(url).post(responseEntity, request);
     }
 
-    private <T> T postForm(String url, MultivaluedMapImpl request, Class<T> responseEntity) {
+    <T> T postForm(String url, MultivaluedMapImpl request, Class<T> responseEntity) {
         ClientResponse response = postForm(url, request);
 
         return response.getEntity(responseEntity);
     }
 
-    private ClientResponse postForm(String url, MultivaluedMap request) {
+    ClientResponse postForm(String url, MultivaluedMap request) {
         ClientResponse response =
                 createClientRequest(url)
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
@@ -438,18 +138,18 @@ public class NordnetApiClient {
         return response;
     }
 
-    private <T> T get(String url, Class<T> responseEntity) {
+    <T> T get(String url, Class<T> responseEntity) {
         return get(url).getEntity(responseEntity);
     }
 
-    private ClientResponse get(String url) {
+    ClientResponse get(String url) {
         ClientResponse response = createClientRequest(url).get(ClientResponse.class);
         manage(response);
 
         return response;
     }
 
-    private void manage(ClientResponse response) {
+    void manage(ClientResponse response) {
         if (response.getStatus() >= 400) {
             throw new UniformInterfaceException(response);
         }
@@ -457,11 +157,11 @@ public class NordnetApiClient {
         setNextReferrer(response.getHeaders());
     }
 
-    private WebResource.Builder createClientRequest(String url) {
+    WebResource.Builder createClientRequest(String url) {
         return createClientRequest(url, MediaType.APPLICATION_JSON_TYPE, Collections.emptyMap());
     }
 
-    private WebResource.Builder createClientRequest(String url, MediaType contentType) {
+    WebResource.Builder createClientRequest(String url, MediaType contentType) {
         return createClientRequest(url, contentType, Collections.emptyMap());
     }
 
