@@ -37,14 +37,14 @@ public class NordnetAgentTest {
     @Test
     public void testRefreshPassword() throws Exception {
         new AgentIntegrationTest.Builder("se", "nordnet")
-            .addCredentialField(Key.USERNAME, manager.get(Arg.USERNAME))
-            .addCredentialField(Key.PASSWORD, manager.get(Arg.PASSWORD))
-            .loadCredentialsBefore(false)
-            .saveCredentialsAfter(false)
-            .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-            .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-            .build()
-            .testRefresh();
+                .addCredentialField(Key.USERNAME, manager.get(Arg.USERNAME))
+                .addCredentialField(Key.PASSWORD, manager.get(Arg.PASSWORD))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                .build()
+                .testRefresh();
     }
 
     @AfterClass
