@@ -14,7 +14,10 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.CardA
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.CardAccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.CardAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.InvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.LoanAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.MarketDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.MortgageDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.MortgageInstallmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.PortfolioDetailsResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -110,6 +113,40 @@ public class CaixaApiClient {
                         QueryParams.STATEMENT_DATE,
                         statementDate.format(CaixaConstants.YEARMONTH_FORMATTER))
                 .get(CardAccountTransactionsResponse.class);
+    }
+
+    public LoanAccountsResponse fetchConsumerLoanAccounts() {
+        return createBaseRequest(Urls.FETCH_ACCOUNTS)
+                .queryParam(QueryParams.TARGET_OPERATION_TYPE, QueryValues.CONSUMER_LOAN)
+                .get(LoanAccountsResponse.class);
+    }
+
+    public LoanAccountsResponse fetchMortgageLoanAccounts() {
+        return createBaseRequest(Urls.FETCH_ACCOUNTS)
+                .queryParam(QueryParams.TARGET_OPERATION_TYPE, QueryValues.MORTGAGE_LOAN)
+                .get(LoanAccountsResponse.class);
+    }
+
+    public MortgageDetailsResponse fetchMortgageDetails(String fullAccountKey) {
+        return createBaseRequest(
+                        new URL(
+                                Urls.FETCH_MORTGAGE_DETAILS
+                                        .parameter(Parameters.ACCOUNT_KEY, fullAccountKey)
+                                        .get()
+                                        .replace("+", ENCODED_SPACE)))
+                .get(MortgageDetailsResponse.class);
+    }
+
+    public MortgageInstallmentsResponse fetchMortgageInstallments(
+            String fullAccountKey, String pageKey) {
+        return createBaseRequest(
+                        new URL(
+                                Urls.FETCH_MORTGAGE_INSTALLMENTS
+                                        .parameter(Parameters.ACCOUNT_KEY, fullAccountKey)
+                                        .get()
+                                        .replace("+", ENCODED_SPACE)))
+                .queryParam(QueryParams.PAGE_KEY, pageKey)
+                .get(MortgageInstallmentsResponse.class);
     }
 
     private URL buildFetchAccountDetailsUrl(String accountKey) {

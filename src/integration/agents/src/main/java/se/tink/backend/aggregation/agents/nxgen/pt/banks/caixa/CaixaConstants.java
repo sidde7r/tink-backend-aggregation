@@ -15,6 +15,8 @@ public class CaixaConstants {
     public static final DateTimeFormatter YEARMONTH_FORMATTER =
             DateTimeFormatter.ofPattern("MM-yyyy");
 
+    public static final String TIMEZONE_ID = "Portugal";
+
     public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<TransactionalAccountType>builder()
                     .put(TransactionalAccountType.CHECKING, "DepositAccount")
@@ -41,6 +43,10 @@ public class CaixaConstants {
                 new URL(BASE.concat(Endpoints.FETCH_CARD_ACCOUNTS));
         public static final URL FETCH_CARD_ACCOUNT_TRANSACTIONS =
                 new URL(BASE.concat(Endpoints.FETCH_CARD_ACCOUNT_TRANSACTIONS));
+        public static final URL FETCH_MORTGAGE_DETAILS =
+                new URL(BASE.concat(Endpoints.FETCH_MORTGAGE_DETAILS));
+        public static final URL FETCH_MORTGAGE_INSTALLMENTS =
+                new URL(BASE.concat(Endpoints.FETCH_MORTGAGE_INSTALLMENTS));
     }
 
     public static class Endpoints {
@@ -53,6 +59,9 @@ public class CaixaConstants {
         public static final String FETCH_CARD_ACCOUNTS = "/business/cards/customercarddata";
         public static final String FETCH_CARD_ACCOUNT_TRANSACTIONS =
                 "/business/cards/accounts/{cardAccountId}/transactions";
+        public static final String FETCH_MORTGAGE_DETAILS = "/business/loans/mortgage/{accountKey}";
+        public static final String FETCH_MORTGAGE_INSTALLMENTS =
+                "/business/loans/mortgage/{accountKey}/installments";
     }
 
     public static class Parameters {
@@ -73,6 +82,7 @@ public class CaixaConstants {
         public static final String TARGET_CARD_OPERATION_TYPE = "targetCardOperationType";
         public static final String STATEMENT_DATE = "statementDate";
         public static final String CARD_ACCOUNT_ID = "cardAccountId";
+        public static final String PAGE_KEY = "pageKey";
     }
 
     public static class QueryValues {
@@ -80,6 +90,8 @@ public class CaixaConstants {
                 "BALANCES_AND_TRANSACTIONS";
         public static final String INVESTMENT_PORTFOLIO_OPERATION = "INVESTMENT_PORTFOLIO";
         public static final String PORTFOLIO_MARKET_DETAILS_OPERATION = "PORTFOLIO";
+        public static final String CONSUMER_LOAN = "CONSUMER_LOAN";
+        public static final String MORTGAGE_LOAN = "MORTGAGE_LOAN";
     }
 
     public static class HeaderKeys {
@@ -93,5 +105,9 @@ public class CaixaConstants {
         public static final String DEVICE_NAME = "is2";
         public static final String APP_NAME = "APP_CAIXADIRECTA";
         public static final String APP_VERSION = "1.4.5";
+    }
+
+    public static class STORAGE {
+        public static final String ACCOUNT_CURRENCY = "accountCurrency";
     }
 }
