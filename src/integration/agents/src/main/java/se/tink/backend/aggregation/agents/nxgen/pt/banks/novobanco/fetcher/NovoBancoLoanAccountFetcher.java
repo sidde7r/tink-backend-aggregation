@@ -37,10 +37,10 @@ public class NovoBancoLoanAccountFetcher implements AccountFetcher<LoanAccount> 
         LoanModule loanModule = LoanModule.builder()
                 .withType(LoanDetails.Type.MORTGAGE)
                 .withBalance(
-                        ExactCurrencyAmount.of(getCurrentBalance(loanData), loanCurrency))
+                        ExactCurrencyAmount.of(getCurrentBalance(loanData, loanCurrency), loanCurrency))
                 .withInterestRate(getInterestRate(loanData))
                 .setInitialBalance(
-                        ExactCurrencyAmount.of(getInitialBalance(loanData), loanCurrency))
+                        ExactCurrencyAmount.of(getInitialBalance(loanData, loanCurrency), loanCurrency))
                 .setInitialDate(getInitialDate(loanData))
                 .setLoanNumber(loanData.getLoanContractId())
                 .build();
@@ -87,13 +87,13 @@ public class NovoBancoLoanAccountFetcher implements AccountFetcher<LoanAccount> 
         return LocalDate.parse(startDateAsString, formatter);
     }
 
-    private double getInitialBalance(NovoBancoApiClient.LoanAggregatedData loanData) {
+    private double getInitialBalance(NovoBancoApiClient.LoanAggregatedData loanData, String currency) {
         String initialBalanceAsString =
                 getPropertyValue(loanData, "Capital utilizado", "Initial Balance");
-        return parseValue(initialBalanceAsString.replaceAll(" EUR", ""));
+        return parseValue(initialBalanceAsString.replaceAll(currency, ""));
     }
 
-    private double getCurrentBalance(NovoBancoApiClient.LoanAggregatedData loanData) {
+    private double getCurrentBalance(NovoBancoApiClient.LoanAggregatedData loanData, String currency) {
         String currentBalanceAsString = Optional.of(loanData)
                 .map(NovoBancoApiClient.LoanAggregatedData::getLoanDetails)
                 .map(GetLoanDetailsResponse::getBody)
@@ -101,7 +101,7 @@ public class NovoBancoLoanAccountFetcher implements AccountFetcher<LoanAccount> 
                 .map(LoanDetailsHeaderEntity::getCurrentBalance)
                 .orElseThrow(() -> new IllegalStateException("Could not find: Current Balance"));
 
-        return parseValue(currentBalanceAsString.replaceAll(" EUR", ""));
+        return parseValue(currentBalanceAsString.replaceAll(currency, ""));
     }
 
     private double parseValue(String value) {

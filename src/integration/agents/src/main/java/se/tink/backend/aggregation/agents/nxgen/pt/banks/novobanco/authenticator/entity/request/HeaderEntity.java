@@ -25,7 +25,7 @@ public class HeaderEntity {
   private String apiKey = Secrets.API_KEY;
 
   @JsonProperty("DeviceId")
-  private String deviceId = FieldValues.DEFAULT_DEVICE_ID; // TODO may need to change!!!!!
+  private String deviceId = FieldValues.DEFAULT_DEVICE_ID;
 
   @JsonProperty("RequestId")
   private String requestId = FieldValues.REQUEST_ID;
