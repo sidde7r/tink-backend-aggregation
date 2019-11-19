@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticato
 
 import java.security.SecureRandom;
 import java.util.Locale;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Secrets;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SecretKeys;
 
 public class Login0SecretProvider {
 
     public String getSecret(String pin) {
         return new RSAEncryptor()
                 .encrypt(
-                        getDataToEncrypt(pin, Secrets.INSTANCE_KEY),
+                        getDataToEncrypt(pin, SecretKeys.INSTANCE_KEY),
                         new RSAPublicServerKey().getKey());
     }
 

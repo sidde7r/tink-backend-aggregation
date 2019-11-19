@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan;
 
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.ResponseLabels.CURRENT_BALANCE;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.ResponseLabels.INTEREST_RATE;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +29,7 @@ public class LoanDetailsHeaderEntity {
         return Optional.ofNullable(lines)
                 .map(Collection::stream)
                 .orElse(Stream.empty())
-                .filter(line -> "TAN".equals(line.getL()))
+                .filter(line -> INTEREST_RATE.equals(line.getL()))
                 .map(LoanLinesEntity::getV)
                 .findFirst()
                 .orElse(null);
@@ -36,7 +39,7 @@ public class LoanDetailsHeaderEntity {
         return Optional.ofNullable(lines)
                 .map(Collection::stream)
                 .orElse(Stream.empty())
-                .filter(line -> "Capital em divida".equals(line.getL()))
+                .filter(line -> CURRENT_BALANCE.equals(line.getL()))
                 .map(LoanLinesEntity::getV)
                 .findFirst()
                 .orElse(null);

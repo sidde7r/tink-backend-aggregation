@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.entity.request;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.*;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.FieldValues;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Secrets;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SecretKeys;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.detail.TimeStampProvider;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -21,13 +22,13 @@ public class HeaderEntity {
     private int origem = 0;
 
     @JsonProperty("ApiKey")
-    private String apiKey = Secrets.API_KEY;
+    private String apiKey = SecretKeys.API_KEY;
 
     @JsonProperty("DeviceId")
     private String deviceId = FieldValues.DEFAULT_DEVICE_ID;
 
     @JsonProperty("RequestId")
-    private String requestId = FieldValues.REQUEST_ID;
+    private String requestId;
 
     @JsonProperty("Aid")
     @JsonInclude(NON_NULL)
@@ -47,6 +48,10 @@ public class HeaderEntity {
 
     @JsonProperty("OpToken")
     private String opToken;
+
+    public HeaderEntity() {
+        this.requestId = UUID.randomUUID().toString().toUpperCase();
+    }
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;

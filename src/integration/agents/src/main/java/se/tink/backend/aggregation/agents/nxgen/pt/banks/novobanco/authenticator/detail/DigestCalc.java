@@ -23,7 +23,7 @@ public class DigestCalc {
 
     private String calculateRequestDigest(final byte[] array)
             throws InvalidKeyException, NoSuchAlgorithmException {
-        final String instanceKey = NovoBancoConstants.Secrets.INSTANCE_KEY;
+        final String instanceKey = NovoBancoConstants.SecretKeys.INSTANCE_KEY;
         return encryptHmacSHA256(Base64.getDecoder().decode(instanceKey), array);
     }
 

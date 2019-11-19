@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.*;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

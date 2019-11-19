@@ -29,9 +29,9 @@ public class NovoBancoAgent extends NextGenerationAgent
 
     public NovoBancoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         apiClient = new NovoBancoApiClient(client, sessionStorage);
-        authenticator = new NovoBancoAuthenticator(apiClient);
+        authenticator = new NovoBancoAuthenticator(apiClient, sessionStorage);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         loanRefreshController = constructLoanRefreshController();
     }

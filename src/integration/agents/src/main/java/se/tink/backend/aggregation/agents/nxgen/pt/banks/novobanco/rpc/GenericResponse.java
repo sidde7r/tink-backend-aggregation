@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.rpc;
 
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.ResponseCodes.*;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.ResponseCodes;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.entity.response.HeaderEntity;
@@ -20,12 +19,8 @@ public class GenericResponse {
 
     public boolean isSessionExpired() {
         Integer resultCode = getResultCode();
-        return Optional.ofNullable(resultCode)
-                .map(
-                        code ->
-                                !code.equals(ResponseCodes.SESSION_EXPIRED)
-                                        && Integer.valueOf(0).equals(header.getSessionTimeout()))
-                .orElse(false);
+        return !Objects.equals(ResponseCodes.SESSION_EXPIRED, resultCode)
+                && Integer.valueOf(0).equals(header.getSessionTimeout());
     }
 
     private Integer getResultCode() {

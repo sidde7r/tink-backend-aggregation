@@ -27,7 +27,7 @@ public class NovoBancoConstants {
                 API_BASE + "mv2/api2/PosicaoIntegrada/ObterDetalheCreditoHabitacao";
     }
 
-    public static class Secrets {
+    public static class SecretKeys {
         public static final String API_KEY = "0102206970E0B44A5A960BD304A95E7FD3";
         // generated  key, encoded to B64 and converted to string (US-ASCII charset + trim)
         public static final String INSTANCE_KEY = "zT/upIt3YlRJSteHtdF3FaeMOzKea0+y5j0qiD0VMS0=";
@@ -64,11 +64,10 @@ public class NovoBancoConstants {
         public static final String OS = "iOS";
         public static final String MODEL = "iPhone 8";
         public static final String OS_VERSION = "12.4";
-        public static final double LATITUDE = 52.22267804387367936;
-        public static final double LONGITUDE = 21.01073071171693824;
+        public static final double LATITUDE = 0.0;
+        public static final double LONGITUDE = 0.0;
         public static final String DEVICE_NAME = "Tink";
         public static final String DEFAULT_DEVICE_ID = UUID.randomUUID().toString().toUpperCase();
-        public static final String REQUEST_ID = UUID.randomUUID().toString().toUpperCase();
         public static final String LANGUAGE = "PT";
         public static final int LOGIN_MODE = 1;
         public static final String CTX_ACCOUNTS = "contas";
@@ -76,6 +75,14 @@ public class NovoBancoConstants {
 
         public static final String APP_VERSION = "3.4.5";
         public static final String APP_BUILD = "5466";
+    }
+
+    public static class ResponseLabels {
+        public static final String CONTRACT = "Contrato";
+        public static final String INTEREST_RATE = "TAN";
+        public static final String CURRENT_BALANCE = "Capital em divida";
+        public static final int SECTION_TYPE = 30;
+        public static final int COLLAPSIBLE_SECTION_TYPE = 32;
     }
 
     public static class ResponseCodes {

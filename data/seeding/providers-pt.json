@@ -519,6 +519,8 @@
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "payload": "tink",
             "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": null,

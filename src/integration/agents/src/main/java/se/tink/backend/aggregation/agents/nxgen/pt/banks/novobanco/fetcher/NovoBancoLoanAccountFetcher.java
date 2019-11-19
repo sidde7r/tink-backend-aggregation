@@ -1,14 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher;
 
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.ResponseLabels.COLLAPSIBLE_SECTION_TYPE;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.ResponseLabels.CONTRACT;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.ResponseLabels.SECTION_TYPE;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoApiClient;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.*;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.GetLoanDetailsBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.LoanBodyDetailsEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.LoanDetailsHeaderEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.LoanLinesEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -124,8 +134,7 @@ public class NovoBancoLoanAccountFetcher implements AccountFetcher<LoanAccount> 
 
     private String getPropertyValue(
             NovoBancoApiClient.LoanAggregatedData loanData, String property, String label) {
-        final int SECTION_TYPE = 30;
-        final int COLLAPSIBLE_SECTION_TYPE = 32;
+
         return Optional.of(loanData)
                 .map(NovoBancoApiClient.LoanAggregatedData::getLoanDetails)
                 .map(GetLoanDetailsResponse::getBody)
@@ -140,7 +149,7 @@ public class NovoBancoLoanAccountFetcher implements AccountFetcher<LoanAccount> 
                 .orElse(Stream.empty())
                 .filter(
                         loanLine ->
-                                "Contrato".equals(loanLine.getL())
+                                CONTRACT.equals(loanLine.getL())
                                         && loanLine.getT() == COLLAPSIBLE_SECTION_TYPE)
                 .findFirst()
                 .map(LoanLinesEntity::getLines)

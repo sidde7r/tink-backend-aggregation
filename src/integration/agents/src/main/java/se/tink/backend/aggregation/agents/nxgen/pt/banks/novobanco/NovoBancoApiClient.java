@@ -1,18 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco;
 
-import static java.util.Objects.requireNonNull;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.FieldValues.DEFAULT_DEVICE_ID;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.ACCOUNT_GENERAL_INFO_ID;
-
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.*;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.FieldValues;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.ServiceIds;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.detail.DigestCalc;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.detail.Login0SecretProvider;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.entity.request.HeaderEntity;
@@ -24,7 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.loan.GetLoanDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.BodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.MovementsEntity;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.*;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.LoanOverviewEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.GetAccountsRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanDetailsRequest;
@@ -36,6 +29,31 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
 
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Objects.requireNonNull;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.FieldValues.DEFAULT_DEVICE_ID;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header.ENCODING_VALUE;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.Header.NB_SIGNATURE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.ACCOUNT_GENERAL_INFO_ID;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.AUTH_COOKIE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.DEVICE_ID_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.SESSION_COOKIE_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOANS;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOAN_DETAILS;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.KEEP_ALIVE;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.LOGIN;
+
 public class NovoBancoApiClient {
 
     private final TinkHttpClient httpClient;
@@ -44,31 +62,18 @@ public class NovoBancoApiClient {
 
     public NovoBancoApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.httpClient = requireNonNull(client);
-        this.sessionStorage = sessionStorage;
-        sessionStorage.put(SessionKeys.DEVICE_ID_KEY, DEFAULT_DEVICE_ID);
+        this.sessionStorage = requireNonNull(sessionStorage);
     }
 
-    public Login0Response loginStep0(String userName, String pin) throws LoginException {
+    public Login0Response loginStep0(String userName, String pin) {
         String secret = new Login0SecretProvider().getSecret(pin);
-
-        Login0Request request = new Login0Request(userName, secret);
-
-        Login0Response response = buildRequest(request, URLs.LOGIN).post(Login0Response.class);
-        if (!response.isValidCredentials()) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
-        sessionStorage.put(
-                SessionKeys.AUTH_COOKIE_KEY, response.getBody().getSession().getAuthCookie());
-        sessionStorage.put(
-                SessionKeys.SESSION_COOKIE_KEY, response.getBody().getSession().getSessionCookie());
-        sessionStorage.put(SessionKeys.DEVICE_ID_KEY, response.getBody().getDevice().getId());
-
-        return response;
+        Login0Request request = new Login0Request(userName, secret, DEFAULT_DEVICE_ID);
+        return buildRequest(request, LOGIN).post(Login0Response.class);
     }
 
     public GetAccountsResponse getAccount(String accountId) {
         GetAccountsResponse response =
-                buildRequest(prepareGetAccountsRequest(accountId), URLs.GET_ACCOUNTS)
+                buildRequest(prepareGetAccountsRequest(accountId), GET_ACCOUNTS)
                         .post(GetAccountsResponse.class);
         if (!response.isSuccessful()) {
             throw new IllegalStateException("Fetching requested account failed");
@@ -78,7 +83,7 @@ public class NovoBancoApiClient {
 
     public GetAccountsResponse getAccounts() {
         GetAccountsResponse response =
-                buildRequest(prepareGetAccountsRequest(null), URLs.GET_ACCOUNTS)
+                buildRequest(prepareGetAccountsRequest(null), GET_ACCOUNTS)
                         .post(GetAccountsResponse.class);
         if (!response.isSuccessful()) {
             throw new IllegalStateException("Fetching Transactional Accounts failed");
@@ -93,30 +98,12 @@ public class NovoBancoApiClient {
                 .forEach(
                         accountDetails -> {
                             GetLoanAccountsResponse loanAccountDetails =
-                                    buildRequest(
-                                                    prepareGetLoansRequest(accountDetails.getId()),
-                                                    URLs.GET_LOANS)
-                                            .post(GetLoanAccountsResponse.class);
+                                    getGetLoanAccountsDetails(accountDetails);
 
                             String opToken = loanAccountDetails.getHeader().getOpToken();
-                            loanAccountDetails
-                                    .getLoanDetails()
-                                    .forEach(
-                                            loanDetails -> {
-                                                GetLoanDetailsResponse loanDetailsResponse =
-                                                        buildRequest(
-                                                                        prepareGetLoanDetailsRequest(
-                                                                                loanDetails
-                                                                                        .getContract(),
-                                                                                opToken),
-                                                                        URLs.GET_LOAN_DETAILS)
-                                                                .post(GetLoanDetailsResponse.class);
-                                                loans.add(
-                                                        new LoanAggregatedData(
-                                                                accountDetails,
-                                                                loanDetails.getContract(),
-                                                                loanDetailsResponse));
-                                            });
+                            loans.addAll(
+                                    getLoansAggregatedData(
+                                            accountDetails, loanAccountDetails, opToken));
                         });
         return loans;
     }
@@ -142,9 +129,42 @@ public class NovoBancoApiClient {
 
     public boolean isAlive() {
         GenericResponse response =
-                buildRequest(prepareGetAccountsRequest(null), URLs.KEEP_ALIVE)
+                buildRequest(prepareGetAccountsRequest(null), KEEP_ALIVE)
                         .post(GenericResponse.class);
         return !response.isSessionExpired();
+    }
+
+    private Collection<LoanAggregatedData> getLoansAggregatedData(
+            AccountDetailsEntity accountDetails,
+            GetLoanAccountsResponse loanAccountDetails,
+            String opToken) {
+        List<LoanAggregatedData> loans = new ArrayList<>();
+        Collection<LoanOverviewEntity> loansDetails = loanAccountDetails.getLoanDetails();
+        loansDetails.forEach(
+                loanDetails -> {
+                    GetLoanDetailsResponse loanDetailsResponse =
+                            getGetLoanDetails(opToken, loanDetails);
+                    loans.add(
+                            new LoanAggregatedData(
+                                    accountDetails,
+                                    loanDetails.getContract(),
+                                    loanDetailsResponse));
+                });
+
+        return loans;
+    }
+
+    private GetLoanDetailsResponse getGetLoanDetails(
+            String opToken, LoanOverviewEntity loanDetails) {
+        return buildRequest(
+                        prepareGetLoanDetailsRequest(loanDetails.getContract(), opToken),
+                        GET_LOAN_DETAILS)
+                .post(GetLoanDetailsResponse.class);
+    }
+
+    private GetLoanAccountsResponse getGetLoanAccountsDetails(AccountDetailsEntity accountDetails) {
+        return buildRequest(prepareGetLoansRequest(accountDetails.getId()), GET_LOANS)
+                .post(GetLoanAccountsResponse.class);
     }
 
     private void saveAccountsInSessionStorage(GetAccountsResponse response) {
@@ -158,18 +178,18 @@ public class NovoBancoApiClient {
 
     private HeaderEntity getHeaderEntityWithOpToken(String opToken) {
         return new HeaderEntity.HeaderEntityBuilder()
-                .withDeviceId(sessionStorage.get(SessionKeys.DEVICE_ID_KEY))
-                .withAuthId(sessionStorage.get(SessionKeys.AUTH_COOKIE_KEY))
-                .withSessionId(sessionStorage.get(SessionKeys.SESSION_COOKIE_KEY))
+                .withDeviceId(sessionStorage.get(DEVICE_ID_KEY))
+                .withAuthId(sessionStorage.get(AUTH_COOKIE_KEY))
+                .withSessionId(sessionStorage.get(SESSION_COOKIE_KEY))
                 .withOpToken(opToken)
                 .build();
     }
 
     private HeaderEntity getHeaderEntity(String context, Integer serviceId) {
         return new HeaderEntity.HeaderEntityBuilder()
-                .withDeviceId(sessionStorage.get(SessionKeys.DEVICE_ID_KEY))
-                .withAuthId(sessionStorage.get(SessionKeys.AUTH_COOKIE_KEY))
-                .withSessionId(sessionStorage.get(SessionKeys.SESSION_COOKIE_KEY))
+                .withDeviceId(sessionStorage.get(DEVICE_ID_KEY))
+                .withAuthId(sessionStorage.get(AUTH_COOKIE_KEY))
+                .withSessionId(sessionStorage.get(SESSION_COOKIE_KEY))
                 .withContext(context)
                 .withServiceId(serviceId)
                 .build();
@@ -182,9 +202,9 @@ public class NovoBancoApiClient {
                 .accept(MediaType.WILDCARD)
                 .acceptLanguage(Locale.UK)
                 .header(Header.CONNECTION_KEY, Header.CONNECTION_VALUE)
-                .header(HttpHeaders.ACCEPT_ENCODING, Header.ENCODING_VALUE)
+                .header(HttpHeaders.ACCEPT_ENCODING, ENCODING_VALUE)
                 .header(Header.USER_AGENT_KEY, Header.USER_AGENT_VALUE)
-                .header(Header.NB_SIGNATURE_KEY, digestCalc.calculateRequestDigest(requestPayload))
+                .header(NB_SIGNATURE_KEY, digestCalc.calculateRequestDigest(requestPayload))
                 .body(requestPayload);
     }
 
