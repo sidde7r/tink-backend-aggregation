@@ -485,7 +485,7 @@
             "groupDisplayName": "Banco Montepio",
             "multiFactor": false,
             "name": "pt-montepio-password",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "payload": "tink",
             "popular": true,
             "status": "ENABLED",

@@ -266,7 +266,7 @@ public class BelfiusConstants {
         public static final String APPLICATION_TYPE = "native";
         public static final String LOCALE_DUTCH = "nl_BE";
         public static final String LOCALE_FRENCH = "fr_BE";
-        public static final String APP_RELEASE = "9120";
+        public static final String APP_RELEASE = "09310";
         public static final String PLATFORM = "I";
         public static final String TYPE_DEVICE = "PHONE";
 
