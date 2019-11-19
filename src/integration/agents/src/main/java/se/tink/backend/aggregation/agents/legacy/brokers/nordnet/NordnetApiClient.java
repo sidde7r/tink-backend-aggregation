@@ -4,9 +4,7 @@ import com.google.common.base.Strings;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import java.io.PrintStream;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
@@ -68,7 +66,6 @@ public class NordnetApiClient {
     public NordnetApiClient(TinkApacheHttpClient4 client, String aggregator) {
         this.aggregator = aggregator;
         this.client = client;
-        this.client.addFilter(new LoggingFilter(new PrintStream(System.out)));
     }
 
     Optional<String> getReferrer() {
