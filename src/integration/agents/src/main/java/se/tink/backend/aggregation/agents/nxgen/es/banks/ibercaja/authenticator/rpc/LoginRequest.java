@@ -7,9 +7,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginRequest {
 
     @JsonProperty("NICI")
-    private int nici;
+    private String nici;
 
-    public LoginRequest(int nici) {
+    public LoginRequest(String nici) {
 
         this.nici = nici;
     }

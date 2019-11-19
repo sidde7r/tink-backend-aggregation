@@ -47,6 +47,11 @@ public class IberCajaConstants {
         public static final String REQUEST_TYPE = "2";
         public static final String PLAYBACK_MODE_REAL = "Real";
         public static final String IS_SPECIALIST = "False";
+        public static final String APP_ID = "IbercajaAppV2Piloto";
+        public static final String VERSION = "2.21.0";
+        public static final String CHANNEL_MOBILE = "MOV";
+        public static final String DEVICE = "IOSP";
+        public static final String ACCESS_CARD = "False";
     }
 
     public static class Headers {
@@ -54,6 +59,14 @@ public class IberCajaConstants {
         public static final String USER = "Usuario";
         public static final String TICKET = "Ticket";
         public static final String PLAYBACK_MODE = "PlayBackMode";
+        public static final String APP_ID = "AppID";
+        public static final String VERSION = "version";
+        public static final String CHANNEL = "Canal";
+        public static final String DEVICE = "Dispositivo";
+        public static final String ACCESS_CARD = "AccesoTarjeta";
+        public static final String NICI = "NICI";
+        public static final String NIP = "nip";
+        public static final String CONTRACT = "contrato";
     }
 
     public static class QueryParams {
@@ -80,6 +93,8 @@ public class IberCajaConstants {
         public static final String FULL_NAME = "FULL_NAME";
         public static final String DOCUMENT_NUMBER = "DOCUMENT_NUMBER";
         public static final String NICI = "NICI";
+        public static final String CONTRACT = "CONTRACT";
+        public static final String NIP = "NIP";
     }
 
     public static class Log {

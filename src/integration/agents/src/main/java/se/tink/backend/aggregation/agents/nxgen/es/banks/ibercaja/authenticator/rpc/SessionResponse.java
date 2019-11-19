@@ -16,13 +16,25 @@ public class SessionResponse {
     private int userType;
 
     @JsonProperty("NICI")
-    private int nici;
+    private String nici;
 
     @JsonProperty("Ticket")
     private String ticket;
 
     @JsonProperty("CodigoUsuario")
     private String user;
+
+    @JsonProperty("ContratoEnCurso")
+    private String contractInCourse;
+
+    @JsonProperty("NIP")
+    private String nip;
+
+    @JsonProperty("ValidacionSCA")
+    private boolean validationSCA;
+
+    @JsonProperty("Telefono")
+    private String phone;
 
     public String getName() {
         return name;
@@ -36,7 +48,7 @@ public class SessionResponse {
         return userType;
     }
 
-    public int getNici() {
+    public String getNici() {
 
         return nici;
     }
@@ -49,5 +61,13 @@ public class SessionResponse {
     public String getUser() {
 
         return user;
+    }
+
+    public String getContractInCourse() {
+        return contractInCourse;
+    }
+
+    public String getNip() {
+        return nip;
     }
 }

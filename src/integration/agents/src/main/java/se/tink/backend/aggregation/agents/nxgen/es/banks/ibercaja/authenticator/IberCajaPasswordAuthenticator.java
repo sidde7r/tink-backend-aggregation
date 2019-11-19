@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator;
 
-import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaApiClient;
@@ -37,15 +36,7 @@ public class IberCajaPasswordAuthenticator implements PasswordAuthenticator {
                                 IberCajaConstants.DefaultRequestParams.CARD,
                                 IberCajaConstants.DefaultRequestParams.LAST_ACCESS));
 
-        iberCajaSessionStorage.saveTicket(sessionResponse.getTicket());
-        iberCajaSessionStorage.saveFullName(sessionResponse.getName());
-
-        if (!Strings.isNullOrEmpty(sessionResponse.getNif())) {
-            iberCajaSessionStorage.saveDocumentNumber(sessionResponse.getNif());
-        }
-        // store NICI in the session storage to be masked in the logs
-        // remove this if the NICI should not be considered as sensitive ifo
-        iberCajaSessionStorage.saveNici(sessionResponse.getNici());
+        iberCajaSessionStorage.saveInitSessionResponse(sessionResponse);
 
         LoginResponse loginResponse =
                 bankClient.login(

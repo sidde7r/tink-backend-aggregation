@@ -57,14 +57,14 @@ public class IberCajaApiClient {
 
     public FetchAccountResponse fetchAccountList() {
 
-        return createAuthenticatedRequest(IberCajaConstants.Urls.FETCH_MAIN_ACCOUNT)
+        return createRequestInSession(IberCajaConstants.Urls.FETCH_MAIN_ACCOUNT)
                 .get(FetchAccountResponse.class);
     }
 
     public TransactionalDetailsResponse fetchTransactionDetails(
             String bankIdentifier, String dateMin, String dateMax) {
 
-        return createAuthenticatedRequest(IberCajaConstants.Urls.FETCH_ACCOUNT_TRANSACTION)
+        return createRequestInSession(IberCajaConstants.Urls.FETCH_ACCOUNT_TRANSACTION)
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_ACCOUNT, bankIdentifier)
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_START_DATE, dateMin)
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_END_DATE, dateMax)
@@ -73,13 +73,12 @@ public class IberCajaApiClient {
 
     public FetchAccountResponse fetchInvestmentAccounList() {
 
-        return createAuthenticatedRequest(IberCajaConstants.Urls.FETCH_MAIN_ACCOUNT)
+        return createRequestInSession(IberCajaConstants.Urls.FETCH_MAIN_ACCOUNT)
                 .get(FetchAccountResponse.class);
     }
 
     public String fetchInvestmentTransactionDetails(String bankIdentifier) {
-        return createAuthenticatedRequest(
-                        IberCajaConstants.Urls.FETCH_INVESTMENT_ACCOUNT_TRANSACTION)
+        return createRequestInSession(IberCajaConstants.Urls.FETCH_INVESTMENT_ACCOUNT_TRANSACTION)
                 .queryParam(IberCajaConstants.QueryParams.ACCOUNT, bankIdentifier)
                 .queryParam(
                         IberCajaConstants.QueryParams.REQUEST_IS_SPECIALIIST,
@@ -89,7 +88,7 @@ public class IberCajaApiClient {
 
     public FetchAccountResponse fetchCreditCardsList() {
 
-        return createAuthenticatedRequest(IberCajaConstants.Urls.FETCH_MAIN_ACCOUNT)
+        return createRequestInSession(IberCajaConstants.Urls.FETCH_MAIN_ACCOUNT)
                 .get(FetchAccountResponse.class);
     }
 
@@ -100,7 +99,7 @@ public class IberCajaApiClient {
             String dateMin,
             String dateMax) {
 
-        return createAuthenticatedRequest(IberCajaConstants.Urls.FETCH_CREDIT_CARD_ACCOUNT)
+        return createRequestInSession(IberCajaConstants.Urls.FETCH_CREDIT_CARD_ACCOUNT)
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_CARD, bankIdentifier)
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_ORDER, requestOrden)
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_CARD_TYPE, requestTipo)
@@ -112,8 +111,7 @@ public class IberCajaApiClient {
     public boolean isAlive() {
 
         try {
-
-            createRequest(IberCajaConstants.Urls.KEEP_ALIVE).get(HttpResponse.class);
+            createRequestInSession(IberCajaConstants.Urls.KEEP_ALIVE).get(HttpResponse.class);
         } catch (HttpResponseException e) {
 
             return false;
@@ -130,12 +128,32 @@ public class IberCajaApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         IberCajaConstants.Headers.PLAYBACK_MODE,
-                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL);
+                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL)
+                .header(
+                        IberCajaConstants.Headers.APP_ID,
+                        IberCajaConstants.DefaultRequestParams.APP_ID)
+                .header(
+                        IberCajaConstants.Headers.VERSION,
+                        IberCajaConstants.DefaultRequestParams.VERSION)
+                .header(
+                        IberCajaConstants.Headers.CHANNEL,
+                        IberCajaConstants.DefaultRequestParams.CHANNEL_MOBILE)
+                .header(
+                        IberCajaConstants.Headers.DEVICE,
+                        IberCajaConstants.DefaultRequestParams.DEVICE)
+                .header(
+                        IberCajaConstants.Headers.ACCESS_CARD,
+                        IberCajaConstants.DefaultRequestParams.ACCESS_CARD);
     }
 
-    private RequestBuilder createAuthenticatedRequest(URL url) {
+    private RequestBuilder createRequestInSession(URL url) {
         return createRequest(url)
                 .header(IberCajaConstants.Headers.USER, iberCajaSessionStorage.getUsername())
-                .header(IberCajaConstants.Headers.TICKET, iberCajaSessionStorage.getTicket());
+                .header(IberCajaConstants.Headers.TICKET, iberCajaSessionStorage.getTicket())
+                .header(IberCajaConstants.Headers.NICI, iberCajaSessionStorage.getNici())
+                .header(IberCajaConstants.Headers.NIP, iberCajaSessionStorage.getNip())
+                .header(
+                        IberCajaConstants.Headers.CONTRACT,
+                        iberCajaSessionStorage.getContractInCourse());
     }
 }
