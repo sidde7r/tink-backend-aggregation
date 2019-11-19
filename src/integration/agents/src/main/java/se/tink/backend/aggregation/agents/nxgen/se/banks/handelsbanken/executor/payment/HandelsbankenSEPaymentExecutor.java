@@ -335,7 +335,7 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
     // A lot of exceptions are thrown in this executor, this method saves us a lot of lines
     private TransferExecutionException paymentFailedException(EndUserMessage endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setEndUserMessage(endUserMessage)
+                .setEndUserMessage(catalog.getString(endUserMessage))
                 .setMessage(endUserMessage.toString())
                 .build();
     }
