@@ -236,25 +236,15 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                 case WAITING:
                     break;
                 case CANCELLED:
-                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setMessage(catalog.getString(EndUserMessage.BANKID_CANCELLED))
-                            .setEndUserMessage(catalog.getString(EndUserMessage.BANKID_CANCELLED))
-                            .build();
+                    throw paymentCanceledException(EndUserMessage.BANKID_CANCELLED);
                 case FAILED_UNKNOWN:
-                    throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                            .setMessage(catalog.getString(EndUserMessage.BANKID_TRANSFER_FAILED))
-                            .setEndUserMessage(
-                                    catalog.getString(EndUserMessage.BANKID_TRANSFER_FAILED))
-                            .build();
+                    throw paymentFailedException(EndUserMessage.BANKID_TRANSFER_FAILED);
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
-        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage(catalog.getString(EndUserMessage.BANKID_NO_RESPONSE))
-                .setEndUserMessage(catalog.getString(EndUserMessage.BANKID_NO_RESPONSE))
-                .build();
+        throw paymentCanceledException(EndUserMessage.BANKID_NO_RESPONSE);
     }
 
     // Made public since it's used to update e-invoices during approval
@@ -343,11 +333,17 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
     }
 
     // A lot of exceptions are thrown in this executor, this method saves us a lot of lines
-    private TransferExecutionException paymentFailedException(
-            TransferExecutionException.EndUserMessage endUserMessage) {
+    private TransferExecutionException paymentFailedException(EndUserMessage endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(endUserMessage)
                 .setMessage(endUserMessage.toString())
+                .build();
+    }
+
+    private TransferExecutionException paymentCanceledException(EndUserMessage endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(catalog.getString(endUserMessage))
+                .setEndUserMessage(catalog.getString(endUserMessage))
                 .build();
     }
 }
