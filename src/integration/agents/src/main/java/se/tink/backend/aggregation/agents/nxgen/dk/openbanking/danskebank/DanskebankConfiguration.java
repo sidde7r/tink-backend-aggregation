@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.annotations.Secret;
@@ -30,6 +32,7 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
 
     @Override
     public ProviderConfiguration getProviderConfiguration() {
+        Preconditions.checkState(!Strings.isNullOrEmpty(clientId), "ClientId is null or empty.");
         return new ProviderConfiguration(organizationId, new ClientInfo(clientId, ""));
     }
 
