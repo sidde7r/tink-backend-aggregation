@@ -1,58 +1,67 @@
 package se.tink.backend.aggregation.agents.brokers.nordnet.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class AuthenticateBasicLoginResponse {
+
     @JsonProperty("country")
     private String country;
 
-    @JsonProperty("lang")
-    private String lang;
-
     @JsonProperty("logged_in")
-    private Boolean loggedIn;
+    private boolean loggedIn;
+
+    @JsonProperty("session_key")
+    private String sessionKey;
 
     @JsonProperty("session_type")
     private String sessionType;
 
+    @JsonProperty("lang")
+    private String lang;
+
     @JsonProperty("code")
     private String code;
-
-    @JsonProperty("message")
-    private String message;
-
-    public String getCountry() {
-        return country;
-    }
 
     public void setCountry(String country) {
         this.country = country;
     }
 
-    public String getLang() {
-        return lang;
+    public String getCountry() {
+        return country;
     }
 
-    public void setLang(String lang) {
-        this.lang = lang;
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
     }
 
-    public Boolean getLoggedIn() {
+    public boolean isLoggedIn() {
         return loggedIn;
     }
 
-    public void setLoggedIn(Boolean loggedIn) {
-        this.loggedIn = loggedIn;
+    public void setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+    }
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    public void setSessionType(String sessionType) {
+        this.sessionType = sessionType;
     }
 
     public String getSessionType() {
         return sessionType;
     }
 
-    public void setSessionType(String sessionType) {
-        this.sessionType = sessionType;
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    public String getLang() {
+        return lang;
     }
 
     public String getCode() {
@@ -61,13 +70,5 @@ public class AuthenticateBasicLoginResponse {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

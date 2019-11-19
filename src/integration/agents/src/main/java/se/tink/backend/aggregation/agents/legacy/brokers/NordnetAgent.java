@@ -94,12 +94,12 @@ public class NordnetAgent extends AbstractAgent
     }
 
     private boolean loginWithPassword() throws LoginException {
-        Optional<String> accessToken =
+//        Optional<String> accessToken =
                 apiClient.loginWithPassword(
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getField(Field.Key.PASSWORD));
 
-        Preconditions.checkState(accessToken.isPresent());
+        //Preconditions.checkState(accessToken.isPresent());
 
         return true;
     }
