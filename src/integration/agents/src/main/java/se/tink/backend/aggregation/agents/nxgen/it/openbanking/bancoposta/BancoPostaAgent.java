@@ -25,7 +25,7 @@ public class BancoPostaAgent extends CbiGlobeAgent {
 
     @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
-        return new BancoPostaApiClient(client, persistentStorage, requestManual);
+        return new BancoPostaApiClient(client, persistentStorage, requestManual, temporaryStorage);
     }
 
     @Override
