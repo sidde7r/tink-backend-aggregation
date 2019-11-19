@@ -161,7 +161,15 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     public String getDisplayName() {
-        return nickname != null ? nickname : getDefaultIdentifier().getName();
+        if (nickname != null) {
+            return nickname;
+        }
+
+        if (getDefaultIdentifier().getName() != null) {
+            return getDefaultIdentifier().getName();
+        }
+
+        return getDefaultIdentifier().getIdentification();
     }
 
     public String getRawAccountSubType() {
