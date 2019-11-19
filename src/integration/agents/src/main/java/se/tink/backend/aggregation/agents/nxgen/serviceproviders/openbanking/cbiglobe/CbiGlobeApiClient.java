@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -27,11 +28,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -41,12 +44,17 @@ public class CbiGlobeApiClient {
     private final PersistentStorage persistentStorage;
     private CbiGlobeConfiguration configuration;
     private boolean requestManual;
+    protected TemporaryStorage temporaryStorage;
 
     public CbiGlobeApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, boolean requestManual) {
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            boolean requestManual,
+            TemporaryStorage temporaryStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.requestManual = requestManual;
+        this.temporaryStorage = temporaryStorage;
     }
 
     protected CbiGlobeConfiguration getConfiguration() {
@@ -139,21 +147,42 @@ public class CbiGlobeApiClient {
     }
 
     public GetTransactionsResponse getTransactions(
-            String apiIdentifier, Date fromDate, Date toDate, String bookingType) {
+            String apiIdentifier, Date fromDate, Date toDate, String bookingType, int page) {
         try {
-            return createRequestWithConsent(
-                            Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, apiIdentifier))
-                    .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
-                    .queryParam(
-                            QueryKeys.DATE_FROM,
-                            ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                    .queryParam(
-                            QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                    .get(GetTransactionsResponse.class);
+            HttpResponse response =
+                    createRequestWithConsent(
+                                    Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, apiIdentifier))
+                            .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
+                            .queryParam(
+                                    QueryKeys.DATE_FROM,
+                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                            .queryParam(
+                                    QueryKeys.DATE_TO,
+                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                            .queryParam(QueryKeys.OFFSET, String.valueOf(page))
+                            .get(HttpResponse.class);
+
+            String totalPages = getTotalPages(response, apiIdentifier);
+
+            temporaryStorage.putIfAbsent(apiIdentifier, totalPages);
+
+            GetTransactionsResponse getTransactionsResponse =
+                    response.getBody(GetTransactionsResponse.class);
+
+            if (Objects.nonNull(totalPages) && Integer.valueOf(totalPages) > page) {
+                getTransactionsResponse.setPageRemaining(true);
+            }
+
+            return getTransactionsResponse;
         } catch (HttpResponseException e) {
             handleAccessExceededError(e);
             throw e;
         }
+    }
+
+    private String getTotalPages(HttpResponse response, String apiIdentifier) {
+        return Optional.ofNullable(response.getHeaders().getFirst(QueryKeys.TOTAL_PAGES))
+                .orElse(temporaryStorage.get(apiIdentifier));
     }
 
     public void handleAccessExceededError(HttpResponseException e) {

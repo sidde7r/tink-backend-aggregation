@@ -11,14 +11,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CbiGlobeTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-                TransactionDatePaginator<TransactionalAccount> {
+                TransactionPagePaginator<TransactionalAccount> {
 
     private final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -42,15 +42,6 @@ public class CbiGlobeTransactionalAccountFetcher
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public PaginatorResponse getTransactionsFor(
-            TransactionalAccount account, Date fromDate, Date toDate) {
-        fromDate = calculateFromDate(toDate);
-
-        return apiClient.getTransactions(
-                account.getApiIdentifier(), fromDate, toDate, this.queryValue);
-    }
-
     public static CbiGlobeTransactionalAccountFetcher createFromBoth(
             CbiGlobeApiClient apiClient, PersistentStorage persistentStorage) {
         return new CbiGlobeTransactionalAccountFetcher(
@@ -61,5 +52,13 @@ public class CbiGlobeTransactionalAccountFetcher
             CbiGlobeApiClient apiClient, PersistentStorage persistentStorage) {
         return new CbiGlobeTransactionalAccountFetcher(
                 apiClient, persistentStorage, QueryValues.BOOKED);
+    }
+
+    @Override
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
+        Date toDate = new Date();
+        Date fromDate = calculateFromDate(toDate);
+        return apiClient.getTransactions(
+                account.getApiIdentifier(), fromDate, toDate, this.queryValue, page);
     }
 }
