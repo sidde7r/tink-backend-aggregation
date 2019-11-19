@@ -14,6 +14,24 @@ public class SwedbankConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
     @Secret private String redirectUrl;
+    private String qSealc;
+    private String keyIdBase64;
+
+    public String getQSealc() {
+        Preconditions.checkNotNull(
+                com.google.common.base.Strings.emptyToNull(qSealc),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "qSealc"));
+
+        return qSealc;
+    }
+
+    public String getKeyIdBase64() {
+        Preconditions.checkNotNull(
+                com.google.common.base.Strings.emptyToNull(keyIdBase64),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "KeyId"));
+
+        return keyIdBase64;
+    }
 
     public String getClientId() {
         Preconditions.checkNotNull(

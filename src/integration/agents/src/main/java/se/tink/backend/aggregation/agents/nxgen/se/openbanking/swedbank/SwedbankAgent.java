@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -36,10 +35,17 @@ public final class SwedbankAgent extends NextGenerationAgent
     private SwedbankTransactionFetcher transactionFetcher;
 
     public SwedbankAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        apiClient = new SwedbankApiClient(client, persistentStorage);
+        apiClient =
+                new SwedbankApiClient(
+                        client,
+                        persistentStorage,
+                        agentsServiceConfiguration,
+                        this.getEidasIdentity());
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }

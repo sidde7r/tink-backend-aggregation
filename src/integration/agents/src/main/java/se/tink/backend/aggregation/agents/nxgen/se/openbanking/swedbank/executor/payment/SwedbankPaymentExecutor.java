@@ -49,7 +49,16 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         AmountEntity amount = AmountEntity.amountOf(paymentRequest);
 
         CreatePaymentRequest createPaymentRequest =
-                new CreatePaymentRequest(creditor, debtor, amount);
+                new CreatePaymentRequest(
+                        creditor,
+                        debtor,
+                        amount,
+                        "Sweden somewhere",
+                        "Marcus Gadre",
+                        "Testing PIS",
+                        "URGENT",
+                        "OUR",
+                        "Annica Alstermark");
 
         AccountTypePair accountTypePair =
                 new AccountTypePair(paymentRequest.getPayment().getCreditorAndDebtorAccountType());
@@ -58,7 +67,8 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         PaymentResponse paymentResponse =
                 apiClient
-                        .createPayment(createPaymentRequest, paymentType)
+                        .createPayment(
+                                createPaymentRequest, SwedbankPaymentType.SeDomesticCreditTransfers)
                         .toTinkPaymentResponse(
                                 creditor, debtor, amount, paymentType, accountTypePair);
 

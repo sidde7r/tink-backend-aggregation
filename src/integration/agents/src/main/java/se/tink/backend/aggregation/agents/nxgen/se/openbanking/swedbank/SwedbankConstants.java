@@ -42,11 +42,11 @@ public final class SwedbankConstants {
         public static final String ACCOUNT_TRANSACTIONS = "/v2/accounts/{account-id}/transactions";
         public static final String CONSENTS = "/v2/consents";
         public static final String CONSENT_STATUS = CONSENTS + "/{consent-id}/status";
-        public static final String INITIATE_PAYMENT = "/sandbox/v2/payments/{paymentType}";
-        public static final String GET_PAYMENT = "/sandbox/v2/payments/{paymentId}";
-        public static final String GET_PAYMENT_STATUS = "/sandbox/v2/payments/{paymentId}/status";
+        public static final String INITIATE_PAYMENT = "/v2/payments/{paymentType}";
+        public static final String GET_PAYMENT = "/v2/payments/{paymentId}";
+        public static final String GET_PAYMENT_STATUS = "/v2/payments/{paymentId}/status";
         public static final String INITIATE_PAYMENT_AUTH =
-                "/sandbox/v2/payments/{paymentId}/authorisations";
+                "/v2/payments/{paymentId}/authorisations";
     }
 
     public static class UrlParameters {
@@ -86,35 +86,33 @@ public final class SwedbankConstants {
     }
 
     public static class HeaderKeys {
-        public static final String X_REQUEST_ID = "X-Request-ID";
+        public static final String X_REQUEST_ID = "x-request-id";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String FROM_DATE = "dateFrom";
         public static final String TO_DATE = "dateTo";
-        public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
+        public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
         public static final String TPP_NOK_REDIRECT_URI = "TPP-Nok-Redirect-URI";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String PSU_USER_AGENT = "PSU-User-Agent";
+        public static final String ACCEPT = "accept";
+        public static final String PSU_IP = "psu-ip";
+        public static final String DIGEST = "digest";
+        public static final String SIGNATURE = "signature";
+        public static final String TPP_SIGNATURE_CERTIFICATE = "tpp-signature-certificate";
+        public static final String DATE = "date";
     }
 
     public static class HeaderValues {
         public static final String PSU_IP_ADDRESS = "127.0.0.1";
         public static final String PSU_USER_AGENT = "Desktop Mode";
-    }
-
-    public static class BICSandbox {
-        public static final String SWEDEN = "SANDSESS";
-        public static final String LITHUANIA = "SANDLT22";
-        public static final String LATVIA = "SANDLV22";
-        public static final String ESTONIA = "SANDEE2X";
-        public static final String COOPERATING_SAVINGSBANKS_SWEDEN = "SANDSESS";
+        public static final String SIGNATURE_HEADER =
+                "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
+        public static final String DATE_PATTERN = "EEE, dd MMM yyyy k:m:s zzz";
+        public static final String OLD_CERT_ID = "Tink";
     }
 
     public static class BICProduction {
         public static final String SWEDEN = "SWEDSESS";
-        public static final String LITHUANIA = "HABALT22";
-        public static final String LATVIA = "HABALV22";
-        public static final String ESTONIA = "HABAEE2X";
-        public static final String COOPERATING_SAVINGSBANKS_SWEDEN = "SWEDSESS";
     }
 
     public static class ErrorMessages {
@@ -155,5 +153,21 @@ public final class SwedbankConstants {
         public static final String WAITING_FOR_SIGNING = "Waiting for signing";
         public static final String TRANSACTION_SIGNING_TIMED_OUT =
                 "Sign for fetching transactions for the last 25 months, timed out";
+    }
+
+    public enum HeadersToSign {
+        X_REQUEST_ID("x-request-id"),
+        TPP_REDIRECT_URI("tpp-redirect-uri"),
+        DATE("date"),
+        DIGEST("digest");
+        private String header;
+
+        HeadersToSign(String header) {
+            this.header = header;
+        }
+
+        public String getHeader() {
+            return header;
+        }
     }
 }

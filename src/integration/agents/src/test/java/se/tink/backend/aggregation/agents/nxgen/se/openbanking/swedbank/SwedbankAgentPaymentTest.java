@@ -6,28 +6,39 @@ import static org.mockito.Mockito.mock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
 public class SwedbankAgentPaymentTest {
+
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+
+    private AgentIntegrationTest.Builder builder;
+
+    @Before
+    public void setup() {
+        manager.before();
+
+        builder =
+                new AgentIntegrationTest.Builder("se", "se-swedbank-oauth2")
+                        .expectLoggedIn(false)
+                        .setFinancialInstitutionId("swedbank")
+                        .setAppId("tink")
+                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
+    }
 
     @Test
     public void testPayments() throws Exception {
-        AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("se", "se-swedbank-oauth2")
-                        .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
 
-        builder.build().testGenericPayment(createListMockedPayment(2));
+        builder.build().testGenericPayment(createListMockedPayment(1));
     }
 
     private List<Payment> createListMockedPayment(int numberOfMockedPayments) {
@@ -36,13 +47,14 @@ public class SwedbankAgentPaymentTest {
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn("SE9345799757774544436741").when(creditor).getAccountNumber();
+            doReturn(manager.get(Arg.CREDITOR_ACCOUNT)).when(creditor).getAccountNumber();
+            doReturn(manager.get(Arg.CREDITOR_NAME)).when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn("SE4880000123459876543219").when(debtor).getAccountNumber();
+            doReturn(manager.get(Arg.DEBTOR_ACCOUNT)).when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inSEK(new Random().nextInt(100));
+            Amount amount = Amount.inSEK(3);
             LocalDate executionDate = LocalDate.now();
             String currency = "SEK";
 
@@ -57,5 +69,13 @@ public class SwedbankAgentPaymentTest {
         }
 
         return listOfMockedPayments;
+    }
+
+    private enum Arg {
+        SAVE_AFTER,
+        LOAD_BEFORE,
+        DEBTOR_ACCOUNT, // Domestic Swedish account number
+        CREDITOR_ACCOUNT, // Domestic Swedish account number
+        CREDITOR_NAME, // Domestic Swedish account number
     }
 }
