@@ -6,7 +6,9 @@ import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import java.io.PrintStream;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.Collections;
@@ -64,7 +66,7 @@ public class NordnetApiClient {
     private static final Pattern FIND_BANKID_URL =
             Pattern.compile("https://nneid\\.nordnet\\.se/std/method/nordnet\\.se/[a-zA-Z\\d]*/");
 
-    private static final String BASE_URL = "https://www.nordnet.se";
+    private static final String BASE_URL = "https://classic.nordnet.se";
     private static final String CLIENT_ID = "MOBILE_IOS_2";
 
     private static final String AUTHENTICATION_BASIC_LOGIN_URL =
@@ -79,9 +81,9 @@ public class NordnetApiClient {
     private static final String INIT_LOGIN_SESSION_URL = BASE_URL + "/api/2/login/anonymous";
     private static final String LOGIN_PAGE_URL =
             BASE_URL
-                    + "/oauth2/authorize?authType=&client_id="
+                    + "/oauth2/authorize?authType=signin&client_id="
                     + CLIENT_ID
-                    + "&response_type=code&redirect_uri=https://www.nordnet.se/now/mobile/token.html";
+                    + "&response_type=code&redirect_uri=nordnet-react://oauth2/authorize-callback";
     private static final String LOGIN_BANKID_PAGE_URL =
             BASE_URL + "/api/2/authentication/eid/saml/request?eid_method=sbidAnother";
     private static final String FETCH_TOKEN_URL = BASE_URL + "/oauth2/token";
@@ -112,6 +114,7 @@ public class NordnetApiClient {
             TinkApacheHttpClient4 client, String aggregator, Credentials credentials) {
         this.aggregator = aggregator;
         this.client = client;
+        this.client.addFilter(new LoggingFilter(new PrintStream(System.out)));
         this.credentials = credentials;
     }
 
@@ -454,8 +457,10 @@ public class NordnetApiClient {
                 client.resource(url)
                         .header("User-Agent", aggregator)
                         .accept(
-                                MediaType.APPLICATION_JSON_TYPE, MediaType.TEXT_HTML_TYPE,
-                                MediaType.TEXT_PLAIN_TYPE, MediaType.WILDCARD_TYPE)
+                                "text/html",
+                                "application/xhtml+xml",
+                                "application/xml;q=0.9",
+                                "*/*;q=0.8")
                         .type(contentType);
 
         Optional<String> referrer = getReferrer();
@@ -484,7 +489,8 @@ public class NordnetApiClient {
                     String location = getLocationUri(response);
                     return location != null
                             && !location.startsWith("/now/mobile/")
-                            && !location.startsWith("/mux/login/startse.html");
+                            && !location.startsWith("/mux/login/startse.html")
+                            && !location.startsWith("/mux/login/login_eleg.html");
                 }
 
                 private String getLocationUri(HttpResponse response) {
@@ -493,8 +499,10 @@ public class NordnetApiClient {
                     if (header == null) {
                         return null;
                     }
-
-                    return header.getValue().toLowerCase().replace("https://www.nordnet.se", "");
+                    String location =
+                            header.getValue().toLowerCase().replace("https://www.nordnet.se", "");
+                    location = location.toLowerCase().replace("https://classic.nordnet.se", "");
+                    return location;
                 }
             };
 
