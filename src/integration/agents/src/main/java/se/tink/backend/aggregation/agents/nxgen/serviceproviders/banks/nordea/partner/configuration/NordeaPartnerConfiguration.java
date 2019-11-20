@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class NordeaPartnerConfiguration implements ClientConfiguration {
     @Secret private String partnerId;
     @Secret private String baseUrl;
-    @Secret private String nordeaSigningPublicKey;
     @Secret private String nordeaEncryptionPublicKey;
     @SensitiveSecret private String partnerKeystorePassword;
     @Secret private String keyId;
@@ -29,13 +28,6 @@ public class NordeaPartnerConfiguration implements ClientConfiguration {
                 !Strings.isNullOrEmpty(partnerId),
                 "Invalid configuration - partnerId shouldn't be empty/null");
         return partnerId;
-    }
-
-    public String getNordeaSigningPublicKey() {
-        Preconditions.checkState(
-                !Strings.isNullOrEmpty(nordeaSigningPublicKey),
-                "Invalid configuration - nordeaSigningPublicKey shouldn't be empty/null");
-        return nordeaSigningPublicKey;
     }
 
     public String getNordeaEncryptionPublicKey() {

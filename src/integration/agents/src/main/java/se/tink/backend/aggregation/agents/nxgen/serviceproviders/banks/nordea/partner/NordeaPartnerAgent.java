@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.configuration.NordeaPartnerConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.NordeaPartnerTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.filter.NordeaHttpRetryFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.filter.NordeaServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.session.NordeaPartnerSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -35,7 +36,7 @@ public class NordeaPartnerAgent extends NextGenerationAgent
     public NordeaPartnerAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, true);
-        apiClient = new NordeaPartnerApiClient(client, sessionStorage);
+        apiClient = new NordeaPartnerApiClient(client, sessionStorage, credentials);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
@@ -67,16 +68,13 @@ public class NordeaPartnerAgent extends NextGenerationAgent
                 new NordeaHttpRetryFilter(
                         NordeaPartnerConstants.HttpFilters.MAX_NUM_RETRIES,
                         NordeaPartnerConstants.HttpFilters.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new NordeaServiceUnavailableFilter());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         NordeaPartnerAuthenticator authenticator =
-                new NordeaPartnerAuthenticator(
-                        supplementalInformationController,
-                        persistentStorage,
-                        sessionStorage,
-                        jweHelper);
+                new NordeaPartnerAuthenticator(credentials, sessionStorage, jweHelper);
         return new AutoAuthenticationController(
                 request, systemUpdater, authenticator, authenticator);
     }

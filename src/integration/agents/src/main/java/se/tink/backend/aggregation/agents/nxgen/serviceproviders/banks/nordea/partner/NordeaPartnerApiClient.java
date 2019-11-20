@@ -3,7 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.p
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.EndPoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.PathParamsKeys;
@@ -24,12 +25,15 @@ public class NordeaPartnerApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+    private final Credentials credentials;
     private NordeaPartnerConfiguration configuration;
     private NordeaPartnerJweHelper jweHelper;
 
-    public NordeaPartnerApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public NordeaPartnerApiClient(
+            TinkHttpClient client, SessionStorage sessionStorage, Credentials credentials) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.credentials = credentials;
     }
 
     public void setConfiguration(NordeaPartnerConfiguration configuration) {
@@ -97,13 +101,7 @@ public class NordeaPartnerApiClient {
 
     private OAuth2Token refreshAccessToken() {
         // if access token is expired we can generate a new access token using the puid
-        String partnerUid =
-                sessionStorage
-                        .get(NordeaPartnerConstants.StorageKeys.PARTNER_USER_ID, String.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SessionError.SESSION_EXPIRED.exception()));
+        String partnerUid = credentials.getField(Field.Key.USERNAME);
         OAuth2Token oAuth2Token = jweHelper.createToken(partnerUid);
         sessionStorage.put(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
         return oAuth2Token;
