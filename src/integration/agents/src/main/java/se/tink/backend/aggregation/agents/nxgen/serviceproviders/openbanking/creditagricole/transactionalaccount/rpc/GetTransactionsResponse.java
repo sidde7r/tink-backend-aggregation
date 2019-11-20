@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.TransactionsLinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -22,7 +24,9 @@ public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return null;
+        return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     @Override
