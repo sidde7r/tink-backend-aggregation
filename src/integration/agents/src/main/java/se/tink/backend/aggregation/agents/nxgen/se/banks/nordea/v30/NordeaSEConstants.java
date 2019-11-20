@@ -298,12 +298,15 @@ public class NordeaSEConstants {
         public static final String EXTERNAL_SERVICE_CALL_FAILED = "External service call failed";
         public static final String INTERNAL_SERVER_ERROR = "internal_server_error";
         public static final String INTERNAL_SERVER_ERROR_MESSAGE =
-                "Something went wrong. Please try again later.";
+                "Something went wrong. Please try again later.".toLowerCase();
         public static final String SIGNING_COLLISION = "signing_collision";
         public static final String SIGNING_COLLISION_MESSAGE = "A signing collision has occurred.";
-        public static final String WRONG_TO_ACCOUNT_LENGTH = "BESE112";
+        public static final String WRONG_TO_ACCOUNT_LENGTH = "BESE1125";
         public static final String WRONG_TO_ACCOUNT_LENGHT_MESSAGE =
                 "Wrong To account length for the chosen bank";
+        public static final String REMOTE_SERVICE_ERROR = "unknown_execution_error_remote_service";
+        public static final String REMOTE_SERVICE_ERROR_MESSAGE =
+                "An exception has occurred when invoking remote service.".toLowerCase();
     }
 
     public static class LogTags {
