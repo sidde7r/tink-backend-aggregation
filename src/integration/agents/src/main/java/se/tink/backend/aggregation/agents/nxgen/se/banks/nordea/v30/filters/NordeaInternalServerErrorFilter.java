@@ -18,12 +18,18 @@ public class NordeaInternalServerErrorFilter extends Filter {
         HttpResponse response = nextFilter(httpRequest);
         if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR && response.hasBody()) {
             String body = response.getBody(String.class);
-            if (!Strings.isNullOrEmpty(body)
-                    && body.toLowerCase().contains(ErrorCodes.INTERNAL_SERVER_ERROR)
-                    && body.toLowerCase().contains(ErrorCodes.INTERNAL_SERVER_ERROR_MESSAGE)) {
+            if (!Strings.isNullOrEmpty(body) && isBankSideFailure(body)) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
         }
         return response;
+    }
+
+    private boolean isBankSideFailure(String body) {
+        String lowerCaseBody = body.toLowerCase();
+        return (lowerCaseBody.contains(ErrorCodes.INTERNAL_SERVER_ERROR)
+                        && lowerCaseBody.contains(ErrorCodes.INTERNAL_SERVER_ERROR_MESSAGE))
+                || (lowerCaseBody.contains(ErrorCodes.REMOTE_SERVICE_ERROR)
+                        && lowerCaseBody.contains(ErrorCodes.REMOTE_SERVICE_ERROR_MESSAGE));
     }
 }
