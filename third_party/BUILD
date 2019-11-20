@@ -1466,6 +1466,8 @@ java_library(
         "@org_seleniumhq_selenium_selenium_remote_driver//jar",
         "@org_seleniumhq_selenium_selenium_safari_driver//jar",
         "@org_seleniumhq_selenium_selenium_support//jar",
+    ],
+    runtime_deps = [
         "@org_w3c_css_sac//jar",
         "@org_webbitserver_webbit//jar",
         "@xalan_serializer//jar",
