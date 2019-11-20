@@ -107,7 +107,8 @@ public final class SwedbankConstants {
 
     public static class HeaderValues {
         public static final String PSU_IP_ADDRESS = "127.0.0.1";
-        public static final String PSU_USER_AGENT = "Desktop Mode";
+        public static final String PSU_USER_AGENT =
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1";
         public static final String SIGNATURE_HEADER =
                 "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
         public static final String DATE_PATTERN = "EEE, dd MMM yyyy k:m:s zzz";
