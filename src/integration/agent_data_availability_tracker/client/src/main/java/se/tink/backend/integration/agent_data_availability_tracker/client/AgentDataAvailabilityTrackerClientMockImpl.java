@@ -18,6 +18,14 @@ public class AgentDataAvailabilityTrackerClientMockImpl
             AccountFeatures features) {}
 
     @Override
+    public void sendIdentityData(
+            final String agent,
+            final String provider,
+            final String market,
+            final se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
+                    identityData) {}
+
+    @Override
     public void endStreamBlocking() throws InterruptedException {}
 
     @Override
