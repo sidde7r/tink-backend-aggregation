@@ -585,12 +585,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_ie_driver",
-    artifact = "org.seleniumhq.selenium:selenium-ie-driver:2.29.0",
-    sha1 = "5761f8a5a5cba5db62cb9ac082cdcdab5509a7d5",
-)
-
-maven_jar(
     name = "javax_el_javax_el_api",
     artifact = "javax.el:javax.el-api:2.2.5",
     sha1 = "370140e991eefb212a6d6baedbce585f00ef76e0",
@@ -2619,6 +2613,7 @@ maven_install(
     name = "selenium",
     artifacts = [
         "org.seleniumhq.selenium:selenium-firefox-driver:3.141.59",
+        "org.seleniumhq.selenium:selenium-ie-driver:3.141.59",
     ],
     fetch_sources = True,
     override_targets = {
