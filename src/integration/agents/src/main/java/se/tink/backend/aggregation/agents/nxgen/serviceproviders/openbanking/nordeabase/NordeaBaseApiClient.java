@@ -1,11 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues.SCOPE;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues.SCOPE_WITHOUT_PAYMENT;
+
+import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
@@ -89,9 +94,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                         NordeaBaseConstants.QueryKeys.DURATION,
                                         NordeaBaseConstants.QueryValues.DURATION_MINUTES)
                                 .queryParam(NordeaBaseConstants.QueryKeys.COUNTRY, country)
-                                .queryParam(
-                                        NordeaBaseConstants.QueryKeys.SCOPE,
-                                        NordeaBaseConstants.QueryValues.SCOPE)
+                                .queryParam(NordeaBaseConstants.QueryKeys.SCOPE, getScopes())
                                 .queryParam(
                                         NordeaBaseConstants.QueryKeys.REDIRECT_URI,
                                         configuration.getRedirectUrl()))
@@ -273,5 +276,26 @@ public class NordeaBaseApiClient implements TokenInterface {
             }
         }
         throw hre;
+    }
+
+    private String getScopes() {
+        List<String> scopes = configuration.getScopes();
+        if (scopes.stream()
+                .allMatch(scope -> NordeaSeConstants.Scopes.AIS.equalsIgnoreCase(scope))) {
+            // Return only AIS scopes
+            return SCOPE_WITHOUT_PAYMENT;
+        } else if (scopes.stream()
+                .allMatch(
+                        scope ->
+                                NordeaSeConstants.Scopes.AIS.equalsIgnoreCase(scope)
+                                        || NordeaSeConstants.Scopes.PIS.equalsIgnoreCase(scope))) {
+            // Return AIS + PIS scopes
+            return SCOPE;
+        } else {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "%s contain invalid scope(s), only support scopes AIS and PIS",
+                            scopes.toString()));
+        }
     }
 }
