@@ -106,6 +106,10 @@ agentsServiceConfiguration:
       host: "http://zproxy.lum-superproxy.io:22225"
       username: "lum-customer-tink_ab-zone-spain-country-es"
       password: "dummyPassword"
+    be:
+      host: "http://zproxy.lum-superproxy.io:22225"
+      username: "lum-customer-tink_ab-zone-belgium"
+      password: "dummyPassword"
   integrations:
     icsConfiguration:
       abn:
@@ -601,6 +605,7 @@ agentsServiceConfiguration:
     censorSensitiveHeaders: false
   featureFlags:
     esProxy: false
+    beProxy: false
 
 providerConfigurationServiceConfiguration:
   host: provider-configuration-api.provider-configuration.svc.cluster.local # add to your /etc/hosts with 127.0.0.1

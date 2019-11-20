@@ -55,6 +55,7 @@ eventProducerServiceConfiguration:
 
 featureFlags:
   esProxy: true
+  beProxy: true
 
 providerConfigurationServiceConfiguration:
   enabled: true
