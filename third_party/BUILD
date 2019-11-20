@@ -904,6 +904,17 @@ java_library(
 )
 
 java_library(
+    name = "xerces_xercesImpl",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@xerces_xercesImpl//jar",
+    ],
+    runtime_deps = [
+        "@xml_apis_xml_apis//jar",
+    ],
+)
+
+java_library(
     # TODO: check is this used?
     name = "net_sourceforge_htmlunit_htmlunit",
     visibility = ["//visibility:public"],
@@ -1389,6 +1400,9 @@ java_library(
     name = "org_seleniumhq_selenium_selenium_htmlunit_driver",
     visibility = ["//visibility:public"],
     exports = [
+        "@org_seleniumhq_selenium_selenium_htmlunit_driver//jar",
+    ],
+    runtime_deps = [
         "@commons_codec_commons_codec//jar",
         "@commons_collections_commons_collections//jar",
         "@commons_io_commons_io//jar",
@@ -1406,7 +1420,6 @@ java_library(
         "@org_eclipse_jetty_jetty_util//jar",
         "@org_eclipse_jetty_jetty_websocket//jar",
         "@org_seleniumhq_selenium_selenium_api//jar",
-        "@org_seleniumhq_selenium_selenium_htmlunit_driver//jar",
         "@org_w3c_css_sac//jar",
         "@xalan_serializer//jar",
         "@xalan_xalan//jar",
