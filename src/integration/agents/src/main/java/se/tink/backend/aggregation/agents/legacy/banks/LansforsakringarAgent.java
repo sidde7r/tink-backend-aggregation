@@ -117,6 +117,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
@@ -323,14 +324,10 @@ public class LansforsakringarAgent extends AbstractAgent
                     // försök igen. Kontakta oss om problemet kvarstår.
                     // This occurs if the user enters the wrong personal number, e.g. 188705030142
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
+                case "00012":
+                case "00019":
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
                 default:
-                    // TODO: If we get this often and the fault is on their side, do an
-                    // implementation which handles that specific error.
-                    // Known errors:
-                    // - 00012 "Tyvärr har det uppstått ett tekniskt fel. Försök igen och kontakta
-                    // oss om problemet kvarstår."
-                    // - 00019 "Tyvärr har det uppstått ett tekniskt fel. Försök igen och kontakta
-                    // oss om problemet kvarstår."
                     throw new IllegalStateException(
                             String.format(
                                     "#login-refactoring - LF - Login failed with errorCode: %s, errorMessage: %s",
@@ -570,7 +567,7 @@ public class LansforsakringarAgent extends AbstractAgent
             return upcomingTransactionListResponse.getUpcomingTransactions();
 
         } else {
-            log.error(
+            log.warn(
                     "Could not fetch upcoming transactions (status: "
                             + clientResponse.getStatus()
                             + ")");
