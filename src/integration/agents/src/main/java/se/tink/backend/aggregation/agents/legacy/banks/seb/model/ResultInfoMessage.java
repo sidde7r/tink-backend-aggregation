@@ -12,6 +12,7 @@ public class ResultInfoMessage {
             ImmutableMap.<String, String>builder()
                     .put("PCB046H", "Transfer validation: DueDate is before next business day")
                     .put("PCB03G0", "Transfer validation: The user does not have enough money")
+                    .put("PCB03K1", "Transfer validation: The destination account is not correct")
                     .build();
 
     public String TableName;
