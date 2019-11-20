@@ -99,7 +99,7 @@ public class LoginAgentWorkerCommandTest {
     public void executeForProgressiveAuthAgentShouldLogin() throws Exception {
         // given
         SteppableAuthenticationResponse steppableAuthenticationResponse =
-                SteppableAuthenticationResponse.finalResponse("");
+                SteppableAuthenticationResponse.finalResponse();
         ProgressiveAuthAgent agent = Mockito.mock(ProgressiveAuthAgent.class);
         Mockito.when(agent.login(Mockito.any())).thenReturn(steppableAuthenticationResponse);
         prepareStateForLogin(agent);

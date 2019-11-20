@@ -7,39 +7,26 @@ public final class SteppableAuthenticationResponse implements AuthenticationStep
 
     private final Optional<String> nextStepIdentifier;
     private final SupplementInformationRequester supplementInformationRequester;
-    private final String persistentData;
 
     private SteppableAuthenticationResponse(
-            final String nextStepIdentifier,
-            final SupplementInformationRequester response,
-            final String persistentData) {
+            final String nextStepIdentifier, final SupplementInformationRequester response) {
         this.nextStepIdentifier = Optional.of(nextStepIdentifier);
         this.supplementInformationRequester = Preconditions.checkNotNull(response);
-        this.persistentData = persistentData;
     }
 
-    private SteppableAuthenticationResponse(final String persistentData) {
+    private SteppableAuthenticationResponse() {
         nextStepIdentifier = Optional.empty();
-        this.persistentData = persistentData;
         supplementInformationRequester = null;
     }
 
-    @Deprecated
     public static SteppableAuthenticationResponse intermediateResponse(
             final String nextStepIdentifier, final SupplementInformationRequester response) {
 
-        return new SteppableAuthenticationResponse(nextStepIdentifier, response, null);
+        return new SteppableAuthenticationResponse(nextStepIdentifier, response);
     }
 
-    public static SteppableAuthenticationResponse intermediateResponse(
-            final String nextStepIdentifier,
-            final SupplementInformationRequester response,
-            final String persistentData) {
-        return new SteppableAuthenticationResponse(nextStepIdentifier, response, persistentData);
-    }
-
-    public static SteppableAuthenticationResponse finalResponse(final String persistentData) {
-        return new SteppableAuthenticationResponse(persistentData);
+    public static SteppableAuthenticationResponse finalResponse() {
+        return new SteppableAuthenticationResponse();
     }
 
     @Override
@@ -49,9 +36,5 @@ public final class SteppableAuthenticationResponse implements AuthenticationStep
 
     public SupplementInformationRequester getSupplementInformationRequester() {
         return supplementInformationRequester;
-    }
-
-    public String getPersistentData() {
-        return persistentData;
     }
 }

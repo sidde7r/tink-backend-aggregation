@@ -29,8 +29,7 @@ final class FinalStep implements AuthenticationStep {
         this.apiClient = apiClient;
     }
 
-    @Override
-    public SupplementInformationRequester respond(final AuthenticationRequest request)
+    public Optional<SupplementInformationRequester> execute(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         final String panNr =
                 kbcAuthenticator.verifyCredentialsNotNullOrEmpty(
@@ -59,13 +58,6 @@ final class FinalStep implements AuthenticationStep {
 
         kbcAuthenticator.login(device);
 
-        return SupplementInformationRequester.empty();
-    }
-
-    @Override
-    public Optional<SupplementInformationRequester> execute(
-            AuthenticationRequest request, Object persistentData)
-            throws AuthenticationException, AuthorizationException {
-        throw new AssertionError("Not yet implemented");
+        return Optional.empty();
     }
 }

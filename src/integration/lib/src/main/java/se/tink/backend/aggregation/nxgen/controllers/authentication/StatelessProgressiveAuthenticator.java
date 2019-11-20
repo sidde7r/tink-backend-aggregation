@@ -1,37 +1,26 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
 
-public abstract class StatelessProgressiveAuthenticator<T> implements ProgressiveAuthenticator {
-
-    private Class<T> persistentDataClass;
-
-    public StatelessProgressiveAuthenticator(Class<T> persistentDataClass) {
-        this.persistentDataClass = persistentDataClass;
-    }
+public abstract class StatelessProgressiveAuthenticator implements AuthenticationControllerType {
 
     public SteppableAuthenticationResponse processAuthentication(
             final SteppableAuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        T persistentData = deserializePersistentData(request.getPersistentData());
         List<? extends AuthenticationStep> stepsToProcess = findAndExtractStepsToProcess(request);
         for (AuthenticationStep step : stepsToProcess) {
-            Optional<SupplementInformationRequester> response =
-                    step.execute(request.getPayload(), persistentData);
+            Optional<SupplementInformationRequester> response = step.execute(request.getPayload());
             if (response.isPresent()) {
                 return SteppableAuthenticationResponse.intermediateResponse(
-                        step.getIdentifier(),
-                        response.get(),
-                        serializePersistentData(persistentData));
+                        step.getIdentifier(), response.get());
             }
         }
-        return SteppableAuthenticationResponse.finalResponse(
-                serializePersistentData(persistentData));
+        return SteppableAuthenticationResponse.finalResponse();
     }
 
     private List<? extends AuthenticationStep> findAndExtractStepsToProcess(
@@ -51,22 +40,6 @@ public abstract class StatelessProgressiveAuthenticator<T> implements Progressiv
         }
     }
 
-    private T deserializePersistentData(String persistentData) {
-        try {
-
-            if (persistentData == null) {
-                return persistentDataClass.newInstance();
-            }
-            Gson gson = new Gson();
-            return gson.fromJson(persistentData, persistentDataClass);
-        } catch (IllegalAccessException | InstantiationException e) {
-            throw new IllegalStateException(
-                    "Error occur during JSON persistent data deserialization");
-        }
-    }
-
-    private String serializePersistentData(T persistentData) {
-        Gson gson = new Gson();
-        return gson.toJson(persistentData);
-    }
+    public abstract Iterable<? extends AuthenticationStep> authenticationSteps()
+            throws AuthenticationException, AuthorizationException;
 }

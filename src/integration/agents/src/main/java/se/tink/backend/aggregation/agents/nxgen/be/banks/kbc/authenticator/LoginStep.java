@@ -4,7 +4,6 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcApiClient;
@@ -35,7 +34,7 @@ final class LoginStep implements AuthenticationStep {
     }
 
     @Override
-    public SupplementInformationRequester respond(final AuthenticationRequest request)
+    public Optional<SupplementInformationRequester> execute(final AuthenticationRequest request)
             throws LoginException, AuthorizationException {
         final Credentials credentials = request.getCredentials();
 
@@ -49,15 +48,11 @@ final class LoginStep implements AuthenticationStep {
 
         String challengeCode = apiClient.challenge(cipherKey);
 
-        return SupplementInformationRequester.fromSupplementalFields(
-                supplementalInformationFormer.formChallengeResponseFields(
-                        Key.LOGIN_DESCRIPTION, Key.LOGIN_INPUT, challengeCode));
-    }
-
-    @Override
-    public Optional<SupplementInformationRequester> execute(
-            AuthenticationRequest request, Object persistentData)
-            throws AuthenticationException, AuthorizationException {
-        throw new AssertionError("Not yet implemented");
+        return Optional.of(
+                new SupplementInformationRequester.Builder()
+                        .withFields(
+                                supplementalInformationFormer.formChallengeResponseFields(
+                                        Key.LOGIN_DESCRIPTION, Key.LOGIN_INPUT, challengeCode))
+                        .build());
     }
 }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller;
 
 import com.google.common.base.Strings;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public final class SignStep implements AuthenticationStep {
     }
 
     @Override
-    public SupplementInformationRequester respond(final AuthenticationRequest request)
+    public Optional<SupplementInformationRequester> execute(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         logger.info("ING SignStep: {}", request.getUserInputsAsList());
 
@@ -49,17 +50,11 @@ public final class SignStep implements AuthenticationStep {
                 authenticator.initEnroll(username, cardNumber, otp);
         request.getCredentials()
                 .setSensitivePayload(SIGN_ID, challengeExchangeValues.getSigningId());
-        return SupplementInformationRequester.fromSupplementalFields(
+        List<Field> fields =
                 supplementalInformationFormer.formChallengeResponseFields(
                         Key.SIGN_CODE_DESCRIPTION,
                         Key.SIGN_CODE_INPUT,
-                        challengeExchangeValues.getChallenge()));
-    }
-
-    @Override
-    public Optional<SupplementInformationRequester> execute(
-            AuthenticationRequest request, Object persistentData)
-            throws AuthenticationException, AuthorizationException {
-        throw new AssertionError("Not yet implemented");
+                        challengeExchangeValues.getChallenge());
+        return Optional.of(new SupplementInformationRequester.Builder().withFields(fields).build());
     }
 }

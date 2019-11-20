@@ -13,6 +13,7 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester.Builder;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.sa.model.auth.AuthenticationRequest;
@@ -44,7 +45,7 @@ public class AuthenticationService {
         }
 
         if (request.getPayload().getUserInputs() != null) {
-            builder.addAllUserInputs(request.getPayload().getUserInputs());
+            builder.addAllUserInputs(request.getPayload().getUserInputs().values());
         }
 
         if (request.getPayload().getCallbackData() != null) {
@@ -144,33 +145,27 @@ public class AuthenticationService {
 
     private SteppableAuthenticationResponse mapResponse(
             final AuthenticationResponse authenticationResponse) {
-
+        final Builder supplementInformationRequesterBuilder =
+                new se.tink.backend.aggregation.nxgen.controllers.authentication
+                        .SupplementInformationRequester.Builder();
         if (authenticationResponse.getFieldsCount() > 0) {
-            return SteppableAuthenticationResponse.finalResponse(
-                    se.tink.backend.aggregation.nxgen.controllers.authentication
-                            .AuthenticationResponse.fromSupplementalFields(
-                            mapFieldList(authenticationResponse.getFieldsList())));
+            supplementInformationRequesterBuilder.withFields(
+                    mapFieldList(authenticationResponse.getFieldsList()));
         }
 
         if (authenticationResponse.getPayload() != null) {
-            return SteppableAuthenticationResponse.finalResponse(
-                    se.tink.backend.aggregation.nxgen.controllers.authentication
-                            .AuthenticationResponse.openThirdPartyApp(
-                            mapThirdPartyAppAuthenticationPayload(
-                                    authenticationResponse.getPayload())));
+            supplementInformationRequesterBuilder.withThirdPartyAppAuthenticationPayload(
+                    mapThirdPartyAppAuthenticationPayload(authenticationResponse.getPayload()));
         }
 
         if (authenticationResponse.getSupplementalWaitRequest() != null) {
-            return SteppableAuthenticationResponse.finalResponse(
-                    se.tink.backend.aggregation.nxgen.controllers.authentication
-                            .AuthenticationResponse.requestWaitingForSupplementalInformation(
-                            mapSupplementalWaitRequest(
-                                    authenticationResponse.getSupplementalWaitRequest())));
+            supplementInformationRequesterBuilder.withSupplementalWaitRequest(
+                    mapSupplementalWaitRequest(
+                            authenticationResponse.getSupplementalWaitRequest()));
         }
 
-        return SteppableAuthenticationResponse.finalResponse(
-                se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse
-                        .empty());
+        return SteppableAuthenticationResponse.intermediateResponse(
+                authenticationResponse.getStepId(), supplementInformationRequesterBuilder.build());
     }
 
     private SupplementalWaitRequest mapSupplementalWaitRequest(

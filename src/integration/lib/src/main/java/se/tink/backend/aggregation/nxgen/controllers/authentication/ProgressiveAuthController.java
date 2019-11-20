@@ -52,12 +52,12 @@ public final class ProgressiveAuthController {
                                         new IllegalStateException(
                                                 "The agent seems to have defined no steps"));
         if (isLastStep(stepToExecute, authenticationSteps)) {
-            return SteppableAuthenticationResponse.finalResponse(request.getPersistentData());
+            return SteppableAuthenticationResponse.finalResponse();
         } else {
             final AuthenticationStep upcomingStep =
                     authenticationSteps.get(authenticationSteps.indexOf(stepToExecute) + 1);
             return SteppableAuthenticationResponse.intermediateResponse(
-                    upcomingStep.getIdentifier(), stepToExecute.respond(loadedRequest));
+                    upcomingStep.getIdentifier(), stepToExecute.execute(loadedRequest).get());
         }
     }
 
