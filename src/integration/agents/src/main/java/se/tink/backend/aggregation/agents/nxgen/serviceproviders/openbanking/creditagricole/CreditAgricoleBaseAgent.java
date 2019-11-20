@@ -97,7 +97,9 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                 new CreditAgricoleBaseTransactionalAccountFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
-                metricRefreshController, updateController, accountFetcher,
+                metricRefreshController,
+                updateController,
+                accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(accountFetcher)));

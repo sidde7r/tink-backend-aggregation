@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount;
 
 import java.util.Collection;
-import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -11,7 +10,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class CreditAgricoleBaseTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount>, TransactionKeyPaginator<TransactionalAccount, URL> {
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, URL> {
 
     private final CreditAgricoleBaseApiClient apiClient;
 
@@ -32,7 +32,8 @@ public class CreditAgricoleBaseTransactionalAccountFetcher
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(TransactionalAccount account, URL next) {
+    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
+            TransactionalAccount account, URL next) {
         return apiClient.getTransactions(account.getApiIdentifier(), next);
     }
 }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient;
 
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.HeaderKeys;
@@ -9,8 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-
-import java.util.Optional;
 
 class TransactionsUtils {
 
@@ -33,7 +32,10 @@ class TransactionsUtils {
     static String getUrl(final String baseUrl, final String id, final URL next) {
         return Optional.ofNullable(next)
                 .map(n -> new URL(baseUrl + n.get()))
-                .orElseGet(() -> new URL(baseUrl + ApiServices.TRANSACTIONS).parameter(IdTags.ACCOUNT_ID, id))
+                .orElseGet(
+                        () ->
+                                new URL(baseUrl + ApiServices.TRANSACTIONS)
+                                        .parameter(IdTags.ACCOUNT_ID, id))
                 .get();
     }
 }
