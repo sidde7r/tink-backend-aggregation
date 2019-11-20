@@ -40,6 +40,7 @@ public class FetchAccountResponse {
     @JsonIgnore
     public IdentityData getIdentityData(final Credentials credentials) {
         return accounts.stream()
+                .filter(AccountEntity::isPersonalAccount)
                 .map(AccountEntity::getRoles)
                 .filter(Objects::nonNull)
                 .filter(roleList -> roleList.size() == 1)

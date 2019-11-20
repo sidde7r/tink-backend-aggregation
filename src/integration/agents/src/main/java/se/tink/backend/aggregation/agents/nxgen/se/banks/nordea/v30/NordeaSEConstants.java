@@ -263,8 +263,9 @@ public class NordeaSEConstants {
         public static final String NORDEA_CLEARING_NUMBER = "3300";
     }
 
-    public static class InvestmentAccounts {
-        public static final String PRODUCT_NAME = "ISK";
+    public static class ProductName {
+        public static final String INVESTMENT = "ISK";
+        public static final String BUSINESS = "FÖRETAG";
     }
 
     public static class ErrorCodes {

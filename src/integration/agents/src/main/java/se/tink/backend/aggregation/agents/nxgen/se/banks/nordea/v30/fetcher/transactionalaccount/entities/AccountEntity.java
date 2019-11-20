@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.InvestmentAccounts;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.ProductName;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -190,13 +190,20 @@ public class AccountEntity implements GeneralAccountEntity {
      *
      * @return
      */
+    @JsonIgnore
     private boolean isISKAccount() {
-        return StringUtils.containsIgnoreCase(productName, InvestmentAccounts.PRODUCT_NAME);
+        return StringUtils.containsIgnoreCase(productName, ProductName.INVESTMENT);
     }
 
     // This method used for setting uniqueId is taken from the legacy Nordea agent.
     @JsonIgnore
     private String maskAccountNumber() {
         return "************" + accountNumber.substring(accountNumber.length() - 4);
+    }
+
+    @JsonIgnore
+    public boolean isPersonalAccount() {
+        // filtering business accounts
+        return !StringUtils.containsIgnoreCase(productName, ProductName.BUSINESS);
     }
 }
