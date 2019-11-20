@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -156,6 +157,7 @@ public class AccountEntity {
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
+                .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .build();
     }
 
