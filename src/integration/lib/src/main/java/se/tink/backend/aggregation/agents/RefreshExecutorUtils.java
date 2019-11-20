@@ -158,7 +158,7 @@ public final class RefreshExecutorUtils {
                     }
                     break;
                 case IDENTITY_DATA:
-                    context.sendIdentityToIdentityAggregatorService(
+                    context.cacheIdentityData(
                             ((RefreshIdentityDataExecutor) agent)
                                     .fetchIdentityData()
                                     .getIdentityData());

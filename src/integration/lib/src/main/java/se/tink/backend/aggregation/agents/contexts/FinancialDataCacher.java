@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.libraries.identitydata.IdentityData;
 
 public interface FinancialDataCacher {
 
@@ -18,6 +19,8 @@ public interface FinancialDataCacher {
      * @param transactions Transactions to be stored in this context
      */
     void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions);
+
+    void cacheIdentityData(IdentityData identityData);
 
     /**
      * Caches {@code account} and the associated {@code accountFeatures}.

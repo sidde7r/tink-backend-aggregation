@@ -74,6 +74,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected boolean isWhitelistRefresh;
     protected ControllerWrapper controllerWrapper;
 
+    protected IdentityData identityData;
+
     public AgentWorkerContext(
             CredentialsRequest request,
             MetricRegistry metricRegistry,
@@ -592,7 +594,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void sendIdentityToIdentityAggregatorService(IdentityData identityData) {
+    public void cacheIdentityData(IdentityData identityData) {
+        this.identityData = identityData;
+    }
+
+    @Override
+    public void sendIdentityToIdentityAggregatorService() {
+
+        if (identityData == null) {
+            return;
+        }
 
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
                 simplifiedIdentityData =

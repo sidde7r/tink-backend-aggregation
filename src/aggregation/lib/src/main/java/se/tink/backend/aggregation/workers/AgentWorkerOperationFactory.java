@@ -247,6 +247,7 @@ public class AgentWorkerOperationFactory {
                             createCommandMetricState(request),
                             agentDataAvailabilityTrackerClient));
         }
+
         return commands;
     }
 

@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.counters.Counter;
@@ -275,6 +276,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
 
     public List<Pair<Account, AccountFeatures>> getCachedAccountsWithFeatures() {
         return new ArrayList<>(allAvailableAccountsByUniqueId.values());
+    }
+
+    public IdentityData getCachedIdentityData() {
+        return identityData;
     }
 
     @Override
