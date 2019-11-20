@@ -1665,12 +1665,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_java",
-    artifact = "org.seleniumhq.selenium:selenium-java:2.29.0",
-    sha1 = "cb582e26966dcd641910b446ab559e14b71ceb07",
-)
-
-maven_jar(
     name = "org_seleniumhq_selenium_selenium_support",
     artifact = "org.seleniumhq.selenium:selenium-support:2.29.0",
     sha1 = "df807afb2e64a819da0e5cfb106892cfc5536131",
@@ -2577,6 +2571,7 @@ maven_install(
         "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0",
         "org.seleniumhq.selenium:selenium-ie-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-iphone-driver:2.39.0",
+        "org.seleniumhq.selenium:selenium-java:3.141.59",
         "org.seleniumhq.selenium:selenium-remote-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-safari-driver:3.141.59",
     ],
