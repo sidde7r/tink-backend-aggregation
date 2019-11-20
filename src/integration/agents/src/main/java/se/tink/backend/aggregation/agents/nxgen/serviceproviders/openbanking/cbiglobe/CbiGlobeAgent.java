@@ -22,9 +22,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class CbiGlobeAgent extends NextGenerationAgent
@@ -33,11 +34,13 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
     protected final String clientName;
     protected CbiGlobeApiClient apiClient;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
+    protected TemporaryStorage temporaryStorage;
 
     public CbiGlobeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
+        temporaryStorage = new TemporaryStorage();
         apiClient = getApiClient(request.isManual());
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -46,7 +49,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
     protected abstract String getIntegrationName();
 
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
-        return new CbiGlobeApiClient(client, persistentStorage, requestManual);
+        return new CbiGlobeApiClient(client, persistentStorage, requestManual, temporaryStorage);
     }
 
     @Override
@@ -110,7 +113,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionPagePaginationController<>(accountFetcher, 1)));
     }
 
     @Override
