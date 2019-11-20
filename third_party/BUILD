@@ -1360,18 +1360,6 @@ java_library(
 )
 
 java_library(
-    name = "org_seleniumhq_selenium_selenium_api",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_seleniumhq_selenium_selenium_api//jar",
-    ],
-    runtime_deps = [
-        "@com_google_guava_guava//jar",
-        "@org_json_json//jar",
-    ],
-)
-
-java_library(
     name = "org_seleniumhq_selenium_selenium_support",
     visibility = ["//visibility:public"],
     exports = [
@@ -1413,11 +1401,11 @@ java_library(
         "@org_eclipse_jetty_jetty_util//jar",
         "@org_eclipse_jetty_jetty_websocket//jar",
         "@org_json_json//jar",
-        "@org_seleniumhq_selenium_selenium_api//jar",
         "@org_seleniumhq_selenium_selenium_support//jar",
         "@org_w3c_css_sac//jar",
         "@org_webbitserver_webbit//jar",
         "@selenium//:org_seleniumhq_selenium_selenium_android_driver",
+        "@selenium//:org_seleniumhq_selenium_selenium_api",
         "@selenium//:org_seleniumhq_selenium_selenium_chrome_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_firefox_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",

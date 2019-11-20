@@ -1329,12 +1329,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_api",
-    artifact = "org.seleniumhq.selenium:selenium-api:2.29.0",
-    sha1 = "4292cc882785ccf771ddbfcd2f0e04a6c7a1155f",
-)
-
-maven_jar(
     name = "org_apache_curator_curator_x_discovery",
     artifact = "org.apache.curator:curator-x-discovery:4.0.0",
     sha1 = "dc70d7cbcfd1e9dbb21b5aa1af3661b57fb5f850",
@@ -2577,6 +2571,7 @@ maven_install(
     name = "selenium",
     artifacts = [
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
+        "org.seleniumhq.selenium:selenium-api:3.141.59",
         "org.seleniumhq.selenium:selenium-chrome-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-firefox-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0",
