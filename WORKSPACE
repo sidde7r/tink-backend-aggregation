@@ -953,12 +953,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_chrome_driver",
-    artifact = "org.seleniumhq.selenium:selenium-chrome-driver:2.29.0",
-    sha1 = "199a8fdce2717f1929c17d4929c35beea5301511",
-)
-
-maven_jar(
     name = "com_googlecode_gettext_commons_gettext_commons",
     artifact = "com.googlecode.gettext-commons:gettext-commons:0.9.8",
     sha1 = "20e498b37fcced2f3fa273df2fae169e6b4e8061",
@@ -2614,6 +2608,7 @@ maven_install(
     artifacts = [
         "org.seleniumhq.selenium:selenium-firefox-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-ie-driver:3.141.59",
+        "org.seleniumhq.selenium:selenium-chrome-driver:3.141.59",
     ],
     fetch_sources = True,
     override_targets = {
