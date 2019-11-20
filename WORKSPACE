@@ -277,12 +277,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_firefox_driver",
-    artifact = "org.seleniumhq.selenium:selenium-firefox-driver:2.29.0",
-    sha1 = "135043df1b5af4b672de5fe9255e8dfb7382204d",
-)
-
-maven_jar(
     name = "com_codahale_metrics_metrics_httpclient",
     artifact = "com.codahale.metrics:metrics-httpclient:3.0.2",
     sha1 = "c658daf41b1ecf934ccd21e83eeeb18703355afb",
@@ -2602,7 +2596,7 @@ maven_install(
         "org.slf4j:jul-to-slf4j:1.7.29",
         "org.slf4j:jcl-over-slf4j:1.7.29",
         "ch.qos.logback:logback-core:1.2.3",
-        "ch.qos.logback:logback-classic:1.2.3"
+        "ch.qos.logback:logback-classic:1.2.3",
     ],
     fetch_sources = False,
     repositories = [
@@ -2614,9 +2608,23 @@ maven_install(
     name = "standalone_agent_test_deps",
     artifacts = [
         "org.springframework:spring-test:5.2.1.RELEASE",
-
     ],
     fetch_sources = False,
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+)
+
+maven_install(
+    name = "selenium",
+    artifacts = [
+        "org.seleniumhq.selenium:selenium-firefox-driver:3.141.59",
+    ],
+    fetch_sources = True,
+    override_targets = {
+        # To avoid version conflicts, use our good old Guava 21 like everywhere else
+        "com.google.guava:guava": "@//third_party:com_google_guava_guava",
+    },
     repositories = [
         "https://repo1.maven.org/maven2",
     ],

@@ -1384,19 +1384,6 @@ java_library(
 )
 
 java_library(
-    name = "org_seleniumhq_selenium_selenium_firefox_driver",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_seleniumhq_selenium_selenium_firefox_driver//jar",
-    ],
-    runtime_deps = [
-        "@commons_io_commons_io//jar",
-        "@org_apache_commons_commons_exec//jar",
-        "@org_seleniumhq_selenium_selenium_remote_driver//jar",
-    ],
-)
-
-java_library(
     name = "org_seleniumhq_selenium_selenium_htmlunit_driver",
     visibility = ["//visibility:public"],
     exports = [
@@ -1461,7 +1448,6 @@ java_library(
         "@org_seleniumhq_selenium_selenium_android_driver//jar",
         "@org_seleniumhq_selenium_selenium_api//jar",
         "@org_seleniumhq_selenium_selenium_chrome_driver//jar",
-        "@org_seleniumhq_selenium_selenium_firefox_driver//jar",
         "@org_seleniumhq_selenium_selenium_htmlunit_driver//jar",
         "@org_seleniumhq_selenium_selenium_ie_driver//jar",
         "@org_seleniumhq_selenium_selenium_iphone_driver//jar",
@@ -1470,6 +1456,7 @@ java_library(
         "@org_seleniumhq_selenium_selenium_support//jar",
         "@org_w3c_css_sac//jar",
         "@org_webbitserver_webbit//jar",
+        "@selenium//:org_seleniumhq_selenium_selenium_firefox_driver",
         "@xalan_serializer//jar",
         "@xalan_xalan//jar",
         "@xerces_xercesImpl//jar",
