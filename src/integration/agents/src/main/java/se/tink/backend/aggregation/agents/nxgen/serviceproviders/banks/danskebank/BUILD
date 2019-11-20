@@ -24,9 +24,9 @@ java_library(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_json_json",
         "//third_party:org_seleniumhq_selenium_selenium_api",
-        "//third_party:org_seleniumhq_selenium_selenium_htmlunit_driver",
         "//third_party:org_seleniumhq_selenium_selenium_remote_driver",
         "//third_party:org_slf4j_slf4j_api",
+        "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
         "@tink_httpcore_4_4_9",
     ],
 )

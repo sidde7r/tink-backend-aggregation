@@ -1384,38 +1384,6 @@ java_library(
 )
 
 java_library(
-    name = "org_seleniumhq_selenium_selenium_htmlunit_driver",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_seleniumhq_selenium_selenium_htmlunit_driver//jar",
-    ],
-    runtime_deps = [
-        "@commons_codec_commons_codec//jar",
-        "@commons_collections_commons_collections//jar",
-        "@commons_io_commons_io//jar",
-        "@commons_logging_commons_logging//jar",
-        "@net_sourceforge_cssparser_cssparser//jar",
-        "@net_sourceforge_htmlunit_htmlunit//jar",
-        "@net_sourceforge_htmlunit_htmlunit_core_js//jar",
-        "@net_sourceforge_nekohtml_nekohtml//jar",
-        "@org_apache_commons_commons_lang3//jar",
-        "@org_apache_httpcomponents_httpclient//jar",
-        "@org_apache_httpcomponents_httpcore//jar",
-        "@org_apache_httpcomponents_httpmime//jar",
-        "@org_eclipse_jetty_jetty_http//jar",
-        "@org_eclipse_jetty_jetty_io//jar",
-        "@org_eclipse_jetty_jetty_util//jar",
-        "@org_eclipse_jetty_jetty_websocket//jar",
-        "@org_seleniumhq_selenium_selenium_api//jar",
-        "@org_w3c_css_sac//jar",
-        "@xalan_serializer//jar",
-        "@xalan_xalan//jar",
-        "@xerces_xercesImpl//jar",
-        "@xml_apis_xml_apis//jar",
-    ],
-)
-
-java_library(
     name = "org_seleniumhq_selenium_selenium_java",
     visibility = ["//visibility:public"],
     exports = [
@@ -1447,13 +1415,13 @@ java_library(
         "@org_json_json//jar",
         "@org_seleniumhq_selenium_selenium_android_driver//jar",
         "@org_seleniumhq_selenium_selenium_api//jar",
-        "@org_seleniumhq_selenium_selenium_htmlunit_driver//jar",
         "@org_seleniumhq_selenium_selenium_remote_driver//jar",
         "@org_seleniumhq_selenium_selenium_support//jar",
         "@org_w3c_css_sac//jar",
         "@org_webbitserver_webbit//jar",
         "@selenium//:org_seleniumhq_selenium_selenium_chrome_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_firefox_driver",
+        "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_ie_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_iphone_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_safari_driver",

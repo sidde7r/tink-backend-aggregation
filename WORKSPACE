@@ -1451,12 +1451,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_htmlunit_driver",
-    artifact = "org.seleniumhq.selenium:selenium-htmlunit-driver:2.29.0",
-    sha1 = "387b28342ff5fcc814c3e461986191427cd115c6",
-)
-
-maven_jar(
     name = "org_eclipse_jetty_orbit_javax_servlet",
     artifact = "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
     sha1 = "0aaaa85845fb5c59da00193f06b8e5278d8bf3f8",
@@ -2599,6 +2593,7 @@ maven_install(
         "org.seleniumhq.selenium:selenium-ie-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-iphone-driver:2.39.0",
         "org.seleniumhq.selenium:selenium-safari-driver:3.141.59",
+        "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0",
     ],
     fetch_sources = True,
     override_targets = {
