@@ -86,11 +86,14 @@ public final class SwedbankConstants {
     }
 
     public static class HeaderKeys {
-        public static final String X_REQUEST_ID = "x-request-id";
+        // X_REQUEST_ID may need to be lowercase for PIS related requests. According to docs
+        // the casing for the header should be as below, if this causes issues for PIS a new
+        // constant should be created.
+        public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String FROM_DATE = "dateFrom";
         public static final String TO_DATE = "dateTo";
-        public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
+        public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String TPP_NOK_REDIRECT_URI = "TPP-Nok-Redirect-URI";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String PSU_USER_AGENT = "PSU-User-Agent";
