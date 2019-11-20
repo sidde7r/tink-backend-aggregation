@@ -22,7 +22,7 @@ public final class SecretsNamesValidationResponse {
         this.valid =
                 invalidSecretsNames.isEmpty()
                         && missingSecretsNames.isEmpty()
-                        && invalidSecretsNames.isEmpty()
+                        && invalidSensitiveSecretsNames.isEmpty()
                         && missingSensitiveSecretsNames.isEmpty()
                         && invalidAgentConfigParamNames.isEmpty()
                         && missingAgentConfigParamNames.isEmpty();
