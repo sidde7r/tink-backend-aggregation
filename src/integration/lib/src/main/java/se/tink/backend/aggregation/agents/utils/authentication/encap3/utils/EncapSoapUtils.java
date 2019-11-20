@@ -235,7 +235,7 @@ public class EncapSoapUtils {
                 return Optional.empty();
             default:
                 String errorMessage =
-                        element.getElementsByTagName("ns2:Message")
+                        element.getElementsByTagName("Message")
                                 .item(0)
                                 .getFirstChild()
                                 .getTextContent();
