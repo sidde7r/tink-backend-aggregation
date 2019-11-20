@@ -8,3 +8,6 @@ tink:
     - group:
       - cluster: aggregation
         environment: staging
+    - group:
+      - cluster: aggregation
+        environment: production
