@@ -13,8 +13,6 @@ public class CredentialsEntity {
     }
 
     public static CredentialsEntity build(String evryToken) {
-        // The front slashes in the evryToken have to be escaped with back slashes
-        String escapedEvryToken = evryToken.replaceAll("/", "\\\\/");
-        return new CredentialsEntity(escapedEvryToken, "EvrySO");
+        return new CredentialsEntity(evryToken, "EvrySO");
     }
 }
