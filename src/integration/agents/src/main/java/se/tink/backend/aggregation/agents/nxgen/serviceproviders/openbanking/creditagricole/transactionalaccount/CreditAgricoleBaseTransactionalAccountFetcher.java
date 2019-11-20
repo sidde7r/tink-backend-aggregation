@@ -5,12 +5,13 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class CreditAgricoleBaseTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount>, TransactionFetcher<TransactionalAccount> {
+        implements AccountFetcher<TransactionalAccount>, TransactionKeyPaginator<TransactionalAccount, URL> {
 
     private final CreditAgricoleBaseApiClient apiClient;
 
@@ -31,7 +32,7 @@ public class CreditAgricoleBaseTransactionalAccountFetcher
     }
 
     @Override
-    public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        return apiClient.getTransactions(account.getApiIdentifier()).toTinkTransactions();
+    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(TransactionalAccount account, URL next) {
+        return apiClient.getTransactions(account.getApiIdentifier(), next);
     }
 }

@@ -14,6 +14,7 @@ class TransactionsUtils {
 
     static GetTransactionsResponse get(
             final String id,
+            final URL next,
             final PersistentStorage persistentStorage,
             final TinkHttpClient client,
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration) {
