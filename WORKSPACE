@@ -1517,12 +1517,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_safari_driver",
-    artifact = "org.seleniumhq.selenium:selenium-safari-driver:2.29.0",
-    sha1 = "79c53be06ba4739c969a53c7c2f702c4d3a439bc",
-)
-
-maven_jar(
     name = "com_sun_jersey_jersey_servlet",
     artifact = "com.sun.jersey:jersey-servlet:1.18.1",
     sha1 = "ecec31589375845cbd42e75c32b64a1475c44bb4",
@@ -2600,10 +2594,11 @@ maven_install(
 maven_install(
     name = "selenium",
     artifacts = [
+        "org.seleniumhq.selenium:selenium-chrome-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-firefox-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-ie-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-iphone-driver:2.39.0",
-        "org.seleniumhq.selenium:selenium-chrome-driver:3.141.59",
+        "org.seleniumhq.selenium:selenium-safari-driver:3.141.59",
     ],
     fetch_sources = True,
     override_targets = {
