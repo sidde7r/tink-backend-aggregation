@@ -27,6 +27,8 @@ public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.empty();
+        return Optional.of(
+                links.getNext() != null
+                        && !links.getNext().getHref().equalsIgnoreCase(links.getSelf().getHref()));
     }
 }

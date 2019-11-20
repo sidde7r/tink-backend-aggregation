@@ -15,4 +15,8 @@ public class TransactionsLinksEntity {
     public LinkDetailsEntity getNext() {
         return next;
     }
+
+    public LinkDetailsEntity getSelf() {
+        return self;
+    }
 }
