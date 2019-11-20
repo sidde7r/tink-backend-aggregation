@@ -86,11 +86,14 @@ public final class SwedbankConstants {
     }
 
     public static class HeaderKeys {
-        public static final String X_REQUEST_ID = "x-request-id";
+        // X_REQUEST_ID may need to be lowercase for PIS related requests. According to docs
+        // the casing for the header should be as below, if this causes issues for PIS a new
+        // constant should be created.
+        public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String FROM_DATE = "dateFrom";
         public static final String TO_DATE = "dateTo";
-        public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
+        public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String TPP_NOK_REDIRECT_URI = "TPP-Nok-Redirect-URI";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String PSU_USER_AGENT = "PSU-User-Agent";
@@ -104,7 +107,8 @@ public final class SwedbankConstants {
 
     public static class HeaderValues {
         public static final String PSU_IP_ADDRESS = "127.0.0.1";
-        public static final String PSU_USER_AGENT = "Desktop Mode";
+        public static final String PSU_USER_AGENT =
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1";
         public static final String SIGNATURE_HEADER =
                 "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
         public static final String DATE_PATTERN = "EEE, dd MMM yyyy k:m:s zzz";
@@ -145,7 +149,6 @@ public final class SwedbankConstants {
         public static final int MONTHS_TO_FETCH_MAX = 25;
         public static final int ATTEMPS_BEFORE_TIMEOUT = 10;
         public static final int CONSENT_DURATION_IN_DAYS = 90;
-        public static final int MONTHS_TO_FETCH = 25;
     }
 
     public static final class LogMessages {
