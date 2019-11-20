@@ -108,4 +108,9 @@ public final class IngBaseConstants {
     public static class Retry {
         public static final int MAX_ATTEMPTS = 3;
     }
+
+    static class HttpClient {
+        public static final int MAX_RETRIES = 4;
+        public static final int RETRY_SLEEP_MILLISECONDS = 1000;
+    }
 }

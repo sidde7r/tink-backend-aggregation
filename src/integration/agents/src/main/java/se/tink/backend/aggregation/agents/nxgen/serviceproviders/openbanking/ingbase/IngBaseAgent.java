@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.IngBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseGatewayTimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.session.IngSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -25,6 +26,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class IngBaseAgent extends NextGenerationAgent
@@ -39,6 +44,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     public IngBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         /*
             ING in their documentation use country code in lowercase, however their API treat
             lowercase as wrong country code and returns error that it's malformed
@@ -49,6 +55,16 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         client, persistentStorage, marketInUppercase, request.isManual());
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+    }
+
+    protected void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(new BankServiceInternalErrorFilter());
+        client.addFilter(new IngBaseGatewayTimeoutFilter());
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        IngBaseConstants.HttpClient.MAX_RETRIES,
+                        IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new TimeoutFilter());
     }
 
     @Override
