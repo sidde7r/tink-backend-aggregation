@@ -3,6 +3,7 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/account:enums",
         "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:service",
