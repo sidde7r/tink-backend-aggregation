@@ -1701,12 +1701,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_android_driver",
-    artifact = "org.seleniumhq.selenium:selenium-android-driver:2.29.0",
-    sha1 = "e254c2f1266dbc7ecaad4508f797b48d8cecd299",
-)
-
-maven_jar(
     name = "org_iban4j_iban4j",
     artifact = "org.iban4j:iban4j:3.1.0",
     sha1 = "ee5e0ee22de269a3ec2785c17a5ff2beecbb76ae",
@@ -2588,12 +2582,13 @@ maven_install(
 maven_install(
     name = "selenium",
     artifacts = [
+        "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
         "org.seleniumhq.selenium:selenium-chrome-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-firefox-driver:3.141.59",
+        "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0",
         "org.seleniumhq.selenium:selenium-ie-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-iphone-driver:2.39.0",
         "org.seleniumhq.selenium:selenium-safari-driver:3.141.59",
-        "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0",
     ],
     fetch_sources = True,
     override_targets = {
