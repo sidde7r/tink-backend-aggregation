@@ -12,7 +12,7 @@ public final class AuthenticationRequest implements Credentialsable {
     private ImmutableMap<String, String> userInputs;
     private ImmutableMap<String, String> callbackData;
 
-    AuthenticationRequest(final Credentials credentials) {
+    public AuthenticationRequest(final Credentials credentials) {
         this.credentials = credentials;
     }
 
