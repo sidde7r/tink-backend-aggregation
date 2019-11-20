@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+import java.util.Optional;
+
 class TransactionsUtils {
 
     static GetTransactionsResponse get(
@@ -20,7 +22,7 @@ class TransactionsUtils {
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration) {
 
         final String authToken = "Bearer " + StorageUtils.getTokenFromStorage(persistentStorage);
-        return client.request(getUrl(creditAgricoleConfiguration.getBaseUrl(), id))
+        return client.request(getUrl(creditAgricoleConfiguration.getBaseUrl(), id, next))
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.AUTHORIZATION, authToken)
@@ -28,7 +30,10 @@ class TransactionsUtils {
                 .get(GetTransactionsResponse.class);
     }
 
-    static String getUrl(final String baseUrl, final String id) {
-        return (new URL(baseUrl + ApiServices.TRANSACTIONS)).parameter(IdTags.ACCOUNT_ID, id).get();
+    static String getUrl(final String baseUrl, final String id, final URL next) {
+        return Optional.ofNullable(next)
+                .map(n -> new URL(baseUrl + n.get()))
+                .orElseGet(() -> new URL(baseUrl + ApiServices.TRANSACTIONS).parameter(IdTags.ACCOUNT_ID, id))
+                .get();
     }
 }
