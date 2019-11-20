@@ -6,9 +6,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.reactivex.rxjava3.core.Observable;
@@ -16,7 +13,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -162,13 +158,9 @@ public final class AgentConfigurationController {
 
                 List<String> redirectUrls = allSecrets.getRedirectUrls();
 
-                if (secretsMap.containsKey(REDIRECT_URLS_KEY)) {
-                    log.warn("Got legacy secrets " + getSecretsServiceParamsString());
-                    initRedirectUrl(allSecrets.getSecrets());
-                } else {
-                    initRedirectUrl(redirectUrls);
-                    initScopes(allSecrets.getScopes());
-                }
+                initRedirectUrl(redirectUrls);
+                initScopes(allSecrets.getScopes());
+
                 extractSensitiveValues(allSecretsMapObj);
             } catch (StatusRuntimeException e) {
                 Preconditions.checkNotNull(
@@ -186,49 +178,6 @@ public final class AgentConfigurationController {
                 }
             }
         }
-    }
-
-    private void initRedirectUrl(Map<String, String> allSecrets) {
-
-        final String CHOSEN_REDIRECT_URL_KEY = "redirectUrl";
-
-        Type listType = new TypeToken<List<String>>() {}.getType();
-
-        final List<String> redirectUrls;
-        try {
-            redirectUrls = new Gson().fromJson(allSecrets.get(REDIRECT_URLS_KEY), listType);
-        } catch (JsonSyntaxException e) {
-            throw new IllegalStateException(
-                    "Could not parse redirectUrls secret : "
-                            + allSecrets.get(REDIRECT_URLS_KEY)
-                            + getSecretsServiceParamsString(),
-                    e);
-        }
-
-        if (redirectUrls.isEmpty()) {
-            // We end up here when the secrets do contain redirectUrls key but it is an empty list.
-            log.info("Empty redirectUrls list in secrets" + getSecretsServiceParamsString());
-
-            return;
-        }
-
-        if (Strings.isNullOrEmpty(redirectUrl)) {
-            // No redirectUrl provided in the CredentialsRequest, pick the first one from
-            // the registered list.
-            allSecretsMapObj.put(CHOSEN_REDIRECT_URL_KEY, redirectUrls.get(0));
-        } else if (!redirectUrls.contains(redirectUrl)) {
-            // The redirectUrl provided in the CredentialsRequest is not among those
-            // registered.
-            throw new IllegalArgumentException(
-                    "Requested redirectUrl : "
-                            + redirectUrl
-                            + " is not registered"
-                            + getSecretsServiceParamsString());
-        } else {
-            // The redirectUrl provided in the CredentialsRequest is among those registered.
-            allSecretsMapObj.put(CHOSEN_REDIRECT_URL_KEY, redirectUrl);
-        }
-        allSecretsMapObj.remove(REDIRECT_URLS_KEY);
     }
 
     private void initRedirectUrl(List<String> redirectUrls) {
