@@ -1505,12 +1505,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_remote_driver",
-    artifact = "org.seleniumhq.selenium:selenium-remote-driver:2.29.0",
-    sha1 = "8651b5f954e15f39d17a26557d27e99b960c401e",
-)
-
-maven_jar(
     name = "com_sun_jersey_jersey_servlet",
     artifact = "com.sun.jersey:jersey-servlet:1.18.1",
     sha1 = "ecec31589375845cbd42e75c32b64a1475c44bb4",
@@ -2588,6 +2582,7 @@ maven_install(
         "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0",
         "org.seleniumhq.selenium:selenium-ie-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-iphone-driver:2.39.0",
+        "org.seleniumhq.selenium:selenium-remote-driver:3.141.59",
         "org.seleniumhq.selenium:selenium-safari-driver:3.141.59",
     ],
     fetch_sources = True,

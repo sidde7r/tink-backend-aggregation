@@ -167,9 +167,9 @@ java_library(
         "@org_mortbay_jetty_servlet_api_2_5//jar",
         "@org_seleniumhq_selenium_jetty_repacked//jar",
         "@org_seleniumhq_selenium_selenium_java//jar",
-        "@org_seleniumhq_selenium_selenium_remote_driver//jar",
         "@org_seleniumhq_selenium_selenium_server//jar",
         "@org_yaml_snakeyaml//jar",
+        "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
     ],
 )
 
@@ -1414,7 +1414,6 @@ java_library(
         "@org_eclipse_jetty_jetty_websocket//jar",
         "@org_json_json//jar",
         "@org_seleniumhq_selenium_selenium_api//jar",
-        "@org_seleniumhq_selenium_selenium_remote_driver//jar",
         "@org_seleniumhq_selenium_selenium_support//jar",
         "@org_w3c_css_sac//jar",
         "@org_webbitserver_webbit//jar",
@@ -1424,29 +1423,12 @@ java_library(
         "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_ie_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_iphone_driver",
+        "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_safari_driver",
         "@xalan_serializer//jar",
         "@xalan_xalan//jar",
         "@xerces_xercesImpl//jar",
         "@xml_apis_xml_apis//jar",
-    ],
-)
-
-java_library(
-    name = "org_seleniumhq_selenium_selenium_remote_driver",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_seleniumhq_selenium_selenium_remote_driver//jar",
-    ],
-    runtime_deps = [
-        "@cglib_cglib_nodep//jar",
-        "@com_google_guava_guava//jar",
-        "@net_java_dev_jna_jna//jar",
-        "@net_java_dev_jna_platform//jar",
-        "@org_apache_commons_commons_exec//jar",
-        "@org_apache_httpcomponents_httpclient//jar",
-        "@org_json_json//jar",
-        "@org_seleniumhq_selenium_selenium_api//jar",
     ],
 )
 
