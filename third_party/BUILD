@@ -1432,7 +1432,6 @@ java_library(
     name = "org_seleniumhq_selenium_selenium_java",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_json_json//jar",
         "@org_seleniumhq_selenium_selenium_android_driver//jar",
         "@org_seleniumhq_selenium_selenium_api//jar",
         "@org_seleniumhq_selenium_selenium_chrome_driver//jar",
@@ -1468,6 +1467,7 @@ java_library(
         "@org_eclipse_jetty_jetty_io//jar",
         "@org_eclipse_jetty_jetty_util//jar",
         "@org_eclipse_jetty_jetty_websocket//jar",
+        "@org_json_json//jar",
         "@org_w3c_css_sac//jar",
         "@org_webbitserver_webbit//jar",
         "@xalan_serializer//jar",
