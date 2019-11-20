@@ -182,6 +182,7 @@ java_library(
         "//third_party:net_sourceforge_cssparser_cssparser",
         "//third_party:net_sourceforge_tess4j",
         "//third_party:net_spy_spymemcached",
+        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_commons_commons_math3",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",

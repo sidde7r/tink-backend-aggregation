@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -316,6 +317,8 @@ public class AggregationServiceResource implements AggregationService {
                                                 financialInstitutionId,
                                                 prv.getFinancialInstitutionId()))
                         .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
+                        // Trying to get rid of possible sandbox providers if they exist.
+                        .filter(prv -> !StringUtils.containsIgnoreCase(prv.getName(), "sandbox"))
                         .collect(Collectors.toList());
 
         Preconditions.checkState(
