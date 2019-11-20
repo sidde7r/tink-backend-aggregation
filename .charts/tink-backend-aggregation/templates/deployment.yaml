@@ -273,6 +273,12 @@ spec:
               name: aggregation-secrets
               key: bec-dk-public-key-salt
               optional: true
+        - name: PROXY_PASSWORD_BE
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: proxy-password-be
+              optional: true
         - name: PROXY_PASSWORD_ES
           valueFrom:
             secretKeyRef:

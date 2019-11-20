@@ -30,6 +30,10 @@ data:
           host: "http://zproxy.lum-superproxy.io:22225"
           username: "lum-customer-tink_ab-zone-spain-country-es"
           password: PROXY_PASSWORD_ES
+        be:
+          host: "http://zproxy.lum-superproxy.io:22225"
+          username: "lum-customer-tink_ab-zone-belgium"
+          password: PROXY_PASSWORD_BE
 
       {{- if .Values.agentDataAvailabilityTrackerAvailable }}
       agentDataAvailabilityTrackerConfiguration:
@@ -70,6 +74,9 @@ data:
       featureFlags:
         {{- if $featureFlagsConfig.esProxy }}
           esProxy: {{ $featureFlagsConfig.esProxy | default false }}
+        {{- end }}
+        {{- if $featureFlagsConfig.beProxy }}
+          beProxy: {{ $featureFlagsConfig.beProxy | default false }}
         {{- end }}
 
       integrations:
