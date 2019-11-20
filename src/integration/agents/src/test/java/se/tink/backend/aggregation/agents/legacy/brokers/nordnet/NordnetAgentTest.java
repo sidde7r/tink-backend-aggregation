@@ -11,7 +11,8 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 public class NordnetAgentTest {
 
     private enum Arg {
-        USERNAME
+        USERNAME,
+        PASSWORD
     }
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
@@ -22,9 +23,22 @@ public class NordnetAgentTest {
     }
 
     @Test
-    public void testRefresh() throws Exception {
+    public void testRefreshBankId() throws Exception {
         new AgentIntegrationTest.Builder("se", "nordnet-bankid")
                 .addCredentialField(Key.USERNAME, manager.get(Arg.USERNAME))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                .build()
+                .testRefresh();
+    }
+
+    @Test
+    public void testRefreshPassword() throws Exception {
+        new AgentIntegrationTest.Builder("se", "nordnet")
+                .addCredentialField(Key.USERNAME, manager.get(Arg.USERNAME))
+                .addCredentialField(Key.PASSWORD, manager.get(Arg.PASSWORD))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
