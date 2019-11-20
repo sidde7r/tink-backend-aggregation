@@ -290,45 +290,45 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
         }
 
         if (!updatablePayment.isChangeAllowed()) {
-            throw paymentFailedException(PAYMENT_UPDATE_NOT_ALLOWED);
+            throw paymentCanceledException(PAYMENT_UPDATE_NOT_ALLOWED);
         }
 
         DetailedPermissions permissions = updatablePayment.getDetailedPermissions();
 
         if (!permissions.isChangeAmount()
                 && !transfer.getAmount().equals(originalTransfer.getAmount())) {
-            throw paymentFailedException(PAYMENT_UPDATE_AMOUNT);
+            throw paymentCanceledException(PAYMENT_UPDATE_AMOUNT);
         }
 
         String newDueDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(transfer.getDueDate());
         String originalDueDate =
                 ThreadSafeDateFormat.FORMATTER_DAILY.format(originalTransfer.getDueDate());
         if (!permissions.isChangeDate() && !newDueDate.equals(originalDueDate)) {
-            throw paymentFailedException(PAYMENT_UPDATE_DUEDATE);
+            throw paymentCanceledException(PAYMENT_UPDATE_DUEDATE);
         }
 
         if (!permissions.isChangeMessage()
                 && !Objects.equals(
                         transfer.getDestinationMessage(),
                         originalTransfer.getDestinationMessage())) {
-            throw paymentFailedException(PAYMENT_UPDATE_DESTINATION_MESSAGE);
+            throw paymentCanceledException(PAYMENT_UPDATE_DESTINATION_MESSAGE);
         }
 
         if (!permissions.isChangeFromAccount()
                 && !Objects.equals(transfer.getSource(), originalTransfer.getSource())) {
-            throw paymentFailedException(PAYMENT_UPDATE_SOURCE);
+            throw paymentCanceledException(PAYMENT_UPDATE_SOURCE);
         }
 
         // Source message never editable in SHB API, therefore we always fail if user tries to edit.
         if (!Objects.equals(transfer.getSourceMessage(), originalTransfer.getSourceMessage())) {
-            throw paymentFailedException(PAYMENT_UPDATE_SOURCE_MESSAGE);
+            throw paymentCanceledException(PAYMENT_UPDATE_SOURCE_MESSAGE);
         }
 
         // Destination never editable in SHB API, therefore we always fail if user tries to edit.
         if (!Objects.equals(
                 transfer.getDestination().getIdentifier(),
                 originalTransfer.getDestination().getIdentifier())) {
-            throw paymentFailedException(PAYMENT_UPDATE_DESTINATION);
+            throw paymentCanceledException(PAYMENT_UPDATE_DESTINATION);
         }
     }
 
