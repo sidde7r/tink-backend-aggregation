@@ -95,6 +95,7 @@ java_library(
         "//third_party:org_apache_commons_commons_collections4",
         "//third_party:org_apache_commons_commons_csv",
         "//third_party:org_apache_curator_curator_client",
+        "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_apache_mahout_mahout_core",
         "//third_party:org_apache_pdfbox_pdfbox",
