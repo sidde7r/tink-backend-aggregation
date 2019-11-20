@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
@@ -79,6 +83,7 @@ public class NordeaBaseApiClient implements TokenInterface {
     }
 
     public URL getAuthorizeUrl(String state, String country) {
+        String scopes = getScopes().stream().map(Object::toString).collect(Collectors.joining(","));
         return client.request(
                         NordeaBaseConstants.Urls.AUTHORIZE
                                 .queryParam(
@@ -89,9 +94,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                         NordeaBaseConstants.QueryKeys.DURATION,
                                         NordeaBaseConstants.QueryValues.DURATION_MINUTES)
                                 .queryParam(NordeaBaseConstants.QueryKeys.COUNTRY, country)
-                                .queryParam(
-                                        NordeaBaseConstants.QueryKeys.SCOPE,
-                                        NordeaBaseConstants.QueryValues.SCOPE)
+                                .queryParam(NordeaBaseConstants.QueryKeys.SCOPE, scopes)
                                 .queryParam(
                                         NordeaBaseConstants.QueryKeys.REDIRECT_URI,
                                         configuration.getRedirectUrl()))
@@ -273,5 +276,35 @@ public class NordeaBaseApiClient implements TokenInterface {
             }
         }
         throw hre;
+    }
+
+    private List<String> getScopes() {
+        List<String> scopes = configuration.getScopes();
+        if (scopes.stream()
+                .allMatch(scope -> NordeaSeConstants.Scopes.AIS.equalsIgnoreCase(scope))) {
+            // Return only AIS scopes
+            return Arrays.asList(
+                    NordeaSeConstants.FormValues.ACCOUNTS_BALANCES,
+                    NordeaSeConstants.FormValues.ACCOUNTS_BASIC,
+                    NordeaSeConstants.FormValues.ACCOUNTS_DETAILS,
+                    NordeaSeConstants.FormValues.ACCOUNTS_TRANSACTIONS);
+        } else if (scopes.stream()
+                .allMatch(
+                        scope ->
+                                NordeaSeConstants.Scopes.AIS.equalsIgnoreCase(scope)
+                                        || NordeaSeConstants.Scopes.PIS.equalsIgnoreCase(scope))) {
+            // Return AIS + PIS scopes
+            return Arrays.asList(
+                    NordeaSeConstants.FormValues.ACCOUNTS_BALANCES,
+                    NordeaSeConstants.FormValues.ACCOUNTS_BASIC,
+                    NordeaSeConstants.FormValues.ACCOUNTS_DETAILS,
+                    NordeaSeConstants.FormValues.ACCOUNTS_TRANSACTIONS,
+                    NordeaSeConstants.FormValues.PAYMENTS_MULTIPLE);
+        } else {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "%s contain invalid scope(s), only support scopes AIS and PIS",
+                            scopes.toString()));
+        }
     }
 }

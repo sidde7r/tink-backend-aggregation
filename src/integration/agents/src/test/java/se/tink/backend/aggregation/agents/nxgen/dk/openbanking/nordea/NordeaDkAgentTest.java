@@ -14,6 +14,8 @@ public class NordeaDkAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("DK", "dk-nordea-ob")
+                        .setFinancialInstitutionId("nordea")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

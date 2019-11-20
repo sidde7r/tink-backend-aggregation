@@ -14,6 +14,8 @@ public class NordeaFiAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("FI", "fi-nordea-oauth2")
+                        .setFinancialInstitutionId("nordea")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
