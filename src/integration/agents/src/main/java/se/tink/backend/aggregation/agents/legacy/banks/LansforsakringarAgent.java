@@ -570,7 +570,7 @@ public class LansforsakringarAgent extends AbstractAgent
             return upcomingTransactionListResponse.getUpcomingTransactions();
 
         } else {
-            log.error(
+            log.warn(
                     "Could not fetch upcoming transactions (status: "
                             + clientResponse.getStatus()
                             + ")");
