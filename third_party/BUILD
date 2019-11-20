@@ -1440,8 +1440,6 @@ java_library(
         "@org_seleniumhq_selenium_selenium_ie_driver//jar",
         "@org_seleniumhq_selenium_selenium_iphone_driver//jar",
         "@org_seleniumhq_selenium_selenium_java//jar",
-        "@org_seleniumhq_selenium_selenium_safari_driver//jar",
-        "@org_seleniumhq_selenium_selenium_support//jar",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
@@ -1468,6 +1466,8 @@ java_library(
         "@org_eclipse_jetty_jetty_websocket//jar",
         "@org_json_json//jar",
         "@org_seleniumhq_selenium_selenium_remote_driver//jar",
+        "@org_seleniumhq_selenium_selenium_safari_driver//jar",
+        "@org_seleniumhq_selenium_selenium_support//jar",
         "@org_w3c_css_sac//jar",
         "@org_webbitserver_webbit//jar",
         "@xalan_serializer//jar",
