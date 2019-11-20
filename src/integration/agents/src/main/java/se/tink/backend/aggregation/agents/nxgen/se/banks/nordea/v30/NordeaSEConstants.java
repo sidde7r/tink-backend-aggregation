@@ -301,7 +301,7 @@ public class NordeaSEConstants {
                 "Something went wrong. Please try again later.";
         public static final String SIGNING_COLLISION = "signing_collision";
         public static final String SIGNING_COLLISION_MESSAGE = "A signing collision has occurred.";
-        public static final String WRONG_TO_ACCOUNT_LENGTH = "BESE112";
+        public static final String WRONG_TO_ACCOUNT_LENGTH = "BESE1125";
         public static final String WRONG_TO_ACCOUNT_LENGHT_MESSAGE =
                 "Wrong To account length for the chosen bank";
     }
