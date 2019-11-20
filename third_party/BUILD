@@ -1479,7 +1479,6 @@ java_library(
     name = "org_seleniumhq_selenium_selenium_remote_driver",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_seleniumhq_selenium_selenium_api//jar",
         "@org_seleniumhq_selenium_selenium_remote_driver//jar",
     ],
     runtime_deps = [
@@ -1490,6 +1489,7 @@ java_library(
         "@org_apache_commons_commons_exec//jar",
         "@org_apache_httpcomponents_httpclient//jar",
         "@org_json_json//jar",
+        "@org_seleniumhq_selenium_selenium_api//jar",
     ],
 )
 
