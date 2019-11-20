@@ -1432,7 +1432,6 @@ java_library(
     name = "org_seleniumhq_selenium_selenium_java",
     visibility = ["//visibility:public"],
     exports = [
-        ":io_netty_netty_all",
         "@cglib_cglib_nodep//jar",
         "@com_google_guava_guava//jar",
         "@commons_codec_commons_codec//jar",
@@ -1468,6 +1467,7 @@ java_library(
         "@org_seleniumhq_selenium_selenium_support//jar",
     ],
     runtime_deps = [
+        ":io_netty_netty_all",
         "@org_w3c_css_sac//jar",
         "@org_webbitserver_webbit//jar",
         "@xalan_serializer//jar",
