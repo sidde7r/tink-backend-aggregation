@@ -74,7 +74,7 @@ git_repository(
     name = "tink_backend_integration_openbanking",
     commit = "662f691468f3b645c2e57a1ce1e2b16fd1d2bf88",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
-    shallow_since = "1572535216 +0000"
+    shallow_since = "1572535216 +0000",
 )
 
 git_repository(
@@ -88,7 +88,7 @@ git_repository(
     name = "tink_backend",
     commit = "92d2e6c7adca04e074ab3351ba8a9404244f6765",
     remote = "git@github.com:tink-ab/tink-backend.git",
-    shallow_since = "1572535216 +0000"
+    shallow_since = "1572535216 +0000",
 )
 
 # Docker dependencies
@@ -2511,7 +2511,9 @@ maven_install(
         "https://repo.maven.apache.org/maven2/",
     ],
 )
+
 load("@java_uuid_generator//:defs.bzl", java_uuid_generator_pin = "pinned_maven_install")
+
 java_uuid_generator_pin()
 
 maven_install(
@@ -2525,7 +2527,9 @@ maven_install(
         "https://repo.maven.apache.org/maven2/",
     ],
 )
+
 load("@io_reactivex_rxjava3_rxjava//:defs.bzl", io_reactivex_rxjava3_rxjava_pin = "pinned_maven_install")
+
 io_reactivex_rxjava3_rxjava_pin()
 
 maven_install(
@@ -2544,7 +2548,9 @@ maven_install(
         "https://repo1.maven.org/maven2",
     ],
 )
+
 load("@io_token//:defs.bzl", io_token_pin = "pinned_maven_install")
+
 io_token_pin()
 
 # Use via //third_party/jetty_server9
