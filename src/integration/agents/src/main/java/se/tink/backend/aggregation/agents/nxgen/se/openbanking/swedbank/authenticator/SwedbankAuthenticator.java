@@ -51,7 +51,7 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
     }
 
     public ConsentResponse getConsentForIbanList() {
-        return apiClient.getConsent(
+        return apiClient.getConsentAccountDetails(
                 apiClient.mapAccountResponseToIbanList(apiClient.fetchAccounts()));
     }
 
@@ -60,7 +60,7 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
     }
 
     public ConsentResponse getConsentForAllAccounts() {
-        return apiClient.createFirstConsent();
+        return apiClient.getConsentAllAccounts();
     }
 
     public boolean getConsentStatus(String consentId) {

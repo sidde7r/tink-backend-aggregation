@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.ex
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentSigningRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.TransactionDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
@@ -71,6 +72,12 @@ public class SebApiClient extends SebBaseApiClient {
         FetchTransactionsResponse response = requestBuilder.get(FetchTransactionsResponse.class);
 
         return response;
+    }
+
+    public TransactionDetailsEntity fetchTransactionDetails(String urlAddress) {
+        return createRequestInSession(
+                        new URL(SebConstants.Urls.BASE_TRANSACTION_DETAILS).concat(urlAddress))
+                .get(TransactionDetailsEntity.class);
     }
 
     public FetchCardAccountResponse fetchCardAccounts() {

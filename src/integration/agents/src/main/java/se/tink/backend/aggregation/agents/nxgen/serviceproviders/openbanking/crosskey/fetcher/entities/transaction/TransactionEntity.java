@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Transactions;
@@ -75,8 +75,14 @@ public class TransactionEntity {
                         ? transactionAmount.negate()
                         : transactionAmount;
 
-        String transactionName =
-                Optional.ofNullable(creditorAccount.getName()).orElse(debtorAccount.getName());
+        final String transactionName;
+        if (creditorAccount != null && !Strings.isNullOrEmpty(creditorAccount.getName())) {
+            transactionName = creditorAccount.getName();
+        } else if (debtorAccount != null && !Strings.isNullOrEmpty(debtorAccount.getName())) {
+            transactionName = debtorAccount.getName();
+        } else {
+            transactionName = "";
+        }
 
         return Transaction.builder()
                 .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))

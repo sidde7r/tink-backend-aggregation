@@ -25,7 +25,7 @@ public class UbiAgent extends CbiGlobeAgent {
 
     @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
-        return new UbiApiClient(client, persistentStorage, requestManual);
+        return new UbiApiClient(client, persistentStorage, requestManual, temporaryStorage);
     }
 
     @Override

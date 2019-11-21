@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class GetTransactionsResponse implements PaginatorResponse {
     private TransactionsEntity transactions;
+    private boolean pageRemaining;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
@@ -20,6 +21,10 @@ public class GetTransactionsResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(false);
+        return Optional.of(pageRemaining);
+    }
+
+    public void setPageRemaining(boolean pageRemaining) {
+        this.pageRemaining = pageRemaining;
     }
 }

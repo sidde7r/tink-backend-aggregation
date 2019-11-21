@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
@@ -208,8 +209,7 @@ public class SwedbankAuthenticationController
             swedbankTransactionFetcher.startScaAuthorization(
                     iban,
                     Timestamp.valueOf(
-                            LocalDateTime.now()
-                                    .minusMonths(SwedbankConstants.TimeValues.MONTHS_TO_FETCH_MAX)),
+                            LocalDateTime.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX)),
                     Timestamp.valueOf(LocalDateTime.now()));
         }
     }

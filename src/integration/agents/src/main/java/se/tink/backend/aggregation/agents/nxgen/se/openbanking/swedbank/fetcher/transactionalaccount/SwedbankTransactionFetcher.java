@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.Response;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
@@ -43,8 +44,7 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
             return apiClient.getTransactions(
                     account.getApiIdentifier(),
                     Timestamp.valueOf(
-                            LocalDateTime.now()
-                                    .minusMonths(SwedbankConstants.TimeValues.MONTHS_TO_FETCH_MAX)),
+                            LocalDateTime.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX)),
                     toDate);
 
         } catch (HttpResponseException e) {
