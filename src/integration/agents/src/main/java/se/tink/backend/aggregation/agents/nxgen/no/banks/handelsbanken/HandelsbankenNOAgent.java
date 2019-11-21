@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authentic
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.HandelsbankenNOInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenNOAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenNOTransactionFetcher;
-import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -42,11 +42,12 @@ public class HandelsbankenNOAgent extends NextGenerationAgent
         apiClient = new HandelsbankenNOApiClient(client, sessionStorage);
         encapClient =
                 new EncapClient(
-                        new HandelsbankenNOEncapConfiguration(),
+                        context,
+                        request,
+                        signatureKeyPair,
                         persistentStorage,
-                        client,
-                        true,
-                        credentials.getField(Field.Key.USERNAME));
+                        new HandelsbankenNOEncapConfiguration(),
+                        HandelsbankenNOConstants.DEVICE_PROFILE);
 
         investmentRefreshController =
                 new InvestmentRefreshController(

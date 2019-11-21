@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FirstLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FirstLoginResponse;
-import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.enums.AuthenticationMethod;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -30,7 +31,10 @@ public class HandelsbankenNOAutoAuthenticator implements AutoAuthenticator {
     public void autoAuthenticate() throws SessionException {
         apiClient.fetchAppInformation();
 
-        String evryToken = encapClient.authenticateUser();
+        String evryToken =
+                encapClient
+                        .authenticateDevice(AuthenticationMethod.DEVICE_AND_PIN)
+                        .getDeviceToken();
         sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
 
         if (evryToken == null) {
