@@ -1,0 +1,29 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "n26",
+    srcs = glob(["**/*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//data:cryptography_test",
+        "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/n26",
+        "//src/integration/amount",
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/models",
+        "//src/libraries/serialization",
+        "//third_party:org_mockito_mockito_core",
+        "//third_party:org_slf4j_slf4j_api",
+    ],
+)
