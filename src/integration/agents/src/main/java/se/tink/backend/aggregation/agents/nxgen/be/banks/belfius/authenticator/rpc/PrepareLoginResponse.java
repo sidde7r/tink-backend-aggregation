@@ -39,6 +39,11 @@ public class PrepareLoginResponse extends BelfiusResponse {
                     BelfiusConstants.ErrorCodes.MISSING_MOBILEBANKING_SUBSCRIPTION)) {
                 throw LoginError.REGISTER_DEVICE_ERROR.exception();
             }
+            if (StringUtils.containsIgnoreCase(
+                    messageResponse.getMessageDetail(),
+                    BelfiusConstants.ErrorCodes.DEVICE_REGISTRATION_ERROR)) {
+                throw new IllegalStateException();
+            }
         }
     }
 }

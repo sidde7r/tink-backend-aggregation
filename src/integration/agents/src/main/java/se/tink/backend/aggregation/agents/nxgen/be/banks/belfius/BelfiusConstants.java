@@ -335,6 +335,7 @@ public class BelfiusConstants {
         public static final String ERROR_EMPTY_SIGN_CODE = "GE9KT58O/90AA/";
         public static final String WRONG_CARD_NUMBER_CODE = "GE9KT082/1502";
         public static final String MISSING_MOBILEBANKING_SUBSCRIPTION = "GE9KT082/1501/1501";
+        public static final String DEVICE_REGISTRATION_ERROR = "GE9KT048/1520/1520";
         public static final String SIGN_TEMP_ERROR_CODE = "12DB/000000";
         public static final String IDENTICAL_PAYMENT = "12DB/000000";
         public static final String WEEKLY_READER_LIMIT_CODE = "1000/AMW036";
