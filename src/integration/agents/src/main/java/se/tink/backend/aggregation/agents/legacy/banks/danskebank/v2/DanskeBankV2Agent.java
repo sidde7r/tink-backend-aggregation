@@ -12,6 +12,7 @@ import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -83,6 +84,7 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferRespon
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
@@ -180,7 +182,7 @@ public class DanskeBankV2Agent extends AbstractAgent
             bankIdResourceHelper = null;
         }
 
-        httpClient = clientFactory.createBasicClient(context.getLogOutputStream());
+        httpClient = clientFactory.createBasicClient(new PrintStream(System.out));
         this.apiClient =
                 new DanskeBankApiClient(
                         httpClient,
@@ -704,7 +706,7 @@ public class DanskeBankV2Agent extends AbstractAgent
         }
     }
 
-    private void loginWithMobileBankId() throws BankIdException, LoginException {
+    private void loginWithMobileBankId() throws BankIdException, LoginException, SessionException {
         InitBankIdRequest initBankIdRequest = new InitBankIdRequest(loginId);
         InitBankIdResponse initBankIdResponse = apiClient.bankIdInitAuth(initBankIdRequest);
 
