@@ -123,18 +123,24 @@ public class ClientConfigurationValidator {
         Set<String> mappedSecretsNames =
                 clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(secretsNames);
 
-        return secretFieldsNamesFromConfigurationClass.stream()
-                // Just get the ones that are in the configuration class and not in the set that
-                // we passed to the method.
-                .filter(
-                        secretFieldNameFromConfiguration ->
-                                !mappedSecretsNames.contains(secretFieldNameFromConfiguration))
-                // Do not count as missing those that are excluded.
-                .filter(
-                        missingSecretFieldNameFromConfiguration ->
-                                !excludedSecretsNames.contains(
-                                        missingSecretFieldNameFromConfiguration))
-                .collect(ImmutableSet.toImmutableSet());
+        ImmutableSet<String> missingSecretsFields =
+                secretFieldsNamesFromConfigurationClass.stream()
+                        // Just get the ones that are in the configuration class and not in the set
+                        // that
+                        // we passed to the method.
+                        .filter(
+                                secretFieldNameFromConfiguration ->
+                                        !mappedSecretsNames.contains(
+                                                secretFieldNameFromConfiguration))
+                        // Do not count as missing those that are excluded.
+                        .filter(
+                                missingSecretFieldNameFromConfiguration ->
+                                        !excludedSecretsNames.contains(
+                                                missingSecretFieldNameFromConfiguration))
+                        .collect(ImmutableSet.toImmutableSet());
+
+        return clientConfigurationMetaInfoHandler.inverseMapSpecialConfigClassFieldNames(
+                missingSecretsFields);
     }
 
     // Package private for testing.
@@ -145,17 +151,21 @@ public class ClientConfigurationValidator {
         Set<String> mappedSecretsNames =
                 clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(secretsNames);
 
-        return mappedSecretsNames.stream()
-                // We pick those that we are trying to validate and are not found in the
-                // ClientConfiguration class.
-                .filter(
-                        secretFieldNameToValidate ->
-                                !secretFieldsNamesFromConfigurationClass.contains(
-                                        secretFieldNameToValidate))
-                // Do not count as invalid those that are excluded from validation.
-                .filter(
-                        invalidSecretFieldName ->
-                                !excludedSecretsNames.contains(invalidSecretFieldName))
-                .collect(ImmutableSet.toImmutableSet());
+        ImmutableSet<String> invalidSecretsFields =
+                mappedSecretsNames.stream()
+                        // We pick those that we are trying to validate and are not found in the
+                        // ClientConfiguration class.
+                        .filter(
+                                secretFieldNameToValidate ->
+                                        !secretFieldsNamesFromConfigurationClass.contains(
+                                                secretFieldNameToValidate))
+                        // Do not count as invalid those that are excluded from validation.
+                        .filter(
+                                invalidSecretFieldName ->
+                                        !excludedSecretsNames.contains(invalidSecretFieldName))
+                        .collect(ImmutableSet.toImmutableSet());
+
+        return clientConfigurationMetaInfoHandler.inverseMapSpecialConfigClassFieldNames(
+                invalidSecretsFields);
     }
 }
