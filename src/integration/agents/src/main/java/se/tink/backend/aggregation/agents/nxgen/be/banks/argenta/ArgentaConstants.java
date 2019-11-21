@@ -27,11 +27,7 @@ public class ArgentaConstants {
     public static final ImmutableMap<String, String> HEADERS =
             ImmutableMap.<String, String>builder()
                     .put("App-Version", Application.APPLICATION_VERSION)
-                    .put("appVersion", Application.APPLICATION_VERSION)
-                    .put("language", "NL")
                     .put("Accept-Language", "nl")
-                    .put("Connection", "keep-alive")
-                    .put("User-Agent", "Argenta-PROD/2306 CFNetwork/978.0.7 Darwin/18.6.0")
                     .build();
 
     public static class HEADER {
