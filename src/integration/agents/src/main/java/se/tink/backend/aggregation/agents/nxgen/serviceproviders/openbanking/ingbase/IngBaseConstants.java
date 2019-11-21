@@ -100,9 +100,7 @@ public final class IngBaseConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find Token!";
         public static final String MISSING_CLIENT_ID = "Cannot find client id!";
-        public static final int FORBIDDEN = 403;
-        public static final int NOT_FOUND = 404;
-        public static final int INTERNAL_SERVER_ERROR = 500;
+        public static final String INVALID_GRANT_ERROR = "invalid_grant";
     }
 
     public static class Retry {
