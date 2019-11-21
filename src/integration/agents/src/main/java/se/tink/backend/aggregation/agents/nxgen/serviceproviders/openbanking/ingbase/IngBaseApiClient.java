@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
@@ -95,7 +96,7 @@ public class IngBaseApiClient {
                         .type(MediaType.APPLICATION_JSON)
                         .get(FetchAccountsResponse.class);
             } catch (HttpResponseException e) {
-                if (e.getResponse().getStatus() == ErrorMessages.NOT_FOUND
+                if (e.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND
                         && i < IngBaseConstants.Retry.MAX_ATTEMPTS - 1) {
                     Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
                 } else {
@@ -138,7 +139,7 @@ public class IngBaseApiClient {
                     .type(MediaType.APPLICATION_JSON)
                     .get(FetchTransactionsResponse.class);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == ErrorMessages.INTERNAL_SERVER_ERROR) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
             } else throw e;
         }
