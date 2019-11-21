@@ -1,0 +1,15 @@
+build_flags:
+  --test_output=all
+
+directories:
+  src/integration/sa_agent
+
+test_sources:
+  src/integration/sa_agent/**/src/test/*
+
+targets:
+  //src/integration/sa_agent/...
+
+workspace_type: java
+
+java_language_level: 8
