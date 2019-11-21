@@ -904,6 +904,17 @@ java_library(
 )
 
 java_library(
+    name = "xerces_xercesImpl",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@xerces_xercesImpl//jar",
+    ],
+    runtime_deps = [
+        "@xml_apis_xml_apis//jar",
+    ],
+)
+
+java_library(
     # TODO: check is this used?
     name = "net_sourceforge_htmlunit_htmlunit",
     visibility = ["//visibility:public"],
@@ -1352,9 +1363,11 @@ java_library(
     name = "org_seleniumhq_selenium_selenium_api",
     visibility = ["//visibility:public"],
     exports = [
+        "@org_seleniumhq_selenium_selenium_api//jar",
+    ],
+    runtime_deps = [
         "@com_google_guava_guava//jar",
         "@org_json_json//jar",
-        "@org_seleniumhq_selenium_selenium_api//jar",
     ],
 )
 
@@ -1362,9 +1375,11 @@ java_library(
     name = "org_seleniumhq_selenium_selenium_support",
     visibility = ["//visibility:public"],
     exports = [
+        "@org_seleniumhq_selenium_selenium_support//jar",
+    ],
+    runtime_deps = [
         "@com_google_guava_guava//jar",
         "@org_json_json//jar",
-        "@org_seleniumhq_selenium_selenium_support//jar",
     ],
 )
 
@@ -1372,9 +1387,11 @@ java_library(
     name = "org_seleniumhq_selenium_selenium_firefox_driver",
     visibility = ["//visibility:public"],
     exports = [
+        "@org_seleniumhq_selenium_selenium_firefox_driver//jar",
+    ],
+    runtime_deps = [
         "@commons_io_commons_io//jar",
         "@org_apache_commons_commons_exec//jar",
-        "@org_seleniumhq_selenium_selenium_firefox_driver//jar",
         "@org_seleniumhq_selenium_selenium_remote_driver//jar",
     ],
 )
@@ -1383,6 +1400,9 @@ java_library(
     name = "org_seleniumhq_selenium_selenium_htmlunit_driver",
     visibility = ["//visibility:public"],
     exports = [
+        "@org_seleniumhq_selenium_selenium_htmlunit_driver//jar",
+    ],
+    runtime_deps = [
         "@commons_codec_commons_codec//jar",
         "@commons_collections_commons_collections//jar",
         "@commons_io_commons_io//jar",
@@ -1400,7 +1420,6 @@ java_library(
         "@org_eclipse_jetty_jetty_util//jar",
         "@org_eclipse_jetty_jetty_websocket//jar",
         "@org_seleniumhq_selenium_selenium_api//jar",
-        "@org_seleniumhq_selenium_selenium_htmlunit_driver//jar",
         "@org_w3c_css_sac//jar",
         "@xalan_serializer//jar",
         "@xalan_xalan//jar",
@@ -1413,6 +1432,9 @@ java_library(
     name = "org_seleniumhq_selenium_selenium_java",
     visibility = ["//visibility:public"],
     exports = [
+        "@org_seleniumhq_selenium_selenium_java//jar",
+    ],
+    runtime_deps = [
         ":io_netty_netty_all",
         "@cglib_cglib_nodep//jar",
         "@com_google_guava_guava//jar",
@@ -1443,7 +1465,6 @@ java_library(
         "@org_seleniumhq_selenium_selenium_htmlunit_driver//jar",
         "@org_seleniumhq_selenium_selenium_ie_driver//jar",
         "@org_seleniumhq_selenium_selenium_iphone_driver//jar",
-        "@org_seleniumhq_selenium_selenium_java//jar",
         "@org_seleniumhq_selenium_selenium_remote_driver//jar",
         "@org_seleniumhq_selenium_selenium_safari_driver//jar",
         "@org_seleniumhq_selenium_selenium_support//jar",
@@ -1460,6 +1481,9 @@ java_library(
     name = "org_seleniumhq_selenium_selenium_remote_driver",
     visibility = ["//visibility:public"],
     exports = [
+        "@org_seleniumhq_selenium_selenium_remote_driver//jar",
+    ],
+    runtime_deps = [
         "@cglib_cglib_nodep//jar",
         "@com_google_guava_guava//jar",
         "@net_java_dev_jna_jna//jar",
@@ -1468,7 +1492,6 @@ java_library(
         "@org_apache_httpcomponents_httpclient//jar",
         "@org_json_json//jar",
         "@org_seleniumhq_selenium_selenium_api//jar",
-        "@org_seleniumhq_selenium_selenium_remote_driver//jar",
     ],
 )
 

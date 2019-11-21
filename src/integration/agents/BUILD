@@ -78,6 +78,7 @@ java_library(
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:commons_httpclient_commons_httpclient",
+        "//third_party:commons_io_commons_io",
         "//third_party:de_jollyday_jollyday",
         "//third_party:io_dropwizard_dropwizard_client",
         "//third_party:io_dropwizard_dropwizard_core",
@@ -94,6 +95,8 @@ java_library(
         "//third_party:org_apache_commons_commons_collections4",
         "//third_party:org_apache_commons_commons_csv",
         "//third_party:org_apache_curator_curator_client",
+        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_apache_mahout_mahout_core",
         "//third_party:org_apache_pdfbox_pdfbox",
         "//third_party:org_apache_velocity_velocity",
@@ -103,6 +106,7 @@ java_library(
         "//third_party:org_eclipse_jetty_jetty_servlets",
         "//third_party:org_hibernate_hibernate_entitymanager",
         "//third_party:org_iban4j_iban4j",
+        "//third_party:org_json_json",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_seleniumhq_selenium_selenium_api",
         "//third_party:org_seleniumhq_selenium_selenium_firefox_driver",
@@ -110,6 +114,7 @@ java_library(
         "//third_party:org_seleniumhq_selenium_selenium_remote_driver",
         "//third_party:org_seleniumhq_selenium_selenium_support",
         "//third_party:org_slf4j_slf4j_api",
+        "//third_party:xerces_xercesImpl",
     ],
 )
 
