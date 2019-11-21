@@ -6,14 +6,13 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.BankIdResponseStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.entities.LoginEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BankIdCollectResponse {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BankIdResponse.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BankIdCollectResponse.class);
 
     private List<Object> recommendedTargetCustomers;
     private String name;
