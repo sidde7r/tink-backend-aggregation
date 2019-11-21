@@ -32,7 +32,7 @@ public class SparebankenSorAutoAuthenticator implements AutoAuthenticator {
         // cookie for later use in the first login request
 
         DeviceAuthenticationResponse deviceAuthenticationResponse =
-                encapClient.authenticateDevice(AuthenticationMethod.DEVICE);
+                encapClient.authenticateDevice(AuthenticationMethod.DEVICE_AND_PIN);
         String evryToken = deviceAuthenticationResponse.getDeviceToken();
         sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
         executeLogin(evryToken);
