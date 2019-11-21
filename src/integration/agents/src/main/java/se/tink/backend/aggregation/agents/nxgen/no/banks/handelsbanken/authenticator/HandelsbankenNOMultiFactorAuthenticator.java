@@ -164,7 +164,7 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
     }
 
     private void executeLogin(String evryToken) {
-        String firstLoginRequest = FirstLoginRequest.build(evryToken);
+        FirstLoginRequest firstLoginRequest = FirstLoginRequest.build(evryToken);
         FirstLoginResponse firstLoginResponse = apiClient.loginFirstStep(firstLoginRequest);
         sessionStorage.put(Tags.ACCESS_TOKEN, firstLoginResponse.getAccessToken());
         apiClient.loginSecondStep();

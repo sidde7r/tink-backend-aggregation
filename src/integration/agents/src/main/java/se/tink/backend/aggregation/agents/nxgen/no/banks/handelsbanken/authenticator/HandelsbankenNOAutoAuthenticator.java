@@ -44,8 +44,8 @@ public class HandelsbankenNOAutoAuthenticator implements AutoAuthenticator {
     }
 
     private void executeLogin(String evryToken) throws HttpResponseException {
-        FirstLoginResponse firstLoginResponse =
-                apiClient.loginFirstStep(FirstLoginRequest.build(evryToken));
+        FirstLoginRequest firstLoginRequest = FirstLoginRequest.build(evryToken);
+        FirstLoginResponse firstLoginResponse = apiClient.loginFirstStep(firstLoginRequest);
 
         sessionStorage.put(
                 HandelsbankenNOConstants.Tags.ACCESS_TOKEN, firstLoginResponse.getAccessToken());
