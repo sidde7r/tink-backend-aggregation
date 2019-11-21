@@ -52,7 +52,8 @@ public class TransactionEntity {
                                         .filter(Objects::nonNull)
                                         .findFirst()
                                         .map(TransactionAccountEntity::getIban)
-                                        .orElse(""));
+                                        .orElse(""))
+                        .replace("<br>", "\n");
 
         Date executionDate = null;
         if (!Strings.isNullOrEmpty(executionDateTime)) {

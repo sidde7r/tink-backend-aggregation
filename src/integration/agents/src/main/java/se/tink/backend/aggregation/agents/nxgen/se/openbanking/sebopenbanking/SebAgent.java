@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.SebPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.creditcards.SebCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.creditcards.SebCreditCardTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.SebTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.SebTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseAgent;
@@ -81,8 +82,9 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
                 updateController,
                 accountFetcher,
                 new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(accountFetcher)));
+                        this.transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                new SebTransactionFetcher(apiClient))));
     }
 
     private CreditCardRefreshController getCreditCardRefreshController() {

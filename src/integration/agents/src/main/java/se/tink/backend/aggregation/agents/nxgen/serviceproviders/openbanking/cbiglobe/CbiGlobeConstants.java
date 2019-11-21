@@ -76,6 +76,8 @@ public final class CbiGlobeConstants {
         public static final String BOOKING_STATUS = "booking_status";
         public static final String DATE_FROM = "date_from";
         public static final String DATE_TO = "date_to";
+        public static final String TOTAL_PAGES = "cpaas-total-pages";
+        public static final String OFFSET = "offset";
     }
 
     public static class QueryValues {

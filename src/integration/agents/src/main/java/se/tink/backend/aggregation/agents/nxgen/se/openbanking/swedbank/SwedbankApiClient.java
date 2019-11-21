@@ -93,8 +93,6 @@ public final class SwedbankApiClient {
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .header(SwedbankConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                 .header(HttpHeaders.DATE, getFormattedDate(new Date()))
                 .accept(MediaType.APPLICATION_JSON)
                 .queryParam(
@@ -102,7 +100,10 @@ public final class SwedbankApiClient {
     }
 
     private RequestBuilder createRequestInSession(URL url) {
-        return createRequest(url).addBearerToken(getTokenFromSession());
+        return createRequest(url)
+                .addBearerToken(getTokenFromSession())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT);
     }
 
     private RequestBuilder createRequestInSessionWithConsent(URL url) {
@@ -116,7 +117,6 @@ public final class SwedbankApiClient {
         if (accounts == null) {
             accounts =
                     createRequestInSessionWithConsent(SwedbankConstants.Urls.ACCOUNTS)
-                            .header(HttpHeaders.DATE, getHeaderTimeStamp())
                             .get(FetchAccountResponse.class);
         }
         return accounts;
@@ -145,23 +145,20 @@ public final class SwedbankApiClient {
     public URL getAuthorizeUrl(String state) {
 
         HttpResponse response =
-                client.request(SwedbankConstants.Urls.AUTHORIZE)
-                        .queryParam(
-                                SwedbankConstants.QueryKeys.BIC,
-                                SwedbankConstants.BICProduction.SWEDEN)
-                        .queryParam(SwedbankConstants.QueryKeys.STATE, state)
+                createRequest(SwedbankConstants.Urls.AUTHORIZE)
                         .queryParam(
                                 SwedbankConstants.QueryKeys.CLIENT_ID,
                                 getConfiguration().getClientId())
-                        .queryParam(
-                                SwedbankConstants.QueryKeys.REDIRECT_URI,
-                                getConfiguration().getRedirectUrl())
                         .queryParam(
                                 SwedbankConstants.QueryKeys.RESPONSE_TYPE,
                                 SwedbankConstants.QueryValues.RESPONSE_TYPE_CODE)
                         .queryParam(
                                 SwedbankConstants.QueryKeys.SCOPE,
                                 SwedbankConstants.QueryValues.SCOPE_PSD2)
+                        .queryParam(
+                                SwedbankConstants.QueryKeys.REDIRECT_URI,
+                                getConfiguration().getRedirectUrl())
+                        .queryParam(SwedbankConstants.QueryKeys.STATE, state)
                         .get(HttpResponse.class);
 
         return new URL(response.getHeaders().getFirst(HttpHeaders.LOCATION));
@@ -189,7 +186,12 @@ public final class SwedbankApiClient {
                 new AccessEntity.Builder().addIbans(list).build());
     }
 
-    public ConsentResponse getConsent(List<String> list) {
+    /**
+     * Get consent for fetching accounts, balances, and transactions. Has to be approved by SCA for
+     * every account. In order to not count as a call without PSU interaction the headers
+     * PSU-IP-Address, PSU-IP-Port, PSU-User-Agent, and PSU-Http-Method are required.
+     */
+    public ConsentResponse getConsentAccountDetails(List<String> list) {
         return createRequestInSession(SwedbankConstants.Urls.CONSENTS)
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl())
@@ -197,7 +199,13 @@ public final class SwedbankApiClient {
                 .post(ConsentResponse.class, createConsentRequest(list));
     }
 
-    public ConsentResponse createFirstConsent() {
+    /**
+     * Get consent to fetch a list of all user's available accounts. Does not require SCA as no
+     * transaction or balance info can be retrieved with this consent. In order to not count as a
+     * call without PSU interaction the headers PSU-IP-Address, PSU-IP-Port, PSU-User-Agent, and
+     * PSU-Http-Method are required.
+     */
+    public ConsentResponse getConsentAllAccounts() {
         return createRequestInSession(SwedbankConstants.Urls.CONSENTS)
                 .type(MediaType.APPLICATION_JSON)
                 .post(ConsentResponse.class, createConsentRequest());
@@ -214,7 +222,8 @@ public final class SwedbankApiClient {
 
         return createRequest(SwedbankConstants.Urls.TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class, request.toData())
+                .queryParams(request.toData())
+                .post(TokenResponse.class)
                 .toTinkToken();
     }
 
@@ -252,6 +261,8 @@ public final class SwedbankApiClient {
                 .queryParam(
                         SwedbankConstants.QueryKeys.BOOKING_STATUS,
                         SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
+                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getConfiguration().getRedirectUrl())
                 .post(Response.class);
     }
 

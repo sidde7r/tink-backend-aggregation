@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
@@ -127,7 +128,7 @@ public final class SwedbankAgent extends NextGenerationAgent
                         new TransactionDatePaginationController<>(
                                 transactionFetcher,
                                 4,
-                                SwedbankConstants.TimeValues.MONTHS_TO_FETCH,
+                                TimeValues.MONTHS_TO_FETCH_MAX,
                                 ChronoUnit.MONTHS)));
     }
 

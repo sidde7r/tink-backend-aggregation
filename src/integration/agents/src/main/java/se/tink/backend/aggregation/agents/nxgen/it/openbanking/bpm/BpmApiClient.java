@@ -7,12 +7,16 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class BpmApiClient extends CbiGlobeApiClient {
 
     public BpmApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, boolean requestManual) {
-        super(client, persistentStorage, requestManual);
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            boolean requestManual,
+            TemporaryStorage temporaryStorage) {
+        super(client, persistentStorage, requestManual, temporaryStorage);
     }
 
     @Override
