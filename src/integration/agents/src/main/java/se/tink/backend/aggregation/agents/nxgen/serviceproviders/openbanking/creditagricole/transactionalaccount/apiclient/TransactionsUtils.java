@@ -2,11 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -21,12 +23,21 @@ class TransactionsUtils {
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration) {
 
         final String authToken = "Bearer " + StorageUtils.getTokenFromStorage(persistentStorage);
-        return client.request(getUrl(creditAgricoleConfiguration.getBaseUrl(), id, next))
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.AUTHORIZATION, authToken)
-                .header(HeaderKeys.PSU_IP_ADDRESS, creditAgricoleConfiguration.getPsuIpAddress())
-                .get(GetTransactionsResponse.class);
+
+        final HttpResponse resp =
+                client.request(getUrl(creditAgricoleConfiguration.getBaseUrl(), id, next))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(HeaderKeys.AUTHORIZATION, authToken)
+                        .header(
+                                HeaderKeys.PSU_IP_ADDRESS,
+                                creditAgricoleConfiguration.getPsuIpAddress())
+                        .get(HttpResponse.class);
+
+        if (HttpStatus.SC_NO_CONTENT == resp.getStatus()) {
+            return new GetTransactionsResponse();
+        }
+        return resp.getBody(GetTransactionsResponse.class);
     }
 
     static String getUrl(final String baseUrl, final String id, final URL next) {
