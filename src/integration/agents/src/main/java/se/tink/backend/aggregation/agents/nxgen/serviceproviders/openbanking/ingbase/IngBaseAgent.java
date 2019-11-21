@@ -57,12 +57,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
-    protected void configureHttpClient(TinkHttpClient client) {
+    private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new IngBaseGatewayTimeoutFilter());
         client.addFilter(
                 new TimeoutRetryFilter(
-                        IngBaseConstants.HttpClient.MAX_RETRIES,
+                        IngBaseConstants.HttpClient.MAX_ATTEMPTS,
                         IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new TimeoutFilter());
     }

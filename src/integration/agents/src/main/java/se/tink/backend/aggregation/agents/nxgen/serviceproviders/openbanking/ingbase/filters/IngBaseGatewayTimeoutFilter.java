@@ -18,7 +18,7 @@ public class IngBaseGatewayTimeoutFilter extends Filter {
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
         if (response.getStatus() == HttpStatus.SC_GATEWAY_TIMEOUT) {
-            log.error("Bank service unavailable, received Http Status code 504");
+            log.warn("Bank service unavailable, received Http Status code 504");
             throw BankServiceError.NO_BANK_SERVICE.exception();
         }
         return response;
