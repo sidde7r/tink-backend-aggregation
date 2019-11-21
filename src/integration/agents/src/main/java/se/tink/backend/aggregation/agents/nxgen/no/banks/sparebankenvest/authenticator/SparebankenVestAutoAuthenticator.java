@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.Spareba
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.entities.SecurityParamsRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.utils.SparebankenVestAuthUtils;
-import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
-import se.tink.backend.aggregation.agents.utils.authentication.encap2.enums.AuthenticationMethod;
-import se.tink.backend.aggregation.agents.utils.authentication.encap2.models.DeviceAuthenticationResponse;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.enums.AuthenticationMethod;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.DeviceAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 

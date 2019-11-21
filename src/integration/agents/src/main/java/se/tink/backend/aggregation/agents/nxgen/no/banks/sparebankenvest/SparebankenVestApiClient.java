@@ -32,6 +32,7 @@ public class SparebankenVestApiClient {
 
     public SparebankenVestApiClient(TinkHttpClient client) {
         this.client = client;
+        this.client.disableSignatureRequestHeader();
     }
 
     public void initLogin() {
@@ -105,6 +106,9 @@ public class SparebankenVestApiClient {
                 .header(
                         SparebankenVestConstants.Headers.ACCEPT,
                         SparebankenVestConstants.Headers.TEXT_HTML_APPLICATION_XHTML_XML)
+                .header(
+                        SparebankenVestConstants.Headers.REFERER,
+                        SparebankenVestConstants.Headers.REFERER_VALUE)
                 .cookie(
                         SparebankenVestConstants.Headers.MOBILE_NAME_COOKIE_KEY,
                         SparebankenVestConstants.Headers.MOBILE_NAME_COOKIE_VALUE)
