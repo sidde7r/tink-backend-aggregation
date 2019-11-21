@@ -473,42 +473,6 @@ spec:
             the last hour.
         tags: <{ $labels.className }>
 
-  - alert: BankServerUnavailableForLogin
-    expr: |
-       # Unavailable outcome above 50%
-       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable"}[30m])) by (action,className)
-           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 0.50)
-       # At least this many attempts.
-       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 5
-    for: 5m
-    labels:
-        severity: ping
-        who: integration
-    annotations:
-        description: Login unavailable rate is above 50% ( <{ $value }> ) for the last 30 minutes.
-            Investigate immediately.
-        summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-            the last 30 minutes.
-        tags: <{ $labels.className }>
-
-  - alert: BankServerUnavailableForRefresh
-    expr: |
-        # Unavailable outcome above 50%
-        (sum(increase(tink_agent_refresh_total{outcome=~"unavailable"}[30m])) by (className)
-            / sum(increase(tink_agent_refresh_total[30m])) by (className) > 0.50)
-        # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total[30m])) by (className) > 5
-    for: 5m
-    labels:
-        severity: ping
-        who: integration
-    annotations:
-        description: Refresh unavailable rate is above 50% ( <{ $value }> ) for the last 30 minutes.
-            Investigate immediately.
-        summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-            the last 30 minutes.
-        tags: <{ $labels.className }>
-
     # PT
   - alert: LoginSuccessRateLowWithAttemptLimitPT
     expr: |
@@ -582,6 +546,43 @@ spec:
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last hour.
         tags: <{ $labels.className }>
+
+### Bank side failures
+  - alert: BankServerUnavailableForLogin
+    expr: |
+      # Unavailable outcome above 50%
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable"}[30m])) by (action,className)
+          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 0.50)
+      # At least this many attempts.
+      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 10
+    for: 5m
+    labels:
+      severity: ping
+      who: integration
+    annotations:
+      description: Login unavailable rate is above 50% ( <{ $value }> ) for the last 30 minutes.
+        Investigate immediately.
+      summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
+        the last 30 minutes.
+      tags: <{ $labels.className }>
+
+  - alert: BankServerUnavailableForRefresh
+    expr: |
+      # Unavailable outcome above 50%
+      (sum(increase(tink_agent_refresh_total{outcome=~"unavailable"}[30m])) by (className)
+          / sum(increase(tink_agent_refresh_total[30m])) by (className) > 0.50)
+      # At least this many attempts.
+      and sum(increase(tink_agent_refresh_total[30m])) by (className) > 10
+    for: 5m
+    labels:
+      severity: ping
+      who: integration
+    annotations:
+      description: Refresh unavailable rate is above 50% ( <{ $value }> ) for the last 30 minutes.
+        Investigate immediately.
+      summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
+        the last 30 minutes.
+      tags: <{ $labels.className }>
 
 ### Agent level login failures
   - alert: HighProviderFailedLoginRatioIntegration
