@@ -220,4 +220,14 @@ public class ClientConfigurationMetaInfoHandler {
                                         .getOrDefault(secretNameToValidate, secretNameToValidate))
                 .collect(ImmutableSet.toImmutableSet());
     }
+
+    // This is the inverse of the above function.
+    public Set<String> inverseMapSpecialConfigClassFieldNames(Set<String> secretsNames) {
+        return secretsNames.stream()
+                .map(
+                        secretNameToValidate ->
+                                specialFieldsMapper.getOrDefault(
+                                        secretNameToValidate, secretNameToValidate))
+                .collect(ImmutableSet.toImmutableSet());
+    }
 }
