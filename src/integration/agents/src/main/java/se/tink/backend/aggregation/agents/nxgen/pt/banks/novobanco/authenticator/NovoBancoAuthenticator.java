@@ -5,6 +5,8 @@ import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBa
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.DEVICE_ID_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.SESSION_COOKIE_KEY;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class NovoBancoAuthenticator implements PasswordAuthenticator {
+    private static final Logger logger = LoggerFactory.getLogger(NovoBancoAuthenticator.class);
     private final NovoBancoApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -29,6 +32,7 @@ public class NovoBancoAuthenticator implements PasswordAuthenticator {
         Login0Response response = apiClient.loginStep0(username, password);
 
         if (!response.isValidCredentials()) {
+            logger.warn("Login0 Request failed with code: " + response.getResultCode());
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 

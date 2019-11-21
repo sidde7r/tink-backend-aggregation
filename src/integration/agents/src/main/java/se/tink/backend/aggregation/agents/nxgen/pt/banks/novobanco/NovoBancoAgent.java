@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.NovoBancoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.NovoBancoSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoInvestmentAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoInvestmentTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoLoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoTransactionalAccountFetcher;
@@ -123,10 +122,7 @@ public class NovoBancoAgent extends NextGenerationAgent
         return new InvestmentRefreshController(
                 metricRefreshController,
                 updateController,
-                new NovoBancoInvestmentAccountFetcher(apiClient),
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(
-                                new NovoBancoInvestmentTransactionFetcher(), 1)));
+                new NovoBancoInvestmentAccountFetcher(apiClient));
+        // no transaction fetcher as mobile app does not support getting investment transactions
     }
 }

@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.FieldValues;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.ServiceIds;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.detail.DigestCalc;
@@ -62,6 +64,7 @@ import se.tink.libraries.pair.Pair;
 
 public class NovoBancoApiClient {
 
+    private static final Logger logger = LoggerFactory.getLogger(NovoBancoApiClient.class);
     private final TinkHttpClient httpClient;
     private final SessionStorage sessionStorage;
     private static final DigestCalc digestCalc = new DigestCalc();
@@ -82,6 +85,8 @@ public class NovoBancoApiClient {
                 buildRequest(prepareGetAccountsRequest(accountId), GET_ACCOUNTS)
                         .post(GetAccountsResponse.class);
         if (!response.isSuccessful()) {
+            logger.warn(
+                    "ObterLista Response ended up with failure code: " + response.getResultCode());
             throw new IllegalStateException("Fetching requested account failed");
         }
         return response;
@@ -92,6 +97,8 @@ public class NovoBancoApiClient {
                 buildRequest(prepareGetAccountsRequest(null), GET_ACCOUNTS)
                         .post(GetAccountsResponse.class);
         if (!response.isSuccessful()) {
+            logger.warn(
+                    "ObterLista Response ended up with failure code: " + response.getResultCode());
             throw new IllegalStateException("Fetching Transactional Accounts failed");
         }
         saveAccountsInSessionStorage(response);
@@ -143,6 +150,11 @@ public class NovoBancoApiClient {
                             GetInvestmentsResponse response =
                                     buildRequest(request, GET_INVESTMENTS)
                                             .post(GetInvestmentsResponse.class);
+                            if (!response.isSuccessful()) {
+                                logger.warn(
+                                        "ObterCarteiraFundos Response ended up with failure code: "
+                                                + response.getResultCode());
+                            }
                             investmentsResponses.add(response);
                         });
         return investmentsResponses;
@@ -165,6 +177,11 @@ public class NovoBancoApiClient {
                 loanDetails -> {
                     GetLoanDetailsResponse loanDetailsResponse =
                             getGetLoanDetails(opToken, loanDetails);
+                    if (!loanAccountDetails.isSuccessful()) {
+                        logger.warn(
+                                "ObterDetalheCreditoHabitacao Response ended up with failure code: "
+                                        + loanAccountDetails.getResultCode());
+                    }
                     loans.add(
                             new LoanAggregatedData(
                                     accountDetails,

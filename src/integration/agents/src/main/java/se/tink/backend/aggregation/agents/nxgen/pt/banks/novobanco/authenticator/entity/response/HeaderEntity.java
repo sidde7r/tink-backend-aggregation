@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.entity.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -38,13 +37,5 @@ public class HeaderEntity {
 
     public ContextEntity getContext() {
         return context;
-    }
-
-    public Integer getResultCode() {
-        return Optional.ofNullable(getStatus()).map(StatusEntity::getCode).orElse(null);
-    }
-
-    public String getSelectedAccountNumber() {
-        return Optional.ofNullable(context).map(ContextEntity::getSelected).orElse(null);
     }
 }
