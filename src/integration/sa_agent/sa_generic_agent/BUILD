@@ -5,8 +5,11 @@ java_library(
     srcs = glob(["src/main/java/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/api",
+        "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/sa_agent/sa_grpc_api:sa-grpc-api",
+        "//src/integration/user:rpc",
         "//third_party/sa_agent:grpc_client_libs",
         "@org_slf4j_slf4j_api//jar",
     ],
@@ -15,13 +18,25 @@ java_library(
 junit_test(
     name = "sa-agent-generic-agent-test",
     srcs = glob(["src/test/java/**/*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//etc:development",
+    ],
     resources = glob([
         "src/test/resources/**/*",
     ]),
+    tags = [
+        "external",
+        "manual",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         ":sa-agent-generic-agent",
+        "//src/integration/api",
         "//src/integration/lib",
+        "//src/integration/lib:lib_test",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/sa_agent/sa_grpc_api:sa-grpc-api",
         "//third_party/sa_agent:grpc_client_libs",
         "@junit_junit//jar",
