@@ -43,4 +43,8 @@ public class HeaderEntity {
     public Integer getResultCode() {
         return Optional.ofNullable(getStatus()).map(StatusEntity::getCode).orElse(null);
     }
+
+    public String getSelectedAccountNumber() {
+        return Optional.ofNullable(context).map(ContextEntity::getSelected).orElse(null);
+    }
 }

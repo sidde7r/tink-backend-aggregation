@@ -13,6 +13,7 @@ import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBa
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.DEVICE_ID_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.SESSION_COOKIE_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_INVESTMENTS;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOANS;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOAN_DETAILS;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.KEEP_ALIVE;
@@ -38,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.rpc.Login0Request;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.rpc.Login0Response;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.AccountRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.investment.GetInvestmentsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.loan.GetLoanAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.loan.GetLoanDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.BodyEntity;
@@ -45,6 +47,8 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.LoanOverviewEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.GetAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.investment.GetInvestmentsRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.investment.GetInvestmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanDetailsRequest;
@@ -127,6 +131,21 @@ public class NovoBancoApiClient {
                         .orElse(Collections.emptyList());
 
         return Pair.of(movements, currency);
+    }
+
+    public Collection<GetInvestmentsResponse> getInvestments() {
+        List<GetInvestmentsResponse> investmentsResponses = new ArrayList<>();
+        getAccountDetails()
+                .forEach(
+                        accountDetails -> {
+                            GetInvestmentsRequest request =
+                                    prepareGetInvestmentsRequest(accountDetails.getId());
+                            GetInvestmentsResponse response =
+                                    buildRequest(request, GET_INVESTMENTS)
+                                            .post(GetInvestmentsResponse.class);
+                            investmentsResponses.add(response);
+                        });
+        return investmentsResponses;
     }
 
     public boolean isAlive() {
@@ -229,6 +248,12 @@ public class NovoBancoApiClient {
         GetLoanDetailsBodyEntity body = new GetLoanDetailsBodyEntity(contractId);
 
         return new GetLoanDetailsRequest(header, body);
+    }
+
+    private GetInvestmentsRequest prepareGetInvestmentsRequest(String accountId) {
+        HeaderEntity header = getHeaderEntity(FieldValues.CTX_ACCOUNTS, ServiceIds.INVESTMENTS_ID);
+        GetInvestmentsBodyEntity body = new GetInvestmentsBodyEntity(accountId, "");
+        return new GetInvestmentsRequest(header, body);
     }
 
     private Collection<AccountDetailsEntity> getAccountDetails() {
