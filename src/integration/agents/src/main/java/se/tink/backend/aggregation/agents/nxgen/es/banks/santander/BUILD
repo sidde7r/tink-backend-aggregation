@@ -1,5 +1,5 @@
 java_library(
-    name = "santander_es",
+    name = "santander",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
