@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "se.tink.sa.model.auth";
+option java_outer_classname = "OuterModel";
+option go_package = "proto";
+
+message AuthenticationRequest {
+  string correlationId = 1;
+}
+
+message AuthenticationResponse {
+  string correlationId = 1;
+}
+
