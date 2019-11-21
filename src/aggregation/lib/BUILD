@@ -43,6 +43,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bankinter",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bbva",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/creditcards/amex",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/santander",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/op",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/spankki",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/creditcards/amex",
