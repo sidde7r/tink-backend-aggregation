@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.entity.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.Optional;
 
 @JsonObject
 public class HeaderEntityWrapper {
