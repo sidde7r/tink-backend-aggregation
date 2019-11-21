@@ -11,4 +11,12 @@ public class TransactionsLinksEntity {
     private LinkDetailsEntity parentlist;
     private LinkDetailsEntity prev;
     private LinkDetailsEntity self;
+
+    public LinkDetailsEntity getNext() {
+        return next;
+    }
+
+    public LinkDetailsEntity getSelf() {
+        return self;
+    }
 }

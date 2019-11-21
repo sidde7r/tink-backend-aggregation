@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class CreditAgricoleBaseApiClient {
@@ -58,8 +59,8 @@ public class CreditAgricoleBaseApiClient {
         ConsentsUtils.put(persistentStorage, client, listOfNecessaryConstents, configuration);
     }
 
-    public GetTransactionsResponse getTransactions(final String id) {
-        return TransactionsUtils.get(id, persistentStorage, client, configuration);
+    public GetTransactionsResponse getTransactions(final String id, final URL next) {
+        return TransactionsUtils.get(id, next, persistentStorage, client, configuration);
     }
 
     private void setTokenToSession(OAuth2Token token) {
