@@ -633,12 +633,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_github_detro_ghostdriver_phantomjsdriver",
-    artifact = "com.github.detro.ghostdriver:phantomjsdriver:1.0.3",
-    sha1 = "17fdf2fe6bb281a7d37fdcb0fd87c77a78bf0d76",
-)
-
-maven_jar(
     name = "com_fasterxml_jackson_core_jackson_annotations",
     artifact = "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
     sha1 = "2ea299c145207161c212e28abbc8f513fa245940",
@@ -2564,6 +2558,7 @@ maven_install(
 maven_install(
     name = "selenium",
     artifacts = [
+        "com.codeborne:phantomjsdriver:1.4.4",
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
         "org.seleniumhq.selenium:selenium-api:3.141.59",
         "org.seleniumhq.selenium:selenium-chrome-driver:3.141.59",

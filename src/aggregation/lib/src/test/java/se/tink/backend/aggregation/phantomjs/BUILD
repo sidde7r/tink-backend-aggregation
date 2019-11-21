@@ -6,7 +6,7 @@ junit_test(
     data = [],
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_github_detro_ghostdriver_phantomjsdriver",
+        "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
         "@selenium//:org_seleniumhq_selenium_selenium_java",
     ],

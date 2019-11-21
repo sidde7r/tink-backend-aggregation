@@ -153,27 +153,6 @@ java_library(
 )
 
 java_library(
-    name = "com_github_detro_ghostdriver_phantomjsdriver",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_github_detro_ghostdriver_phantomjsdriver//jar",
-    ],
-    runtime_deps = [
-        "@commons_codec_commons_codec//jar",
-        "@mx4j_mx4j_tools//jar",
-        "@net_jcip_jcip_annotations//jar",
-        "@org_bouncycastle_bcpkix_jdk15on//jar",
-        "@org_bouncycastle_bcprov_jdk15on//jar",
-        "@org_mortbay_jetty_servlet_api_2_5//jar",
-        "@org_seleniumhq_selenium_jetty_repacked//jar",
-        "@org_seleniumhq_selenium_selenium_server//jar",
-        "@org_yaml_snakeyaml//jar",
-        "@selenium//:org_seleniumhq_selenium_selenium_java",
-        "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
-    ],
-)
-
-java_library(
     name = "com_github_rholder_guava_retrying",
     visibility = ["//visibility:public"],
     exports = [
