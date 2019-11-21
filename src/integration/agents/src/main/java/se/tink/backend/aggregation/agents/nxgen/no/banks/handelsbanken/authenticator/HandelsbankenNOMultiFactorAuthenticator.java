@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authentic
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.SendSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.VerifyCustomerResponse;
-import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -45,6 +45,7 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
 
     private int pollWaitCounter;
     private String mobileNumber;
+    private String nationalId;
 
     public HandelsbankenNOMultiFactorAuthenticator(
             HandelsbankenNOApiClient apiClient,
@@ -64,6 +65,7 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
             throws AuthenticationException {
         pollWaitCounter = 0;
         this.mobileNumber = mobileNumber;
+        this.nationalId = nationalId;
 
         apiClient.fetchAppInformation();
 
@@ -148,8 +150,11 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
                         getActivationCodeField());
 
         String activateEvryToken =
-                encapClient.activateAndAuthenticateUser(
-                        activationCodeResponse.get(ActivationCodeFieldConstants.NAME));
+                encapClient
+                        .registerDevice(
+                                nationalId,
+                                activationCodeResponse.get(ActivationCodeFieldConstants.NAME))
+                        .getDeviceToken();
 
         sessionStorage.put(Storage.ACTIVATE_EVRY_TOKEN, activateEvryToken);
         if (activateEvryToken == null) {
@@ -159,7 +164,7 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
     }
 
     private void executeLogin(String evryToken) {
-        String firstLoginRequest = FirstLoginRequest.build(evryToken);
+        FirstLoginRequest firstLoginRequest = FirstLoginRequest.build(evryToken);
         FirstLoginResponse firstLoginResponse = apiClient.loginFirstStep(firstLoginRequest);
         sessionStorage.put(Tags.ACCESS_TOKEN, firstLoginResponse.getAccessToken());
         apiClient.loginSecondStep();

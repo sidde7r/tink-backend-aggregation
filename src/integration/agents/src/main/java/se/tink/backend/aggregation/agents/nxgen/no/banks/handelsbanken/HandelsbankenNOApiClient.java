@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FinalizeBankIdRequest;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FirstLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FirstLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.PollBankIdResponse;
@@ -127,7 +128,7 @@ public class HandelsbankenNOApiClient {
                 .post(String.class, finalizeBankIdRequest);
     }
 
-    public FirstLoginResponse loginFirstStep(String firstLoginRequest) {
+    public FirstLoginResponse loginFirstStep(FirstLoginRequest firstLoginRequest) {
         FirstLoginResponse firstLoginResponse =
                 client.request(Url.LOGIN_FIRST_STEP.get())
                         .accept(MediaType.APPLICATION_JSON)

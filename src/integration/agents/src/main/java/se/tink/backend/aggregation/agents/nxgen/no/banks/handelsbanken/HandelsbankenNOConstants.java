@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken;
 import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 public class HandelsbankenNOConstants {
+    public static final DeviceProfile DEVICE_PROFILE = DeviceProfileConfiguration.IOS_STABLE;
 
     public static final int AUTHENTICATION_TIMEOUT_COUNT =
             15; // set to 15 currently same as SparebankenSor
@@ -257,38 +259,18 @@ public class HandelsbankenNOConstants {
 
         public static final String applicationVersion = "11402";
 
-        public static final String encapApiVersion = "3.3.5";
+        public static final String encapApiVersion = "3.5.4";
 
         public static final String credentialsAppNameForEdb = "HANDELSBANKEN_SMBM";
 
-        public static final String credentialsBankCodeForEdb = "(null)";
-
-        public static final String saIdentifier = "samobile_hb_mobile_ios_v1";
-
-        public static final String appId = "com.evry.mobilebanken.handelsbanken";
+        public static final String appId = "com.evry.mobilbanken.handelsbanken";
 
         public static final String rsaPubKeyString =
-                "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3maOiHUOhZR75rlXiyic"
-                        + "csi5mp5OEdkamnC1oRO1o71eP2u7v3i3sEIHQ9jHaIw6kHCrHqFCPvgjvbzcM8vC"
-                        + "uHZF3xafYCxShUH6Kb5AU7of6L7dTqXJDwyK6EJ1sGX1qIrlqVdYzDtfEES7NZb4"
-                        + "nJOpcFzeG9Nt9N7slm4Xq7KFYHFSkVXOWF2Se9f/raoaYVkFCNK8XClw1wPRnkc0"
-                        + "587xE1qwUa661m/pmCkm6M0FO7wfdS9zOQuq9Ual1x2sD7q+H2UhKtmY9zb31paM"
-                        + "ZDa6Tr3/eHopfisV/g1LxeVx/99tVf7b3vdAbBlcBep6YaawnhWM27NGEZ/jldzK"
-                        + "YQIDAQAB";
-
-        public static final String clientPrivateKeyString =
-                "MIICXQIBAAKBgQC4gh8oXob7B0mrdW1EOV4BMHuloZHnrQ9p3dLJHX6YKeYwAXEx"
-                        + "+AopG5+X27PBlasY7c4lm1VrYtbhgSiA5bvfBDQ5/OAMqTJ6o9VBMgU0TuXYc9C+"
-                        + "jUmZf04flu1T2GEqpU3jISCubbfiH7ksJQNtdqqq6AW8W+rKGNgBn5Rn2QIDAQAB"
-                        + "AoGBAJPBEDaBzFJGecZmmQPjdNY6/ymag38l5Yv/6YbIqdIs63tSDFXZrjlRN7Ki"
-                        + "bAcAVi32cflHtVXzpuSbS9Y9Iv6MbNpNJi1KAEe+hYZs2iuyi7Bjotom+T0tyjLU"
-                        + "QnYwsrhPvpkQ7p01MKpGTcbvXGxelcDs1yaYcqGlHdL486ZpAkEA9ZS/KlzRKRyr"
-                        + "EbWrBsX1qV/5MPEDQnCCVQo6bNifHXHgJutmhTYe/wJPvljs2URDvwB8irbWEkuc"
-                        + "Hk04G5ZbLwJBAMBWEHwiErD2pvuqFYIyacrrbLZ5JrQp/nVlqB7dgYHKf0oW7zi7"
-                        + "OY3DKgTGPMD8Ar+G/B6eFuv9d96psWBLC3cCQEsD890J2y5Wvn67YpHAGIlzcpgb"
-                        + "luZNndJCPJSRGxGQfmsFDxzz6kX1O8ymNzsq2hLXIDPzI7MU+4xaBCCRLisCQAzK"
-                        + "LFJ02ZVW8Yeuqbt8qrhJq3L+32n/mOIpnmJfDGubEZfVqpa1LICWx8aFgCi9GVmv"
-                        + "GjjW/mM2+a+ezSLAGsUCQQCQziZRLYLf0vRiITGNwEvj6qxt7YHmzc1tUjYkgYB5"
-                        + "fqtRp234QkKHCujiBh2t9g3ObvOtEuEzxYOwupLE3tYK";
+                "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv0zsNwsaDIgQ/6DKhpVeqdfRf"
+                        + "8Xd6Bl+azzeTXA6jA7jzz65FmOWIKWDxj+NJDGvgbqYpawpLus1nYA/OzB9n82CGz/lFgx"
+                        + "r//0JbASQP2QnCr19p0EXtwAHI1ctAFW3rxeR/+Y1Ji1Qa5h6pmuWggyC9TGNcrsrk8zRV"
+                        + "Z9GBTavkQzDu4oxznfw9ERmWjkaYdGst7ULaH5rpPRuSiOAK2wHjP0yRrK1hSbNsedTCSR"
+                        + "jDXl3/ISc12E9RNMKwk4YHFXhy8kqBwTW8rgDAaZdIWuqj650aYOGD4yDI3Fm1+yyIKAEq"
+                        + "/f5nf7i+K8ZasjcqJ62nW3MV3cjJ/x2yUM8FwIDAQAB";
     }
 }

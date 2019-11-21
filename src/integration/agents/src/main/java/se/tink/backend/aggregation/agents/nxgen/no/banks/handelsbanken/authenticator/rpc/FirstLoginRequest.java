@@ -1,18 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc;
 
+import java.util.Collections;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants.LogInRequestConstants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.entities.CredentialsEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
 public class FirstLoginRequest {
+    private CredentialsEntity credentials;
+    private List<String> tokenProtocolVersions;
 
-    public static String build(String evryToken) {
-        return "{\"credentials\":"
-                + "{\"token\":\""
-                + evryToken.replaceAll("/", "\\\\/")
-                + "\",\"tokenType\":\""
-                + LogInRequestConstants.TOKEN_TYPE
-                + "\"},"
-                + "\"tokenProtocolVersions\":[\""
-                + LogInRequestConstants.TOKEN_PROTOCOL_VERSION
-                + "\"]}";
+    private FirstLoginRequest(CredentialsEntity credentials, List<String> tokenProtocolVersions) {
+        this.credentials = credentials;
+        this.tokenProtocolVersions = tokenProtocolVersions;
+    }
+
+    public static FirstLoginRequest build(String evryToken) {
+        CredentialsEntity credentialsEntity = CredentialsEntity.build(evryToken);
+        return new FirstLoginRequest(
+                credentialsEntity,
+                Collections.singletonList(LogInRequestConstants.TOKEN_PROTOCOL_VERSION));
     }
 }
