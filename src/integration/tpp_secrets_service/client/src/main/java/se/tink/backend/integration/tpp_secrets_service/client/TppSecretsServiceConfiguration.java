@@ -59,8 +59,4 @@ public class TppSecretsServiceConfiguration {
         }
         return port;
     }
-
-    public String getEnvironment() {
-        return environment;
-    }
 }

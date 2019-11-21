@@ -79,13 +79,8 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
                             .build();
 
             internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
-            if ("staging".equalsIgnoreCase(tppSecretsServiceConfiguration.getEnvironment())) {
-                log.info(
-                        "Connection re-establish mechanism activates in {}",
-                        tppSecretsServiceConfiguration.getEnvironment());
-                this.channel.notifyWhenStateChanged(
-                        ConnectivityState.IDLE, this::reconnectIfNecessary);
-            }
+            log.info("Connection re-establish mechanism activates");
+            this.channel.notifyWhenStateChanged(ConnectivityState.IDLE, this::reconnectIfNecessary);
         } else {
             log.warn(
                     "Trying to start an instance of TppSecretsServiceClientImpl when the configuration says it is not enabled.");
