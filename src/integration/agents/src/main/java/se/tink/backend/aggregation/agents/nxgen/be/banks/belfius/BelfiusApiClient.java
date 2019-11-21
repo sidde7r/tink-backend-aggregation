@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -358,10 +360,18 @@ public class BelfiusApiClient {
         return transactionsResponse;
     }
 
+    private static String urlEncode(final String string) {
+        try {
+            return URLEncoder.encode(string, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     private <T extends BelfiusResponse> T post(
             URL url, Class<T> c, BelfiusRequest.Builder builder) {
         setSessionData(builder);
-        String body = "request=" + SerializationUtils.serializeToString(builder.build());
+        String body = "request=" + urlEncode(SerializationUtils.serializeToString(builder.build()));
         HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
         T response = parseBelfiusResponse(httpResponse, c);
         MessageResponse.validate(response);
@@ -372,7 +382,7 @@ public class BelfiusApiClient {
     private <T extends BelfiusResponse> T postUserInput(
             URL url, Class<T> c, BelfiusRequest.Builder builder) {
         setSessionData(builder);
-        String body = "request=" + SerializationUtils.serializeToString(builder.build());
+        String body = "request=" + urlEncode(SerializationUtils.serializeToString(builder.build()));
         HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
         T response = parseBelfiusResponse(httpResponse, c);
         this.sessionStorage.incrementRequestCounter();
@@ -382,7 +392,7 @@ public class BelfiusApiClient {
     private <T extends BelfiusResponse> T postTransaction(
             URL url, Class<T> c, BelfiusRequest.Builder builder) {
         setSessionData(builder);
-        String body = "request=" + SerializationUtils.serializeToString(builder.build());
+        String body = "request=" + urlEncode(SerializationUtils.serializeToString(builder.build()));
         body = body.replace("\\\\", Character.toString((char) 92));
         HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
         T response = parseBelfiusResponse(httpResponse, c);
