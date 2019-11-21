@@ -13,6 +13,7 @@ public class NovoBancoConstants {
         public static final URL GET_DETAILS = new URL(Endpoints.GET_DETAILS);
         public static final URL GET_LOANS = new URL(Endpoints.GET_LOANS);
         public static final URL GET_LOAN_DETAILS = new URL(Endpoints.GET_LOAN_DETAILS);
+        public static final URL GET_INVESTMENTS = new URL(Endpoints.GET_INVESTMENTS);
     }
 
     private static class Endpoints {
@@ -25,6 +26,8 @@ public class NovoBancoConstants {
         public static final String GET_LOANS = API_BASE + "mv2/api2/PosicaoIntegrada/ObterSeccao";
         public static final String GET_LOAN_DETAILS =
                 API_BASE + "mv2/api2/PosicaoIntegrada/ObterDetalheCreditoHabitacao";
+        public static final String GET_INVESTMENTS =
+                API_BASE + "mv2/api2/FundosInvestimento/ObterCarteiraFundos";
     }
 
     public static class SecretKeys {
@@ -45,6 +48,7 @@ public class NovoBancoConstants {
     public static class ServiceIds {
         public static final int MOVEMENTS_ID = 3396;
         public static final int LOANS_ID = 194;
+        public static final int INVESTMENTS_ID = 158;
     }
 
     public static class Header {
@@ -77,12 +81,28 @@ public class NovoBancoConstants {
         public static final String APP_BUILD = "5466";
     }
 
+    public static class DateFormats {
+        public static final String DD_MM_YYYY = "dd-MM-yyyy";
+    }
+
     public static class ResponseLabels {
         public static final String CONTRACT = "Contrato";
         public static final String INTEREST_RATE = "TAN";
         public static final String CURRENT_BALANCE = "Capital em divida";
         public static final int SECTION_TYPE = 30;
         public static final int COLLAPSIBLE_SECTION_TYPE = 32;
+
+        public static final String INITIAL_DATE_PT = "Data Início do contrato";
+        public static final String INITIAL_DATE_EN = "Initial Date";
+
+        public static final String INITIAL_BALANCE_PT = "Capital utilizado";
+        public static final String INITIAL_BALANCE_EN = "Initial Balance";
+
+        public static final String PRODUCT_NAME_PT = "Designação";
+        public static final String PRODUCT_NAME_EN = "Product Name";
+
+        public static final String CURRENCY_PT = "Moeda";
+        public static final String CURRENCY_EN = "Currency";
     }
 
     public static class ResponseCodes {

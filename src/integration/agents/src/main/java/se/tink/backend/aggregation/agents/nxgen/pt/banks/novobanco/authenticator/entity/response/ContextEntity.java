@@ -30,4 +30,10 @@ public class ContextEntity {
                 .filter(acc -> accountId.equals(acc.getId()))
                 .findFirst();
     }
+
+    public Optional<AccountDetailsEntity> getSelectedAccountDetails() {
+        return Optional.ofNullable(accounts)
+                .map(AccountsEntity::getSelected)
+                .flatMap(this::getAccountDetails);
+    }
 }

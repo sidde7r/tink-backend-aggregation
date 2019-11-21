@@ -13,6 +13,7 @@ import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBa
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.DEVICE_ID_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.SESSION_COOKIE_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_INVESTMENTS;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOANS;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOAN_DETAILS;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.KEEP_ALIVE;
@@ -29,6 +30,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.FieldValues;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.ServiceIds;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.detail.DigestCalc;
@@ -38,6 +41,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.rpc.Login0Request;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.rpc.Login0Response;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.AccountRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.investment.GetInvestmentsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.loan.GetLoanAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.loan.GetLoanDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.BodyEntity;
@@ -45,6 +49,8 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.LoanOverviewEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.GetAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.investment.GetInvestmentsRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.investment.GetInvestmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanDetailsRequest;
@@ -58,6 +64,7 @@ import se.tink.libraries.pair.Pair;
 
 public class NovoBancoApiClient {
 
+    private static final Logger logger = LoggerFactory.getLogger(NovoBancoApiClient.class);
     private final TinkHttpClient httpClient;
     private final SessionStorage sessionStorage;
     private static final DigestCalc digestCalc = new DigestCalc();
@@ -78,6 +85,8 @@ public class NovoBancoApiClient {
                 buildRequest(prepareGetAccountsRequest(accountId), GET_ACCOUNTS)
                         .post(GetAccountsResponse.class);
         if (!response.isSuccessful()) {
+            logger.warn(
+                    "ObterLista Response ended up with failure code: " + response.getResultCode());
             throw new IllegalStateException("Fetching requested account failed");
         }
         return response;
@@ -88,6 +97,8 @@ public class NovoBancoApiClient {
                 buildRequest(prepareGetAccountsRequest(null), GET_ACCOUNTS)
                         .post(GetAccountsResponse.class);
         if (!response.isSuccessful()) {
+            logger.warn(
+                    "ObterLista Response ended up with failure code: " + response.getResultCode());
             throw new IllegalStateException("Fetching Transactional Accounts failed");
         }
         saveAccountsInSessionStorage(response);
@@ -129,6 +140,26 @@ public class NovoBancoApiClient {
         return Pair.of(movements, currency);
     }
 
+    public Collection<GetInvestmentsResponse> getInvestments() {
+        List<GetInvestmentsResponse> investmentsResponses = new ArrayList<>();
+        getAccountDetails()
+                .forEach(
+                        accountDetails -> {
+                            GetInvestmentsRequest request =
+                                    prepareGetInvestmentsRequest(accountDetails.getId());
+                            GetInvestmentsResponse response =
+                                    buildRequest(request, GET_INVESTMENTS)
+                                            .post(GetInvestmentsResponse.class);
+                            if (!response.isSuccessful()) {
+                                logger.warn(
+                                        "ObterCarteiraFundos Response ended up with failure code: "
+                                                + response.getResultCode());
+                            }
+                            investmentsResponses.add(response);
+                        });
+        return investmentsResponses;
+    }
+
     public boolean isAlive() {
         GenericResponse response =
                 buildRequest(prepareGetAccountsRequest(null), KEEP_ALIVE)
@@ -146,6 +177,11 @@ public class NovoBancoApiClient {
                 loanDetails -> {
                     GetLoanDetailsResponse loanDetailsResponse =
                             getGetLoanDetails(opToken, loanDetails);
+                    if (!loanAccountDetails.isSuccessful()) {
+                        logger.warn(
+                                "ObterDetalheCreditoHabitacao Response ended up with failure code: "
+                                        + loanAccountDetails.getResultCode());
+                    }
                     loans.add(
                             new LoanAggregatedData(
                                     accountDetails,
@@ -229,6 +265,12 @@ public class NovoBancoApiClient {
         GetLoanDetailsBodyEntity body = new GetLoanDetailsBodyEntity(contractId);
 
         return new GetLoanDetailsRequest(header, body);
+    }
+
+    private GetInvestmentsRequest prepareGetInvestmentsRequest(String accountId) {
+        HeaderEntity header = getHeaderEntity(FieldValues.CTX_ACCOUNTS, ServiceIds.INVESTMENTS_ID);
+        GetInvestmentsBodyEntity body = new GetInvestmentsBodyEntity(accountId, "");
+        return new GetInvestmentsRequest(header, body);
     }
 
     private Collection<AccountDetailsEntity> getAccountDetails() {
