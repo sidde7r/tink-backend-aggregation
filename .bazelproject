@@ -36,6 +36,7 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bbva
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bankinter
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/creditcards/amex
+  //src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/santander
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/op
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/spankki
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/creditcards/amex
@@ -62,6 +63,7 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/skandiabanken
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/brokers/avanza
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/icabanken
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/amex/v62
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/aib
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays
@@ -89,6 +91,7 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/norwegian
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bankdata
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/bankdatadk
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyske/authenticator
   -//deb:all
   -//third_party:all
 
