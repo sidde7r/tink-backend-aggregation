@@ -289,8 +289,6 @@ public final class TppSecretsServiceClientImpl implements TppSecretsServiceClien
 
     private synchronized void reconnectIfNecessary() {
         if (!isShutDown.get()) {
-            log.info(
-                    "Secrets service gRPC connection state changes to {}", channel.getState(false));
             this.channel.notifyWhenStateChanged(
                     this.channel.getState(false), this::reconnectIfNecessary);
             // Use current state as the source state to avoid recursively running of this method.
