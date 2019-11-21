@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator;
 
+import static se.tink.backend.aggregation.agents.exceptions.errors.SessionError.SESSION_EXPIRED;
+
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -8,8 +10,10 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.ClientCredentialTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.ErrorBody;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -47,7 +51,16 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
-        return client.refreshToken(refreshToken);
+        try {
+            return client.refreshToken(refreshToken);
+        } catch (HttpResponseException e) {
+            ErrorBody errorBody = e.getResponse().getBody(ErrorBody.class);
+            if (e.getResponse().getStatus() == 401
+                    && "invalid_token".equalsIgnoreCase(errorBody.getError())) {
+                throw new SessionException(SESSION_EXPIRED);
+            }
+            throw e;
+        }
     }
 
     @Override
