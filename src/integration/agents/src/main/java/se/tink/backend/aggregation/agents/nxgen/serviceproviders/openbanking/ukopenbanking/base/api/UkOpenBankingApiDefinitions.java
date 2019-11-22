@@ -208,6 +208,14 @@ public class UkOpenBankingApiDefinitions {
         IBAN,
         PAYM,
         SORT_CODE_ACCOUNT_NUMBER,
+        /*
+        This identifier type is added for Santander. This bank sometimes sends identifier such as
+        {"SchemeName":"UK.Santander.SavingsRollNumber","Identification":"SAVINGRXXXXXXXX"}, to handle
+        such responses without crash, we needed that new type.
+        Although Santander is not following UKOB specifications by sending such identifiers, we
+        decided to make a fix in our side to support this bank.
+         */
+        SAVINGS_ROLL_NUMBER,
         PAN;
 
         private static final GenericTypeMapper<ExternalAccountIdentification4Code, String>
@@ -222,7 +230,9 @@ public class UkOpenBankingApiDefinitions {
                                 .put(ExternalAccountIdentification4Code.PAYM, "UK.OBIE.Paym")
                                 .put(
                                         ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER,
-                                        "UK.OBIE.SortCodeAccountNumber",
+                                        "UK.OBIE.SortCodeAccountNumber")
+                                .put(
+                                        ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER,
                                         "UK.Santander.SavingsRollNumber")
                                 // TODO: Remove the following mapping for PAN and
                                 // UK.Santander.SavingsRollNumber when Santander starts
