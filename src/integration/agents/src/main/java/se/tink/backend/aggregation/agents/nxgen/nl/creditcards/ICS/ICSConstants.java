@@ -95,11 +95,16 @@ public class ICSConstants {
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
+        public static final String INVALID_TOKEN = "invalid_token";
         public static final String MISSING_BALANCE = "No balance available";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find OAuth token.";
         public static final String MISSING_STATE = "OAuth state cannot be null or empty.";
         public static final String MISSING_PERMISSIONS = "Did not receive all permissions";
+    }
+
+    public static class ErrorCode {
+        public static final int UNAUTHORIZED = 401;
     }
 
     public static final class StorageKeys {
