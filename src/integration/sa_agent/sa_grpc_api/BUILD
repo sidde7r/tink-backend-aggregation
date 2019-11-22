@@ -15,4 +15,8 @@ proto_library(
         "proto/auth/services.proto",
     ],
     visibility = ["//visibility:public"],
+    deps = [
+        "@com_google_googleapis//google/type:date_proto",
+        "@com_google_protobuf//:timestamp_proto",
+    ],
 )

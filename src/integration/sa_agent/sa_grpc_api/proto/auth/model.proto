@@ -5,9 +5,14 @@ option java_package = "se.tink.sa.model.auth";
 option java_outer_classname = "OuterModel";
 option go_package = "proto";
 
+import "google/protobuf/timestamp.proto";
+import "google/type/date.proto";
+
 message AuthenticationRequest {
   string correlationId = 1;
   Credentials credentials = 2;
+  string userInputs = 3;    // com.google.common.collect.ImmutableList<String>
+  map<string, string> callbackData = 4; // com.google.common.collect.ImmutableMap
 }
 
 message AuthenticationResponse {
@@ -15,21 +20,21 @@ message AuthenticationResponse {
 }
 
 message Credentials {
-  string debugUntil = 1;    // java.util.Date
+  google.type.Date debugUntil = 1;
   int64 providerLatency = 2;
   string fieldsSerialized = 3;
   string id = 4;
-  string nextUpdate = 5;    // java.util.Date
+  google.type.Date nextUpdate = 5;
   string payload = 6;
   string providerName = 7;
-  string sessionExpiryDate = 8;    // java.util.Date
+  google.type.Date sessionExpiryDate = 8;
   CredentialsStatus status = 9;
   string statusPayload = 10;
   string statusPrompt = 11;
-  string statusUpdated = 12;    // java.util.Date
+  google.type.Date statusUpdated = 12;
   string supplementalInformation = 13;
   CredentialsTypes type = 14;
-  string updated = 15;    // java.util.Date
+  google.type.Date updated = 15;
   string userId = 16;
   bool forceManualAuthentication = 17;
   int32 dataVersion = 18;

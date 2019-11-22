@@ -2048,6 +2048,7 @@ java_library(
     exports = [
         "//third_party:lombok_plugin",
         "//third_party:netty",
+        "//third_party:com_google_protobuf_protobuf_java",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
