@@ -12,8 +12,11 @@ junit_test(
         "manual",
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/monabanq",
+    ],
     deps = [
-        "//src/integration/agents",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/euroinformation",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
