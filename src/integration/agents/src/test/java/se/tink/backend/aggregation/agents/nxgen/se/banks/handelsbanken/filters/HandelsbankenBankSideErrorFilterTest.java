@@ -38,7 +38,7 @@ public class HandelsbankenBankSideErrorFilterTest {
         mockHttpResponseForUrl(
                 url,
                 500,
-                MediaType.APPLICATION_JSON,
+                MediaType.APPLICATION_JSON.concat(";charset=UTF-8"),
                 "{\"type\":\"http://schemas.shbmain.shb.biz/http/status/serverError\",\"status\":500,\"detail\":\"Ett fel har tyvärr inträffat. Försök igen senare.\"}");
 
         sendRequest(url);
@@ -51,7 +51,7 @@ public class HandelsbankenBankSideErrorFilterTest {
         mockHttpResponseForUrl(
                 url,
                 200,
-                MediaType.APPLICATION_XML,
+                MediaType.APPLICATION_XML.concat(";charset=UTF-8"),
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?> \n"
                         + "<response code=\"666\" label=\"Tjänsten kan inte nås för tillfället.\" label_en-GB=\"The service is not available at the moment, please try again later.\" label_nl-NL=\"De service is niet beschikbaar op dit moment, probeer het later opnieuw.\" /> ");
 

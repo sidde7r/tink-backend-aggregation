@@ -19,19 +19,19 @@ public class HandelsbankenSEBankSideErrorFilter extends Filter {
             throws HttpClientException, HttpResponseException {
         HttpResponse httpResponse = nextFilter(httpRequest);
         if (httpResponse.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                && MediaType.APPLICATION_JSON_TYPE.equals(httpResponse.getType())) {
+                && MediaType.APPLICATION_JSON_TYPE.isCompatible(httpResponse.getType())) {
 
             if (httpResponse.hasBody()
                     && httpResponse.getBody(ErrorResponse.class).isTmpBankSideFailure()) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
-        } else if (MediaType.APPLICATION_XML_TYPE.equals(httpResponse.getType())) {
+        } else if (MediaType.APPLICATION_XML_TYPE.isCompatible(httpResponse.getType())) {
             // No check for response status as they return http status 200
 
             // if failed to parse the response to XmlErrorResponse don't throw exception
             if (Try.of(() -> httpResponse.getBody(XmlErrorResponse.class).isServiceUnavailable())
                     .getOrElse(false)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.NO_BANK_SERVICE.exception();
             }
         }
         return httpResponse;
