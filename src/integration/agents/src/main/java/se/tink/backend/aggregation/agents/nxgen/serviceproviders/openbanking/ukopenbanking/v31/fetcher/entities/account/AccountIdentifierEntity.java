@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
 @JsonObject
@@ -57,6 +58,8 @@ public class AccountIdentifierEntity {
                 return Optional.empty();
             case BBAN:
                 return Optional.of(new BbanIdentifier(identification));
+            case SAVINGS_ROLL_NUMBER:
+                return Optional.of(new NonValidIdentifier(identification));
             default:
                 throw new IllegalStateException(
                         String.format("Unknown identifier type: %s", identifierType));
