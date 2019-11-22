@@ -60,12 +60,14 @@ public final class SibsUtils {
     }
 
     public static LocalDate convertStringToLocalDate(String localDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(SibsConstants.Formats.TRANSACTION_DATE_FORMAT);
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern(SibsConstants.Formats.TRANSACTION_DATE_FORMAT);
         return LocalDate.parse(localDate, formatter);
     }
 
     public static String convertLocalDateToString(LocalDate localDate) {
-        DateTimeFormatter customFormatter = DateTimeFormatter.ofPattern(SibsConstants.Formats.TRANSACTION_DATE_FORMAT);
+        DateTimeFormatter customFormatter =
+                DateTimeFormatter.ofPattern(SibsConstants.Formats.TRANSACTION_DATE_FORMAT);
         return customFormatter.format(localDate);
     }
 }

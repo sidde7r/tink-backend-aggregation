@@ -136,7 +136,8 @@ public class SibsPaymentInitiationRequest {
         }
 
         public Builder withRequestedExecutionDate(LocalDate requestedExecutionDate) {
-            this.requestedExecutionDate = SibsUtils.convertLocalDateToString(requestedExecutionDate);
+            this.requestedExecutionDate =
+                    SibsUtils.convertLocalDateToString(requestedExecutionDate);
             return this;
         }
 

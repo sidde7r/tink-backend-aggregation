@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc;
 
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -94,7 +93,8 @@ public class SibsGetPaymentResponse {
                         .withCreditor(creditorAccount.toTinkCreditor())
                         .withDebtor(debtorAccount.toTinkDebtor())
                         .withExactCurrencyAmount(instructedAmount.toTinkAmount())
-                        .withExecutionDate(SibsUtils.convertStringToLocalDate(requestedExecutionDate))
+                        .withExecutionDate(
+                                SibsUtils.convertStringToLocalDate(requestedExecutionDate))
                         .withCurrency(instructedAmount.getCurrency())
                         .withStatus(getTransactionStatus().getTinkStatus())
                         .withUniqueId(getPaymentId());
