@@ -11,12 +11,15 @@ import "google/type/date.proto";
 message AuthenticationRequest {
   string correlationId = 1;
   Credentials credentials = 2;
-  string userInputs = 3;    // com.google.common.collect.ImmutableList<String>
-  map<string, string> callbackData = 4; // com.google.common.collect.ImmutableMap
+  string userInputs = 3;    // TODO: com.google.common.collect.ImmutableList<String>
+  map<string, string> callbackData = 4; // TODO: com.google.common.collect.ImmutableMap
 }
 
 message AuthenticationResponse {
   string correlationId = 1;
+  string fields = 2;  // TODO: com.google.common.collect.ImmutableList<Field>
+  ThirdPartyAppAuthenticationPayload payload = 3;
+  SupplementalWaitRequest supplementalWaitRequest = 4;
 }
 
 message Credentials {
@@ -67,4 +70,40 @@ message Credentials {
     FRAUD = 3;
     THIRD_PARTY_APP = 4;
   }
+}
+
+message ThirdPartyAppAuthenticationPayload {
+  Android android = 1;
+  Ios ios = 2;
+  Desktop desktop = 3;
+  string downloadTitle = 4;
+  string downloadMessage = 5;
+  string upgradeTitle = 6;
+  string upgradeMessage = 7;
+
+  message Android {
+    string packageName = 1;
+    int32 requiredMinimumVersion = 2;
+    string intent = 3;
+  }
+
+  message Ios {
+    string appStoreUrl = 1;
+    string scheme = 2;
+    string deepLinkUrl = 3;
+  }
+
+  message Desktop {
+    string url = 1;
+  }
+}
+
+message SupplementalWaitRequest {
+  string key = 1;
+  int64 waitFor = 2;
+  TimeUnit timeUnit = 3; // TODO: java.util.concurrent.TimeUnit
+}
+
+message TimeUnit {
+  // TODO
 }
