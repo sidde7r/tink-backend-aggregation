@@ -15,6 +15,8 @@ proto_library(
         "proto/auth/services.proto",
         "proto/fetch/account/model.proto",
         "proto/fetch/account/services.proto",
+        "proto/fetch/trans/model.proto",
+        "proto/fetch/trans/services.proto",
     ],
     visibility = ["//visibility:public"],
     deps = [
