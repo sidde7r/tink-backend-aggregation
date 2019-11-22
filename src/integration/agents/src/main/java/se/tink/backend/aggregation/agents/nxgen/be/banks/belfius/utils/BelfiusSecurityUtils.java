@@ -46,6 +46,13 @@ public class BelfiusSecurityUtils {
                 + String.format("%06d", (int) (Math.random() * 1000000));
     }
 
+    public static String generateTransactionIdRegisterDevice() {
+        return "signDeviceRegistration"
+                + System.currentTimeMillis() / 1000
+                + "."
+                + String.format("%06d", (int) (Math.random() * 1000000));
+    }
+
     public static String generateTransferId() {
         return "submitTransfer"
                 + System.currentTimeMillis() / 1000
