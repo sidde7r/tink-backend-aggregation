@@ -275,7 +275,7 @@ public class BelfiusConstants {
         public static final String PLATFORM = "I";
         public static final String TYPE_DEVICE = "PHONE";
 
-        public static final String SYS_VER = "10.02.000";
+        public static final String SYS_VER = "12.04.000";
         public static final String APP_VER = "09.03.001";
 
         public static final String CHECK_STATUS_APPLICATION_ID = "services";
