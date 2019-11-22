@@ -27,7 +27,7 @@ public class AmericanExpressV62ATConfiguration implements AmericanExpressV62Conf
 
     @Override
     public String getLocale() {
-        return AmericanExpressV62ATConstants.BodyValue.LOCALE;
+        return AmericanExpressV62ATConstants.HeaderValues.LOCALE;
     }
 
     @Override
@@ -46,5 +46,14 @@ public class AmericanExpressV62ATConfiguration implements AmericanExpressV62Conf
         request.setCmlEnabled(true);
         request.setTimestamp(Long.toString(System.currentTimeMillis()));
         return request;
+    }
+
+    public String getGitSha() {
+        return AmericanExpressV62ATConstants.HeaderValues.GIT_SHA;
+    }
+
+    @Override
+    public String getAppVersion() {
+        return AmericanExpressV62ATConstants.HeaderValues.APP_VERSION;
     }
 }

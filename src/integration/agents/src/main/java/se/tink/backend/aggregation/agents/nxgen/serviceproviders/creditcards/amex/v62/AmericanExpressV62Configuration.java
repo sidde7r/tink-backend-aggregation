@@ -19,4 +19,8 @@ public interface AmericanExpressV62Configuration extends ClientConfiguration {
 
     // == Timeline Api ==
     TimelineRequest createTimelineRequest(Integer cardIndex);
+
+    String getGitSha();
+
+    String getAppVersion();
 }

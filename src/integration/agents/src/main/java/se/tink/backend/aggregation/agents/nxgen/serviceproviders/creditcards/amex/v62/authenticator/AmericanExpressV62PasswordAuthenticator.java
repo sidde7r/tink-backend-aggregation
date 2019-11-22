@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Predicates;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
@@ -47,72 +47,101 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        LogonRequest logonRequest = new LogonRequest();
-        logonRequest.setUsernameAndPassword(username, password);
 
-        Optional.ofNullable(persistentStorage.get(AmericanExpressV62Constants.Tags.HARDWARE_ID))
-                .orElseGet(
-                        () ->
-                                generateAndStoreUuidFromValue(
-                                        AmericanExpressV62Constants.Tags.HARDWARE_ID, username));
-        Optional.ofNullable(persistentStorage.get(AmericanExpressV62Constants.Tags.INSTALLATION_ID))
-                .orElseGet(
-                        () ->
-                                generateAndStoreUuidFromValue(
-                                        AmericanExpressV62Constants.Tags.INSTALLATION_ID,
-                                        password));
-
-        LogonResponse logonResponse = apiClient.logon(logonRequest);
-
-        if (!logonResponse.isSuccess()) {
-            String reportingCode = logonResponse.getStatus().getReportingCode().toUpperCase();
-
-            switch (reportingCode) {
-                case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_FIRST_ATTEMPT:
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
-                case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_SECOND_ATTEMPT:
-                    throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
-                case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_ACCOUNT_BLOCKED:
-                    throw AuthorizationError.ACCOUNT_BLOCKED.exception();
-                case AmericanExpressV62Constants.ReportingCode.BANKSIDE_TEMPORARY_ERROR:
-                case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_CONTENT_ERROR:
-                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
-                case AmericanExpressV62Constants.ReportingCode.UNSUPPORTED_MARKET:
-                    // Using the message sent from Amex as user message as it will be in the local
-                    // language and with
-                    // reference to the relevant market.
-                    throw LoginError.NOT_CUSTOMER.exception(
-                            new LocalizableKey(logonResponse.getStatus().getMessage()));
-
-                default:
-                    LOGGER.error(
-                            String.format(
-                                    "%s: %s",
-                                    reportingCode, logonResponse.getStatus().getMessage()));
-                    throw new IllegalStateException("Logon failure");
-            }
+        prepareStorageBeforeAuth(username);
+        sendInitializationRequests();
+        LogonRequest request = new LogonRequest(username, password);
+        LogonResponse response = apiClient.logon(request);
+        if (!response.isSuccess()) {
+            handleErrorResponse(response);
         }
-
-        sessionStorage.put(
-                AmericanExpressV62Constants.Tags.CUPCAKE,
-                logonResponse.getLogonData().getCupcake());
-        sessionStorage.put(
-                AmericanExpressV62Constants.Tags.SESSION_ID,
-                logonResponse.getLogonData().getAmexSession());
-        sessionStorage.put(Tags.USER_DATA, logonResponse.getSummaryData().getUserData());
-
-        List<CardEntity> cardList =
-                logonResponse.getSummaryData().getCardList().stream()
-                        .filter(AmericanExpressV62Predicates.cancelledCardsPredicate)
-                        // Double filtering for backward compatibility
-                        .filter(AmericanExpressV62Predicates.cancelledCardSummaryValuePredicate)
-                        .collect(Collectors.toList());
-        instanceStorage.saveCreditCardList(cardList);
+        prepareStorageAfterAuth(response);
     }
 
-    private String generateAndStoreUuidFromValue(String tag, String value) {
-        String generatedUuid = StringUtils.hashAsUUID(value);
-        persistentStorage.put(tag, generatedUuid);
-        return generatedUuid;
+    private void handleErrorResponse(LogonResponse response)
+            throws AuthenticationException, AuthorizationException {
+
+        String reportingCode = response.getStatus().getReportingCode().toUpperCase();
+        switch (reportingCode) {
+            case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_FIRST_ATTEMPT:
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_SECOND_ATTEMPT:
+                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
+            case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_ACCOUNT_BLOCKED:
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            case AmericanExpressV62Constants.ReportingCode.BANKSIDE_TEMPORARY_ERROR:
+            case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_CONTENT_ERROR:
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            case AmericanExpressV62Constants.ReportingCode.UNSUPPORTED_MARKET:
+                // Using the message sent from Amex as user message as it will be in the local
+                // language and with
+                // reference to the relevant market.
+                throw LoginError.NOT_CUSTOMER.exception(
+                        new LocalizableKey(response.getStatus().getMessage()));
+
+            default:
+                LOGGER.error(
+                        String.format("%s: %s", reportingCode, response.getStatus().getMessage()));
+                throw new IllegalStateException("Logon failure");
+        }
+    }
+
+    private void sendInitializationRequests() {
+        apiClient.initialization(InitializationRequest.createAccountServicingRequest());
+        apiClient.initialization(InitializationRequest.createContentRequest());
+    }
+
+    private void prepareStorageBeforeAuth(String username) {
+        persistentStorage.putIfAbsent(
+                AmericanExpressV62Constants.Tags.HARDWARE_ID, StringUtils.hashAsUUID(username));
+        persistentStorage.putIfAbsent(
+                AmericanExpressV62Constants.Tags.INSTALLATION_ID, generateUUID());
+        sessionStorage.putIfAbsent(AmericanExpressV62Constants.Tags.PROCESS_ID, generateUUID());
+    }
+
+    private void prepareStorageAfterAuth(LogonResponse response) {
+        sessionStorage.put(
+                AmericanExpressV62Constants.Tags.CUPCAKE, response.getLogonData().getCupcake());
+        sessionStorage.put(
+                AmericanExpressV62Constants.Tags.SESSION_ID,
+                response.getLogonData().getAmexSession());
+        sessionStorage.put(
+                AmericanExpressV62Constants.Tags.USER_DATA,
+                response.getSummaryData().getUserData());
+        sessionStorage.put(
+                AmericanExpressV62Constants.Tags.GATEKEEPER,
+                response.getLogonData().getGateKeeperCookie());
+        sessionStorage.put(
+                AmericanExpressV62Constants.Tags.AUTHORIZATION,
+                createAuthorizationHeaderValue(response));
+
+        persistentStorage.putIfAbsent(
+                AmericanExpressV62Constants.Tags.MASKED_USER_ID,
+                response.getLogonData().getProfileData().getMaskedUserId());
+        persistentStorage.putIfAbsent(
+                AmericanExpressV62Constants.Tags.REMEMBER_ME_TOKEN,
+                response.getLogonData().getProfileData().getData());
+        persistentStorage.putIfAbsent(
+                AmericanExpressV62Constants.Tags.PUBLIC_GUID,
+                response.getLogonData().getPublicGuid());
+
+        instanceStorage.saveCreditCardList(getCardList(response));
+    }
+
+    private List<CardEntity> getCardList(LogonResponse response) {
+        return response.getSummaryData().getCardList().stream()
+                .filter(AmericanExpressV62Predicates.cancelledCardsPredicate)
+                // Double filtering for backward compatibility
+                .filter(AmericanExpressV62Predicates.cancelledCardSummaryValuePredicate)
+                .collect(Collectors.toList());
+    }
+
+    private String generateUUID() {
+        return UUID.randomUUID().toString().toUpperCase();
+    }
+
+    private String createAuthorizationHeaderValue(LogonResponse response) {
+        String rawToken = response.getLogonData().getJsonWebToken().getRawToken();
+        return "Bearer " + rawToken;
     }
 }

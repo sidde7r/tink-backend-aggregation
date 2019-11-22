@@ -11,7 +11,7 @@ public class AmericanExpressFIConfiguration implements AmericanExpressV62Configu
 
     @Override
     public String getLocale() {
-        return AmericanExpressFIConstants.BodyValues.LOCALE;
+        return AmericanExpressFIConstants.HeaderValues.LOCALE;
     }
 
     @Override
@@ -45,5 +45,14 @@ public class AmericanExpressFIConfiguration implements AmericanExpressV62Configu
         request.setPayWithPointsEnabled(true);
         request.setTimestamp(Long.toString(System.currentTimeMillis()));
         return request;
+    }
+
+    public String getGitSha() {
+        return null;
+    }
+
+    @Override
+    public String getAppVersion() {
+        return AmericanExpressFIConstants.HeaderValues.APP_VERSION;
     }
 }

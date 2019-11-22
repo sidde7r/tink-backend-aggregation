@@ -8,7 +8,7 @@ public class UserIdLogin {
     private boolean rememberMeFlag;
     private String userId;
     private String password;
-    //  private String rememberMeToken;
+    private String rememberMeToken;
 
     public UserIdLogin setRememberMeFlag(boolean rememberMeFlag) {
         this.rememberMeFlag = rememberMeFlag;
@@ -25,7 +25,8 @@ public class UserIdLogin {
         return this;
     }
 
-    //    public void setRememberMeToken(String rememberMeToken) {
-    //        this.rememberMeToken = rememberMeToken;
-    //    }
+    public UserIdLogin setRememberMeToken(String rememberMeToken) {
+        this.rememberMeToken = rememberMeToken;
+        return this;
+    }
 }

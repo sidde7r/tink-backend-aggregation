@@ -12,11 +12,7 @@ public class LogonRequest {
     private List<CardArtRequest> cardArtRequest = ImmutableList.of(new CardArtRequest());
     private LoginCredentials loginCredentials;
 
-    public void setLoginCredentials(LoginCredentials loginCredentials) {
-        this.loginCredentials = loginCredentials;
-    }
-
-    public void setUsernameAndPassword(String username, String password) {
+    public LogonRequest(String username, String password) {
         this.loginCredentials = new LoginCredentials();
         this.loginCredentials.setUsernameAndPassword(username, password);
     }
