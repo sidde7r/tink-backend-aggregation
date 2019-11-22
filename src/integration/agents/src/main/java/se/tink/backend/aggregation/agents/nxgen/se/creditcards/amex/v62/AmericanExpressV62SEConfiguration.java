@@ -12,7 +12,7 @@ public class AmericanExpressV62SEConfiguration implements AmericanExpressV62Conf
 
     @Override
     public String getLocale() {
-        return AmericanExpressV62SEConstants.LOCALE;
+        return AmericanExpressV62SEConstants.HeaderValues.LOCALE;
     }
 
     @Override
@@ -40,11 +40,20 @@ public class AmericanExpressV62SEConfiguration implements AmericanExpressV62Conf
 
     @Override
     public String getAppId() {
-        return AmericanExpressV62SEConstants.APP_ID;
+        return AmericanExpressV62SEConstants.HeaderValues.APP_ID;
     }
 
     @Override
     public String getUserAgent() {
-        return AmericanExpressV62SEConstants.USER_AGENT;
+        return AmericanExpressV62SEConstants.HeaderValues.USER_AGENT;
+    }
+
+    public String getGitSha() {
+        return AmericanExpressV62SEConstants.HeaderValues.GIT_SHA;
+    }
+
+    @Override
+    public String getAppVersion() {
+        return AmericanExpressV62SEConstants.HeaderValues.APP_VERSION;
     }
 }

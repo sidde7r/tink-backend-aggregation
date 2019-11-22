@@ -13,6 +13,7 @@ public class LogonDataEntity {
     private String publicGuid;
     private String statusCode;
     private String message;
+    private JsonWebTokenEntity jsonWebToken;
 
     public int getStatus() {
         return status;
@@ -44,6 +45,10 @@ public class LogonDataEntity {
 
     public String getMessage() {
         return message;
+    }
+
+    public JsonWebTokenEntity getJsonWebToken() {
+        return jsonWebToken;
     }
 
     public boolean loginSucceed() {

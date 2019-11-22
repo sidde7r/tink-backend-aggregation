@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.creditcards.amex;
 
 import java.util.Date;
-import se.tink.backend.aggregation.agents.nxgen.fr.creditcards.amex.AmericanExpressFRConstants.BodyValues;
-import se.tink.backend.aggregation.agents.nxgen.fr.creditcards.amex.AmericanExpressFRConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.creditcards.amex.fetcher.rpc.TimelineFRRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
@@ -14,17 +12,17 @@ public class AmericanExpressFRConfiguration implements AmericanExpressV62Configu
 
     @Override
     public String getLocale() {
-        return BodyValues.LOCALE;
+        return AmericanExpressFRConstants.HeaderValues.LOCALE;
     }
 
     @Override
     public String getAppId() {
-        return HeaderValues.APP_ID;
+        return AmericanExpressFRConstants.HeaderValues.APP_ID;
     }
 
     @Override
     public String getUserAgent() {
-        return HeaderValues.USER_AGENT;
+        return AmericanExpressFRConstants.HeaderValues.USER_AGENT;
     }
 
     @Override
@@ -48,5 +46,13 @@ public class AmericanExpressFRConfiguration implements AmericanExpressV62Configu
         request.setCmlEnabled(true);
         request.setTimestamp(Long.toString(System.currentTimeMillis()));
         return request;
+    }
+
+    public String getGitSha() {
+        return AmericanExpressFRConstants.HeaderValues.GIT_SHA;
+    }
+
+    public String getAppVersion() {
+        return AmericanExpressFRConstants.HeaderValues.APP_VERSION;
     }
 }

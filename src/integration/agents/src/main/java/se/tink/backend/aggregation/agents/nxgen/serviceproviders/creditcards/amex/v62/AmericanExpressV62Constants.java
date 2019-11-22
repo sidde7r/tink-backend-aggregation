@@ -14,14 +14,18 @@ public final class AmericanExpressV62Constants {
     public static final String NUMBER_REGEX = "[^0-9,.]";
 
     public enum ConstantValueHeaders implements HeaderEnum {
+        AUTHORITY(":authority", "global.americanexpress.com"),
         CHARSET("charset", "UTF-8"),
-        CLIENT_TYPE("X-AXP-ClientType", "iPhone"),
-        APP_VERSION("X-AXP-AppVersion", "6.23.0"),
-        DEVICE_MODEL("X-AXP-DeviceModel", "iPhone8,1"),
-        DEVICE_OS("X-AXP-DeviceOS", "iOS"),
-        HARDWARE_ID("X-AXP-HardwareID", ""),
-        OS_VERSION("X-AXP-OSVersion", "12.2"),
-        TIMEZONE_OFFSET("X-AXP-TimeZoneOffset", "7200000");
+        CLIENT_TYPE("x-axp-clienttype", "iPhone"),
+        APP_VERSION("x-axp-appversion", "6.24.0"),
+        DEVICE_MODEL("x-axp-devicemodel", "iPhone8,1"),
+        DEVICE_OS("x-axp-deviceos", "iOS"),
+        OS_VERSION("x-axp-osversion", "12.4.3"),
+        MANUFACTURER("x-axp-manufacturer", "Apple"),
+        TIMEZONE_OFFSET("x-axp-timezoneoffset", "3600000"),
+        TIMEZONE_NAME("x-axp-device-timezone-name", "Europe/Stockholm"),
+        ACCEPT_ENCODING("accept-encoding", "br, gzip, deflate"),
+        ACCEPT_LANGUAGE("accept-language", "en-us");
 
         private final String headerName;
         private final String headerValue;
@@ -52,25 +56,44 @@ public final class AmericanExpressV62Constants {
         public static final String EXTEND_SESSION =
                 "/mobileone/msl/services/accountservicing/v1/extendSession";
         public static final String LOG_OUT = "/mobileone/msl/services/accountservicing/v1/logoff";
+        public static final String INITIALIZATION =
+                "/mobileone/msl/services/accountservicing/v1/initialization";
     }
 
     public static final class Tags {
         public static final String SESSION_ID = "sessionId";
         public static final String HARDWARE_ID = "hardwareId";
-        public static final String FACE = "face";
         public static final String CARD_LIST = "cardList";
         public static final String IS_PENDING = "pendingTransaction";
         public static final String CUPCAKE = "cupcake";
         public static final String INSTALLATION_ID = "installationId";
         public static final String USER_DATA = "userData";
+        public static final String GATEKEEPER = "gatekeeperCookie";
+        public static final String PROCESS_ID = "processId";
+        public static final String MASKED_USER_ID = "maskedUserId";
+        public static final String REMEMBER_ME_TOKEN = "rememberMeToken";
+        public static final String PUBLIC_GUID = "publicGuid";
+        public static final String AUTHORIZATION = "authorization";
     }
 
     public static final class Headers {
-        public static final String LOCALE = "X-AXP-Locale";
-        public static final String SESSION = "X-AXP-AmexSession";
-        public static final String CUPCAKE = "X-AXP-BlueBoxValues";
-        public static final String INSTALLATION_ID = "X-AXP-AppInstallationId";
-        public static final String APP_ID = "X-AXP-AppId";
+        public static final String LOCALE = "x-axp-locale";
+        public static final String SESSION = "x-axp-amexsession";
+        public static final String CUPCAKE = "x-axp-blueboxvalues";
+        public static final String INSTALLATION_ID = "x-axp-appinstallationid";
+        public static final String APP_ID = "x-axp-appid";
+        public static final String APP_VERSION = "x-axp-appversion";
+        public static final String HARDWARE_ID = "x-axp-hardwareid";
+        public static final String PROCESS_ID = "x-axp-process-id";
+        public static final String GATEKEEPER = "x-axp-gatekeeper";
+        public static final String PUBLIC_GUID = "x-axp-public-guid";
+        public static final String REQUEST_ID = "x-axp-request-id";
+        public static final String GIT_SHA = "x-axp-git-sha";
+        public static final String AUTHORIZATION = "authorization";
+    }
+
+    public static final class HeadersValue {
+        public static final String UNAVAILABLE = "UNAVAILABLE";
     }
 
     public static final class RequestValue {

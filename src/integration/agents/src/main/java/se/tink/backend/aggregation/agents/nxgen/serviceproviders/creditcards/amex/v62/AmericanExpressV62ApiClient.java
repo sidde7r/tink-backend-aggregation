@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
+import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
@@ -36,23 +38,51 @@ public class AmericanExpressV62ApiClient {
 
     protected RequestBuilder createRequest(String uri) {
         URL url = new URL(AmericanExpressV62Constants.BASE_API + uri);
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .header(AmericanExpressV62Constants.Headers.APP_ID, config.getAppId())
-                .header(HttpHeaders.USER_AGENT, config.getUserAgent())
-                .header(AmericanExpressV62Constants.ConstantValueHeaders.CHARSET)
-                .header(AmericanExpressV62Constants.ConstantValueHeaders.CLIENT_TYPE)
-                .header(AmericanExpressV62Constants.ConstantValueHeaders.APP_VERSION)
-                .header(AmericanExpressV62Constants.ConstantValueHeaders.DEVICE_MODEL)
-                .header(AmericanExpressV62Constants.ConstantValueHeaders.DEVICE_OS)
-                .header(AmericanExpressV62Constants.ConstantValueHeaders.HARDWARE_ID)
-                .header(AmericanExpressV62Constants.ConstantValueHeaders.OS_VERSION)
-                .header(
-                        AmericanExpressV62Constants.Headers.INSTALLATION_ID,
-                        persistentStorage.get(AmericanExpressV62Constants.Tags.INSTALLATION_ID))
-                .header(AmericanExpressV62Constants.ConstantValueHeaders.TIMEZONE_OFFSET)
-                .header(AmericanExpressV62Constants.Headers.LOCALE, config.getLocale());
+        RequestBuilder requestBuilder =
+                client.request(url)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(AmericanExpressV62Constants.ConstantValueHeaders.AUTHORITY)
+                        .header(AmericanExpressV62Constants.ConstantValueHeaders.CHARSET)
+                        .header(AmericanExpressV62Constants.ConstantValueHeaders.CLIENT_TYPE)
+                        .header(AmericanExpressV62Constants.ConstantValueHeaders.DEVICE_MODEL)
+                        .header(AmericanExpressV62Constants.ConstantValueHeaders.DEVICE_OS)
+                        .header(AmericanExpressV62Constants.ConstantValueHeaders.OS_VERSION)
+                        .header(AmericanExpressV62Constants.ConstantValueHeaders.MANUFACTURER)
+                        .header(AmericanExpressV62Constants.ConstantValueHeaders.TIMEZONE_NAME)
+                        .header(AmericanExpressV62Constants.ConstantValueHeaders.TIMEZONE_OFFSET)
+                        .header(AmericanExpressV62Constants.ConstantValueHeaders.ACCEPT_ENCODING)
+                        .header(AmericanExpressV62Constants.ConstantValueHeaders.ACCEPT_LANGUAGE)
+                        .header(
+                                AmericanExpressV62Constants.Headers.INSTALLATION_ID,
+                                persistentStorage.get(
+                                        AmericanExpressV62Constants.Tags.INSTALLATION_ID))
+                        .header(
+                                AmericanExpressV62Constants.Headers.HARDWARE_ID,
+                                persistentStorage.get(AmericanExpressV62Constants.Tags.HARDWARE_ID))
+                        .header(
+                                AmericanExpressV62Constants.Headers.PROCESS_ID,
+                                sessionStorage.get(AmericanExpressV62Constants.Tags.PROCESS_ID))
+                        .header(
+                                AmericanExpressV62Constants.Headers.PUBLIC_GUID,
+                                persistentStorage.getOrDefault(
+                                        AmericanExpressV62Constants.Tags.PUBLIC_GUID,
+                                        AmericanExpressV62Constants.HeadersValue.UNAVAILABLE))
+                        .header(
+                                AmericanExpressV62Constants.Headers.REQUEST_ID,
+                                UUID.randomUUID().toString().toUpperCase())
+                        .header(HttpHeaders.USER_AGENT, config.getUserAgent())
+                        .header(AmericanExpressV62Constants.Headers.APP_ID, config.getAppId())
+                        .header(
+                                AmericanExpressV62Constants.Headers.APP_VERSION,
+                                config.getAppVersion())
+                        .header(AmericanExpressV62Constants.Headers.LOCALE, config.getLocale());
+
+        if (config.getGitSha() != null) {
+            requestBuilder.header(AmericanExpressV62Constants.Headers.GIT_SHA, config.getGitSha());
+        }
+
+        return requestBuilder;
     }
 
     protected RequestBuilder createRequestInSession(String uri) {
@@ -62,7 +92,17 @@ public class AmericanExpressV62ApiClient {
                         sessionStorage.get(AmericanExpressV62Constants.Tags.SESSION_ID))
                 .header(
                         AmericanExpressV62Constants.Headers.CUPCAKE,
-                        sessionStorage.get(AmericanExpressV62Constants.Tags.CUPCAKE));
+                        sessionStorage.get(AmericanExpressV62Constants.Tags.CUPCAKE))
+                .header(
+                        AmericanExpressV62Constants.Headers.GATEKEEPER,
+                        sessionStorage.get(AmericanExpressV62Constants.Tags.GATEKEEPER))
+                .header(
+                        AmericanExpressV62Constants.Headers.AUTHORIZATION,
+                        sessionStorage.get(AmericanExpressV62Constants.Tags.AUTHORIZATION));
+    }
+
+    public void initialization(InitializationRequest request) {
+        createRequest(AmericanExpressV62Constants.Urls.INITIALIZATION).post(request);
     }
 
     public LogonResponse logon(LogonRequest request) {

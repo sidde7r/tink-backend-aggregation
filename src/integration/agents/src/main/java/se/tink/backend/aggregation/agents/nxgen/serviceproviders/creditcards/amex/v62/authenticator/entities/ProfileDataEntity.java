@@ -6,4 +6,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ProfileDataEntity {
     private String maskedUserId;
     private String data;
+
+    public String getMaskedUserId() {
+        return maskedUserId;
+    }
+
+    public String getData() {
+        return data;
+    }
 }

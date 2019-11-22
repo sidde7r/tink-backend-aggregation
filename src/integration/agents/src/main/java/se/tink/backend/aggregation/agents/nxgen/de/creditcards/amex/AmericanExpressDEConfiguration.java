@@ -24,7 +24,7 @@ public class AmericanExpressDEConfiguration implements AmericanExpressV62Configu
 
     @Override
     public String getLocale() {
-        return AmericanExpressDEConstants.BodyValue.LOCALE;
+        return AmericanExpressDEConstants.HeaderValues.LOCALE;
     }
 
     @Override
@@ -44,5 +44,15 @@ public class AmericanExpressDEConfiguration implements AmericanExpressV62Configu
         request.setPushEnabled(false);
 
         return request;
+    }
+
+    @Override
+    public String getGitSha() {
+        return AmericanExpressDEConstants.HeaderValues.GIT_SHA;
+    }
+
+    @Override
+    public String getAppVersion() {
+        return AmericanExpressDEConstants.HeaderValues.APP_VERSION;
     }
 }
