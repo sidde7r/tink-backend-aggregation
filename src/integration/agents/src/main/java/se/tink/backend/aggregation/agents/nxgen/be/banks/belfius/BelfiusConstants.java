@@ -122,10 +122,11 @@ public class BelfiusConstants {
         // PrepareLoginRequest
         public static final String CARD_NR = "Container@minp_CardNr";
         public static final String LOGON_SOFT = "Container@mb_LogonSoft";
-        public static final String LOGIN_PW_CHALLENGE = "Container@reuse_LoginPw@lbl_challenge";
-        public static final String LOGON_SOFT_CHALLENGE =
+        public static final String LOGIN_SOFT_CHALLENGE = "Container@reuse_LogonSoft@lbl_challenge";
+        public static final String LOGON_SOFT_GET_CHALLENGE =
                 "Container@reuse_LogonSoft@btn_getChallenge";
-        public static final String LOGIN_PW_CONTRACT = "Container@reuse_LoginPw@lb_contract";
+        public static final String LOGON_SOFT_CONTRACT_NUMBER =
+                "Container@reuse_LogonSoft@lb_contract_nr";
 
         // RegisterDeviceRequest
         public static final String DEVICE_REGISTRATION_REGISTER =

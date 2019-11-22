@@ -15,14 +15,14 @@ public class PrepareLoginResponse extends BelfiusResponse {
 
     public String getChallenge() {
         return ScreenUpdateResponse.findWidgetOrElseThrow(
-                        this, BelfiusConstants.Widget.LOGIN_PW_CHALLENGE)
+                        this, BelfiusConstants.Widget.LOGIN_SOFT_CHALLENGE)
                 .getProperties(Text.class)
                 .getText();
     }
 
     public String getContractNumber() {
         return ScreenUpdateResponse.findWidgetOrElseThrow(
-                        this, BelfiusConstants.Widget.LOGIN_PW_CONTRACT)
+                        this, BelfiusConstants.Widget.LOGON_SOFT_CONTRACT_NUMBER)
                 .getProperties(Text.class)
                 .getText();
     }

@@ -20,6 +20,6 @@ public class PrepareLoginRequest extends BelfiusRequest {
                                         BelfiusConstants.Widget.LOGON_SOFT)),
                         WidgetEventsRequest.create(
                                 WidgetEventInformation.newButtonClickedWidgetEvent(
-                                        Widget.LOGON_SOFT_CHALLENGE)));
+                                        Widget.LOGON_SOFT_GET_CHALLENGE)));
     }
 }
