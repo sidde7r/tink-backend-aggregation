@@ -89,6 +89,10 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
             throws AuthenticationException, AuthorizationException {
         apiClient.openSession();
         apiClient.startFlow();
+        apiClient.closeSession(sessionStorage.getSessionId());
+
+        apiClient.openSession();
+        apiClient.startFlow();
 
         String challenge = apiClient.prepareAuthentication(panNumber);
         String code = supplementalInformationHelper.waitForLoginChallengeResponse(challenge);
