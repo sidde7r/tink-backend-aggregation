@@ -2,10 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAddressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonInclude(Include.NON_NULL)
@@ -21,7 +22,7 @@ public class SibsPaymentInitiationRequest {
     private SibsAddressEntity creditorAddress;
     private String remittanceInformationUnstructured;
     private String creditorClearingCode;
-    private LocalDate requestedExecutionDate;
+    private String requestedExecutionDate;
 
     public SibsPaymentInitiationRequest(Builder builder) {
         this.endToEndIdentification = builder.endToEndIdentification;
@@ -72,7 +73,7 @@ public class SibsPaymentInitiationRequest {
         return creditorClearingCode;
     }
 
-    public LocalDate getRequestedExecutionDate() {
+    public String getRequestedExecutionDate() {
         return requestedExecutionDate;
     }
 
@@ -86,7 +87,7 @@ public class SibsPaymentInitiationRequest {
         private SibsAddressEntity creditorAddress;
         private String remittanceInformationUnstructured;
         private String creditorClearingCode;
-        private LocalDate requestedExecutionDate;
+        private String requestedExecutionDate;
 
         public Builder withEndToEndIdentification(String endToEndIdentification) {
             this.endToEndIdentification = endToEndIdentification;
@@ -135,7 +136,7 @@ public class SibsPaymentInitiationRequest {
         }
 
         public Builder withRequestedExecutionDate(LocalDate requestedExecutionDate) {
-            this.requestedExecutionDate = requestedExecutionDate;
+            this.requestedExecutionDate = SibsUtils.convertLocalDateToString(requestedExecutionDate);
             return this;
         }
 

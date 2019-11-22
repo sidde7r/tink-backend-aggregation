@@ -5,6 +5,7 @@ import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -56,5 +57,15 @@ public final class SibsUtils {
                 .withWaitStrategy(WaitStrategies.fixedWait(sleepTime, TimeUnit.SECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
                 .build();
+    }
+
+    public static LocalDate convertStringToLocalDate(String localDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(SibsConstants.Formats.TRANSACTION_DATE_FORMAT);
+        return LocalDate.parse(localDate, formatter);
+    }
+
+    public static String convertLocalDateToString(LocalDate localDate) {
+        DateTimeFormatter customFormatter = DateTimeFormatter.ofPattern(SibsConstants.Formats.TRANSACTION_DATE_FORMAT);
+        return customFormatter.format(localDate);
     }
 }
