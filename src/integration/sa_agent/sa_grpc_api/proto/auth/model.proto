@@ -7,9 +7,59 @@ option go_package = "proto";
 
 message AuthenticationRequest {
   string correlationId = 1;
+  Credentials credentials = 2;
 }
 
 message AuthenticationResponse {
   string correlationId = 1;
 }
 
+message Credentials {
+  string debugUntil = 1;    // java.util.Date
+  int64 providerLatency = 2;
+  string fieldsSerialized = 3;
+  string id = 4;
+  string nextUpdate = 5;    // java.util.Date
+  string payload = 6;
+  string providerName = 7;
+  string sessionExpiryDate = 8;    // java.util.Date
+  CredentialsStatus status = 9;
+  string statusPayload = 10;
+  string statusPrompt = 11;
+  string statusUpdated = 12;    // java.util.Date
+  string supplementalInformation = 13;
+  CredentialsTypes type = 14;
+  string updated = 15;    // java.util.Date
+  string userId = 16;
+  bool forceManualAuthentication = 17;
+  int32 dataVersion = 18;
+
+  enum CredentialsStatus {
+    CREATED = 0;
+    AUTHENTICATING = 1;
+    UNCHANGED = 2;
+    UPDATING = 3;
+    UPDATED = 4;
+    AWAITING_MOBILE_BANKID_AUTHENTICATION = 5;
+    AWAITING_THIRD_PARTY_APP_AUTHENTICATION = 6;
+    AWAITING_SUPPLEMENTAL_INFORMATION = 7;
+    AWAITING_OTHER_CREDENTIALS_TYPE = 8;
+    AUTHENTICATION_ERROR = 9;
+    NOT_IMPLEMENTED_ERROR = 10;
+    TEMPORARY_ERROR = 11;
+    HINTED = 12;
+    PERMANENT_ERROR = 13;
+    DELETED = 14;
+    METRIC = 15;
+    DISABLED = 16;
+    SESSION_EXPIRED = 17;
+  }
+
+  enum CredentialsTypes {
+    PASSWORD = 0;
+    MOBILE_BANKID = 1;
+    KEYFOB = 2;
+    FRAUD = 3;
+    THIRD_PARTY_APP = 4;
+  }
+}
