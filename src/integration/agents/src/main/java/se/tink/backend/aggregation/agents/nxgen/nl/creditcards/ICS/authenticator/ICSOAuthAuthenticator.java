@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator;
 
-import static se.tink.backend.aggregation.agents.exceptions.errors.SessionError.SESSION_EXPIRED;
-
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.ClientCredentialTokenResponse;
@@ -35,7 +34,9 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
                         .map(client::setupAccount)
                         .filter(AccountSetupResponse::receivedAllReadPermissions)
                         .orElseThrow(
-                                () -> new IllegalStateException(ErrorMessages.MISSING_PERMISSIONS))
+                                () ->
+                                        new IllegalStateException(
+                                                ICSConstants.ErrorMessages.MISSING_PERMISSIONS))
                         .getData()
                         .getAccountRequestId();
 
@@ -55,9 +56,10 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
             return client.refreshToken(refreshToken);
         } catch (HttpResponseException e) {
             ErrorBody errorBody = e.getResponse().getBody(ErrorBody.class);
-            if (e.getResponse().getStatus() == 401
-                    && "invalid_token".equalsIgnoreCase(errorBody.getError())) {
-                throw new SessionException(SESSION_EXPIRED);
+            if (e.getResponse().getStatus() == ICSConstants.ErrorCode.UNAUTHORIZED
+                    && ICSConstants.ErrorMessages.INVALID_TOKEN.equalsIgnoreCase(
+                            errorBody.getError())) {
+                throw new SessionException(SessionError.SESSION_EXPIRED);
             }
             throw e;
         }
