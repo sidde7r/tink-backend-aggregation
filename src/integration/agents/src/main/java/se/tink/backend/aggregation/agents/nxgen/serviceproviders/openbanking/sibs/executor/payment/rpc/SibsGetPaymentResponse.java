@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.rpc;
 
-import java.time.LocalDate;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAddressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsTppMessageEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsTransactionStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
@@ -27,8 +29,10 @@ public class SibsGetPaymentResponse {
     private SibsAmountEntity transactionFees;
     private boolean transactionFeeIndicator;
     private String creditorClearingCode;
-    private LocalDate requestedExecutionDate;
+    private String requestedExecutionDate;
     private List<SibsTppMessageEntity> tppMessages;
+
+    private final Logger logger = LoggerFactory.getLogger(SibsGetPaymentResponse.class);
 
     public SibsTransactionStatus getTransactionStatus() {
         return transactionStatus;
@@ -74,7 +78,7 @@ public class SibsGetPaymentResponse {
         return creditorClearingCode;
     }
 
-    public LocalDate getRequestedExecutionDate() {
+    public String getRequestedExecutionDate() {
         return requestedExecutionDate;
     }
 
@@ -89,10 +93,14 @@ public class SibsGetPaymentResponse {
                         .withCreditor(creditorAccount.toTinkCreditor())
                         .withDebtor(debtorAccount.toTinkDebtor())
                         .withExactCurrencyAmount(instructedAmount.toTinkAmount())
-                        .withExecutionDate(requestedExecutionDate)
+                        .withExecutionDate(
+                                SibsUtils.convertStringToLocalDate(requestedExecutionDate))
                         .withCurrency(instructedAmount.getCurrency())
                         .withStatus(getTransactionStatus().getTinkStatus())
                         .withUniqueId(getPaymentId());
+
+        logger.info("Payment execution date set to: {}", requestedExecutionDate);
+
         return new PaymentResponse(buildingPaymentResponse.build(), sessionStorage);
     }
 }

@@ -44,6 +44,7 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                 new SibsPaymentInitiationRequest.Builder()
                         .withCreditorAccount(fromCreditor(paymentRequest.getPayment()))
                         .withDebtorAccount(fromDebtor(paymentRequest.getPayment()))
+                        .withRequestedExecutionDate(paymentRequest.getPayment().getExecutionDate())
                         .withInstructedAmount(
                                 SibsAmountEntity.of(
                                         paymentRequest.getPayment().getExactCurrencyAmount()))
