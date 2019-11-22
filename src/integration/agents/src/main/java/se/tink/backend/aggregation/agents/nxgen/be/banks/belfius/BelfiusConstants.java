@@ -62,32 +62,35 @@ public class BelfiusConstants {
 
     public static final class Widget {
         // LoginRequest
-        public static final String VERSION_KIND_APP = "Container@reuse_LoginPw@minp_VersionKindApp";
+        public static final String VERSION_KIND_APP_LOGIN_PW =
+                "Container@reuse_LoginPw@minp_VersionKindApp";
+        public static final String VERSION_KIND_APP =
+                "Container@reuse_LogonSoft@minp_VersionKindApp";
         public static final String DEVICE_TOKEN_HASHED =
-                "Container@reuse_LoginPw@inp_deviceTokenHashed";
+                "Container@reuse_LogonSoft@inp_deviceTokenHashed";
         public static final String DEVICE_TOKEN_HASHED_IOS_COMPARISON =
-                "Container@reuse_LoginPw@inp_deviceTokenHashedIosComparison";
-        public static final String SIGNATURE = "Container@reuse_LoginPw@inp_signature";
-        public static final String IS_GUEST = "Container@reuse_LoginPw@minp_IsGuest";
+                "Container@reuse_LogonSoft@inp_deviceTokenHashedIosComparison";
+        public static final String SIGNATURE = "Container@reuse_LogonSoft@inp_signature";
+        public static final String IS_GUEST = "Container@reuse_LogonSoft@minp_IsGuest";
         public static final String TYPE_LOGON_DEVICE =
-                "Container@reuse_LoginPw@minp_TypeLogonDevice";
-        public static final String CODE_SDK = "Container@reuse_LoginPw@minp_CodeSDK";
-        public static final String DEV_T = "Container@reuse_LoginPw@minp_dev_t";
-        public static final String ROOT = "Container@reuse_LoginPw@minp_root";
-        public static final String ROOT_H = "Container@reuse_LoginPw@minp_root_h";
-        public static final String EMUL = "Container@reuse_LoginPw@minp_emul";
-        public static final String DEBUG = "Container@reuse_LoginPw@minp_debug";
-        public static final String TAMPER = "Container@reuse_LoginPw@minp_tamper";
-        public static final String NS_WIFI = "Container@reuse_LoginPw@minp_ns_wifi";
-        public static final String UNKW_S = "Container@reuse_LoginPw@minp_unkw_s";
-        public static final String HOST = "Container@reuse_LoginPw@minp_host";
-        public static final String MALW = "Container@reuse_LoginPw@minp_malw";
-        public static final String MALW_L = "Container@reuse_LoginPw@minp_malw_l";
-        public static final String SMS_LIS = "Container@reuse_LoginPw@minp_sms_lis";
-        public static final String FACE_D = "Container@reuse_LoginPw@minp_face_d";
-        public static final String SYS_VER = "Container@reuse_LoginPw@minp_sys_ver";
-        public static final String APP_VER = "Container@reuse_LoginPw@minp_app_ver";
-        public static final String AUTHENTICATE = "Container@reuse_LoginPw@btn_authenticate";
+                "Container@reuse_LogonSoft@minp_TypeLogonDevice";
+        public static final String CODE_SDK = "Container@reuse_LogonSoft@minp_CodeSDK";
+        public static final String DEV_T = "Container@reuse_LogonSoft@minp_dev_t";
+        public static final String ROOT = "Container@reuse_LogonSoft@minp_root";
+        public static final String ROOT_H = "Container@reuse_LogonSoft@minp_root_h";
+        public static final String EMUL = "Container@reuse_LogonSoft@minp_emul";
+        public static final String DEBUG = "Container@reuse_LogonSoft@minp_debug";
+        public static final String TAMPER = "Container@reuse_LogonSoft@minp_tamper";
+        public static final String NS_WIFI = "Container@reuse_LogonSoft@minp_ns_wifi";
+        public static final String UNKW_S = "Container@reuse_LogonSoft@minp_unkw_s";
+        public static final String HOST = "Container@reuse_LogonSoft@minp_host";
+        public static final String MALW = "Container@reuse_LogonSoft@minp_malw";
+        public static final String MALW_L = "Container@reuse_LogonSoft@minp_malw_l";
+        public static final String SMS_LIS = "Container@reuse_LogonSoft@minp_sms_lis";
+        public static final String FACE_D = "Container@reuse_LogonSoft@minp_face_d";
+        public static final String SYS_VER = "Container@reuse_LogonSoft@minp_sys_ver";
+        public static final String APP_VER = "Container@reuse_LogonSoft@minp_app_ver";
+        public static final String AUTHENTICATE = "Container@reuse_LogonSoft@btn_authenticate";
 
         // AuthenticateWithCodeRequest
         public static final String IWS_LOGIN_AUTHENTIFICATION =
