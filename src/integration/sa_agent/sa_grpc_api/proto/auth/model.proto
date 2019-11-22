@@ -5,7 +5,6 @@ option java_package = "se.tink.sa.model.auth";
 option java_outer_classname = "OuterModel";
 option go_package = "proto";
 
-import "google/protobuf/timestamp.proto";
 import "google/type/date.proto";
 
 message AuthenticationRequest {
@@ -121,8 +120,13 @@ message SupplementalWaitRequest {
   string key = 1;
   int64 waitFor = 2;
   TimeUnit timeUnit = 3; // TODO: java.util.concurrent.TimeUnit
-}
-
-message TimeUnit {
-  // TODO
+  enum TimeUnit {
+    NANOSECONDS = 0;
+    MICROSECONDS = 1;
+    MILLISECONDS = 2;
+    SECONDS = 3;
+    MINUTES = 4;
+    HOURS = 5;
+    DAYS = 6;
+  }
 }
