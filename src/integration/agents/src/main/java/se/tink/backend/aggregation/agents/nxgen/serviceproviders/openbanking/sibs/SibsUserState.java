@@ -18,6 +18,7 @@ public class SibsUserState {
     private static final String SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS =
             "sibs_manual_authentication_in_progress";
     private static final int DAYS_BACK_TO_FETCH_TRANSACTIONS = 10;
+    private static final int DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD = 89;
     private static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern(PAGINATION_DATE_FORMAT);
@@ -32,14 +33,14 @@ public class SibsUserState {
     }
 
     public String getConsentId() {
-        Consent consent =
-                persistentStorage
-                        .get(CONSENT_ID, Consent.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SessionError.SESSION_EXPIRED.exception()));
-        return consent.getConsentId();
+        return getConsent().getConsentId();
+    }
+
+    private Consent getConsent() {
+        return persistentStorage
+                .get(CONSENT_ID, Consent.class)
+                .orElseThrow(
+                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
     public void removeConsent() {
@@ -64,13 +65,20 @@ public class SibsUserState {
     }
 
     public String getTransactionsFetchBeginDate(final Account account) {
-        LocalDate lastDate =
+        LocalDate updateDate =
                 Optional.ofNullable(credentials.getUpdated())
                         .map(d -> new java.sql.Date(d.getTime()).toLocalDate())
                         .orElse(TRANSACTIONS_FROM_BEGINNING);
-        if (lastDate.getYear() != TRANSACTIONS_FROM_BEGINNING.getYear()) {
-            lastDate = lastDate.minusDays(DAYS_BACK_TO_FETCH_TRANSACTIONS);
+        if (isDateNotABigBang(updateDate)) {
+            updateDate = updateDate.minusDays(DAYS_BACK_TO_FETCH_TRANSACTIONS);
+        } else if (getConsent().isConsentOlderThan30Minutes()) {
+            updateDate =
+                    LocalDate.now().minusDays(DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD);
         }
-        return DATE_FORMATTER.format(lastDate);
+        return DATE_FORMATTER.format(updateDate);
+    }
+
+    private boolean isDateNotABigBang(LocalDate date) {
+        return date.getYear() != TRANSACTIONS_FROM_BEGINNING.getYear();
     }
 }

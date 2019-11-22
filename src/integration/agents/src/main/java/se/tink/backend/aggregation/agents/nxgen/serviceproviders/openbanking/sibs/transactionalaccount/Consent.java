@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -21,5 +24,11 @@ public class Consent {
 
     public String getConsentId() {
         return consentId;
+    }
+
+    @JsonIgnore
+    public boolean isConsentOlderThan30Minutes() {
+        LocalDateTime created = LocalDateTime.parse(consentCreated);
+        return ChronoUnit.MINUTES.between(created, LocalDateTime.now()) > 29;
     }
 }
