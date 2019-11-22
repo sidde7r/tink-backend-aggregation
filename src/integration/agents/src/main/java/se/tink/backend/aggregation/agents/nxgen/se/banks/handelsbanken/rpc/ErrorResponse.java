@@ -16,6 +16,7 @@ public class ErrorResponse {
         // Error text to look for is very specific, as to not accidentally treat something that's
         // an issue on our and as a bank side failure.
         return status == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                && ErrorMessage.ERROR_OCCURRED_TRY_AGAIN_LATER.equalsIgnoreCase(detail);
+                && (ErrorMessage.ERROR_OCCURRED_TRY_AGAIN_LATER.equalsIgnoreCase(detail)
+                        || ErrorMessage.CANNOT_ANSWER.equalsIgnoreCase(detail));
     }
 }
