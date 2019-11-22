@@ -11,15 +11,34 @@ import "google/type/date.proto";
 message AuthenticationRequest {
   string correlationId = 1;
   Credentials credentials = 2;
-  string userInputs = 3;    // TODO: com.google.common.collect.ImmutableList<String>
-  map<string, string> callbackData = 4; // TODO: com.google.common.collect.ImmutableMap
+  repeated string userInputs = 3;
+  map<string, string> callbackData = 4;
 }
 
 message AuthenticationResponse {
   string correlationId = 1;
-  string fields = 2;  // TODO: com.google.common.collect.ImmutableList<Field>
+  repeated Field fields = 2;
   ThirdPartyAppAuthenticationPayload payload = 3;
   SupplementalWaitRequest supplementalWaitRequest = 4;
+}
+
+message Field {
+  string description = 1;
+  string helpText = 2;
+  string hint = 3;
+  bool immutable = 4;
+  bool masked = 5;
+  int32 maxLength = 6;
+  int32 minLength = 7;
+  string name = 8;
+  bool numeric = 9;
+  bool optional = 10;
+  string pattern = 11;
+  string patternError = 12;
+  string value = 13;
+  bool sensitive = 14;
+  bool checkbox = 15;
+  string additionalInfo = 16;
 }
 
 message Credentials {
