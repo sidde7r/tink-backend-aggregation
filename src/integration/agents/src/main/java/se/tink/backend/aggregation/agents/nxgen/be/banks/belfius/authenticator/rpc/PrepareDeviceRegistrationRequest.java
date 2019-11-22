@@ -17,9 +17,6 @@ public class PrepareDeviceRegistrationRequest extends BelfiusRequest {
                                 WidgetEventInformation.newButtonClickedWidgetEvent(
                                         BelfiusConstants.Widget.DEVICE_REGISTRATION)),
                         WidgetEventsRequest.create(
-                                WidgetEventInformation.newButtonClickedWidgetEvent(
-                                        BelfiusConstants.Widget
-                                                .DEVICE_REGISTRATION_PREPARE_REGISTRATION),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.DEVICE_REGISTRATION_DEV_TOKEN,
                                         deviceToken),
@@ -28,6 +25,9 @@ public class PrepareDeviceRegistrationRequest extends BelfiusRequest {
                                         deviceBrand),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.DEVICE_REGISTRATION_MODEL,
-                                        deviceName)));
+                                        deviceName),
+                                WidgetEventInformation.newButtonClickedWidgetEvent(
+                                        BelfiusConstants.Widget
+                                                .DEVICE_REGISTRATION_PREPARE_REGISTRATION)));
     }
 }
