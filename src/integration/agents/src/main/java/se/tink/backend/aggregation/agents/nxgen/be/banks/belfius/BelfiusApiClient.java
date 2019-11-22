@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.AuthenticateWithCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.CheckStatusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.CheckStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.CloseSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.OpenSessionRequest;
@@ -153,6 +154,13 @@ public class BelfiusApiClient {
                         RegisterDeviceRequest.create(signature));
         response.validate();
         return response;
+    }
+
+    public void closeSession(final String sessionId) {
+        post(
+                BelfiusConstants.Url.GEPA_RENDERING_URL,
+                BelfiusResponse.class,
+                CloseSessionRequest.create(sessionId));
     }
 
     public PrepareLoginResponse prepareLogin(String panNumber) throws LoginException {

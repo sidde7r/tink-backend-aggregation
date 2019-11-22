@@ -101,6 +101,8 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         String sign = supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
         apiClient.registerDevice(sign);
         persistentStorage.put(BelfiusConstants.Storage.DEVICE_TOKEN, deviceToken);
+
+        apiClient.closeSession(sessionStorage.getSessionId());
     }
 
     private void login(String panNumber, String password, String deviceToken)
