@@ -27,6 +27,10 @@ public class LoginResponse extends BelfiusResponse {
                     messageResponse.getMessageDetail(),
                     BelfiusConstants.ErrorCodes.ACCOUNT_BLOCKED)) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            } else if (StringUtils.containsIgnoreCase(
+                    messageResponse.getMessageDetail(),
+                    BelfiusConstants.ErrorCodes.DEVICE_REGISTRATION_ERROR)) {
+                throw new IllegalStateException();
             }
         }
     }
