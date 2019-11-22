@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "se.tink.sa.services.fetch.account";
+option java_outer_classname = "OuterModel";
+option go_package = "proto";
+
+message FetchAccountsRequest {
+  // TODO
+}
+
+message FetchAccountsResponse {
+  // TODO
+}
