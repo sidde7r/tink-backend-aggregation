@@ -22,5 +22,6 @@ proto_library(
     deps = [
         "@com_google_googleapis//google/type:date_proto",
         "@com_google_protobuf//:timestamp_proto",
+        "@com_google_protobuf//:any_proto",
     ],
 )

@@ -6,6 +6,7 @@ option java_outer_classname = "OuterModel";
 option go_package = "proto";
 
 import "google/type/date.proto";
+import "google/protobuf/any.proto";
 
 message FetchAccountsRequest {
   repeated Account account = 1;
@@ -54,15 +55,31 @@ enum AccountExclusion {
 }
 
 message ExactCurrencyAmount {
-  // TODO
+  google.protobuf.Any value = 1;  // java.math.BigDecimal
+  string currencyCode = 2;
 }
 
-message AccountTypes {
-  // TODO
+enum AccountTypes {
+  CHECKING = 0;
+  SAVINGS = 1;
+  INVESTMENT = 2;
+  MORTGAGE = 3;
+  CREDIT_CARD = 4;
+  LOAN = 5;
+  DUMMY = 6;
+  PENSION = 7;
+  OTHER = 8;
+  EXTERNAL = 9;
 }
 
 message TransferDestination {
-  // TODO
+  double balance = 1;
+  string displayBankName = 2;
+  string displayAccountNumber = 3;
+  google.protobuf.Any uri = 4; // java.net.URI
+  string name = 5;
+  string type = 6;
+  bool matchesMultiple = 7;
 }
 
 message AccountDetails {
