@@ -2560,21 +2560,17 @@ maven_install(
     artifacts = [
         "com.codeborne:phantomjsdriver:1.4.4",
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
-        "org.seleniumhq.selenium:selenium-api:3.141.59",
-        "org.seleniumhq.selenium:selenium-chrome-driver:3.141.59",
-        "org.seleniumhq.selenium:selenium-firefox-driver:3.141.59",
+        "org.seleniumhq.selenium:selenium-api:3.4.0",
+        "org.seleniumhq.selenium:selenium-chrome-driver:3.4.0",
+        "org.seleniumhq.selenium:selenium-firefox-driver:3.4.0",
         "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0",
-        "org.seleniumhq.selenium:selenium-ie-driver:3.141.59",
+        "org.seleniumhq.selenium:selenium-ie-driver:3.4.0",
         "org.seleniumhq.selenium:selenium-iphone-driver:2.39.0",
-        "org.seleniumhq.selenium:selenium-java:3.141.59",
-        "org.seleniumhq.selenium:selenium-remote-driver:3.141.59",
-        "org.seleniumhq.selenium:selenium-safari-driver:3.141.59",
+        "org.seleniumhq.selenium:selenium-java:3.4.0",
+        "org.seleniumhq.selenium:selenium-remote-driver:3.4.0",
+        "org.seleniumhq.selenium:selenium-safari-driver:3.4.0",
     ],
     fetch_sources = True,
-    override_targets = {
-        # To avoid version conflicts, use our good old Guava 21 like everywhere else
-        "com.google.guava:guava": "@//third_party:com_google_guava_guava",
-    },
     repositories = [
         "https://repo1.maven.org/maven2",
     ],
