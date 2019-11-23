@@ -5,8 +5,11 @@ option java_package = "se.tink.sa.services.fetch.trans";
 option java_outer_classname = "OuterModel";
 option go_package = "proto";
 
+import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/account.proto";
+
 message FetchTransactionsRequest {
-  // TODO
+  string key = 1;
+  TransactionalAccountType accountType = 2;
 }
 
 message FetchTransactionsResponse {

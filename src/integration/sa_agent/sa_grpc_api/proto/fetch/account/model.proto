@@ -5,85 +5,12 @@ option java_package = "se.tink.sa.services.fetch.account";
 option java_outer_classname = "OuterModel";
 option go_package = "proto";
 
-import "google/type/date.proto";
+import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/account.proto";
 
 message FetchAccountsRequest {
   string consentId = 1;
 }
 
 message FetchAccountsResponse {
-  repeated Account account = 1;
-}
-
-message Account {
-  string accountNumber = 1;
-  AccountExclusion accountExclusion = 2;
-  double availableCredit = 3;
-  ExactCurrencyAmount exactAvailableCredit = 4;
-  double balance = 5;
-  ExactCurrencyAmount exactBalance = 6;
-  string currencyCode = 7;
-  string bankId = 8;
-  google.type.Date certainDate = 9;
-  string credentialsId = 10;
-  bool excluded = 11;
-  bool favored = 12;
-  string id = 13;
-  string name = 14;
-  double ownership = 15;
-  string payload = 16;
-  AccountTypes type = 17;
-  string userId = 18;
-  bool userModifiedExcluded = 19;
-  bool userModifiedName = 20;
-  bool userModifiedType = 21;
-  string identifiers = 22;
-  repeated TransferDestination transferDestinations = 23;
-  AccountDetails details = 24;
-  bool closed = 25;
-  string holderName = 26;
-  string flags = 27;
-  string financialInstitutionId = 28;
-}
-
-enum AccountExclusion {
-  AGGREGATION = 0;
-  PFM_AND_SEARCH = 1;
-  PFM_DATA = 2;
-  NONE = 3;
-}
-
-message ExactCurrencyAmount {
-  string value = 1;
-  string currencyCode = 2;
-}
-
-enum AccountTypes {
-  CHECKING = 0;
-  SAVINGS = 1;
-  INVESTMENT = 2;
-  MORTGAGE = 3;
-  CREDIT_CARD = 4;
-  LOAN = 5;
-  DUMMY = 6;
-  PENSION = 7;
-  OTHER = 8;
-  EXTERNAL = 9;
-}
-
-message TransferDestination {
-  double balance = 1;
-  string displayBankName = 2;
-  string displayAccountNumber = 3;
-  string uri = 4;
-  string name = 5;
-  string type = 6;
-  bool matchesMultiple = 7;
-}
-
-message AccountDetails {
-  double interest = 1;
-  int32 numMonthsBound = 2;
-  string type = 3;
-  google.type.Date nextDayOfTermsChange = 4;
+  repeated TransactionalAccount account = 1;
 }
