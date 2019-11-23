@@ -8,7 +8,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 public class PhantomJsTest {
 
     @Test
-    public void whenAttemptingToLoadPhantomJs_raiseCannotFindExecutableInPathException() {
+    public void whenFailingToFindPhantomJsExecutable_raiseCannotFindExecutableException() {
         try {
             new PhantomJSDriver(
                     new Capabilities() {
