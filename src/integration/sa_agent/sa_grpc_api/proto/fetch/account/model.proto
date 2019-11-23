@@ -9,11 +9,11 @@ import "google/type/date.proto";
 import "google/protobuf/any.proto";
 
 message FetchAccountsRequest {
-  repeated Account account = 1;
+  // TODO
 }
 
 message FetchAccountsResponse {
-  // TODO
+  repeated Account account = 1;
 }
 
 message Account {
