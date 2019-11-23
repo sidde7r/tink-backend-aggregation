@@ -83,5 +83,8 @@ message TransferDestination {
 }
 
 message AccountDetails {
-  // TODO
+  double interest = 1;
+  int32 numMonthsBound = 2;
+  string type = 3;
+  google.type.Date nextDayOfTermsChange = 4;
 }
