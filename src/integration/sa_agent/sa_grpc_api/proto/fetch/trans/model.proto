@@ -6,6 +6,7 @@ option java_outer_classname = "OuterModel";
 option go_package = "proto";
 
 import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/account.proto";
+import "google/type/date.proto";
 
 message FetchTransactionsRequest {
   string key = 1;
@@ -13,5 +14,26 @@ message FetchTransactionsRequest {
 }
 
 message FetchTransactionsResponse {
-  // TODO
+  TransactionsEntity transactions = 1;
+}
+
+message TransactionsEntity {
+  repeated BookedEntity booked = 1;
+}
+
+message BookedEntity {
+   google.type.Date bookingDate = 1;
+   google.type.Date valueDate = 2;
+   AmountEntity amount = 3;
+   CreditorAccount creditorAccount = 4;
+   string remittanceInformationUnstructured = 5;
+}
+
+message AmountEntity {
+  string currency = 1;
+  string content = 2;
+}
+
+message CreditorAccount {
+
 }
