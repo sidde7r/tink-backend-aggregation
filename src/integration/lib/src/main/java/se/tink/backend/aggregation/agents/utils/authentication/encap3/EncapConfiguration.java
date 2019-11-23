@@ -11,4 +11,6 @@ public interface EncapConfiguration {
     String getRsaPubKeyString(); // base64 encoded
 
     String getClientPrivateKeyString(); // base64 encoded
+
+    String getLocale(); // eg. en_SE
 }

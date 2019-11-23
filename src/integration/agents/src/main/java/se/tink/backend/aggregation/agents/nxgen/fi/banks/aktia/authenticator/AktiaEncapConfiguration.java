@@ -33,4 +33,9 @@ public class AktiaEncapConfiguration implements EncapConfiguration {
     public String getClientPrivateKeyString() {
         return null;
     }
+
+    @Override
+    public String getLocale() {
+        return "en_SE";
+    }
 }

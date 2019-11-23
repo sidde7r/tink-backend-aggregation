@@ -46,7 +46,9 @@ public class EncapSoapUtils {
                 + String.format(
                         "<n4:customerid>%s</n4:customerid>",
                         StringEscapeUtils.escapeXml10(storage.getUsername()))
-                + "<n4:locale>en_SE</n4:locale>"
+                + String.format(
+                        "<n4:locale>%s</n4:locale>",
+                        StringEscapeUtils.escapeXml10(configuration.getLocale()))
                 + "<n4:ip>127.0.0.1</n4:ip>"
                 + "</n4:ClientContext>"
                 + "</n4:AutHeader>"
@@ -94,7 +96,9 @@ public class EncapSoapUtils {
                 + String.format(
                         "<n3:customerid>%s</n3:customerid>",
                         StringEscapeUtils.escapeXml10(storage.getUsername()))
-                + "<n3:locale>en_SE</n3:locale>"
+                + String.format(
+                        "<n3:locale>%s</n3:locale>",
+                        StringEscapeUtils.escapeXml10(configuration.getLocale()))
                 + "<n3:ip>127.0.0.1</n3:ip>"
                 + "</n3:ClientContext>"
                 + "</n3:AutHeader>"
@@ -145,7 +149,9 @@ public class EncapSoapUtils {
                 + String.format(
                         "<n4:customerid>%s</n4:customerid>",
                         StringEscapeUtils.escapeXml10(username))
-                + "<n4:locale>en_SE</n4:locale>"
+                + String.format(
+                        "<n4:locale>%s</n4:locale>",
+                        StringEscapeUtils.escapeXml10(configuration.getLocale()))
                 + "<n4:ip>127.0.0.1</n4:ip>"
                 + "</n4:ClientContext>"
                 + "</n4:AutHeader>"
@@ -190,7 +196,9 @@ public class EncapSoapUtils {
                 + String.format(
                         "<n4:customerid>%s</n4:customerid>",
                         StringEscapeUtils.escapeXml10(username))
-                + "<n4:locale>en_SE</n4:locale>"
+                + String.format(
+                        "<n4:locale>%s</n4:locale>",
+                        StringEscapeUtils.escapeXml10(configuration.getLocale()))
                 + "<n4:ip>127.0.0.1</n4:ip>"
                 + "</n4:ClientContext>"
                 + "</n4:AutHeader>"

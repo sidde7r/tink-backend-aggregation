@@ -46,4 +46,9 @@ public class SpankkiEncapConfiguration implements EncapConfiguration {
                 + "/QBt1JQRvaGq0vI00+1Mj92bH3ViO2VUEiGq2ENXGSrlYRaqwIsF75QT4xwA7FJ4"
                 + "4CwIDAQAB";
     }
+
+    @Override
+    public String getLocale() {
+        return null;
+    }
 }
