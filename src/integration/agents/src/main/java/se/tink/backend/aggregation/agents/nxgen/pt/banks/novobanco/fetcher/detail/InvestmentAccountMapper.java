@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.detail;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.i
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class InvestmentAccountMapper {
@@ -52,8 +52,8 @@ public class InvestmentAccountMapper {
                 .withAccountNumber(accountDetails.getId())
                 .withAccountName(accountDetails.getDesc())
                 .addIdentifier(
-                        AccountIdentifier.create(
-                                AccountIdentifier.Type.COUNTRY_SPECIFIC, accountDetails.getId()))
+                        AccountIdentifierProvider.getAccountIdentifier(
+                                accountDetails.getIban(), accountDetails.getId()))
                 .build();
     }
 
@@ -90,11 +90,32 @@ public class InvestmentAccountMapper {
         return PortfolioModule.builder()
                 .withType(PortfolioModule.PortfolioType.OTHER) // information unavailable
                 .withUniqueIdentifier(fundsPortfolioEntity.getFundCode())
-                .withCashValue(fundsPortfolioEntity.getFundPrice())
-                .withTotalProfit(fundsPortfolioEntity.getAppreciation())
-                .withTotalValue(fundsPortfolioEntity.getTotalQuantity())
+                .withCashValue(getFundPrice(fundsPortfolioEntity))
+                .withTotalProfit(getAppreciation(fundsPortfolioEntity))
+                .withTotalValue(getTotalValue(fundsPortfolioEntity))
                 .withoutInstruments()
                 .build();
+    }
+
+    private static double getFundPrice(FundsPortfolioEntity fundsPortfolioEntity) {
+        return Optional.of(fundsPortfolioEntity)
+                .map(FundsPortfolioEntity::getFundPrice)
+                .map(BigDecimal::doubleValue)
+                .orElse(0.0);
+    }
+
+    private static double getAppreciation(FundsPortfolioEntity fundsPortfolioEntity) {
+        return Optional.of(fundsPortfolioEntity)
+                .map(FundsPortfolioEntity::getAppreciation)
+                .map(BigDecimal::doubleValue)
+                .orElse(0.0);
+    }
+
+    private static double getTotalValue(FundsPortfolioEntity fundsPortfolioEntity) {
+        return Optional.of(fundsPortfolioEntity)
+                .map(FundsPortfolioEntity::getTotalQuantity)
+                .map(BigDecimal::doubleValue)
+                .orElse(0.0);
     }
 
     private static String getCurrency(GetInvestmentsResponse investmentsResponse) {
@@ -104,7 +125,7 @@ public class InvestmentAccountMapper {
                 .orElseThrow(() -> new IllegalStateException("Currency information is missing"));
     }
 
-    private static double getCashBalanceValue(GetInvestmentsResponse investmentsResponse) {
+    private static BigDecimal getCashBalanceValue(GetInvestmentsResponse investmentsResponse) {
         return Optional.of(investmentsResponse)
                 .map(GetInvestmentsResponse::getBody)
                 .map(GetInvestmentsBodyEntity::getDossierTotalValue)

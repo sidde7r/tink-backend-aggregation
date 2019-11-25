@@ -19,7 +19,7 @@ public class TransactionalAccountMapper {
                         .build();
 
         Pair<String, AccountIdentifier.Type> accountId =
-                getAccountIdentifier(iban, internalAccountId);
+                AccountIdentifierProvider.getAccountIdentifierData(iban, internalAccountId);
 
         IdModule idModule =
                 IdModule.builder()
@@ -35,13 +35,6 @@ public class TransactionalAccountMapper {
                 .withBalance(balanceModule)
                 .withId(idModule)
                 .build();
-    }
-
-    private static Pair<String, AccountIdentifier.Type> getAccountIdentifier(
-            String iban, String internalAccountId) {
-        return Optional.ofNullable(iban)
-                .map(s -> Pair.of(iban, AccountIdentifier.Type.IBAN))
-                .orElse(Pair.of(internalAccountId, AccountIdentifier.Type.COUNTRY_SPECIFIC));
     }
 
     private static TransactionalAccountType getAccountType(String iban) {

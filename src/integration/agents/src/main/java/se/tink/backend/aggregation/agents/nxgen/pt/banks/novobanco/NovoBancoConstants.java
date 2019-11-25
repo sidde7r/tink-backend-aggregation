@@ -14,6 +14,8 @@ public class NovoBancoConstants {
         public static final URL GET_LOANS = new URL(Endpoints.GET_LOANS);
         public static final URL GET_LOAN_DETAILS = new URL(Endpoints.GET_LOAN_DETAILS);
         public static final URL GET_INVESTMENTS = new URL(Endpoints.GET_INVESTMENTS);
+        public static final URL GET_AGGREGATED_SUMMARY = new URL(Endpoints.GET_AGGREGATED_SUMMARY);
+        public static final URL GET_CARD_DETAILS = new URL(Endpoints.GET_CARD_DETAILS);
     }
 
     private static class Endpoints {
@@ -28,6 +30,10 @@ public class NovoBancoConstants {
                 API_BASE + "mv2/api2/PosicaoIntegrada/ObterDetalheCreditoHabitacao";
         public static final String GET_INVESTMENTS =
                 API_BASE + "mv2/api2/FundosInvestimento/ObterCarteiraFundos";
+        public static final String GET_AGGREGATED_SUMMARY =
+                API_BASE + "mv2/api2/PosicaoIntegrada/Obter";
+        public static final String GET_CARD_DETAILS =
+                API_BASE + "mv2/api2/ConsultaMovimentosCartoes/ObterLista";
     }
 
     public static class SecretKeys {
@@ -49,6 +55,8 @@ public class NovoBancoConstants {
         public static final int MOVEMENTS_ID = 3396;
         public static final int LOANS_ID = 194;
         public static final int INVESTMENTS_ID = 158;
+        public static final int SUMMARY_ID = 194;
+        public static final int CARDS_ID = 2048;
     }
 
     public static class Header {
@@ -89,8 +97,9 @@ public class NovoBancoConstants {
         public static final String CONTRACT = "Contrato";
         public static final String INTEREST_RATE = "TAN";
         public static final String CURRENT_BALANCE = "Capital em divida";
-        public static final int SECTION_TYPE = 30;
-        public static final int COLLAPSIBLE_SECTION_TYPE = 32;
+        public static final String CREDIT_CARDS = "Cartões de Crédito";
+        public static final Integer SECTION_TYPE = 30;
+        public static final Integer COLLAPSIBLE_SECTION_TYPE = 32;
 
         public static final String INITIAL_DATE_PT = "Data Início do contrato";
         public static final String INITIAL_DATE_EN = "Initial Date";

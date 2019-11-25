@@ -13,6 +13,8 @@ import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBa
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.DEVICE_ID_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SessionKeys.SESSION_COOKIE_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_AGGREGATED_SUMMARY;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_CARD_DETAILS;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_INVESTMENTS;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOANS;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.URLs.GET_LOAN_DETAILS;
@@ -41,14 +43,19 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.rpc.Login0Request;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.rpc.Login0Response;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.AccountRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.creditcard.GetCardDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.investment.GetInvestmentsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.loan.GetLoanAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.request.loan.GetLoanDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.BodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.MovementsEntity;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.LoanOverviewEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.generic.DetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.GetAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.creditcard.GetCreditCardDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.creditcard.GetCreditCardDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.creditcard.GetSummaryRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.creditcard.GetSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.investment.GetInvestmentsRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.investment.GetInvestmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanAccountsRequest;
@@ -85,7 +92,7 @@ public class NovoBancoApiClient {
                 buildRequest(prepareGetAccountsRequest(accountId), GET_ACCOUNTS)
                         .post(GetAccountsResponse.class);
         if (!response.isSuccessful()) {
-            logger.warn(
+            logger.error(
                     "ObterLista Response ended up with failure code: " + response.getResultCode());
             throw new IllegalStateException("Fetching requested account failed");
         }
@@ -97,7 +104,7 @@ public class NovoBancoApiClient {
                 buildRequest(prepareGetAccountsRequest(null), GET_ACCOUNTS)
                         .post(GetAccountsResponse.class);
         if (!response.isSuccessful()) {
-            logger.warn(
+            logger.error(
                     "ObterLista Response ended up with failure code: " + response.getResultCode());
             throw new IllegalStateException("Fetching Transactional Accounts failed");
         }
@@ -160,6 +167,26 @@ public class NovoBancoApiClient {
         return investmentsResponses;
     }
 
+    public CreditCardAggregatedData getCreditCards() {
+        List<GetCreditCardDetailsResponse> cardsDetails = new ArrayList<>();
+        GetSummaryResponse summaryResponse = getGetSummaryResponse();
+
+        Collection<String> creditCardContractsIds = summaryResponse.getCreditCardsContractsIds();
+        creditCardContractsIds.forEach(
+                contractId -> {
+                    GetCreditCardDetailsResponse cardResponse =
+                            buildRequest(prepareGetCardDetailsRequest(contractId), GET_CARD_DETAILS)
+                                    .post(GetCreditCardDetailsResponse.class);
+                    if (!cardResponse.isSuccessful()) {
+                        logger.error(
+                                "ConsultaMovimentosCartoes Request ended up with failure code: "
+                                        + cardResponse.getResultCode());
+                    }
+                    cardsDetails.add(cardResponse);
+                });
+        return new CreditCardAggregatedData(cardsDetails, getAccountDetails());
+    }
+
     public boolean isAlive() {
         GenericResponse response =
                 buildRequest(prepareGetAccountsRequest(null), KEEP_ALIVE)
@@ -172,7 +199,7 @@ public class NovoBancoApiClient {
             GetLoanAccountsResponse loanAccountDetails,
             String opToken) {
         List<LoanAggregatedData> loans = new ArrayList<>();
-        Collection<LoanOverviewEntity> loansDetails = loanAccountDetails.getLoanDetails();
+        Collection<DetailsEntity> loansDetails = loanAccountDetails.getLoanDetails();
         loansDetails.forEach(
                 loanDetails -> {
                     GetLoanDetailsResponse loanDetailsResponse =
@@ -192,8 +219,7 @@ public class NovoBancoApiClient {
         return loans;
     }
 
-    private GetLoanDetailsResponse getGetLoanDetails(
-            String opToken, LoanOverviewEntity loanDetails) {
+    private GetLoanDetailsResponse getGetLoanDetails(String opToken, DetailsEntity loanDetails) {
         return buildRequest(
                         prepareGetLoanDetailsRequest(loanDetails.getContract(), opToken),
                         GET_LOAN_DETAILS)
@@ -203,6 +229,19 @@ public class NovoBancoApiClient {
     private GetLoanAccountsResponse getGetLoanAccountsDetails(AccountDetailsEntity accountDetails) {
         return buildRequest(prepareGetLoansRequest(accountDetails.getId()), GET_LOANS)
                 .post(GetLoanAccountsResponse.class);
+    }
+
+    private GetSummaryResponse getGetSummaryResponse() {
+        GetSummaryResponse summaryResponse =
+                buildRequest(prepareGetSummaryRequest(), GET_AGGREGATED_SUMMARY)
+                        .post(GetSummaryResponse.class);
+        if (!summaryResponse.isSuccessful()) {
+            logger.error(
+                    "PosicaoIntegrada Request ended up with failure code: "
+                            + summaryResponse.getResultCode());
+            throw new IllegalStateException("Could not get Credit Card details");
+        }
+        return summaryResponse;
     }
 
     private void saveAccountsInSessionStorage(GetAccountsResponse response) {
@@ -273,6 +312,17 @@ public class NovoBancoApiClient {
         return new GetInvestmentsRequest(header, body);
     }
 
+    private GetSummaryRequest prepareGetSummaryRequest() {
+        HeaderEntity header = getHeaderEntity(FieldValues.CTX_ACCOUNTS, ServiceIds.SUMMARY_ID);
+        return new GetSummaryRequest(header);
+    }
+
+    private GetCreditCardDetailsRequest prepareGetCardDetailsRequest(String accountCardId) {
+        HeaderEntity header = getHeaderEntity(null, ServiceIds.CARDS_ID);
+        GetCardDetailsBodyEntity body = new GetCardDetailsBodyEntity(true, accountCardId);
+        return new GetCreditCardDetailsRequest(header, body);
+    }
+
     private Collection<AccountDetailsEntity> getAccountDetails() {
         if (!sessionStorage.containsKey(ACCOUNT_GENERAL_INFO_ID)) {
             getAccounts();
@@ -306,6 +356,26 @@ public class NovoBancoApiClient {
 
         public GetLoanDetailsResponse getLoanDetails() {
             return loanDetails;
+        }
+    }
+
+    public static class CreditCardAggregatedData {
+        public CreditCardAggregatedData(
+                Collection<GetCreditCardDetailsResponse> creditCardDetailsResponses,
+                Collection<AccountDetailsEntity> accountsDetails) {
+            this.creditCardDetailsResponses = creditCardDetailsResponses;
+            this.accountsDetails = accountsDetails;
+        }
+
+        private Collection<GetCreditCardDetailsResponse> creditCardDetailsResponses;
+        private Collection<AccountDetailsEntity> accountsDetails;
+
+        public Collection<GetCreditCardDetailsResponse> getCreditCardDetailsResponses() {
+            return creditCardDetailsResponses;
+        }
+
+        public Collection<AccountDetailsEntity> getAccountsDetails() {
+            return accountsDetails;
         }
     }
 }

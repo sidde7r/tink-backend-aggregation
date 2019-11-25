@@ -22,16 +22,16 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoApiClient;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.entity.response.AccountDetailsEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.generic.DetailLineEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.GetLoanDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.LoanBodyDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.LoanDetailsHeaderEntity;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan.LoanLinesEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LoanAccountMapper {
@@ -52,15 +52,15 @@ public class LoanAccountMapper {
                         .setLoanNumber(loanData.getLoanContractId())
                         .build();
 
+        AccountDetailsEntity accountDetails = loanData.getAccountDetails();
         IdModule idModule =
                 IdModule.builder()
                         .withUniqueIdentifier(loanData.getLoanContractId())
-                        .withAccountNumber(loanData.getAccountDetails().getId())
-                        .withAccountName(loanData.getAccountDetails().getDesc())
+                        .withAccountNumber(accountDetails.getId())
+                        .withAccountName(accountDetails.getDesc())
                         .addIdentifier(
-                                AccountIdentifier.create(
-                                        AccountIdentifier.Type.COUNTRY_SPECIFIC,
-                                        loanData.getLoanContractId()))
+                                AccountIdentifierProvider.getAccountIdentifier(
+                                        accountDetails.getIban(), accountDetails.getId()))
                         .setProductName(getProductName(loanData))
                         .build();
 
@@ -136,22 +136,22 @@ public class LoanAccountMapper {
                 .map(LoanBodyDetailsEntity::getLines)
                 .map(Collection::stream)
                 .orElse(Stream.empty())
-                .filter(loanLine -> loanLine.getT() == SECTION_TYPE)
+                .filter(loanLine -> SECTION_TYPE.equals(loanLine.getType()))
                 .findFirst()
-                .map(LoanLinesEntity::getLines)
+                .map(DetailLineEntity::getLines)
                 .map(Collection::stream)
                 .orElse(Stream.empty())
                 .filter(
                         loanLine ->
-                                CONTRACT.equals(loanLine.getL())
-                                        && loanLine.getT() == COLLAPSIBLE_SECTION_TYPE)
+                                CONTRACT.equals(loanLine.getLabel())
+                                        && COLLAPSIBLE_SECTION_TYPE.equals(loanLine.getType()))
                 .findFirst()
-                .map(LoanLinesEntity::getLines)
+                .map(DetailLineEntity::getLines)
                 .map(Collection::stream)
                 .orElse(Stream.empty())
-                .filter(loanLine -> property.equals(loanLine.getL()))
+                .filter(loanLine -> property.equals(loanLine.getLabel()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Could not find: " + label))
-                .getV();
+                .getValue();
     }
 }
