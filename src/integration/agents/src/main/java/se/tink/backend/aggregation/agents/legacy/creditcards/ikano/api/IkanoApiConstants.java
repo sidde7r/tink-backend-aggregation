@@ -6,6 +6,7 @@ public class IkanoApiConstants {
         public static final String BANKID_IN_PROGRESS = "MOBILEBANKID_ALREADY_IN_PROGRESS";
         public static final String NO_CLIENT = "NO_CLIENT";
         public static final String BANKID_CANCELLED = "MOBILEBANKID_USER_CANCEL";
+        public static final String BANKID_UNKNOWN_ERROR = "MOBILEBANKID_UNKNOWN_ERROR";
     }
 
     public class Error {

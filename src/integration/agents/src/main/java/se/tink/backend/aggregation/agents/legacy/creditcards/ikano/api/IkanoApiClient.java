@@ -67,6 +67,9 @@ public class IkanoApiClient {
         if (response.isBankIdAlreadyInProgress()) {
             throw BankIdError.ALREADY_IN_PROGRESS.exception();
         }
+        if (response.isBankIdUnkownError()) {
+            throw BankIdError.UNKNOWN.exception();
+        }
 
         response.checkForErrors();
 

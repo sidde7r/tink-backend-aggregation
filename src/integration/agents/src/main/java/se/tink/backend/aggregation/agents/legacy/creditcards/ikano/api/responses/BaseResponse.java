@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.creditcards.ikano.api.responses;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiConstants;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.FatalErrorException;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.ResponseError;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserErrorException;
@@ -40,5 +41,10 @@ public abstract class BaseResponse {
     public boolean isBankIdCancel() {
         return error != null
                 && IkanoApiConstants.ErrorCode.BANKID_CANCELLED.equalsIgnoreCase(error.getCode());
+    }
+
+    @JsonIgnore
+    public boolean isBankIdUnkownError() {
+        return error != null && ErrorCode.BANKID_UNKNOWN_ERROR.equalsIgnoreCase(error.getCode());
     }
 }
