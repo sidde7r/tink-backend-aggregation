@@ -156,12 +156,10 @@ public final class AgentConfigurationController {
                         secretsMap.entrySet().stream()
                                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-                List<String> redirectUrls = allSecrets.getRedirectUrls();
-
-                initRedirectUrl(redirectUrls);
-                initScopes(allSecrets.getScopes());
-
                 extractSensitiveValues(allSecretsMapObj);
+
+                initRedirectUrl(allSecrets.getRedirectUrls());
+                initScopes(allSecrets.getScopes());
             } catch (StatusRuntimeException e) {
                 Preconditions.checkNotNull(
                         e.getStatus(), "Status cannot be null for StatusRuntimeException: " + e);
