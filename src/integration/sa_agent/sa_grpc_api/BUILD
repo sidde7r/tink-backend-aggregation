@@ -13,6 +13,15 @@ proto_library(
     srcs = [
         "proto/auth/model.proto",
         "proto/auth/services.proto",
+        "proto/fetch/account/accounttype.proto",
+        "proto/fetch/account/model.proto",
+        "proto/fetch/account/services.proto",
+        "proto/fetch/trans/model.proto",
+        "proto/fetch/trans/services.proto",
     ],
     visibility = ["//visibility:public"],
+    deps = [
+        "@com_google_googleapis//google/type:date_proto",
+        "@com_google_protobuf//:timestamp_proto",
+    ],
 )

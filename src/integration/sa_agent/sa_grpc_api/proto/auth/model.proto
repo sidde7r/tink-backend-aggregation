@@ -5,11 +5,128 @@ option java_package = "se.tink.sa.model.auth";
 option java_outer_classname = "OuterModel";
 option go_package = "proto";
 
+import "google/type/date.proto";
+
 message AuthenticationRequest {
   string correlationId = 1;
+  Credentials credentials = 2;
+  repeated string userInputs = 3;
+  map<string, string> callbackData = 4;
 }
 
 message AuthenticationResponse {
   string correlationId = 1;
+  repeated Field fields = 2;
+  ThirdPartyAppAuthenticationPayload payload = 3;
+  SupplementalWaitRequest supplementalWaitRequest = 4;
 }
 
+message Field {
+  string description = 1;
+  string helpText = 2;
+  string hint = 3;
+  bool immutable = 4;
+  bool masked = 5;
+  int32 maxLength = 6;
+  int32 minLength = 7;
+  string name = 8;
+  bool numeric = 9;
+  bool optional = 10;
+  string pattern = 11;
+  string patternError = 12;
+  string value = 13;
+  bool sensitive = 14;
+  bool checkbox = 15;
+  string additionalInfo = 16;
+}
+
+message Credentials {
+  google.type.Date debugUntil = 1;
+  int64 providerLatency = 2;
+  string fieldsSerialized = 3;
+  string id = 4;
+  google.type.Date nextUpdate = 5;
+  string payload = 6;
+  string providerName = 7;
+  google.type.Date sessionExpiryDate = 8;
+  CredentialsStatus status = 9;
+  string statusPayload = 10;
+  string statusPrompt = 11;
+  google.type.Date statusUpdated = 12;
+  string supplementalInformation = 13;
+  CredentialsTypes type = 14;
+  google.type.Date updated = 15;
+  string userId = 16;
+  bool forceManualAuthentication = 17;
+  int32 dataVersion = 18;
+
+  enum CredentialsStatus {
+    CREATED = 0;
+    AUTHENTICATING = 1;
+    UNCHANGED = 2;
+    UPDATING = 3;
+    UPDATED = 4;
+    AWAITING_MOBILE_BANKID_AUTHENTICATION = 5;
+    AWAITING_THIRD_PARTY_APP_AUTHENTICATION = 6;
+    AWAITING_SUPPLEMENTAL_INFORMATION = 7;
+    AWAITING_OTHER_CREDENTIALS_TYPE = 8;
+    AUTHENTICATION_ERROR = 9;
+    NOT_IMPLEMENTED_ERROR = 10;
+    TEMPORARY_ERROR = 11;
+    HINTED = 12;
+    PERMANENT_ERROR = 13;
+    DELETED = 14;
+    METRIC = 15;
+    DISABLED = 16;
+    SESSION_EXPIRED = 17;
+  }
+
+  enum CredentialsTypes {
+    PASSWORD = 0;
+    MOBILE_BANKID = 1;
+    KEYFOB = 2;
+    FRAUD = 3;
+    THIRD_PARTY_APP = 4;
+  }
+}
+
+message ThirdPartyAppAuthenticationPayload {
+  Android android = 1;
+  Ios ios = 2;
+  Desktop desktop = 3;
+  string downloadTitle = 4;
+  string downloadMessage = 5;
+  string upgradeTitle = 6;
+  string upgradeMessage = 7;
+
+  message Android {
+    string packageName = 1;
+    int32 requiredMinimumVersion = 2;
+    string intent = 3;
+  }
+
+  message Ios {
+    string appStoreUrl = 1;
+    string scheme = 2;
+    string deepLinkUrl = 3;
+  }
+
+  message Desktop {
+    string url = 1;
+  }
+}
+
+message SupplementalWaitRequest {
+  string key = 1;
+  int64 waitFor = 2;
+  TimeUnit timeUnit = 3; // TODO: java.util.concurrent.TimeUnit
+  enum TimeUnit {
+    NANOSECONDS = 0;
+    MICROSECONDS = 1;
+    MILLISECONDS = 2;
+    SECONDS = 3;
+    MINUTES = 4;
+    HOURS = 5;
+    DAYS = 6;
+  }
+}

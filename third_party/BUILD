@@ -2046,6 +2046,7 @@ java_library(
     licenses = ["notice"],
     visibility = ["//visibility:public"],
     exports = [
+        "//third_party:com_google_protobuf_protobuf_java",
         "//third_party:lombok_plugin",
         "//third_party:netty",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
