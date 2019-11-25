@@ -13,7 +13,7 @@ public class NexiAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("it", "it-nexi-oauth2")
+                new AgentIntegrationTest.Builder("it", "it-nexi-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
