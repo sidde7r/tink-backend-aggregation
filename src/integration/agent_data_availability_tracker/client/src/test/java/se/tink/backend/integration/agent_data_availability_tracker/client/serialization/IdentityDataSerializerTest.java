@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
 
 public class IdentityDataSerializerTest {
 
-    private static final String VALUE_NOT_LISTED = TrackingList.Builder.VALUE_NOT_LISTED;
     private static final String SECRET_VALUE = "SecretValue";
 
     @Test
@@ -16,7 +15,7 @@ public class IdentityDataSerializerTest {
 
         ImmutableSet<String> secretFieldKeys =
                 ImmutableSet.<String>builder()
-                        .add("IDENTITY_DATA.name", "IDENTITY_DATA.ssn", "IDENTITY_DATA.dateOfBirth")
+                        .add("IdentityData.name", "IdentityData.ssn", "IdentityData.dateOfBirth")
                         .build();
 
         IdentityData identityData = new IdentityData();
