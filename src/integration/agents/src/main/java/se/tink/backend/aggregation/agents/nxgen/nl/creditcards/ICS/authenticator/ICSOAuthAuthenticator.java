@@ -56,9 +56,12 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
             return client.refreshToken(refreshToken);
         } catch (HttpResponseException e) {
             ErrorBody errorBody = e.getResponse().getBody(ErrorBody.class);
-            if (e.getResponse().getStatus() == ICSConstants.ErrorCode.UNAUTHORIZED
-                    && ICSConstants.ErrorMessages.INVALID_TOKEN.equalsIgnoreCase(
-                            errorBody.getError())) {
+            if ((e.getResponse().getStatus() == ICSConstants.ErrorCode.UNAUTHORIZED
+                            && ICSConstants.ErrorMessages.INVALID_TOKEN.equalsIgnoreCase(
+                                    errorBody.getError()))
+                    || (e.getResponse().getStatus() == ICSConstants.ErrorCode.FORBIDDEN
+                            && ICSConstants.ErrorMessages.CONSENT_ERROR.equalsIgnoreCase(
+                                    errorBody.getError()))) {
                 throw new SessionException(SessionError.SESSION_EXPIRED);
             }
             throw e;
