@@ -11,7 +11,7 @@ public class SEBApiConstants {
         public static final String PENSION_SAVINGS_FUND = "pensionsspar fond";
         public static final String SAFE_PENSION_INSURANCE = "trygg privatpension";
         public static final String PENSION_INSURANCE = "pensionsförsäkring";
-        public static final String IPS = "IPS";
+        public static final String IPS = "ips";
         public static final String KAPITAL_PENSION = "kapitalpension";
     }
 
