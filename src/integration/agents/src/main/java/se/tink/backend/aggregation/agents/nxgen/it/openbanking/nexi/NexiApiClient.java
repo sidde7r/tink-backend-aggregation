@@ -13,6 +13,11 @@ public class NexiApiClient extends CbiGlobeApiClient {
             PersistentStorage persistentStorage,
             boolean requestManual,
             TemporaryStorage temporaryStorage) {
-        super(client, persistentStorage, requestManual, temporaryStorage, InstrumentType.CARDS_ACCOUNTS);
+        super(
+                client,
+                persistentStorage,
+                requestManual,
+                temporaryStorage,
+                InstrumentType.CARDS_ACCOUNTS);
     }
 }
