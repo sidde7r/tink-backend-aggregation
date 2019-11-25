@@ -156,12 +156,14 @@ public final class AgentConfigurationController {
                         secretsMap.entrySet().stream()
                                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-                List<String> redirectUrls = allSecrets.getRedirectUrls();
-
-                initRedirectUrl(redirectUrls);
-                initScopes(allSecrets.getScopes());
-
+                // This method needs to be called before the init methods because we only want to
+                // mask the values from the secrets objects (secrets and sensitiveSecrets) and the
+                // init method put other stuff in that map, i.e. selected redirectUrl and scopes. So
+                // order is important.
                 extractSensitiveValues(allSecretsMapObj);
+
+                initRedirectUrl(allSecrets.getRedirectUrls());
+                initScopes(allSecrets.getScopes());
             } catch (StatusRuntimeException e) {
                 Preconditions.checkNotNull(
                         e.getStatus(), "Status cannot be null for StatusRuntimeException: " + e);
