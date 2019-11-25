@@ -172,7 +172,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                 if (errorResponse.isUnregisteredRecipient()) {
                     throw executorHelper.transferRejectedError(
                             ErrorCodes.UNREGISTERED_RECIPIENT,
-                            catalog.getString(EndUserMessage.UNREGISTERED_RECIPIENT));
+                            EndUserMessage.UNREGISTERED_RECIPIENT);
                 }
                 log.warn("Payment execution failed", e);
                 throw executorHelper.paymentFailedError(e);
