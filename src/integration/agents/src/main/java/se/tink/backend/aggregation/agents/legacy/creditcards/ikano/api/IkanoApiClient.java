@@ -93,6 +93,10 @@ public class IkanoApiClient {
             throw BankIdError.CANCELLED.exception();
         }
 
+        if (response.isBankIdUnkownError()) {
+            throw BankIdError.UNKNOWN.exception();
+        }
+
         response.checkForErrors();
 
         if (response.hasSession()) {
