@@ -25,6 +25,8 @@ public class LoginRequest extends BelfiusRequest {
                                         deviceTokenHashedIosComparison),
                                 newInputEvent(BelfiusConstants.Widget.SIGNATURE, signature),
                                 newInputEvent(BelfiusConstants.Widget.IS_GUEST, "N"),
+                                WidgetEventInformation.newButtonClickedWidgetEvent(
+                                        BelfiusConstants.Widget.AUTHENTICATE),
                                 newInputEvent(BelfiusConstants.Widget.TYPE_LOGON_DEVICE, ""),
                                 newInputEvent(BelfiusConstants.Widget.CODE_SDK, "I"),
                                 newInputEvent(BelfiusConstants.Widget.DEV_T, "I"),
@@ -45,9 +47,7 @@ public class LoginRequest extends BelfiusRequest {
                                         BelfiusConstants.Request.SYS_VER),
                                 newInputEvent(
                                         BelfiusConstants.Widget.APP_VER,
-                                        BelfiusConstants.Request.APP_VER),
-                                WidgetEventInformation.newButtonClickedWidgetEvent(
-                                        BelfiusConstants.Widget.AUTHENTICATE)));
+                                        BelfiusConstants.Request.APP_VER)));
     }
 
     private static WidgetEventInformation newInputEvent(String widgetId, String value) {
