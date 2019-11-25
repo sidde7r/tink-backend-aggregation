@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -16,7 +17,7 @@ public class BpmApiClient extends CbiGlobeApiClient {
             PersistentStorage persistentStorage,
             boolean requestManual,
             TemporaryStorage temporaryStorage) {
-        super(client, persistentStorage, requestManual, temporaryStorage);
+        super(client, persistentStorage, requestManual, temporaryStorage, InstrumentType.ACCOUNTS);
     }
 
     @Override

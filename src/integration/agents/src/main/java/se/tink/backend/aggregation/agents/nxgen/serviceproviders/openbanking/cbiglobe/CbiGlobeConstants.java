@@ -41,6 +41,10 @@ public final class CbiGlobeConstants {
         public static final URL CONSENTS_STATUS = new URL(BASE_URL + ApiServices.CONSENTS_STATUS);
         public static final URL PAYMENT = new URL(BASE_URL + ApiServices.PAYMENT);
         public static final URL FETCH_PAYMENT = new URL(BASE_URL + ApiServices.FETCH_PAYMENT);
+        public static final URL CARD_ACCOUNTS = new URL(BASE_URL + ApiServices.CARD_ACCOUNTS);
+        public static final URL CARD_BALANCES = new URL(BASE_URL + ApiServices.CARD_BALANCES);
+        public static final URL CARD_TRANSACTIONS =
+                new URL(BASE_URL + ApiServices.CARD_TRANSACTIONS);
     }
 
     // TODO: Remove 'sbx' prefix for production
@@ -60,6 +64,12 @@ public final class CbiGlobeConstants {
                 "/sbx/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers";
         private static final String FETCH_PAYMENT =
                 "/sbx/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/{payment-id}";
+        public static final String CARD_ACCOUNTS =
+                "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts";
+        public static final String CARD_BALANCES =
+                "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts/{accountId}/balances";
+        public static final String CARD_TRANSACTIONS =
+                "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts/{accountId}/transactions";
     }
 
     public static class StorageKeys {

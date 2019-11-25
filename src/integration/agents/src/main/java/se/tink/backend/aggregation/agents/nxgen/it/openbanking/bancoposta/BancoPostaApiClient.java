@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -20,7 +21,7 @@ public class BancoPostaApiClient extends CbiGlobeApiClient {
             PersistentStorage persistentStorage,
             boolean requestManual,
             TemporaryStorage temporaryStorage) {
-        super(client, persistentStorage, requestManual, temporaryStorage);
+        super(client, persistentStorage, requestManual, temporaryStorage, InstrumentType.ACCOUNTS);
     }
 
     public ConsentResponse updateConsent(String consentId, UpdateConsentRequest body) {
