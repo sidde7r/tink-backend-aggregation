@@ -60,7 +60,6 @@ public final class SwedbankConstants {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String CONSENT = "CONSENT";
-        public static final String CONSENT_STATUS = "CONSENT_STATUS";
     }
 
     public static class QueryKeys {
