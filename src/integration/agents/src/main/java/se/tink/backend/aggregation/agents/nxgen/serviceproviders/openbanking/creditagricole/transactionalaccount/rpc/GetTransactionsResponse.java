@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.TransactionsLinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<URL> {
     @JsonProperty("_links")
     private TransactionsLinksEntity links;
+
     private List<TransactionEntity> transactions;
 
     @Override
