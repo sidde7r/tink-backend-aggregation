@@ -72,6 +72,9 @@ public class FakeIntegrationArgumentsCreator {
                     }
 
                     @Override
+                    public void cacheIdentityData(IdentityData identityData) {}
+
+                    @Override
                     public void cacheTransactions(
                             @Nonnull String accountUniqueId, List<Transaction> transactions) {}
 
@@ -153,8 +156,7 @@ public class FakeIntegrationArgumentsCreator {
                     }
 
                     @Override
-                    public void sendIdentityToIdentityAggregatorService(
-                            IdentityData identityData) {}
+                    public void sendIdentityToIdentityAggregatorService() {}
                 };
         return context;
     }

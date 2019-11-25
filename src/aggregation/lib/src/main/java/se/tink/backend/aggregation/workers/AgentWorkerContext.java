@@ -74,6 +74,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected boolean isWhitelistRefresh;
     protected ControllerWrapper controllerWrapper;
 
+    protected IdentityData identityData;
+
     public AgentWorkerContext(
             CredentialsRequest request,
             MetricRegistry metricRegistry,
@@ -592,8 +594,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void sendIdentityToIdentityAggregatorService(IdentityData identityData) {
+    public void cacheIdentityData(IdentityData identityData) {
+        this.identityData = identityData;
+    }
 
+    public se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
+            getAggregationIdentityData() {
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
                 simplifiedIdentityData =
                         new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData();
@@ -605,6 +611,19 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         simplifiedIdentityData.setName(identityData.getFullName());
         simplifiedIdentityData.setSsn(identityData.getSsn());
+
+        return simplifiedIdentityData;
+    }
+
+    @Override
+    public void sendIdentityToIdentityAggregatorService() {
+
+        if (identityData == null) {
+            return;
+        }
+
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
+                simplifiedIdentityData = getAggregationIdentityData();
 
         UpdateIdentityDataRequest updateIdentityDataRequest = new UpdateIdentityDataRequest();
         updateIdentityDataRequest.setIdentityData(simplifiedIdentityData);

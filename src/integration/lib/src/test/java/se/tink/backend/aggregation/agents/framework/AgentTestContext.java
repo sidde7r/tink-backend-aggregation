@@ -197,6 +197,17 @@ public class AgentTestContext extends AgentContext {
         accountsByBankId.put(account.getBankId(), account);
     }
 
+    @Override
+    public void cacheIdentityData(IdentityData identityData) {
+        log.info("Updating identity data");
+
+        try {
+            log.info(mapper.writeValueAsString(identityData));
+        } catch (Exception e) {
+            // NOOP.
+        }
+    }
+
     public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountId) {
         throw new NotImplementedException("Account features need to be cached to be retrievable");
     }
@@ -335,7 +346,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public void sendIdentityToIdentityAggregatorService(IdentityData identityData) {
+    public void sendIdentityToIdentityAggregatorService() {
         // TODO: implement sending identity data
         throw new NotImplementedException("Method not implemented");
     }

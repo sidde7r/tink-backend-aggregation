@@ -22,7 +22,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
             LoggerFactory.getLogger(SendAccountsToDataAvailabilityTrackerAgentWorkerCommand.class);
 
     private static final String METRIC_NAME = "data_availability_tracker_refresh";
-    private static final String METRIC_ACTION = "send_accounts_to_data_availability_tracker";
+    private static final String METRIC_ACTION = "send_refresh_data_to_data_availability_tracker";
 
     private final AgentWorkerCommandContext context;
     private final AgentWorkerCommandMetricState metrics;
@@ -77,6 +77,9 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                                                     pair.first,
                                                     pair.second));
 
+                    agentDataAvailabilityTrackerClient.sendIdentityData(
+                            agentName, provider, market, context.getAggregationIdentityData());
+
                     action.completed();
                 } else {
 
@@ -85,7 +88,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
 
             } catch (Exception e) {
                 action.failed();
-                log.error("Failed sending accounts to tracking service.", e);
+                log.error("Failed sending refresh data to tracking service.", e);
             }
         } finally {
             metrics.stop();

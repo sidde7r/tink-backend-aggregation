@@ -15,11 +15,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
 import se.tink.backend.integration.agent_data_availability_tracker.api.AgentDataAvailabilityTrackerServiceGrpc;
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;
 import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
 import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.LoanTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.PortfolioTrackingSerializer;
 
@@ -154,6 +156,31 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
                         .setMarket(market);
 
         // TODO: Unwrapped serialization such that builder.setAll can be used instead of loop
+        serializer
+                .buildList()
+                .forEach(
+                        entry ->
+                                requestBuilder
+                                        .addFieldName(entry.getName())
+                                        .addFieldValue(entry.getValue()));
+
+        accountDeque.add(requestBuilder.build());
+    }
+
+    public void sendIdentityData(
+            final String agent,
+            final String provider,
+            final String market,
+            final IdentityData identityData) {
+
+        IdentityDataSerializer serializer = new IdentityDataSerializer(identityData);
+
+        TrackAccountRequest.Builder requestBuilder =
+                TrackAccountRequest.newBuilder()
+                        .setAgent(agent)
+                        .setProvider(provider)
+                        .setMarket(market);
+
         serializer
                 .buildList()
                 .forEach(

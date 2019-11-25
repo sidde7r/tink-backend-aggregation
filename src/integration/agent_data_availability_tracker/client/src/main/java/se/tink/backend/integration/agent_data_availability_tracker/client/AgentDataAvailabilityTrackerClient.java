@@ -15,6 +15,13 @@ public interface AgentDataAvailabilityTrackerClient extends Managed {
             final Account account,
             final AccountFeatures features);
 
+    void sendIdentityData(
+            final String agent,
+            final String provider,
+            final String market,
+            final se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
+                    identityData);
+
     void endStreamBlocking() throws InterruptedException;
 
     boolean sendingRealData();

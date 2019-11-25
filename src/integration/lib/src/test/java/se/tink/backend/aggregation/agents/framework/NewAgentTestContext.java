@@ -368,9 +368,12 @@ public final class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public void sendIdentityToIdentityAggregatorService(IdentityData identityData) {
+    public void cacheIdentityData(IdentityData identityData) {
         this.identityData = identityData;
     }
+
+    @Override
+    public void sendIdentityToIdentityAggregatorService() {}
 
     public void validateFetchedData(AisValidator validator) {
         validator.validate(
