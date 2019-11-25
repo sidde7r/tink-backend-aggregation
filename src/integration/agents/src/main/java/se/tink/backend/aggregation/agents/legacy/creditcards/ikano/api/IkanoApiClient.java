@@ -67,6 +67,9 @@ public class IkanoApiClient {
         if (response.isBankIdAlreadyInProgress()) {
             throw BankIdError.ALREADY_IN_PROGRESS.exception();
         }
+        if (response.isBankIdUnkownError()) {
+            throw BankIdError.UNKNOWN.exception();
+        }
 
         response.checkForErrors();
 
@@ -82,15 +85,7 @@ public class IkanoApiClient {
                         .header("Username", credentials.getUsername())
                         .get(BankIdSession.class);
 
-        if (response.isBankIdNoClient()) {
-            throw BankIdError.NO_CLIENT.exception();
-        }
-
-        if (response.isBankIdCancel()) {
-            throw BankIdError.CANCELLED.exception();
-        }
-
-        response.checkForErrors();
+        checkBankIdResponseForErrors(response);
 
         if (response.hasSession()) {
             sessionId = response.getSessionId();
@@ -101,6 +96,23 @@ public class IkanoApiClient {
         }
 
         return false;
+    }
+
+    private void checkBankIdResponseForErrors(BankIdSession response)
+            throws BankIdException, UserErrorException, FatalErrorException {
+        if (response.isBankIdNoClient()) {
+            throw BankIdError.NO_CLIENT.exception();
+        }
+
+        if (response.isBankIdCancel()) {
+            throw BankIdError.CANCELLED.exception();
+        }
+
+        if (response.isBankIdUnkownError()) {
+            throw BankIdError.UNKNOWN.exception();
+        }
+
+        response.checkForErrors();
     }
 
     /** Store session tokens in sensitive payload, so it will be masked from logs */
