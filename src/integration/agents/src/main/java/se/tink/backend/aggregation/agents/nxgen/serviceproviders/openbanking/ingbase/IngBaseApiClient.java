@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryKeys;
@@ -132,17 +131,11 @@ public class IngBaseApiClient {
     }
 
     public FetchTransactionsResponse fetchTransactionsPage(final String transactionsUrl) {
-        try {
-            return buildRequestWithSignature(
-                            transactionsUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
-                    .addBearerToken(getTokenFromSession())
-                    .type(MediaType.APPLICATION_JSON)
-                    .get(FetchTransactionsResponse.class);
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
-            } else throw e;
-        }
+        return buildRequestWithSignature(
+                        transactionsUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
+                .addBearerToken(getTokenFromSession())
+                .type(MediaType.APPLICATION_JSON)
+                .get(FetchTransactionsResponse.class);
     }
 
     public URL getAuthorizeUrl(final String state) {
