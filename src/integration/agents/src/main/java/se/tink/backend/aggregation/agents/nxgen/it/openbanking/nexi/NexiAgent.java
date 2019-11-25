@@ -30,7 +30,7 @@ public class NexiAgent extends CbiGlobeAgent {
     @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
-                CbiGlobeTransactionalAccountFetcher.createFromBooked(apiClient, persistentStorage);
+                CbiGlobeTransactionalAccountFetcher.createFromBoth(apiClient, persistentStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
