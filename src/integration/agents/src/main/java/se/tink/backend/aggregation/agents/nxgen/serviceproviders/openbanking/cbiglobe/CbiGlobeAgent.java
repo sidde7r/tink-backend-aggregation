@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration.Environment;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
@@ -49,7 +50,12 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
     protected abstract String getIntegrationName();
 
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
-        return new CbiGlobeApiClient(client, persistentStorage, requestManual, temporaryStorage);
+        return new CbiGlobeApiClient(
+                client,
+                persistentStorage,
+                requestManual,
+                temporaryStorage,
+                InstrumentType.ACCOUNTS);
     }
 
     @Override

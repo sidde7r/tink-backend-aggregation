@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
@@ -45,16 +46,19 @@ public class CbiGlobeApiClient {
     private CbiGlobeConfiguration configuration;
     private boolean requestManual;
     protected TemporaryStorage temporaryStorage;
+    protected InstrumentType instrumentType;
 
     public CbiGlobeApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             boolean requestManual,
-            TemporaryStorage temporaryStorage) {
+            TemporaryStorage temporaryStorage,
+            InstrumentType instrumentType) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.requestManual = requestManual;
         this.temporaryStorage = temporaryStorage;
+        this.instrumentType = instrumentType;
     }
 
     protected CbiGlobeConfiguration getConfiguration() {
@@ -99,8 +103,14 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder createAccountsRequestWithConsent() {
-        return createRequestInSession(Urls.ACCOUNTS)
+        return createRequestInSession(getAccountsUrl())
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
+    }
+
+    private URL getAccountsUrl() {
+        return this.instrumentType.equals(InstrumentType.ACCOUNTS)
+                ? Urls.ACCOUNTS
+                : Urls.CARD_ACCOUNTS;
     }
 
     private OAuth2Token getTokenFromStorage() {
@@ -138,7 +148,8 @@ public class CbiGlobeApiClient {
 
     public GetBalancesResponse getBalances(String resourceId) {
         try {
-            return createRequestWithConsent(Urls.BALANCES.parameter(IdTags.ACCOUNT_ID, resourceId))
+            return createRequestWithConsent(
+                            getBalancesUrl().parameter(IdTags.ACCOUNT_ID, resourceId))
                     .get(GetBalancesResponse.class);
         } catch (HttpResponseException e) {
             handleAccessExceededError(e);
@@ -146,12 +157,19 @@ public class CbiGlobeApiClient {
         }
     }
 
+    private URL getBalancesUrl() {
+        return this.instrumentType.equals(InstrumentType.ACCOUNTS)
+                ? Urls.BALANCES
+                : Urls.CARD_BALANCES;
+    }
+
     public GetTransactionsResponse getTransactions(
             String apiIdentifier, Date fromDate, Date toDate, String bookingType, int page) {
         try {
             HttpResponse response =
                     createRequestWithConsent(
-                                    Urls.TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, apiIdentifier))
+                                    getTransactionsUrl()
+                                            .parameter(IdTags.ACCOUNT_ID, apiIdentifier))
                             .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
                             .queryParam(
                                     QueryKeys.DATE_FROM,
@@ -178,6 +196,12 @@ public class CbiGlobeApiClient {
             handleAccessExceededError(e);
             throw e;
         }
+    }
+
+    private URL getTransactionsUrl() {
+        return this.instrumentType.equals(InstrumentType.ACCOUNTS)
+                ? Urls.TRANSACTIONS
+                : Urls.CARD_TRANSACTIONS;
     }
 
     private String getTotalPages(HttpResponse response, String apiIdentifier) {
