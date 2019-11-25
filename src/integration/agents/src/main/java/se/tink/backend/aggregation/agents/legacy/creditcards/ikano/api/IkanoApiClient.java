@@ -85,6 +85,21 @@ public class IkanoApiClient {
                         .header("Username", credentials.getUsername())
                         .get(BankIdSession.class);
 
+        checkBankIdResponseForErrors(response);
+
+        if (response.hasSession()) {
+            sessionId = response.getSessionId();
+            sessionKey = response.getSessionKey();
+
+            storeSessionInSensitivePayload(sessionId, sessionKey);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void checkBankIdResponseForErrors(BankIdSession response)
+            throws BankIdException, UserErrorException, FatalErrorException {
         if (response.isBankIdNoClient()) {
             throw BankIdError.NO_CLIENT.exception();
         }
@@ -98,16 +113,6 @@ public class IkanoApiClient {
         }
 
         response.checkForErrors();
-
-        if (response.hasSession()) {
-            sessionId = response.getSessionId();
-            sessionKey = response.getSessionKey();
-
-            storeSessionInSensitivePayload(sessionId, sessionKey);
-            return true;
-        }
-
-        return false;
     }
 
     /** Store session tokens in sensitive payload, so it will be masked from logs */
