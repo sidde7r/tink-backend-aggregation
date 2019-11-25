@@ -43,6 +43,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/bankdatadk",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyske",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/danskebank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ee/banks/aslhv",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bankinter",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bbva",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/santander",

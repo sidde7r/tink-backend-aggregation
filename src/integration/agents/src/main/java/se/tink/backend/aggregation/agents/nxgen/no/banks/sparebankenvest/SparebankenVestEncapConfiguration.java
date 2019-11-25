@@ -33,4 +33,9 @@ public class SparebankenVestEncapConfiguration implements EncapConfiguration {
     public String getClientPrivateKeyString() {
         return null;
     }
+
+    @Override
+    public String getLocale() {
+        return "nb_SE";
+    }
 }
