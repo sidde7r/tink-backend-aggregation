@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
 
 public class IdentityDataSerializer extends TrackingMapSerializer {
 
-    public static final String IDENTITY_DATA = "IDENTITY_DATA";
+    public static final String IDENTITY_DATA = "IdentityData";
     private final IdentityData identityData;
 
     public IdentityDataSerializer(IdentityData identityData) {
