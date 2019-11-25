@@ -1,27 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults.TIMEZONE_CET;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class InterestEntity {
-    private double differentialPercentage;
-
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Double differentialPercentage;
     private Date reviewDate;
 
-    private double percentage;
+    private Double percentage;
 
-    public double getDifferentialPercentage() {
+    public Double getDifferentialPercentage() {
         return differentialPercentage;
     }
 
-    public Date getReviewDate() {
-        return reviewDate;
+    public LocalDate getReviewDateAsLocalDate() {
+        return reviewDate.toInstant().atZone(ZoneId.of(TIMEZONE_CET)).toLocalDate();
     }
 
-    public double getPercentage() {
+    public Double getPercentage() {
         return percentage;
     }
 }

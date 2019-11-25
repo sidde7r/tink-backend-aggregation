@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "monabanq",
+    name = "cic",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
@@ -12,12 +12,11 @@ junit_test(
         "manual",
     ],
     visibility = ["//visibility:public"],
-    runtime_deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/monabanq",
-    ],
+    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/cic"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/euroinformation",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/cic",
         "//src/integration/api",
+        "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",

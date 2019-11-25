@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "monabanq",
+    name = "beobank",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
@@ -13,10 +13,9 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/monabanq",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/beobank",
     ],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/euroinformation",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",

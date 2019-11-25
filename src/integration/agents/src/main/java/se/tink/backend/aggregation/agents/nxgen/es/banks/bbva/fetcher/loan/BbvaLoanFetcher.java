@@ -5,10 +5,14 @@ import static io.vavr.API.Case;
 import static io.vavr.API.Match;
 import static io.vavr.control.Try.run;
 
+import io.vavr.collection.List;
 import io.vavr.control.Try;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
@@ -16,8 +20,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.BaseLoanEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.ConsumerLoanEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.MortgageEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -35,30 +41,54 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        return apiClient
-                .fetchFinancialDashboard()
-                .getPositions()
-                .map(PositionEntity::getContract)
-                .flatMap(ContractEntity::getLoan)
-                .map(this::enrichLoanAccountWithDetails)
-                .asJava();
+        ArrayList<LoanAccount> loans = new ArrayList<>();
+
+        List<PositionEntity> positions = apiClient.fetchFinancialDashboard().getPositions();
+
+        java.util.List<LoanAccount> consumerLoans =
+                positions
+                        .map(PositionEntity::getContract)
+                        .flatMap(ContractEntity::getLoan)
+                        .map(this::getConsumerLoanFromDetails)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
+
+        java.util.List<LoanAccount> mortgages =
+                positions
+                        .map(PositionEntity::getContract)
+                        .flatMap(ContractEntity::getMortgage)
+                        .map(this::getMortgageFromDetails)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
+
+        loans.addAll(consumerLoans);
+        loans.addAll(mortgages);
+
+        return loans;
     }
 
-    private LoanAccount enrichLoanAccountWithDetails(LoanEntity loan) {
+    private Optional<LoanAccount> getConsumerLoanFromDetails(ConsumerLoanEntity loan) {
+
         return Try.of(() -> apiClient.fetchLoanDetails(loan.getId()))
                 .onFailure(HttpResponseException.class, handleFetchLoanDetailsException(loan))
-                .fold(
-                        error -> loan.toTinkLoanAccount(),
-                        loanDetails -> loanDetails.toTinkLoanAccount(loan));
+                .fold(error -> Optional.empty(), loan::toTinkConsumerLoan);
     }
 
-    private Consumer<HttpResponseException> handleFetchLoanDetailsException(LoanEntity loan) {
+    private Optional<LoanAccount> getMortgageFromDetails(MortgageEntity loan) {
+        return Try.of(() -> apiClient.fetchLoanDetails(loan.getId()))
+                .onFailure(HttpResponseException.class, handleFetchLoanDetailsException(loan))
+                .fold(error -> Optional.empty(), loan::toTinkMortgage);
+    }
+
+    private Consumer<HttpResponseException> handleFetchLoanDetailsException(BaseLoanEntity loan) {
         return e -> {
             final HttpResponse res = e.getResponse();
             Match(res.getStatus())
                     .of(
                             Case($(409), run(() -> logLoanDetailsError(res, loan))),
-                            Case($(500), run(() -> handleBankServiceError(res))),
+                            Case($(500), run(() -> handleBankServiceError(res, e))),
                             // Throw e if we have no match.
                             Case(
                                     $(),
@@ -68,9 +98,9 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
         };
     }
 
-    private void handleBankServiceError(HttpResponse res) {
+    private void handleBankServiceError(HttpResponse res, HttpResponseException e) {
         if (findTempUnavailableText(res)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
         }
     }
 
@@ -83,7 +113,7 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
                 .find();
     }
 
-    private void logLoanDetailsError(HttpResponse res, LoanEntity loan) {
+    private void logLoanDetailsError(HttpResponse res, BaseLoanEntity loan) {
         final BbvaErrorResponse errorResponse = res.getBody(BbvaErrorResponse.class);
 
         LOGGER.warn(

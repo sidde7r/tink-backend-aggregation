@@ -1,0 +1,18 @@
+java_library(
+    name = "creditmutuel",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/euroinformation",
+        "//src/integration/amount",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/serialization",
+        "//src/libraries/strings",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_slf4j_slf4j_api",
+    ],
+)
