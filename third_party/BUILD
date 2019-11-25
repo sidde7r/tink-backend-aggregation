@@ -1339,18 +1339,6 @@ java_library(
 )
 
 java_library(
-    name = "org_seleniumhq_selenium_selenium_support",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_seleniumhq_selenium_selenium_support//jar",
-    ],
-    runtime_deps = [
-        "@com_google_guava_guava//jar",
-        "@org_json_json//jar",
-    ],
-)
-
-java_library(
     name = "org_slf4j_jul_to_slf4j",
     visibility = ["//visibility:public"],
     exports = [

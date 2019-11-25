@@ -107,7 +107,6 @@ java_library(
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_json_json",
         "//third_party:org_jsoup_jsoup",
-        "//third_party:org_seleniumhq_selenium_selenium_support",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:xerces_xercesImpl",
         "@selenium//:com_codeborne_phantomjsdriver",
