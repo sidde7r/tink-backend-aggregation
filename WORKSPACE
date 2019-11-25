@@ -2558,7 +2558,7 @@ maven_install(
 maven_install(
     name = "selenium",
     artifacts = [
-        "com.codeborne:phantomjsdriver:1.4.4",
+        "com.codeborne:phantomjsdriver:1.4.3",
         "org.seleniumhq.selenium:selenium-support:3.4.0",
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
         "org.seleniumhq.selenium:selenium-api:3.4.0",
