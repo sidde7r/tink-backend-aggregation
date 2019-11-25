@@ -93,7 +93,7 @@ public class NovoBancoApiClient {
                         .post(GetAccountsResponse.class);
         if (!response.isSuccessful()) {
             logger.error(
-                    "ObterLista Response ended up with failure code: " + response.getResultCode());
+                    "ObterLista Response ended up with failure code: {}", response.getResultCode());
             throw new IllegalStateException("Fetching requested account failed");
         }
         return response;
@@ -105,7 +105,7 @@ public class NovoBancoApiClient {
                         .post(GetAccountsResponse.class);
         if (!response.isSuccessful()) {
             logger.error(
-                    "ObterLista Response ended up with failure code: " + response.getResultCode());
+                    "ObterLista Response ended up with failure code: {}", response.getResultCode());
             throw new IllegalStateException("Fetching Transactional Accounts failed");
         }
         saveAccountsInSessionStorage(response);
@@ -159,8 +159,8 @@ public class NovoBancoApiClient {
                                             .post(GetInvestmentsResponse.class);
                             if (!response.isSuccessful()) {
                                 logger.warn(
-                                        "ObterCarteiraFundos Response ended up with failure code: "
-                                                + response.getResultCode());
+                                        "ObterCarteiraFundos Response ended up with failure code: {}",
+                                        response.getResultCode());
                             }
                             investmentsResponses.add(response);
                         });
@@ -179,8 +179,8 @@ public class NovoBancoApiClient {
                                     .post(GetCreditCardDetailsResponse.class);
                     if (!cardResponse.isSuccessful()) {
                         logger.error(
-                                "ConsultaMovimentosCartoes Request ended up with failure code: "
-                                        + cardResponse.getResultCode());
+                                "ConsultaMovimentosCartoes Request ended up with failure code: {}",
+                                cardResponse.getResultCode());
                     }
                     cardsDetails.add(cardResponse);
                 });
@@ -206,8 +206,8 @@ public class NovoBancoApiClient {
                             getGetLoanDetails(opToken, loanDetails);
                     if (!loanAccountDetails.isSuccessful()) {
                         logger.warn(
-                                "ObterDetalheCreditoHabitacao Response ended up with failure code: "
-                                        + loanAccountDetails.getResultCode());
+                                "ObterDetalheCreditoHabitacao Response ended up with failure code: {}",
+                                loanAccountDetails.getResultCode());
                     }
                     loans.add(
                             new LoanAggregatedData(
@@ -237,8 +237,8 @@ public class NovoBancoApiClient {
                         .post(GetSummaryResponse.class);
         if (!summaryResponse.isSuccessful()) {
             logger.error(
-                    "PosicaoIntegrada Request ended up with failure code: "
-                            + summaryResponse.getResultCode());
+                    "PosicaoIntegrada Request ended up with failure code: {}",
+                    summaryResponse.getResultCode());
             throw new IllegalStateException("Could not get Credit Card details");
         }
         return summaryResponse;

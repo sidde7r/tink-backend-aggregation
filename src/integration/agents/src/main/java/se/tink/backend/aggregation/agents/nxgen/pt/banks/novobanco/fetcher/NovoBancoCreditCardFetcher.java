@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoApiC
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.entity.response.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.detail.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.creditcard.CardAccountsEntity;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.creditcard.CardListEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.creditcard.ContextCardsEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.creditcard.GetCardDetailsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.creditcard.GetCreditCardDetailsResponse;
@@ -34,33 +35,36 @@ public class NovoBancoCreditCardFetcher implements AccountFetcher<CreditCardAcco
         Collection<AccountDetailsEntity> accounts = response.getAccountsDetails();
         creditCards.forEach(
                 creditCard -> {
-                    Optional.of(creditCard)
-                            .map(GetCreditCardDetailsResponse::getBody)
-                            .map(GetCardDetailsBodyEntity::getContextCards)
-                            .map(ContextCardsEntity::getCardAccounts)
-                            .map(CardAccountsEntity::getCardList)
-                            .map(Collection::stream)
-                            .orElse(Stream.empty())
+                    getCardListStream(creditCard)
                             .forEach(
                                     cardList -> {
-                                        AccountDetailsEntity accountDetails =
-                                                accounts.stream()
-                                                        .filter(
-                                                                acc ->
-                                                                        Objects.equals(
-                                                                                acc.getId(),
-                                                                                cardList
-                                                                                        .getDoAccount()))
-                                                        .findFirst()
-                                                        .orElseThrow(
-                                                                () ->
-                                                                        new IllegalStateException(
-                                                                                "Could not find a matching account"));
                                         resultAccounts.addAll(
-                                                CreditCardAccountMapper.mapToTinkAccounts(
-                                                        cardList, accountDetails));
+                                                getMappedAccounts(accounts, cardList));
                                     });
                 });
         return resultAccounts;
+    }
+
+    private Collection<CreditCardAccount> getMappedAccounts(
+            Collection<AccountDetailsEntity> accounts, CardListEntity cardList) {
+        AccountDetailsEntity accountDetails =
+                accounts.stream()
+                        .filter(acc -> Objects.equals(acc.getId(), cardList.getDoAccount()))
+                        .findFirst()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find a matching account"));
+        return CreditCardAccountMapper.mapToTinkAccounts(cardList, accountDetails);
+    }
+
+    private Stream<CardListEntity> getCardListStream(GetCreditCardDetailsResponse creditCard) {
+        return Optional.of(creditCard)
+                .map(GetCreditCardDetailsResponse::getBody)
+                .map(GetCardDetailsBodyEntity::getContextCards)
+                .map(ContextCardsEntity::getCardAccounts)
+                .map(CardAccountsEntity::getCardList)
+                .map(Collection::stream)
+                .orElse(Stream.empty());
     }
 }

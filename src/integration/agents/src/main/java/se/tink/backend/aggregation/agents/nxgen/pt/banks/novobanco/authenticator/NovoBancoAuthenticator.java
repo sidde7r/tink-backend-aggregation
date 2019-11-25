@@ -32,7 +32,7 @@ public class NovoBancoAuthenticator implements PasswordAuthenticator {
         Login0Response response = apiClient.loginStep0(username, password);
 
         if (!response.isValidCredentials()) {
-            logger.warn("Login0 Request failed with code: " + response.getResultCode());
+            logger.warn("Login0 Request failed with code: {}", response.getResultCode());
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
