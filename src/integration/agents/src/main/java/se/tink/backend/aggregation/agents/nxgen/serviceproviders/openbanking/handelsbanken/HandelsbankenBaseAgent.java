@@ -54,6 +54,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         this.client.setEidasProxy(configuration.getEidasProxy());
 
         this.client.addFilter(new BankServiceInternalErrorFilter());
+        this.client.addFilter(new TimeoutFilter());
     }
 
     @Override
