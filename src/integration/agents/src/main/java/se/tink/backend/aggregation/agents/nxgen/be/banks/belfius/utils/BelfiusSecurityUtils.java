@@ -16,12 +16,8 @@ public class BelfiusSecurityUtils {
         String contractPasswordHash = hash(String.format("%s%s", contractNumber, password));
         return hash(
                 String.format(
-                        "%s%s%s%s%s",
-                        challengeUpperCase,
-                        challengeUpperCase,
-                        deviceToken,
-                        panNumberStripped,
-                        contractPasswordHash));
+                        "%s%s%s%s",
+                        challengeUpperCase, challengeUpperCase, deviceToken, panNumberStripped));
     }
 
     // challenge|iban(85)|iban(to/94)|amount(0,01) EUR
