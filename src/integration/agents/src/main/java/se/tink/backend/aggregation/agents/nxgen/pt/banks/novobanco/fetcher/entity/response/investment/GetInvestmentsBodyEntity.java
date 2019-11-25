@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.investment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -16,7 +17,7 @@ public class GetInvestmentsBodyEntity {
     private String selectedDossier;
 
     @JsonProperty("ValorTotalDossier")
-    private double dossierTotalValue;
+    private BigDecimal dossierTotalValue;
 
     @JsonProperty("Moeda")
     private String currency;
@@ -33,7 +34,7 @@ public class GetInvestmentsBodyEntity {
         return selectedDossier;
     }
 
-    public double getDossierTotalValue() {
+    public BigDecimal getDossierTotalValue() {
         return dossierTotalValue;
     }
 

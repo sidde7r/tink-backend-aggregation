@@ -1,10 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.loan;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.generic;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class LoanOverviewEntity {
+public class DetailsEntity {
     @JsonProperty("Produto")
     private String product;
 
@@ -12,7 +13,7 @@ public class LoanOverviewEntity {
     private String contract;
 
     @JsonProperty("Saldo")
-    private double balance;
+    private BigDecimal balance;
 
     public String getProduct() {
         return product;
@@ -22,7 +23,7 @@ public class LoanOverviewEntity {
         return contract;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.entity.response.investment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -12,19 +13,19 @@ public class FundsPortfolioEntity {
     private String fundCode;
 
     @JsonProperty("Cotacao")
-    private double fundPrice;
+    private BigDecimal fundPrice;
 
     @JsonProperty("QuantidadeTotal")
-    private double totalQuantity;
+    private BigDecimal totalQuantity;
 
     @JsonProperty("Valorizacao")
-    private double appreciation;
+    private BigDecimal appreciation;
 
     @JsonProperty("QuantidadeDisponivel")
-    private double availableQuantity;
+    private BigDecimal availableQuantity;
 
     @JsonProperty("QuantidadePendenteLiquidacao")
-    private double pendingSettlementQuantity;
+    private BigDecimal pendingSettlementQuantity;
 
     @JsonProperty("DataCotacao")
     private String priceDate;
@@ -40,23 +41,23 @@ public class FundsPortfolioEntity {
         return fundCode;
     }
 
-    public double getFundPrice() {
+    public BigDecimal getFundPrice() {
         return fundPrice;
     }
 
-    public double getTotalQuantity() {
+    public BigDecimal getTotalQuantity() {
         return totalQuantity;
     }
 
-    public double getAppreciation() {
+    public BigDecimal getAppreciation() {
         return appreciation;
     }
 
-    public double getAvailableQuantity() {
+    public BigDecimal getAvailableQuantity() {
         return availableQuantity;
     }
 
-    public double getPendingSettlementQuantity() {
+    public BigDecimal getPendingSettlementQuantity() {
         return pendingSettlementQuantity;
     }
 

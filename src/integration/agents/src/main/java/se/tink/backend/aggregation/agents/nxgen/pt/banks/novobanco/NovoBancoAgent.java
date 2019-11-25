@@ -6,11 +6,14 @@ import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.NovoBancoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.NovoBancoSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoLoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoTransactionFetcher;
@@ -19,6 +22,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -31,13 +35,15 @@ public class NovoBancoAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshInvestmentAccountsExecutor {
+                RefreshInvestmentAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private final NovoBancoApiClient apiClient;
     private final NovoBancoAuthenticator authenticator;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public NovoBancoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -47,6 +53,18 @@ public class NovoBancoAgent extends NextGenerationAgent
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         loanRefreshController = constructLoanRefreshController();
         investmentRefreshController = constructInvestmentRefreshController();
+        creditCardRefreshController = constructCreditCardRefreshController();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new NovoBancoCreditCardFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(
+                                new NovoBancoCreditCardTransactionFetcher(), 1)));
     }
 
     @Override
@@ -124,5 +142,15 @@ public class NovoBancoAgent extends NextGenerationAgent
                 updateController,
                 new NovoBancoInvestmentAccountFetcher(apiClient));
         // no transaction fetcher as mobile app does not support getting investment transactions
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
     }
 }

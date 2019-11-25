@@ -20,7 +20,8 @@ public class NovoBancoAgentTest {
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("pt", "pt-novobanco-password")
                     .loadCredentialsBefore(false)
-                    .saveCredentialsAfter(false);
+                    .saveCredentialsAfter(false)
+                    .expectLoggedIn(true);
 
     @Before
     public void before() {
@@ -36,7 +37,6 @@ public class NovoBancoAgentTest {
     public void testLoginAndRefresh() throws Exception {
         builder.addCredentialField(Field.Key.USERNAME, helper.get(NovoBancoAgentTest.Arg.USERNAME))
                 .addCredentialField(Field.Key.PASSWORD, helper.get(NovoBancoAgentTest.Arg.PASSWORD))
-                .expectLoggedIn(false)
                 .build()
                 .testRefresh();
     }
