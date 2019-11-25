@@ -277,12 +277,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_firefox_driver",
-    artifact = "org.seleniumhq.selenium:selenium-firefox-driver:2.29.0",
-    sha1 = "135043df1b5af4b672de5fe9255e8dfb7382204d",
-)
-
-maven_jar(
     name = "com_codahale_metrics_metrics_httpclient",
     artifact = "com.codahale.metrics:metrics-httpclient:3.0.2",
     sha1 = "c658daf41b1ecf934ccd21e83eeeb18703355afb",
@@ -591,12 +585,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_ie_driver",
-    artifact = "org.seleniumhq.selenium:selenium-ie-driver:2.29.0",
-    sha1 = "5761f8a5a5cba5db62cb9ac082cdcdab5509a7d5",
-)
-
-maven_jar(
     name = "javax_el_javax_el_api",
     artifact = "javax.el:javax.el-api:2.2.5",
     sha1 = "370140e991eefb212a6d6baedbce585f00ef76e0",
@@ -642,12 +630,6 @@ maven_jar(
     name = "xalan_serializer",
     artifact = "xalan:serializer:2.7.1",
     sha1 = "4b4b18df434451249bb65a63f2fb69e215a6a020",
-)
-
-maven_jar(
-    name = "com_github_detro_ghostdriver_phantomjsdriver",
-    artifact = "com.github.detro.ghostdriver:phantomjsdriver:1.0.3",
-    sha1 = "17fdf2fe6bb281a7d37fdcb0fd87c77a78bf0d76",
 )
 
 maven_jar(
@@ -962,12 +944,6 @@ maven_jar(
     name = "com_codahale_metrics_metrics_annotation",
     artifact = "com.codahale.metrics:metrics-annotation:3.0.2",
     sha1 = "49cee8ba1d76f67c59146546448fc0f3eef32b75",
-)
-
-maven_jar(
-    name = "org_seleniumhq_selenium_selenium_chrome_driver",
-    artifact = "org.seleniumhq.selenium:selenium-chrome-driver:2.29.0",
-    sha1 = "199a8fdce2717f1929c17d4929c35beea5301511",
 )
 
 maven_jar(
@@ -1347,18 +1323,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_api",
-    artifact = "org.seleniumhq.selenium:selenium-api:2.29.0",
-    sha1 = "4292cc882785ccf771ddbfcd2f0e04a6c7a1155f",
-)
-
-maven_jar(
-    name = "org_seleniumhq_selenium_selenium_iphone_driver",
-    artifact = "org.seleniumhq.selenium:selenium-iphone-driver:2.29.0",
-    sha1 = "c08b55569e5947e7a60cd15c5029761230081f7e",
-)
-
-maven_jar(
     name = "org_apache_curator_curator_x_discovery",
     artifact = "org.apache.curator:curator-x-discovery:4.0.0",
     sha1 = "dc70d7cbcfd1e9dbb21b5aa1af3661b57fb5f850",
@@ -1475,12 +1439,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_htmlunit_driver",
-    artifact = "org.seleniumhq.selenium:selenium-htmlunit-driver:2.29.0",
-    sha1 = "387b28342ff5fcc814c3e461986191427cd115c6",
-)
-
-maven_jar(
     name = "org_eclipse_jetty_orbit_javax_servlet",
     artifact = "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
     sha1 = "0aaaa85845fb5c59da00193f06b8e5278d8bf3f8",
@@ -1532,18 +1490,6 @@ maven_jar(
     name = "org_bouncycastle_bcprov_jdk15on",
     artifact = "org.bouncycastle:bcprov-jdk15on:1.59",
     sha1 = "2507204241ab450456bdb8e8c0a8f986e418bd99",
-)
-
-maven_jar(
-    name = "org_seleniumhq_selenium_selenium_remote_driver",
-    artifact = "org.seleniumhq.selenium:selenium-remote-driver:2.29.0",
-    sha1 = "8651b5f954e15f39d17a26557d27e99b960c401e",
-)
-
-maven_jar(
-    name = "org_seleniumhq_selenium_selenium_safari_driver",
-    artifact = "org.seleniumhq.selenium:selenium-safari-driver:2.29.0",
-    sha1 = "79c53be06ba4739c969a53c7c2f702c4d3a439bc",
 )
 
 maven_jar(
@@ -1713,12 +1659,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_seleniumhq_selenium_selenium_java",
-    artifact = "org.seleniumhq.selenium:selenium-java:2.29.0",
-    sha1 = "cb582e26966dcd641910b446ab559e14b71ceb07",
-)
-
-maven_jar(
     name = "org_seleniumhq_selenium_selenium_support",
     artifact = "org.seleniumhq.selenium:selenium-support:2.29.0",
     sha1 = "df807afb2e64a819da0e5cfb106892cfc5536131",
@@ -1734,12 +1674,6 @@ maven_jar(
     name = "org_apache_curator_curator_framework",
     artifact = "org.apache.curator:curator-framework:4.0.1",
     sha1 = "3da85d2bda41cb43dc18c089820b67d12ba38826",
-)
-
-maven_jar(
-    name = "org_seleniumhq_selenium_selenium_android_driver",
-    artifact = "org.seleniumhq.selenium:selenium-android-driver:2.29.0",
-    sha1 = "e254c2f1266dbc7ecaad4508f797b48d8cecd299",
 )
 
 maven_jar(
@@ -2602,7 +2536,7 @@ maven_install(
         "org.slf4j:jul-to-slf4j:1.7.29",
         "org.slf4j:jcl-over-slf4j:1.7.29",
         "ch.qos.logback:logback-core:1.2.3",
-        "ch.qos.logback:logback-classic:1.2.3"
+        "ch.qos.logback:logback-classic:1.2.3",
     ],
     fetch_sources = False,
     repositories = [
@@ -2614,10 +2548,36 @@ maven_install(
     name = "standalone_agent_test_deps",
     artifacts = [
         "org.springframework:spring-test:5.2.1.RELEASE",
-
     ],
     fetch_sources = False,
     repositories = [
         "https://repo1.maven.org/maven2",
     ],
 )
+
+maven_install(
+    name = "selenium",
+    artifacts = [
+        "com.codeborne:phantomjsdriver:1.4.3",
+        "org.seleniumhq.selenium:selenium-support:3.4.0",
+        "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
+        "org.seleniumhq.selenium:selenium-api:3.4.0",
+        "org.seleniumhq.selenium:selenium-chrome-driver:3.4.0",
+        "org.seleniumhq.selenium:selenium-firefox-driver:3.4.0",
+        "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0",
+        "org.seleniumhq.selenium:selenium-ie-driver:3.4.0",
+        "org.seleniumhq.selenium:selenium-iphone-driver:2.39.0",
+        "org.seleniumhq.selenium:selenium-java:3.4.0",
+        "org.seleniumhq.selenium:selenium-remote-driver:3.4.0",
+        "org.seleniumhq.selenium:selenium-safari-driver:3.4.0",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:selenium_install.json",
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+)
+
+load("@selenium//:defs.bzl", pin_selenium = "pinned_maven_install")
+
+pin_selenium()

@@ -196,6 +196,8 @@ public class HandelsbankenSEConstants {
     public static class ErrorMessage {
         public static final String ERROR_OCCURRED_TRY_AGAIN_LATER =
                 "Ett fel har tyvärr inträffat. Försök igen senare.";
+        public static final String CANNOT_ANSWER =
+                "Vi kan tyvärr inte lämna svar just nu.\\nVi beklagar detta och jobbar på att lösa problemet så fort vi kan.\\nVi ber dig därför att göra ett nytt försök lite senare.";
         public static final String SERVICE_NOT_AVAILABLE = "Tjänsten kan inte nås för tillfället.";
     }
 
