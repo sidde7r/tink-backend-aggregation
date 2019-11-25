@@ -2572,7 +2572,12 @@ maven_install(
         "org.seleniumhq.selenium:selenium-safari-driver:3.4.0",
     ],
     fetch_sources = True,
+    maven_install_json = "//third_party:selenium_install.json",
     repositories = [
         "https://repo1.maven.org/maven2",
     ],
 )
+
+load("@selenium//:defs.bzl", pin_selenium = "pinned_maven_install")
+
+pin_selenium()
