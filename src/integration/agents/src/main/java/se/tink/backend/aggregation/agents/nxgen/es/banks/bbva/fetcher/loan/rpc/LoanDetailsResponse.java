@@ -1,27 +1,33 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.rpc;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults.TIMEZONE_CET;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.collection.List;
-import io.vavr.control.Option;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.FormatsEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.RelatedContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities.AmortizationScheduleEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities.InstallmentsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities.InterestEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities.ProductEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 
 @JsonObject
 public class LoanDetailsResponse {
+    private static final Logger log = LoggerFactory.getLogger(LoanDetailsResponse.class);
+
     private AmountEntity awardedAmount;
     private ProductEntity product;
 
@@ -54,110 +60,50 @@ public class LoanDetailsResponse {
     @JsonProperty("interests")
     private List<InterestEntity> interestRates;
 
-    public AmountEntity getAwardedAmount() {
-        return awardedAmount;
-    }
-
-    public ProductEntity getProduct() {
-        return product;
-    }
-
-    public Date getNextPaymentDate() {
-        return nextPaymentDate;
-    }
-
-    public FormatsEntity getFormats() {
-        return formats;
-    }
-
-    public AmountEntity getRedeemedAmount() {
-        return redeemedAmount;
-    }
-
-    public String getCounterPart() {
-        return counterPart;
-    }
-
-    public Date getDueDate() {
-        return dueDate;
-    }
-
-    public List<AmortizationScheduleEntity> getAmortizationSchedule() {
-        return amortizationSchedule;
-    }
-
-    public BankEntity getBank() {
-        return bank;
-    }
-
-    public List<RelatedContractEntity> getRelatedContracts() {
-        return relatedContracts;
-    }
-
-    public InstallmentsEntity getInstallments() {
-        return installments;
-    }
-
-    public Date getValidityDate() {
-        return validityDate;
-    }
-
-    public int getInstallmentTotalCount() {
-        return installmentTotalCount;
-    }
-
-    public AmountEntity getInitialAmount() {
-        return initialAmount;
-    }
-
-    public String getAmortizationDescription() {
-        return amortizationDescription;
-    }
-
-    public AmountEntity getDelinquencyAmount() {
-        return delinquencyAmount;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public List<InterestEntity> getInterestRates() {
-        return interestRates;
+    @JsonIgnore
+    private LocalDate getValidityDateAsLocalDate() {
+        return validityDate.toInstant().atZone(ZoneId.of(TIMEZONE_CET)).toLocalDate();
     }
 
     @JsonIgnore
-    public Option<InterestEntity> getFirstInterestEntity() {
-        return interestRates.headOption();
+    private Double getFirstInterestRate() {
+        Double interestPercentage =
+                interestRates.headOption().map(InterestEntity::getPercentage).getOrNull();
+
+        if (interestPercentage == null) {
+            return null;
+        }
+
+        return interestPercentage / 100d;
     }
 
-    public int getPendingPayments() {
-        return pendingPayments;
+    @JsonIgnore
+    private LocalDate getFirstInterestReviewDate() {
+        return interestRates.headOption().map(InterestEntity::getReviewDateAsLocalDate).getOrNull();
     }
 
-    public AmountEntity getPendingAmount() {
-        return pendingAmount;
-    }
+    @JsonIgnore
+    public Optional<LoanModule> getLoanModuleWithTypeAndLoanNumber(
+            LoanDetails.Type loanType, String loanNumber) {
 
-    public LoanAccount toTinkLoanAccount(LoanEntity loan) {
-        final double interestRate =
-                getFirstInterestEntity().map(InterestEntity::getPercentage).getOrElse(0.0);
+        final Double interestRate = getFirstInterestRate();
 
-        final Date interestReviewDate =
-                getFirstInterestEntity().map(InterestEntity::getReviewDate).getOrNull();
+        if (interestRate == null) {
+            log.warn("Unable to parse interest for loan with id {}. Ignoring loan.", loanNumber);
+            return Optional.empty();
+        }
 
-        final ExactCurrencyAmount initialBalance = initialAmount.toTinkAmount().negate();
-
-        final LoanDetails loanDetails =
-                LoanDetails.builder(loan.getTinkLoanType())
-                        .setInitialDate(validityDate)
-                        .setInitialBalance(initialBalance)
-                        .setLoanNumber(loan.getDigit())
-                        .setNextDayOfTermsChange(interestReviewDate)
-                        .setNumMonthsBound(installmentTotalCount)
+        return Optional.of(
+                LoanModule.builder()
+                        .withType(loanType)
+                        .withBalance(pendingAmount.toTinkAmount().negate())
+                        .withInterestRate(interestRate)
+                        .setInitialBalance(initialAmount.toTinkAmount().negate())
+                        .setMonthlyAmortization(installments.getInstallmentAmount().toTinkAmount())
                         .setAmortized(redeemedAmount.toTinkAmount())
-                        .build();
-
-        return loan.toTinkLoanAccount(interestRate, loanDetails);
+                        .setLoanNumber(loanNumber)
+                        .setInitialDate(getValidityDateAsLocalDate())
+                        .setNextDayOfTermsChange(getFirstInterestReviewDate())
+                        .build());
     }
 }

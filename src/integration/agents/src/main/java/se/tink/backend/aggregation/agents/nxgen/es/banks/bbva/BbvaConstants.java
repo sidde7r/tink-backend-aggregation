@@ -41,6 +41,7 @@ public final class BbvaConstants {
     public static final class Defaults {
         public static final String CURRENCY = "EUR";
         public static final String CHARSET = "UTF-8";
+        public static final String TIMEZONE_CET = "CET";
     }
 
     public static final class AccountType {
