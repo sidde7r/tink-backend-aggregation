@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +15,9 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
 public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<URL> {
+    @JsonProperty("_links")
     private TransactionsLinksEntity links;
+
     private List<TransactionEntity> transactions;
 
     @Override
