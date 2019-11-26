@@ -1919,3 +1919,13 @@ java_library(
         "@standalone_agent_deps//:org_springframework_spring_web",
     ],
 )
+
+java_library(
+    name = "standalone_agent_test_libs",
+    licenses = ["notice"],
+    visibility = ["//visibility:public"],
+    exports = [
+        "//third_party:standalone_agent_libs",
+        "@standalone_agent_deps//:org_springframework_spring_test",
+    ],
+)
