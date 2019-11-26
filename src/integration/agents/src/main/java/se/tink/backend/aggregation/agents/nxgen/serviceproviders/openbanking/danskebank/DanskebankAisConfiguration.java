@@ -1,9 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.authenticator.rpc.AccountPermissionResponseV31;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.enums.MarketCode;
 
 public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     protected final URL apiBaseURL;
@@ -28,13 +30,13 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
             URL identityDataURL,
             URL appToAppURL,
             List<String> additionalPermissions,
-            String market) {
+            @Nonnull MarketCode market) {
         this.apiBaseURL = apiBaseURL;
         this.wellKnownURL = wellKnownURL;
         this.identityDataURL = identityDataURL;
         this.appToAppURL = appToAppURL;
         this.additionalPermissions = additionalPermissions;
-        this.market = market;
+        this.market = market.name().toLowerCase();
     }
 
     public URL getWellKnownURL() {
@@ -123,7 +125,7 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
         protected URL wellKnownURL;
         protected URL identityDataURL;
         protected URL appToAppURL;
-        private String market;
+        private MarketCode market;
         protected List<String> additionalPermissions;
 
         public Builder() {}
@@ -137,8 +139,8 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
             return this;
         }
 
-        public DanskebankAisConfiguration.Builder withWellKnownURL(final String wellKnownURL) {
-            this.wellKnownURL = new URL(wellKnownURL);
+        public DanskebankAisConfiguration.Builder withWellKnownURL(final URL wellKnownURL) {
+            this.wellKnownURL = wellKnownURL;
             return this;
         }
 
@@ -148,7 +150,7 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
             return this;
         }
 
-        public DanskebankAisConfiguration.Builder onMarket(String market) {
+        public DanskebankAisConfiguration.Builder onMarket(@Nonnull MarketCode market) {
             this.market = market;
             return this;
         }

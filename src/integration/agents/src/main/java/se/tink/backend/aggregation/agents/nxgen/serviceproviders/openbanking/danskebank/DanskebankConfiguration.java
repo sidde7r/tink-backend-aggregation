@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
