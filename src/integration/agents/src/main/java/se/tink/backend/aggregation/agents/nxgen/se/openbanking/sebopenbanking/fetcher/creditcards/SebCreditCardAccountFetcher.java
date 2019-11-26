@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,10 +37,13 @@ public class SebCreditCardAccountFetcher<A extends Account>
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        apiClient.fetchCardAccounts().toTinkAccounts().stream()
-                .forEach(
-                        creditCardAccount -> fetchAndSaveCreditCardTransactions(creditCardAccount));
-        return accountNumberAccountMap.values();
+        return Collections.EMPTY_LIST;
+
+        //  apiClient.fetchCardAccounts().toTinkAccounts().stream()
+        //          .forEach(
+        //                  creditCardAccount ->
+        // fetchAndSaveCreditCardTransactions(creditCardAccount));
+        // return accountNumberAccountMap.values();
     }
 
     /**
