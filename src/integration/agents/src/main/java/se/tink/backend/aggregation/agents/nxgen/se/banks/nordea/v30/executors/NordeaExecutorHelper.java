@@ -253,8 +253,7 @@ public class NordeaExecutorHelper {
             CompleteTransferResponse completeTransferResponse, String transferId) {
         if (completeTransferResponse.hasErrors()) {
             throw transferRejectedError(
-                    ErrorCodes.TRANSFER_REJECTED,
-                    catalog.getString(EndUserMessage.TRANSFER_REJECTED));
+                    ErrorCodes.TRANSFER_REJECTED, EndUserMessage.TRANSFER_REJECTED);
         }
         Optional<ResultsEntity> first =
                 Optional.ofNullable(completeTransferResponse.getResults())
@@ -386,7 +385,7 @@ public class NordeaExecutorHelper {
     }
 
     protected TransferExecutionException transferRejectedError(
-            String errorMessage, String endUserMessage) {
+            String errorMessage, TransferExecutionException.EndUserMessage endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(errorMessage)
                 .setEndUserMessage(catalog.getString(endUserMessage))
