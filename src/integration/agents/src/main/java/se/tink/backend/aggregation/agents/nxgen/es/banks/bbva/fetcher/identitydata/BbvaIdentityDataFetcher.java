@@ -40,6 +40,7 @@ public class BbvaIdentityDataFetcher implements IdentityDataFetcher {
                 builder.setNifNumber(documentNumber);
                 break;
             case BbvaConstants.IdTypeCodes.NIE:
+                LOGGER.info("ES BBVA: encountered NIE document type");
                 builder.setNieNumber(documentNumber);
                 break;
             default:
