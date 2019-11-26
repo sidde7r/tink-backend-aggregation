@@ -17,6 +17,7 @@ public class ResultInfoMessage {
                     .put("PCB049I", "Transfer validation: Transfer can be made next business day as earliest, change due date")
                     .put("PCB03L1", "Transfer validation: Supplied destination account doesn't exist in any Swedish bank")
                     .put("PCB0792", "Transfer validation: Transfer limit for business account has been reached")
+                    .put("PCB0354", "Transfer validation: Destination account doesn't exist at bank") // Seems to be a specific error for SEB destination accounts
                     .build();
 
     public String TableName;
