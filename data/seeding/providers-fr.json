@@ -492,7 +492,7 @@
         },
         {
             "accessType": "OPEN_BANKING",
-            "className": "nxgen.fr.openbanking.caixa.CaixaAgent",
+            "className": "nxgen.fr.openbanking.caixa.CaixaRedirectAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caixa Geral de Depositos (Test)",
             "fields": [
