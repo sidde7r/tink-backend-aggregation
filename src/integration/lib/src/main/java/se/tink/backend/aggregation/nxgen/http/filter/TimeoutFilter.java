@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.http.filter;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -25,8 +26,12 @@ public class TimeoutFilter extends Filter {
             return nextFilter(httpRequest);
         } catch (HttpClientException e) {
 
+            if (Strings.isNullOrEmpty(e.getMessage())) {
+                throw e;
+            }
+
             BANK_SIDE_FAILURES.stream()
-                    .filter((failure -> failure.contains(e.getMessage().toLowerCase())))
+                    .filter((failure -> e.getMessage().toLowerCase().contains(failure)))
                     .findAny()
                     .ifPresent(
                             f -> {
