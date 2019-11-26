@@ -21,5 +21,5 @@ public class SEBApiConstants {
     }
 
     public static EnumSet<AccountTypes> PSD2_Account_Types =
-            EnumSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS, AccountTypes.CREDIT_CARD);
+            EnumSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS);
 }
