@@ -1,18 +1,19 @@
 package se.tink.backend.aggregation.agents.banks.seb.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class ResultInfoMessage {
     private static final ImmutableMap<String, String> CANCELLED_DESCRIPTIONS_BY_CODE =
             ImmutableMap.<String, String>builder()
                     .put("PCB046H", "Transfer validation: DueDate is before next business day")
                     .put("PCB03G0", "Transfer validation: The user does not have enough money")
                     .put("PCB03K1", "Transfer validation: The destination account is not correct")
+                    .put("PCB0464", "Transfer validation: The user lacks permission for this action")
                     .build();
 
     public String TableName;
