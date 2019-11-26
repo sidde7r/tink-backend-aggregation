@@ -281,10 +281,12 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
                 if (item == RefreshableItem.IDENTITY_DATA
                         && agent instanceof RefreshIdentityDataExecutor) {
 
-                    context.sendIdentityToIdentityAggregatorService(
+                    context.cacheIdentityData(
                             ((RefreshIdentityDataExecutor) agent)
                                     .fetchIdentityData()
                                     .getIdentityData());
+
+                    context.sendIdentityToIdentityAggregatorService();
                 } else {
                     RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
                 }
