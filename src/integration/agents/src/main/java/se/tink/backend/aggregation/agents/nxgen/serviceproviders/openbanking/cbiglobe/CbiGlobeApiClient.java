@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderKeys;
@@ -32,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
@@ -194,13 +192,6 @@ public class CbiGlobeApiClient {
     private String getTotalPages(HttpResponse response, String apiIdentifier) {
         return Optional.ofNullable(response.getHeaders().getFirst(QueryKeys.TOTAL_PAGES))
                 .orElse(temporaryStorage.get(apiIdentifier));
-    }
-
-    public void handleAccessExceededError(HttpResponseException e) {
-        final String message = e.getResponse().getBody(String.class).toLowerCase();
-        if (message.contains(ErrorMessages.ACCESS_EXCEEDED)) {
-            throw BankServiceError.ACCESS_EXCEEDED.exception();
-        }
     }
 
     public boolean isTokenValid() {
