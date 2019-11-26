@@ -43,22 +43,21 @@ message Field {
 message Credentials {
   google.type.Date debugUntil = 1;
   int64 providerLatency = 2;
-  string fieldsSerialized = 3;
-  string id = 4;
-  google.type.Date nextUpdate = 5;
-  string payload = 6;
-  string providerName = 7;
-  google.type.Date sessionExpiryDate = 8;
-  CredentialsStatus status = 9;
-  string statusPayload = 10;
-  string statusPrompt = 11;
-  google.type.Date statusUpdated = 12;
-  string supplementalInformation = 13;
-  CredentialsTypes type = 14;
-  google.type.Date updated = 15;
-  string userId = 16;
-  bool forceManualAuthentication = 17;
-  int32 dataVersion = 18;
+  string id = 3;
+  google.type.Date nextUpdate = 4;
+  string payload = 5;
+  string providerName = 6;
+  google.type.Date sessionExpiryDate = 7;
+  CredentialsStatus status = 8;
+  string statusPayload = 9;
+  string statusPrompt = 10;
+  google.type.Date statusUpdated = 11;
+  string supplementalInformation = 12;
+  CredentialsTypes type = 13;
+  google.type.Date updated = 14;
+  string userId = 15;
+  bool forceManualAuthentication = 16;
+  int32 dataVersion = 17;
 
   enum CredentialsStatus {
     CREATED = 0;
