@@ -48,10 +48,10 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
-        applyfilters(this.client);
+        applyFilters(this.client);
     }
 
-    private void applyfilters(TinkHttpClient client) {
+    private void applyFilters(TinkHttpClient client) {
         client.addFilter(new AccessExceededFilter());
     }
 
