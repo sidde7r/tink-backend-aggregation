@@ -4,6 +4,7 @@ public final class NemIdCodeAppConstants {
     public static class Status {
         public static final String STATUS_OK = "ok";
         public static final String STATUS_TIMEOUT = "timeout";
+        public static final String OVERWRITTEN = "overwritten";
     }
 
     public static class Errors {

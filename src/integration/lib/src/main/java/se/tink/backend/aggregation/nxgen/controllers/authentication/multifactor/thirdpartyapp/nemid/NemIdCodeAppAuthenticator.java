@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.Errors;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.Status;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.error.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
@@ -62,6 +63,8 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
             case Status.STATUS_TIMEOUT:
                 status = ThirdPartyAppStatus.TIMED_OUT;
                 break;
+            case Status.OVERWRITTEN:
+                throw NemIdError.INTERRUPTED.exception();
             default:
                 throw new IllegalStateException(
                         String.format("Unknown code app poll response: %s.", pollStatus));
