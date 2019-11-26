@@ -146,7 +146,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                     apiClient, supplementalInformationHelper, catalog),
             new BankIdAuthenticationController<>(
                     supplementalRequester,
-                    new SwedbankDefaultBankIdAuthenticator(apiClient),
+                    new SwedbankDefaultBankIdAuthenticator(apiClient, sessionStorage),
                     persistentStorage,
                     credentials)
         };
@@ -243,7 +243,8 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
 
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
-                metricRefreshController, new SwedbankDefaultTransferDestinationFetcher(apiClient));
+                metricRefreshController,
+                new SwedbankDefaultTransferDestinationFetcher(apiClient, sessionStorage));
     }
 
     @Override
