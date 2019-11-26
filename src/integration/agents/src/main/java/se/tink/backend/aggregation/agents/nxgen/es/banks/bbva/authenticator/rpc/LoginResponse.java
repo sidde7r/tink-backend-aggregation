@@ -10,11 +10,11 @@ public class LoginResponse {
     private String authenticationState;
     private UserEntity user;
 
-  public UserEntity getUser() {
-    return user;
-  }
+    public UserEntity getUser() {
+        return user;
+    }
 
-  public String getAuthenticationState() {
+    public String getAuthenticationState() {
         return authenticationState;
     }
 }

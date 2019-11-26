@@ -162,7 +162,7 @@ public class BbvaAgent extends NextGenerationAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        final IdentityDataFetcher fetcher = new BbvaIdentityDataFetcher(apiClient, sessionStorage);
+        final IdentityDataFetcher fetcher = new BbvaIdentityDataFetcher(apiClient);
         return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 

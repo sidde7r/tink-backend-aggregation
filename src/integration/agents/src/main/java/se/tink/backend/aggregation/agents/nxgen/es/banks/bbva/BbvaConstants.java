@@ -41,6 +41,7 @@ public final class BbvaConstants {
     public static final class Defaults {
         public static final String CURRENCY = "EUR";
         public static final String CHARSET = "UTF-8";
+        public static final String TIMEZONE_CET = "CET";
     }
 
     public static final class AccountType {
@@ -88,7 +89,7 @@ public final class BbvaConstants {
 
         public static final String PARAM_ID = "ID";
 
-        public static final String LOGIN = BASE_URL + "/ASO/TechArchitecture/grantingTickets/V02";
+        public static final String TICKET = BASE_URL + "/ASO/TechArchitecture/grantingTickets/V02";
         public static final String SESSION =
                 BASE_URL + "/ENPP/enpp_mult_web_mobility_02/sessions/v1";
         public static final String PRODUCTS =
@@ -105,7 +106,7 @@ public final class BbvaConstants {
         public static final String SECURITY_PROFITABILITY =
                 BASE_URL + "/ASO/securityActions/V01/listProfitability";
         public static final String IDENTITY_DATA =
-                BASE_URL + "/ASO/customers/V02/{" + PARAM_ID + "}";
+                BASE_URL + "/ASO/contextualData/V02/{" + PARAM_ID + "}";
     }
 
     public enum Headers implements HeaderEnum {
@@ -168,8 +169,8 @@ public final class BbvaConstants {
     }
 
     public static final class IdTypeCodes {
-        public static final String NIF = "nif";
-        public static final String NIE = "nie";
+        public static final String NIF = "1";
+        public static final String NIE = "6";
     }
 
     public static class TimeoutFilter {

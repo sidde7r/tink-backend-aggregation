@@ -4,6 +4,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class PersonalizationEntity {
-  private String channelCode;
-  private String personalizationCode;
+    private String channelCode;
+    private String personalizationCode;
 }

@@ -2,14 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import com.google.common.collect.ImmutableList;
 import io.vavr.CheckedFunction1;
-import io.vavr.control.Try;
-import java.util.function.Supplier;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Headers;
@@ -31,8 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.InitiateSessionRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.InitiateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -71,7 +65,7 @@ public class BbvaApiClient {
 
     public LoginResponse login(LoginRequest loginRequest) {
         HttpResponse httpResponse =
-                client.request(Url.LOGIN)
+                client.request(BbvaConstants.Url.TICKET)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(Headers.CONSUMER_ID)
@@ -86,8 +80,9 @@ public class BbvaApiClient {
     }
 
     public void logout() {
-        createRequest(BbvaConstants.Url.SESSION)
+        createRequest(BbvaConstants.Url.TICKET)
                 .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent())
+                .header(HeaderKeys.TSEC_KEY, getTsec())
                 .delete();
     }
 
@@ -161,29 +156,6 @@ public class BbvaApiClient {
         request.setAccountContracts(ImmutableList.of(accountContract));
 
         return request;
-    }
-
-    public Try<InitiateSessionResponse> initiateSession() {
-        final InitiateSessionRequest request =
-                new InitiateSessionRequest(BbvaConstants.PostParameter.CONSUMER_ID_VALUE);
-
-        final RequestBuilder requestBuilder =
-                createRequest(BbvaConstants.Url.SESSION)
-                        .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent());
-
-        return Try.of(() -> requestBuilder.post(HttpResponse.class, request))
-                .filterTry(
-                        BbvaPredicates.IS_HTML_MEDIA_TYPE.negate(),
-                        (Supplier<Throwable>) SessionError.SESSION_EXPIRED::exception)
-                .peek(response -> setTsec(response.getHeaders().getFirst(HeaderKeys.TSEC_KEY)))
-                .map(response -> response.getBody(InitiateSessionResponse.class))
-                .filterTry(
-                        BbvaPredicates.IS_BANK_SERVICE_UNAVAILABLE.negate(),
-                        (Supplier<Throwable>) BankServiceError.NO_BANK_SERVICE::exception)
-                .filterTry(BbvaPredicates.RESPONSE_HAS_ERROR.negate(), logAndThrow())
-                .filterTry(BbvaPredicates.IS_RESPONSE_OK, logAndThrow())
-                .peek(response -> setUserId(response.getUser().getId()))
-                .peek(response -> setIdTypeCode(response.getIdentificationTypeCode()));
     }
 
     public IdentityDataResponse fetchIdentityData() {
