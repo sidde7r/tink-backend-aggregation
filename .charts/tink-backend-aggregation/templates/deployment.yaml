@@ -141,7 +141,7 @@ spec:
               name: aggregation-secrets
               key: fints-reg-number
               optional: true
-        - name: NORDEA_PARTNER_KEYSTORE_PASSWORD
+        - name: NORDEA_PARTNER_KEYSTOREPASSWORD
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
