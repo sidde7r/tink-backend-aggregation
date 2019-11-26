@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.danskebank;
+package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.danskebank;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankAisConfiguration;
@@ -22,8 +22,8 @@ public class DanskebankV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 new DanskebankAisConfiguration.Builder()
                         .withApiBaseURL(V31.AIS_BASE)
-                        .withWellKnownURL(V31.getWellKnownUrl(MarketCode.DK))
-                        .onMarket(MarketCode.DK)
+                        .withWellKnownURL(V31.getWellKnownUrl(MarketCode.FI))
+                        .onMarket(MarketCode.FI)
                         .build();
     }
 

@@ -625,6 +625,20 @@
             "type": "BANK"
         },
         {
+            "className": "nxgen.no.openbanking.danskebank.DanskebankV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Danske Bank",
+            "fields": [],
+            "multiFactor": false,
+            "name": "no-danskebank-ob",
+            "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK",
+            "accessType": "OPEN_BANKING"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.no.banks.dnb.DnbAgent",
             "credentialsType": "MOBILE_BANKID",
