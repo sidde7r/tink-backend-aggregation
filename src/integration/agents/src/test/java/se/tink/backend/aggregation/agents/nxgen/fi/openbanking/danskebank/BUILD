@@ -13,7 +13,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/danskebank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/danskebank",
     ],
     deps = [
         "//src/integration/lib:lib_test",
