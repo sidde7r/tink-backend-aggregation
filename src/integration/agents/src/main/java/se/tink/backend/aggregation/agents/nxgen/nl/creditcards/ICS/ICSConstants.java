@@ -93,6 +93,7 @@ public class ICSConstants {
     }
 
     public static class ErrorMessages {
+        public static final String CONSENT_ERROR = "consent_error";
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String INVALID_TOKEN = "invalid_token";
@@ -105,6 +106,7 @@ public class ICSConstants {
 
     public static class ErrorCode {
         public static final int UNAUTHORIZED = 401;
+        public static final int FORBIDDEN = 403;
     }
 
     public static final class StorageKeys {
