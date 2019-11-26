@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;
