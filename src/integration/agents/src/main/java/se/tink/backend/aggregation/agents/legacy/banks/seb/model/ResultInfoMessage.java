@@ -14,6 +14,7 @@ public class ResultInfoMessage {
                     .put("PCB03G0", "Transfer validation: The user does not have enough money")
                     .put("PCB03K1", "Transfer validation: The destination account is not correct")
                     .put("PCB0464", "Transfer validation: The user lacks permission for this action")
+                    .put("PCB049I", "Transfer validation: Transfer can be made next business day as earliest, change due date")
                     .build();
 
     public String TableName;
