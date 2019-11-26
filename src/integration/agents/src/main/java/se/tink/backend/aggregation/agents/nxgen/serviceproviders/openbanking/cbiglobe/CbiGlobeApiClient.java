@@ -147,14 +147,8 @@ public class CbiGlobeApiClient {
     }
 
     public GetBalancesResponse getBalances(String resourceId) {
-        try {
-            return createRequestWithConsent(
-                            getBalancesUrl().parameter(IdTags.ACCOUNT_ID, resourceId))
-                    .get(GetBalancesResponse.class);
-        } catch (HttpResponseException e) {
-            handleAccessExceededError(e);
-            throw e;
-        }
+        return createRequestWithConsent(getBalancesUrl().parameter(IdTags.ACCOUNT_ID, resourceId))
+                .get(GetBalancesResponse.class);
     }
 
     private URL getBalancesUrl() {
@@ -165,37 +159,30 @@ public class CbiGlobeApiClient {
 
     public GetTransactionsResponse getTransactions(
             String apiIdentifier, Date fromDate, Date toDate, String bookingType, int page) {
-        try {
-            HttpResponse response =
-                    createRequestWithConsent(
-                                    getTransactionsUrl()
-                                            .parameter(IdTags.ACCOUNT_ID, apiIdentifier))
-                            .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
-                            .queryParam(
-                                    QueryKeys.DATE_FROM,
-                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                            .queryParam(
-                                    QueryKeys.DATE_TO,
-                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                            .queryParam(QueryKeys.OFFSET, String.valueOf(page))
-                            .get(HttpResponse.class);
+        HttpResponse response =
+                createRequestWithConsent(
+                                getTransactionsUrl().parameter(IdTags.ACCOUNT_ID, apiIdentifier))
+                        .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
+                        .queryParam(
+                                QueryKeys.DATE_FROM,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                        .queryParam(
+                                QueryKeys.DATE_TO,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                        .queryParam(QueryKeys.OFFSET, String.valueOf(page))
+                        .get(HttpResponse.class);
 
-            String totalPages = getTotalPages(response, apiIdentifier);
+        String totalPages = getTotalPages(response, apiIdentifier);
 
-            temporaryStorage.putIfAbsent(apiIdentifier, totalPages);
+        temporaryStorage.putIfAbsent(apiIdentifier, totalPages);
 
-            GetTransactionsResponse getTransactionsResponse =
-                    response.getBody(GetTransactionsResponse.class);
+        GetTransactionsResponse getTransactionsResponse =
+                response.getBody(GetTransactionsResponse.class);
 
-            if (Objects.nonNull(totalPages) && Integer.valueOf(totalPages) > page) {
-                getTransactionsResponse.setPageRemaining(true);
-            }
-
-            return getTransactionsResponse;
-        } catch (HttpResponseException e) {
-            handleAccessExceededError(e);
-            throw e;
+        if (Objects.nonNull(totalPages) && Integer.valueOf(totalPages) > page) {
+            getTransactionsResponse.setPageRemaining(true);
         }
+        return getTransactionsResponse;
     }
 
     private URL getTransactionsUrl() {

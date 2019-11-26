@@ -26,6 +26,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -45,6 +47,12 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
         apiClient = getApiClient(request.isManual());
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
+        applyfilters(this.client);
+    }
+
+    private void applyfilters(TinkHttpClient client) {
+        client.addFilter(new AccessExceededFilter());
     }
 
     protected abstract String getIntegrationName();
