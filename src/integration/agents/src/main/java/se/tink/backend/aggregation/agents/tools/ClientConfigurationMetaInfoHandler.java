@@ -175,7 +175,9 @@ public class ClientConfigurationMetaInfoHandler {
         Reflections reflectionsPackageToScan =
                 new Reflections(packageToScan, new SubTypesScanner(false));
         Set<Class<? extends ClientConfiguration>> clientConfigurationClassForAgentSet =
-                reflectionsPackageToScan.getSubTypesOf(ClientConfiguration.class);
+                reflectionsPackageToScan.getSubTypesOf(ClientConfiguration.class).stream()
+                        .filter(clazz -> !clazz.isInterface())
+                        .collect(Collectors.toSet());
 
         if (clientConfigurationClassForAgentSet.size() > 1) {
             throw new IllegalStateException(
