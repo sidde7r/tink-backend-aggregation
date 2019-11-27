@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.session;
 
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Messages;
-
+import io.vavr.control.Try;
+import java.util.function.Supplier;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ResultEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class BbvaSessionHandler implements SessionHandler {
@@ -23,11 +21,8 @@ public class BbvaSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        apiClient
-                .initiateSession()
-                .map(BbvaResponse::getResult)
-                .map(ResultEntity::getCode)
-                .filter(Messages.OK::equalsIgnoreCase)
-                .getOrElseThrow(t -> SessionError.SESSION_EXPIRED.exception());
+        Try.of(apiClient::fetchIdentityData)
+                .getOrElseThrow(
+                        (Supplier<SessionException>) SessionError.SESSION_EXPIRED::exception);
     }
 }
