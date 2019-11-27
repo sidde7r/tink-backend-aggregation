@@ -15,13 +15,9 @@ public class CbiGlobeConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
     @AgentConfigParam private String redirectUrl;
-    @Secret private String keystorePath;
-    @SensitiveSecret private String keystorePassword;
     @Secret private String aspspCode;
     @Secret private String aspspProductCode;
     @Secret private String eidasQwac;
-
-    private String environment;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -68,44 +64,5 @@ public class CbiGlobeConfiguration implements ClientConfiguration {
                 eidasQwac, String.format(ErrorMessages.INVALID_CONFIGURATION, "EIDAS QWAC"));
 
         return eidasQwac;
-    }
-
-    public String getKeystorePath() {
-        Preconditions.checkNotNull(
-                keystorePath, String.format(ErrorMessages.INVALID_CONFIGURATION, "Keystore Path"));
-
-        return keystorePath;
-    }
-
-    public String getKeystorePassword() {
-        Preconditions.checkNotNull(
-                keystorePassword,
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Keystore Password"));
-
-        return keystorePassword;
-    }
-
-    public Environment getEnvironment() {
-        return Environment.fromString(environment);
-    }
-
-    public enum Environment {
-        SANDBOX("sandbox"),
-        PRODUCTION("production");
-
-        private final String value;
-
-        Environment(String value) {
-            this.value = value;
-        }
-
-        public static Environment fromString(String value) {
-            return Environment.valueOf(value.toUpperCase());
-        }
-
-        @Override
-        public String toString() {
-            return value;
-        }
     }
 }
