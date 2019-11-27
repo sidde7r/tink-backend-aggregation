@@ -16,13 +16,13 @@ public class SdcAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("dk", "dk-sdc-ob")
+                new AgentIntegrationTest.Builder("dk", "dk-banknordik-ob")
                         .addCredentialField(Key.LOGIN_INPUT, TEST_SSN)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false)
                         .setAppId("tink")
-                        .setFinancialInstitutionId("sdc");
+                        .setFinancialInstitutionId("banknordik");
     }
 
     @Test
