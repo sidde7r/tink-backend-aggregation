@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -35,7 +36,8 @@ public class CaixaLoanAccountFetcher
     }
 
     private List<LoanAccount> fetchMortgages() {
-        return apiClient.fetchMortgageLoanAccounts().getAccounts().stream()
+        return Optional.ofNullable(apiClient.fetchMortgageLoanAccounts().getAccounts())
+                .orElse(Collections.emptyList()).stream()
                 .map(
                         loanAccount ->
                                 loanAccount.mortgageToTinkAccount(
