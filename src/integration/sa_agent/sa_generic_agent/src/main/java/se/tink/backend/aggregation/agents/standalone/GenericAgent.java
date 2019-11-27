@@ -13,6 +13,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class GenericAgent implements Agent, ProgressiveAuthAgent {
 
+    private GenericAgentConfiguration genericAgentConfiguration;
     private AgentsServiceConfiguration agentsServiceConfiguration;
     private final ManagedChannel channel;
     private final AuthenticationService authenticationService;
@@ -21,9 +22,13 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent {
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration) {
+        genericAgentConfiguration =
+                context.getAgentConfigurationController()
+                        .getAgentConfiguration(GenericAgentConfiguration.class);
         channel =
                 ManagedChannelBuilder.forAddress(
-                                GenericAgentConstants.Grpc.host, GenericAgentConstants.Grpc.port)
+                                genericAgentConfiguration.getGrpcHost(),
+                                genericAgentConfiguration.getGrpcPort())
                         .usePlaintext()
                         .build();
         authenticationService = new AuthenticationService(channel);
