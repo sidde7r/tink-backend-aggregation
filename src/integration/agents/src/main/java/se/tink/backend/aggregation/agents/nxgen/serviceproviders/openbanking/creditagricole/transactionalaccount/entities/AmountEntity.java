@@ -12,4 +12,10 @@ public class AmountEntity {
     public ExactCurrencyAmount toAmount() {
         return new ExactCurrencyAmount(amount, currency);
     }
+
+    public ExactCurrencyAmount toAmount(CreditDebitIndicatorEntity creditDebitIndicator) {
+        return CreditDebitIndicatorEntity.DBIT == creditDebitIndicator
+                ? new ExactCurrencyAmount(amount.negate(), currency)
+                : new ExactCurrencyAmount(amount, currency);
+    }
 }
