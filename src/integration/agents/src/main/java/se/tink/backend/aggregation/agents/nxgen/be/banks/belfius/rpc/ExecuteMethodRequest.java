@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Map;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -9,7 +10,7 @@ public class ExecuteMethodRequest extends RequestEntity {
     private String applicationId;
     private String methodId;
     private String serviceName;
-    private Map<String, Object> inputs;
+    @JsonIgnore private Map<String, Object> inputs;
 
     public static ExecuteMethodRequest.Builder builder() {
         return new ExecuteMethodRequest.Builder();
@@ -37,6 +38,7 @@ public class ExecuteMethodRequest extends RequestEntity {
             return this;
         }
 
+        @JsonIgnore
         public ExecuteMethodRequest.Builder setInputs(Map<String, Object> inputs) {
             method.inputs = inputs;
             return this;

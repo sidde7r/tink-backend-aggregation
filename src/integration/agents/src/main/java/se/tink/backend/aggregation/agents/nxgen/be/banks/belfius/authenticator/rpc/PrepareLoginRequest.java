@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants.Widget;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventInformation;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventsRequest;
@@ -14,8 +15,11 @@ public class PrepareLoginRequest extends BelfiusRequest {
                 .setRequests(
                         WidgetEventsRequest.create(
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.CARD_NR, panNumber),
+                                        Widget.PAN, panNumber),
                                 WidgetEventInformation.newButtonClickedWidgetEvent(
-                                        BelfiusConstants.Widget.LOGIN_PW)));
+                                        BelfiusConstants.Widget.LOGON_SOFT)),
+                        WidgetEventsRequest.create(
+                                WidgetEventInformation.newButtonClickedWidgetEvent(
+                                        Widget.LOGON_SOFT_GET_CHALLENGE)));
     }
 }

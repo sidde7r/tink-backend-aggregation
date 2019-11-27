@@ -13,7 +13,7 @@ public class RegisterDeviceRequest extends BelfiusRequest {
     public static Builder create(String signature) {
         return BelfiusRequest.builder()
                 .setRetry(false)
-                .setTransactionId(BelfiusSecurityUtils.generateTransactionId())
+                .setTransactionId(BelfiusSecurityUtils.generateTransactionIdRegisterDevice())
                 .setRequests(
                         WidgetEventsRequest.create(
                                 WidgetEventInformation.newButtonClickedWidgetEvent(

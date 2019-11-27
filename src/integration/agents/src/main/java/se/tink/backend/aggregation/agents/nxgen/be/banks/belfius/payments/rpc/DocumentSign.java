@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEvent
 public class DocumentSign extends BelfiusRequest {
     public static BelfiusRequest.Builder create(String sessionId) {
         return BelfiusRequest.builder()
-                .setRetry(false)
+                // .setRetry(false)
                 .setRequests(
                         WidgetEventsRequest.create(
                                 WidgetEventInformation.newButtonClickedWidgetEvent(

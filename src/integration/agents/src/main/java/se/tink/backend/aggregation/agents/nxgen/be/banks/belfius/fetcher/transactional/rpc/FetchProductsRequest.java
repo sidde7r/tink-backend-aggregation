@@ -16,4 +16,12 @@ public class FetchProductsRequest extends BelfiusRequest {
                                 WidgetEventInformation.newButtonClickedWidgetEvent(
                                         BelfiusConstants.Widget.PRODUCT_LIST_LOAD)));
     }
+
+    public static Builder createFetchMore() {
+        return BelfiusRequest.builder()
+                .setRequests(
+                        WidgetEventsRequest.create(
+                                WidgetEventInformation.newButtonClickedWidgetEvent(
+                                        "Container@reuse_ProductList@repeater_detail")));
+    }
 }
