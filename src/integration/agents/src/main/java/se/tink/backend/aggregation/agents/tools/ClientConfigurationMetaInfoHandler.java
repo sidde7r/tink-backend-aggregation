@@ -181,11 +181,17 @@ public class ClientConfigurationMetaInfoHandler {
                         .collect(Collectors.toSet());
 
         if (clientConfigurationClassForAgentSet.size() > 1) {
-            clientConfigurationClassForAgentSet =
-                    clientConfigurationClassForAgentSet.stream()
-                            .filter(this::isPrioritizedClientConfiguration)
-                            .collect(Collectors.toSet());
-            if (clientConfigurationClassForAgentSet.size() > 1) {
+            // Try to narrow it down looking for the optional annotation
+            // @PrioritizedClientConfiguration
+            Set<Class<? extends ClientConfiguration>>
+                    prioritizedClientConfiguratitonClassForAgentSet =
+                            clientConfigurationClassForAgentSet.stream()
+                                    .filter(this::isPrioritizedClientConfiguration)
+                                    .collect(Collectors.toSet());
+            if (prioritizedClientConfiguratitonClassForAgentSet.size() == 1) {
+                clientConfigurationClassForAgentSet =
+                        prioritizedClientConfiguratitonClassForAgentSet;
+            } else {
                 throw new IllegalStateException(
                         "Found more than one class implementing ClientConfiguration: "
                                 + clientConfigurationClassForAgentSet);
