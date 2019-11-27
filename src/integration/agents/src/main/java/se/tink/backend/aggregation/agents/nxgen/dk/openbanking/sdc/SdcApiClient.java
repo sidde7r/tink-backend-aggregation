@@ -149,6 +149,27 @@ public final class SdcApiClient {
 
     public TransactionsResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
+
+        /*
+           Currently, for a given date range, if there are more than 200 transactions, the bank
+           just returns the first 200 and ignores the rest and does not give any indicator to us
+           to make us realise the issue. Bank will make a fix for that in 2020.
+           For this reason we temporarily narrowed down the date range (from 3 months to 1 month
+           see SdcAgent class)
+
+           It is not a perfect solution as one might still have more than 200 transactions for a
+           given date period. For this reason there are two things that we can do if we ever get
+           200 transactions as a response of an API call:
+
+           1) Crash the agent so we will be sure that we will not show any corrupted data (data with
+           missing transactions) to the user
+
+           2) Divide the date range into two, recursively call getTransactionsFor for these two
+           smaller date ranges, merge the results and return
+
+           We need to decide one of these approaches and implement it here
+        */
+
         return createRequestInSession(
                         Urls.TRANSACTIONS.parameter(
                                 PathParameters.ACCOUNT_ID, account.getApiIdentifier()))
@@ -161,7 +182,7 @@ public final class SdcApiClient {
                         getConfiguration().getOcpApimSubscriptionKey())
                 .queryParam(
                         BerlinGroupConstants.QueryKeys.BOOKING_STATUS,
-                        SdcConstants.QueryValues.BOOKED) // TODO Verify pagination
+                        SdcConstants.QueryValues.BOOKED)
                 .queryParam(
                         SdcConstants.QueryKeys.DATE_FROM,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))

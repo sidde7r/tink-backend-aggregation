@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sdc;
 
+import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -91,13 +92,19 @@ public final class SdcAgent extends NextGenerationAgent
         final SdcTransactionalAccountTransactionFetcher transactionFetcher =
                 new SdcTransactionalAccountTransactionFetcher(apiClient);
 
+        /*
+           We are overriding the default date range (by default it is 3 months but we use 1 month)
+           See getTransactionsFor method in SdcApiClient class to find out more details
+        */
+
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController<>(
+                                transactionFetcher, 12, 1, ChronoUnit.MONTHS)));
     }
 
     @Override
