@@ -36,7 +36,7 @@ public class SwedbankConfiguration implements ClientConfiguration {
 
     public String getClientId() {
         Preconditions.checkNotNull(
-                com.google.common.base.Strings.emptyToNull(redirectUrl),
+                com.google.common.base.Strings.emptyToNull(clientId),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
@@ -44,7 +44,7 @@ public class SwedbankConfiguration implements ClientConfiguration {
 
     public String getClientSecret() {
         Preconditions.checkNotNull(
-                com.google.common.base.Strings.emptyToNull(redirectUrl),
+                com.google.common.base.Strings.emptyToNull(clientSecret),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;

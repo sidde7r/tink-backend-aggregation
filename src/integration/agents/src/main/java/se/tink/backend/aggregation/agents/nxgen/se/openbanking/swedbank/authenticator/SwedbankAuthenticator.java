@@ -46,8 +46,6 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
     public void useConsent(ConsentResponse consentResponse) {
         persistentStorage.put(
                 SwedbankConstants.StorageKeys.CONSENT, consentResponse.getConsentId());
-        persistentStorage.put(
-                SwedbankConstants.StorageKeys.CONSENT_STATUS, consentResponse.getConsentStatus());
     }
 
     public ConsentResponse getConsentForIbanList() {
