@@ -1,18 +1,33 @@
 package se.tink.backend.aggregation.agents.banks.seb.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class ResultInfoMessage {
     private static final ImmutableMap<String, String> CANCELLED_DESCRIPTIONS_BY_CODE =
             ImmutableMap.<String, String>builder()
                     .put("PCB046H", "Transfer validation: DueDate is before next business day")
                     .put("PCB03G0", "Transfer validation: The user does not have enough money")
                     .put("PCB03K1", "Transfer validation: The destination account is not correct")
+                    .put(
+                            "PCB0464",
+                            "Transfer validation: The user lacks permission for this action")
+                    .put(
+                            "PCB049I",
+                            "Transfer validation: Transfer can be made next business day as earliest, change due date")
+                    .put(
+                            "PCB03L1",
+                            "Transfer validation: Supplied destination account doesn't exist in any Swedish bank")
+                    .put(
+                            "PCB0792",
+                            "Transfer validation: Transfer limit for business account has been reached")
+                    .put(
+                            "PCB0354",
+                            "Transfer validation: Destination account doesn't exist at bank") // Seems to be a specific error for SEB destination accounts
                     .build();
 
     public String TableName;

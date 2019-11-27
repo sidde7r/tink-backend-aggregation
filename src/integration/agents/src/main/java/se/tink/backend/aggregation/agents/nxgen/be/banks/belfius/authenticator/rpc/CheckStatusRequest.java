@@ -26,4 +26,17 @@ public class CheckStatusRequest extends BelfiusRequest {
                                                 .build())
                                 .build());
     }
+
+    public static Builder createActor() {
+        return BelfiusRequest.builder()
+                .setApplicationId(BelfiusConstants.Request.CHECK_STATUS_APPLICATION_ID)
+                .setExecutionMode(BelfiusConstants.Request.CHECK_STATUS_EXECUTION_MODE)
+                .setRequests(
+                        ExecuteMethodRequest.builder()
+                                .setApplicationId(
+                                        BelfiusConstants.Request.CHECK_STATUS_APPLICATION_ID)
+                                .setMethodId("GetName")
+                                .setServiceName("gef0.gef1.gemd.ActorInformation.diamlservice")
+                                .build());
+    }
 }

@@ -151,11 +151,21 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                         .getValidOcr()
                         .orElseThrow(() -> paymentCanceledException(INVALID_OCR));
                 break;
-            case MESSAGE: // Intentional fallthrough
+            case MESSAGE:
+                validationResult
+                        .getValidMessage()
+                        .orElseThrow(() -> paymentCanceledException(INVALID_DESTINATION_MESSAGE));
+                break;
             default:
                 validationResult
                         .getValidOcr()
-                        .orElseThrow(() -> paymentCanceledException(INVALID_DESTINATION_MESSAGE));
+                        .orElse(
+                                validationResult
+                                        .getValidMessage()
+                                        .orElseThrow(
+                                                () ->
+                                                        paymentCanceledException(
+                                                                INVALID_DESTINATION_MESSAGE)));
         }
     }
 

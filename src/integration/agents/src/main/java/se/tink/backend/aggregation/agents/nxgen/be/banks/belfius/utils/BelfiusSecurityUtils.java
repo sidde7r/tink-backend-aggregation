@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 
 public class BelfiusSecurityUtils {
 
-    public static String createSignature(
+    public static String createSignatureSoft(
             String challenge,
             String deviceToken,
             String panNumber,
@@ -16,12 +16,31 @@ public class BelfiusSecurityUtils {
         String contractPasswordHash = hash(String.format("%s%s", contractNumber, password));
         return hash(
                 String.format(
+                        "%s%s%s%s",
+                        challengeUpperCase, challengeUpperCase, deviceToken, panNumberStripped));
+    }
+
+    public static String createSignaturePw(
+            String challenge,
+            String deviceToken,
+            String panNumber,
+            String contractNumber,
+            String password) {
+        String challengeUpperCase = challenge.toUpperCase();
+        String panNumberStripped = panNumber.replace(" ", "");
+
+        String contractPasswordHash = hash(String.format("%s%s", contractNumber, password));
+
+        String hashInput =
+                String.format(
                         "%s%s%s%s%s",
                         challengeUpperCase,
                         challengeUpperCase,
                         deviceToken,
                         panNumberStripped,
-                        contractPasswordHash));
+                        contractPasswordHash);
+
+        return hash(hashInput);
     }
 
     // challenge|iban(85)|iban(to/94)|amount(0,01) EUR
@@ -41,6 +60,13 @@ public class BelfiusSecurityUtils {
 
     public static String generateTransactionId() {
         return "signIWSAuthentication"
+                + System.currentTimeMillis() / 1000
+                + "."
+                + String.format("%06d", (int) (Math.random() * 1000000));
+    }
+
+    public static String generateTransactionIdRegisterDevice() {
+        return "signDeviceRegistration"
                 + System.currentTimeMillis() / 1000
                 + "."
                 + String.format("%06d", (int) (Math.random() * 1000000));

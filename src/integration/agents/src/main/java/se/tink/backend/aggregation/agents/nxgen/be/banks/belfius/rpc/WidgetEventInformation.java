@@ -93,4 +93,11 @@ public class WidgetEventInformation {
                 .setActiveElement(activeElement)
                 .build();
     }
+
+    public static WidgetEventInformation newMenuAccessWidgetEvent(String widgetId) {
+        return WidgetEventInformation.builder(widgetId)
+                .setWidgetType("M_Button")
+                .setEventType("clicked")
+                .build();
+    }
 }

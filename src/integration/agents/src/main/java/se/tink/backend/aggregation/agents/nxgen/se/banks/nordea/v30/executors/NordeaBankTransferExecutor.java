@@ -169,6 +169,11 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                 if (errorResponse.isWrongToAccountLengthError()) {
                     throw executorHelper.wrongToAccountLengthError();
                 }
+                if (errorResponse.isUnregisteredRecipient()) {
+                    throw executorHelper.transferRejectedError(
+                            ErrorCodes.UNREGISTERED_RECIPIENT,
+                            EndUserMessage.UNREGISTERED_RECIPIENT);
+                }
                 log.warn("Payment execution failed", e);
                 throw executorHelper.paymentFailedError(e);
             }
@@ -219,11 +224,6 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         }
         if (errorResponse.isNotEnoughFunds()) {
             throw executorHelper.notEnoughFundsError();
-        }
-        if (errorResponse.isUnregisteredRecipient()) {
-            throw executorHelper.transferRejectedError(
-                    ErrorCodes.UNREGISTERED_RECIPIENT,
-                    catalog.getString(EndUserMessage.UNREGISTERED_RECIPIENT));
         }
         if (errorResponse.isSigningCollision()) {
             throw executorHelper.bankIdAlreadyInProgressError(e);

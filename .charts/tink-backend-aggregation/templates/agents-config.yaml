@@ -102,7 +102,7 @@ data:
           baseUrl: "{{ $agentsConfig.nordeapartner.baseUrl }}"
           nordeaEncryptionPublicKey: "{{ $agentsConfig.nordeapartner.nordeaEncryptionPublicKey }}"
           keyId: "{{ $agentsConfig.nordeapartner.keyId }}"
-          partnerKeystorePassword: "NORDEA_PARTNER_KEYSTORE_PASSWORD"
+          partnerKeystorePassword: "NORDEA_PARTNER_KEYSTOREPASSWORD"
         {{- end }}
 
         {{- if $agentsConfig.dnb }}
