@@ -15,6 +15,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
@@ -128,6 +129,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
@@ -280,6 +282,10 @@ public class SEBApiAgent extends AbstractAgent
 
     private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG =
             TransferMessageLengthConfig.createWithMaxLength(12);
+
+    private static final ImmutableList<String> BANK_SIDE_FAILURES =
+            ImmutableList.of(
+                    "connection reset", "connect timed out", "read timed out", "failed to respond");
 
     private String customerId;
     private String userId;
@@ -2335,10 +2341,27 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private <T> T postAsJSON(String url, Object entity, Class<T> responseEntityType) {
-        return resource(url)
-                .entity(entity)
-                .type(MediaType.APPLICATION_JSON)
-                .post(responseEntityType);
+        try {
+            return resource(url)
+                    .entity(entity)
+                    .type(MediaType.APPLICATION_JSON)
+                    .post(responseEntityType);
+        } catch (ClientHandlerException e) {
+
+            if (Strings.isNullOrEmpty(e.getMessage())) {
+                throw e;
+            }
+
+            BANK_SIDE_FAILURES.stream()
+                    .filter((failure -> e.getMessage().toLowerCase().contains(failure)))
+                    .findAny()
+                    .ifPresent(
+                            f -> {
+                                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
+                            });
+
+            throw e;
+        }
     }
 
     public List<Transfer> updateEInvoices() {
