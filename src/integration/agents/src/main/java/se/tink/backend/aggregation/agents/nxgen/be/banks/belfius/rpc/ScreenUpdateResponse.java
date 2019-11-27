@@ -50,6 +50,13 @@ public class ScreenUpdateResponse extends ResponseEntity {
                                         "Could not find widget with widgetId: " + widgetId));
     }
 
+    public static List<Widget> findWidgets(BelfiusResponse response, String widgetId) {
+        return response.filter(ScreenUpdateResponse.class)
+                .flatMap(r -> r.getWidgets().stream())
+                .filter(widget -> widgetId.equalsIgnoreCase(widget.getWidgetId()))
+                .collect(Collectors.toList());
+    }
+
     public static Widget widgetContains(BelfiusResponse response, String widgetId) {
         List<Widget> collect =
                 response.filter(ScreenUpdateResponse.class)

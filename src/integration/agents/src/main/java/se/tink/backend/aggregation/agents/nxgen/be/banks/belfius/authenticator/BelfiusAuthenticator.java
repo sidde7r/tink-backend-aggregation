@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClien
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.PrepareLoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.SendCardNumberResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
@@ -73,7 +74,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         panNumber = BelfiusStringUtils.formatPanNumber(panNumber);
 
         try {
-            login(panNumber, password, deviceToken);
+            loginAuto(panNumber, password, deviceToken);
         } catch (AuthenticationException | AuthorizationException e) {
             throw SessionError.SESSION_EXPIRED.exception(e);
         }
@@ -115,17 +116,60 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         apiClient.startFlow();
 
         PrepareLoginResponse response = apiClient.prepareLogin(panNumber);
+
         String contractNumber = response.getContractNumber();
         String challenge = response.getChallenge();
 
-        sessionStorage.setChallenge(challenge);
+        // sessionStorage.setChallenge(challenge);
 
         String deviceTokenHashed = BelfiusSecurityUtils.hash(deviceToken);
         String deviceTokenHashedIosComparison = BelfiusSecurityUtils.hash(deviceTokenHashed);
         String signature =
-                BelfiusSecurityUtils.createSignature(
+                BelfiusSecurityUtils.createSignatureSoft(
                         challenge, deviceToken, panNumber, contractNumber, password);
 
+        // TODO ADDING THIS CRAP
+        apiClient.bacProductList();
+
         apiClient.login(deviceTokenHashed, deviceTokenHashedIosComparison, signature);
+
+        // TODO ADDING THIS CRAP
+        apiClient.actorInformation();
+        apiClient.startFlow();
+
+        SendCardNumberResponse sendCardNumberResponse = apiClient.sendCardNumber(panNumber);
+        String challenge2 = sendCardNumberResponse.getChallenge();
+
+        sessionStorage.setChallenge(challenge2);
+
+        String signaturePw =
+                BelfiusSecurityUtils.createSignaturePw(
+                        challenge2, deviceToken, panNumber, contractNumber, password);
+
+        apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
+    }
+
+    private void loginAuto(String panNumber, String password, String deviceToken)
+            throws AuthenticationException, AuthorizationException {
+        apiClient.openSession();
+        apiClient.startFlow();
+
+        PrepareLoginResponse response = apiClient.prepareLogin(panNumber);
+
+        String contractNumber = response.getContractNumber();
+
+        String deviceTokenHashed = BelfiusSecurityUtils.hash(deviceToken);
+        String deviceTokenHashedIosComparison = BelfiusSecurityUtils.hash(deviceTokenHashed);
+
+        SendCardNumberResponse sendCardNumberResponse = apiClient.sendCardNumber(panNumber);
+        String challenge2 = sendCardNumberResponse.getChallenge();
+
+        sessionStorage.setChallenge(challenge2);
+
+        String signaturePw =
+                BelfiusSecurityUtils.createSignaturePw(
+                        challenge2, deviceToken, panNumber, contractNumber, password);
+
+        apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
     }
 }

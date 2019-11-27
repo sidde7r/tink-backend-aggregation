@@ -8,11 +8,13 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.AuthenticateWithCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.AuthenticateWithCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.CheckStatusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.CheckStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.CloseSessionRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.FeedStructureRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.OpenSessionRequest;
@@ -25,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.PrepareLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.RegisterDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.RegisterDeviceSignResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.SendCardNumberResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchProductsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchTransactionsRequest;
@@ -187,11 +190,32 @@ public class BelfiusApiClient {
         return loginResponse;
     }
 
+    public LoginResponse loginPw(
+            String deviceTokenHashed, String deviceTokenHashedIosComparison, String signature)
+            throws AuthenticationException, AuthorizationException {
+
+        LoginResponse loginResponse =
+                postUserInput(
+                        BelfiusConstants.Url.GEPA_RENDERING_URL,
+                        LoginResponse.class,
+                        LoginRequest.createPw(
+                                deviceTokenHashed, deviceTokenHashedIosComparison, signature));
+        loginResponse.validate();
+        return loginResponse;
+    }
+
     public FetchProductsResponse fetchProducts() {
         return post(
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 FetchProductsResponse.class,
                 FetchProductsRequest.create());
+    }
+
+    public void bacProductList() {
+        post(
+                BelfiusConstants.Url.GEPA_SERVICE_URL,
+                BelfiusResponse.class,
+                FeedStructureRequest.createBacProductList());
     }
 
     public FetchTransactionsResponse fetchTransactions(String key, boolean initialRequest) {
@@ -249,6 +273,20 @@ public class BelfiusApiClient {
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 FetchTransactionsResponse.class,
                 EntitySelect.create(sessionStorage.getSessionId()));
+    }
+
+    public SendCardNumberResponse sendCardNumber(String cardNumber) {
+        return post(
+                BelfiusConstants.Url.GEPA_RENDERING_URL,
+                SendCardNumberResponse.class,
+                EntitySelect.createWithCardNumber(sessionStorage.getSessionId(), cardNumber));
+    }
+
+    public BelfiusResponse actorInformation() {
+        return post(
+                Url.GEPA_SERVICE_URL,
+                FetchTransactionsResponse.class,
+                CheckStatusRequest.createActor());
     }
 
     public BelfiusResponse entityClick() {
@@ -379,7 +417,10 @@ public class BelfiusApiClient {
     private <T extends BelfiusResponse> T post(
             URL url, Class<T> c, BelfiusRequest.Builder builder) {
         setSessionData(builder);
-        String body = "request=" + urlEncode(SerializationUtils.serializeToString(builder.build()));
+        String body =
+                "request="
+                        + urlEncode(SerializationUtils.serializeToString(builder.build()))
+                                .replace("+", "%20");
         HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
         T response = parseBelfiusResponse(httpResponse, c);
         MessageResponse.validate(response);
