@@ -13,9 +13,10 @@ def organise(output_folder):
     for m in metadata:
         request_id = m["requestId"]
         provider_name = m["providerName"]
+        status = m["status"]
         if provider_name not in provider_issues:
             provider_issues[provider_name] = []
-        provider_issues[provider_name].append(request_id + "_" + provider_name)
+        provider_issues[provider_name].append(status + "_" + request_id + "_" + provider_name)
 
     folders = {}
 

@@ -38,7 +38,6 @@ async def run(cookie,
               payload="",
               authenticate_for_aws_command=None,
               ws: websockets.WebSocketServerProtocol = None):
-
     print("Download request has been received")
     output_folder = os.path.join(output_folder, get_timestamp())
 
@@ -82,7 +81,7 @@ async def run(cookie,
                                                             ])
 
         await send_message(ws, "Fetched logs for the flow with requestID = " + request_id
-                     + " (flow " + str(index + 1) + "/" + str(len(request_ids)) + ")", payload)
+                           + " (flow " + str(index + 1) + "/" + str(len(request_ids)) + ")", payload)
 
         # Now we have all logs for the session identified by request_id. Find AWS HTTP debug log for it
         # TODO: If log is older than 7 days we need to ignore them since we do not keep those logs
@@ -94,16 +93,18 @@ async def run(cookie,
             # (since we already find what we are looking for)
             if "AWS CLI" in log.message:
                 http_debug_log_link = log.message.split("AWS")[1].split("CLI: ")[1].strip()
+                status = log.message.split("\n")[0].split(":")[1].strip()
                 metadata.append({
+                    "status": status,
                     "unique_name": request_id + "_" + log.providerName,
-                    "log_path"  : http_debug_log_link,
-                    "requestId" : request_id,
-                    "userId"    : logs_for_session.find_user_id_by_request_id(request_id),
+                    "log_path": http_debug_log_link,
+                    "requestId": request_id,
+                    "userId": logs_for_session.find_user_id_by_request_id(request_id),
                     "providerName": log.providerName,
                     "timestamp": logs_for_session.get_timestamp_by_request_id(request_id)
                 })
                 download_requests.append(AWSRequest(http_debug_log_link,
-                                                    os.path.join(output_folder, request_id + "_" +
+                                                    os.path.join(output_folder, status + "_" + request_id + "_" +
                                                                  log.providerName + ".log")))
                 found_aws_log_link = True
 
@@ -113,7 +114,7 @@ async def run(cookie,
             await send_message(ws, "Could not find AWS log link for request with ID = " + request_id, payload)
 
     with open(os.path.join(output_folder, "metadata.json"), "w", encoding="utf-8") as out:
-        json.dump(metadata, out)
+        json.dump(metadata, out, indent=4)
 
     # Create the necessary Terminal command to download all AWS debug logs that we discovered
     download_log_command = AWSManager.create_download_command(download_requests)
@@ -221,6 +222,7 @@ async def main():
               username=args.username,
               idp_id=args.idp_id,
               sp_id=args.sp_id)
+
 
 if __name__ == "__main__":
     asyncio.get_event_loop().run_until_complete(main())
