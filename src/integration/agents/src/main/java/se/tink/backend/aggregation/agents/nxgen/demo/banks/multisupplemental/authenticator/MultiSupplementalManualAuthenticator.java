@@ -77,6 +77,7 @@ public class MultiSupplementalManualAuthenticator implements TypedAuthenticator 
         checkAnswers(
                 supplementalInformationHelper.askSupplementalInformation(
                         Field.builder()
+                                .immutable(true)
                                 .name(loginDesciptionField)
                                 .description("Security Code")
                                 .value(String.format("%04d", random.nextInt(10000)))
@@ -94,6 +95,7 @@ public class MultiSupplementalManualAuthenticator implements TypedAuthenticator 
         checkAnswers(
                 supplementalInformationHelper.askSupplementalInformation(
                         Field.builder()
+                                .immutable(true)
                                 .name(loginChallengeField)
                                 .description("Login Code")
                                 .value(String.format("%04d", random.nextInt(10000)))
