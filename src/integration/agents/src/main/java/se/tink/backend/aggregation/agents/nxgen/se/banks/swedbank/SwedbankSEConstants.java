@@ -33,4 +33,8 @@ public class SwedbankSEConstants {
                 "det har uppstått ett internt tekniskt fel. var god försök senare.";
         public static final String INTERNAL_SERVER_ERROR = "internal_server_error";
     }
+
+    public static class StorageKey {
+        public static final String HAS_EXTENDED_BANKID = "extendedBankId";
+    }
 }

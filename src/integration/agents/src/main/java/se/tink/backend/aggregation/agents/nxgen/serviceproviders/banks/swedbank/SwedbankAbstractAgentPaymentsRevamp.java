@@ -126,7 +126,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
-                new SwedbankDefaultBankIdAuthenticator(apiClient),
+                new SwedbankDefaultBankIdAuthenticator(apiClient, sessionStorage),
                 persistentStorage,
                 credentials);
     }
@@ -222,7 +222,8 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
 
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
-                metricRefreshController, new SwedbankDefaultTransferDestinationFetcher(apiClient));
+                metricRefreshController,
+                new SwedbankDefaultTransferDestinationFetcher(apiClient, sessionStorage));
     }
 
     @Override

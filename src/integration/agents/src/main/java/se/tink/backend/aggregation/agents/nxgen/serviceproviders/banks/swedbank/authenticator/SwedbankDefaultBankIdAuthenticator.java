@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.AbstractBankIdAuthResponse;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SwedbankDefaultBankIdAuthenticator
         implements BankIdAuthenticator<AbstractBankIdAuthResponse> {
@@ -29,9 +31,12 @@ public class SwedbankDefaultBankIdAuthenticator
             LoggerFactory.getLogger(SwedbankDefaultBankIdAuthenticator.class);
     private final SwedbankDefaultApiClient apiClient;
     private SwedbankBaseConstants.BankIdResponseStatus previousStatus;
+    private final SessionStorage sessionStorage;
 
-    public SwedbankDefaultBankIdAuthenticator(SwedbankDefaultApiClient apiClient) {
+    public SwedbankDefaultBankIdAuthenticator(
+            SwedbankDefaultApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -75,6 +80,10 @@ public class SwedbankDefaultBankIdAuthenticator
                 case INTERRUPTED:
                     return BankIdStatus.INTERRUPTED;
                 case COMPLETE:
+                    // Store if bankID has extended usage for when fetching transfer destinations
+                    sessionStorage.put(
+                            StorageKey.HAS_EXTENDED_BANKID,
+                            collectBankIdResponse.isExtendedUsage());
                     completeBankIdLogin(collectBankIdResponse);
                     return BankIdStatus.DONE;
                 case TIMEOUT:
