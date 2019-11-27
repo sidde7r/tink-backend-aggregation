@@ -2361,6 +2361,12 @@ public class SEBApiAgent extends AbstractAgent
                             });
 
             throw e;
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
+                throw BankServiceError.NO_BANK_SERVICE.exception(e);
+            }
+
+            throw e;
         }
     }
 
