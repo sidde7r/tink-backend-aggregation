@@ -3,9 +3,7 @@ package se.tink.sa.agent.pt.ob.sibs.rest.client;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.methods.RequestBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -45,11 +43,9 @@ public class SibsConsentRestClient implements ConsentsRestClient {
         params.put(SibsConstants.PathParameterKeys.ASPSP_CDE, bankCode);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_UTF8_VALUE);
-        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
-        headers.set(
-                SibsConstants.HeaderKeys.TPP_REDIRECT_URI,
-                getRedirectUrlForState(prepareParamsMap(state, code)));
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        headers.set(SibsConstants.HeaderKeys.TPP_REDIRECT_URI, getRedirectUrlForState(state));
 
         HttpEntity<ConsentRequest> httpEntity = new HttpEntity<>(request, headers);
 
@@ -63,20 +59,15 @@ public class SibsConsentRestClient implements ConsentsRestClient {
         return StringUtils.join(path);
     }
 
-    protected String getRedirectUrlForState(Map<String, String> params) {
-        RequestBuilder rb = RequestBuilder.create(redirectUrl);
-        if (MapUtils.isNotEmpty(params)) {
-            params.keySet().stream().forEach(key -> rb.addParameter(key, params.get(key)));
-        }
-
-        return rb.build().getURI().toString();
-    }
-
-    private Map<String, String> prepareParamsMap(String state, String code) {
-        Map<String, String> params = new HashMap<>();
-        params.put(SibsConstants.QueryKeys.STATE, state);
-        params.put("code", code);
-        return params;
+    protected String getRedirectUrlForState(String state) {
+        StringBuilder sb =
+                new StringBuilder()
+                        .append(redirectUrl)
+                        .append("?")
+                        .append(SibsConstants.QueryKeys.STATE)
+                        .append("=")
+                        .append(state);
+        return sb.toString();
     }
 
     @Override

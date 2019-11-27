@@ -22,9 +22,6 @@ public class EidasProxyClient {
     @Value("${security.eidas.proxy.address}")
     private String eidasProxyAddress;
 
-    @Value("${security.eidas.proxy.port:443}")
-    private int eidasProxyPort;
-
     @Value("${security.eidas.proxy.protocol:https}")
     private String eidasProxyProtocol;
 

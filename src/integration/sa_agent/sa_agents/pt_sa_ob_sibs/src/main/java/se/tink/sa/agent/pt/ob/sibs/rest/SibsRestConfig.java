@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import se.tink.sa.agent.pt.ob.sibs.rest.interceptor.SibsMessageSignInterceptor;
 import se.tink.sa.agent.pt.ob.sibs.rest.interceptor.SibsStandardHeadersAppender;
 import se.tink.sa.framework.rest.config.DefaultRestServicesConfig;
+import se.tink.sa.framework.rest.interceptor.EidasHeadersAppender;
 import se.tink.sa.framework.rest.interceptor.RestIoLogger;
 import se.tink.sa.framework.tools.SecretsHandler;
 
@@ -28,15 +29,27 @@ public class SibsRestConfig extends DefaultRestServicesConfig {
         if (CollectionUtils.isEmpty(interceptors)) {
             interceptors = new ArrayList<>();
         }
-        interceptors.add(new SibsStandardHeadersAppender(secretsHandler.getClientId()));
+        interceptors.add(sibsStandardHeadersAppender());
         interceptors.add(sibsMessageSignInterceptor());
         interceptors.add(new RestIoLogger());
+        interceptors.add(eidasHeadersAppender());
         restTemplate.setInterceptors(interceptors);
+        restTemplate.setRequestFactory(clientHttpRequestFactory());
         return restTemplate;
     }
 
     @Bean
     public SibsMessageSignInterceptor sibsMessageSignInterceptor() {
         return new SibsMessageSignInterceptor();
+    }
+
+    @Bean
+    public SibsStandardHeadersAppender sibsStandardHeadersAppender() {
+        return new SibsStandardHeadersAppender();
+    }
+
+    @Bean
+    public EidasHeadersAppender eidasHeadersAppender() {
+        return new EidasHeadersAppender();
     }
 }
