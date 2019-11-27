@@ -9,5 +9,8 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/enums",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "@com_fasterxml_jackson_core_jackson_annotations//jar",
+        "@com_google_guava_guava//jar",
     ],
 )
