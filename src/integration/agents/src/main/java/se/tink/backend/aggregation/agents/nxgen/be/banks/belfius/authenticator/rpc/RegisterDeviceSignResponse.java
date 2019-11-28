@@ -22,6 +22,10 @@ public class RegisterDeviceSignResponse extends BelfiusResponse {
                             messageResponse.getMessageDetail(),
                             BelfiusConstants.ErrorCodes.ERROR_EMPTY_SIGN_CODE)) {
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+            } else if (StringUtils.containsIgnoreCase(
+                    messageResponse.getMessageDetail(),
+                    BelfiusConstants.ErrorCodes.DEVICE_REGISTRATION_ERROR)) {
+                throw new IllegalStateException("Unknown device registration error");
             }
         }
     }
