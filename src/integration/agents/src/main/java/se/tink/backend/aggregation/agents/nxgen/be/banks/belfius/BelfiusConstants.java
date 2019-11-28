@@ -52,7 +52,7 @@ public class BelfiusConstants {
     public static class Storage {
         public static final String SESSION_ID = "SESSION_ID";
         public static final String MACHINE_IDENTIFIER = "MACHINE_IDENTIFIER";
-        public static final String REQUEST_COUNTER = "REQUEST_COUNTER";
+        public static final String REQUEST_COUNTER_AGG = "REQUEST_COUNTER";
         public static final String DEVICE_TOKEN = "DEVICE_TOKEN";
     }
 

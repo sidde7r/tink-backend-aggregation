@@ -15,12 +15,12 @@ public class BelfiusSessionStorage {
     public void clearSessionData() {
         this.sessionStorage.remove(BelfiusConstants.Storage.SESSION_ID);
         this.sessionStorage.remove(BelfiusConstants.Storage.MACHINE_IDENTIFIER);
-        this.sessionStorage.remove(BelfiusConstants.Storage.REQUEST_COUNTER);
+        this.sessionStorage.remove(BelfiusConstants.Storage.REQUEST_COUNTER_AGG);
     }
 
     public void clearSessionDataExceptMachineIdentifier() {
         this.sessionStorage.remove(BelfiusConstants.Storage.SESSION_ID);
-        this.sessionStorage.remove(BelfiusConstants.Storage.REQUEST_COUNTER);
+        this.sessionStorage.remove(BelfiusConstants.Storage.REQUEST_COUNTER_AGG);
     }
 
     public boolean containsSessionData() {
@@ -30,14 +30,14 @@ public class BelfiusSessionStorage {
     public void putSessionData(String sessionId, String machineIdentifier) {
         this.sessionStorage.put(BelfiusConstants.Storage.SESSION_ID, sessionId);
         this.sessionStorage.put(BelfiusConstants.Storage.MACHINE_IDENTIFIER, machineIdentifier);
-        this.sessionStorage.remove(BelfiusConstants.Storage.REQUEST_COUNTER);
+        this.sessionStorage.remove(BelfiusConstants.Storage.REQUEST_COUNTER_AGG);
     }
 
     public void incrementRequestCounter() {
         if (containsSessionData()) {
             int requestCounter = Integer.valueOf(getRequestCounter()) + 1;
             this.sessionStorage.put(
-                    BelfiusConstants.Storage.REQUEST_COUNTER, String.valueOf(requestCounter));
+                    BelfiusConstants.Storage.REQUEST_COUNTER_AGG, String.valueOf(requestCounter));
         }
     }
 
@@ -53,7 +53,7 @@ public class BelfiusSessionStorage {
 
     public String getRequestCounter() {
         return Optional.ofNullable(
-                        this.sessionStorage.get(BelfiusConstants.Storage.REQUEST_COUNTER))
+                        this.sessionStorage.get(BelfiusConstants.Storage.REQUEST_COUNTER_AGG))
                 .orElse("1");
     }
 
