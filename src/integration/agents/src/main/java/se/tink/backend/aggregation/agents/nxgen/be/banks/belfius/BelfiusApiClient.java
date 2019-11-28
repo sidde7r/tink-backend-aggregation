@@ -436,7 +436,7 @@ public class BelfiusApiClient {
         HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
         T response = parseBelfiusResponse(httpResponse, c);
         MessageResponse.validate(response);
-        this.sessionStorage.incrementRequestCounter();
+        this.sessionStorage.incrementRequestCounterAggregated();
         return response;
     }
 
@@ -446,7 +446,7 @@ public class BelfiusApiClient {
         String body = "request=" + urlEncode(SerializationUtils.serializeToString(builder.build()));
         HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
         T response = parseBelfiusResponse(httpResponse, c);
-        this.sessionStorage.incrementRequestCounter();
+        this.sessionStorage.incrementRequestCounterAggregated();
         return response;
     }
 
@@ -457,7 +457,7 @@ public class BelfiusApiClient {
         body = body.replace("\\\\", Character.toString((char) 92));
         HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
         T response = parseBelfiusResponse(httpResponse, c);
-        this.sessionStorage.incrementRequestCounter();
+        this.sessionStorage.incrementRequestCounterAggregated();
         return response;
     }
 
@@ -477,7 +477,7 @@ public class BelfiusApiClient {
     private void setSessionData(BelfiusRequest.Builder builder) {
         if (this.sessionStorage.containsSessionData()) {
             builder.setSessionId(this.sessionStorage.getSessionId())
-                    .setRequestCounter(this.sessionStorage.getRequestCounter());
+                    .setRequestCounter(this.sessionStorage.getRequestCounterAggregated());
         }
     }
 

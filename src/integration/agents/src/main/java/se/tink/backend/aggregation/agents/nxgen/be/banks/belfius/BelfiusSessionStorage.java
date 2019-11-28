@@ -33,9 +33,9 @@ public class BelfiusSessionStorage {
         this.sessionStorage.remove(BelfiusConstants.Storage.REQUEST_COUNTER_AGG);
     }
 
-    public void incrementRequestCounter() {
+    public void incrementRequestCounterAggregated() {
         if (containsSessionData()) {
-            int requestCounter = Integer.valueOf(getRequestCounter()) + 1;
+            int requestCounter = Integer.valueOf(getRequestCounterAggregated()) + 1;
             this.sessionStorage.put(
                     BelfiusConstants.Storage.REQUEST_COUNTER_AGG, String.valueOf(requestCounter));
         }
@@ -51,7 +51,8 @@ public class BelfiusSessionStorage {
                 .orElse("XXX");
     }
 
-    public String getRequestCounter() {
+    /** @return requestCounter for requests with execution mode "aggregated" */
+    public String getRequestCounterAggregated() {
         return Optional.ofNullable(
                         this.sessionStorage.get(BelfiusConstants.Storage.REQUEST_COUNTER_AGG))
                 .orElse("1");
