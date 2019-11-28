@@ -81,7 +81,7 @@ git_repository(
     name = "com_tink_api_grpc",
     commit = "fbdc9dc561b8d80d81f642d49dfbf7aee2ecc63e",
     remote = "git@github.com:tink-ab/tink-grpc.git",
-    shallow_since = "1563525421 +0000",
+    #shallow_since = "1563525421 +0000",
 )
 
 git_repository(
@@ -183,6 +183,24 @@ http_file(
     sha256 = "8e8b2b3a0b5b083cf5fc0268da7dd6b305762e591ec4a468e5e688f77c32e63f",
     urls = ["https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-windows-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
+
+# rules_proto will not be builtin in to Bazel in v1.0 and later
+# prepare us for that, and use the out-ot-repo version
+http_archive(
+    name = "rules_proto",
+    sha256 = "57001a3b33ec690a175cdf0698243431ef27233017b9bed23f96d44b9c98242f",
+    strip_prefix = "rules_proto-9cd4f8f1ede19d81c6d48910429fe96776e567b1",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_proto/archive/9cd4f8f1ede19d81c6d48910429fe96776e567b1.tar.gz",
+        "https://github.com/bazelbuild/rules_proto/archive/9cd4f8f1ede19d81c6d48910429fe96776e567b1.tar.gz",
+    ],
+)
+
+load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
+
+rules_proto_dependencies()
+
+rules_proto_toolchains()
 
 http_archive(
     name = "com_google_protobuf",
