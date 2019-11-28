@@ -288,6 +288,7 @@ public class SwedbankBaseConstants {
 
     public static class BankErrorMessage {
         public static final String LOGIN_FAILED = "LOGIN_FAILED";
+        public static final String SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE";
     }
 
     public static class ErrorMessage {
