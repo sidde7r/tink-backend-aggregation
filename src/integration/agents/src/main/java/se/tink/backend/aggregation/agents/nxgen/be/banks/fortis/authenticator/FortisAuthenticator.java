@@ -362,7 +362,8 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         EbankingUsersResponse ebankingUsersResponse =
                 getEbankingUsers(authenticatorFactorId, apiClient.getDistributorId(), smid);
 
-        if (ebankingUsersResponse.getValue().getEBankingUsers().size() != 0) {
+        if (ebankingUsersResponse.getValue() != null
+                && ebankingUsersResponse.getValue().getEBankingUsers().size() != 0) {
             Optional<EBankingUserId> eBankingUserId =
                     Optional.ofNullable(
                             ebankingUsersResponse
