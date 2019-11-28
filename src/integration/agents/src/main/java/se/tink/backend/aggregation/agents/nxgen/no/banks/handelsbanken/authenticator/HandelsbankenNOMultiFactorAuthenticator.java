@@ -4,6 +4,7 @@ import com.google.api.client.http.HttpStatusCodes;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,19 +121,18 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
     private String getBankIdEvryToken() {
         FinalizeBankIdRequest finalizeBankIdRequest = FinalizeBankIdRequest.build();
         String finalizedBankIdResponse = apiClient.finalizeBankId(finalizeBankIdRequest);
-        String evryToken =
-                Jsoup.parse(finalizedBankIdResponse)
-                        .getElementsByAttributeValue(Tags.NAME, Tags.EVRY_TOKEN_FIELD_VALUE)
-                        .first()
-                        .val();
-
-        sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
-        if (evryToken == null) {
+        Document doc = Jsoup.parse(finalizedBankIdResponse);
+        try {
+            Element scriptTag = doc.getElementsByTag("script").get(0);
+            String scriptData = scriptTag.dataNodes().get(0).getWholeData();
+            String evryToken = StringUtils.substringBetween(scriptData, "?so=", "&");
+            sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
+            return evryToken;
+        } catch (NullPointerException npe) {
             throw new IllegalStateException(
                     "can not retrieve every token, could it change field key? :"
                             + finalizedBankIdResponse);
         }
-        return evryToken;
     }
 
     private String getActivateEvryToken() throws SupplementalInfoException, LoginException {
