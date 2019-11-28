@@ -19,7 +19,8 @@ public class CredentialsEventProducer {
         this.eventProducerServiceClient = eventProducerServiceClient;
     }
 
-    public void sendCredentialsRefreshCommandChainFinished(Credentials credentials, String appId) {
+    public void sendCredentialsRefreshCommandChainFinished(
+            Credentials credentials, String appId, String correlationId) {
         CredentialsRefreshCommandChainFinished data =
                 CredentialsRefreshCommandChainFinished.newBuilder()
                         .setTimestamp(ProtobufTypeUtil.toProtobufTimestamp(Instant.now()))
@@ -27,12 +28,14 @@ public class CredentialsEventProducer {
                         .setUserId(credentials.getUserId())
                         .setCredentialsId(credentials.getId())
                         .setProviderName(credentials.getProviderName())
+                        .setCorrelationId(correlationId)
                         .build();
 
         eventProducerServiceClient.postEventAsync(Any.pack(data));
     }
 
-    public void sendCredentialsRefreshCommandChainStarted(Credentials credentials, String appId) {
+    public void sendCredentialsRefreshCommandChainStarted(
+            Credentials credentials, String appId, String correlationId) {
         CredentialsRefreshCommandChainStarted data =
                 CredentialsRefreshCommandChainStarted.newBuilder()
                         .setTimestamp(ProtobufTypeUtil.toProtobufTimestamp(Instant.now()))
@@ -40,6 +43,7 @@ public class CredentialsEventProducer {
                         .setUserId(credentials.getUserId())
                         .setCredentialsId(credentials.getId())
                         .setProviderName(credentials.getProviderName())
+                        .setCorrelationId(correlationId)
                         .build();
 
         eventProducerServiceClient.postEventAsync(Any.pack(data));

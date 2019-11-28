@@ -33,7 +33,8 @@ public class CredentialsEventProducerTest {
     @Test
     public void testCredentialsRefreshCommandChainStarted() throws InvalidProtocolBufferException {
         ArgumentCaptor<Any> capture = ArgumentCaptor.forClass(Any.class);
-        credentialsEventProducer.sendCredentialsRefreshCommandChainStarted(validCredentials, appId);
+        credentialsEventProducer.sendCredentialsRefreshCommandChainStarted(
+                validCredentials, appId, "correlationId");
         Mockito.verify(eventProducerServiceClient, Mockito.times(1))
                 .postEventAsync(capture.capture());
 
