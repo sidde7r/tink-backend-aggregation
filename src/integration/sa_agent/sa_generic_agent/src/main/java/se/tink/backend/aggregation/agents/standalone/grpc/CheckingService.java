@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.standalone.grpc;
 
 import io.grpc.ManagedChannel;
+import java.net.URI;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,11 +10,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountDetails;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.TransferDestination;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountExclusion;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.sa.services.fetch.account.AccountIdentifierType;
 import se.tink.sa.services.fetch.account.FetchAccountsRequest;
@@ -29,9 +33,9 @@ public class CheckingService {
         fetchAccountsServiceBlockingStub = FetchAccountsServiceGrpc.newBlockingStub(channel);
     }
 
-    public FetchAccountsResponse fetchCheckingAccounts(final String consetnId) {
+    public FetchAccountsResponse fetchCheckingAccounts(final String consentId) {
         FetchAccountsRequest fetchAccountsRequest =
-                FetchAccountsRequest.newBuilder().setConsentId(consetnId).build();
+                FetchAccountsRequest.newBuilder().setConsentId(consentId).build();
         return mapFetchAccountsResponse(
                 fetchAccountsServiceBlockingStub.fetchCheckingAccounts(fetchAccountsRequest));
     }
@@ -80,7 +84,13 @@ public class CheckingService {
         account.setUserModifiedName(transactionalAccount.getUserModifiedName());
         account.setUserModifiedType(transactionalAccount.getUserModifiedType());
         account.setIdentifiers(mapAccountIdentifiers(transactionalAccount.getIdentifiersList()));
-
+        account.setTransferDestinations(
+                mapTransferDestinations(transactionalAccount.getTransferDestinationsList()));
+        account.setDetails(mapAccountDetails(transactionalAccount.getDetails()));
+        account.setClosed(transactionalAccount.getClosed());
+        account.setHolderName(transactionalAccount.getHolderName());
+        account.setFlags(mapAccountFlags(transactionalAccount.getFlagsList()));
+        account.setFinancialInstitutionId(transactionalAccount.getFinancialInstitutionId());
         return account;
     }
 
@@ -125,5 +135,49 @@ public class CheckingService {
     private AccountIdentifier.Type mapAccountIdentifierType(
             final AccountIdentifierType accountIdentifierType) {
         return AccountIdentifier.Type.values()[accountIdentifierType.getNumber()];
+    }
+
+    private List<TransferDestination> mapTransferDestinations(
+            final List<se.tink.sa.services.fetch.account.TransferDestination>
+                    transferDestinations) {
+        return Optional.ofNullable(transferDestinations).orElse(Collections.emptyList()).stream()
+                .map(this::mapTransferDestination)
+                .collect(Collectors.toList());
+    }
+
+    private TransferDestination mapTransferDestination(
+            final se.tink.sa.services.fetch.account.TransferDestination transferDestination) {
+        TransferDestination resp = new TransferDestination();
+        resp.setBalance(transferDestination.getBalance());
+        resp.setUri(mapUri(transferDestination.getUri()));
+        resp.setName(transferDestination.getName());
+        resp.setType(transferDestination.getType());
+        return resp;
+    }
+
+    private URI mapUri(final se.tink.sa.services.fetch.account.URI uri) {
+        return URI.create(uri.getPath());
+    }
+
+    private AccountDetails mapAccountDetails(
+            final se.tink.sa.services.fetch.account.AccountDetails accountDetails) {
+        final AccountDetails resp = new AccountDetails();
+        resp.setInterest(accountDetails.getInterest());
+        resp.setNumMonthsBound(accountDetails.getNumMonthsBound());
+        resp.setType(accountDetails.getType());
+        resp.setNextDayOfTermsChange(mapFromGoogleDate(accountDetails.getNextDayOfTermsChange()));
+        return resp;
+    }
+
+    private Collection<AccountFlag> mapAccountFlags(
+            final List<se.tink.sa.services.fetch.account.AccountFlag> accountFlags) {
+        return Optional.ofNullable(accountFlags).orElse(Collections.emptyList()).stream()
+                .map(this::mapAccountFlag)
+                .collect(Collectors.toList());
+    }
+
+    private AccountFlag mapAccountFlag(
+            final se.tink.sa.services.fetch.account.AccountFlag accountFlag) {
+        return AccountFlag.values()[accountFlag.getNumber()];
     }
 }
