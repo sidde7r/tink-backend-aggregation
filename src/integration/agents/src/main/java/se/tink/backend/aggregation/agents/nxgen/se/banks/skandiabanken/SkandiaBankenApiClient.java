@@ -290,4 +290,8 @@ public class SkandiaBankenApiClient {
 
         return oAuth2Token;
     }
+
+    public String fetchMessage() {
+        return httpClient.request(Urls.LOGIN_MESSAGE).get(String.class);
+    }
 }
