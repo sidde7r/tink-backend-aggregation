@@ -129,10 +129,13 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
                         challenge, deviceToken, panNumber, contractNumber, password);
 
         apiClient.bacProductList();
-
         apiClient.login(deviceTokenHashed, deviceTokenHashedIosComparison, signature);
-
         apiClient.actorInformation();
+
+        apiClient.closeSession(sessionStorage.getSessionId());
+
+        apiClient.openSession();
+
         apiClient.startFlow();
 
         SendCardNumberResponse sendCardNumberResponse = apiClient.sendCardNumber(panNumber);
