@@ -96,14 +96,20 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         apiClient.startFlow();
 
         String challenge = apiClient.prepareAuthentication(panNumber);
-        String code = supplementalInformationHelper.waitForLoginChallengeResponse(challenge);
+        final String code =
+                supplementalInformationHelper
+                        .waitForLoginChallengeResponse(challenge)
+                        .replace(" ", "");
         apiClient.authenticateWithCode(code);
 
         final String deviceBrand = aggregator;
         final String deviceName = BelfiusConstants.MODEL;
 
         challenge = apiClient.prepareDeviceRegistration(deviceToken, deviceBrand, deviceName);
-        String sign = supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
+        final String sign =
+                supplementalInformationHelper
+                        .waitForSignCodeChallengeResponse(challenge)
+                        .replace(" ", "");
         apiClient.registerDevice(sign);
         persistentStorage.put(BelfiusConstants.Storage.DEVICE_TOKEN, deviceToken);
 
