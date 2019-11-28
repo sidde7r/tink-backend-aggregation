@@ -22,7 +22,6 @@ public class BankProfileHandler {
         return this;
     }
 
-    @JsonIgnore
     public BankProfile getActiveBankProfile() {
         return activeBankProfile;
     }
@@ -31,11 +30,13 @@ public class BankProfileHandler {
         return bankProfiles;
     }
 
+    @JsonIgnore
     public BankProfileHandler addBankProfile(BankProfile bankProfile) {
         this.bankProfiles.add(bankProfile);
         return this;
     }
 
+    @JsonIgnore
     public BankProfile findProfile(BankProfile requestedBankProfile) {
         return bankProfiles.stream()
                 .filter(
@@ -48,6 +49,7 @@ public class BankProfileHandler {
                 .orElseThrow(IllegalStateException::new);
     }
 
+    @JsonIgnore
     // currently we are always using the last added bank profile for transfers
     public BankProfile findTransferProfile() {
         int transferProfileIndex = bankProfiles.size() - 1;
@@ -55,6 +57,7 @@ public class BankProfileHandler {
         return bankProfiles.get(transferProfileIndex);
     }
 
+    @JsonIgnore
     public void throwIfNotAuthorizedForRegisterAction(SwedbankBaseConstants.MenuItemKey menuItemKey)
             throws TransferExecutionException {
         if (!isAuthorizedForAction(menuItemKey)) {
@@ -66,6 +69,7 @@ public class BankProfileHandler {
         }
     }
 
+    @JsonIgnore
     public boolean isAuthorizedForAction(SwedbankBaseConstants.MenuItemKey menuItemKey) {
         Map<String, MenuItemLinkEntity> menuItems = getMenuItems();
         Preconditions.checkNotNull(menuItemKey);
