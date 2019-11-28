@@ -35,7 +35,6 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
@@ -338,10 +337,7 @@ public class LansforsakringarAgent extends AbstractAgent
         BankIdLoginResponse bankIdloginResponse =
                 bankIdloginClientResponse.getEntity(BankIdLoginResponse.class);
 
-        credentials.setSupplementalInformation(null);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.openBankId();
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             ClientResponse clientLoginResponse =
@@ -699,9 +695,7 @@ public class LansforsakringarAgent extends AbstractAgent
                     createGetRequest(CREATE_BANKID_REFERENCE_PAYMENTS_URL);
             validateTransactionClientResponse(createReferenceResponse);
 
-            credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-            credentials.setStatusPayload(null);
-            supplementalRequester.requestSupplementalInformation(credentials, false);
+            supplementalRequester.openBankId();
 
             ClientResponse bankIdResponse = createGetRequest(SEND_UNSIGNED_PAYMENT_URL);
             validateTransactionClientResponse(bankIdResponse);
@@ -829,9 +823,7 @@ public class LansforsakringarAgent extends AbstractAgent
                 createPostRequest(SIGN_PAYMENT_CREATE_REFERENCE_URL, paymentRequest);
         validateTransactionClientResponse(createPaymentClientResponse);
 
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        credentials.setStatusPayload(null);
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.openBankId();
 
         ClientResponse sendPaymentClientResponse =
                 createPostRequest(SIGN_PAYMENT_SEND_PAYMENT_URL, paymentRequest);
@@ -1039,9 +1031,7 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     private void signAndValidatePayment(PaymentRequest paymentRequest) throws BankIdException {
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        credentials.setStatusPayload(null);
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.openBankId();
 
         collectTransferResponse(SEND_PAYMENT_URL, paymentRequest);
     }
@@ -1235,10 +1225,7 @@ public class LansforsakringarAgent extends AbstractAgent
     private void signAndValidateTransfer(TransferRequest transferRequest) throws BankIdException {
         createPostRequest(CREATE_BANKID_REFERENCE_URL, transferRequest);
 
-        credentials.setSupplementalInformation(null);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.openBankId();
 
         collectTransferResponse(BANKID_COLLECT_DIRECT_TRANSFER_URL, transferRequest);
     }
