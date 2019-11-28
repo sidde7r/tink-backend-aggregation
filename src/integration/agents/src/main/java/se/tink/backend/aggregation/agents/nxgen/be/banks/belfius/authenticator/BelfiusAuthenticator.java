@@ -128,12 +128,10 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
                 BelfiusSecurityUtils.createSignatureSoft(
                         challenge, deviceToken, panNumber, contractNumber, password);
 
-        // TODO ADDING THIS CRAP
         apiClient.bacProductList();
 
         apiClient.login(deviceTokenHashed, deviceTokenHashedIosComparison, signature);
 
-        // TODO ADDING THIS CRAP
         apiClient.actorInformation();
         apiClient.startFlow();
 
