@@ -142,16 +142,6 @@ public class AuthenticationService {
         return Credentials.CredentialsStatus.values()[credentialsStatus.ordinal()];
     }
 
-    private com.google.type.Date mapToGoogleDate(final Date date) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return com.google.type.Date.newBuilder()
-                .setYear(calendar.get(Calendar.YEAR))
-                .setMonth(calendar.get(Calendar.MONTH))
-                .setDay(calendar.get(Calendar.DAY_OF_MONTH))
-                .build();
-    }
-
     private SteppableAuthenticationResponse mapResponse(
             final AuthenticationResponse authenticationResponse) {
 
@@ -269,6 +259,16 @@ public class AuthenticationService {
                 .value(field.getValue())
                 .checkbox(field.getCheckbox())
                 .additionalInfo(field.getAdditionalInfo())
+                .build();
+    }
+
+    private com.google.type.Date mapToGoogleDate(final Date date) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return com.google.type.Date.newBuilder()
+                .setYear(calendar.get(Calendar.YEAR))
+                .setMonth(calendar.get(Calendar.MONTH))
+                .setDay(calendar.get(Calendar.DAY_OF_MONTH))
                 .build();
     }
 }

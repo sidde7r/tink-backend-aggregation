@@ -5,8 +5,7 @@ option java_package = "se.tink.sa.services.fetch.trans";
 option java_outer_classname = "OuterModel";
 option go_package = "proto";
 
-import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/accounttype.proto";
-import "google/type/date.proto";
+import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/account.proto";
 
 message FetchTransactionsRequest {
   string key = 1;
@@ -14,26 +13,15 @@ message FetchTransactionsRequest {
 }
 
 message FetchTransactionsResponse {
-  TransactionsEntity transactions = 1;
+  repeated TransactionsMapEntity transactions = 1;
 }
 
-message TransactionsEntity {
-  repeated BookedEntity booked = 1;
+message TransactionsMapEntity {
+    TransactionalAccount key = 1;
+    repeated Transaction value = 2;
 }
 
-message BookedEntity {
-   google.type.Date bookingDate = 1;
-   google.type.Date valueDate = 2;
-   AmountEntity amount = 3;
-   CreditorAccount creditorAccount = 4;
-   string remittanceInformationUnstructured = 5;
+message Transaction {
+  string key = 1;
 }
 
-message AmountEntity {
-  string currency = 1;
-  string content = 2;
-}
-
-message CreditorAccount {
-
-}
