@@ -27,6 +27,6 @@ public class CredentialsRefreshStartEventCommand extends AgentWorkerCommand {
 
     @Override
     public void postProcess() throws Exception {
-        // NOP
+        credentialsEventProducer.sendCredentialsRefreshCommandChainFinished(credentials, appId);
     }
 }
