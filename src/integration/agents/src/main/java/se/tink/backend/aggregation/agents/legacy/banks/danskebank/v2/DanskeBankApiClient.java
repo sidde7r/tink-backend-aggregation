@@ -5,6 +5,7 @@ import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.io.IOException;
@@ -50,14 +51,16 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.PortfoliosListResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.SignBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.SignBankIdResponse;
-import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.StatusEntity;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferDetailsResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferRequest;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.VerifyBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.VerifyBankIdResponse;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class DanskeBankApiClient {
@@ -98,21 +101,28 @@ public class DanskeBankApiClient {
     }
 
     /** Initializes a session for a password login. */
-    public CreateSessionResponse initAndCreateSession() {
+    public CreateSessionResponse initAndCreateSession() throws LoginException, SessionException {
         return initAndCreateSession(Optional.empty());
     }
 
-    public LoginResponse loginWithPassword(LoginRequest loginRequest) {
-        return post(DanskeBankUrl.LOGIN, LoginResponse.class, loginRequest);
+    public LoginResponse loginWithPassword(LoginRequest loginRequest)
+            throws LoginException, SessionException {
+        LoginResponse response = post(DanskeBankUrl.LOGIN, LoginResponse.class, loginRequest);
+        handleAbstractResponseError(response);
+        return response;
     }
 
     public LoginResponse loginConfirmChallenge(
-            LoginResponse loginResponse, String challengeResponse) {
+            LoginResponse loginResponse, String challengeResponse)
+            throws LoginException, SessionException {
         ChallengeResponseRequest challengeRequest = new ChallengeResponseRequest();
         challengeRequest.setChallengeData(loginResponse.getChallengeData());
         challengeRequest.setResponse(challengeResponse);
 
-        return post(DanskeBankUrl.LOGIN_CHALLENGE, LoginResponse.class, challengeRequest);
+        LoginResponse response =
+                post(DanskeBankUrl.LOGIN_CHALLENGE, LoginResponse.class, challengeRequest);
+        handleAbstractResponseError(response);
+        return response;
     }
 
     public InitBankIdResponse bankIdInitAuth(InitBankIdRequest initBankIdRequest) {
@@ -120,6 +130,7 @@ public class DanskeBankApiClient {
 
         ClientResponse initBankIdClientResponse =
                 postBankIdService(BankIdServiceType.INITAUTH, initBankIdAuthMessage);
+        handleClientResponseError(initBankIdClientResponse);
 
         MessageContainer initBankIdAuthResponseMessage =
                 initBankIdClientResponse.getEntity(MessageContainer.class);
@@ -134,6 +145,7 @@ public class DanskeBankApiClient {
 
         ClientResponse verifyClientResponse =
                 postBankIdService(bankIdServiceType, verifyAuthMessage);
+        handleClientResponseError(verifyClientResponse);
 
         return getDecryptedBankIdResponse(bankIdServiceType, verifyClientResponse);
     }
@@ -143,27 +155,38 @@ public class DanskeBankApiClient {
      * cookie. Without this call the user will never be logged in and authed to access nodes in the
      * `MB` url subset.
      */
-    public CreateSessionResponse createAuthenticatedSession() {
-        return initAndCreateSession(Optional.ofNullable(nssId));
+    public CreateSessionResponse createAuthenticatedSession()
+            throws LoginException, SessionException {
+        CreateSessionResponse response = initAndCreateSession(Optional.ofNullable(nssId));
+        handleAbstractResponseError(response);
+        return response;
     }
 
     public AccountListResponse getAccounts() {
-        return get(DanskeBankUrl.ACCOUNTS, AccountListResponse.class);
+        AccountListResponse response = get(DanskeBankUrl.ACCOUNTS, AccountListResponse.class);
+        handleGenericErrors(response);
+        return response;
     }
 
     public PortfoliosListResponse getPortfolios() {
-        return get(DanskeBankUrl.PORTFOLIOS, PortfoliosListResponse.class);
+        PortfoliosListResponse response =
+                get(DanskeBankUrl.PORTFOLIOS, PortfoliosListResponse.class);
+        handleGenericErrors(response);
+        return response;
     }
 
     public PapersListResponse getPortfolioPapers(String portfolioId) {
-        return get(DanskeBankUrl.portfolioPapers(portfolioId), PapersListResponse.class);
+        PapersListResponse response =
+                get(DanskeBankUrl.portfolioPapers(portfolioId), PapersListResponse.class);
+        handleGenericErrors(response);
+        return response;
     }
 
     boolean isCreditCardAccount(AccountEntity accountEntity) {
         if (cardsResponse == null) {
             // The call bellow is used to get a cookie which is needed when fetching the cards
             fetchCustomerSettings();
-            this.cardsResponse = getWithoutParameters(DanskeBankUrl.CARDS, CardsResponse.class);
+            cardsResponse = getWithoutParameters(DanskeBankUrl.CARDS, CardsResponse.class);
         }
 
         if (cardsResponse.getOutput() == null
@@ -179,8 +202,10 @@ public class DanskeBankApiClient {
         MultivaluedMap<String, String> queryParameters = new MultivaluedMapImpl();
         queryParameters.put("PushAcceptedOnDevice", Collections.singletonList("no"));
 
-        createRequestWithCustomParameters(DanskeBankUrl.CUSTOMER_SETTINGS, queryParameters)
-                .get(ClientResponse.class);
+        ClientResponse response =
+                createRequestWithCustomParameters(DanskeBankUrl.CUSTOMER_SETTINGS, queryParameters)
+                        .get(ClientResponse.class);
+        handleClientResponseError(response);
     }
 
     private WebResource.Builder createRequestWithCustomParameters(
@@ -225,15 +250,23 @@ public class DanskeBankApiClient {
 
         String transactionsUrl =
                 DanskeBankUrl.serviceAccountsIdTransaction(accountEntity.getAccountId(), type);
-        return get(transactionsUrl, queryParameters, AccountResponse.class);
+        AccountResponse response = get(transactionsUrl, queryParameters, AccountResponse.class);
+        handleGenericErrors(response);
+        return response;
     }
 
     public TransferDetailsResponse getTransferAccounts() {
-        return get(DanskeBankUrl.ACCOUNTS_TRANSFER_DETAILS, TransferDetailsResponse.class);
+        TransferDetailsResponse response =
+                get(DanskeBankUrl.ACCOUNTS_TRANSFER_DETAILS, TransferDetailsResponse.class);
+        handleGenericErrors(response);
+        return response;
     }
 
     public TransferDetailsResponse getPaymentAccounts() {
-        return get(DanskeBankUrl.ACCOUNTS_BILLS_DETAILS, TransferDetailsResponse.class);
+        TransferDetailsResponse response =
+                get(DanskeBankUrl.ACCOUNTS_BILLS_DETAILS, TransferDetailsResponse.class);
+        handleGenericErrors(response);
+        return response;
     }
 
     public TransferResponse createTransfer(TransferRequest transferRequest) throws IOException {
@@ -241,14 +274,19 @@ public class DanskeBankApiClient {
         String transferRequestSerialized =
                 MAPPER.writeValueAsString(transferRequest).replace("\\\\", "\\");
 
-        return post(DanskeBankUrl.TRANSFER, TransferResponse.class, transferRequestSerialized);
+        TransferResponse response =
+                post(DanskeBankUrl.TRANSFER, TransferResponse.class, transferRequestSerialized);
+        handleGenericErrors(response);
+        return response;
     }
 
     public BillResponse createPayment(BillRequest billRequest) throws IOException {
         // Hack to ensure Jersey/Jackson doesn't escape stuff.
         String billRequestSerialized = MAPPER.writeValueAsString(billRequest).replace("\\\\", "\\");
 
-        return post(DanskeBankUrl.BILL, BillResponse.class, billRequestSerialized);
+        BillResponse response = post(DanskeBankUrl.BILL, BillResponse.class, billRequestSerialized);
+        handleGenericErrors(response);
+        return response;
     }
 
     public void confirmTransfer(String challengeData) {
@@ -278,10 +316,8 @@ public class DanskeBankApiClient {
     private void sendChallengeResponse(String url, ChallengeResponseRequest request) {
         ChallengeResponseResponse response = post(url, ChallengeResponseResponse.class, request);
 
-        StatusEntity status = response.getStatus();
-        if (status.getStatusCode() != 0) {
-            String statusText = status.getStatusText();
-
+        if (!response.isStatusOk()) {
+            String statusText = response.getStatus().getStatusText();
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage("Error from DanskeBank: " + statusText)
                     .setMessage("Failed to confirm transfer, error from Danske Bank: " + statusText)
@@ -290,14 +326,19 @@ public class DanskeBankApiClient {
     }
 
     public EInvoiceListResponse getEInvoices() {
-        return get(DanskeBankUrl.EINVOICE_LIST, EInvoiceListResponse.class);
+        EInvoiceListResponse response =
+                get(DanskeBankUrl.EINVOICE_LIST, EInvoiceListResponse.class);
+        handleGenericErrors(response);
+        return response;
     }
 
     public EInvoiceDetailsResponse getEInvoiceDetails(String transactionId)
             throws UnsupportedEncodingException {
         String detailsUrl = DanskeBankUrl.eInvoiceDetails(transactionId);
 
-        return get(detailsUrl, EInvoiceDetailsResponse.class);
+        EInvoiceDetailsResponse response = get(detailsUrl, EInvoiceDetailsResponse.class);
+        handleGenericErrors(response);
+        return response;
     }
 
     public EInvoiceApproveResponse approveEInvoice(
@@ -307,7 +348,10 @@ public class DanskeBankApiClient {
 
         String approveUrl = DanskeBankUrl.eInvoiceApprove(transactionId);
 
-        return post(approveUrl, EInvoiceApproveResponse.class, requestSerialized);
+        EInvoiceApproveResponse response =
+                post(approveUrl, EInvoiceApproveResponse.class, requestSerialized);
+        handleGenericErrors(response);
+        return response;
     }
 
     private <T extends AbstractResponse> T get(
@@ -358,6 +402,7 @@ public class DanskeBankApiClient {
             BankIdServiceType serviceType, MessageContainer messageContainer) {
         ClientResponse response =
                 createRequest(serviceType).post(ClientResponse.class, messageContainer);
+        handleClientResponseError(response);
         interceptNssIdCookie(response);
         return response;
     }
@@ -483,12 +528,14 @@ public class DanskeBankApiClient {
      * the same system for login and for other authed calls, so there we don't use this call with
      * NSSID.
      */
-    private CreateSessionResponse initAndCreateSession(Optional<String> nssId) {
+    private CreateSessionResponse initAndCreateSession(Optional<String> nssId)
+            throws LoginException, SessionException {
         InitSessionResponse initSessionResponse =
                 postWithoutMagicKeyUpdate(
                         DanskeBankUrl.INITSESSION,
                         InitSessionResponse.class,
                         new InitSessionRequest());
+        handleAbstractResponseError(initSessionResponse);
 
         CreateSessionRequest createSessionRequest =
                 CreateSessionRequest.create(
@@ -499,7 +546,9 @@ public class DanskeBankApiClient {
                         DanskeBankUrl.CREATESESSION,
                         CreateSessionResponse.class,
                         createSessionRequest);
-        if (createSessionResponse.getStatus().getStatusCode() != 0) {
+        handleAbstractResponseError(createSessionResponse);
+
+        if (!createSessionResponse.isStatusOk()) {
             throw new IllegalStateException(
                     String.format(
                             "[userid: %s] Failed to create session: [%d] %s",
@@ -508,5 +557,38 @@ public class DanskeBankApiClient {
                             createSessionResponse.getStatus().getStatusText()));
         }
         return createSessionResponse;
+    }
+
+    private void handleClientResponseError(ClientResponse response) {
+        if (response.getStatus() >= 400) {
+            throw new UniformInterfaceException(response);
+        }
+    }
+
+    private <T extends AbstractResponse> void handleAbstractResponseError(T response)
+            throws LoginException, SessionException {
+        if (!response.isStatusOk()) {
+
+            if (response.isStatusAuthorizationNotPossible()) {
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+            }
+            if (response.isStatusTechnicalError()) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            if (response.isUnauthorizedError() || response.isSessionExpiredError()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+            handleGenericErrors(response);
+        }
+    }
+
+    private <T extends AbstractResponse> void handleGenericErrors(T response) {
+        if (!response.isStatusOk()) {
+            throw new IllegalStateException(
+                    "Error code: "
+                            + response.getStatus().getStatusCode()
+                            + ", error text: "
+                            + response.getStatus().getStatusText());
+        }
     }
 }
