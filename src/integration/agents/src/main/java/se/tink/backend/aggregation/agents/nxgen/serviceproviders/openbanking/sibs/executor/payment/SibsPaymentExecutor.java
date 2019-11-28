@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -40,16 +41,23 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
-        SibsPaymentInitiationRequest sibsPaymentRequest =
+
+        SibsPaymentInitiationRequest.Builder builder =
                 new SibsPaymentInitiationRequest.Builder()
                         .withCreditorAccount(fromCreditor(paymentRequest.getPayment()))
                         .withDebtorAccount(fromDebtor(paymentRequest.getPayment()))
-                        .withRequestedExecutionDate(paymentRequest.getPayment().getExecutionDate())
                         .withInstructedAmount(
                                 SibsAmountEntity.of(
                                         paymentRequest.getPayment().getExactCurrencyAmount()))
-                        .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
-                        .build();
+                        .withCreditorName(paymentRequest.getPayment().getCreditor().getName());
+
+        LocalDate paymentExecutionDate = paymentRequest.getPayment().getExecutionDate();
+
+        if (LocalDate.now().isBefore(paymentExecutionDate)) {
+            builder.withRequestedExecutionDate(paymentExecutionDate);
+        }
+
+        SibsPaymentInitiationRequest sibsPaymentRequest = builder.build();
 
         return apiClient
                 .createPayment(
