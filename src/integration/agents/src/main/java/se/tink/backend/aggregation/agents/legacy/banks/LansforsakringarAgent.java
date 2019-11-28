@@ -434,10 +434,19 @@ public class LansforsakringarAgent extends AbstractAgent
 
     private <T> T handleRequestResponse(ClientResponse response, Class<T> returnClass)
             throws HttpStatusCodeErrorException {
-        if (response.getStatus() == 200) {
+        if (response.getStatus() == HttpStatus.SC_OK) {
             return response.getEntity(returnClass);
         } else {
             String errorMsg = response.getHeaders().getFirst("Error-Message");
+
+            // Looking at error message to decide if bank side failure as LF seem to have a bunch
+            // of different codes for the same errors.
+            if (!Strings.isNullOrEmpty(errorMsg)
+                    && errorMsg.toLowerCase()
+                            .contains("tyvärr har det uppstått ett tekniskt fel")) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception("Message:" + errorMsg);
+            }
+
             throw new HttpStatusCodeErrorException(
                     response,
                     "Request status code " + response.getStatus() + ": '" + errorMsg + "'");
