@@ -144,7 +144,7 @@ public class IngCardReaderAuthenticator {
             }
             if (IngConstants.ErrorCodes.SMARTBANKING_SERVER_IS_NOT_RESPONDING_CODE.equalsIgnoreCase(
                     errorCode)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception("error code: " + errorCode);
             }
             String errormsg =
                     String.format(

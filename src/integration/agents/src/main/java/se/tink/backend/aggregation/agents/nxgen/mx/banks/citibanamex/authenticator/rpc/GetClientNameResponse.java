@@ -20,10 +20,9 @@ public class GetClientNameResponse extends BaseResponse {
     public GetClientNameResponse handleErrors() throws LoginException {
         if (Errors.INCORRECT_CLIENT_NAME.equalsIgnoreCase(faultstring)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
-        } else if (Errors.BANK_SIDE_ERROR.equalsIgnoreCase(faultstring)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
-        } else if (StringUtils.isNotEmpty(faultstring)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        } else if (Errors.BANK_SIDE_ERROR.equalsIgnoreCase(faultstring)
+                || StringUtils.isNotEmpty(faultstring)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception("Error message: " + faultstring);
         }
         return this;
     }

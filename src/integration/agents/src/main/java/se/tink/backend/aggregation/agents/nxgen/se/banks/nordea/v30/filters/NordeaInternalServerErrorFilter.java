@@ -19,7 +19,7 @@ public class NordeaInternalServerErrorFilter extends Filter {
         if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR && response.hasBody()) {
             String body = response.getBody(String.class);
             if (!Strings.isNullOrEmpty(body) && isBankSideFailure(body)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception("Error body: " + body);
             }
         }
         return response;

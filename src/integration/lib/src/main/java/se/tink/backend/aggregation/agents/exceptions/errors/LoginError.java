@@ -46,6 +46,11 @@ public enum LoginError implements AgentError {
     }
 
     @Override
+    public LoginException exception(String internalMessage) {
+        return new LoginException(this, internalMessage);
+    }
+
+    @Override
     public LoginException exception(Throwable cause) {
         return new LoginException(this, cause);
     }

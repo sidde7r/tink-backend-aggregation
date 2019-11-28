@@ -28,6 +28,11 @@ public enum BankIdErrorNO implements AgentError {
     }
 
     @Override
+    public BankIdException exception(String internalMessage) {
+        return new BankIdException(this, internalMessage);
+    }
+
+    @Override
     public AgentExceptionImpl exception(Throwable cause) {
         return BankIdError.valueOf(this.name()).exception(this.userMessage, cause);
     }

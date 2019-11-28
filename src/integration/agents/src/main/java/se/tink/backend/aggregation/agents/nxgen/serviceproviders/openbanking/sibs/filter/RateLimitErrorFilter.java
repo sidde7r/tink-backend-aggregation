@@ -30,7 +30,7 @@ public class RateLimitErrorFilter extends Filter {
         HttpResponse response = nextFilter(httpRequest);
 
         if (response.getStatus() == TOO_MANY_REQUESTS) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception("Http status: " + TOO_MANY_REQUESTS);
         }
 
         return response;

@@ -14,6 +14,9 @@ public interface AgentRuntimeError extends AgentBaseError {
     AgentRuntimeExceptionImpl exception();
 
     @Override
+    AgentRuntimeExceptionImpl exception(String internalMessage);
+
+    @Override
     AgentRuntimeExceptionImpl exception(Throwable cause);
 
     @Override

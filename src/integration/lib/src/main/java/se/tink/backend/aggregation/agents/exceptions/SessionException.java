@@ -21,6 +21,10 @@ public class SessionException extends AuthenticationException {
         super(error, userMessage, cause);
     }
 
+    public SessionException(SessionError sessionError, String internalMessage) {
+        super(sessionError, internalMessage);
+    }
+
     @Override
     public SessionError getError() {
         return getError(SessionError.class);

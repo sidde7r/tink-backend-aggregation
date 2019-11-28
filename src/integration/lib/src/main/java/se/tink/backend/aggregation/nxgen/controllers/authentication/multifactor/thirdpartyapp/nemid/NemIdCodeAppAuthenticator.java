@@ -87,7 +87,8 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
                     .post(NemIdCodeAppPollResponse.class, request);
         } catch (HttpClientException e) {
             if (Errors.READ_TIMEOUT_ERROR.equals(e.getCause().getMessage())) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        "Error message: " + Errors.READ_TIMEOUT_ERROR);
             }
             throw e;
         }

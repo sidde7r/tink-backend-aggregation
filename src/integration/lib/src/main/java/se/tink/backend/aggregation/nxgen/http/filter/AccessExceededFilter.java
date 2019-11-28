@@ -18,7 +18,8 @@ public final class AccessExceededFilter extends Filter {
         if (response.getStatus() == 429) {
             String body = response.getBody(String.class).toLowerCase();
             if (body.contains(ACCESS_EXCEEDED)) {
-                throw BankServiceError.ACCESS_EXCEEDED.exception();
+                throw BankServiceError.ACCESS_EXCEEDED.exception(
+                        "Http status: " + response.getStatus() + "Error body: " + body);
             }
         }
 

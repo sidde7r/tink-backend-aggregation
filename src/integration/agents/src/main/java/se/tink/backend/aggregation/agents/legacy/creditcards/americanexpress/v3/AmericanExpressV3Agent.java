@@ -312,7 +312,8 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
 
             if (message.toLowerCase()
                     .contains("fel inträffade tyvärr vid laddning av innehållet")) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        "Message: " + message + ", status: " + statusCode);
             }
         }
 

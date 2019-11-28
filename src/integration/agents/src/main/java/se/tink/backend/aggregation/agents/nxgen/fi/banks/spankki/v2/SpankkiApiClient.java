@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConstants.Headers;
@@ -233,7 +232,11 @@ public class SpankkiApiClient {
 
     private <T extends SpankkiResponse> T validateResponse(T response) {
         if (response.getStatus().isBankSideFailure()) {
-            throw new BankServiceException(BankServiceError.BANK_SIDE_FAILURE);
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Status code: "
+                            + response.getStatus().getStatusCode()
+                            + ", message: "
+                            + response.getStatus().getMessage());
         }
         sessionStorage.put(Storage.SESSION_ID, response.getStatus().getSessionId());
 

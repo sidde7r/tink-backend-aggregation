@@ -6,10 +6,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AuthResponse {
+
     private String errorCode;
     private String message;
     private String returnCode;
     private String body;
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 
     public boolean isSuccess() {
         return "success".equalsIgnoreCase(returnCode);

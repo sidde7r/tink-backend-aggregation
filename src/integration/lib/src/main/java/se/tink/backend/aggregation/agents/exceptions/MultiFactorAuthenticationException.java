@@ -21,4 +21,8 @@ public abstract class MultiFactorAuthenticationException extends AuthenticationE
             AgentError error, LocalizableKey userMessage, Throwable cause) {
         super(error, userMessage, cause);
     }
+
+    public MultiFactorAuthenticationException(AgentError error, String internalMessage) {
+        super(error, internalMessage);
+    }
 }

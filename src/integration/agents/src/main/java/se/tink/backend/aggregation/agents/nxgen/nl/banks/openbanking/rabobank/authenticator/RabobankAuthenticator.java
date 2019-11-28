@@ -109,7 +109,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
             }
         }
         if (consentId.isEmpty()) {
-            throw BankServiceError.CONSENT_INVALID.exception();
+            throw BankServiceError.CONSENT_INVALID.exception("Missing consent ID.");
         }
         return consentId;
     }

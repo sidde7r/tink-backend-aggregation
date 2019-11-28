@@ -26,7 +26,8 @@ public class SwedbankSeHttpFilter extends Filter {
             String error = Strings.nullToEmpty(response.getBody(String.class)).toLowerCase();
             if (error.contains(SwedbankSEConstants.Errors.INTERNAL_SERVER_ERROR.toLowerCase())
                     && error.contains(Errors.INTERNAL_TECHNICAL_ERROR.toLowerCase())) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        "Http status: " + response.getStatus() + ", body: " + error);
             }
         }
     }

@@ -173,7 +173,8 @@ public class KbcApiClient {
                 && matchesErrorMessage(
                         header.getResultMessage(),
                         KbcConstants.ErrorMessage.THIRD_PARTY_SERVER_ERROR)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Error code: " + resultValue + ", message: " + header.getResultMessage());
         }
     }
 

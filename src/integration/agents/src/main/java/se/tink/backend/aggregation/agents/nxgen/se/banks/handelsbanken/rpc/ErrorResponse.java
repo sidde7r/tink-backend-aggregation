@@ -11,6 +11,14 @@ public class ErrorResponse {
     private int status;
     private String detail;
 
+    public int getStatus() {
+        return status;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
     @JsonIgnore
     public boolean isTmpBankSideFailure() {
         // Error text to look for is very specific, as to not accidentally treat something that's
