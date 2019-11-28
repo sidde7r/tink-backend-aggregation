@@ -81,25 +81,33 @@ public class NovoBancoTransactionFetcherTest {
         Collection<? extends Transaction> transactions =
                 fetcher.getTransactionsFor(getAccount(PAYLOAD_ACCOUNT_ID_1, ACCOUNT_1_CURRENCY), 1)
                         .getTinkTransactions();
-
         // then
+        assertTransactionsEqual(transactions);
+    }
+
+    private void assertTransactionsEqual(Collection<? extends Transaction> transactions) {
         Collection<TransactionDto> refTransactions = AccountsTestData.getReferenceTransactionDtos();
         assertEquals(refTransactions.size(), transactions.size());
         refTransactions.forEach(
                 refTransaction -> {
-                    String refDescription = refTransaction.getDescription();
-                    Transaction transaction =
-                            transactions.stream()
-                                    .filter(
-                                            t ->
-                                                    refDescription.equals(
-                                                            ((Transaction) t).getDescription()))
-                                    .findFirst()
-                                    .orElse(null);
-                    assertNotNull("No transaction matching the ref description", transaction);
-                    assertEquals(refTransaction.getDate(), dateToString(transaction.getDate()));
-                    assertEquals(refTransaction.getAmount(), transaction.getExactAmount());
+                    Transaction transaction = getMatchingTransaction(refTransaction, transactions);
+                    assertTransactionEquals(refTransaction, transaction);
                 });
+    }
+
+    private void assertTransactionEquals(TransactionDto refTransaction, Transaction transaction) {
+        assertNotNull("No transaction matching the ref description", transaction);
+        assertEquals(refTransaction.getDate(), dateToString(transaction.getDate()));
+        assertEquals(refTransaction.getAmount(), transaction.getExactAmount());
+    }
+
+    private Transaction getMatchingTransaction(
+            TransactionDto refTransaction, Collection<? extends Transaction> transactions) {
+        String refDescription = refTransaction.getDescription();
+        return transactions.stream()
+                .filter(t -> refDescription.equals(((Transaction) t).getDescription()))
+                .findFirst()
+                .orElse(null);
     }
 
     private String dateToString(Date date) {

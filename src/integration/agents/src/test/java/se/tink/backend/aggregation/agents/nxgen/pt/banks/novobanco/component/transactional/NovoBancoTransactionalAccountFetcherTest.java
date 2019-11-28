@@ -82,13 +82,22 @@ public class NovoBancoTransactionalAccountFetcherTest {
 
         // then
         assertEquals(2, accounts.size());
+        assertAccountsEqual(accounts);
+    }
+
+    private void assertAccountsEqual(Collection<TransactionalAccount> accounts) {
         accounts.forEach(
                 account -> {
                     TransactionalAccountDto expected =
                             getReferenceAccountDto(account.getAccountNumber());
-                    assertEquals(expected.getAccountNumber(), account.getAccountNumber());
-                    assertTrue(account.isUniqueIdentifierEqual(expected.getUniqueIdentifier()));
-                    assertEquals(expected.getExactBalance(), account.getExactBalance());
+                    assertAccountEquals(expected, account);
                 });
+    }
+
+    private void assertAccountEquals(
+            TransactionalAccountDto expected, TransactionalAccount account) {
+        assertEquals(expected.getAccountNumber(), account.getAccountNumber());
+        assertTrue(account.isUniqueIdentifierEqual(expected.getUniqueIdentifier()));
+        assertEquals(expected.getExactBalance(), account.getExactBalance());
     }
 }
