@@ -32,7 +32,7 @@ import se.tink.libraries.pair.Pair;
 
 public class NovoBancoTransactionFetcherTest {
     @Test
-    public void sanity_NoTransactionsAvailable_EmptyCollectionReturned() {
+    public void shouldReturnEmptyCollectionIfNoTransactionsAvailable() {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.getTransactions(any()))
@@ -49,7 +49,7 @@ public class NovoBancoTransactionFetcherTest {
     }
 
     @Test
-    public void sanity_SomeTransactionsAvailable_NonEmptyCollectionReturned() {
+    public void shouldReturnNonEmptyCollectionIfTransactionsAvailable() {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         List<MovementsEntity> movements =
@@ -68,7 +68,7 @@ public class NovoBancoTransactionFetcherTest {
     }
 
     @Test
-    public void test_ValidResponse_TransactionsMappedCorrectly() {
+    public void shouldReturnCorrectlyMappedTransactions() {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         List<MovementsEntity> movements =

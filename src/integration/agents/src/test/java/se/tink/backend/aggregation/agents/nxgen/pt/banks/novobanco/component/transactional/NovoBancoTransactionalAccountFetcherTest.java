@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class NovoBancoTransactionalAccountFetcherTest {
 
     @Test
-    public void sanity_ValidResponses_NonEmptyCollectionReturned() {
+    public void shouldReturnNonEmptyCollectionIfTransactionalAccountsAvailable() {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.getAccount(AccountsTestData.PAYLOAD_ACCOUNT_ID_1))
@@ -37,7 +37,7 @@ public class NovoBancoTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void sanity_EmptyResponses_EmptyCollectionReturned() {
+    public void shouldReturnEmptyCollectionIfNoTransactionalAccountsAvailable() {
         // given
         final GetAccountsResponse emptyResponse = new GetAccountsResponse();
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
@@ -51,7 +51,7 @@ public class NovoBancoTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void sanity_ErroredResponses_EmptyCollectionReturned() {
+    public void shouldReturnEmptyCollectionIfErroredResponse() {
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.getAccount(any()))
                 .thenReturn(AccountsTestData.getResponse(AccountsTestData.PAYLOAD_ERRORED));
@@ -65,7 +65,7 @@ public class NovoBancoTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void test_ValidResponse_AccountsMappedCorrectly() {
+    public void shouldReturnCorrectlyMappedAccounts() {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.getAccount(AccountsTestData.PAYLOAD_ACCOUNT_ID_1))

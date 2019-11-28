@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 public class NovoBancoInvestmentAccountFetcherTest {
 
     @Test
-    public void sanity_NoInvestmentsAvailable_EmptyCollectionReturned() {
+    public void shouldReturnEmptyCollectionIfNoInvestmentsAvailable() {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.getInvestments()).thenReturn(Collections.emptyList());
@@ -33,7 +33,7 @@ public class NovoBancoInvestmentAccountFetcherTest {
     }
 
     @Test
-    public void sanity_ErroredResponses_EmptyCollectionReturned() {
+    public void shouldReturnEmptyCollectionIfErroredResponse() {
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.getInvestments())
                 .thenReturn(Collections.singletonList(InvestmentTestData.getResponse(FAILED_CALL)));
@@ -45,7 +45,7 @@ public class NovoBancoInvestmentAccountFetcherTest {
     }
 
     @Test
-    public void sanity_ValidResponses_NonEmptyCollectionReturned() {
+    public void shouldReturnNonEmptyCollectionIfInvestmentsAvailable() {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.getInvestments())
