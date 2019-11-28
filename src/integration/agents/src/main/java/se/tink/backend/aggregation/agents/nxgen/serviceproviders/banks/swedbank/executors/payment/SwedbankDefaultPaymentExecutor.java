@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants.MenuItemKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.BaseTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.payment.rpc.RegisterPayeeRequest;
@@ -17,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfileHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -26,16 +26,16 @@ import se.tink.libraries.transfer.rpc.Transfer;
 public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
         implements PaymentExecutor {
     private final Catalog catalog;
-    private final SessionStorage sessionStorage;
+    private final SwedbankStorage swedbankStorage;
 
     public SwedbankDefaultPaymentExecutor(
             Catalog catalog,
             SwedbankDefaultApiClient apiClient,
             SwedbankTransferHelper transferHelper,
-            SessionStorage sessionStorage) {
+            SwedbankStorage swedbankStorage) {
         super(apiClient, transferHelper);
         this.catalog = catalog;
-        this.sessionStorage = sessionStorage;
+        this.swedbankStorage = swedbankStorage;
     }
 
     @Override
@@ -125,12 +125,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
                     .build();
         }
 
-        BankProfileHandler handler =
-                sessionStorage
-                        .get(
-                                SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER,
-                                BankProfileHandler.class)
-                        .orElseThrow(IllegalStateException::new);
+        BankProfileHandler handler = swedbankStorage.getBankProfileHandler();
         handler.throwIfNotAuthorizedForRegisterAction(MenuItemKey.REGISTER_PAYEE);
         RegisterPayeeRequest registerPayeeRequest =
                 RegisterPayeeRequest.create(

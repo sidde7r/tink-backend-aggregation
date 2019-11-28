@@ -68,6 +68,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final boolean isBankId;
+    private final SwedbankStorage swedbankStorage;
 
     public SwedbankAbstractAgentPaymentsRevamp(
             CredentialsRequest request,
@@ -90,11 +91,13 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
             SwedbankApiClientProvider apiClientProvider) {
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
+        swedbankStorage = new SwedbankStorage();
+
         this.isBankId =
                 request.getProvider().getCredentialsType().equals(CredentialsTypes.MOBILE_BANKID);
         this.configuration = configuration;
         this.apiClient =
-                apiClientProvider.getApiAgent(client, configuration, credentials, sessionStorage);
+                apiClientProvider.getApiAgent(client, configuration, credentials, swedbankStorage);
         eInvoiceRefreshController = null;
 
         SwedbankDefaultInvestmentFetcher investmentFetcher =
@@ -238,10 +241,10 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
                         context, catalog, supplementalInformationHelper, apiClient, isBankId);
         SwedbankDefaultBankTransferExecutorNxgen transferExecutor =
                 new SwedbankDefaultBankTransferExecutorNxgen(
-                        catalog, apiClient, transferHelper, sessionStorage);
+                        catalog, apiClient, transferHelper, swedbankStorage);
         SwedbankDefaultPaymentExecutor paymentExecutor =
                 new SwedbankDefaultPaymentExecutor(
-                        catalog, apiClient, transferHelper, sessionStorage);
+                        catalog, apiClient, transferHelper, swedbankStorage);
         SwedbankDefaultApproveEInvoiceExecutor approveEInvoiceExecutor =
                 new SwedbankDefaultApproveEInvoiceExecutor(apiClient, transferHelper);
         SwedbankDefaultUpdatePaymentExecutor updatePaymentExecutor =

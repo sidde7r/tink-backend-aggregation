@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.ConfirmTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.InitiateSignTransferResponse;
@@ -36,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.Outbox
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferDestination;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferSource;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.i18n.Catalog;
@@ -49,7 +49,7 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
     private final Catalog catalog;
     private final SwedbankDefaultApiClient apiClient;
     private final SwedbankTransferHelper transferHelper;
-    private final SessionStorage sessionStorage;
+    private final SwedbankStorage swedbankStorage;
 
     private PaymentBaseinfoResponse paymentBaseinfoResponse;
     private RegisteredTransfersResponse registeredTransfersResponse;
@@ -58,11 +58,11 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
             Catalog catalog,
             SwedbankDefaultApiClient apiClient,
             SwedbankTransferHelper transferHelper,
-            SessionStorage sessionStorage) {
+            SwedbankStorage swedbankStorage) {
         this.catalog = catalog;
         this.apiClient = apiClient;
         this.transferHelper = transferHelper;
-        this.sessionStorage = sessionStorage;
+        this.swedbankStorage = swedbankStorage;
     }
 
     @Override
@@ -172,12 +172,7 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
                     .build();
         }
 
-        BankProfileHandler handler =
-                sessionStorage
-                        .get(
-                                SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER,
-                                BankProfileHandler.class)
-                        .orElseThrow(IllegalStateException::new);
+        BankProfileHandler handler = swedbankStorage.getBankProfileHandler();
         handler.throwIfNotAuthorizedForRegisterAction(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_EXTERNAL_TRANSFER_RECIPIENT);
 
