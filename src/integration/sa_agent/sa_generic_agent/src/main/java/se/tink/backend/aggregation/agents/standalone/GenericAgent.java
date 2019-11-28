@@ -73,7 +73,9 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
-        return checkingService.fetchCheckingAccounts();
+        // TODO: grab consentId
+        final String consentId = "???";
+        return checkingService.fetchCheckingAccounts(consentId);
     }
 
     @Override
