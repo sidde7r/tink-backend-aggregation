@@ -21,6 +21,10 @@ public class SibsConstants {
         public static final String TIP_REDIRECT_PREFERRED = "tppRedirectPreferred";
     }
 
+    public static class HeaderValues {
+        public static final String DIGEST_PREFIX = "SHA-256=";
+    }
+
     public static class QueryValues {
         public static final String BOTH = "both";
     }
@@ -38,6 +42,7 @@ public class SibsConstants {
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String PSU_ID_TYPE = "PSU-ID-Type";
         public static final String PSU_ID = "PSU-ID";
+        public static final String X_AGGREGATOR = "X-Aggregator";
     }
 
     public static class FormValues {
