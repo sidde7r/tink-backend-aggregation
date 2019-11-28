@@ -184,7 +184,6 @@ public class HandelsbankenNOConstants {
         public static final String JSESSION_ID = "JSESSIONID";
         public static final String REFERENCE_WORD = "bidm_ref-word";
         public static final String NAME = "name";
-        public static final String EVRY_TOKEN_FIELD_VALUE = "so";
         public static final String ACCESS_TOKEN = "accessToken";
         public static final String TRANSACTIONS = "transactions";
         public static final String NONCE = "SECESB_NONCE";
