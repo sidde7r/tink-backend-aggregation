@@ -1131,6 +1131,11 @@ public class LansforsakringarAgent extends AbstractAgent
         AccountIdentifier source = transfer.getSource();
         AccountIdentifier destination = transfer.getDestination();
 
+        if (!destination.is(AccountIdentifier.Type.SE)) {
+            throw new Exception(
+                    "Transfer account identifiers other than Swedish ones not implemented yet.");
+        }
+
         TransferrableResponse sourceAccounts = fetchTransferSourceAccounts();
         validateSourceAccount(source, sourceAccounts);
 
@@ -1141,24 +1146,19 @@ public class LansforsakringarAgent extends AbstractAgent
         Preconditions.checkState(
                 destinationAccounts != null, "Could not collect transfer accounts");
 
-        TransferRequest transferRequest = new TransferRequest();
-
         // Ensure correctly formatted transfer messages
         boolean isBetweenSameUserAccounts =
                 LFUtils.find(destination, sourceAccounts.getAccounts()).isPresent();
         TransferMessageFormatter.Messages formattedMessages =
                 transferMessageFormatter.getMessages(transfer, isBetweenSameUserAccounts);
 
-        transferRequest.setBankName(findBankName(destination, destinationAccounts));
-        transferRequest.setAmount(transfer.getAmount().getValue());
-        transferRequest.setToText(formattedMessages.getDestinationMessage());
-        transferRequest.setFromText(formattedMessages.getSourceMessage());
-        transferRequest.setChallenge("");
-        transferRequest.setResponse("");
-        transferRequest.setFromAccount(source.getIdentifier(DEFAULT_FORMATTER));
-
-        String apiFormattedDestination = getToAccount(destination);
-        transferRequest.setToAccount(apiFormattedDestination);
+        TransferRequest transferRequest =
+                TransferRequest.create(
+                        findBankName(destination, destinationAccounts),
+                        transfer.getAmount().getValue(),
+                        formattedMessages,
+                        source.getIdentifier(DEFAULT_FORMATTER),
+                        LFUtils.getApiAdaptedToAccount(destination.to(SwedishIdentifier.class)));
 
         // Execute the transfer.
 
@@ -1241,15 +1241,6 @@ public class LansforsakringarAgent extends AbstractAgent
         supplementalRequester.requestSupplementalInformation(credentials, false);
 
         collectTransferResponse(BANKID_COLLECT_DIRECT_TRANSFER_URL, transferRequest);
-    }
-
-    private String getToAccount(AccountIdentifier destination) throws Exception {
-        if (!destination.is(AccountIdentifier.Type.SE)) {
-            throw new Exception(
-                    "Transfer account identifiers other than Swedish ones not implemented yet.");
-        }
-
-        return LFUtils.getApiAdaptedToAccount(destination.to(SwedishIdentifier.class));
     }
 
     private String fetchToken() {

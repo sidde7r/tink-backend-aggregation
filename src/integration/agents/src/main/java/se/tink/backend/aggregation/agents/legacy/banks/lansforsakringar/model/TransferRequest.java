@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 
 public class TransferRequest {
     private static final String FOUR_POINT_PRECISION_FORMAT_STRING = "0.0000";
@@ -16,68 +17,37 @@ public class TransferRequest {
     private String response;
     private String fromAccount;
 
-    public String getToText() {
-        return toText;
-    }
-
-    public void setToText(String toText) {
-        this.toText = toText;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
+    private TransferRequest(
+            String bankName,
+            double amount,
+            TransferMessageFormatter.Messages formattedMessages,
+            String fromAccount,
+            String toAccount) {
+        this.bankName = bankName;
         this.amount = amount;
+        this.toText = formattedMessages.getDestinationMessage();
+        this.fromText = formattedMessages.getSourceMessage();
+        this.challenge = "";
+        this.response = "";
+        this.fromAccount = fromAccount;
+        this.toAccount = toAccount;
+    }
+
+    public static TransferRequest create(
+            String bankName,
+            double amount,
+            TransferMessageFormatter.Messages formattedMessages,
+            String fromAccount,
+            String toAccount) {
+        return new TransferRequest(bankName, amount, formattedMessages, fromAccount, toAccount);
     }
 
     public String getBankName() {
         return bankName;
     }
 
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-
-    public String getFromText() {
-        return fromText;
-    }
-
-    public void setFromText(String fromText) {
-        this.fromText = fromText;
-    }
-
-    public String getToAccount() {
-        return toAccount;
-    }
-
-    public void setToAccount(String toAccount) {
-        this.toAccount = toAccount;
-    }
-
-    public String getChallenge() {
-        return challenge;
-    }
-
-    public void setChallenge(String challenge) {
-        this.challenge = challenge;
-    }
-
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
     public String getFromAccount() {
         return fromAccount;
-    }
-
-    public void setFromAccount(String fromAccount) {
-        this.fromAccount = fromAccount;
     }
 
     public String calculateHash() {
