@@ -7,16 +7,19 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.KbcAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.KbcBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.filters.KbcHttpFilter;
@@ -28,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAut
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -44,6 +48,7 @@ public final class KbcAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
 
@@ -52,6 +57,7 @@ public final class KbcAgent
     private KbcHttpFilter httpFilter;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final InvestmentRefreshController investmentRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     private final AutoAuthenticationProgressiveController progressiveAuthenticator;
@@ -72,6 +78,7 @@ public final class KbcAgent
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.investmentRefreshController = constructInvestmentRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
 
@@ -141,6 +148,23 @@ public final class KbcAgent
                 new KbcCreditCardFetcher(apiClient, sessionStorage);
         return new CreditCardRefreshController(
                 metricRefreshController, updateController, creditCardFetcher, creditCardFetcher);
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
+    }
+
+    private InvestmentRefreshController constructInvestmentRefreshController() {
+        KbcInvestmentAccountFetcher accountFetcher =
+                new KbcInvestmentAccountFetcher(apiClient, sessionStorage);
+        return new InvestmentRefreshController(
+                metricRefreshController, updateController, accountFetcher);
     }
 
     @Override

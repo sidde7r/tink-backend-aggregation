@@ -55,9 +55,15 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.Valida
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AssetJarsDto;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AssetsDetailResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AssetsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.BeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.FutureTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.FutureTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.InvestmentPlanDetailResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.InvestmentPlanDto;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.InvestmentPlansOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.TransactionsHistoryRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.TransactionsHistoryResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
@@ -756,6 +762,43 @@ public class KbcApiClient {
 
     public String fetchCards(final byte[] cipherKey) {
         return post(KbcConstants.Url.CARDS, null, String.class, cipherKey);
+    }
+
+    public InvestmentPlansOverviewResponse fetchInvestmentPlanOverview(final byte[] cipherKey) {
+        InvestmentPlansOverviewResponse response =
+                post(
+                        Url.INVESTMENT_PLAN_OVERVIEW,
+                        null,
+                        InvestmentPlansOverviewResponse.class,
+                        cipherKey);
+        verifyDoubleZeroResponseCode(response.getHeader());
+        return response;
+    }
+
+    public InvestmentPlanDetailResponse fetchInvestmentPlanDetail(
+            final InvestmentPlanDto investmentPlan, final byte[] cipherKey) {
+        InvestmentPlanDetailResponse response =
+                post(
+                        Url.INVESTMENT_PLAN_DETAIL,
+                        investmentPlan,
+                        InvestmentPlanDetailResponse.class,
+                        cipherKey);
+        verifyDoubleZeroResponseCode(response.getHeader());
+        return response;
+    }
+
+    public AssetsResponse fetchAssets(final byte[] cipherKey) {
+        AssetsResponse response = post(Url.ASSETS, null, AssetsResponse.class, cipherKey);
+        verifyDoubleZeroResponseCode(response.getHeader());
+        return response;
+    }
+
+    public AssetsDetailResponse fetchAssetsDetail(
+            final AssetJarsDto assetJarsDto, final byte[] cipherKey) {
+        AssetsDetailResponse response =
+                post(Url.ASSETS_DETAIL, assetJarsDto, AssetsDetailResponse.class, cipherKey);
+        verifyDoubleZeroResponseCode(response.getHeader());
+        return response;
     }
 
     public AccountsResponse accountsForTransferToOwn(final byte[] cipherKey) {
