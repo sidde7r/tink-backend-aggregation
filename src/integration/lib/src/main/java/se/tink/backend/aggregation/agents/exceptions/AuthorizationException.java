@@ -31,6 +31,10 @@ public class AuthorizationException extends AgentExceptionImpl {
         super(error, userMessage, cause);
     }
 
+    public AuthorizationException(AuthorizationError error, String internalMessage) {
+        super(error, internalMessage);
+    }
+
     @Override
     public AuthorizationError getError() {
         return getError(AuthorizationError.class);

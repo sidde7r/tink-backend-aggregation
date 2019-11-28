@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.exceptions;
 
+import se.tink.backend.aggregation.agents.exceptions.errors.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -19,6 +20,10 @@ public class BankIdException extends MultiFactorAuthenticationException {
 
     public BankIdException(BankIdError error, LocalizableKey userMessage, Throwable cause) {
         super(error, userMessage, cause);
+    }
+
+    public BankIdException(AgentError error, String internalMessage) {
+        super(error, internalMessage);
     }
 
     @Override

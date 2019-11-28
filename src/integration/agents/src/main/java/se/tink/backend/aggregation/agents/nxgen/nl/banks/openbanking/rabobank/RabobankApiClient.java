@@ -168,7 +168,7 @@ public final class RabobankApiClient {
         final String consentId = persistentStorage.get(StorageKey.CONSENT_ID);
         if (consentId == null) {
             RabobankUtils.removeOauthToken(persistentStorage);
-            throw BankServiceError.CONSENT_INVALID.exception();
+            throw BankServiceError.CONSENT_INVALID.exception("Missing consent id.");
         }
 
         final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
@@ -195,15 +195,16 @@ public final class RabobankApiClient {
 
         if (StringUtils.containsIgnoreCase(consentStatus, RabobankConstants.Consents.EXPIRE)) {
             RabobankUtils.removeOauthToken(persistentStorage);
-            throw BankServiceError.CONSENT_EXPIRED.exception();
+            throw BankServiceError.CONSENT_EXPIRED.exception("Error messsage: " + consentStatus);
         } else if (StringUtils.containsIgnoreCase(
                 consentStatus, RabobankConstants.Consents.INVALID)) {
             RabobankUtils.removeOauthToken(persistentStorage);
-            throw BankServiceError.CONSENT_INVALID.exception();
+            throw BankServiceError.CONSENT_INVALID.exception("Error messsage: " + consentStatus);
         } else if (StringUtils.containsIgnoreCase(
                 consentStatus, RabobankConstants.Consents.REVOKED_BY_USER)) {
             RabobankUtils.removeOauthToken(persistentStorage);
-            throw BankServiceError.CONSENT_REVOKED_BY_USER.exception();
+            throw BankServiceError.CONSENT_REVOKED_BY_USER.exception(
+                    "Error messsage: " + consentStatus);
         } else {
             logger.debug("Consent status is " + consentStatus);
         }

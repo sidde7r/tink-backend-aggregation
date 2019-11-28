@@ -32,11 +32,11 @@ public class LoginResponse extends BaseResponse {
         if (Errors.INCORRECT_PASSWORD.equalsIgnoreCase(faultstring)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         } else if (Errors.BANK_SIDE_ERROR.equalsIgnoreCase(faultstring)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception("Error message: " + faultstring);
         } else if (Errors.MULTIPLE_SESSION_ACTIVE.equalsIgnoreCase(faultstring)) {
-            throw BankServiceError.MULTIPLE_LOGIN.exception();
+            throw BankServiceError.MULTIPLE_LOGIN.exception("Error message: " + faultstring);
         } else if (StringUtils.isNotEmpty(faultstring)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception("Error message: " + faultstring);
         }
         return this;
     }

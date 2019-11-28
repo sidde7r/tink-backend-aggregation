@@ -131,7 +131,7 @@ public class EnterCardApiClient {
                 case AuthenticationErrors.ERROR_IN_SIGNICAT_RESPONSE:
                 case AuthenticationErrors.REAUTH_FAILURE:
                 default:
-                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception("Error: " + error);
             }
         }
     }

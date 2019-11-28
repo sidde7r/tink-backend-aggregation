@@ -59,7 +59,8 @@ public class SkandiabankenHttpFilter extends Filter {
         String body = response.getBody(String.class);
         if (matchesErrorMessage(ErrorMessages.TECHNICAL_ERROR, body)
                 || matchesErrorMessage(ErrorMessages.TECHNICAL_DIFFICULTIES, body)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Http status: " + response.getStatus() + ", body: " + body);
         }
     }
 

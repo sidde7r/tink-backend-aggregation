@@ -22,7 +22,8 @@ public class BankServiceInternalErrorFilter extends Filter {
         HttpResponse response = nextFilter(httpRequest);
 
         if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Http status: " + HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }
 
         return response;

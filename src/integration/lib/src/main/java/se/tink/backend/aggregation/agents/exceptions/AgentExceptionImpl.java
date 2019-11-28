@@ -20,6 +20,12 @@ public abstract class AgentExceptionImpl extends Exception implements AgentExcep
         this(error, userMessage, null);
     }
 
+    public AgentExceptionImpl(AgentError error, String internalMessage) {
+        super(internalMessage);
+        this.error = Objects.requireNonNull(error, "error object is mandatory");
+        this.userMessage = error.userMessage();
+    }
+
     AgentExceptionImpl(AgentError error, LocalizableKey userMessage, Throwable cause) {
         super(String.format("Cause: %s.%s", error.getClass().getSimpleName(), error.name()), cause);
         this.error = Objects.requireNonNull(error, "error object is mandatory");

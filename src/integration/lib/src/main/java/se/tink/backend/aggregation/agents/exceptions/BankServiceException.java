@@ -22,6 +22,10 @@ public class BankServiceException extends AgentRuntimeExceptionImpl {
         super(error, userMessage, cause);
     }
 
+    public BankServiceException(BankServiceError error, String internalMessage) {
+        super(error, internalMessage);
+    }
+
     @Override
     public BankServiceError getError() {
         return getError(BankServiceError.class);

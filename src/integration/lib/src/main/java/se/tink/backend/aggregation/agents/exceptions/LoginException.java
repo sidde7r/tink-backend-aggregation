@@ -21,6 +21,10 @@ public class LoginException extends AuthenticationException {
         super(error, userMessage, cause);
     }
 
+    public LoginException(LoginError error, String internalMessage) {
+        super(error, internalMessage);
+    }
+
     @Override
     public LoginError getError() {
         return getError(LoginError.class);

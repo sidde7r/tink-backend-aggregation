@@ -19,7 +19,8 @@ public class ServiceUnavailableBankServiceErrorFilter extends Filter {
         HttpResponse response = nextFilter(httpRequest);
 
         if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
-            throw BankServiceError.NO_BANK_SERVICE.exception();
+            throw BankServiceError.NO_BANK_SERVICE.exception(
+                    "Http status: " + HttpStatus.SC_SERVICE_UNAVAILABLE);
         }
 
         return response;

@@ -122,7 +122,11 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
         } else {
 
             if (authResponse.isBankSideFailure()) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        "Error code: "
+                                + authResponse.getErrorCode()
+                                + ", error message: "
+                                + authResponse.getMessage());
             }
 
             LOGGER.info(

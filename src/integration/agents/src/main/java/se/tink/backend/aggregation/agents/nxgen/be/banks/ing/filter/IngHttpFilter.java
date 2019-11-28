@@ -22,7 +22,8 @@ public class IngHttpFilter extends Filter {
     private void check503(final HttpResponse httpResponse) {
         int httpStatus = httpResponse.getStatus();
         if (httpStatus == 503 && isBankServiceErrorResponseBody(httpResponse)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Http status: " + httpStatus + ", body: " + httpResponse.getBody(String.class));
         }
     }
 
@@ -73,7 +74,8 @@ public class IngHttpFilter extends Filter {
         String responseBody = httpResponse.getBody(String.class);
         boolean isUnavailable = responseBody.toLowerCase().contains("unavailable");
         if (httpStatus >= 500 && isUnavailable) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Http status: " + httpStatus + ", body: " + httpResponse.getBody(String.class));
         }
     }
 }

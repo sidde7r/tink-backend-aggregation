@@ -27,7 +27,8 @@ public class JyskeBankUnavailableFilter extends Filter {
         if (response.getStatus() == 400) {
             String body = response.getBody(String.class).toLowerCase();
             if (body.contains(ErrorMessages.BANK_UNAVAILABLE_DURING_MIDNIGHT)) {
-                throw BankServiceError.NO_BANK_SERVICE.exception();
+                throw BankServiceError.NO_BANK_SERVICE.exception(
+                        "Http status: " + response.getStatus() + ", body: " + body);
             }
         }
 

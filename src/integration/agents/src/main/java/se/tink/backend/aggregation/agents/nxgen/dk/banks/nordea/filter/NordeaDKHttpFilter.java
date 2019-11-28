@@ -22,7 +22,8 @@ public class NordeaDKHttpFilter extends AbstractRetryFilter {
 
         // if retried many times and still unavailable, throw exception
         if (isUnavailable(response)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Http status: " + response.getStatus());
         }
 
         return response;

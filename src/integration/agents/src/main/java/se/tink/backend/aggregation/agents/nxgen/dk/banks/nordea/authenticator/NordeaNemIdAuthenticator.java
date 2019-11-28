@@ -74,7 +74,8 @@ public class NordeaNemIdAuthenticator implements NemIdAuthenticator {
             }
 
             if (ErrorCode.BANK_IS_DOWN_ERRORS_LIST.contains(errorCode.get())) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        "Error code: " + errorCode.get());
             }
 
             throw new IllegalStateException(
