@@ -69,6 +69,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
         return balance == null || balance.replaceAll("[^0-9]", "").isEmpty();
     }
 
+    @JsonIgnore
     protected Optional<TransactionalAccount> toTransactionalAccount(
             BankProfile bankProfile, @Nonnull AccountTypes type) {
         if (fullyFormattedNumber == null || currency == null || isBalanceUndefined()) {
