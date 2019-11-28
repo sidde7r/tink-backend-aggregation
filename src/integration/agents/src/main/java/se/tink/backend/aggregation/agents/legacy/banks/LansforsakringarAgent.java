@@ -29,7 +29,6 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.client.utils.URIBuilder;
@@ -307,7 +306,7 @@ public class LansforsakringarAgent extends AbstractAgent
 
         int status = bankIdloginClientResponse.getStatus();
 
-        if (status != Status.OK.getStatusCode()) {
+        if (status != HttpStatus.SC_OK) {
             String errorCode = bankIdloginClientResponse.getHeaders().getFirst("Error-Code");
             String errorMessage = bankIdloginClientResponse.getHeaders().getFirst("Error-Message");
 
@@ -349,13 +348,13 @@ public class LansforsakringarAgent extends AbstractAgent
 
             status = clientLoginResponse.getStatus();
 
-            if (status == Status.OK.getStatusCode()) {
+            if (status == HttpStatus.SC_OK) {
                 LoginResponse loginResponse = clientLoginResponse.getEntity(LoginResponse.class);
                 loginName = loginResponse.getName();
                 loginSsn = loginResponse.getSsn();
                 return loginResponse;
-            } else if (status == Status.UNAUTHORIZED.getStatusCode()
-                    || status == Status.BAD_REQUEST.getStatusCode()) {
+            } else if (status == HttpStatus.SC_UNAUTHORIZED
+                    || status == HttpStatus.SC_BAD_REQUEST) {
                 switch (clientLoginResponse.getHeaders().getFirst("Error-Code")) {
                     case "00013":
                     case "00014":
@@ -1043,10 +1042,10 @@ public class LansforsakringarAgent extends AbstractAgent
 
             int status = clientResponse.getStatus();
 
-            if (status == Status.OK.getStatusCode()) {
+            if (status == HttpStatus.SC_OK) {
                 return;
-            } else if (status == Status.UNAUTHORIZED.getStatusCode()
-                    || status == Status.BAD_REQUEST.getStatusCode()) {
+            } else if (status == HttpStatus.SC_UNAUTHORIZED
+                    || status == HttpStatus.SC_BAD_REQUEST) {
                 switch (clientResponse.getHeaders().getFirst("Error-Code")) {
                     case "00153":
                     case "00154":
@@ -1100,12 +1099,12 @@ public class LansforsakringarAgent extends AbstractAgent
     /** Helper method to validate a client response in the payment process. */
     private void validateTransactionClientResponse(ClientResponse clientResponse)
             throws TransferExecutionException {
-        if (clientResponse.getStatus() == 400
+        if (clientResponse.getStatus() == HttpStatus.SC_BAD_REQUEST
                 && clientResponse.getHeaders().getFirst("Error-Message") != null) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(clientResponse.getHeaders().getFirst("Error-Message"))
                     .build();
-        } else if (clientResponse.getStatus() != 200) {
+        } else if (clientResponse.getStatus() != HttpStatus.SC_OK) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(catalog.getString("Failed to sign payment using BankID"))
                     .build();
@@ -1343,7 +1342,7 @@ public class LansforsakringarAgent extends AbstractAgent
     @Override
     public boolean keepAlive() throws Exception {
         try {
-            return createGetRequest(OVERVIEW_URL).getStatus() == Status.OK.getStatusCode();
+            return createGetRequest(OVERVIEW_URL).getStatus() == HttpStatus.SC_OK;
         } catch (ClientHandlerException exception) {
             // There are various messages in this exception like 'Connection reset', 'Connection
             // timed out', 'No route to host', 'Temporary failure in name resolution' etc and in
