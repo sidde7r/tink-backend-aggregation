@@ -11,14 +11,13 @@ public class HandelsbankenSessionStorage {
     private final SessionStorage sessionStorage;
     private final HandelsbankenConfiguration configuration;
 
-    public HandelsbankenSessionStorage(
-            SessionStorage sessionStorage, HandelsbankenConfiguration configuration) {
-        this.sessionStorage = sessionStorage;
+    public HandelsbankenSessionStorage(HandelsbankenConfiguration configuration) {
+        this.sessionStorage = new SessionStorage();
         this.configuration = configuration;
     }
 
     protected HandelsbankenSessionStorage(HandelsbankenSessionStorage sessionStorage) {
-        this(sessionStorage.sessionStorage, sessionStorage.configuration);
+        this(sessionStorage.configuration);
     }
 
     public void persist(ApplicationEntryPointResponse applicationEntryPoint) {

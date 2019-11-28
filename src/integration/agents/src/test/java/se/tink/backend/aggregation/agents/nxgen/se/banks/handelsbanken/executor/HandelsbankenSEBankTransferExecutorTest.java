@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter.Messages;
 import se.tink.libraries.account.AccountIdentifier;
@@ -63,8 +62,7 @@ public class HandelsbankenSEBankTransferExecutorTest {
         HandelsbankenSEConfiguration configuration = new HandelsbankenSEConfiguration();
         HandelsbankenPersistentStorage persistentStorage =
                 new HandelsbankenPersistentStorage(new PersistentStorage(), Collections.emptyMap());
-        HandelsbankenSessionStorage sessionStorage =
-                new HandelsbankenSessionStorage(new SessionStorage(), configuration);
+        HandelsbankenSessionStorage sessionStorage = new HandelsbankenSessionStorage(configuration);
 
         Transfer transfer = new Transfer();
         transfer.setSource(
