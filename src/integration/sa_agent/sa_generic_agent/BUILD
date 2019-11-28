@@ -5,6 +5,8 @@ java_library(
     srcs = glob(["src/main/java/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/account:enums",
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib",
@@ -12,6 +14,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/sa_agent/sa_grpc_api:sa-grpc-api",
         "//src/integration/user:rpc",
+        "//src/libraries/account_identifier",
         "//third_party/sa_agent:grpc_client_libs",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@org_slf4j_slf4j_api//jar",
