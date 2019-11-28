@@ -95,6 +95,18 @@ public class BelfiusApiClient {
                 sessionOpenedResponse.getSessionId(), sessionOpenedResponse.getMachineIdentifier());
     }
 
+    public void openSessionWithMachineIdentifier(String machineIdentifier) {
+        this.sessionStorage.clearSessionDataExceptMachineIdentifier();
+        SessionOpenedResponse sessionOpenedResponse =
+                post(
+                                BelfiusConstants.Url.GEPA_RENDERING_URL,
+                                OpenSessionResponse.class,
+                                OpenSessionRequest.create(this.locale))
+                        .getSessionData();
+
+        this.sessionStorage.putSessionData(sessionOpenedResponse.getSessionId(), machineIdentifier);
+    }
+
     public void keepAlive() {
         post(
                         BelfiusConstants.Url.GEPA_RENDERING_URL,

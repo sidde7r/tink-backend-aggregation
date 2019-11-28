@@ -112,7 +112,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
     private void login(String panNumber, String password, String deviceToken)
             throws AuthenticationException, AuthorizationException {
-        apiClient.openSession();
+        final String machineIdentifier = sessionStorage.getMachineIdentifier();
+
+        apiClient.openSessionWithMachineIdentifier(machineIdentifier);
         apiClient.startFlow();
 
         PrepareLoginResponse response = apiClient.prepareLogin(panNumber);
@@ -131,11 +133,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         apiClient.bacProductList();
         apiClient.login(deviceTokenHashed, deviceTokenHashedIosComparison, signature);
         apiClient.actorInformation();
-
         apiClient.closeSession(sessionStorage.getSessionId());
 
-        apiClient.openSession();
-
+        apiClient.openSessionWithMachineIdentifier(machineIdentifier);
         apiClient.startFlow();
 
         SendCardNumberResponse sendCardNumberResponse = apiClient.sendCardNumber(panNumber);
@@ -152,7 +152,10 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
     private void loginAuto(String panNumber, String password, String deviceToken)
             throws AuthenticationException, AuthorizationException {
-        apiClient.openSession();
+        final String machineIdentifier = sessionStorage.getMachineIdentifier();
+
+        apiClient.openSessionWithMachineIdentifier(machineIdentifier);
+
         apiClient.startFlow();
 
         PrepareLoginResponse response = apiClient.prepareLogin(panNumber);

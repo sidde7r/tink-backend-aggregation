@@ -18,6 +18,11 @@ public class BelfiusSessionStorage {
         this.sessionStorage.remove(BelfiusConstants.Storage.REQUEST_COUNTER);
     }
 
+    public void clearSessionDataExceptMachineIdentifier() {
+        this.sessionStorage.remove(BelfiusConstants.Storage.SESSION_ID);
+        this.sessionStorage.remove(BelfiusConstants.Storage.REQUEST_COUNTER);
+    }
+
     public boolean containsSessionData() {
         return this.sessionStorage.containsKey(BelfiusConstants.Storage.SESSION_ID);
     }
