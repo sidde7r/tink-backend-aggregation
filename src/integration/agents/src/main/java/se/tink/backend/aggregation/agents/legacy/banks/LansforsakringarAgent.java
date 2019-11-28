@@ -56,6 +56,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LFUtils;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.Session;
@@ -1129,7 +1130,6 @@ public class LansforsakringarAgent extends AbstractAgent
         validateSourceAccount(source, sourceAccounts);
 
         // Find the destination account or the bank of the destination account.
-
         TransferrableResponse destinationAccounts = fetchTransferDestinationAccounts();
 
         Preconditions.checkState(
@@ -1149,20 +1149,44 @@ public class LansforsakringarAgent extends AbstractAgent
                         source.getIdentifier(DEFAULT_FORMATTER),
                         LFUtils.getApiAdaptedToAccount(destination.to(SwedishIdentifier.class)));
 
-        // Execute the transfer.
-
         if (Strings.isNullOrEmpty(transferRequest.getBankName())) {
             // Local transfer, no need for signing.
-
             createPostRequest(INTERNAL_TRANSFER_URL, transferRequest);
         } else {
-            // External transfer, need to sign.
-            try {
-                signAndValidateTransfer(transferRequest);
-            } catch (Exception initialException) {
-                deleteSignedTransaction(transferRequest);
-                throw initialException;
+            executeExternalBankTransfer(transferRequest);
+        }
+    }
+
+    private void executeExternalBankTransfer(TransferRequest transferRequest) throws Exception {
+        ClientResponse createTransferResponse =
+                createPostRequest(CREATE_BANKID_REFERENCE_URL, transferRequest);
+
+        if (createTransferResponse.getStatus() != HttpStatus.SC_OK) {
+            String errorCode = createTransferResponse.getHeaders().getFirst("Error-Code");
+
+            if (!Strings.isNullOrEmpty(errorCode)) {
+                if ("502203".equals(errorCode)) { // Destination account incorrect
+                    throw cancelTransfer(EndUserMessage.INVALID_DESTINATION);
+                }
+
+                throw failTransferWithMessage(
+                        String.format(
+                                "Transfer failed with error code: %s and message: %s",
+                                errorCode,
+                                createTransferResponse.getHeaders().getFirst("Error-Message")),
+                        EndUserMessage.TRANSFER_EXECUTE_FAILED);
             }
+
+            throw failTransfer(EndUserMessage.TRANSFER_EXECUTE_FAILED);
+        }
+
+        supplementalRequester.openBankId();
+
+        try {
+            collectTransferResponse(BANKID_COLLECT_DIRECT_TRANSFER_URL, transferRequest);
+        } catch (Exception initialException) {
+            deleteSignedTransaction(transferRequest);
+            throw initialException;
         }
     }
 
@@ -1219,14 +1243,6 @@ public class LansforsakringarAgent extends AbstractAgent
                 }
             }
         }
-    }
-
-    private void signAndValidateTransfer(TransferRequest transferRequest) throws BankIdException {
-        createPostRequest(CREATE_BANKID_REFERENCE_URL, transferRequest);
-
-        supplementalRequester.openBankId();
-
-        collectTransferResponse(BANKID_COLLECT_DIRECT_TRANSFER_URL, transferRequest);
     }
 
     private String fetchToken() {
@@ -2029,5 +2045,31 @@ public class LansforsakringarAgent extends AbstractAgent
         }
         IdentityData identityData = SeIdentityData.of(loginName, loginSsn);
         return new FetchIdentityDataResponse(identityData);
+    }
+
+    private TransferExecutionException cancelTransfer(
+            TransferExecutionException.EndUserMessage endUserMessage) {
+        return cancelTransferWithMessage(endUserMessage.getKey().get(), endUserMessage);
+    }
+
+    private TransferExecutionException cancelTransferWithMessage(
+            String message, TransferExecutionException.EndUserMessage endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(message)
+                .setEndUserMessage(catalog.getString(endUserMessage))
+                .build();
+    }
+
+    private TransferExecutionException failTransfer(
+            TransferExecutionException.EndUserMessage endUserMessage) {
+        return failTransferWithMessage(endUserMessage.getKey().get(), endUserMessage);
+    }
+
+    private TransferExecutionException failTransferWithMessage(
+            String message, TransferExecutionException.EndUserMessage endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(message)
+                .setEndUserMessage(catalog.getString(endUserMessage))
+                .build();
     }
 }
