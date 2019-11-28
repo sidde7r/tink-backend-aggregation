@@ -8,9 +8,12 @@ java_library(
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/sa_agent/sa_grpc_api:sa-grpc-api",
         "//src/integration/user:rpc",
         "//third_party/sa_agent:grpc_client_libs",
+        "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
 )

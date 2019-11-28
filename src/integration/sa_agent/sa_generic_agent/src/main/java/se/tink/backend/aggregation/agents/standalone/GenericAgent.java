@@ -1,27 +1,43 @@
 package se.tink.backend.aggregation.agents.standalone;
 
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agents.standalone.grpc.AuthenticationService;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.sa.agent.facade.AuthenticationFacade;
 
 public class GenericAgent implements Agent, ProgressiveAuthAgent {
 
+    private GenericAgentConfiguration genericAgentConfiguration;
     private AgentsServiceConfiguration agentsServiceConfiguration;
+    private final ManagedChannel channel;
+    private final AuthenticationService authenticationService;
 
     public GenericAgent(
             CredentialsRequest request,
             AgentContext context,
-            AgentsServiceConfiguration configuration) {}
+            AgentsServiceConfiguration configuration) {
+        genericAgentConfiguration =
+                context.getAgentConfigurationController()
+                        .getAgentConfiguration(GenericAgentConfiguration.class);
+        channel =
+                ManagedChannelBuilder.forAddress(
+                                genericAgentConfiguration.getGrpcHost(),
+                                genericAgentConfiguration.getGrpcPort())
+                        .usePlaintext()
+                        .build();
+        authenticationService = new AuthenticationService(channel);
+    }
 
     @Override
     public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
             throws Exception {
-        return AuthenticationFacade.getInstance().login(request);
+        return authenticationService.login(request);
     }
 
     @Override
