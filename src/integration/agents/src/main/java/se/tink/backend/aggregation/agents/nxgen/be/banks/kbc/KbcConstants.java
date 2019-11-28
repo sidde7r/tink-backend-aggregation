@@ -74,7 +74,7 @@ public class KbcConstants {
         }
 
         public static final String HOST = "https://mobile.kbc-group.com";
-        public static final String VERSION = "1905";
+        public static final String VERSION = "1908";
 
         private static String createUrlWithHost(String uri) {
             return HOST + uri;
