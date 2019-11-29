@@ -99,6 +99,7 @@ async def run(cookie,
                     "unique_name": request_id + "_" + log.providerName,
                     "log_path": http_debug_log_link,
                     "requestId": request_id,
+                    "credentialsId": log.credentialsId,
                     "userId": logs_for_session.find_user_id_by_request_id(request_id),
                     "providerName": log.providerName,
                     "timestamp": logs_for_session.get_timestamp_by_request_id(request_id)
