@@ -392,7 +392,7 @@ eventProducerServiceConfiguration:
 
 featureFlags:
   esProxy: true
-  beProxy: true
+  beProxy: false
 
 providerConfigurationServiceConfiguration:
   enabled: true
