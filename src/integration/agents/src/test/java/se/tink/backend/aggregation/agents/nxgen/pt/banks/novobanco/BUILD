@@ -9,7 +9,6 @@ junit_test(
     ],
     tags = [
         "external",
-        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [
