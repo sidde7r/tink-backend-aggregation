@@ -9,8 +9,6 @@ import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/account.proto";
 import "google/type/date.proto";
 
 message FetchTransactionsRequest {
-  string key = 1;
-  TransactionalAccountType accountType = 2;
 }
 
 message FetchTransactionsResponse {

@@ -19,7 +19,6 @@ public class TransactionsMapperService {
             mapFetchTransactionsRequest() {
         se.tink.sa.services.fetch.trans.FetchTransactionsRequest.Builder request =
                 se.tink.sa.services.fetch.trans.FetchTransactionsRequest.newBuilder();
-        // TODO
         return request.build();
     }
 

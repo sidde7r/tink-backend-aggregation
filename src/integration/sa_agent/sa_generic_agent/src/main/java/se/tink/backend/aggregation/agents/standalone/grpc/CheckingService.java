@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.standalone.grpc;
 import io.grpc.ManagedChannel;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.sa.services.fetch.account.FetchAccountsRequest;
 import se.tink.sa.services.fetch.account.FetchAccountsServiceGrpc;
 import se.tink.sa.services.fetch.trans.FetchTransactionsServiceGrpc;
 
@@ -20,11 +19,10 @@ public class CheckingService {
                 FetchTransactionsServiceGrpc.newBlockingStub(channel);
     }
 
-    public FetchAccountsResponse fetchCheckingAccounts(final String consentId) {
-        FetchAccountsRequest fetchAccountsRequest =
-                FetchAccountsRequest.newBuilder().setConsentId(consentId).build();
+    public FetchAccountsResponse fetchCheckingAccounts() {
         return AccountMapperService.mapFetchAccountsResponse(
-                fetchAccountsServiceBlockingStub.fetchCheckingAccounts(fetchAccountsRequest));
+                fetchAccountsServiceBlockingStub.fetchCheckingAccounts(
+                        AccountMapperService.mapFetchAccountRequest()));
     }
 
     public FetchTransactionsResponse fetchCheckingTransactions() {

@@ -8,7 +8,6 @@ option go_package = "proto";
 import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/account.proto";
 
 message FetchAccountsRequest {
-  string consentId = 1;
 }
 
 message FetchAccountsResponse {

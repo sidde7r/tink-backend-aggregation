@@ -18,9 +18,14 @@ import se.tink.libraries.account.enums.AccountExclusion;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.sa.services.fetch.account.AccountIdentifierType;
+import se.tink.sa.services.fetch.account.FetchAccountsRequest;
 import se.tink.sa.services.fetch.account.TransactionalAccountType;
 
 public class AccountMapperService {
+
+    public static FetchAccountsRequest mapFetchAccountRequest() {
+        return FetchAccountsRequest.newBuilder().build();
+    }
 
     public static FetchAccountsResponse mapFetchAccountsResponse(
             final se.tink.sa.services.fetch.account.FetchAccountsResponse fetchAccountsResponse) {
