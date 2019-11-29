@@ -10,14 +10,14 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.G
 public class GetAccountsResponseTest {
 
     @Test
-    public void testSuccessfulGetAccounts() {
+    public void shouldReportSuccessIfSuccessfulGetAccountsResponse() {
         GetAccountsResponse response =
                 AccountsTestData.getResponse(AccountsTestData.PAYLOAD_ACCOUNT_ID_1);
         assertTrue(response.isSuccessful());
     }
 
     @Test
-    public void testUnsuccessfulGetAccounts() {
+    public void shouldReportFailureIfUnsuccessfulGetAccountsResponse() {
         GetAccountsResponse response =
                 AccountsTestData.getResponse(AccountsTestData.PAYLOAD_ERRORED);
         assertFalse(response.isSuccessful());

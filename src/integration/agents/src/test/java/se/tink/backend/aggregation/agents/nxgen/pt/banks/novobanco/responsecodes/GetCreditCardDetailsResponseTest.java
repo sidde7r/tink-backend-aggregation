@@ -9,7 +9,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class GetCreditCardDetailsResponseTest {
     @Test
-    public void testSuccessfulGetCreditCardDetailsResponse() {
+    public void shouldReportSuccessIfSuccessfulGetCreditCardDetailsResponse() {
         GetCreditCardDetailsResponse response =
                 SerializationUtils.deserializeFromString(
                         getSuccessfulResponse(), GetCreditCardDetailsResponse.class);
@@ -17,7 +17,7 @@ public class GetCreditCardDetailsResponseTest {
     }
 
     @Test
-    public void testUnsuccessfulGetCreditCardDetailsResponse() {
+    public void shouldReportFailureIfGetCreditCardDetailsResponse() {
         GetCreditCardDetailsResponse response =
                 SerializationUtils.deserializeFromString(
                         getUnsuccessfulResponse(), GetCreditCardDetailsResponse.class);

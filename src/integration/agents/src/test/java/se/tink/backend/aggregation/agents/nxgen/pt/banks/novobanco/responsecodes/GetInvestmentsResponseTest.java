@@ -12,13 +12,13 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.i
 public class GetInvestmentsResponseTest {
 
     @Test
-    public void testSuccessfulGetInvestments() {
+    public void shouldReportSuccessIfSuccessfulGetInvestmentsResponse() {
         GetInvestmentsResponse response = InvestmentTestData.getResponse(SUCCESSFUL_CALL);
         assertTrue(response.isSuccessful());
     }
 
     @Test
-    public void testUnsuccessfulGetInvestments() {
+    public void shouldReportFailureIfUnsuccessfulGetInvestmentsResponse() {
         GetInvestmentsResponse response = InvestmentTestData.getResponse(FAILED_CALL);
         assertFalse(response.isSuccessful());
     }

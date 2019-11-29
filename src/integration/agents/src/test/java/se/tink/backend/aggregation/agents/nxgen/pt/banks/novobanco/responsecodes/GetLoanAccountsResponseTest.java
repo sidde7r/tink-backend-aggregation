@@ -10,7 +10,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class GetLoanAccountsResponseTest {
 
     @Test
-    public void testSuccessfulGetLoanAccounts() {
+    public void shouldReportSuccessIfSuccessfulGetLoanAccountsResponse() {
         GetLoanAccountsResponse response =
                 SerializationUtils.deserializeFromString(
                         getSuccessfulResponse(), GetLoanAccountsResponse.class);
@@ -18,7 +18,7 @@ public class GetLoanAccountsResponseTest {
     }
 
     @Test
-    public void testUnsuccessfulGetLoanAccounts() {
+    public void shouldReportFailureIfUnsuccessfulGetLoanAccountsResponse() {
         GetLoanAccountsResponse response =
                 SerializationUtils.deserializeFromString(
                         getUnsuccessfulResponse(), GetLoanAccountsResponse.class);

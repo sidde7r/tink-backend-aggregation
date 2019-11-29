@@ -10,13 +10,13 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.component.aut
 public class Login0ResponseTest {
 
     @Test
-    public void testFailedLogin() {
+    public void shouldReportSuccessIfFailedLoginResponse() {
         Login0Response response = Login0TestData.getResponse(Login0TestData.FAILED_LOGIN);
         assertFalse(response.isValidCredentials());
     }
 
     @Test
-    public void testSuccessfulLogin() {
+    public void shouldReportSuccessIfSuccessfulLoginResponse() {
         Login0Response response = Login0TestData.getResponse(Login0TestData.SUCCESSFUL_LOGIN);
         assertTrue(response.isValidCredentials());
     }

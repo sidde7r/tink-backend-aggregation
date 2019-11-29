@@ -10,7 +10,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class GenericResponseTest {
 
     @Test
-    public void testSessionNotEstablished() {
+    public void shouldReportSessionExpiredIfUnsuccessfulResponse() {
         GenericResponse response =
                 SerializationUtils.deserializeFromString(
                         getUnsuccessfulResponse(), GenericResponse.class);
@@ -18,7 +18,7 @@ public class GenericResponseTest {
     }
 
     @Test
-    public void testSessionExpired() {
+    public void shouldReportSessionExpiredIfSessionExpiredResponse() {
         GenericResponse response =
                 SerializationUtils.deserializeFromString(
                         getSessionExpiredResponse(), GenericResponse.class);
@@ -26,7 +26,7 @@ public class GenericResponseTest {
     }
 
     @Test
-    public void testSessionAlive() {
+    public void shouldReportSessionAliveIfSessionAliveResponse() {
         GenericResponse response =
                 SerializationUtils.deserializeFromString(
                         getSuccessfulResponse(), GenericResponse.class);

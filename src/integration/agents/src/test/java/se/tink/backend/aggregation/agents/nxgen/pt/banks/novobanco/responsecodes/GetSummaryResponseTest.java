@@ -9,7 +9,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class GetSummaryResponseTest {
     @Test
-    public void testSuccessfulGetSummary() {
+    public void shouldReportSuccessIfSuccessfulGetSummaryResponse() {
         GetSummaryResponse response =
                 SerializationUtils.deserializeFromString(
                         getSuccessfulResponse(), GetSummaryResponse.class);
@@ -17,7 +17,7 @@ public class GetSummaryResponseTest {
     }
 
     @Test
-    public void testUnsuccessfulGetSummary() {
+    public void shouldReportFailureIfUnsuccessfulGetSummaryResponse() {
         GetSummaryResponse response =
                 SerializationUtils.deserializeFromString(
                         getUnsuccessfulResponse(), GetSummaryResponse.class);

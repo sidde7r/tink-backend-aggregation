@@ -34,7 +34,7 @@ public class NovoBancoAgentTest {
     }
 
     @Test
-    public void testLoginAndRefresh() throws Exception {
+    public void shouldLoginAndRefreshSuccessfully() throws Exception {
         builder.addCredentialField(Field.Key.USERNAME, helper.get(NovoBancoAgentTest.Arg.USERNAME))
                 .addCredentialField(Field.Key.PASSWORD, helper.get(NovoBancoAgentTest.Arg.PASSWORD))
                 .build()

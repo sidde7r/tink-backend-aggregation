@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class NovoBancoAuthenticatorTest {
 
     @Test
-    public void loginWithCorrectCredentials() {
+    public void shouldNotThrowIfLoginWithCorrectCredentials() {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.loginStep0("proper", "credentials"))
@@ -40,7 +40,8 @@ public class NovoBancoAuthenticatorTest {
     }
 
     @Test(expected = LoginException.class)
-    public void loginWithWrongCredentials() throws AuthenticationException, AuthorizationException {
+    public void shouldThrowIfLoginWithWrongCredentials()
+            throws AuthenticationException, AuthorizationException {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.loginStep0("wrong", "credentials"))

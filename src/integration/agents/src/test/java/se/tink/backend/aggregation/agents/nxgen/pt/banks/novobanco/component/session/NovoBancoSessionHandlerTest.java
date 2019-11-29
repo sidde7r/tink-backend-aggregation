@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class NovoBancoSessionHandlerTest {
 
     @Test(expected = SessionException.class)
-    public void testSessionIsExpired() throws SessionException {
+    public void shouldThrowExceptionIfNoLongerAlive() throws SessionException {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.isAlive()).thenReturn(false);
@@ -25,7 +25,7 @@ public class NovoBancoSessionHandlerTest {
     }
 
     @Test
-    public void testSessionIsAlive() {
+    public void shouldNotThrowIfSessionIsStillAlive() {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.isAlive()).thenReturn(true);
