@@ -34,6 +34,8 @@ public class AccountsItemEntity {
 
     private String currency;
 
+    private AccountIdentificationEntity accountId;
+
     public String getCashAccountType() {
         return cashAccountType;
     }
@@ -78,7 +80,7 @@ public class AccountsItemEntity {
                                 .withUniqueIdentifier(resourceId)
                                 .withAccountNumber(resourceId)
                                 .withAccountName(name)
-                                .addIdentifier(new IbanIdentifier(resourceId))
+                                .addIdentifier(new IbanIdentifier(bicFi, accountId.getIban()))
                                 .build())
                 .addHolderName(name)
                 .setApiIdentifier(resourceId)
