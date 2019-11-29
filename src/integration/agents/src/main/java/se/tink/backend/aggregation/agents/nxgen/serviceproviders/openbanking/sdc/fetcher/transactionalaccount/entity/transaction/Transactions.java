@@ -9,7 +9,7 @@ public class Transactions {
 
     private List<TransactionEntity> booked;
     private List<TransactionEntity> pending;
-    private TransactionKeyLinksEntity links;
+    // private TransactionKeyLinksEntity links;
 
     public List<TransactionEntity> getBooked() {
         return ListUtils.emptyIfNull(booked);

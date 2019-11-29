@@ -167,26 +167,46 @@ public final class SdcApiClient {
            2) Divide the date range into two, recursively call getTransactionsFor for these two
            smaller date ranges, merge the results and return
 
+           3) Find the oldest date (D) in the fetched transactions and recursively fetch the transactions
+           whose date period is between fromDate and D. Append it into the response
+
            We need to decide one of these approaches and implement it here
         */
 
-        return createRequestInSession(
-                        Urls.TRANSACTIONS.parameter(
-                                PathParameters.ACCOUNT_ID, account.getApiIdentifier()))
-                .header(
-                        BerlinGroupConstants.HeaderKeys.X_REQUEST_ID,
-                        BerlinGroupUtils.getRequestId())
-                .header(BerlinGroupConstants.HeaderKeys.CONSENT_ID, BerlinGroupUtils.getRequestId())
-                .header(
-                        SdcConstants.HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
-                        getConfiguration().getOcpApimSubscriptionKey())
-                .queryParam(
-                        BerlinGroupConstants.QueryKeys.BOOKING_STATUS,
-                        SdcConstants.QueryValues.BOOKED)
-                .queryParam(
-                        SdcConstants.QueryKeys.DATE_FROM,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                .get(TransactionsResponse.class);
+        TransactionsResponse response =
+                createRequestInSession(
+                                Urls.TRANSACTIONS.parameter(
+                                        PathParameters.ACCOUNT_ID, account.getApiIdentifier()))
+                        .header(
+                                BerlinGroupConstants.HeaderKeys.X_REQUEST_ID,
+                                BerlinGroupUtils.getRequestId())
+                        .header(
+                                BerlinGroupConstants.HeaderKeys.CONSENT_ID,
+                                BerlinGroupUtils.getRequestId())
+                        .header(
+                                SdcConstants.HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
+                                getConfiguration().getOcpApimSubscriptionKey())
+                        .queryParam(
+                                BerlinGroupConstants.QueryKeys.BOOKING_STATUS,
+                                SdcConstants.QueryValues.BOOKED)
+                        .queryParam(
+                                SdcConstants.QueryKeys.DATE_FROM,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                        .queryParam(
+                                QueryKeys.DATE_TO,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                        .get(TransactionsResponse.class);
+
+        // Implementation of approach (3) (this is a temporary fix, should be removed after the bank
+        // fixes the issue in their end)
+        Optional<Date> transactionsMissingUntil = response.getOverflowTransactionDate();
+
+        if (transactionsMissingUntil.isPresent()) {
+            TransactionsResponse responseForMissingPart =
+                    getTransactionsFor(account, fromDate, transactionsMissingUntil.get());
+            response.mergeTransactionResponse(responseForMissingPart);
+        }
+
+        return response;
     }
 }

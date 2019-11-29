@@ -34,6 +34,11 @@ public class TransactionsResponse implements PaginatorResponse {
         return Optional.empty();
     }
 
+    public void mergeTransactionResponse(TransactionsResponse response) {
+        transactions.getBooked().addAll(response.transactions.getBooked());
+        transactions.getPending().addAll(response.transactions.getPending());
+    }
+
     public Optional<Date> getOverflowTransactionDate() {
 
         int totalTransactionsReturned =

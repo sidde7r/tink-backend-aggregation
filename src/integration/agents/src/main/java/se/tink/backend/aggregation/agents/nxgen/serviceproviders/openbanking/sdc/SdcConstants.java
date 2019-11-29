@@ -91,6 +91,6 @@ public final class SdcConstants {
     }
 
     public static class Transactions {
-        public static final int MAX_TRANSACTIONS_PER_RESPONSE = 400;
+        public static final int MAX_TRANSACTIONS_PER_RESPONSE = 200;
     }
 }
