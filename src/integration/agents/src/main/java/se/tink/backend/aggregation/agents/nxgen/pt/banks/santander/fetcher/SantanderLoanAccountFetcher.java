@@ -10,11 +10,12 @@ import static se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetche
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants;
@@ -35,6 +36,7 @@ public class SantanderLoanAccountFetcher implements AccountFetcher<LoanAccount> 
     private static final GenericTypeMapper<Type, String> loanTypes =
             GenericTypeMapper.<Type, String>genericBuilder()
                     .put(Type.MORTGAGE, "096HG0") // Habitação
+                    .put(Type.MORTGAGE, "096HG2") // Empréstimo da Casa
                     .put(Type.CREDIT, "096MF0") // Habitação Multifunções
                     .build();
 
@@ -48,23 +50,11 @@ public class SantanderLoanAccountFetcher implements AccountFetcher<LoanAccount> 
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        List<Map<String, String>> businessData = apiClient.fetchLoans().getBusinessData();
-
-        if (businessData == null) {
-            return Collections.emptyList();
-        }
-
-        List<LoanAccount> accounts = new ArrayList<>();
-        for (Map<String, String> loan : businessData) {
-            String loanType = loan.get(LOAN_TYPE);
-            if (loanTypes.translate(loanType).isPresent()) {
-                accounts.add(toTinkAccount(loan));
-            } else {
-                log.warn("Unknown loan product type: {}. Loan won't be mapped.", loanType);
-            }
-        }
-
-        return accounts;
+        return Optional.ofNullable(
+                        (List<Map<String, String>>) apiClient.fetchLoans().getBusinessData())
+                .orElse(Collections.emptyList()).stream()
+                .map(this::toTinkAccount)
+                .collect(Collectors.toList());
     }
 
     private LoanAccount toTinkAccount(Map<String, String> loan) {
@@ -74,10 +64,11 @@ public class SantanderLoanAccountFetcher implements AccountFetcher<LoanAccount> 
         LocalDate startDate =
                 LocalDate.parse(loan.get(START_DATE), SantanderConstants.DATE_FORMATTER);
 
+        String loanProductName = loan.get(NAME);
         return LoanAccount.nxBuilder()
                 .withLoanDetails(
                         LoanModule.builder()
-                                .withType(loanTypes.translate(loan.get(LOAN_TYPE)).get())
+                                .withType(mapLoanType(loan.get(LOAN_TYPE), loanProductName))
                                 .withBalance(
                                         ExactCurrencyAmount.of(
                                                 new BigDecimal(loan.get(BALANCE)), loanCurrency))
@@ -90,12 +81,26 @@ public class SantanderLoanAccountFetcher implements AccountFetcher<LoanAccount> 
                         IdModule.builder()
                                 .withUniqueIdentifier(loan.get(ACCOUNT_NUMBER))
                                 .withAccountNumber(loan.get(ACCOUNT_NUMBER))
-                                .withAccountName(loan.get(NAME))
+                                .withAccountName(loanProductName)
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 AccountIdentifier.Type.IBAN,
                                                 loan.get(ACCOUNT_NUMBER)))
                                 .build())
                 .build();
+    }
+
+    private Type mapLoanType(String loanProductType, String loanProductName) {
+        Optional<Type> type = loanTypes.translate(loanProductType);
+
+        if (type.isPresent()) {
+            return type.get();
+        } else {
+            log.warn(
+                    "Unknown loan product type: {} with name {}. Loan will be mapped as OTHER.",
+                    loanProductType,
+                    loanProductName);
+            return Type.OTHER;
+        }
     }
 }
