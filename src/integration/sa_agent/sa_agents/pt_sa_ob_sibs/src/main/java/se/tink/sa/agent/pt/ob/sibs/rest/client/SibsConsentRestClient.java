@@ -1,6 +1,5 @@
 package se.tink.sa.agent.pt.ob.sibs.rest.client;
 
-import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -12,10 +11,10 @@ import se.tink.sa.agent.pt.ob.sibs.rest.client.authentication.rpc.ConsentRequest
 import se.tink.sa.agent.pt.ob.sibs.rest.client.authentication.rpc.ConsentResponse;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.authentication.rpc.ConsentStatusRequest;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.authentication.rpc.ConsentStatusResponse;
-import se.tink.sa.framework.rest.client.AbstractBusinessRestClient;
+import se.tink.sa.agent.pt.ob.sibs.rest.client.common.AbstractSibsRestClient;
 
 @Component
-public class SibsConsentRestClient extends AbstractBusinessRestClient {
+public class SibsConsentRestClient extends AbstractSibsRestClient {
 
     @Value("${bank.rest.service.consents.path}")
     private String consentsBasePath;
@@ -28,8 +27,7 @@ public class SibsConsentRestClient extends AbstractBusinessRestClient {
 
     public ConsentResponse getConsent(ConsentRequest request, String bankCode, String state) {
         String url = prepareUrl(baseUrl, consentsBasePath);
-        Map<String, String> params = new HashMap<>();
-        params.put(SibsConstants.PathParameterKeys.ASPSP_CDE, bankCode);
+        Map<String, String> params = sibsParamsSet(bankCode);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
@@ -58,8 +56,7 @@ public class SibsConsentRestClient extends AbstractBusinessRestClient {
     public ConsentStatusResponse checkConsentStatus(ConsentStatusRequest request, String bankCode) {
         String url = prepareUrl(baseUrl, consentsStatusPath);
 
-        Map<String, String> params = new HashMap<>();
-        params.put(SibsConstants.PathParameterKeys.ASPSP_CDE, bankCode);
+        Map<String, String> params = sibsParamsSet(bankCode);
         params.put(SibsConstants.PathParameterKeys.CONSENT_ID, request.getConsentId());
 
         ConsentStatusResponse response =
