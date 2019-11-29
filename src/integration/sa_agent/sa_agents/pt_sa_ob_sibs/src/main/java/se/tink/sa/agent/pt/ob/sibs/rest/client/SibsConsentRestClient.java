@@ -2,22 +2,20 @@ package se.tink.sa.agent.pt.ob.sibs.rest.client;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import se.tink.sa.agent.pt.ob.sibs.SibsConstants;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.authentication.rpc.ConsentRequest;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.authentication.rpc.ConsentResponse;
-import se.tink.sa.framework.rest.ConsentsRestClient;
+import se.tink.sa.agent.pt.ob.sibs.rest.client.authentication.rpc.ConsentStatusRequest;
+import se.tink.sa.agent.pt.ob.sibs.rest.client.authentication.rpc.ConsentStatusResponse;
+import se.tink.sa.framework.rest.client.AbstractBusinessRestClient;
 
 @Component
-public class SibsConsentRestClient implements ConsentsRestClient {
+public class SibsConsentRestClient extends AbstractBusinessRestClient {
 
     @Value("${bank.rest.service.consents.path}")
     private String consentsBasePath;
@@ -25,19 +23,10 @@ public class SibsConsentRestClient implements ConsentsRestClient {
     @Value("${bank.rest.service.consents.path.status}")
     private String consentsStatusPath;
 
-    @Value("${bank.rest.service.url}")
-    protected String baseUrl;
-
     @Value("${tink.redirect.url}")
     private String redirectUrl;
 
-    @Autowired private RestTemplate restTemplate;
-
-    public ConsentResponse getConsent(ConsentRequest request) {
-        String state = UUID.randomUUID().toString().replace("-", "");
-        String code = UUID.randomUUID().toString().replace("-", "");
-        String bankCode = "BCTT";
-
+    public ConsentResponse getConsent(ConsentRequest request, String bankCode, String state) {
         String url = prepareUrl(baseUrl, consentsBasePath);
         Map<String, String> params = new HashMap<>();
         params.put(SibsConstants.PathParameterKeys.ASPSP_CDE, bankCode);
@@ -55,10 +44,6 @@ public class SibsConsentRestClient implements ConsentsRestClient {
         return response;
     }
 
-    protected String prepareUrl(String... path) {
-        return StringUtils.join(path);
-    }
-
     protected String getRedirectUrlForState(String state) {
         StringBuilder sb =
                 new StringBuilder()
@@ -70,9 +55,16 @@ public class SibsConsentRestClient implements ConsentsRestClient {
         return sb.toString();
     }
 
-    @Override
-    public <String, ConsentStatusResponse> ConsentStatusResponse checkConsentStatus(
-            String request) {
-        return null;
+    public ConsentStatusResponse checkConsentStatus(ConsentStatusRequest request, String bankCode) {
+        String url = prepareUrl(baseUrl, consentsStatusPath);
+
+        Map<String, String> params = new HashMap<>();
+        params.put(SibsConstants.PathParameterKeys.ASPSP_CDE, bankCode);
+        params.put(SibsConstants.PathParameterKeys.CONSENT_ID, request.getConsentId());
+
+        ConsentStatusResponse response =
+                restTemplate.getForObject(url, ConsentStatusResponse.class, params);
+
+        return response;
     }
 }
