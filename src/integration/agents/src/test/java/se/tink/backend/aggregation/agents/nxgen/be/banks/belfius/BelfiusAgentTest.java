@@ -6,8 +6,6 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BelfiusAgentTest {
     private enum Arg {

@@ -96,6 +96,8 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         apiClient.openSession();
         apiClient.startFlow();
 
+        apiClient.sendIsDeviceRegistered(panNumber, BelfiusSecurityUtils.hash(deviceToken));
+
         String challenge = apiClient.prepareAuthentication(panNumber);
         final String code =
                 supplementalInformationHelper

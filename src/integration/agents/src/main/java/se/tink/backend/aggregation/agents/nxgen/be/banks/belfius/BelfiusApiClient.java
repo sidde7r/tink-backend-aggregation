@@ -159,6 +159,14 @@ public class BelfiusApiClient {
                 .isDeviceRegistered();
     }
 
+    public void sendIsDeviceRegistered(String panNumber, String deviceTokenHash) {
+        post(
+                BelfiusConstants.Url.GEPA_SERVICE_URL,
+                CheckStatusResponse.class,
+                CheckStatusRequest.create(panNumber, deviceTokenHash),
+                ExecutionMode.SERVICES);
+    }
+
     public String prepareDeviceRegistration(
             String deviceToken, String deviceBrand, String deviceName) {
         PrepareDeviceRegistrationResponse response =

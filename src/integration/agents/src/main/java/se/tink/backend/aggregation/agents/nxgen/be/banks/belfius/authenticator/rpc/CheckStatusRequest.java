@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.ExecuteMethodRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.ExecuteMethodWithInputsRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -14,7 +15,7 @@ public class CheckStatusRequest extends BelfiusRequest {
                 .setApplicationId(BelfiusConstants.Request.CHECK_STATUS_APPLICATION_ID)
                 .setExecutionMode(BelfiusConstants.Request.CHECK_STATUS_EXECUTION_MODE)
                 .setRequests(
-                        ExecuteMethodRequest.builder()
+                        ExecuteMethodWithInputsRequest.builder()
                                 .setApplicationId(
                                         BelfiusConstants.Request.CHECK_STATUS_APPLICATION_ID)
                                 .setMethodId(BelfiusConstants.Request.CHECK_STATUS_METHOD_ID)
