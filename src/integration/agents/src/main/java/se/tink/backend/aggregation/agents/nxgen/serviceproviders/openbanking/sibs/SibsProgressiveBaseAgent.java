@@ -133,7 +133,7 @@ public abstract class SibsProgressiveBaseAgent
         final SibsTransactionalAccountAccountFetcher accountFetcher =
                 new SibsTransactionalAccountAccountFetcher(apiClient);
         final SibsTransactionalAccountTransactionFetcher transactionFetcher =
-                new SibsTransactionalAccountTransactionFetcher(apiClient);
+                new SibsTransactionalAccountTransactionFetcher(apiClient, request, userState);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
