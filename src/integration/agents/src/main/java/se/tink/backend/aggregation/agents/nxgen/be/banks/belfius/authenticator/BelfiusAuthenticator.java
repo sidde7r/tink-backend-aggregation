@@ -162,6 +162,8 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
                 BelfiusSecurityUtils.createSignaturePw(
                         challenge2, deviceToken, panNumber, contractNumber, password);
 
+        sleepForSeconds(5); // Entering password
+
         apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
     }
 
@@ -185,10 +187,20 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         sessionStorage.setChallenge(challenge2);
 
+        sleepForSeconds(5); // Entering password
+
         String signaturePw =
                 BelfiusSecurityUtils.createSignaturePw(
                         challenge2, deviceToken, panNumber, contractNumber, password);
 
         apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
+    }
+
+    private static void sleepForSeconds(final int seconds) {
+        try {
+            Thread.sleep(1000 * seconds);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }
