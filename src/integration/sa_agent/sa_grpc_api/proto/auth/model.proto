@@ -19,6 +19,7 @@ message AuthenticationResponse {
   repeated Field fields = 2;
   ThirdPartyAppAuthenticationPayload payload = 3;
   SupplementalWaitRequest supplementalWaitRequest = 4;
+  string stepId = 5;
 }
 
 message Field {
