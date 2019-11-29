@@ -97,6 +97,10 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
             }
             return refreshedToken;
         } catch (HttpResponseException hre) {
+            if (hre.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                // BankId Auth controller will throw session expired to force manual login
+                return Optional.empty();
+            }
             if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
                 hre.getResponse().getBody(ErrorResponse.class).handleErrors();
             }
