@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount;
 
+import java.util.Date;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import org.apache.commons.lang3.time.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.ConsentFetcher;
@@ -30,7 +34,6 @@ public class VolksbankTransactionFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             final TransactionalAccount account, final String key) {
-
         final String consentId = consentFetcher.fetchConsent();
 
         final OAuth2Token oauthToken =
@@ -38,8 +41,20 @@ public class VolksbankTransactionFetcher
                         .get(Storage.OAUTH_TOKEN, OAuth2Token.class)
                         .orElseThrow(() -> new NoSuchElementException("Missing Oauth token!"));
 
+        if (Objects.isNull(key)) {
+            final Date now = new Date();
+            final Date fromDate =
+                    DateUtils.addDays(now, VolksbankConstants.Transaction.DEFAULT_HISTORY_DAYS);
+            final Date toDate = now;
+
+            return apiClient
+                    .readTransactionsWithDates(account, fromDate, toDate, consentId, oauthToken)
+                    .getTransactions();
+        }
+
         return apiClient
-                .readTransactions(account, VolksbankUtils.splitURLQuery(key), consentId, oauthToken)
+                .readTransactionsWithLink(
+                        account, VolksbankUtils.splitURLQuery(key), consentId, oauthToken)
                 .getTransactions();
     }
 }

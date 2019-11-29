@@ -1,20 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.detail;
 
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoConstants.SecurityConfig.RSA;
+
 import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class RSAPublicServerKey {
 
     public PublicKey getKey() {
         try {
             RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(getModulus(), getExponent());
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(RSA, BouncyCastleProvider.PROVIDER_NAME);
             return keyFactory.generatePublic(publicKeySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchProviderException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
