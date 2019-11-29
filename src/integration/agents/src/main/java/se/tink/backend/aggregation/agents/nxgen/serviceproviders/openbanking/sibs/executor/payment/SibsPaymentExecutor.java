@@ -53,7 +53,7 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
         LocalDate paymentExecutionDate = paymentRequest.getPayment().getExecutionDate();
 
-        if (LocalDate.now().isBefore(paymentExecutionDate)) {
+        if (paymentExecutionDate != null && LocalDate.now().isBefore(paymentExecutionDate)) {
             builder.withRequestedExecutionDate(paymentExecutionDate);
         }
 
