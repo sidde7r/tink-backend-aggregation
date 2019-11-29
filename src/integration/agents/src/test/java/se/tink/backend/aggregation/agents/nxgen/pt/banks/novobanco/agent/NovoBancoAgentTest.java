@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -34,7 +34,7 @@ public class NovoBancoAgentTest {
     }
 
     @Test
-    public void testLoginAndRefresh() throws Exception {
+    public void shouldLoginAndRefreshSuccessfully() throws Exception {
         builder.addCredentialField(Field.Key.USERNAME, helper.get(NovoBancoAgentTest.Arg.USERNAME))
                 .addCredentialField(Field.Key.PASSWORD, helper.get(NovoBancoAgentTest.Arg.PASSWORD))
                 .build()

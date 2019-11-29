@@ -19,7 +19,7 @@ public class TransactionalAccountMapper {
                         .build();
 
         Pair<String, AccountIdentifier.Type> accountId =
-                AccountIdentifierProvider.getAccountIdentifierData(iban, internalAccountId);
+                AccountIdentifierProvider.getAccountIdentifierData(internalAccountId, iban);
 
         IdModule idModule =
                 IdModule.builder()

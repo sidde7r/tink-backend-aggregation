@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.responsecodes;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -10,7 +10,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class GenericResponseTest {
 
     @Test
-    public void testSessionExpired() {
+    public void shouldReportSessionExpiredIfUnsuccessfulResponse() {
         GenericResponse response =
                 SerializationUtils.deserializeFromString(
                         getUnsuccessfulResponse(), GenericResponse.class);
@@ -18,7 +18,15 @@ public class GenericResponseTest {
     }
 
     @Test
-    public void testSessionAlive() {
+    public void shouldReportSessionExpiredIfSessionExpiredResponse() {
+        GenericResponse response =
+                SerializationUtils.deserializeFromString(
+                        getSessionExpiredResponse(), GenericResponse.class);
+        assertTrue(response.isSessionExpired());
+    }
+
+    @Test
+    public void shouldReportSessionAliveIfSessionAliveResponse() {
         GenericResponse response =
                 SerializationUtils.deserializeFromString(
                         getSuccessfulResponse(), GenericResponse.class);
@@ -36,6 +44,22 @@ public class GenericResponseTest {
                 + "\t\t\t\"Mensagem\": \"De momento não é possível processar a sua instrução. Por favor tente mais tarde.\",\n"
                 + "\t\t\t\"Severidade\": 3,\n"
                 + "\t\t\t\"Codigo\": 50\n"
+                + "\t\t}\n"
+                + "\t}\n"
+                + "}";
+    }
+
+    private String getSessionExpiredResponse() {
+        return "{\n"
+                + "\t\"Header\": {\n"
+                + "\t\t\"ResponseId\": \"fed8f486110c4c7ba05ef092816263fa\",\n"
+                + "\t\t\"OpToken\": null,\n"
+                + "\t\t\"Time\": \"2019-11-27T09:37:35.5882499Z\",\n"
+                + "\t\t\"SessionTimeout\": 0,\n"
+                + "\t\t\"Status\": {\n"
+                + "\t\t\t\"Mensagem\": \"A sua sessão expirou. Por favor aceda novamente ao serviço.\",\n"
+                + "\t\t\t\"Severidade\": 4,\n"
+                + "\t\t\t\"Codigo\": 20\n"
                 + "\t\t}\n"
                 + "\t}\n"
                 + "}";
