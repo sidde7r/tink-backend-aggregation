@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -29,6 +30,7 @@ public class TransactionEntity {
                 .setAmount(ExactCurrencyAmount.of(amount, currency))
                 .setDate(bookDate)
                 .setDescription(String.join(" ", descriptionLines))
+                .setPayload(TransactionPayloadTypes.MUTATION_CODE, mutationCode)
                 .build();
     }
 }
