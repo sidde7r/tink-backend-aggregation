@@ -3,7 +3,7 @@ from AWSManager import *
 import os
 import argparse
 import sys
-from constants import requestid_query
+from constants import find_aws_log_link_query
 import websockets
 import asyncio
 import aws_google_auth
@@ -51,8 +51,9 @@ async def run(cookie,
 
     # First determine the set of requestIDs for the result of the query
     result = elasticsearch_manager.make_query(query)
-    request_ids = result.get_request_ids()
-    await send_message(ws, "Fetched unique request IDs. There are " + str(len(request_ids)) + " ids", payload)
+    unique_keys = result.get_unique_keys()
+    await send_message(ws, "Fetched unique requestID+providerName pairs. There are " + str(
+        len(unique_keys)) + " unique pair", payload)
 
     # Get the timestamps for the lower and upper limit of time range used in the query
     gte = json.loads(query)["bool"]["must"][-1]["range"]["@timestamp"]["gte"]
@@ -67,21 +68,26 @@ async def run(cookie,
     metadata = []
     download_requests = []
 
-    for index, request_id in enumerate(request_ids):
+    for index, key in enumerate(unique_keys):
 
-        # For each requestID make a query to ElasticSearch to fetch all logs belonging to this requestID
-        # Note that we are using a bigger time range to ensure that we will fetch all logs
+        request_id = key.split("_")[0]
+        provider_name = key.split("_")[1]
+
+        # For each <requestID,providerName> pair, make a query to ElasticSearch to fetch all logs belonging to this
+        # pair. Note that we are using a bigger time range to ensure that we will fetch all logs
         # (the time range for the query that the user made might not coincide completely with the time range
-        # when the full traffic for this requestID occurred)
-        logs_for_session = elasticsearch_manager.make_query(query=json.dumps(requestid_query),
+        # when the full traffic for this requestID+providerName occurred)
+        logs_for_session = elasticsearch_manager.make_query(query=json.dumps(find_aws_log_link_query),
                                                             replacements=[
                                                                 ("<requestId>", request_id),
+                                                                ("<providerName>", provider_name),
                                                                 ("<gte>", gte_date),
                                                                 ("<lte>", lte_date)
                                                             ])
 
         await send_message(ws, "Fetched logs for the flow with requestID = " + request_id
-                           + " (flow " + str(index + 1) + "/" + str(len(request_ids)) + ")", payload)
+                           + " and provider name = " + provider_name + " (flow " + str(index + 1) + "/" + str(
+            len(unique_keys)) + ")", payload)
 
         # Now we have all logs for the session identified by request_id. Find AWS HTTP debug log for it
         # TODO: If log is older than 7 days we need to ignore them since we do not keep those logs
@@ -96,13 +102,13 @@ async def run(cookie,
                 status = log.message.split("\n")[0].split(":")[1].strip()
                 metadata.append({
                     "status": status,
-                    "unique_name": request_id + "_" + log.providerName,
+                    "unique_name": log.requestId + "_" + log.providerName,
                     "log_path": http_debug_log_link,
-                    "requestId": request_id,
+                    "requestId": log.requestId,
                     "credentialsId": log.credentialsId,
-                    "userId": logs_for_session.find_user_id_by_request_id(request_id),
+                    "userId": log.userId,
                     "providerName": log.providerName,
-                    "timestamp": logs_for_session.get_timestamp_by_request_id(request_id)
+                    "timestamp": log.timestamp
                 })
                 download_requests.append(AWSRequest(http_debug_log_link,
                                                     os.path.join(output_folder, status + "_" + request_id + "_" +
