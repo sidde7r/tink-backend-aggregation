@@ -5,13 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Date;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.CurrencyEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.TypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 @JsonObject
 public class SecurityEntity {
@@ -56,14 +60,9 @@ public class SecurityEntity {
             Instrument.Type instrumentType,
             String portfolioId,
             String securityCode) {
-        SecurityProfitabilityResponse profitabilityResponse =
-                apiClient.fetchSecurityProfitability(portfolioId, securityCode);
         double marketValue = totalAmount.toTinkAmount().getDoubleValue();
-        double totalProfit = profitabilityResponse.getTotalProfit();
-        double averageAcquisitionPrice = getAverageAcquisitionPrice(marketValue - totalProfit);
 
         Instrument instrument = new Instrument();
-
         instrument.setUniqueIdentifier(marketName + isin);
         instrument.setName(name);
         instrument.setQuantity(quantity);
@@ -72,10 +71,15 @@ public class SecurityEntity {
         instrument.setMarketValue(marketValue);
         instrument.setCurrency(currency.getId());
         instrument.setIsin(isin);
-        instrument.setProfit(totalProfit);
-        instrument.setAverageAcquisitionPrice(averageAcquisitionPrice);
         instrument.setMarketPlace(marketName);
         instrument.setRawType(typeSecurities.getId());
+
+        Double totalProfit = getTotalProfit(apiClient, portfolioId, securityCode);
+        if (totalProfit != null) {
+            instrument.setProfit(totalProfit);
+            instrument.setAverageAcquisitionPrice(
+                    getAverageAcquisitionPrice(marketValue - totalProfit));
+        }
 
         return instrument;
     }
@@ -92,6 +96,23 @@ public class SecurityEntity {
         return new BigDecimal(acquisitionAmount / quantity)
                 .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .doubleValue();
+    }
+
+    @JsonIgnore
+    private Double getTotalProfit(
+            BbvaApiClient apiClient, String portfolioId, String securityCode) {
+        try {
+            SecurityProfitabilityResponse profitabilityResponse =
+                    apiClient.fetchSecurityProfitability(portfolioId, securityCode);
+            return profitabilityResponse.getTotalProfit();
+        } catch (HttpResponseException exception) {
+            HttpResponse response = exception.getResponse();
+            if (response.getStatus() == HttpStatus.SC_CONFLICT
+                    && response.getBody(BbvaErrorResponse.class).isContractNotOperableError()) {
+                return null;
+            }
+            throw exception;
+        }
     }
 
     public String getRicCode() {
