@@ -167,6 +167,14 @@ public class BelfiusApiClient {
                 ExecutionMode.SERVICES);
     }
 
+    public void consultClientSettings() {
+        post(
+                BelfiusConstants.Url.GEPA_SERVICE_URL,
+                CheckStatusResponse.class,
+                CheckStatusRequest.createConsultClientSettings(),
+                ExecutionMode.SERVICES);
+    }
+
     public String prepareDeviceRegistration(
             String deviceToken, String deviceBrand, String deviceName) {
         PrepareDeviceRegistrationResponse response =
