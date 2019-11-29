@@ -100,9 +100,11 @@ async def run(cookie,
             if "AWS CLI" in log.message:
                 http_debug_log_link = log.message.split("AWS")[1].split("CLI: ")[1].strip()
                 status = log.message.split("\n")[0].split(":")[1].strip()
+                unique_file_name = status + "_" + log.requestId + "_" + log.providerName + ".log"
+
                 metadata.append({
                     "status": status,
-                    "unique_name": log.requestId + "_" + log.providerName,
+                    "unique_file_name": unique_file_name,
                     "log_path": http_debug_log_link,
                     "requestId": log.requestId,
                     "credentialsId": log.credentialsId,
@@ -111,14 +113,15 @@ async def run(cookie,
                     "timestamp": log.timestamp
                 })
                 download_requests.append(AWSRequest(http_debug_log_link,
-                                                    os.path.join(output_folder, status + "_" + request_id + "_" +
-                                                                 log.providerName + ".log")))
+                                                    os.path.join(output_folder, unique_file_name)))
                 found_aws_log_link = True
 
         if found_aws_log_link:
-            await send_message(ws, "Found AWS log link for request with ID = " + request_id, payload)
+            await send_message(ws, "Found AWS log link for request with requestID = " + request_id
+                               + " and provider name = " + provider_name, payload)
         else:
-            await send_message(ws, "Could not find AWS log link for request with ID = " + request_id, payload)
+            await send_message(ws, "Could not find AWS log link for request with requestID = " + request_id
+                               + " and provider name = " + provider_name, payload)
 
     with open(os.path.join(output_folder, "metadata.json"), "w", encoding="utf-8") as out:
         json.dump(metadata, out, indent=4)
@@ -127,7 +130,7 @@ async def run(cookie,
     download_log_command = AWSManager.create_download_command(download_requests)
 
     # TODO: We can find a way to send the Google password of the user so user will not need to enter his
-    # password everytime, we should just find a safe and convenient way to do so
+    # password every time, we should just find a safe and convenient way to do so
     """
         Assuming that we have a good way to send the Google password to this method and it is stored in 
         "password" variable, the following way is to make the script use the password automatically
