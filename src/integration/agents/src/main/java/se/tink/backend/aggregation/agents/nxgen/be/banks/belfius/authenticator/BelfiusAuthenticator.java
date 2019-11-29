@@ -111,12 +111,13 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         apiClient.consultClientSettings();
 
         challenge = apiClient.prepareDeviceRegistration(deviceToken, deviceBrand, deviceName);
+
+        apiClient.keepAlive();
+
         final String sign =
                 supplementalInformationHelper
                         .waitForSignCodeChallengeResponse(challenge)
                         .replace(" ", "");
-
-        apiClient.keepAlive();
 
         apiClient.registerDevice(sign);
         persistentStorage.put(BelfiusConstants.Storage.DEVICE_TOKEN, deviceToken);
