@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco;
 
+import java.security.Security;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -54,6 +56,7 @@ public class NovoBancoAgent extends NextGenerationAgent
         loanRefreshController = constructLoanRefreshController();
         investmentRefreshController = constructInvestmentRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
+        Security.addProvider(new BouncyCastleProvider());
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
