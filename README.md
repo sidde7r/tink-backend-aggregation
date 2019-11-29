@@ -1,5 +1,7 @@
 # Tink Backend Aggregation
 
+[![codecov](https://codecov.io/gh/tink-ab/tink-backend-aggregation/branch/master/graph/badge.svg?token=6S1cv6TuzT)](https://codecov.io/gh/tink-ab/tink-backend-aggregation)
+
 ## Integration Squad
 
 ## Getting started
