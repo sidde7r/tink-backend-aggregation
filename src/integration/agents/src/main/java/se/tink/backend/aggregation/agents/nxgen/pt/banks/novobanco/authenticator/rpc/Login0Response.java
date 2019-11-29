@@ -22,7 +22,7 @@ public class Login0Response extends GenericResponse {
         return Optional.ofNullable(getHeader())
                 .map(HeaderEntity::getStatus)
                 .map(StatusEntity::getCode)
-                .map(code -> ResponseCodes.INVALID_LOGIN != code)
+                .map(code -> ResponseCodes.OK == code)
                 .orElse(false);
     }
 }

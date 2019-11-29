@@ -51,9 +51,11 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
         final BankIdResponse bankIdResponse = apiClient.collectBankId(reference);
         final String redirectUrl = bankIdResponse.getRedirectUrl();
 
-        if (redirectUrl.equalsIgnoreCase("/message/")
-                || redirectUrl.equalsIgnoreCase("/otpchooser/")) {
-            throw LoginError.NOT_CUSTOMER.exception();
+        if (redirectUrl.equalsIgnoreCase("/message/")) {
+            String message = apiClient.fetchMessage();
+            if (isNotCustomerMessage(message)) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
         }
 
         if (!Strings.isNullOrEmpty(redirectUrl)) {
@@ -74,6 +76,18 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
         }
 
         return BankIdStatus.WAITING;
+    }
+
+    private boolean isNotCustomerMessage(String message) {
+        if (Strings.isNullOrEmpty(message)) {
+            return false;
+        }
+
+        if (message.toLowerCase().contains(SkandiaBankenConstants.ErrorMessages.NOT_CUSTOMER)) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override

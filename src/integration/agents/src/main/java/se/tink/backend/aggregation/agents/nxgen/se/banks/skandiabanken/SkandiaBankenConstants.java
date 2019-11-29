@@ -48,6 +48,7 @@ public class SkandiaBankenConstants {
         public static final URL FETCH_APPROVED_PAYMENTS =
                 new URL(BASE + Endpoints.FETCH_APPROVED_PAYMENTS);
         public static final URL LOGOUT = new URL(BASE + Endpoints.LOGOUT);
+        public static final URL LOGIN_MESSAGE = new URL(LOGIN_BASE).concat("/message/");
     }
 
     public static class Endpoints {
@@ -179,6 +180,8 @@ public class SkandiaBankenConstants {
         public static final String TECHNICAL_ERROR = "Skandia bank & försäkring - Tekniskt fel";
         public static final String TECHNICAL_DIFFICULTIES =
                 "We're experiencing technical difficulties at the moment. Please try again or contact Customer services.";
+        public static final String NOT_CUSTOMER =
+                "för att använda tjänsten behöver du bli kund hos oss.";
         private static final ImmutableList<String> BANK_SIDE_FAILURES =
                 ImmutableList.of("connection reset", "connect timed out", "read timed out");
     }
