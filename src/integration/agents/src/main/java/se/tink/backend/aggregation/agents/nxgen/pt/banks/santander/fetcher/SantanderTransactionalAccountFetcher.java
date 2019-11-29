@@ -47,7 +47,10 @@ public class SantanderTransactionalAccountFetcher implements AccountFetcher<Tran
 
     private List<TransactionalAccount> deserializeAccounts(
             List<List<Map<String, String>>> accounts) {
-        List<Map<String, String>> checkingAccounts = accounts.get(TRANSACTIONAL_ACCOUNTS_INDEX);
+
+        List<Map<String, String>> checkingAccounts =
+                Optional.ofNullable(accounts.get(TRANSACTIONAL_ACCOUNTS_INDEX))
+                        .orElse(Collections.emptyList());
 
         return checkingAccounts.stream()
                 .map(this::toTinkAccount)
