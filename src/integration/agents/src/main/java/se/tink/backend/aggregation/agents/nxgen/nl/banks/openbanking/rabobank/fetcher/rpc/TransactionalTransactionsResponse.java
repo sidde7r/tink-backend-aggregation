@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.assertj.core.util.Lists;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -60,6 +61,9 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
                 .setDate(transaction.getBookedDate())
                 .setDescription(description)
                 .setPending(isPending)
+                .setPayload(
+                        TransactionPayloadTypes.DETAILS,
+                        transaction.getRaboDetailedTransactionType())
                 .build();
     }
 
