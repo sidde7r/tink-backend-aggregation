@@ -108,7 +108,7 @@ public class DanskeBankApiClient {
     public LoginResponse loginWithPassword(LoginRequest loginRequest)
             throws LoginException, SessionException {
         LoginResponse response = post(DanskeBankUrl.LOGIN, LoginResponse.class, loginRequest);
-        handleAbstractResponseError(response);
+        handleAbstractResponseError(response, false);
         return response;
     }
 
@@ -546,7 +546,7 @@ public class DanskeBankApiClient {
                         DanskeBankUrl.CREATESESSION,
                         CreateSessionResponse.class,
                         createSessionRequest);
-        handleAbstractResponseError(createSessionResponse);
+        handleAbstractResponseError(createSessionResponse, false);
 
         if (!createSessionResponse.isStatusOk()) {
             throw new IllegalStateException(
@@ -567,6 +567,11 @@ public class DanskeBankApiClient {
 
     private <T extends AbstractResponse> void handleAbstractResponseError(T response)
             throws LoginException, SessionException {
+        handleAbstractResponseError(response, true);
+    }
+
+    private <T extends AbstractResponse> void handleAbstractResponseError(
+            T response, boolean failOnUnkownError) throws LoginException, SessionException {
         if (!response.isStatusOk()) {
 
             if (response.isStatusAuthorizationNotPossible()) {
@@ -578,7 +583,9 @@ public class DanskeBankApiClient {
             if (response.isUnauthorizedError() || response.isSessionExpiredError()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
-            handleGenericErrors(response);
+            if (failOnUnkownError) {
+                handleGenericErrors(response);
+            }
         }
     }
 
