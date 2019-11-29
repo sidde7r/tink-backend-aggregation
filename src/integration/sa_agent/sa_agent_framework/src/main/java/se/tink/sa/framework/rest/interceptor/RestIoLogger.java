@@ -1,6 +1,7 @@
 package se.tink.sa.framework.rest.interceptor;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.util.StreamUtils;
 
 @Slf4j
 public class RestIoLogger implements ClientHttpRequestInterceptor {
@@ -24,15 +26,17 @@ public class RestIoLogger implements ClientHttpRequestInterceptor {
         } catch (RuntimeException ex) {
             throw ex;
         } finally {
-            logIo(request, body, response);
+            response = logIo(request, body, response);
         }
         return response;
     }
 
-    private void logIo(HttpRequest request, byte[] body, ClientHttpResponse response)
+    private ClientHttpResponse logIo(HttpRequest request, byte[] body, ClientHttpResponse response)
             throws IOException {
 
         if (log.isInfoEnabled()) {
+            final ClientHttpResponse responseCopy =
+                    new BufferingClientHttpResponseWrapper(response);
             StringBuilder sb =
                     new StringBuilder(
                                     "\n********************************** Http request **********************************")
@@ -62,14 +66,19 @@ public class RestIoLogger implements ClientHttpRequestInterceptor {
                         .append("\n");
                 printHeaders(sb, response.getHeaders());
                 //                        @TODO: replace interceptor to copy stream
-                //                        .append("Response
-                // body:\t").append(StreamUtils.copyToString(response.getBody(),
-                // Charset.defaultCharset())).append("\n")
+                sb.append("Response body:\t")
+                        .append(
+                                StreamUtils.copyToString(
+                                        responseCopy.getBody(), Charset.defaultCharset()))
+                        .append("\n");
                 sb.append(
                         "********************************** Http response end **********************************\n");
+                response = responseCopy;
             }
             log.info("{}", sb.toString());
         }
+
+        return response;
     }
 
     private void printHeaders(StringBuilder sb, HttpHeaders headers) {
