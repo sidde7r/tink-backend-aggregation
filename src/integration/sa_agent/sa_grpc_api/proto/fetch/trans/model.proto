@@ -6,6 +6,7 @@ option java_outer_classname = "OuterModel";
 option go_package = "proto";
 
 import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/account.proto";
+import "google/type/date.proto";
 
 message FetchTransactionsRequest {
   string key = 1;
@@ -22,6 +23,68 @@ message TransactionsMapEntity {
 }
 
 message Transaction {
-  string key = 1;
+  string accountId = 1;
+  double amount = 2;
+  string credentialsId = 3;
+  google.type.Date date = 4;
+  string description = 5;
+  string id = 6;
+  map<string, string> internalPayload = 7;
+  double originalAmount = 8;
+  repeated PayloadMap payload = 9;
+  bool pending = 10;
+  int64 timestamp = 11;
+  TransactionTypes type = 12;
+  string userId = 13;
+  bool upcoming = 14;
+}
+
+message PayloadMap {
+  TransactionPayloadTypes key = 1;
+  string value = 2;
+}
+
+enum TransactionPayloadTypes {
+  GIRO = 0;
+  TRANSFER_TWIN = 1;
+  TRANSFER_ACCOUNT = 2;
+  TRANSFER_ACCOUNT_EXTERNAL = 3;
+  TRANSFER_ACCOUNT_NAME_EXTERNAL = 4;
+  EXTERNAL_ID = 5;
+  VERIFICATION_NUMBER = 6;
+  CHARGEBACK_OR_RETURN = 7;
+  UNSETTLED_AMOUNT = 8;
+  DOCUMENT = 9;
+  PAYMENT_GATEWAY = 10;
+  AGENT_CATEGORY = 11;
+  AGENT_ORIGINAL_CATEGORY = 12;
+  INTUIT_CATEGORY = 13;
+  MCC = 14;
+  YODLEE_CATEGORY = 15;
+  AMEX_CATEGORY = 16;
+  GOOGLE_PLACES_TYPES = 17;
+  SUB_ACCOUNT = 18;
+  TRANSFER_PROVIDER = 19;
+  FRAUD_STATUS = 20;
+  MESSAGE = 21;
+  DETAILS = 22;
+  EDITABLE_TRANSACTION_TRANSFER_ID = 23;
+  EDITABLE_TRANSACTION_TRANSFER = 24;
+  EXCHANGE_RATE = 25;
+  LOCAL_CURRENCY = 26;
+  AMOUNT_IN_LOCAL_CURRENCY = 27;
+  LOCAL_REGION = 28;
+  LINK_COUNTERPART_PROMPT_ANSWER = 29;
+  CREDIT_CARD_NUMBER = 30;
+  CREDIT_CARD_HOLDER = 31;
+}
+
+enum TransactionTypes {
+  DEFAULT = 0;
+  CREDIT_CARD_TYPE = 1;
+  TRANSFER = 2;
+  PAYMENT = 3;
+  WITHDRAWAL = 4;
+  TRAINING = 5;
 }
 

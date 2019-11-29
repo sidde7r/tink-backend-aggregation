@@ -158,7 +158,7 @@ public class AccountMapperService {
         return AccountIdentifier.Type.values()[accountIdentifierType.getNumber()];
     }
 
-    private static Date mapFromGoogleDate(final com.google.type.Date date) {
+    public static Date mapFromGoogleDate(final com.google.type.Date date) {
         final Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, date.getYear());
         calendar.set(Calendar.MONTH, date.getMonth());
