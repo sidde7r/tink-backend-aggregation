@@ -12,7 +12,6 @@ import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -182,7 +181,7 @@ public class DanskeBankV2Agent extends AbstractAgent
             bankIdResourceHelper = null;
         }
 
-        httpClient = clientFactory.createBasicClient(new PrintStream(System.out));
+        httpClient = clientFactory.createBasicClient(context.getLogOutputStream());
         this.apiClient =
                 new DanskeBankApiClient(
                         httpClient,
