@@ -5,7 +5,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.common.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceEntity {
@@ -15,7 +15,7 @@ public class BalanceEntity {
     public String referenceDate;
     public String lastChangeDateTime;
 
-    public Amount getAmount() {
+    public ExactCurrencyAmount getAmount() {
         return Optional.ofNullable(balanceAmount)
                 .orElseThrow(IllegalStateException::new)
                 .toTinkAmount();

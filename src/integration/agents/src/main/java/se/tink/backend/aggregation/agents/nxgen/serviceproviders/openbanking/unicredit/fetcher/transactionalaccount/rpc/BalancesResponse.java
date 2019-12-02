@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.balance.BalanceAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.balance.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalancesResponse {
@@ -20,7 +20,7 @@ public class BalancesResponse {
         return Optional.ofNullable(balances).orElse(Collections.emptyList());
     }
 
-    public Amount getBalance() {
+    public ExactCurrencyAmount getBalance() {
 
         return getBalances().stream()
                 .min(Comparator.comparing(BalanceEntity::getBalanceMappingPriority))
