@@ -34,7 +34,6 @@ args = parser.parse_args()
 
 
 async def fetch_server(websocket, path):
-
     aws_tokens = {}
 
     while True:
@@ -77,7 +76,8 @@ async def fetch_server(websocket, path):
             "timestamp": int(datetime.now().timestamp())
         }
 
-start_server = websockets.serve(fetch_server, "localhost", 8765)
 
+start_server = websockets.serve(fetch_server, "localhost", 8765)
 asyncio.get_event_loop().run_until_complete(start_server)
+print("AWSLogFetcher Server is running and waiting for request")
 asyncio.get_event_loop().run_forever()

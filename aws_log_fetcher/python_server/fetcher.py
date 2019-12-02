@@ -3,7 +3,7 @@ from AWSManager import *
 import os
 import argparse
 import sys
-from constants import requestid_query
+from constants import find_aws_log_link_query
 import websockets
 import asyncio
 import aws_google_auth
@@ -38,7 +38,6 @@ async def run(cookie,
               payload="",
               authenticate_for_aws_command=None,
               ws: websockets.WebSocketServerProtocol = None):
-
     print("Download request has been received")
     output_folder = os.path.join(output_folder, get_timestamp())
 
@@ -52,8 +51,9 @@ async def run(cookie,
 
     # First determine the set of requestIDs for the result of the query
     result = elasticsearch_manager.make_query(query)
-    request_ids = result.get_request_ids()
-    await send_message(ws, "Fetched unique request IDs. There are " + str(len(request_ids)) + " ids", payload)
+    unique_keys = result.get_unique_keys()
+    await send_message(ws, "Fetched unique requestID+providerName pairs. There are " + str(
+        len(unique_keys)) + " unique pair", payload)
 
     # Get the timestamps for the lower and upper limit of time range used in the query
     gte = json.loads(query)["bool"]["must"][-1]["range"]["@timestamp"]["gte"]
@@ -68,21 +68,26 @@ async def run(cookie,
     metadata = []
     download_requests = []
 
-    for index, request_id in enumerate(request_ids):
+    for index, key in enumerate(unique_keys):
 
-        # For each requestID make a query to ElasticSearch to fetch all logs belonging to this requestID
-        # Note that we are using a bigger time range to ensure that we will fetch all logs
+        request_id = key.split("_")[0]
+        provider_name = key.split("_")[1]
+
+        # For each <requestID,providerName> pair, make a query to ElasticSearch to fetch all logs belonging to this
+        # pair. Note that we are using a bigger time range to ensure that we will fetch all logs
         # (the time range for the query that the user made might not coincide completely with the time range
-        # when the full traffic for this requestID occurred)
-        logs_for_session = elasticsearch_manager.make_query(query=json.dumps(requestid_query),
+        # when the full traffic for this requestID+providerName occurred)
+        logs_for_session = elasticsearch_manager.make_query(query=json.dumps(find_aws_log_link_query),
                                                             replacements=[
                                                                 ("<requestId>", request_id),
+                                                                ("<providerName>", provider_name),
                                                                 ("<gte>", gte_date),
                                                                 ("<lte>", lte_date)
                                                             ])
 
         await send_message(ws, "Fetched logs for the flow with requestID = " + request_id
-                     + " (flow " + str(index + 1) + "/" + str(len(request_ids)) + ")", payload)
+                           + " and provider name = " + provider_name + " (flow " + str(index + 1) + "/" + str(
+            len(unique_keys)) + ")", payload)
 
         # Now we have all logs for the session identified by request_id. Find AWS HTTP debug log for it
         # TODO: If log is older than 7 days we need to ignore them since we do not keep those logs
@@ -94,32 +99,38 @@ async def run(cookie,
             # (since we already find what we are looking for)
             if "AWS CLI" in log.message:
                 http_debug_log_link = log.message.split("AWS")[1].split("CLI: ")[1].strip()
+                status = log.message.split("\n")[0].split(":")[1].strip()
+                unique_file_name = status + "_" + log.requestId + "_" + log.providerName + ".log"
+
                 metadata.append({
-                    "unique_name": request_id + "_" + log.providerName,
-                    "log_path"  : http_debug_log_link,
-                    "requestId" : request_id,
-                    "userId"    : logs_for_session.find_user_id_by_request_id(request_id),
+                    "status": status,
+                    "unique_file_name": unique_file_name,
+                    "log_path": http_debug_log_link,
+                    "requestId": log.requestId,
+                    "credentialsId": log.credentialsId,
+                    "userId": log.userId,
                     "providerName": log.providerName,
-                    "timestamp": logs_for_session.get_timestamp_by_request_id(request_id)
+                    "timestamp": log.timestamp
                 })
                 download_requests.append(AWSRequest(http_debug_log_link,
-                                                    os.path.join(output_folder, request_id + "_" +
-                                                                 log.providerName + ".log")))
+                                                    os.path.join(output_folder, unique_file_name)))
                 found_aws_log_link = True
 
         if found_aws_log_link:
-            await send_message(ws, "Found AWS log link for request with ID = " + request_id, payload)
+            await send_message(ws, "Found AWS log link for request with requestID = " + request_id
+                               + " and provider name = " + provider_name, payload)
         else:
-            await send_message(ws, "Could not find AWS log link for request with ID = " + request_id, payload)
+            await send_message(ws, "Could not find AWS log link for request with requestID = " + request_id
+                               + " and provider name = " + provider_name, payload)
 
     with open(os.path.join(output_folder, "metadata.json"), "w", encoding="utf-8") as out:
-        json.dump(metadata, out)
+        json.dump(metadata, out, indent=4)
 
     # Create the necessary Terminal command to download all AWS debug logs that we discovered
     download_log_command = AWSManager.create_download_command(download_requests)
 
     # TODO: We can find a way to send the Google password of the user so user will not need to enter his
-    # password everytime, we should just find a safe and convenient way to do so
+    # password every time, we should just find a safe and convenient way to do so
     """
         Assuming that we have a good way to send the Google password to this method and it is stored in 
         "password" variable, the following way is to make the script use the password automatically
@@ -221,6 +232,7 @@ async def main():
               username=args.username,
               idp_id=args.idp_id,
               sp_id=args.sp_id)
+
 
 if __name__ == "__main__":
     asyncio.get_event_loop().run_until_complete(main())

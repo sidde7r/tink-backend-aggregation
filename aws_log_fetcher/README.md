@@ -60,7 +60,9 @@ To find GOOGLE_IDP_ID and GOOGLE_SP_ID, run `cat /Users/<username>/.aws/config`.
 
 ## Usage
 
-- Open Kibana website and make any query. It is generally a good idea to put the filter `doc.level=ERROR` as generally if there is no error in a request flow, an AWS debug log will not be dumped. 
+- Python server must be already running before you run Kibana in your browser. Otherwise Python server and the Chrome extension will not be able to connect
+to each other.
+- Open Kibana website and make any query.
 - Then click to "Download Logs" button. A popup window will appear where you will see some messages sent by Python server.
 - If it is the first time you are trying to download logs, it means you are not authenticated to AWS. In this case you will see a message saying the following:
 ```
