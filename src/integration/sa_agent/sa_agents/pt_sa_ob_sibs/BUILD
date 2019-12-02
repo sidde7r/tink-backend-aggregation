@@ -3,6 +3,10 @@ load("//tools/bzl:junit.bzl", "junit_test")
 java_binary(
     name = "standalone-agent-ob-sibs-bin",
     srcs = glob(["src/main/java/**/*.java"]),
+    data = [
+        "//data:aggregation_test",
+    ],
+    jvm_flags = ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=6666"],
     main_class = "se.tink.sa.agent.pt.ob.sibs.SibsStandaloneAgent",
     resources = glob([
         "src/main/resources/**/*",

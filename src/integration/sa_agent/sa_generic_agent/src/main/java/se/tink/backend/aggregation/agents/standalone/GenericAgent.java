@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.standalone.grpc.CheckingService;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckingAccountsExecutor {
@@ -22,6 +23,8 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
     private AgentsServiceConfiguration agentsServiceConfiguration;
     private final ManagedChannel channel;
     private final AuthenticationService authenticationService;
+    private final CredentialsRequest credentialsRequest;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public GenericAgent(
             CredentialsRequest request,
@@ -36,8 +39,15 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
                                 genericAgentConfiguration.getGrpcPort())
                         .usePlaintext()
                         .build();
-        authenticationService = new AuthenticationService(channel);
-        checkingService = new CheckingService(channel);
+
+        this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
+
+        authenticationService =
+                new AuthenticationService(
+                        channel, strongAuthenticationState, genericAgentConfiguration);
+        checkingService =
+                new CheckingService(channel, strongAuthenticationState, genericAgentConfiguration);
+        credentialsRequest = request;
     }
 
     @Override
