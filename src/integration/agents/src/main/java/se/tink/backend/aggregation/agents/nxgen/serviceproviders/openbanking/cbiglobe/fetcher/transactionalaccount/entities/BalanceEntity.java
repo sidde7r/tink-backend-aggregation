@@ -2,12 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 
 import java.util.Arrays;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceEntity {
 
-    public static Amount defaultAmount = Amount.inEUR(0);
     private AmountEntity balanceAmount;
     private String balanceType;
 
@@ -16,7 +15,7 @@ public class BalanceEntity {
                 || balanceType.equalsIgnoreCase("forwardAvailable");
     }
 
-    public Amount toAmount() {
+    public ExactCurrencyAmount toAmount() {
         return balanceAmount.toAmount();
     }
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
@@ -19,7 +19,7 @@ public class AmountEntity {
     }
 
     @JsonIgnore
-    public Amount toAmount() {
-        return new Amount(currency, amount);
+    public ExactCurrencyAmount toAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
     }
 }
