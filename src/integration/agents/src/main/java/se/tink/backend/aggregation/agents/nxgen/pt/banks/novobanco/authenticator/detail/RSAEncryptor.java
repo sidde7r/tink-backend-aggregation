@@ -38,7 +38,7 @@ public class RSAEncryptor {
                     NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException {
         final Cipher instance =
                 Cipher.getInstance(RSA_TRANSFORMATION, BouncyCastleProvider.PROVIDER_NAME);
-        instance.init(1, key);
+        instance.init(Cipher.ENCRYPT_MODE, key);
         return generateIVWithByteArray(instance.doFinal(getBytesWithUTF8Charset(data)));
     }
 

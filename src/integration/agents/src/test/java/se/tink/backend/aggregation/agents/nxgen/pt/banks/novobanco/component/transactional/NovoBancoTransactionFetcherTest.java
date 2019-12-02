@@ -96,7 +96,7 @@ public class NovoBancoTransactionFetcherTest {
     }
 
     private void assertTransactionEquals(TransactionDto refTransaction, Transaction transaction) {
-        assertNotNull("No transaction matching the ref description", transaction);
+        assertNotNull("No transaction matching the reference description", transaction);
         assertEquals(refTransaction.getDate(), dateToString(transaction.getDate()));
         assertEquals(refTransaction.getAmount(), transaction.getExactAmount());
     }
