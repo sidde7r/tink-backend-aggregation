@@ -44,7 +44,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
 
     public IngBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         configureHttpClient(client);
         /*
             ING in their documentation use country code in lowercase, however their API treat

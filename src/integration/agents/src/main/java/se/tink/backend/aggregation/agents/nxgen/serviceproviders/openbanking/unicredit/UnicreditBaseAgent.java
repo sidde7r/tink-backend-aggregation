@@ -34,7 +34,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
 
     public UnicreditBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
 
         apiClient = getApiClient(request.isManual());
         clientName = request.getProvider().getPayload();

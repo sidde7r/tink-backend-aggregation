@@ -44,7 +44,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), true);
 
         this.clientName = request.getProvider().getPayload();
 
