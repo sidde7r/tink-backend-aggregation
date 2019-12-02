@@ -84,6 +84,10 @@ public class BelfiusApiClient {
         this.locale = locale;
     }
 
+    public void requestConfigIos() {
+        client.request(Url.CONFIG_IOS).get(HttpResponse.class);
+    }
+
     public void openSession() {
         this.sessionStorage.clearSessionData();
         SessionOpenedResponse sessionOpenedResponse =
