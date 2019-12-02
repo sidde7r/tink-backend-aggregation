@@ -4,23 +4,17 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.security.KeyStore;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
-import javax.net.ssl.SSLContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
-import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 
 public class QsealcSigner {
 
@@ -69,23 +63,12 @@ public class QsealcSigner {
             EidasIdentity eidasIdentity,
             String oldCertId) {
         try {
-
-            KeyStore trustStore = conf.getRootCaTrustStore();
-            KeyStore keyStore = conf.getClientCertKeystore();
-            SSLContext sslContext =
-                    new SSLContextBuilder()
-                            .loadTrustMaterial(
-                                    trustStore,
-                                    TrustRootCaStrategy.createWithoutFallbackTrust(trustStore))
-                            .loadKeyMaterial(keyStore, "changeme".toCharArray())
-                            .build();
-
-            HttpClient httpClient =
-                    HttpClients.custom()
-                            .setHostnameVerifier(new AllowAllHostnameVerifier())
-                            .setSslcontext(sslContext)
-                            .build();
-            return new QsealcSigner(httpClient, alg, conf.getHost(), oldCertId, eidasIdentity);
+            return new QsealcSigner(
+                    QsealcSignerHttpClient.getHttpClient(conf),
+                    alg,
+                    conf.getHost(),
+                    oldCertId,
+                    eidasIdentity);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
