@@ -247,9 +247,12 @@ public class NordeaPasswordAuthenticator implements TypedAuthenticator, AutoAuth
 
     private void loginWithBankId(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        this.credentials.setType(CredentialsTypes.MOBILE_BANKID);
-        bankIdAuthenticationController.authenticate(credentials);
-        this.credentials.setType(CredentialsTypes.PASSWORD);
+        try {
+            this.credentials.setType(CredentialsTypes.MOBILE_BANKID);
+            bankIdAuthenticationController.authenticate(credentials);
+        } finally {
+            this.credentials.setType(CredentialsTypes.PASSWORD);
+        }
     }
 
     private void revokeBankIdToken() {
