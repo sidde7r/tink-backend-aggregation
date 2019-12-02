@@ -9,6 +9,5 @@ import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/model.proto";
 
 service FetchAccountsService {
   rpc fetchCheckingAccounts (FetchAccountsRequest) returns (FetchAccountsResponse);
-  rpc fetchSavingAccounts (FetchAccountsRequest) returns (FetchAccountsResponse);
 }
 

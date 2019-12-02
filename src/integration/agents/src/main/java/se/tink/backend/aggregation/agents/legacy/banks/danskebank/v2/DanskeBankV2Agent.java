@@ -83,6 +83,7 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferRespon
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
@@ -704,7 +705,7 @@ public class DanskeBankV2Agent extends AbstractAgent
         }
     }
 
-    private void loginWithMobileBankId() throws BankIdException, LoginException {
+    private void loginWithMobileBankId() throws BankIdException, LoginException, SessionException {
         InitBankIdRequest initBankIdRequest = new InitBankIdRequest(loginId);
         InitBankIdResponse initBankIdResponse = apiClient.bankIdInitAuth(initBankIdRequest);
 

@@ -41,7 +41,7 @@ public abstract class HandelsbankenAgent<
                         this.persistentStorage, credentials.getSensitivePayload());
         this.bankClient = constructApiClient(handelsbankenConfiguration);
         this.handelsbankenSessionStorage =
-                new HandelsbankenSessionStorage(this.sessionStorage, handelsbankenConfiguration);
+                new HandelsbankenSessionStorage(handelsbankenConfiguration);
 
         this.loanRefreshController =
                 new LoanRefreshController(

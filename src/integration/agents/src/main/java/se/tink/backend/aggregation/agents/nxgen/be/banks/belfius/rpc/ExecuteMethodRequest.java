@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -14,6 +15,21 @@ public class ExecuteMethodRequest extends RequestEntity {
 
     public static ExecuteMethodRequest.Builder builder() {
         return new ExecuteMethodRequest.Builder();
+    }
+
+    public static RequestEntity createGetAppMessageText() {
+        return builder()
+                .setApplicationId("services")
+                .setMethodId("List")
+                .setInputs(
+                        ImmutableMap.<String, Object>builder()
+                                .put("AppRelease", "09310")
+                                .put("Application", "BDM")
+                                .put("Language", "NL")
+                                .put("Platform", "I")
+                                .put("TypeDevice", "PHONE")
+                                .build())
+                .build();
     }
 
     public static class Builder {

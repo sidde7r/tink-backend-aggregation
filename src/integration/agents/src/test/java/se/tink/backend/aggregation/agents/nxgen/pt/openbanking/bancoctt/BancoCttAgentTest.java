@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.bancoctt;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
+// @Ignore
 public class BancoCttAgentTest {
 
     private AgentIntegrationTest.Builder builder;

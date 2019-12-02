@@ -16,7 +16,7 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CredentialsEventProducerTest {
-
+    private static final String CORRELATION_ID = "correlationId";
     private EventProducerServiceClient eventProducerServiceClient;
     private CredentialsEventProducer credentialsEventProducer;
     private Credentials validCredentials;
@@ -33,7 +33,8 @@ public class CredentialsEventProducerTest {
     @Test
     public void testCredentialsRefreshCommandChainStarted() throws InvalidProtocolBufferException {
         ArgumentCaptor<Any> capture = ArgumentCaptor.forClass(Any.class);
-        credentialsEventProducer.sendCredentialsRefreshCommandChainStarted(validCredentials, appId);
+        credentialsEventProducer.sendCredentialsRefreshCommandChainStarted(
+                validCredentials, appId, CORRELATION_ID);
         Mockito.verify(eventProducerServiceClient, Mockito.times(1))
                 .postEventAsync(capture.capture());
 
@@ -47,6 +48,7 @@ public class CredentialsEventProducerTest {
                         .setUserId(validCredentials.getUserId())
                         .setCredentialsId(validCredentials.getId())
                         .setProviderName(validCredentials.getProviderName())
+                        .setCorrelationId(CORRELATION_ID)
                         .build();
 
         Assert.assertEquals(data, output);

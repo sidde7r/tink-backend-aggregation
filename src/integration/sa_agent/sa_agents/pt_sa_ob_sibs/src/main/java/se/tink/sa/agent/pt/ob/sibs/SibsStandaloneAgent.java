@@ -9,9 +9,9 @@ import org.springframework.context.annotation.PropertySource;
 import se.tink.sa.framework.StandaloneAgent;
 
 @Slf4j
-@Configuration
 @ComponentScan(basePackageClasses = {StandaloneAgent.class, SibsStandaloneAgent.class})
-@PropertySource("classpath:application.properties")
+@PropertySource({"classpath:application.properties", "classpath:secrets.properties"})
+@Configuration
 public class SibsStandaloneAgent extends StandaloneAgent {
 
     public static void main(String[] args) {

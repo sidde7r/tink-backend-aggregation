@@ -20,7 +20,8 @@ public class NordeaServiceUnavailableFilter extends Filter {
         HttpResponse response = nextFilter(httpRequest);
         if (HttpStatus.SC_BAD_GATEWAY == response.getStatus()
                 || HttpStatus.SC_SERVICE_UNAVAILABLE == response.getStatus()) {
-            throw BankServiceError.NO_BANK_SERVICE.exception();
+            throw BankServiceError.NO_BANK_SERVICE.exception(
+                    "Http status: " + response.getStatus());
         }
         return response;
     }

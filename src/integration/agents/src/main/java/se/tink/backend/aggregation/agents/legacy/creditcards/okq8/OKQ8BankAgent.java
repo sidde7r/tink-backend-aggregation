@@ -83,7 +83,8 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
 
         if (isFetchAgain(loginResponse)) {
             // Could not get a non-empty response within attempt limit.
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Failed to get a response within retry limit.");
         }
 
         loginResponseFromAuthenticationRequest = Optional.of(loginResponse);

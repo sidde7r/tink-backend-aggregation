@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator;
 
 import java.security.KeyPair;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqApiClient;
@@ -115,7 +116,11 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
                         agentConfiguration.getClientSecret());
 
         if (!"bearer".equals(tokenExchangeResponse.getTokenType())) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Token is not of bearer type"
+                            + (Strings.isNullOrEmpty(tokenExchangeResponse.getTokenType())
+                                    ? "."
+                                    : ": " + tokenExchangeResponse.getTokenType()));
         }
 
         return tokenExchangeResponse.toTinkToken(

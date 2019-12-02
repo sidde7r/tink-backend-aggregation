@@ -116,7 +116,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
             // When we get to this page, the SMS has already been sent
             // Throw a bank side failure, since it will most likely not trigger SCA next time
             LOG.error("SCA not implemented");
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception("SCA not implemented");
         }
 
         return getCurrentUrl(driver).toUri().getPath().equalsIgnoreCase(Paths.GLOBAL_POSITION);

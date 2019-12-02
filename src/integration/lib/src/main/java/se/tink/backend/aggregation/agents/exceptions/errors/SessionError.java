@@ -23,6 +23,11 @@ public enum SessionError implements AgentError {
     }
 
     @Override
+    public SessionException exception(String internalMessage) {
+        return new SessionException(this, internalMessage);
+    }
+
+    @Override
     public SessionException exception(Throwable cause) {
         return new SessionException(this, cause);
     }

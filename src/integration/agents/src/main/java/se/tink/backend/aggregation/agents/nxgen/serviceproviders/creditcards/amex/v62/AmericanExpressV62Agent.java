@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.entities.UserDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.AmericanExpressV62CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.AmericanExpressV62TransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.filter.AmericanExpressV62HttpRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.session.AmericanExpressV62SessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Storage;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -46,6 +47,10 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         this.client.addFilter(new TimeoutFilter());
+        this.client.addFilter(
+                new AmericanExpressV62HttpRetryFilter(
+                        AmericanExpressV62Constants.HttpFilters.MAX_NUM_RETRIES,
+                        AmericanExpressV62Constants.HttpFilters.RETRY_SLEEP_MILLISECONDS));
 
         this.apiClient =
                 new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);

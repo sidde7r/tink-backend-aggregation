@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transactional.SwedbankDefaultTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.SwedbankDefaultTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.filters.SwedbankBaseHttpFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.filters.SwedbankServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.interfaces.SwedbankApiClientProvider;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -78,6 +79,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final boolean isBankId;
+    private final SwedbankStorage swedbankStorage;
 
     public SwedbankAbstractAgent(
             CredentialsRequest request,
@@ -100,11 +102,12 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
             SwedbankApiClientProvider apiClientProvider) {
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
+        swedbankStorage = new SwedbankStorage();
         this.isBankId =
                 request.getProvider().getCredentialsType().equals(CredentialsTypes.MOBILE_BANKID);
         this.configuration = configuration;
         this.apiClient =
-                apiClientProvider.getApiAgent(client, configuration, credentials, sessionStorage);
+                apiClientProvider.getApiAgent(client, configuration, credentials, swedbankStorage);
         eInvoiceRefreshController = null;
 
         SwedbankDefaultInvestmentFetcher investmentFetcher =
@@ -133,6 +136,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                 new TimeoutRetryFilter(
                         TimeoutFilter.NUM_TIMEOUT_RETRIES,
                         TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new SwedbankServiceUnavailableFilter());
     }
 
     @Override
@@ -259,10 +263,10 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                         context, catalog, supplementalInformationHelper, apiClient, isBankId);
         SwedbankDefaultBankTransferExecutor transferExecutor =
                 new SwedbankDefaultBankTransferExecutor(
-                        catalog, apiClient, transferHelper, sessionStorage);
+                        catalog, apiClient, transferHelper, swedbankStorage);
         SwedbankDefaultPaymentExecutor paymentExecutor =
                 new SwedbankDefaultPaymentExecutor(
-                        catalog, apiClient, transferHelper, sessionStorage);
+                        catalog, apiClient, transferHelper, swedbankStorage);
         SwedbankDefaultApproveEInvoiceExecutor approveEInvoiceExecutor =
                 new SwedbankDefaultApproveEInvoiceExecutor(apiClient, transferHelper);
         SwedbankDefaultUpdatePaymentExecutor updatePaymentExecutor =

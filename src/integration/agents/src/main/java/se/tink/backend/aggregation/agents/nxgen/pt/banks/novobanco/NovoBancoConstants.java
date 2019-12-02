@@ -119,4 +119,12 @@ public class NovoBancoConstants {
         public static final int SESSION_EXPIRED = 40;
         public static final int OK = 0;
     }
+
+    public static class SecurityConfig {
+        public static final String RSA = "RSA";
+        public static final String RSA_TRANSFORMATION =
+                String.format("%s/%s/%s", RSA, "NONE", "PKCS1Padding");
+        public static final String HMAC_SHA256 = "HmacSHA256";
+        public static final String SECRET_FORMAT = "%s|%s|%d|%s";
+    }
 }

@@ -143,7 +143,8 @@ public class NordeaV20ApiClient {
             }
 
             if (errorCode.get().equals(ErrorCode.TEMPORARY_TECHNICAL_ERROR)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        "Error code: " + errorCode.get());
             }
 
             return validate(response);

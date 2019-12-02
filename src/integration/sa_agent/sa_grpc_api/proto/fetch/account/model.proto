@@ -5,55 +5,11 @@ option java_package = "se.tink.sa.services.fetch.account";
 option java_outer_classname = "OuterModel";
 option go_package = "proto";
 
-import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/accounttype.proto";
+import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/account.proto";
 
 message FetchAccountsRequest {
-  string consentId = 1;
 }
 
 message FetchAccountsResponse {
   repeated TransactionalAccount account = 1;
-}
-
-message TransactionalAccount {
-  TransactionalAccountType accountType = 1;
-  IdModule idModule = 2;
-  string name = 3;
-  string productName = 4;
-  string accountNumber = 5;
-  repeated AccountIdentifier identifiers = 6;
-  string uniqueIdentifier = 7;
-  string apiIdentifier = 8;
-  HolderName holderName = 9;
-  map<string, string> temporaryStorage = 10;
-  repeated AccountFlag accountFlags = 11;
-  ExactCurrencyAmount exactBalance = 12;
-  ExactCurrencyAmount exactAvailableCredit = 13;
-}
-
-message IdModule {
-  string uniqueId = 1;
-  string accountNumber = 2;
-  string accountName = 3;
-  string productName = 4;
-  repeated AccountIdentifier identifiers = 5;
-}
-
-message AccountIdentifier {
-  string name = 1;
-}
-
-message HolderName {
-  string value = 1;
-}
-
-enum AccountFlag {
-    BUSINESS = 0;
-    MANDATE = 1;
-    PSD2_PAYMENT_ACCOUNT = 2;
-}
-
-message ExactCurrencyAmount {
-  string value = 1;
-  string currencyCode = 2;
 }

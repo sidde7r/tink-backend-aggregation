@@ -31,7 +31,7 @@ public class AccountsResponse extends BaseResponse {
     @JsonIgnore
     public AccountsResponse handleErrors() {
         if (!Strings.isNullOrEmpty(errmsg)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception("Error message: " + errmsg);
         }
         return this;
     }

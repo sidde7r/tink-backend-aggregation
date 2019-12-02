@@ -51,7 +51,8 @@ public class RevolutErrorsFilter extends Filter {
         if (response.getStatus() == errorStatus) {
             String body = response.getBody(String.class);
             if (body.contains(errorMessage)) {
-                throw error.exception();
+                throw error.exception(
+                        "Error status: " + errorStatus + ", message: " + errorMessage);
             }
         }
         // Not a match, do nothing

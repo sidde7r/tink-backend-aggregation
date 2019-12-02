@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
@@ -32,6 +34,9 @@ public class SibsBaseApiClient {
 
     private static final String TRUE = "true";
     private static final String PSU_IP_ADDRESS = "127.0.0.1";
+    private static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern(PAGINATION_DATE_FORMAT);
     private final String isPsuInvolved;
     private final SibsUserState userState;
     private final TinkHttpClient client;
@@ -78,11 +83,11 @@ public class SibsBaseApiClient {
     }
 
     public TransactionKeyPaginatorResponse<String> getAccountTransactions(
-            TransactionalAccount account) {
+            TransactionalAccount account, LocalDate dateFrom) {
         URL accountTransactions =
                 createUrl(SibsConstants.Urls.ACCOUNT_TRANSACTIONS)
                         .parameter(PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier());
-        String transactionFetchFromDate = userState.getTransactionsFetchBeginDate(account);
+        String transactionFetchFromDate = DATE_FORMATTER.format(dateFrom);
         return client.request(accountTransactions)
                 .queryParam(QueryKeys.WITH_BALANCE, TRUE)
                 .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)

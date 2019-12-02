@@ -26,6 +26,10 @@ public enum BankServiceError implements AgentRuntimeError {
         this.userMessage = userMessage;
     }
 
+    public BankServiceException exception(String internalMessage) {
+        return new BankServiceException(this, internalMessage);
+    }
+
     @Override
     public BankServiceException exception() {
         return new BankServiceException(this);

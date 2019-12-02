@@ -1,30 +1,37 @@
-requestid_query = {
-  "bool": {
-    "must": [
-      {
-        "match_all": {}
-      },
-      {
-        "match_phrase": {
-          "doc.mdc.requestId": {
-            "query": "<requestId>"
-          }
-        }
-      },
-      {
-        "range": {
-          "@timestamp": {
-            "gte": "<gte>",
-            "lte": "<lte>",
-            "format": "strict_date_optional_time"
-          }
-        }
-      }
-    ],
-    "filter": [],
-    "should": [],
-    "must_not": []
-  }
+find_aws_log_link_query = {
+    "bool": {
+        "must": [
+            {
+                "match_all": {}
+            },
+            {
+                "match_phrase": {
+                    "doc.mdc.requestId": {
+                        "query": "<requestId>"
+                    }
+                }
+            },
+            {
+                "match_phrase": {
+                    "doc.mdc.providerName": {
+                        "query": "<providerName>"
+                    }
+                }
+            },
+            {
+                "range": {
+                    "@timestamp": {
+                        "gte": "<gte>",
+                        "lte": "<lte>",
+                        "format": "strict_date_optional_time"
+                    }
+                }
+            }
+        ],
+        "filter": [],
+        "should": [],
+        "must_not": []
+    }
 }
 
 header = {

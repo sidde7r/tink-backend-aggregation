@@ -181,4 +181,8 @@ public final class BbvaConstants {
         public static final String COUNTRY = "es";
         public static final String ES_PROXY = "esProxy";
     }
+
+    public static class ErrorCode {
+        public static final String CONTRACT_NOT_OPERABLE = "contractNotOperable";
+    }
 }

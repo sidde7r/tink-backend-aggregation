@@ -86,6 +86,8 @@ clients:
     aggregatorIdentifier: "Avanza"
   avanza-testing:
     aggregatorIdentifier: "Avanza"
+  billecta-production:
+    aggregationIdentifier: "Savelend"
   collector-testing:
     aggregatorIdentifier: "Collector Bank"
   collector-verified:
@@ -392,7 +394,7 @@ eventProducerServiceConfiguration:
 
 featureFlags:
   esProxy: true
-  beProxy: true
+  beProxy: false
 
 providerConfigurationServiceConfiguration:
   enabled: true

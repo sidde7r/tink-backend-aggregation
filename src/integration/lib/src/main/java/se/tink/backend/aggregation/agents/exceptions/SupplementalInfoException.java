@@ -22,6 +22,11 @@ public class SupplementalInfoException extends AuthenticationException {
         super(error, userMessage, cause);
     }
 
+    public SupplementalInfoException(
+            SupplementalInfoError supplementalInfoError, String internalMessage) {
+        super(supplementalInfoError, internalMessage);
+    }
+
     @Override
     public SupplementalInfoError getError() {
         return getError(SupplementalInfoError.class);

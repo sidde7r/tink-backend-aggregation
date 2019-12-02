@@ -26,6 +26,11 @@ public enum ThirdPartyAppError implements AgentError {
     }
 
     @Override
+    public ThirdPartyAppException exception(String internalMessage) {
+        return new ThirdPartyAppException(this, internalMessage);
+    }
+
+    @Override
     public ThirdPartyAppException exception(Throwable cause) {
         return new ThirdPartyAppException(this, cause);
     }

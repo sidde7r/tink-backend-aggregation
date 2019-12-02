@@ -15,6 +15,14 @@ public class AuthResponse {
         return "success".equalsIgnoreCase(returnCode);
     }
 
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
     public boolean isBankSideFailure() {
         return SebKortConstants.Error.GENERIC_TECHNICAL_ERROR.equalsIgnoreCase(errorCode)
                 && !Strings.isNullOrEmpty(message)

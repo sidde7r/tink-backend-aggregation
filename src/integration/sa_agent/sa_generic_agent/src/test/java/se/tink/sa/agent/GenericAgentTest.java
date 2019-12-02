@@ -1,11 +1,10 @@
 package se.tink.sa.agent;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
+// @Ignore
 public class GenericAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -14,7 +13,7 @@ public class GenericAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-standalonemillenniumbcp-oauth2")
-                        .setFinancialInstitutionId("milleniumPtStandalone")
+                        .setFinancialInstitutionId("standalonemillenniumbcp")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)

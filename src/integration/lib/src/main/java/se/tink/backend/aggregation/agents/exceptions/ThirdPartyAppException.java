@@ -22,6 +22,10 @@ public class ThirdPartyAppException extends MultiFactorAuthenticationException {
         super(error, userMessage, cause);
     }
 
+    public ThirdPartyAppException(ThirdPartyAppError thirdPartyAppError, String internalMessage) {
+        super(thirdPartyAppError, internalMessage);
+    }
+
     @Override
     public ThirdPartyAppError getError() {
         return getError(ThirdPartyAppError.class);

@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.Agent;
@@ -44,20 +45,17 @@ public final class ProgressiveAuthAgentTest {
                     @Override
                     public SteppableAuthenticationResponse login(
                             final SteppableAuthenticationRequest request) {
-
-                        final AuthenticationResponse payload = AuthenticationResponse.empty();
-
-                        return SteppableAuthenticationResponse.finalResponse(payload);
+                        return SteppableAuthenticationResponse.finalResponse();
                     }
                 };
 
         final SteppableAuthenticationRequest request =
-                SteppableAuthenticationRequest.initialRequest();
+                SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
 
         final SteppableAuthenticationResponse response = agent.login(request);
 
-        Assert.assertEquals(Optional.empty(), response.getStep());
-        Assert.assertFalse(response.getPayload().getFields().isPresent());
+        Assert.assertEquals(Optional.empty(), response.getStepIdentifier());
+        Assert.assertNull(response.getSupplementInformationRequester());
     }
 
     @Test
@@ -66,13 +64,14 @@ public final class ProgressiveAuthAgentTest {
         class LoginStep implements AuthenticationStep {
 
             @Override
-            public AuthenticationResponse respond(final AuthenticationRequest request) {
+            public Optional<SupplementInformationRequester> execute(
+                    final AuthenticationRequest request) {
 
                 // Unless the following is true, the authenticator would throw INCORRECT_CREDENTIALS
-                Assert.assertEquals(1, request.getUserInputs().size());
-                Assert.assertEquals("133700", request.getUserInputs().get(0));
+                Assert.assertEquals(1, request.getUserInputsAsList().size());
+                Assert.assertEquals("133700", request.getUserInputsAsList().get(0));
 
-                return AuthenticationResponse.empty();
+                return Optional.empty();
             }
         }
 
@@ -84,7 +83,7 @@ public final class ProgressiveAuthAgentTest {
 
                         final SteppableAuthenticationResponse response;
 
-                        if (!request.getStep().isPresent()) {
+                        if (!request.getStepIdentifier().isPresent()) {
                             // Authentication step 1
                             final Field description =
                                     Field.builder()
@@ -101,23 +100,22 @@ public final class ProgressiveAuthAgentTest {
                                             .description("Response code, 6 digits")
                                             .build();
 
-                            final AuthenticationResponse payload =
-                                    AuthenticationResponse.fromSupplementalFields(
-                                            Arrays.asList(description, input));
+                            final SupplementInformationRequester payload =
+                                    new SupplementInformationRequester.Builder()
+                                            .withFields(Arrays.asList(description, input))
+                                            .build();
 
                             response =
                                     SteppableAuthenticationResponse.intermediateResponse(
-                                            LoginStep.class, payload);
+                                            LoginStep.class.getName(), payload);
                         } else {
                             // Authentication step 2
                             final AuthenticationRequest requestPayload =
-                                    AuthenticationRequest.fromUserInputs(
-                                                    request.getPayload().getUserInputs())
+                                    new AuthenticationRequest(Mockito.mock(Credentials.class))
+                                            .withUserInputs(request.getPayload().getUserInputs())
                                             .withCredentials(new Credentials());
-                            final AuthenticationResponse payload =
-                                    new LoginStep().respond(requestPayload);
 
-                            response = SteppableAuthenticationResponse.finalResponse(payload);
+                            response = SteppableAuthenticationResponse.finalResponse();
                         }
 
                         return response;
@@ -125,26 +123,28 @@ public final class ProgressiveAuthAgentTest {
                 };
 
         final SteppableAuthenticationRequest request1 =
-                SteppableAuthenticationRequest.initialRequest();
+                SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
 
         final SteppableAuthenticationResponse response1 = agent.login(request1);
 
-        Assert.assertTrue(response1.getStep().isPresent());
-        Assert.assertEquals(LoginStep.class, response1.getStep().get());
-        Assert.assertTrue(response1.getPayload().getFields().isPresent());
-        Assert.assertEquals(2, response1.getPayload().getFields().get().size());
+        Assert.assertTrue(response1.getStepIdentifier().isPresent());
+        Assert.assertEquals(LoginStep.class.getName(), response1.getStepIdentifier().get());
+        Assert.assertTrue(response1.getSupplementInformationRequester().getFields().isPresent());
+        Assert.assertEquals(
+                2, response1.getSupplementInformationRequester().getFields().get().size());
 
         // Response code given by the user and their card reader
-        final List<String> responseCode = Collections.singletonList("133700");
+        Map<String, String> userInputs = new HashMap<>();
+        userInputs.put("RESPONSE_CODE", "133700");
 
         final SteppableAuthenticationRequest request2 =
                 SteppableAuthenticationRequest.subsequentRequest(
-                        response1.getStep().get(),
-                        AuthenticationRequest.fromUserInputs(responseCode));
-
+                        response1.getStepIdentifier().get(),
+                        new AuthenticationRequest(Mockito.mock(Credentials.class))
+                                .withUserInputs(userInputs));
         final SteppableAuthenticationResponse response2 = agent.login(request2);
 
-        Assert.assertEquals(Optional.empty(), response2.getStep());
-        Assert.assertFalse(response2.getPayload().getFields().isPresent());
+        Assert.assertEquals(Optional.empty(), response2.getStepIdentifier());
+        Assert.assertNull(response2.getSupplementInformationRequester());
     }
 }

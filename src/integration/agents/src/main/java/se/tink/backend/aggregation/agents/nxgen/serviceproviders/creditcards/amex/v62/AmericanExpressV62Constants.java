@@ -126,4 +126,9 @@ public final class AmericanExpressV62Constants {
         public static final String SECOND_ATTEMPT = "secondAttempt";
         public static final String REVOKED = "revoked";
     }
+
+    public static class HttpFilters {
+        public static final int RETRY_SLEEP_MILLISECONDS = 5000;
+        public static final int MAX_NUM_RETRIES = 3;
+    }
 }

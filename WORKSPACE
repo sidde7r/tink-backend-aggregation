@@ -72,16 +72,16 @@ git_repository(
 
 git_repository(
     name = "tink_backend_integration_openbanking",
-    commit = "1ebe12733efbaf5c53babf6d15bfbb78c6c7429a",
+    commit = "d4bef40a23271793a471668807cae4f675117cab",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
     shallow_since = "1572535216 +0000",
 )
 
 git_repository(
     name = "com_tink_api_grpc",
-    commit = "f23aeafc40b0105ab41cc0aeb31de754bb450a06",
+    commit = "fbdc9dc561b8d80d81f642d49dfbf7aee2ecc63e",
     remote = "git@github.com:tink-ab/tink-grpc.git",
-    shallow_since = "1563525421 +0000",
+    #shallow_since = "1563525421 +0000",
 )
 
 git_repository(
@@ -183,6 +183,24 @@ http_file(
     sha256 = "8e8b2b3a0b5b083cf5fc0268da7dd6b305762e591ec4a468e5e688f77c32e63f",
     urls = ["https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/%s/protoc-gen-grpc-java-%s-windows-x86_64.exe" % (GRPC_JAVA_VERSION, GRPC_JAVA_VERSION)],
 )
+
+# rules_proto will not be builtin in to Bazel in v1.0 and later
+# prepare us for that, and use the out-ot-repo version
+http_archive(
+    name = "rules_proto",
+    sha256 = "57001a3b33ec690a175cdf0698243431ef27233017b9bed23f96d44b9c98242f",
+    strip_prefix = "rules_proto-9cd4f8f1ede19d81c6d48910429fe96776e567b1",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_proto/archive/9cd4f8f1ede19d81c6d48910429fe96776e567b1.tar.gz",
+        "https://github.com/bazelbuild/rules_proto/archive/9cd4f8f1ede19d81c6d48910429fe96776e567b1.tar.gz",
+    ],
+)
+
+load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
+
+rules_proto_dependencies()
+
+rules_proto_toolchains()
 
 http_archive(
     name = "com_google_protobuf",
@@ -2200,18 +2218,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_salesforce_servicelibs_grpc_contrib",
-    artifact = "com.salesforce.servicelibs:grpc-contrib:0.8.1",
-    sha1 = "15f172548a208c43997cb76c3bfea1b26b38e72e",
-)
-
-maven_jar(
-    name = "com_salesforce_servicelibs_grpc_testing_contrib",
-    artifact = "com.salesforce.servicelibs:grpc-testing-contrib:0.8.1",
-    sha1 = "fe552fb9914b8fea9df9d5cec89469d8bdb02069",
-)
-
-maven_jar(
     name = "org_awaitility_awaitility",
     artifact = "org.awaitility:awaitility:4.0.1",
     sha1 = "b1b83c03c9d58c8b1aaf116b1e5365fa2ed2b572",
@@ -2445,7 +2451,6 @@ maven_install(
         "https://repo.maven.apache.org/maven2/",
     ],
 )
-
 load("@java_uuid_generator//:defs.bzl", java_uuid_generator_pin = "pinned_maven_install")
 
 java_uuid_generator_pin()
@@ -2484,7 +2489,6 @@ maven_install(
 )
 
 load("@io_token//:defs.bzl", io_token_pin = "pinned_maven_install")
-
 io_token_pin()
 
 # Use via //third_party/jetty_server9
@@ -2527,6 +2531,7 @@ maven_install(
         "org.springframework:spring-expression:5.2.1.RELEASE",
         "org.springframework:spring-beans:5.2.1.RELEASE",
         "org.springframework:spring-web:5.2.1.RELEASE",
+        "org.springframework:spring-test:5.2.1.RELEASE",
         "commons-codec:commons-codec:1.11",
         "commons-logging:commons-logging:1.2",
         "org.apache.httpcomponents:httpclient:4.5.10",
@@ -2535,6 +2540,7 @@ maven_install(
         "org.slf4j:slf4j-api:1.7.29",
         "org.slf4j:jul-to-slf4j:1.7.29",
         "org.slf4j:jcl-over-slf4j:1.7.29",
+        "org.slf4j:log4j-over-slf4j:1.7.29",
         "ch.qos.logback:logback-core:1.2.3",
         "ch.qos.logback:logback-classic:1.2.3",
     ],
@@ -2581,3 +2587,20 @@ maven_install(
 load("@selenium//:defs.bzl", pin_selenium = "pinned_maven_install")
 
 pin_selenium()
+
+maven_install(
+    name = "com_salesforce_servicelibs_grpc_testing_contrib",
+    artifacts = [
+        "com.salesforce.servicelibs:grpc-testing-contrib:0.8.1",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:com_salesforce_servicelibs_grpc_testing_contrib_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+    excluded_artifacts = [
+        "io.netty:*",
+    ]
+)
+load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
+com_salesforce_servicelibs_grpc_testing_contrib_pin()

@@ -1,20 +1,18 @@
 package se.tink.backend.aggregation.agents.standalone.grpc;
 
 import io.grpc.ManagedChannel;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.standalone.GenericAgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester.Builder;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.sa.model.auth.AuthenticationRequest;
 import se.tink.sa.model.auth.AuthenticationResponse;
 import se.tink.sa.model.auth.Credentials;
@@ -25,13 +23,28 @@ public class AuthenticationService {
     private final ProgressiveAuthAgentServiceGrpc.ProgressiveAuthAgentServiceBlockingStub
             progressiveAuthAgentServiceBlockingStub;
 
-    public AuthenticationService(final ManagedChannel channel) {
+    private static final String BANK_CODE = "BANK_CODE";
+    private static final String STATE = "STATE";
+
+    private final GenericAgentConfiguration configuration;
+    private final StrongAuthenticationState strongAuthenticationState;
+
+    public AuthenticationService(
+            final ManagedChannel channel,
+            StrongAuthenticationState strongAuthenticationState,
+            GenericAgentConfiguration configuration) {
         progressiveAuthAgentServiceBlockingStub =
                 ProgressiveAuthAgentServiceGrpc.newBlockingStub(channel);
+        this.configuration = configuration;
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request) {
-        return mapResponse(progressiveAuthAgentServiceBlockingStub.login(mapRequest(request)));
+        AuthenticationRequest authenticationRequest = mapRequest(request);
+        AuthenticationResponse response =
+                progressiveAuthAgentServiceBlockingStub.login(authenticationRequest);
+        SteppableAuthenticationResponse steppableAuthenticationResponse = mapResponse(response);
+        return steppableAuthenticationResponse;
     }
 
     private AuthenticationRequest mapRequest(final SteppableAuthenticationRequest request) {
@@ -44,13 +57,16 @@ public class AuthenticationService {
         }
 
         if (request.getPayload().getUserInputs() != null) {
-            builder.addAllUserInputs(request.getPayload().getUserInputs());
+            builder.addAllUserInputs(request.getPayload().getUserInputs().values());
         }
 
-        if (request.getPayload().getCallbackData() != null) {
-            builder.putAllCallbackData(request.getPayload().getCallbackData());
-        }
-
+        //        if (request.getPayload().getCallbackData() != null) {
+        //            builder.putAllCallbackData(request.getPayload().getCallbackData());
+        //        }
+        Map<String, String> cb = new HashMap<>();
+        cb.put(STATE, strongAuthenticationState.getState());
+        cb.put(BANK_CODE, configuration.getBankCode());
+        builder.putAllCallbackData(cb);
         return builder.build();
     }
 
@@ -142,45 +158,29 @@ public class AuthenticationService {
         return Credentials.CredentialsStatus.values()[credentialsStatus.ordinal()];
     }
 
-    private com.google.type.Date mapToGoogleDate(final Date date) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return com.google.type.Date.newBuilder()
-                .setYear(calendar.get(Calendar.YEAR))
-                .setMonth(calendar.get(Calendar.MONTH))
-                .setDay(calendar.get(Calendar.DAY_OF_MONTH))
-                .build();
-    }
-
     private SteppableAuthenticationResponse mapResponse(
             final AuthenticationResponse authenticationResponse) {
-
+        final Builder supplementInformationRequesterBuilder =
+                new se.tink.backend.aggregation.nxgen.controllers.authentication
+                        .SupplementInformationRequester.Builder();
         if (authenticationResponse.getFieldsCount() > 0) {
-            return SteppableAuthenticationResponse.finalResponse(
-                    se.tink.backend.aggregation.nxgen.controllers.authentication
-                            .AuthenticationResponse.fromSupplementalFields(
-                            mapFieldList(authenticationResponse.getFieldsList())));
+            supplementInformationRequesterBuilder.withFields(
+                    mapFieldList(authenticationResponse.getFieldsList()));
         }
 
         if (authenticationResponse.getPayload() != null) {
-            return SteppableAuthenticationResponse.finalResponse(
-                    se.tink.backend.aggregation.nxgen.controllers.authentication
-                            .AuthenticationResponse.openThirdPartyApp(
-                            mapThirdPartyAppAuthenticationPayload(
-                                    authenticationResponse.getPayload())));
+            supplementInformationRequesterBuilder.withThirdPartyAppAuthenticationPayload(
+                    mapThirdPartyAppAuthenticationPayload(authenticationResponse.getPayload()));
         }
 
         if (authenticationResponse.getSupplementalWaitRequest() != null) {
-            return SteppableAuthenticationResponse.finalResponse(
-                    se.tink.backend.aggregation.nxgen.controllers.authentication
-                            .AuthenticationResponse.requestWaitingForSupplementalInformation(
-                            mapSupplementalWaitRequest(
-                                    authenticationResponse.getSupplementalWaitRequest())));
+            supplementInformationRequesterBuilder.withSupplementalWaitRequest(
+                    mapSupplementalWaitRequest(
+                            authenticationResponse.getSupplementalWaitRequest()));
         }
 
-        return SteppableAuthenticationResponse.finalResponse(
-                se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse
-                        .empty());
+        return SteppableAuthenticationResponse.intermediateResponse(
+                authenticationResponse.getStepId(), supplementInformationRequesterBuilder.build());
     }
 
     private SupplementalWaitRequest mapSupplementalWaitRequest(
@@ -269,6 +269,16 @@ public class AuthenticationService {
                 .value(field.getValue())
                 .checkbox(field.getCheckbox())
                 .additionalInfo(field.getAdditionalInfo())
+                .build();
+    }
+
+    private com.google.type.Date mapToGoogleDate(final Date date) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return com.google.type.Date.newBuilder()
+                .setYear(calendar.get(Calendar.YEAR))
+                .setMonth(calendar.get(Calendar.MONTH))
+                .setDay(calendar.get(Calendar.DAY_OF_MONTH))
                 .build();
     }
 }

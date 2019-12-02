@@ -1,15 +1,13 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "netty-versions-grpc-for-tls-ma-test",
+    name = "netty_versions_grpc_for_tls_ma_test",
     srcs = glob(
         ["*.java"],
     ),
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/uuid",
-        "//third_party:com_google_protobuf_protobuf_java",
-        "//third_party:com_salesforce_servicelibs_grpc_testing_contrib",
         "//third_party:io_grpc_grpc_context",
         "//third_party:io_grpc_grpc_netty",
         "//third_party:io_grpc_grpc_protobuf_lite",
@@ -24,5 +22,6 @@ junit_test(
         "//third_party:junit_junit",
         "//third_party:org_mockito3_mockito_core",
         "//third_party/grpc",
+        "@com_salesforce_servicelibs_grpc_testing_contrib",
     ],
 )

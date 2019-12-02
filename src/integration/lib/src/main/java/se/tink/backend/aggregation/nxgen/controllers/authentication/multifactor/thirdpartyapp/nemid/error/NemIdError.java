@@ -26,6 +26,11 @@ public enum NemIdError implements AgentError {
     }
 
     @Override
+    public NemIdException exception(String internalMessage) {
+        return new NemIdException(this, internalMessage);
+    }
+
+    @Override
     public NemIdException exception(Throwable cause) {
         return new NemIdException(this, cause);
     }

@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -89,6 +90,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         tinkProvider = request.getProvider();
         this.wellKnownURL = aisConfig.getWellKnownURL();
         this.agentConfig = aisConfig;
+
+        client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     // Different part between UkOpenBankingBaseAgent and this class

@@ -46,6 +46,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     @Override
     public void authenticate(String panNumber, String password)
             throws AuthenticationException, AuthorizationException {
+
+        apiClient.requestConfigIos();
+
         panNumber = BelfiusStringUtils.formatPanNumber(panNumber);
 
         String deviceToken = persistentStorage.get(BelfiusConstants.Storage.DEVICE_TOKEN);
@@ -61,6 +64,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
     @Override
     public void autoAuthenticate() throws SessionException {
+
+        apiClient.requestConfigIos();
+
         String panNumber = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
         String deviceToken = persistentStorage.get(BelfiusConstants.Storage.DEVICE_TOKEN);
@@ -90,20 +96,35 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
             throws AuthenticationException, AuthorizationException {
         apiClient.openSession();
         apiClient.startFlow();
+        apiClient.appMessageText();
         apiClient.closeSession(sessionStorage.getSessionId());
 
         apiClient.openSession();
         apiClient.startFlow();
 
+        apiClient.sendIsDeviceRegistered(panNumber, BelfiusSecurityUtils.hash(deviceToken));
+
         String challenge = apiClient.prepareAuthentication(panNumber);
-        String code = supplementalInformationHelper.waitForLoginChallengeResponse(challenge);
+        final String code =
+                supplementalInformationHelper
+                        .waitForLoginChallengeResponse(challenge)
+                        .replace(" ", "");
         apiClient.authenticateWithCode(code);
 
         final String deviceBrand = aggregator;
         final String deviceName = BelfiusConstants.MODEL;
 
+        apiClient.consultClientSettings();
+
         challenge = apiClient.prepareDeviceRegistration(deviceToken, deviceBrand, deviceName);
-        String sign = supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
+
+        apiClient.keepAlive();
+
+        final String sign =
+                supplementalInformationHelper
+                        .waitForSignCodeChallengeResponse(challenge)
+                        .replace(" ", "");
+
         apiClient.registerDevice(sign);
         persistentStorage.put(BelfiusConstants.Storage.DEVICE_TOKEN, deviceToken);
 
@@ -112,7 +133,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
     private void login(String panNumber, String password, String deviceToken)
             throws AuthenticationException, AuthorizationException {
-        apiClient.openSession();
+        final String machineIdentifier = sessionStorage.getMachineIdentifier();
+
+        apiClient.openSessionWithMachineIdentifier(machineIdentifier);
         apiClient.startFlow();
 
         PrepareLoginResponse response = apiClient.prepareLogin(panNumber);
@@ -128,13 +151,12 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
                 BelfiusSecurityUtils.createSignatureSoft(
                         challenge, deviceToken, panNumber, contractNumber, password);
 
-        // TODO ADDING THIS CRAP
         apiClient.bacProductList();
-
         apiClient.login(deviceTokenHashed, deviceTokenHashedIosComparison, signature);
-
-        // TODO ADDING THIS CRAP
         apiClient.actorInformation();
+        apiClient.closeSession(sessionStorage.getSessionId());
+
+        apiClient.openSessionWithMachineIdentifier(machineIdentifier);
         apiClient.startFlow();
 
         SendCardNumberResponse sendCardNumberResponse = apiClient.sendCardNumber(panNumber);
@@ -146,12 +168,17 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
                 BelfiusSecurityUtils.createSignaturePw(
                         challenge2, deviceToken, panNumber, contractNumber, password);
 
+        sleepForSeconds(5); // Entering password
+
         apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
     }
 
     private void loginAuto(String panNumber, String password, String deviceToken)
             throws AuthenticationException, AuthorizationException {
-        apiClient.openSession();
+        final String machineIdentifier = sessionStorage.getMachineIdentifier();
+
+        apiClient.openSessionWithMachineIdentifier(machineIdentifier);
+
         apiClient.startFlow();
 
         PrepareLoginResponse response = apiClient.prepareLogin(panNumber);
@@ -166,10 +193,20 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         sessionStorage.setChallenge(challenge2);
 
+        sleepForSeconds(5); // Entering password
+
         String signaturePw =
                 BelfiusSecurityUtils.createSignaturePw(
                         challenge2, deviceToken, panNumber, contractNumber, password);
 
         apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
+    }
+
+    private static void sleepForSeconds(final int seconds) {
+        try {
+            Thread.sleep(1000 * seconds);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

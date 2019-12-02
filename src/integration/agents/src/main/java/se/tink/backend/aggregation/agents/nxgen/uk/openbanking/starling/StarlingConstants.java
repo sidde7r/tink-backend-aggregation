@@ -111,4 +111,10 @@ public class StarlingConstants {
         public static final String DIGEST = "Digest";
         public static final String DATE = "DATE";
     }
+
+    public class TransactionDirections {
+
+        public static final String IN = "IN";
+        public static final String OUT = "OUT";
+    }
 }

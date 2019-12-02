@@ -42,6 +42,11 @@ public enum BankIdError implements AgentError {
     }
 
     @Override
+    public BankIdException exception(String internalMessage) {
+        return new BankIdException(this, internalMessage);
+    }
+
+    @Override
     public BankIdException exception(Throwable cause) {
         return new BankIdException(this, cause);
     }

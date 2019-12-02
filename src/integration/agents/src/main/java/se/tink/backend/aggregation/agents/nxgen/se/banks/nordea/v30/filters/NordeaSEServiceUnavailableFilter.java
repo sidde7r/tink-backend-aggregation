@@ -19,7 +19,8 @@ public class NordeaSEServiceUnavailableFilter extends Filter {
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
         if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
-            throw BankServiceError.NO_BANK_SERVICE.exception();
+            throw BankServiceError.NO_BANK_SERVICE.exception(
+                    "Bank service unavailable, received Http Status code 503");
         }
         return response;
     }

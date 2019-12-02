@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
@@ -13,6 +14,7 @@ import se.tink.libraries.strings.StringUtils;
 @JsonObject
 public class LoanAccountEntity extends AccountEntity {
 
+    @JsonIgnore
     public Optional<LoanAccount> toLoanAccount(String interest, Date nextDayOfTermsChange) {
         if (fullyFormattedNumber == null || balance == null) {
             return Optional.empty();
@@ -35,6 +37,7 @@ public class LoanAccountEntity extends AccountEntity {
                         .build());
     }
 
+    @JsonIgnore
     private double parsePercentageToDouble(String interestString) {
         // Using BigDecimal for the division to not end up with stuff like 0.016200000000000003
         BigDecimal interest = new BigDecimal(StringUtils.parseAmount(interestString));

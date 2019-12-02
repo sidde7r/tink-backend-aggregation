@@ -6,15 +6,15 @@ import se.tink.libraries.pair.Pair;
 
 public class AccountIdentifierProvider {
     public static Pair<String, AccountIdentifier.Type> getAccountIdentifierData(
-            String iban, String internalAccountId) {
+            String internalAccountId, String iban) {
         return Optional.ofNullable(iban)
                 .map(s -> Pair.of(iban, AccountIdentifier.Type.IBAN))
                 .orElse(Pair.of(internalAccountId, AccountIdentifier.Type.COUNTRY_SPECIFIC));
     }
 
-    public static AccountIdentifier getAccountIdentifier(String iban, String internalAccountId) {
+    public static AccountIdentifier getAccountIdentifier(String internalAccountId, String iban) {
         Pair<String, AccountIdentifier.Type> idDetails =
-                getAccountIdentifierData(iban, internalAccountId);
+                getAccountIdentifierData(internalAccountId, iban);
         return AccountIdentifier.create(idDetails.second, idDetails.first);
     }
 }

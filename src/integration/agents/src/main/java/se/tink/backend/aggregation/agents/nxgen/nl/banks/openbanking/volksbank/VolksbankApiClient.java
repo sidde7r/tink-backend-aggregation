@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.ConsentParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Transaction;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TransactionFetcherParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
@@ -33,42 +35,58 @@ public class VolksbankApiClient {
         this.urlFactory = urlFactory;
     }
 
-    public TransactionResponse readTransactions(
+    public TransactionResponse readTransactionsWithDates(
+            final TransactionalAccount account,
+            final Date fromDate,
+            final Date toDate,
+            final String consentId,
+            final OAuth2Token oauth2Token) {
+        RequestBuilder request =
+                client.request(getTransactionsUrl(account))
+                        .queryParam(
+                                TransactionFetcherParams.DATE_FROM,
+                                Transaction.TRANSACTION_FORMAT.format(fromDate))
+                        .queryParam(
+                                TransactionFetcherParams.DATE_TO,
+                                Transaction.TRANSACTION_FORMAT.format(toDate))
+                        .queryParam(
+                                TransactionFetcherParams.BOOKING_STATUS,
+                                TransactionFetcherParams.BOOKING_STATUS_VALUE)
+                        .queryParam(
+                                TransactionFetcherParams.PAGE_DIRECTION,
+                                TransactionFetcherParams.PAGE_DIRECTION_VALUE)
+                        .queryParam(
+                                TransactionFetcherParams.LIMIT,
+                                TransactionFetcherParams.LIMIT_VALUE.toString());
+        return readTransactions(request, consentId, oauth2Token);
+    }
+
+    public TransactionResponse readTransactionsWithLink(
             final TransactionalAccount account,
             final Map<String, String> urlParams,
             final String consentId,
             final OAuth2Token oauth2Token) {
-
-        URL url =
-                urlFactory.buildURL(
-                        Paths.ACCOUNTS + "/" + account.getApiIdentifier() + Paths.TRANSACTIONS);
-
-        RequestBuilder request =
-                client.request(url)
-                        .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.REQUEST_ID, getRequestId())
-                        .header(HeaderKeys.CONSENT_ID, consentId)
-                        .addBearerToken(oauth2Token);
-
-        if (urlParams != null) {
-            for (String key : urlParams.keySet()) {
-                request = request.queryParam(key, urlParams.get(key));
-            }
-        } else {
-            request =
-                    request.queryParam(
-                                    TransactionFetcherParams.BOOKING_STATUS,
-                                    TransactionFetcherParams.BOOKING_STATUS_VALUE)
-                            .queryParam(
-                                    TransactionFetcherParams.PAGE_DIRECTION,
-                                    TransactionFetcherParams.PAGE_DIRECTION_VALUE)
-                            .queryParam(
-                                    TransactionFetcherParams.LIMIT,
-                                    TransactionFetcherParams.LIMIT_VALUE.toString());
+        RequestBuilder request = client.request(getTransactionsUrl(account));
+        for (String key : urlParams.keySet()) {
+            request = request.queryParam(key, urlParams.get(key));
         }
+        return readTransactions(request, consentId, oauth2Token);
+    }
+
+    private URL getTransactionsUrl(TransactionalAccount account) {
+        return urlFactory.buildURL(
+                Paths.ACCOUNTS + "/" + account.getApiIdentifier() + Paths.TRANSACTIONS);
+    }
+
+    private TransactionResponse readTransactions(
+            RequestBuilder request, final String consentId, final OAuth2Token oauth2Token) {
+
+        request.header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.REQUEST_ID, getRequestId())
+                .header(HeaderKeys.CONSENT_ID, consentId)
+                .addBearerToken(oauth2Token);
 
         String response = request.get(String.class);
-
         return getResponse(response, TransactionResponse.class);
     }
 

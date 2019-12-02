@@ -23,6 +23,10 @@ public class NemIdException extends MultiFactorAuthenticationException {
         super(error, userMessage, cause);
     }
 
+    public NemIdException(AgentError error, String internalMessage) {
+        super(error, internalMessage);
+    }
+
     @Override
     public AgentBaseError getError() {
         return null;

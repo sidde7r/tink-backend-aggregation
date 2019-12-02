@@ -72,7 +72,7 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
 
     private boolean isAuthenticationFailedException(final HttpResponseException responseException) {
         BankIdResponse resp = responseException.getResponse().getBody(BankIdResponse.class);
-        if (ErrorCodes.AUTHENTICATION_COLLISION.equalsIgnoreCase(resp.getError())) {
+        if (ErrorCodes.AUTHENTICATION_FAILED.equalsIgnoreCase(resp.getError())) {
             return true;
         }
         log.warn("Unhandled authentication error: {}", resp.getError());

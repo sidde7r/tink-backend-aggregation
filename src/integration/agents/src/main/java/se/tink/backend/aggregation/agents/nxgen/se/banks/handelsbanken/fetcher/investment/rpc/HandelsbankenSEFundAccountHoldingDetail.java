@@ -47,11 +47,7 @@ public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
                             instrument.setQuantity(
                                     details.flatMap(HandelsbankenSEFundDetails::parseNavAmount)
                                             .filter(navAmount -> navAmount != 0d)
-                                            .map(
-                                                    navAmount ->
-                                                            Math.floor(
-                                                                    extractedMarketValue
-                                                                            / navAmount))
+                                            .map(navAmount -> extractedMarketValue / navAmount)
                                             .orElse(null));
                             instrument.setType(Instrument.Type.FUND);
                             return instrument;

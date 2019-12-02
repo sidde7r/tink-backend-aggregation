@@ -71,7 +71,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class SwedbankDefaultApiClient {
@@ -80,7 +79,7 @@ public class SwedbankDefaultApiClient {
     protected final TinkHttpClient client;
     private final SwedbankConfiguration configuration;
     private final String username;
-    private final SessionStorage sessionStorage;
+    private final SwedbankStorage swedbankStorage;
     // only use cached menu items for a profile
     private BankProfileHandler bankProfileHandler;
 
@@ -88,11 +87,11 @@ public class SwedbankDefaultApiClient {
             TinkHttpClient client,
             SwedbankConfiguration configuration,
             String username,
-            SessionStorage sessionStorage) {
+            SwedbankStorage swedbankStorage) {
         this.client = client;
         this.configuration = configuration;
         this.username = username;
-        this.sessionStorage = sessionStorage;
+        this.swedbankStorage = swedbankStorage;
         ensureAuthorizationHeaderIsSet();
     }
 
@@ -607,18 +606,12 @@ public class SwedbankDefaultApiClient {
             bankProfileHandler.setActiveBankProfile(bankProfile);
         }
 
-        sessionStorage.put(
-                SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER, bankProfileHandler);
+        swedbankStorage.setBankProfileHandler(bankProfileHandler);
     }
 
     private BankProfileHandler getBankProfileHandler() {
         if (bankProfileHandler == null) {
-            bankProfileHandler =
-                    sessionStorage
-                            .get(
-                                    SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER,
-                                    BankProfileHandler.class)
-                            .orElseThrow(IllegalStateException::new);
+            bankProfileHandler = swedbankStorage.getBankProfileHandler();
             bankProfileHandler.setActiveBankProfile(bankProfileHandler.findTransferProfile());
         }
 

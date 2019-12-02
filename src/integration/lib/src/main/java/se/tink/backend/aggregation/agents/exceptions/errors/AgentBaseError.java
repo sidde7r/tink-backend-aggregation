@@ -9,6 +9,8 @@ public interface AgentBaseError {
 
     Throwable exception();
 
+    Throwable exception(String internalMessage);
+
     Throwable exception(Throwable cause);
 
     Throwable exception(LocalizableKey userMessage);

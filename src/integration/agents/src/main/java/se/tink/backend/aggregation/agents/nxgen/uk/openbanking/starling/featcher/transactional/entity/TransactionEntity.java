@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.TransactionDirections;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -47,10 +48,15 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
 
+        ExactCurrencyAmount transactionAmount =
+                new ExactCurrencyAmount(new BigDecimal(amount.getValue()), amount.getCurrency());
+
+        if (direction.equals(TransactionDirections.OUT)) {
+            transactionAmount = transactionAmount.negate();
+        }
+
         return Transaction.builder()
-                .setAmount(
-                        new ExactCurrencyAmount(
-                                new BigDecimal(amount.getValue()), amount.getCurrency()))
+                .setAmount(transactionAmount)
                 .setDate(transactionTime)
                 .setDescription(reference)
                 .setPending(isPending())

@@ -27,4 +27,8 @@ public abstract class AuthenticationException extends AgentExceptionImpl {
     AuthenticationException(AgentError error, LocalizableKey userMessage, Throwable cause) {
         super(error, userMessage, cause);
     }
+
+    public AuthenticationException(AgentError error, String internalMessage) {
+        super(error, internalMessage);
+    }
 }

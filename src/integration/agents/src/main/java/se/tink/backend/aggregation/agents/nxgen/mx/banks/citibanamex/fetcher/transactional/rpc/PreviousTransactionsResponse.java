@@ -20,7 +20,7 @@ public class PreviousTransactionsResponse extends BaseResponse {
     @JsonIgnore
     public PreviousTransactionsResponse handleErrors() {
         if (!Strings.isNullOrEmpty(errmsg)) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception("Error message: " + errmsg);
         }
         return this;
     }
