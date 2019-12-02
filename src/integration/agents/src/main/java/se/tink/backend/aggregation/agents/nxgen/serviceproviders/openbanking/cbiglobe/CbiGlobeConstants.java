@@ -88,6 +88,7 @@ public final class CbiGlobeConstants {
         public static final String DATE_TO = "date_to";
         public static final String TOTAL_PAGES = "cpaas-total-pages";
         public static final String OFFSET = "offset";
+        public static final String SCOPE = "scope";
     }
 
     public static class QueryValues {
@@ -95,6 +96,7 @@ public final class CbiGlobeConstants {
         public static final String BOTH = "both";
         public static final String BOOKED = "booked";
         public static final String STATE = "state";
+        public static final String PRODUCTION = "production";
     }
 
     public static class HeaderKeys {

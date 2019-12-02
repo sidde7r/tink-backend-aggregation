@@ -126,6 +126,7 @@ public class CbiGlobeApiClient {
         return createRequest(Urls.TOKEN)
                 .header(HeaderKeys.AUTHORIZATION, authorizationHeader)
                 .queryParam(QueryKeys.GRANT_TYPE, QueryValues.CLIENT_CREDENTIALS)
+                .queryParam(QueryKeys.SCOPE, QueryValues.PRODUCTION)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(GetTokenResponse.class);
     }
