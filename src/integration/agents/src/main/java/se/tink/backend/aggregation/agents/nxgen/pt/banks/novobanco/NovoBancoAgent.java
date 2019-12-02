@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoB
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoLoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NovoBancoAgent extends NextGenerationAgent
@@ -48,8 +49,10 @@ public class NovoBancoAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
 
     public NovoBancoAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, true);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), true);
         apiClient = new NovoBancoApiClient(client, sessionStorage);
         authenticator = new NovoBancoAuthenticator(apiClient, sessionStorage);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
@@ -57,6 +60,10 @@ public class NovoBancoAgent extends NextGenerationAgent
         investmentRefreshController = constructInvestmentRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
         Security.addProvider(new BouncyCastleProvider());
+
+        final MultiIpGateway gateway =
+                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
+        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
