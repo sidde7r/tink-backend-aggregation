@@ -8,29 +8,33 @@ import org.assertj.core.util.Preconditions;
  * In progressive authentication, carry request information such as step, userInputs and credential.
  */
 public final class SteppableAuthenticationRequest implements AuthenticationSteppable {
-    private final Class<? extends AuthenticationStep> step;
+    private final String stepIdentifier;
     private final AuthenticationRequest payload;
 
     private SteppableAuthenticationRequest(
-            final Class<? extends AuthenticationStep> step, final AuthenticationRequest payload) {
-        this.step = step;
+            final String stepIdentifier, final AuthenticationRequest payload) {
+        this.stepIdentifier = stepIdentifier;
         this.payload = payload;
     }
 
+    private SteppableAuthenticationRequest() {
+        stepIdentifier = null;
+        payload = AuthenticationRequest.empty();
+    }
+
     public static SteppableAuthenticationRequest initialRequest() {
-        return new SteppableAuthenticationRequest(null, AuthenticationRequest.empty());
+        return new SteppableAuthenticationRequest();
     }
 
     public static SteppableAuthenticationRequest subsequentRequest(
-            @Nonnull final Class<? extends AuthenticationStep> klass,
-            @Nonnull final AuthenticationRequest payload) {
+            @Nonnull final String stepIdentifier, @Nonnull final AuthenticationRequest payload) {
         return new SteppableAuthenticationRequest(
-                Preconditions.checkNotNull(klass), Preconditions.checkNotNull(payload));
+                stepIdentifier, Preconditions.checkNotNull(payload));
     }
 
     @Override
-    public Optional<Class<? extends AuthenticationStep>> getStep() {
-        return Optional.ofNullable(step);
+    public Optional<String> getStepIdentifier() {
+        return Optional.ofNullable(stepIdentifier);
     }
 
     public AuthenticationRequest getPayload() {

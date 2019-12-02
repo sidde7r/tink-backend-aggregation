@@ -30,35 +30,34 @@ public final class ProgressiveAuthController {
         return executeStep(authSteps, determineStepClassToExecute(authSteps, request), request);
     }
 
-    private Class<? extends AuthenticationStep> determineStepClassToExecute(
+    private String determineStepClassToExecute(
             LinkedList<? extends AuthenticationStep> authenticationSteps,
             SteppableAuthenticationRequest request) {
-        return request.getStep().orElse(authenticationSteps.getFirst().getClass());
+        return request.getStepIdentifier().orElse(authenticationSteps.getFirst().getIdentifier());
     }
 
     private SteppableAuthenticationResponse executeStep(
             LinkedList<? extends AuthenticationStep> authenticationSteps,
-            final Class<? extends AuthenticationStep> stepClassToExecute,
+            final String stepIdentifier,
             final SteppableAuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         final AuthenticationRequest loadedRequest =
                 request.getPayload().withCredentials(credentials);
         AuthenticationStep stepToExecute =
                 authenticationSteps.stream()
-                        .filter(step -> stepClassToExecute.isInstance(step))
+                        .filter(step -> stepIdentifier.equals(step.getIdentifier()))
                         .findAny()
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
                                                 "The agent seems to have defined no steps"));
         if (isLastStep(stepToExecute, authenticationSteps)) {
-            return SteppableAuthenticationResponse.finalResponse(
-                    stepToExecute.respond(loadedRequest));
+            return SteppableAuthenticationResponse.finalResponse();
         } else {
             final AuthenticationStep upcomingStep =
                     authenticationSteps.get(authenticationSteps.indexOf(stepToExecute) + 1);
             return SteppableAuthenticationResponse.intermediateResponse(
-                    upcomingStep.getClass(), stepToExecute.respond(loadedRequest));
+                    upcomingStep.getIdentifier(), stepToExecute.execute(loadedRequest).get());
         }
     }
 
