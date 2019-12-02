@@ -135,6 +135,10 @@ public class SwedbankDefaultApiClient {
         try {
             return makeRequest(linkEntity, requestObject, responseClass, Collections.emptyMap());
         } catch (HttpResponseException hre) {
+            if (SwedbankApiErrors.isStrongAuthenticationNeeded(hre)) {
+                throw BankServiceError.MULTIPLE_LOGIN.exception(hre);
+            }
+
             if (retry) {
                 return makeRequestWithRetry(hre, linkEntity, requestObject, responseClass, attempt);
             } else {

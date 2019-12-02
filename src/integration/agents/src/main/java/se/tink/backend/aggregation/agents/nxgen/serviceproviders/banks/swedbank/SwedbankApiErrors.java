@@ -109,4 +109,19 @@ public class SwedbankApiErrors {
         ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
         return errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.RECIPIENT_NUMBER);
     }
+
+    public static boolean isStrongAuthenticationNeeded(HttpResponseException hre) {
+        // This method expects an response with the following characteristics:
+        // - Http status: 401
+        // - Http body: `ErrorResponse` with error field of "STRONGER_AUTHENTICATION_NEEDED"
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_UNAUTHORIZED) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorCode(
+                SwedbankBaseConstants.ErrorCode.STRONGER_AUTHENTICATION_NEEDED);
+    }
 }
