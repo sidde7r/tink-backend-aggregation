@@ -647,23 +647,13 @@ public class LansforsakringarAgent extends AbstractAgent
         if (!Objects.equal(
                 transfer.getDestinationMessage(), originalTransfer.getDestinationMessage())) {
 
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setMessage("Not allowed to change destination message")
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage
-                                            .EINVOICE_MODIFY_DESTINATION_MESSAGE))
-                    .build();
+            throw cancelTransfer(
+                    TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE);
         }
 
         if (!Objects.equal(transfer.getSourceMessage(), originalTransfer.getSourceMessage())) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setMessage("Not allowed to change source message")
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage
-                                            .EINVOICE_MODIFY_SOURCE_MESSAGE))
-                    .build();
+            throw cancelTransfer(
+                    TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_SOURCE_MESSAGE);
         }
     }
 
@@ -687,12 +677,7 @@ public class LansforsakringarAgent extends AbstractAgent
             }
         }
 
-        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setEndUserMessage(
-                        catalog.getString(
-                                TransferExecutionException.EndUserMessage
-                                        .EXISTING_UNSIGNED_TRANSFERS))
-                .build();
+        throw cancelTransfer(TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS);
     }
 
     private void signEInvoice(PaymentEntity paymentEntityToSign) {
@@ -749,9 +734,9 @@ public class LansforsakringarAgent extends AbstractAgent
                 transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID);
 
         if (!electronicInvoiceId.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("No electronicInvoiceId on transfer")
-                    .build();
+            throw failTransferWithMessage(
+                    "No electronicInvoiceId on transfer",
+                    TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
         }
 
         EInvoicesListResponse invoicesListResponse =
@@ -763,11 +748,7 @@ public class LansforsakringarAgent extends AbstractAgent
                         .findFirst();
 
         if (!eInvoice.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
-                    .build();
+            throw failTransfer(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES);
         }
 
         return eInvoice.get();
@@ -777,11 +758,7 @@ public class LansforsakringarAgent extends AbstractAgent
         Optional<AccountEntity> sourceAccount = GeneralUtils.find(source, fetchPaymentAccounts());
 
         if (!sourceAccount.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
-                    .build();
+            throw failTransfer(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND);
         }
 
         return sourceAccount.get();
@@ -810,10 +787,7 @@ public class LansforsakringarAgent extends AbstractAgent
         }
 
         if (!payment.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Cannot find payment in list from bank.")
-                    .setEndUserMessage(catalog.getString("Something went wrong."))
-                    .build();
+            throw failTransfer(TransferExecutionException.EndUserMessage.PAYMENT_NO_MATCHES);
         }
 
         AccountEntity source = validatePaymentSourceAccount(transfer.getSource());
@@ -880,11 +854,7 @@ public class LansforsakringarAgent extends AbstractAgent
             }
 
             // if we fail to remove a payment after
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    "We encountered problems signing the payment/transfer with your bank. Please log in to your bank app and validate the payment/transfer."))
-                    .build();
+            throw failTransfer(TransferExecutionException.EndUserMessage.SIGN_AND_REMOVAL_FAILED);
         }
     }
 
@@ -1087,11 +1057,7 @@ public class LansforsakringarAgent extends AbstractAgent
                         }
                 }
             } else {
-                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage(
-                                catalog.getString(
-                                        "Failed to sign using BankID, please try again later"))
-                        .build();
+                throw failTransfer(TransferExecutionException.EndUserMessage.BANKID_FAILED);
             }
             Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
         }
@@ -1115,9 +1081,7 @@ public class LansforsakringarAgent extends AbstractAgent
                     .setEndUserMessage(clientResponse.getHeaders().getFirst("Error-Message"))
                     .build();
         } else if (clientResponse.getStatus() != HttpStatus.SC_OK) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString("Failed to sign payment using BankID"))
-                    .build();
+            throw failTransfer(TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
         }
     }
 
@@ -1205,11 +1169,7 @@ public class LansforsakringarAgent extends AbstractAgent
                 LFUtils.find(source, sourceAccounts.getAccounts());
 
         if (!fromAccountDetails.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
-                    .build();
+            throw failTransfer(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND);
         }
     }
 
@@ -1244,11 +1204,8 @@ public class LansforsakringarAgent extends AbstractAgent
                             LFUtils.getClearingNumberDetails(swedishDestination);
                     return clearingNumber.getBankName();
                 } else {
-                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setEndUserMessage(
-                                    catalog.getString(
-                                            "Could not find a bank for the given destination account. Check the account number and try again."))
-                            .build();
+                    throw cancelTransfer(
+                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION);
                 }
             }
         }
