@@ -105,6 +105,9 @@ public class SwedbankDefaultBankIdAuthenticator
                 if (errorResponse.hasErrorCode(
                         SwedbankBaseConstants.BankErrorMessage.LOGIN_FAILED)) {
                     return BankIdStatus.TIMEOUT;
+                } else if (errorResponse.hasErrorCode(
+                        SwedbankBaseConstants.BankErrorMessage.SESSION_INVALIDATED)) {
+                    return BankIdStatus.FAILED_UNKNOWN;
                 }
             } else if (responseStatus == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 // This code is a temporary fix until Swedbank returns a better error message.
