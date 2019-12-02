@@ -1,15 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.google.gson.Gson;
 import java.security.cert.CertificateException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryKeys;
@@ -43,26 +47,26 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class IngBaseApiClient {
 
-    private final SimpleDateFormat dateFormat;
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     private final String market;
     private EidasIdentity eidasIdentity;
     private IngBaseConfiguration configuration;
     private EidasProxyConfiguration eidasProxyConfiguration;
-    private final boolean manualRequest;
+    private final Provider provider;
     private String certificateSerial;
+
+    private static final Logger logger = LoggerFactory.getLogger(IngBaseApiClient.class);
 
     public IngBaseApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             String market,
-            boolean manualRequest) {
+            Provider provider) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.market = market;
-        this.manualRequest = manualRequest;
-        dateFormat = new SimpleDateFormat(QueryValues.DATE_FORMAT);
+        this.provider = provider;
     }
 
     public IngBaseConfiguration getConfiguration() {
@@ -173,6 +177,22 @@ public class IngBaseApiClient {
     }
 
     private TokenResponse getApplicationAccessToken() {
+        /*
+           Reuse the application access token which saved in the provider if it is still valid
+        */
+        final String providerPayload = provider.getPayload();
+        if (!Objects.isNull(providerPayload)) {
+            try {
+                final TokenResponse response =
+                        new Gson().fromJson(providerPayload, TokenResponse.class);
+                if (!response.hasAccessExpired()) {
+                    return response;
+                }
+            } catch (Exception e) {
+                logger.warn("Unable to parse payload : " + providerPayload);
+            }
+        }
+
         final String reqId = IngBaseUtils.getRequestId();
         final String date = getFormattedDate();
 
@@ -198,13 +218,21 @@ public class IngBaseApiClient {
                                 date,
                                 digest);
 
-        return buildRequest(reqId, date, digest, Urls.TOKEN)
-                .header(HeaderKeys.AUTHORIZATION, authHeader)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .header(
-                        HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
-                        getConfiguration().getClientCertificate())
-                .post(TokenResponse.class, payload);
+        final TokenResponse response =
+                buildRequest(reqId, date, digest, Urls.TOKEN)
+                        .header(HeaderKeys.AUTHORIZATION, authHeader)
+                        .type(MediaType.APPLICATION_FORM_URLENCODED)
+                        .header(
+                                HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
+                                getConfiguration().getClientCertificate())
+                        .post(TokenResponse.class, payload);
+
+        /*
+           Save the valid application access token to playload
+        */
+        String payloadStr = new Gson().toJson(response);
+        provider.setPayload(payloadStr);
+        return response;
     }
 
     private AuthorizationUrl getAuthorizationUrl(final TokenResponse tokenResponse) {

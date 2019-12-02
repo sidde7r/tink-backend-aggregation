@@ -36,7 +36,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class IngBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     protected final IngBaseApiClient apiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -53,8 +52,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         final String marketInUppercase = request.getProvider().getMarket().toUpperCase();
         apiClient =
                 new IngBaseApiClient(
-                        client, persistentStorage, marketInUppercase, request.isManual());
-        clientName = request.getProvider().getPayload();
+                        client, persistentStorage, marketInUppercase, request.getProvider());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 

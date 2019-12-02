@@ -28,7 +28,14 @@ public class TokenResponse {
     @JsonProperty("client_id")
     private String clientId;
 
+    // issuedAt is needed because the application access token will be saved as json string to the
+    // provider
+    private long issuedAt = getCurrentEpoch();
+
     public OAuth2Token toTinkToken() {
+        long currentTime = getCurrentEpoch();
+        this.expiresIn = this.issuedAt + this.expiresIn - currentTime;
+        this.refreshTokenExpiresIn = this.issuedAt + this.refreshTokenExpiresIn - currentTime;
         return OAuth2Token.create(
                 this.tokenType,
                 this.accessToken,
@@ -48,5 +55,14 @@ public class TokenResponse {
 
     public String getClientId() {
         return clientId;
+    }
+
+    public boolean hasAccessExpired() {
+        long currentTime = getCurrentEpoch();
+        return currentTime >= this.issuedAt + this.expiresIn;
+    }
+
+    private static long getCurrentEpoch() {
+        return System.currentTimeMillis() / 1000L;
     }
 }
