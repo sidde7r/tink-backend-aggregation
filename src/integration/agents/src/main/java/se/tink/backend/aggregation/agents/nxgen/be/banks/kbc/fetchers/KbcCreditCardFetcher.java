@@ -33,7 +33,6 @@ public class KbcCreditCardFetcher
                         sessionStorage.get(KbcConstants.Encryption.AES_SESSION_KEY_KEY));
 
         String cards = apiClient.fetchCards(cipherKey);
-        LOGGER.infoExtraLong("cards: " + cards, KbcConstants.LogTags.CREDIT_CARDS);
         return Collections.emptyList();
     }
 
