@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.util.Base64;
+import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -16,10 +17,14 @@ import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 
 public class QsealcSigner {
+
+    private static final Logger log = LoggerFactory.getLogger(QsealcSigner.class);
 
     private static final String TINK_QSEALC_APPID = "X-Tink-QSealC-AppId";
     private static final String TINK_QSEALC_CLUSTERID = "X-Tink-QSealC-ClusterId";
@@ -109,7 +114,13 @@ public class QsealcSigner {
             post.setHeader(TINK_QSEALC_CLUSTERID, eidasIdentity.getClusterId());
             post.setHeader(TINK_REQUESTER, eidasIdentity.getRequester());
             post.setEntity(new ByteArrayEntity(Base64.getEncoder().encode(signingData)));
+            long start = System.nanoTime();
             HttpResponse response = httpClient.execute(post);
+            long total = System.nanoTime() - start;
+            long eidasSigningRoundtrip = TimeUnit.SECONDS.convert(total, TimeUnit.NANOSECONDS);
+            if (eidasSigningRoundtrip > 0) {
+                log.info("Eidas signing time: {} seconds", eidasSigningRoundtrip);
+            }
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             response.getEntity().writeTo(outputStream);
