@@ -86,6 +86,10 @@ public abstract class AggregationTransaction {
         return type;
     }
 
+    public Map<TransactionPayloadTypes, String> getPayload() {
+        return payload;
+    }
+
     public Transaction toSystemTransaction(User user) {
         Transaction transaction = new Transaction();
 
