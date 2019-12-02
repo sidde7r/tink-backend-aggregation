@@ -47,7 +47,8 @@ public class SwedbankBaseConstants {
         INIT_BANKID(createUrlWithHost("/v5/identification/bankid/mobile")),
         INIT_TOKEN(createUrlWithHost("/v5/identification/securitytoken/challenge")),
         TOUCH(createUrlWithHost("/v5/identification/touch")),
-        LOGOUT(createUrlWithHost("/v5/identification/logout"));
+        LOGOUT(createUrlWithHost("/v5/identification/logout")),
+        PROFILE("/v5/profile/");
 
         public static final String DSID_KEY = "dsid";
         private URL url;
@@ -396,5 +397,9 @@ public class SwedbankBaseConstants {
     public static class Retry {
         public static final int FIRST_ATTEMPT = 1;
         public static final int MAX_RETRY_ATTEMPTS = 2;
+    }
+
+    public static class FeatureFlag {
+        public static final String CHECK_KEEP_ALIVE = "swedbankKeepAlive";
     }
 }

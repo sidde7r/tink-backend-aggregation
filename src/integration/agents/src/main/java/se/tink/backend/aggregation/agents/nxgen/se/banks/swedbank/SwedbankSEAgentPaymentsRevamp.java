@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSELoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankAbstractAgentPaymentsRevamp;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -15,11 +15,13 @@ public class SwedbankSEAgentPaymentsRevamp extends SwedbankAbstractAgentPayments
     private final LoanRefreshController loanRefreshController;
 
     public SwedbankSEAgentPaymentsRevamp(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
         super(
                 request,
                 context,
-                signatureKeyPair,
+                agentsServiceConfiguration,
                 new SwedbankSEConfiguration(request.getProvider().getPayload()),
                 new SwedbankSEApiClientProvider());
 

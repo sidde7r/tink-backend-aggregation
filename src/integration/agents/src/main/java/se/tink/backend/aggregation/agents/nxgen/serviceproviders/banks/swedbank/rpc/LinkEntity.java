@@ -15,12 +15,23 @@ public class LinkEntity {
         return method;
     }
 
-    public SwedbankBaseConstants.LinkMethod getMethodValue() {
-        return SwedbankBaseConstants.LinkMethod.fromVerb(method);
-    }
-
     public String getUri() {
         return uri;
+    }
+
+    public LinkEntity setMethod(String method) {
+        this.method = method;
+        return this;
+    }
+
+    public LinkEntity setUri(String uri) {
+        this.uri = uri;
+        return this;
+    }
+
+    @JsonIgnore
+    public SwedbankBaseConstants.LinkMethod getMethodValue() {
+        return SwedbankBaseConstants.LinkMethod.fromVerb(method);
     }
 
     @JsonIgnore
