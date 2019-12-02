@@ -1,7 +1,7 @@
-podCpuRequest: "1250m"
-podCpuLimit: "1250m"
-podMemoryRequest: "6Gi"
-podMemoryLimit: "6Gi"
+podCpuRequest: "2500m"
+podCpuLimit: "2500m"
+podMemoryRequest: "8Gi"
+podMemoryLimit: "8Gi"
 heapSize: "4G"
 replicas: 8
 maxReplicas: 20
