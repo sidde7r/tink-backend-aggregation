@@ -1042,18 +1042,17 @@ public class LansforsakringarAgent extends AbstractAgent
                         throw BankIdError.TIMEOUT.exception();
                     default:
                         if (clientResponse.getHeaders().getFirst("Error-Message") != null) {
-                            throw TransferExecutionException.builder(
-                                            SignableOperationStatuses.FAILED)
-                                    .setEndUserMessage(
-                                            clientResponse.getHeaders().getFirst("Error-Message"))
-                                    .build();
+                            throw failTransferWithMessage(
+                                    String.format(
+                                            "Error code: %s, error message: %s",
+                                            clientResponse.getHeaders().getFirst("Error-Code"),
+                                            clientResponse.getHeaders().getFirst("Error-Message")),
+                                    TransferExecutionException.EndUserMessage
+                                            .BANKID_TRANSFER_FAILED);
                         } else {
-                            throw TransferExecutionException.builder(
-                                            SignableOperationStatuses.FAILED)
-                                    .setEndUserMessage(
-                                            catalog.getString(
-                                                    "Failed to sign using BankID, please try again later"))
-                                    .build();
+                            throw failTransfer(
+                                    TransferExecutionException.EndUserMessage
+                                            .BANKID_TRANSFER_FAILED);
                         }
                 }
             } else {
@@ -1077,9 +1076,12 @@ public class LansforsakringarAgent extends AbstractAgent
             throws TransferExecutionException {
         if (clientResponse.getStatus() == HttpStatus.SC_BAD_REQUEST
                 && clientResponse.getHeaders().getFirst("Error-Message") != null) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(clientResponse.getHeaders().getFirst("Error-Message"))
-                    .build();
+            throw failTransferWithMessage(
+                    String.format(
+                            "Error code: %s, error message: %s",
+                            clientResponse.getHeaders().getFirst("Error-Code"),
+                            clientResponse.getHeaders().getFirst("Error-Message")),
+                    TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
         } else if (clientResponse.getStatus() != HttpStatus.SC_OK) {
             throw failTransfer(TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
         }
