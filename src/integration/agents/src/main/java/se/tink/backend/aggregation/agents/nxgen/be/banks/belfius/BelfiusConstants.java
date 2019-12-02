@@ -55,6 +55,8 @@ public class BelfiusConstants {
                                 + "F2CRenderingMobile/GEPAService/machineIdentifier={"
                                 + UrlParameter.MACHINE_IDENTIFIER
                                 + "}");
+
+        static final URL CONFIG_IOS = new URL(BASE + "configIOS.json");
     }
 
     public static class Storage {

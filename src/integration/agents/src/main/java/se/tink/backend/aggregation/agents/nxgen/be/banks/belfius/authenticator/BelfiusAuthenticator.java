@@ -46,6 +46,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     @Override
     public void authenticate(String panNumber, String password)
             throws AuthenticationException, AuthorizationException {
+
+        apiClient.requestConfigIos();
+
         panNumber = BelfiusStringUtils.formatPanNumber(panNumber);
 
         String deviceToken = persistentStorage.get(BelfiusConstants.Storage.DEVICE_TOKEN);
@@ -61,6 +64,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
     @Override
     public void autoAuthenticate() throws SessionException {
+
+        apiClient.requestConfigIos();
+
         String panNumber = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
         String deviceToken = persistentStorage.get(BelfiusConstants.Storage.DEVICE_TOKEN);
