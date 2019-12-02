@@ -12,22 +12,18 @@ public final class AuthenticationRequest implements Credentialsable {
     private ImmutableMap<String, String> userInputs;
     private ImmutableMap<String, String> callbackData;
 
-    private AuthenticationRequest() {}
-
-    public static AuthenticationRequest empty() {
-        return new AuthenticationRequest();
+    AuthenticationRequest(final Credentials credentials) {
+        this.credentials = credentials;
     }
 
-    public static AuthenticationRequest fromCallbackData(final Map<String, String> callbackData) {
-        AuthenticationRequest request = new AuthenticationRequest();
-        request.callbackData = ImmutableMap.copyOf(callbackData);
-        return request;
+    public AuthenticationRequest withCallbackData(final Map<String, String> callbackData) {
+        this.callbackData = ImmutableMap.copyOf(callbackData);
+        return this;
     }
 
-    public static AuthenticationRequest fromUserInputs(final Map<String, String> userInputs) {
-        final AuthenticationRequest request = new AuthenticationRequest();
-        request.userInputs = ImmutableMap.copyOf(userInputs);
-        return request;
+    public AuthenticationRequest withUserInputs(final Map<String, String> userInputs) {
+        this.userInputs = ImmutableMap.copyOf(userInputs);
+        return this;
     }
 
     @Override
@@ -48,11 +44,9 @@ public final class AuthenticationRequest implements Credentialsable {
         return callbackData;
     }
 
-    public AuthenticationRequest withCredentials(final Credentials newCredentials) {
-        final AuthenticationRequest request = new AuthenticationRequest();
-        request.userInputs = userInputs;
-        request.callbackData = callbackData;
-        request.credentials = newCredentials;
-        return request;
+    @Deprecated
+    public AuthenticationRequest withCredentials(final Credentials credentials) {
+        this.credentials = credentials;
+        return this;
     }
 }
