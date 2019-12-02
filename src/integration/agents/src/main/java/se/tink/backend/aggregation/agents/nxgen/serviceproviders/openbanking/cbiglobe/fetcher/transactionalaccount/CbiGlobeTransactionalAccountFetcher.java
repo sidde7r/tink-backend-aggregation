@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
@@ -39,6 +40,7 @@ public class CbiGlobeTransactionalAccountFetcher
 
         return getAccountsResponse.getAccounts().stream()
                 .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

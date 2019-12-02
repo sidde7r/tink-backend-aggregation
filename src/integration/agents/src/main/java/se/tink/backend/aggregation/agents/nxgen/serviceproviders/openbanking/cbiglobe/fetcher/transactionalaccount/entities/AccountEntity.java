@@ -7,10 +7,12 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -33,18 +35,24 @@ public class AccountEntity {
         return resourceId;
     }
 
-    public TransactionalAccount toTinkAccount(GetBalancesResponse getBalancesResponse) {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(getAccountNumber())
-                .setAccountNumber(iban)
-                .setBalance(getBalance(getBalancesResponse.getBalances()))
-                .setAlias(getName())
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+    public Optional<TransactionalAccount> toTinkAccount(GetBalancesResponse getBalancesResponse) {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(getBalance(getBalancesResponse.getBalances())))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(getName())
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                                .build())
                 .setApiIdentifier(resourceId)
                 .build();
     }
 
-    private Amount getBalance(List<BalanceEntity> balances) {
+    private ExactCurrencyAmount getBalance(List<BalanceEntity> balances) {
         return balances.stream()
                 .min(Comparator.comparing(BalanceEntity::getBalanceMappingPriority))
                 .map(BalanceEntity::toAmount)
