@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.Agent;
@@ -49,7 +50,7 @@ public final class ProgressiveAuthAgentTest {
                 };
 
         final SteppableAuthenticationRequest request =
-                SteppableAuthenticationRequest.initialRequest();
+                SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
 
         final SteppableAuthenticationResponse response = agent.login(request);
 
@@ -110,8 +111,8 @@ public final class ProgressiveAuthAgentTest {
                         } else {
                             // Authentication step 2
                             final AuthenticationRequest requestPayload =
-                                    AuthenticationRequest.fromUserInputs(
-                                                    request.getPayload().getUserInputs())
+                                    new AuthenticationRequest(Mockito.mock(Credentials.class))
+                                            .withUserInputs(request.getPayload().getUserInputs())
                                             .withCredentials(new Credentials());
 
                             response = SteppableAuthenticationResponse.finalResponse();
@@ -122,7 +123,7 @@ public final class ProgressiveAuthAgentTest {
                 };
 
         final SteppableAuthenticationRequest request1 =
-                SteppableAuthenticationRequest.initialRequest();
+                SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
 
         final SteppableAuthenticationResponse response1 = agent.login(request1);
 
@@ -139,8 +140,8 @@ public final class ProgressiveAuthAgentTest {
         final SteppableAuthenticationRequest request2 =
                 SteppableAuthenticationRequest.subsequentRequest(
                         response1.getStepIdentifier().get(),
-                        AuthenticationRequest.fromUserInputs(userInputs));
-
+                        new AuthenticationRequest(Mockito.mock(Credentials.class))
+                                .withUserInputs(userInputs));
         final SteppableAuthenticationResponse response2 = agent.login(request2);
 
         Assert.assertEquals(Optional.empty(), response2.getStepIdentifier());
