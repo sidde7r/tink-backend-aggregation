@@ -1097,8 +1097,9 @@ public class LansforsakringarAgent extends AbstractAgent
         AccountIdentifier destination = transfer.getDestination();
 
         if (!destination.is(AccountIdentifier.Type.SE)) {
-            throw new Exception(
-                    "Transfer account identifiers other than Swedish ones not implemented yet.");
+            throw cancelTransferWithMessage(
+                    "Transfer account identifiers other than Swedish are not supported.",
+                    TransferExecutionException.EndUserMessage.INVALID_SOURCE);
         }
 
         TransferrableResponse sourceAccounts = fetchTransferSourceAccounts();
