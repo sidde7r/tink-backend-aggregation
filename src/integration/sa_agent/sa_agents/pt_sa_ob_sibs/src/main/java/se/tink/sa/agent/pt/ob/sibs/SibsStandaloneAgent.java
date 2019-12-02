@@ -10,7 +10,7 @@ import se.tink.sa.framework.StandaloneAgent;
 
 @Slf4j
 @ComponentScan(basePackageClasses = {StandaloneAgent.class, SibsStandaloneAgent.class})
-@PropertySource("classpath:application.properties")
+@PropertySource({"classpath:application.properties", "classpath:secrets.properties"})
 @Configuration
 public class SibsStandaloneAgent extends StandaloneAgent {
 

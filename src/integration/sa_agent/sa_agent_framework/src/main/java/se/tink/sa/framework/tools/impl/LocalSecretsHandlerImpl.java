@@ -9,7 +9,7 @@ import se.tink.sa.framework.tools.SecretsHandler;
 @Getter
 public class LocalSecretsHandlerImpl implements SecretsHandler {
 
-    @Value("${secrets.service.clientId:@null}")
+    @Value("${secrets.service.clientId}")
     private String clientId;
 
     @Value("${secrets.service.clientSecret:@null}")
