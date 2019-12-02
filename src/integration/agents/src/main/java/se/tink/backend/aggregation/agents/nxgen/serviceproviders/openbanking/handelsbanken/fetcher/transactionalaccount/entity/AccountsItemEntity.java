@@ -61,7 +61,7 @@ public class AccountsItemEntity {
                 .withBalance(BalanceModule.of(getAmount(balance)))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(getAccountNumberWithoutClearing())
+                                .withUniqueIdentifier(getBbanWithoutClearing())
                                 .withAccountNumber(getAccountNumberWithClearing())
                                 .withAccountName(Optional.ofNullable(name).orElse(accountType))
                                 .addIdentifier(
@@ -76,23 +76,25 @@ public class AccountsItemEntity {
                 .build();
     }
 
-    /**
-     * Parsing the iban instead of using the bban directly as they may suddenly start including the
-     * clearing number in the bban. As we're using the account number without clearing as unique
-     * identifier it's not a risk we want to take.
-     */
     @JsonIgnore
-    private String getAccountNumberWithoutClearing() {
-        return iban.substring(iban.length() - 9);
+    private String getBbanWithoutClearing() {
+        // 9 is the documented max length of an shb account number, anything longer we would have to
+        // look closer at.
+        if (getBban().length() > 9) {
+            throw new IllegalStateException("Unexpected bban: " + getBban());
+        }
+        return getBban();
     }
 
+    // Use BBAN as getting the bban from iban is not a static operation as there can be up to 30
+    // characters in the bban part of the iban, if we have no clearing number, assume bban has it.
     @JsonIgnore
     private String getAccountNumberWithClearing() {
         if (Strings.isNullOrEmpty(clearingNumber)) {
-            return getAccountNumberWithoutClearing();
+            return getBban();
         }
 
-        return clearingNumber + "-" + getAccountNumberWithoutClearing();
+        return clearingNumber + "-" + getBbanWithoutClearing();
     }
 
     @JsonIgnore
