@@ -118,6 +118,9 @@ public class TransferExecutionException extends RuntimeException {
         BANKID_FAILED(new LocalizableKey("The BankID authentication failed")),
         BANKID_TRANSFER_FAILED(new LocalizableKey("Failed to sign transfer with BankID")),
         SIGN_TRANSFER_FAILED(new LocalizableKey("Failed to sign transfer")),
+        SIGN_AND_REMOVAL_FAILED(
+                new LocalizableKey(
+                        "We encountered problems signing the payment/transfer with your bank. Please log in to your bank app and validate the payment/transfer.")),
         CHALLENGE_NO_RESPONSE(
                 new LocalizableKey(
                         "Transfer or payment was not signed with security token device")),
