@@ -3,24 +3,26 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants.Request;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ExecuteMethodRequest extends RequestEntity {
+public class ExecuteMethodContractRequest extends RequestEntity {
 
     private String applicationId;
     private String methodId;
     private String serviceName;
-    @JsonIgnore private Map<String, Object> inputs;
+    private Map<String, Object> inputs;
 
-    public static ExecuteMethodRequest.Builder builder() {
-        return new ExecuteMethodRequest.Builder();
+    public static ExecuteMethodContractRequest.Builder builder() {
+        return new ExecuteMethodContractRequest.Builder();
     }
 
-    public static RequestEntity createGetAppMessageText() {
+    public static RequestEntity create() {
         return builder()
                 .setApplicationId("services")
-                .setMethodId("List")
+                .setMethodId("CheckStatus")
+                .setServiceName(Request.GET_APP_MESSAGE_TEXT_NAME)
                 .setInputs(
                         ImmutableMap.<String, Object>builder()
                                 .put("AppRelease", "09310")
@@ -33,34 +35,34 @@ public class ExecuteMethodRequest extends RequestEntity {
     }
 
     public static class Builder {
-        private ExecuteMethodRequest method;
+        private ExecuteMethodContractRequest method;
 
         public Builder() {
-            method = new ExecuteMethodRequest();
+            method = new ExecuteMethodContractRequest();
         }
 
-        public ExecuteMethodRequest.Builder setApplicationId(String applicationId) {
+        public ExecuteMethodContractRequest.Builder setApplicationId(String applicationId) {
             method.applicationId = applicationId;
             return this;
         }
 
-        public ExecuteMethodRequest.Builder setMethodId(String methodId) {
+        public ExecuteMethodContractRequest.Builder setMethodId(String methodId) {
             method.methodId = methodId;
             return this;
         }
 
-        public ExecuteMethodRequest.Builder setServiceName(String serviceName) {
+        public ExecuteMethodContractRequest.Builder setServiceName(String serviceName) {
             method.serviceName = serviceName;
             return this;
         }
 
         @JsonIgnore
-        public ExecuteMethodRequest.Builder setInputs(Map<String, Object> inputs) {
+        public ExecuteMethodContractRequest.Builder setInputs(Map<String, Object> inputs) {
             method.inputs = inputs;
             return this;
         }
 
-        public ExecuteMethodRequest build() {
+        public ExecuteMethodContractRequest build() {
             return method;
         }
     }

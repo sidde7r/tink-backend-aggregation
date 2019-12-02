@@ -10,6 +10,9 @@ public class BelfiusConstants {
     public static final ImmutableMap<String, String> HEADERS =
             ImmutableMap.<String, String>builder()
                     .put("User-Agent", "I/PHONE/BDM/09310/PRD")
+                    .put("Connection", "keep-alive")
+                    .put("Accept-Encoding", "br, gzip, deflate")
+                    .put("Accept-Language", "nl-be")
                     .build();
     public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES =
             ImmutableMap.<String, AccountTypes>builder()
@@ -295,6 +298,8 @@ public class BelfiusConstants {
 
         public static final String START_FLOW_SERVICE_NAME =
                 "gef0.gef1.gemd.Native_MobileFlow.diamlflow";
+        public static final String GET_APP_MESSAGE_TEXT_NAME =
+                "gef0.gef1.gemd.GetAppMessageText.diamlservice";
 
         public static class Session {
             public static class Attribute {

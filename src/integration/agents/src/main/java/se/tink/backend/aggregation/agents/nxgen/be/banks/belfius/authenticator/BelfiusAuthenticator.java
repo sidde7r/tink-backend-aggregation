@@ -90,10 +90,13 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
             throws AuthenticationException, AuthorizationException {
         apiClient.openSession();
         apiClient.startFlow();
+        apiClient.appMessageText();
         apiClient.closeSession(sessionStorage.getSessionId());
 
         apiClient.openSession();
         apiClient.startFlow();
+
+        apiClient.sendIsDeviceRegistered(panNumber, BelfiusSecurityUtils.hash(deviceToken));
 
         String challenge = apiClient.prepareAuthentication(panNumber);
         final String code =
@@ -105,11 +108,17 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         final String deviceBrand = aggregator;
         final String deviceName = BelfiusConstants.MODEL;
 
+        apiClient.consultClientSettings();
+
         challenge = apiClient.prepareDeviceRegistration(deviceToken, deviceBrand, deviceName);
+
+        apiClient.keepAlive();
+
         final String sign =
                 supplementalInformationHelper
                         .waitForSignCodeChallengeResponse(challenge)
                         .replace(" ", "");
+
         apiClient.registerDevice(sign);
         persistentStorage.put(BelfiusConstants.Storage.DEVICE_TOKEN, deviceToken);
 
@@ -153,6 +162,8 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
                 BelfiusSecurityUtils.createSignaturePw(
                         challenge2, deviceToken, panNumber, contractNumber, password);
 
+        sleepForSeconds(5); // Entering password
+
         apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
     }
 
@@ -176,10 +187,20 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         sessionStorage.setChallenge(challenge2);
 
+        sleepForSeconds(5); // Entering password
+
         String signaturePw =
                 BelfiusSecurityUtils.createSignaturePw(
                         challenge2, deviceToken, panNumber, contractNumber, password);
 
         apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
+    }
+
+    private static void sleepForSeconds(final int seconds) {
+        try {
+            Thread.sleep(1000 * seconds);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

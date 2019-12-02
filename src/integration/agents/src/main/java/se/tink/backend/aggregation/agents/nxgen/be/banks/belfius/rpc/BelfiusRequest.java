@@ -39,6 +39,15 @@ public class BelfiusRequest {
         @JsonSubTypes.Type(
                 value = ExecuteMethodRequest.class,
                 name = BelfiusConstants.Response.Attribute.EXECUTE_METHOD),
+        @JsonSubTypes.Type(
+                value = ExecuteMethodGetAppMessageTextRequest.class,
+                name = BelfiusConstants.Response.Attribute.EXECUTE_METHOD),
+        @JsonSubTypes.Type(
+                value = ExecuteMethodContractRequest.class,
+                name = BelfiusConstants.Response.Attribute.EXECUTE_METHOD),
+        @JsonSubTypes.Type(
+                value = ExecuteMethodWithInputsRequest.class,
+                name = BelfiusConstants.Response.Attribute.EXECUTE_METHOD),
     })
     private List<RequestEntity> requests;
 

@@ -58,6 +58,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.Si
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.TransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.ExecuteMethodGetAppMessageTextRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.SessionOpenedResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.StartFlowRequest;
@@ -156,6 +157,22 @@ public class BelfiusApiClient {
                         CheckStatusRequest.create(panNumber, deviceTokenHash),
                         ExecutionMode.SERVICES)
                 .isDeviceRegistered();
+    }
+
+    public void sendIsDeviceRegistered(String panNumber, String deviceTokenHash) {
+        post(
+                BelfiusConstants.Url.GEPA_SERVICE_URL,
+                CheckStatusResponse.class,
+                CheckStatusRequest.create(panNumber, deviceTokenHash),
+                ExecutionMode.SERVICES);
+    }
+
+    public void consultClientSettings() {
+        post(
+                BelfiusConstants.Url.GEPA_SERVICE_URL,
+                CheckStatusResponse.class,
+                CheckStatusRequest.createConsultClientSettings(),
+                ExecutionMode.SERVICES);
     }
 
     public String prepareDeviceRegistration(
@@ -323,6 +340,17 @@ public class BelfiusApiClient {
                 Url.GEPA_SERVICE_URL,
                 FetchTransactionsResponse.class,
                 CheckStatusRequest.createActor(),
+                ExecutionMode.SERVICES);
+    }
+
+    public BelfiusResponse appMessageText() {
+        return post(
+                Url.GEPA_SERVICE_URL,
+                BelfiusResponse.class,
+                BelfiusRequest.builder()
+                        .setApplicationId("services")
+                        .setExecutionMode("sequential")
+                        .setRequests(ExecuteMethodGetAppMessageTextRequest.create()),
                 ExecutionMode.SERVICES);
     }
 
