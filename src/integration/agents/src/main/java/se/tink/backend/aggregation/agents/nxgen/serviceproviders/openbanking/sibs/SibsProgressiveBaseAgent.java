@@ -64,7 +64,7 @@ public abstract class SibsProgressiveBaseAgent
             AgentContext context,
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration.getSignatureKeyPair(), true);
-        userState = new SibsUserState(persistentStorage, credentials);
+        userState = new SibsUserState(persistentStorage);
         setConfiguration(configuration);
         apiClient = new SibsBaseApiClient(client, userState, request.isManual());
         clientName = request.getProvider().getPayload();

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
 import java.time.LocalDateTime;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SibsSignSteps;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.Consent;
@@ -15,11 +14,9 @@ public class SibsUserState {
             "sibs_manual_authentication_in_progress";
 
     private final PersistentStorage persistentStorage;
-    private final Credentials credentials;
 
-    SibsUserState(final PersistentStorage persistentStorage, final Credentials credentials) {
+    SibsUserState(final PersistentStorage persistentStorage) {
         this.persistentStorage = persistentStorage;
-        this.credentials = credentials;
     }
 
     public String getConsentId() {
