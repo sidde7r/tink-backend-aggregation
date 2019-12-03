@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Locale;
 import javax.annotation.Nullable;
@@ -33,8 +33,7 @@ public class HtmlResponse {
     protected final String body;
     protected final Document document;
     private static final XPathFactory xpathFactory = XPathFactory.newInstance();
-    private static final NumberFormat amountFormat =
-            DecimalFormat.getInstance(Locale.forLanguageTag("es"));
+    private final DecimalFormat amountFormat;
 
     protected static Document parseHTML(String body) {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -60,25 +59,30 @@ public class HtmlResponse {
     }
 
     public HtmlResponse(HttpResponse response) {
+        this.amountFormat =
+                new DecimalFormat(
+                        "#,##0.##", DecimalFormatSymbols.getInstance(Locale.forLanguageTag("es")));
+        this.amountFormat.setParseBigDecimal(true);
+
         this.body = response.getBody(String.class);
         this.document = parseHTML(this.body);
     }
 
     protected ExactCurrencyAmount parseAmount(String amountString) {
-        // amount uses "." as thousands separator and "," as decimal separator
         if (!amountString.endsWith("€")) {
             throw new IllegalStateException("Unknown account currency for " + amountString);
         }
 
+        return ExactCurrencyAmount.of(
+                parseValue(amountString), BankinterConstants.DEFAULT_CURRENCY);
+    }
+
+    protected BigDecimal parseValue(String amountString) {
         try {
             if (amountString.startsWith("+")) {
-                return ExactCurrencyAmount.of(
-                        new BigDecimal(amountFormat.parse(amountString.substring(1)).toString()),
-                        BankinterConstants.DEFAULT_CURRENCY);
+                return (BigDecimal) amountFormat.parse(amountString.substring(1));
             } else {
-                return ExactCurrencyAmount.of(
-                        new BigDecimal(amountFormat.parse(amountString).toString()),
-                        BankinterConstants.DEFAULT_CURRENCY);
+                return (BigDecimal) amountFormat.parse(amountString);
             }
         } catch (ParseException e) {
             throw new IllegalStateException("Could not parse amount " + amountString, e);
