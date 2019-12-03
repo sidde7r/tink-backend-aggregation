@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterCons
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.identitydata.rpc.IdentityDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.investment.rpc.InvestmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.JsfUpdateResponse;
@@ -77,6 +78,10 @@ public final class BankinterApiClient {
                         .queryParam(QueryKeys.ACCOUNT_INDEX, Integer.toString(accountIndex))
                         .queryParam(QueryKeys.INDEX, QueryValues.INDEX_N)
                         .get(HttpResponse.class));
+    }
+
+    public InvestmentResponse fetchInvestmentAccount(String url) {
+        return new InvestmentResponse(client.request(Urls.BASE + url).get(HttpResponse.class));
     }
 
     public <T extends JsfUpdateResponse> T fetchJsfUpdate(

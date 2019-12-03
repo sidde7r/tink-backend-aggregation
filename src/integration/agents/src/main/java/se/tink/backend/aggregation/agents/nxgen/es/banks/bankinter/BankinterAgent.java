@@ -3,12 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator.BankinterAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.identitydata.BankinterIdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.investment.BankinterInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.BankinterTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.session.BankinterSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -16,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -25,10 +29,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class BankinterAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                RefreshInvestmentAccountsExecutor {
 
     private final BankinterApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public BankinterAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -36,6 +42,11 @@ public final class BankinterAgent extends NextGenerationAgent
         apiClient = new BankinterApiClient(client, persistentStorage);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BankinterInvestmentFetcher(apiClient));
     }
 
     @Override
@@ -86,5 +97,15 @@ public final class BankinterAgent extends NextGenerationAgent
     public FetchIdentityDataResponse fetchIdentityData() {
         final IdentityDataFetcher fetcher = new BankinterIdentityDataFetcher(apiClient);
         return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 }
