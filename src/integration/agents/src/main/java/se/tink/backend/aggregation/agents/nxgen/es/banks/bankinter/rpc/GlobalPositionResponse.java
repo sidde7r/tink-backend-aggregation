@@ -1,10 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
 public class GlobalPositionResponse extends HtmlResponse {

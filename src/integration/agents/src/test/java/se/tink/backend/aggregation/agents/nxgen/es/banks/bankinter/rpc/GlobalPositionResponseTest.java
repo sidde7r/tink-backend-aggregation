@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc;
 
 import static org.junit.Assert.assertEquals;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterTestData.loadTestResponse;
