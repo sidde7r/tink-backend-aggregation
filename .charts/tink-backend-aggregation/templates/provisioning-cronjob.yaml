@@ -58,7 +58,7 @@ spec:
                   key: aggregationdb-password
           containers:
           - name: tink-backend-aggregation-provisioning-cronjob
-            image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default "latest" }}
+            image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default .Values.Version | default "latest" }}
             imagePullPolicy: Always
             resources:
               requests:
