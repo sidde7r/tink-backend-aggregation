@@ -381,6 +381,10 @@ clients:
     aggregatorIdentifier: "EnterCard"
   se-entercard-testing:
     aggregatorIdentifier: "EnterCard"
+  se-ikano-bank-testing:
+    aggregatorIdentifier: "Ikano Bank"
+  se-ikano-bank-production:
+    aggregatorIdentifier: "Ikano Bank"
   se-jak-medlemsbank:
     aggregatorIdentifier: "JAK Medlemsbank"
   se-lan-og-spar-se:
