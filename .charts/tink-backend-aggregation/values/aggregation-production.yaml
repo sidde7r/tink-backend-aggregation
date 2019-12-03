@@ -396,6 +396,7 @@ eventProducerServiceConfiguration:
 featureFlags:
   esProxy: true
   beProxy: false
+  swedbankKeepAlive: false
 
 providerConfigurationServiceConfiguration:
   enabled: true
