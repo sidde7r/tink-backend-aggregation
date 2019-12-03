@@ -27,6 +27,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     private final BelfiusSessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final String aggregator;
+    private boolean requestConfigIosSent;
 
     public BelfiusAuthenticator(
             final BelfiusApiClient apiClient,
@@ -65,7 +66,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     @Override
     public void autoAuthenticate() throws SessionException {
 
-        apiClient.requestConfigIos();
+        if (!requestConfigIosSent) {
+            apiClient.requestConfigIos();
+        }
 
         String panNumber = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
