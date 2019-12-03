@@ -125,6 +125,10 @@ clients:
     aggregatorIdentifier: "Lån & Spar"
   dk-langa-sparekasse:
     aggregatorIdentifier: "Langå Sparekasse"
+  dk-middelfart-development-2:
+    aggregatorIdentifier: "Middelfart Sparekasse"
+  dk-middelfart-development-3:
+    aggregatorIdentifier: "Middelfart Sparekasse"
   dk-proveo-testing:
     aggregatorIdentifier: "proVeo"
   dk-proveo-staging:
@@ -168,6 +172,10 @@ clients:
   fo-bank-nordic-production:
     aggregatorIdentifier: "Bank Nordic"
   fo-betri-production:
+    aggregatorIdentifier: "Betri"
+  fo-betri-development-2:
+    aggregatorIdentifier: "Betri"
+  fo-betri-development-3:
     aggregatorIdentifier: "Betri"
   fo-nordoya-sparikassi:
     aggregatorIdentifier: "Nordoya Sparikassi"
@@ -327,6 +335,10 @@ clients:
     aggregatorIdentifier: "Storebrand"
   no-storebrand-testing:
     aggregatorIdentifier: "Storebrand"
+  no-storebrand-development-2:
+    aggregatorIdentifier: "Storebrand"
+  no-storebrand-development-3:
+    aggregatorIdentifier: "Storebrand"
   no-strommen-sparebank:
     aggregatorIdentifier: "Strømmen Sparebank"
   no-sunndal-sparebank:
@@ -369,6 +381,10 @@ clients:
     aggregatorIdentifier: "EnterCard"
   se-entercard-testing:
     aggregatorIdentifier: "EnterCard"
+  se-ikano-bank-testing:
+    aggregatorIdentifier: "Ikano Bank"
+  se-ikano-bank-production:
+    aggregatorIdentifier: "Ikano Bank"
   se-jak-medlemsbank:
     aggregatorIdentifier: "JAK Medlemsbank"
   se-lan-og-spar-se:
@@ -378,6 +394,10 @@ clients:
   se-skandiabanken:
     aggregatorIdentifier: "Skandiabanken"
   se-sparbanken-syd-production:
+    aggregatorIdentifier: "Sparbanken Syd"
+  se-sparbanken-syd-development-2:
+    aggregatorIdentifier: "Sparbanken Syd"
+  se-sparbanken-syd-development-3:
     aggregatorIdentifier: "Sparbanken Syd"
   zimpler-production:
     aggregatorIdentifier: "Zimpler"
