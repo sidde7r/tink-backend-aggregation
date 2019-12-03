@@ -88,7 +88,7 @@ clients:
   avanza-testing:
     aggregatorIdentifier: "Avanza"
   billecta-production:
-    aggregationIdentifier: "Savelend"
+    aggregatorIdentifier: "Savelend"
   collector-testing:
     aggregatorIdentifier: "Collector Bank"
   collector-verified:
