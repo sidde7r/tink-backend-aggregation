@@ -5,6 +5,7 @@ junit_test(
     srcs = glob(["**/*.java"]),
     data = [
         "//data:agent_unit_tests",
+        "//data:aggregation_test",
         "//data/test/agents/es/bankinter",
         "//etc:development",
     ],
