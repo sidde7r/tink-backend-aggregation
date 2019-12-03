@@ -49,6 +49,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
             throws AuthenticationException, AuthorizationException {
 
         apiClient.requestConfigIos();
+        requestConfigIosSent = true;
 
         panNumber = BelfiusStringUtils.formatPanNumber(panNumber);
 
@@ -68,6 +69,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         if (!requestConfigIosSent) {
             apiClient.requestConfigIos();
+            requestConfigIosSent = true;
         }
 
         String panNumber = credentials.getField(Field.Key.USERNAME);
