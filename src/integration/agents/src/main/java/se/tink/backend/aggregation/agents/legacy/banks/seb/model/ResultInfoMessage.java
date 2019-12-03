@@ -45,7 +45,8 @@ public class ResultInfoMessage {
     }
 
     public String getErrorText() {
-        return ErrorText != null ? ErrorText.trim() : null;
+        String text = ErrorText != null ? ErrorText.trim() : null;
+        return "2000".equalsIgnoreCase(getErrorCode()) ? "Banken har blockerat överföringen" : text;
     }
 
     private Optional<String> getOptionalDescription() {
