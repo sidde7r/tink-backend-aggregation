@@ -57,11 +57,18 @@ public final class BankdataApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private BankdataConfiguration configuration;
-    private EidasProxyConfiguration eidasProxyConfiguration;
+    private final String baseUrl;
+    private final String baseAuthUrl;
 
-    public BankdataApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public BankdataApiClient(
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            String baseUrl,
+            String baseAuthUrl) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.baseUrl = baseUrl;
+        this.baseAuthUrl = baseAuthUrl;
     }
 
     public URL getAuthorizeUrl(String state) {
@@ -73,7 +80,7 @@ public final class BankdataApiClient {
         final String codeChallenge = BankdataUtils.generateCodeChallenge(codeVerifier);
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         sessionStorage.put(StorageKeys.CONSENT_ID, consentId);
-        URL url = new URL(configuration.getBaseAuthUrl() + Endpoints.AUTHORIZE);
+        URL url = new URL(baseAuthUrl + Endpoints.AUTHORIZE);
 
         return createRequest(url)
                 .queryParam(QueryKeys.RESPONSE_TYPE, BankdataConstants.QueryValues.CODE)
@@ -102,7 +109,7 @@ public final class BankdataApiClient {
     public void authorizeConsent(String consentId) {
         final String requestId = UUID.randomUUID().toString();
         final ConsentAuthorizationRequest consentAuthorization = new ConsentAuthorizationRequest();
-        URL url = new URL(configuration.getBaseUrl() + Endpoints.AUTHORIZE_CONSENT);
+        URL url = new URL(baseUrl + Endpoints.AUTHORIZE_CONSENT);
 
         client.request(url.parameter(IdTags.CONSENT_ID, consentId))
                 .addBearerToken(getTokenFromSession())
@@ -114,7 +121,7 @@ public final class BankdataApiClient {
 
     public AccountResponse fetchAccounts() {
         final String requestId = UUID.randomUUID().toString();
-        URL url = new URL(configuration.getBaseUrl() + Endpoints.ACCOUNTS);
+        URL url = new URL(baseUrl + Endpoints.ACCOUNTS);
 
         final AccountResponse accountsWithoutBalances =
                 createRequestInSession(url)
@@ -135,11 +142,7 @@ public final class BankdataApiClient {
 
     private AccountEntity fetchBalances(final AccountEntity accountEntity) {
         final String requestId = UUID.randomUUID().toString();
-        final URL url =
-                new URL(
-                        getConfiguration().getBaseUrl()
-                                + Endpoints.AIS_PRODUCT
-                                + accountEntity.getBalancesLink());
+        final URL url = new URL(baseUrl + Endpoints.AIS_PRODUCT + accountEntity.getBalancesLink());
 
         final List<BalanceEntity> balances =
                 client.request(url)
@@ -160,7 +163,7 @@ public final class BankdataApiClient {
         final String requestId = UUID.randomUUID().toString();
         final URL fullUrl =
                 new URL(
-                        configuration.getBaseUrl()
+                        baseUrl
                                 + Endpoints.AIS_PRODUCT
                                 + account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL));
 
@@ -182,7 +185,7 @@ public final class BankdataApiClient {
             CreatePaymentRequest paymentRequest, PaymentType type) throws PaymentException {
         final String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
 
-        URL url = new URL(configuration.getBaseUrl() + productType);
+        URL url = new URL(baseUrl + productType);
 
         try {
             CreatePaymentResponse response =
@@ -202,7 +205,7 @@ public final class BankdataApiClient {
         final String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
 
         URL url =
-                new URL(configuration.getBaseUrl() + productType + Endpoints.PAYMENT_ID)
+                new URL(baseUrl + productType + Endpoints.PAYMENT_ID)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
         String paymentProduct = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
 
@@ -216,7 +219,7 @@ public final class BankdataApiClient {
 
     public PaymentStatusResponse getPaymentStatus(String paymentProduct, String paymentId) {
         URL url =
-                new URL(configuration.getBaseUrl() + Endpoints.GET_PAYMENT_STATUS)
+                new URL(baseUrl + Endpoints.GET_PAYMENT_STATUS)
                         .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
@@ -250,7 +253,7 @@ public final class BankdataApiClient {
     private AuthorizePaymentResponse authorizePayment(String paymentId, PaymentType type) {
         String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
         URL url =
-                new URL(configuration.getBaseUrl() + productType + Endpoints.AUTHORIZE_PAYMENT)
+                new URL(baseUrl + productType + Endpoints.AUTHORIZE_PAYMENT)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
         return createPaymentRequestInSession(url, StorageKeys.INITIAL_TOKEN)
@@ -264,7 +267,7 @@ public final class BankdataApiClient {
         final String redirectUri = getConfiguration().getRedirectUrl();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
 
-        return new URL(configuration.getBaseAuthUrl() + Endpoints.AUTHORIZE)
+        return new URL(baseAuthUrl + Endpoints.AUTHORIZE)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.SCOPE, QueryValues.PIS_SCOPE + paymentId)
@@ -280,7 +283,7 @@ public final class BankdataApiClient {
                         FormValues.CLIENT_CREDENTIALS,
                         FormValues.SCOPE,
                         getConfiguration().getClientId());
-        URL url = new URL(configuration.getBaseAuthUrl() + Endpoints.TOKEN);
+        URL url = new URL(baseAuthUrl + Endpoints.TOKEN);
 
         TokenResponse response =
                 client.request(url)
@@ -296,7 +299,7 @@ public final class BankdataApiClient {
         getTokenWithClientCredentials();
         final ConsentRequest consentRequest = new ConsentRequest();
         final String requestId = UUID.randomUUID().toString();
-        URL url = new URL(configuration.getBaseUrl() + Endpoints.CONSENT);
+        URL url = new URL(baseUrl + Endpoints.CONSENT);
 
         ConsentResponse response =
                 client.request(url)
@@ -317,7 +320,6 @@ public final class BankdataApiClient {
     protected void setConfiguration(
             BankdataConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.client.setEidasProxy(eidasProxyConfiguration);
     }
 
@@ -352,7 +354,7 @@ public final class BankdataApiClient {
     }
 
     private OAuth2Token getTokenResponse(TokenRequest tokenRequest) {
-        URL url = new URL(configuration.getBaseAuthUrl() + Endpoints.TOKEN);
+        URL url = new URL(baseAuthUrl + Endpoints.TOKEN);
 
         return client.request(url)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)

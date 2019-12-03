@@ -9,16 +9,11 @@ public final class DjurslandsAgent extends BankdataAgent {
 
     public DjurslandsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getBaseUrl() {
-        return DjurslandsConstants.BASE_URL;
-    }
-
-    @Override
-    protected String getBaseAuthUrl() {
-        return DjurslandsConstants.BASE_AUTH_URL;
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                DjurslandsConstants.BASE_URL,
+                DjurslandsConstants.BASE_AUTH_URL);
     }
 }

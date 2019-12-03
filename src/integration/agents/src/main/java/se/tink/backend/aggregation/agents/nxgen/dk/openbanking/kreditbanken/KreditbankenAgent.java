@@ -9,16 +9,11 @@ public final class KreditbankenAgent extends BankdataAgent {
 
     public KreditbankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getBaseUrl() {
-        return KreditbankenConstants.BASE_URL;
-    }
-
-    @Override
-    protected String getBaseAuthUrl() {
-        return KreditbankenConstants.BASE_AUTH_URL;
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                KreditbankenConstants.BASE_URL,
+                KreditbankenConstants.BASE_AUTH_URL);
     }
 }

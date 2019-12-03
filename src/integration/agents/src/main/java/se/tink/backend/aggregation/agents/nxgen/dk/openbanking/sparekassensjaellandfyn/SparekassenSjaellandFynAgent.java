@@ -9,16 +9,11 @@ public final class SparekassenSjaellandFynAgent extends BankdataAgent {
 
     public SparekassenSjaellandFynAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getBaseUrl() {
-        return SparekassenSjaellandFynConstants.BASE_URL;
-    }
-
-    @Override
-    protected String getBaseAuthUrl() {
-        return SparekassenSjaellandFynConstants.BASE_AUTH_URL;
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                SparekassenSjaellandFynConstants.BASE_URL,
+                SparekassenSjaellandFynConstants.BASE_AUTH_URL);
     }
 }

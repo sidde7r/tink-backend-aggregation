@@ -9,16 +9,11 @@ public final class AlmBrandAgent extends BankdataAgent {
 
     public AlmBrandAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getBaseUrl() {
-        return AlmBrandConstants.BASE_URL;
-    }
-
-    @Override
-    protected String getBaseAuthUrl() {
-        return AlmBrandConstants.BASE_AUTH_URL;
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                AlmBrandConstants.BASE_URL,
+                AlmBrandConstants.BASE_AUTH_URL);
     }
 }

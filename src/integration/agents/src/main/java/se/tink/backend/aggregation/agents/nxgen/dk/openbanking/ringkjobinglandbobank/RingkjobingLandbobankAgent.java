@@ -9,16 +9,11 @@ public final class RingkjobingLandbobankAgent extends BankdataAgent {
 
     public RingkjobingLandbobankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getBaseUrl() {
-        return RingkjobingLandbobankConstants.BASE_URL;
-    }
-
-    @Override
-    protected String getBaseAuthUrl() {
-        return RingkjobingLandbobankConstants.BASE_AUTH_URL;
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                RingkjobingLandbobankConstants.BASE_URL,
+                RingkjobingLandbobankConstants.BASE_AUTH_URL);
     }
 }

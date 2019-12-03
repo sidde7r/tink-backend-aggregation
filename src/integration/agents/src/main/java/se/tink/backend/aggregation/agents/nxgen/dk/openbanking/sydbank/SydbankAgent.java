@@ -9,16 +9,11 @@ public final class SydbankAgent extends BankdataAgent {
 
     public SydbankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getBaseUrl() {
-        return SydbankConstants.BASE_URL;
-    }
-
-    @Override
-    protected String getBaseAuthUrl() {
-        return SydbankConstants.BASE_AUTH_URL;
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                SydbankConstants.BASE_URL,
+                SydbankConstants.BASE_AUTH_URL);
     }
 }

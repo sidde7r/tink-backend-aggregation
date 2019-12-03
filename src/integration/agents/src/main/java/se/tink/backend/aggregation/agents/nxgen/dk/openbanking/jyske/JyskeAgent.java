@@ -9,16 +9,11 @@ public final class JyskeAgent extends BankdataAgent {
 
     public JyskeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getBaseUrl() {
-        return JyskeConstants.BASE_URL;
-    }
-
-    @Override
-    protected String getBaseAuthUrl() {
-        return JyskeConstants.BASE_AUTH_URL;
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                JyskeConstants.BASE_URL,
+                JyskeConstants.BASE_AUTH_URL);
     }
 }

@@ -9,16 +9,11 @@ public final class SkjernAgent extends BankdataAgent {
 
     public SkjernAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getBaseUrl() {
-        return SkjernConstants.BASE_URL;
-    }
-
-    @Override
-    protected String getBaseAuthUrl() {
-        return SkjernConstants.BASE_AUTH_URL;
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                SkjernConstants.BASE_URL,
+                SkjernConstants.BASE_AUTH_URL);
     }
 }

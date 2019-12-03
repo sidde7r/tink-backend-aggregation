@@ -9,16 +9,11 @@ public final class NordfynsAgent extends BankdataAgent {
 
     public NordfynsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getBaseUrl() {
-        return NordfynsConstants.BASE_URL;
-    }
-
-    @Override
-    protected String getBaseAuthUrl() {
-        return NordfynsConstants.BASE_AUTH_URL;
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                NordfynsConstants.BASE_URL,
+                NordfynsConstants.BASE_AUTH_URL);
     }
 }
