@@ -85,7 +85,13 @@ public class BelfiusApiClient {
     }
 
     public void requestConfigIos() {
-        client.request(Url.CONFIG_IOS).get(HttpResponse.class);
+        client.request(Url.CONFIG_IOS)
+                .header("Accept", "*/*")
+                .header("Accept-Encoding", "br, gzip, deflate")
+                .header("Accept-Language", "nl-be")
+                .header("Connection", "keep-alive")
+                .header("User-Agent", "Belfius%20Mobile/192811614 CFNetwork/974.2.1 Darwin/18.0.0")
+                .get(HttpResponse.class);
     }
 
     public void openSession() {

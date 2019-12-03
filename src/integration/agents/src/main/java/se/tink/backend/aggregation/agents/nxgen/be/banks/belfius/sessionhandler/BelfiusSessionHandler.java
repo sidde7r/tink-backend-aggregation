@@ -18,10 +18,14 @@ public class BelfiusSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        try {
-            apiClient.keepAlive();
-        } catch (Exception e) {
-            throw SessionError.SESSION_EXPIRED.exception(e);
-        }
+        // TODO Commenting out the keepalive temporarily to eliminate noise
+        // if (false) {
+        //    try {
+        //        apiClient.keepAlive();
+        //    } catch (Exception e) {
+        //        throw SessionError.SESSION_EXPIRED.exception(e);
+        //    }
+        // }
+        throw SessionError.SESSION_EXPIRED.exception();
     }
 }

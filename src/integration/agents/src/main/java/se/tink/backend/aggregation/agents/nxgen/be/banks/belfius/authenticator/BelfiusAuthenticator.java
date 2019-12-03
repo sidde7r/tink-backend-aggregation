@@ -101,19 +101,20 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
             throws AuthenticationException, AuthorizationException {
         apiClient.openSession();
         apiClient.startFlow();
-        apiClient.appMessageText();
-        apiClient.closeSession(sessionStorage.getSessionId());
 
-        apiClient.openSession();
-        apiClient.startFlow();
+        apiClient.bacProductList();
 
         apiClient.sendIsDeviceRegistered(panNumber, BelfiusSecurityUtils.hash(deviceToken));
 
         String challenge = apiClient.prepareAuthentication(panNumber);
+
+        apiClient.keepAlive();
+
         final String code =
                 supplementalInformationHelper
                         .waitForLoginChallengeResponse(challenge)
                         .replace(" ", "");
+
         apiClient.authenticateWithCode(code);
 
         final String deviceBrand = aggregator;
@@ -123,14 +124,14 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         challenge = apiClient.prepareDeviceRegistration(deviceToken, deviceBrand, deviceName);
 
-        apiClient.keepAlive();
-
         final String sign =
                 supplementalInformationHelper
                         .waitForSignCodeChallengeResponse(challenge)
                         .replace(" ", "");
 
+        // Getting an error response here!!!!
         apiClient.registerDevice(sign);
+
         persistentStorage.put(BelfiusConstants.Storage.DEVICE_TOKEN, deviceToken);
 
         apiClient.closeSession(sessionStorage.getSessionId());
