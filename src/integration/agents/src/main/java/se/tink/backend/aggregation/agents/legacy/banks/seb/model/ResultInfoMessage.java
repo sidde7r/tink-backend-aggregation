@@ -28,6 +28,9 @@ public class ResultInfoMessage {
                     .put(
                             "PCB0354",
                             "Transfer validation: Destination account doesn't exist at bank") // Seems to be a specific error for SEB destination accounts
+                    .put(
+                            "2000",
+                            "Transfer validation: To protect your money from fraudulent attempts, we have blocked this transfer. We can help you transfer the money by calling us at 0771-365 365.")
                     .build();
 
     public String TableName;
