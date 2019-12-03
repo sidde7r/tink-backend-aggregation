@@ -1,13 +1,19 @@
 package se.tink.sa.agent.pt.ob.sibs.rest.client;
 
+import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import se.tink.sa.agent.pt.ob.sibs.SibsConstants;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.common.AbstractSibsRestClient;
-import se.tink.sa.agent.pt.ob.sibs.rest.client.common.CommonSibsRequestRequest;
+import se.tink.sa.agent.pt.ob.sibs.rest.client.common.CommonAccountSibsRequestRequest;
+import se.tink.sa.agent.pt.ob.sibs.rest.client.common.CommonAccountTransactionsSibsRequest;
+import se.tink.sa.agent.pt.ob.sibs.rest.client.common.CommonSibsRequest;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.rpc.AccountsResponse;
+import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.rpc.BalancesResponse;
+import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.rpc.TransactionsResponse;
 
 @Component
 public class SibsAccountInformationClient extends AbstractSibsRestClient {
@@ -26,7 +32,7 @@ public class SibsAccountInformationClient extends AbstractSibsRestClient {
     @Value("${bank.rest.service.accounts.path.transactions}")
     private String accountTransactionsPath;
 
-    public AccountsResponse fetchAccounts(CommonSibsRequestRequest request) {
+    public AccountsResponse fetchAccounts(CommonSibsRequest request) {
         String url = prepareUrl(baseUrl, accountsPath);
 
         Map<String, String> params = sibsParamsSet(request.getBankCode());
@@ -44,4 +50,87 @@ public class SibsAccountInformationClient extends AbstractSibsRestClient {
 
         return response.getBody();
     }
+
+    public BalancesResponse getAccountBalances(CommonAccountSibsRequestRequest request) {
+
+        String url = prepareUrl(baseUrl, accountBalancesPath);
+
+        Map<String, String> params = sibsParamsSet(request.getBankCode());
+        params.put(
+                SibsConstants.QueryKeys.PSU_INVOLVED,
+                BooleanUtils.toStringTrueFalse(request.getIsPsuInvolved()));
+        params.put(SibsConstants.PathParameterKeys.ACCOUNT_ID, request.getAccountId());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        headers.set(SibsConstants.HeaderKeys.CONSENT_ID, request.getConsentId());
+        HttpEntity entity = new HttpEntity(headers);
+
+        ResponseEntity<BalancesResponse> response =
+                restTemplate.exchange(url, HttpMethod.GET, entity, BalancesResponse.class, params);
+
+        return response.getBody();
+    }
+
+    public TransactionsResponse getAccountTransactions(
+            CommonAccountTransactionsSibsRequest request) {
+
+        String url = prepareUrl(baseUrl, accountTransactionsPath);
+
+        Map<String, String> params = sibsParamsSet(request.getBankCode());
+        params.put(
+                SibsConstants.QueryKeys.PSU_INVOLVED,
+                BooleanUtils.toStringTrueFalse(request.getIsPsuInvolved()));
+        params.put(SibsConstants.PathParameterKeys.ACCOUNT_ID, request.getAccountId());
+        params.put(SibsConstants.QueryKeys.WITH_BALANCE, TRUE);
+        params.put(SibsConstants.QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH);
+        params.put(SibsConstants.QueryKeys.DATE_FROM, request.getDateFromTransactionFetch());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        headers.set(SibsConstants.HeaderKeys.CONSENT_ID, request.getConsentId());
+        HttpEntity entity = new HttpEntity(headers);
+
+        ResponseEntity<TransactionsResponse> response =
+                restTemplate.exchange(
+                        url, HttpMethod.GET, entity, TransactionsResponse.class, params);
+
+        return response.getBody();
+    }
+
+    public TransactionsResponse getTransactionsForKey(
+            CommonAccountTransactionsSibsRequest request) {
+        String url = prepareUrl(baseUrl, request.getNextPageUri());
+
+        Map<String, String> params = new HashMap<>();
+        params.put(
+                SibsConstants.QueryKeys.PSU_INVOLVED,
+                BooleanUtils.toStringTrueFalse(request.getIsPsuInvolved()));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        headers.set(SibsConstants.HeaderKeys.CONSENT_ID, request.getConsentId());
+        HttpEntity entity = new HttpEntity(headers);
+
+        ResponseEntity<TransactionsResponse> response =
+                restTemplate.exchange(
+                        url, HttpMethod.GET, entity, TransactionsResponse.class, params);
+
+        return response.getBody();
+    }
+
+    //    public TransactionKeyPaginatorResponse<String> getAccountTransactions(
+    //            TransactionalAccount account) {
+    //        URL accountTransactions =
+    //                createUrl(SibsConstants.Urls.ACCOUNT_TRANSACTIONS)
+    //                        .parameter(PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier());
+    //        String transactionFetchFromDate = userState.getTransactionsFetchBeginDate(account);
+    //        return client.request(accountTransactions)
+    //                .queryParam(QueryKeys.WITH_BALANCE, TRUE)
+    //                .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
+    //                .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
+    //                .queryParam(QueryKeys.DATE_FROM, transactionFetchFromDate)
+    //                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
+    //                .get(TransactionsResponse.class);
+    //    }
 }

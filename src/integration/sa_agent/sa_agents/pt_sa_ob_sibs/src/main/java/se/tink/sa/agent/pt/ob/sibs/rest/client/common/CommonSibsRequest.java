@@ -4,8 +4,10 @@ import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class CommonSibsRequestRequest {
+public class CommonSibsRequest {
 
     private String bankCode;
     private String consentId;

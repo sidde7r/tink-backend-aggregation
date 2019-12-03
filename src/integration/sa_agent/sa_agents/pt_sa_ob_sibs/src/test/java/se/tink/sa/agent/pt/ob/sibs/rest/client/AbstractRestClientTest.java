@@ -3,6 +3,7 @@ package se.tink.sa.agent.pt.ob.sibs.rest.client;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
+import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.tink.sa.agent.pt.ob.sibs.SibsConstants;
@@ -49,5 +50,9 @@ public class AbstractRestClientTest {
                 valid90Days,
                 SibsConstants.FormValues.FREQUENCY_PER_DAY,
                 false);
+    }
+
+    protected String generateNewTestState() {
+        return UUID.randomUUID().toString().replace("-", "") + UUID_TINK_TAG;
     }
 }
