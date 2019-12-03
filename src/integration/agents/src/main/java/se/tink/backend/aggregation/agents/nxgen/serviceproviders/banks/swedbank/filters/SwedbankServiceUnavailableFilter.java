@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.filters;
 
 import io.vavr.control.Try;
+import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants.BankErrorMessage;
@@ -19,6 +21,12 @@ public class SwedbankServiceUnavailableFilter extends Filter {
         HttpResponse response = nextFilter(httpRequest);
 
         if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
+            // Swedbank return the content type in as
+            // Content-Type: : application/json;charset=UTF-8
+            // The additional ":" makes parsing the response fail
+
+            response.getHeaders().remove(HttpHeaders.CONTENT_TYPE);
+            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
             if (Try.of(() -> response.getBody(ErrorResponse.class))
                     .map(e -> e.hasErrorCode(BankErrorMessage.SERVICE_UNAVAILABLE))
                     .getOrElse(Boolean.FALSE)) {
