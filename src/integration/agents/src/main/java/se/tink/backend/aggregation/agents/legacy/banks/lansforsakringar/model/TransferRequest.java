@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 
+@JsonObject
 public class TransferRequest {
     private static final String FOUR_POINT_PRECISION_FORMAT_STRING = "0.0000";
 
