@@ -35,7 +35,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        ":standalone-agent-ob-sibs",
+        ":standalone-agent-ob-sibs-bin",
         "//src/integration/sa_agent/sa_agent_framework:sa-agent-framework",
         "//src/integration/sa_agent/sa_grpc_api:sa-grpc-api",
         "//third_party:standalone_agent_test_libs",

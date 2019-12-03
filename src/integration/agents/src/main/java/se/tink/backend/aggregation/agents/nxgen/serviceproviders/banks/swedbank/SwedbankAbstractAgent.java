@@ -102,7 +102,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration,
             SwedbankConfiguration configuration,
             SwedbankApiClientProvider apiClientProvider) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), true);
         this.agentsServiceConfiguration = agentsServiceConfiguration;
         configureHttpClient(client);
         swedbankStorage = new SwedbankStorage();
