@@ -520,7 +520,10 @@ public class BelfiusApiClient {
             BelfiusRequest.Builder builder,
             final ExecutionMode executionMode) {
         setSessionData(builder, executionMode);
-        String body = "request=" + urlEncode(SerializationUtils.serializeToString(builder.build()));
+        String body =
+                "request="
+                        + urlEncode(SerializationUtils.serializeToString(builder.build()))
+                                .replace("+", "%20");
         HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
         T response = parseBelfiusResponse(httpResponse, c);
         this.sessionStorage.incrementRequestCounter(executionMode);
