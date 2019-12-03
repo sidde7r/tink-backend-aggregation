@@ -26,23 +26,27 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class BankdataAgent extends NextGenerationAgent
+public class BankdataAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final BankdataApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final String baseUrl;
+    private final String baseAuthUrl;
 
     public BankdataAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
+            String baseUrl,
+            String baseAuthUrl) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BankdataApiClient(client, sessionStorage);
+        this.baseUrl = baseUrl;
+        this.baseAuthUrl = baseAuthUrl;
+        apiClient = new BankdataApiClient(client, sessionStorage, baseUrl, baseAuthUrl);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
-
-    protected abstract String getBaseUrl();
-
-    protected abstract String getBaseAuthUrl();
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -55,8 +59,6 @@ public abstract class BankdataAgent extends NextGenerationAgent
         BankdataConfiguration config =
                 getAgentConfigurationController()
                         .getAgentConfiguration(BankdataConfiguration.class);
-        config.setBaseUrl(getBaseUrl());
-        config.setBaseAuthUrl(getBaseAuthUrl());
         return config;
     }
 

@@ -16,32 +16,6 @@ public class BankdataConfiguration implements ClientConfiguration {
     @JsonProperty @Secret private String clientId;
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @SensitiveSecret private String apiKey;
-    @JsonProperty @Secret private String baseUrl;
-    @JsonProperty @Secret private String baseAuthUrl;
-
-    public String getBaseUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(baseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
-
-        return baseUrl;
-    }
-
-    public String getBaseAuthUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(baseAuthUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base Auth URL"));
-
-        return baseAuthUrl;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public void setBaseAuthUrl(String baseAuthUrl) {
-        this.baseAuthUrl = baseAuthUrl;
-    }
 
     public String getApiKey() {
         Preconditions.checkNotNull(
