@@ -4,14 +4,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class NemIdChallengeEntity {
-    private String key;
     private String keycardNo;
     private String tokenSerial;
-    private NemIdSecurityDeviceEntity securityDevice;
-
-    public String getKey() {
-        return key;
-    }
+    private String anyActiveCodeapps;
+    private NemIdSecurityDevice securityDevice;
 
     public String getKeycardNo() {
         return keycardNo;
@@ -21,7 +17,11 @@ public class NemIdChallengeEntity {
         return tokenSerial;
     }
 
-    public NemIdSecurityDeviceEntity getSecurityDevice() {
+    public String getAnyActiveCodeapps() {
+        return anyActiveCodeapps;
+    }
+
+    public NemIdSecurityDevice getSecurityDevice() {
         return securityDevice;
     }
 }

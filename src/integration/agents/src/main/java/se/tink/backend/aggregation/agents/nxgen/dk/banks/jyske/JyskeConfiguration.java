@@ -16,7 +16,6 @@ public class JyskeConfiguration implements ClientConfiguration {
     @JsonProperty @Secret private String productNemIdPublicKeyB64;
     @JsonProperty @Secret private String aesPadding;
     @JsonProperty @Secret private String mobileServicePublicKeyB64;
-
     private RSAPublicKey productNemIdPublicKey;
     private RSAPublicKey mobileServicePublicKey;
 

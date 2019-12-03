@@ -2,52 +2,25 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.en
 
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.security.Encryptable;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppPollResponse;
 
 @JsonObject
 public class NemIdEnrollEntity implements Encryptable {
-    private String key;
-    private String keycardNo;
-    private String keyNo;
+    private String codeappSerialNo;
+    private String responseSignature;
+    private String userResponse;
     private String mobileCode;
-    private NemIdSecurityDeviceEntity securityDevice;
+    private NemIdSecurityDevice securityDevice;
 
-    public String getKeyNo() {
-        return keyNo;
-    }
+    // Empty contstructor required for serialization
+    public NemIdEnrollEntity() {}
 
-    public void setKeyNo(String keyNo) {
-        this.keyNo = keyNo;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getKeycardNo() {
-        return keycardNo;
-    }
-
-    public void setKeycardNo(String keycardNo) {
-        this.keycardNo = keycardNo;
-    }
-
-    public String getMobileCode() {
-        return mobileCode;
-    }
-
-    public void setMobileCode(String mobileCode) {
-        this.mobileCode = mobileCode;
-    }
-
-    public NemIdSecurityDeviceEntity getSecurityDevice() {
-        return securityDevice;
-    }
-
-    public void setSecurityDevice(NemIdSecurityDeviceEntity securityDevice) {
+    public NemIdEnrollEntity(
+            NemIdCodeAppPollResponse response, String code, NemIdSecurityDevice securityDevice) {
+        this.codeappSerialNo = response.getCodeAppSerialNumber();
+        this.responseSignature = response.getPayload().getSignedResponse();
+        this.userResponse = response.getPayload().getResponse();
+        this.mobileCode = code;
         this.securityDevice = securityDevice;
     }
 }

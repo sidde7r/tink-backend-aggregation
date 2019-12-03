@@ -4,17 +4,24 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.sec
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class NemIdLoginEncryptionEntity implements Encryptable {
+public class NemIdLoginInstallIdEncryptionEntity implements Encryptable {
+
+    private final String installId;
     private final String userId;
     private final String pinCode;
 
-    public NemIdLoginEncryptionEntity(String userId, String pinCode) {
+    public NemIdLoginInstallIdEncryptionEntity(String userId, String pinCode, String installId) {
         this.userId = userId;
         this.pinCode = pinCode;
+        this.installId = installId;
     }
 
     public String getUserId() {
         return userId;
+    }
+
+    public String getInstallId() {
+        return installId;
     }
 
     public String getPinCode() {

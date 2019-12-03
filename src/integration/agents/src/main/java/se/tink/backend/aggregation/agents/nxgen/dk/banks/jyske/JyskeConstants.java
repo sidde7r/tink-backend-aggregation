@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class JyskeConstants {
 
+    public static final String INTEGRATION_NAME = "jyskebank-dk";
     public static final Charset CHARSET = Charsets.UTF_8;
 
     public static final class Url {
@@ -17,11 +18,12 @@ public final class JyskeConstants {
                 "https://mobile-services.jyskebank.dk/mobilebank.services/rest";
 
         public static final URL NEMID_INIT = toBankDataUrl("/nemid/init");
-
         public static final URL NEMID_GET_CHALLANGE = toBankDataUrl("/nemid/get_challange");
-
         public static final URL NEMID_ENROLL = toBankDataUrl("/nemid/inroll");
         public static final URL NEMID_LOGIN = toBankDataUrl("/nemid/login_with_installid_prop");
+        public static final URL GENERATE_CODE = toBankDataUrl("/nemid/generatecode");
+        public static final URL CHANGE_TO_KEYCARD = toBankDataUrl("/nemid/changetokeycard");
+
         public static final URL GET_ACCOUNTS_WITH_EXTERNALS = toBankDataUrl("/accounts");
 
         public static final URL GET_TRANSACTIONS_WITH_EXTERNALS =
@@ -66,7 +68,13 @@ public final class JyskeConstants {
     }
 
     public static final class Storage {
+        public static final String TOKEN = "token";
         public static final String INSTALL_ID = "installId";
+        public static final String USER_ID = "userId";
+        public static final String PIN_CODE = "pin";
+        public static final String NEMID_CHALLENGE_ENTITY = "nemidChallengeEntity";
+        public static final String NEMID_LOGIN_ENTITY = "nemidLoginResponse";
+        public static final String KEYCARD_CHALLENGE_ENTITY = "keycardChallengeEntity";
     }
 
     public static final class ErrorCode {
