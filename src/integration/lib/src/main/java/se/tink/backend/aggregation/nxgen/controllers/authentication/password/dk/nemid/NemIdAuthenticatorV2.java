@@ -11,7 +11,7 @@ public interface NemIdAuthenticatorV2 {
     //  - Signed NemId parameters which the iframe use
     //
     // This is the standard way of operations according to the NemId implementation guide.
-    NemIdParametersV1 getNemIdParameters() throws AuthenticationException;
+    NemIdParametersV2 getNemIdParameters() throws AuthenticationException;
 
     // Exchange the NemId token for a service provider authentication token
     String exchangeNemIdToken(String nemIdToken)

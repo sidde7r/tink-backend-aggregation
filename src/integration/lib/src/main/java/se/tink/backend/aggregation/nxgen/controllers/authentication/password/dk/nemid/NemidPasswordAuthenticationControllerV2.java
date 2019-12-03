@@ -33,16 +33,17 @@ public class NemidPasswordAuthenticationControllerV2
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
 
-        String username = credentials.getField(Field.Key.USERNAME);
-        String password = credentials.getField(Field.Key.PASSWORD);
+        final String username = credentials.getField(Field.Key.USERNAME);
+        final String password = credentials.getField(Field.Key.PASSWORD);
+        final String pinCode = credentials.getField(Field.Key.ACCESS_PIN);
 
-        final NemIdParametersV1 nemIdParameters = authenticator.getNemIdParameters();
+        final NemIdParametersV2 nemIdParameters = authenticator.getNemIdParameters();
 
         final String token = iFrameController.doLoginWith(username, password, nemIdParameters);
 
         final String installId = authenticator.exchangeNemIdToken(token);
 
-        authenticateWithInstallId(username, password, installId);
+        authenticateWithInstallId(username, pinCode, installId);
 
         // TODO: Evaluate if installId should be stored like this.
         storage.put(NEMID_INSTALL_ID, installId);

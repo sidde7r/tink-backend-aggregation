@@ -195,7 +195,7 @@ public class WebdriverHelper {
     }
 
     public void switchToIframeAndExecuteJavascript(
-            By iframe, By input, NemIdParametersV1 nemIdParameters) {
+            By iframe, By input, NemIdParametersV2 nemIdParameters) {
 
         for (int i = 0; i < 5; i++) {
 
