@@ -8,7 +8,6 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.standalone.GenericAgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester.Builder;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -39,12 +38,12 @@ public class AuthenticationService {
         this.strongAuthenticationState = strongAuthenticationState;
     }
 
-    public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request) {
+    public ThirdPartyAppAuthenticationPayload login(SteppableAuthenticationRequest request) {
         AuthenticationRequest authenticationRequest = mapRequest(request);
         AuthenticationResponse response =
                 progressiveAuthAgentServiceBlockingStub.login(authenticationRequest);
-        SteppableAuthenticationResponse steppableAuthenticationResponse = mapResponse(response);
-        return steppableAuthenticationResponse;
+        ThirdPartyAppAuthenticationPayload payload = mapResponse(response);
+        return payload;
     }
 
     private AuthenticationRequest mapRequest(final SteppableAuthenticationRequest request) {
@@ -158,7 +157,7 @@ public class AuthenticationService {
         return Credentials.CredentialsStatus.values()[credentialsStatus.ordinal()];
     }
 
-    private SteppableAuthenticationResponse mapResponse(
+    private ThirdPartyAppAuthenticationPayload mapResponse(
             final AuthenticationResponse authenticationResponse) {
         final Builder supplementInformationRequesterBuilder =
                 new se.tink.backend.aggregation.nxgen.controllers.authentication
@@ -179,8 +178,7 @@ public class AuthenticationService {
                             authenticationResponse.getSupplementalWaitRequest()));
         }
 
-        return SteppableAuthenticationResponse.intermediateResponse(
-                authenticationResponse.getStepId(), supplementInformationRequesterBuilder.build());
+        return supplementInformationRequesterBuilder.build().getThirdPartyAppPayload().get();
     }
 
     private SupplementalWaitRequest mapSupplementalWaitRequest(
