@@ -178,6 +178,7 @@ public class IcaBankenConstants {
 
     public static final class Error {
         public static final int MULTIPLE_LOGIN_ERROR_CODE = 1001;
+        public static final int GENERIC_ERROR_CODE = 1000;
     }
 
     public enum UserMessage implements LocalizableEnum {
