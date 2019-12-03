@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid;
 
-import java.util.List;
-import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 
-public interface NemIdAuthenticator {
+public interface NemIdAuthenticatorV2 {
     // The NemIdParameters is a html/javscript blob delivered by the service provider, it must
     // contain:
     //  - An iframe pointing to https://applet.danid.dk/...
@@ -15,8 +14,9 @@ public interface NemIdAuthenticator {
     NemIdParameters getNemIdParameters() throws AuthenticationException;
 
     // Exchange the NemId token for a service provider authentication token
-    void exchangeNemIdToken(String nemIdToken)
+    String exchangeNemIdToken(String nemIdToken)
             throws AuthenticationException, AuthorizationException;
 
-    List<Cookie> getCookies();
+    void authenticateUsingInstallId(String userId, String pinCode, String installId)
+            throws SessionException;
 }

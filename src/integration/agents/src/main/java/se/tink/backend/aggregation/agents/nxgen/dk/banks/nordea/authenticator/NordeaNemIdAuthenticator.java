@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
@@ -104,5 +106,10 @@ public class NordeaNemIdAuthenticator implements NemIdAuthenticator {
                         .getAuthenticationToken()
                         .getToken();
         bankClient.setToken(token);
+    }
+
+    @Override
+    public List<Cookie> getCookies() {
+        return Collections.EMPTY_LIST;
     }
 }
