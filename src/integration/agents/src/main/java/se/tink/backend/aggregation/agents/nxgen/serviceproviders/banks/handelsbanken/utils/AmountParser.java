@@ -12,7 +12,8 @@ public class AmountParser {
     private final String text;
 
     public AmountParser(String text) {
-        this.text = text;
+        // Replace all whitespaces, and explicitly non breaking space, as it was not covered by \s
+        this.text = text.replaceAll("[\\s\\u00a0]+", "");
     }
 
     public Optional<Double> parse() {
