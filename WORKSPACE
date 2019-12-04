@@ -2394,6 +2394,12 @@ maven_jar(
     sha1 = "59661ca47034c6a72e255e5803ae4019d2bd55c9",
 )
 
+maven_jar(
+    name = "jbrowserdriver",
+    artifact = "com.machinepublishers:jbrowserdriver:1.1.1",
+    sha1 = "f7d706f639802de9f8bdd689bcabc53576c8b63d",
+)
+
 ### === END === Java Spark dependencies
 
 # GRPC/Protobuf rules

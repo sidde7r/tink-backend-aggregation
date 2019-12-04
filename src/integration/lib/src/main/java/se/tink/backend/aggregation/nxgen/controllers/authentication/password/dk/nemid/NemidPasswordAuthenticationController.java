@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 
-public class NemidPasswordAuthenticationController extends NemidAuthenticationController
+public class NemidPasswordAuthenticationController extends NemidAuthenticationControllerV1
         implements PasswordAuthenticator {
 
     public NemidPasswordAuthenticationController(NemIdAuthenticator authenticator) {
@@ -14,6 +14,8 @@ public class NemidPasswordAuthenticationController extends NemidAuthenticationCo
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
+        // TODO: readd NemidAuthenticationControllerV1
+
         try {
             doLoginWith(username, password);
             passTokenToAuthenticator();
@@ -23,7 +25,5 @@ public class NemidPasswordAuthenticationController extends NemidAuthenticationCo
     }
 
     @Override
-    void clickLogin() {
-        clickButton(SUBMIT_BUTTON);
-    }
+    void clickLogin() {}
 }
