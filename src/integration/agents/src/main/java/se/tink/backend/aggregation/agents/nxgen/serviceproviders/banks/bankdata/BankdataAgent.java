@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata;
 
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -10,7 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.TimeoutFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataNemIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataPinAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataInvestmentFetcher;
@@ -20,9 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdIFrameController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemidPasswordAuthenticationControllerV2;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -72,15 +69,7 @@ public class BankdataAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-
-        BankdataNemIdAuthenticator nemIdAuthenticator =
-                new BankdataNemIdAuthenticator(bankClient, sessionStorage);
-
-        NemidPasswordAuthenticationControllerV2 nemidPasswordAuthenticationController =
-                new NemidPasswordAuthenticationControllerV2(
-                        new NemIdIFrameController(), nemIdAuthenticator, sessionStorage);
-
-        return new TypedAuthenticationController(nemidPasswordAuthenticationController);
+        return new PasswordAuthenticationController(new BankdataPinAuthenticator(bankClient));
     }
 
     @Override
@@ -170,10 +159,6 @@ public class BankdataAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new BankdataSessionHandler(
-                credentials.getField(Key.USERNAME),
-                credentials.getField(Key.PASSWORD),
-                new BankdataNemIdAuthenticator(bankClient, sessionStorage),
-                sessionStorage);
+        return new BankdataSessionHandler();
     }
 }

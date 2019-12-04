@@ -4,6 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.interfaces.RSAPublicKey;
+import org.apache.commons.codec.binary.Base64;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.security.Token;
+import se.tink.backend.aggregation.agents.utils.crypto.AES;
 
 // TODO: Remove and merge into other classes
 @Deprecated
@@ -17,6 +20,13 @@ public class BankdataSecurityHelper {
         } catch (CertificateException e) {
             throw new SecurityException("Certificate error", e);
         }
+    }
+
+    public static byte[] encryptWithAESAndBase64Encode(byte[] dataToEnc, Token token) {
+        // NOTE: Jyske always prepend 16 bytes junk data to the data for encryption, and ignored in
+        // decryption.
+        // So it is independent on the IV value.
+        return Base64.encodeBase64(AES.encryptCbc(token.getBytes(), new byte[16], dataToEnc));
     }
 
     public static String buildJSONData(String keyId, String publicKey) {
