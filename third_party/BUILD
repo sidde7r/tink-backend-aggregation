@@ -1847,6 +1847,15 @@ java_plugin(
 )
 
 java_library(
+    name = "snakeyaml",
+    licenses = ["notice"],
+    visibility = ["//visibility:public"],
+    exports = [
+        "@org_yaml_snakeyaml//jar",
+    ],
+)
+
+java_library(
     name = "standalone_agent_libs",
     licenses = ["notice"],
     visibility = ["//visibility:public"],

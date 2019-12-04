@@ -1,5 +1,5 @@
-eidasProxy:
-  host: https://127.0.0.1:12443
-  caPath: data/test/qsealc/proxytls.crt
-  tlsCrtPath: data/test/qsealc/proxytls.crt
-  tlsKeyPath: data/test/qsealc/proxytls.key
+host: http://127.0.0.1:12345
+caPath: data/test/qsealc/ca.crt
+tlsCrtPath: data/test/qsealc/proxytls.crt
+tlsKeyPath: data/test/qsealc/proxytls.key
+environment: development
