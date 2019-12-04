@@ -111,10 +111,16 @@ public class AutoAuthenticationProgressiveController
             return Collections.singletonList(
                     new AuthenticationStep() {
                         @Override
-                        public Optional<SupplementInformationRequester> execute(
-                                AuthenticationRequest request)
+                        public SupplementInformationRequester respond(AuthenticationRequest request)
                                 throws AuthenticationException, AuthorizationException {
-                            return Optional.empty();
+                            return SupplementInformationRequester.empty();
+                        }
+
+                        @Override
+                        public Optional<SupplementInformationRequester> execute(
+                                AuthenticationRequest request, Object persistentData)
+                                throws AuthenticationException, AuthorizationException {
+                            throw new AssertionError("Not yet implemented");
                         }
                     });
         } catch (SessionException autoException) {

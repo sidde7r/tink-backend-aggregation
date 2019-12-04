@@ -8,17 +8,21 @@ import org.assertj.core.util.Preconditions;
  * In progressive authentication, carry request information such as step, userInputs and credential.
  */
 public final class SteppableAuthenticationRequest implements AuthenticationSteppable {
-    private final String stepIdentifier;
+    private final Optional<String> stepIdentifier;
     private final AuthenticationRequest payload;
+    private String persistentData;
 
     private SteppableAuthenticationRequest(
-            final String stepIdentifier, final AuthenticationRequest payload) {
-        this.stepIdentifier = stepIdentifier;
+            final String stepIdentifier,
+            final AuthenticationRequest payload,
+            final String persistentData) {
+        this.stepIdentifier = Optional.of(stepIdentifier);
         this.payload = payload;
+        this.persistentData = persistentData;
     }
 
     private SteppableAuthenticationRequest() {
-        stepIdentifier = null;
+        stepIdentifier = Optional.empty();
         payload = AuthenticationRequest.empty();
     }
 
@@ -27,17 +31,23 @@ public final class SteppableAuthenticationRequest implements AuthenticationStepp
     }
 
     public static SteppableAuthenticationRequest subsequentRequest(
-            @Nonnull final String stepIdentifier, @Nonnull final AuthenticationRequest payload) {
+            @Nonnull final String stepIdentifier,
+            @Nonnull final AuthenticationRequest payload,
+            final String persistentData) {
         return new SteppableAuthenticationRequest(
-                stepIdentifier, Preconditions.checkNotNull(payload));
+                stepIdentifier, Preconditions.checkNotNull(payload), persistentData);
     }
 
     @Override
     public Optional<String> getStepIdentifier() {
-        return Optional.ofNullable(stepIdentifier);
+        return stepIdentifier;
     }
 
     public AuthenticationRequest getPayload() {
         return payload;
+    }
+
+    public String getPersistentData() {
+        return persistentData;
     }
 }

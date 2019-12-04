@@ -35,7 +35,9 @@ public final class ProgressiveLoginExecutor {
                     payload.getThirdPartyAppPayload().get());
 
             return SteppableAuthenticationRequest.subsequentRequest(
-                    stepResponse.getStepIdentifier().get(), AuthenticationRequest.empty());
+                    stepResponse.getStepIdentifier().get(),
+                    AuthenticationRequest.empty(),
+                    stepResponse.getPersistentData());
         }
 
         if (payload.getSupplementalWaitRequest().isPresent()) {
@@ -53,7 +55,8 @@ public final class ProgressiveLoginExecutor {
 
             return SteppableAuthenticationRequest.subsequentRequest(
                     stepResponse.getStepIdentifier().get(),
-                    AuthenticationRequest.fromCallbackData(callbackData));
+                    AuthenticationRequest.fromCallbackData(callbackData),
+                    stepResponse.getPersistentData());
         }
 
         if (payload.getFields().isPresent()) {
@@ -64,7 +67,8 @@ public final class ProgressiveLoginExecutor {
 
             return SteppableAuthenticationRequest.subsequentRequest(
                     stepResponse.getStepIdentifier().get(),
-                    AuthenticationRequest.fromUserInputs(map));
+                    AuthenticationRequest.fromUserInputs(map),
+                    stepResponse.getPersistentData());
         }
 
         throw new IllegalStateException("The authentication response payload contained nothing");

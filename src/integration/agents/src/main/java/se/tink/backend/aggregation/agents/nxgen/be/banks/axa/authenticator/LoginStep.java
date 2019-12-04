@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaStorage;
@@ -30,7 +32,7 @@ final class LoginStep implements AuthenticationStep {
     }
 
     @Override
-    public Optional<SupplementInformationRequester> execute(final AuthenticationRequest request) {
+    public SupplementInformationRequester respond(final AuthenticationRequest request) {
         final String basicAuth = AxaConstants.Request.BASIC_AUTH;
         final String ucrid = generateUcrid();
         final GenerateChallengeResponse challengeResponse =
@@ -45,10 +47,17 @@ final class LoginStep implements AuthenticationStep {
         storage.sessionStoreUcrid(ucrid);
 
         // Request supplemental info from card reader
-        return Optional.of(new SupplementInformationRequester.Builder().withFields(fields).build());
+        return SupplementInformationRequester.fromSupplementalFields(fields);
     }
 
     private static String generateUcrid() {
         return RandomStringUtils.randomNumeric(32);
+    }
+
+    @Override
+    public Optional<SupplementInformationRequester> execute(
+            AuthenticationRequest request, Object persistentData)
+            throws AuthenticationException, AuthorizationException {
+        throw new AssertionError("Not yet implemented");
     }
 }

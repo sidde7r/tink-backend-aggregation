@@ -10,6 +10,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 
 public final class ProgressiveAuthAgentTest {
@@ -44,7 +46,7 @@ public final class ProgressiveAuthAgentTest {
                     @Override
                     public SteppableAuthenticationResponse login(
                             final SteppableAuthenticationRequest request) {
-                        return SteppableAuthenticationResponse.finalResponse();
+                        return SteppableAuthenticationResponse.finalResponse("");
                     }
                 };
 
@@ -54,7 +56,7 @@ public final class ProgressiveAuthAgentTest {
         final SteppableAuthenticationResponse response = agent.login(request);
 
         Assert.assertEquals(Optional.empty(), response.getStepIdentifier());
-        Assert.assertNull(response.getSupplementInformationRequester());
+        Assert.assertFalse(response.getSupplementInformationRequester().getFields().isPresent());
     }
 
     @Test
@@ -63,13 +65,19 @@ public final class ProgressiveAuthAgentTest {
         class LoginStep implements AuthenticationStep {
 
             @Override
-            public Optional<SupplementInformationRequester> execute(
-                    final AuthenticationRequest request) {
+            public SupplementInformationRequester respond(final AuthenticationRequest request) {
 
                 // Unless the following is true, the authenticator would throw INCORRECT_CREDENTIALS
                 Assert.assertEquals(1, request.getUserInputsAsList().size());
                 Assert.assertEquals("133700", request.getUserInputsAsList().get(0));
 
+                return SupplementInformationRequester.empty();
+            }
+
+            @Override
+            public Optional<SupplementInformationRequester> execute(
+                    AuthenticationRequest request, Object persistentData)
+                    throws AuthenticationException, AuthorizationException {
                 return Optional.empty();
             }
         }
@@ -100,9 +108,8 @@ public final class ProgressiveAuthAgentTest {
                                             .build();
 
                             final SupplementInformationRequester payload =
-                                    new SupplementInformationRequester.Builder()
-                                            .withFields(Arrays.asList(description, input))
-                                            .build();
+                                    SupplementInformationRequester.fromSupplementalFields(
+                                            Arrays.asList(description, input));
 
                             response =
                                     SteppableAuthenticationResponse.intermediateResponse(
@@ -113,8 +120,10 @@ public final class ProgressiveAuthAgentTest {
                                     AuthenticationRequest.fromUserInputs(
                                                     request.getPayload().getUserInputs())
                                             .withCredentials(new Credentials());
+                            final SupplementInformationRequester payload =
+                                    new LoginStep().respond(requestPayload);
 
-                            response = SteppableAuthenticationResponse.finalResponse();
+                            response = SteppableAuthenticationResponse.finalResponse("");
                         }
 
                         return response;
@@ -127,7 +136,7 @@ public final class ProgressiveAuthAgentTest {
         final SteppableAuthenticationResponse response1 = agent.login(request1);
 
         Assert.assertTrue(response1.getStepIdentifier().isPresent());
-        Assert.assertEquals(LoginStep.class.getName(), response1.getStepIdentifier().get());
+        Assert.assertEquals(LoginStep.class, response1.getStepIdentifier().get());
         Assert.assertTrue(response1.getSupplementInformationRequester().getFields().isPresent());
         Assert.assertEquals(
                 2, response1.getSupplementInformationRequester().getFields().get().size());
@@ -139,11 +148,12 @@ public final class ProgressiveAuthAgentTest {
         final SteppableAuthenticationRequest request2 =
                 SteppableAuthenticationRequest.subsequentRequest(
                         response1.getStepIdentifier().get(),
-                        AuthenticationRequest.fromUserInputs(userInputs));
+                        AuthenticationRequest.fromUserInputs(userInputs),
+                        "");
 
         final SteppableAuthenticationResponse response2 = agent.login(request2);
 
         Assert.assertEquals(Optional.empty(), response2.getStepIdentifier());
-        Assert.assertNull(response2.getSupplementInformationRequester());
+        Assert.assertFalse(response2.getSupplementInformationRequester().getFields().isPresent());
     }
 }

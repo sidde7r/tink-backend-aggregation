@@ -10,10 +10,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementIn
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 
-public class ThirdPartyAppAuthenticationStep implements AuthenticationStep {
+public class ThirdPartyAppAuthenticationStep<T> implements AuthenticationStep<T> {
 
     public interface CallbackProcessor<T> {
-        void process(Map<String, String> callbackData)
+        void process(Map<String, String> callbackData, T persistentData)
                 throws AuthenticationException, AuthorizationException;
     }
 
@@ -31,7 +31,8 @@ public class ThirdPartyAppAuthenticationStep implements AuthenticationStep {
     }
 
     @Override
-    public Optional<SupplementInformationRequester> execute(AuthenticationRequest request)
+    public Optional<SupplementInformationRequester> execute(
+            AuthenticationRequest request, T persistentData)
             throws AuthenticationException, AuthorizationException {
         if (request.getCallbackData().isEmpty()) {
             return Optional.of(
@@ -40,7 +41,7 @@ public class ThirdPartyAppAuthenticationStep implements AuthenticationStep {
                             .withSupplementalWaitRequest(supplementalWaitRequest)
                             .build());
         }
-        callbackProcessor.process(request.getCallbackData());
+        callbackProcessor.process(request.getCallbackData(), persistentData);
         return Optional.empty();
     }
 }

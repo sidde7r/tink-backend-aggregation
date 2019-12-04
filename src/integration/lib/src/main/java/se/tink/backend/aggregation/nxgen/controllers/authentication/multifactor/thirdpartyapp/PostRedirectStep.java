@@ -16,11 +16,18 @@ final class PostRedirectStep implements AuthenticationStep {
     }
 
     @Override
-    public Optional<SupplementInformationRequester> execute(final AuthenticationRequest request)
+    public SupplementInformationRequester respond(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
         authenticator.collect(request.getCallbackData());
 
-        return Optional.empty();
+        return SupplementInformationRequester.empty();
+    }
+
+    @Override
+    public Optional<SupplementInformationRequester> execute(
+            AuthenticationRequest request, Object persistentData)
+            throws AuthenticationException, AuthorizationException {
+        throw new AssertionError("Not yet implemented");
     }
 }

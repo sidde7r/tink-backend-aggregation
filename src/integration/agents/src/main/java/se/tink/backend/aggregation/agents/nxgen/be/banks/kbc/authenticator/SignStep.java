@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator;
 
-import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -36,7 +36,7 @@ final class SignStep implements AuthenticationStep {
     }
 
     @Override
-    public Optional<SupplementInformationRequester> execute(final AuthenticationRequest request)
+    public SupplementInformationRequester respond(final AuthenticationRequest request)
             throws LoginException, AuthorizationException {
         final Credentials credentials = request.getCredentials();
         final String panNr =
@@ -78,9 +78,15 @@ final class SignStep implements AuthenticationStep {
         final String signTypeId = apiClient.signTypeManual(signingId, cipherKey);
         final String signChallengeCode = apiClient.signChallenge(signTypeId, signingId, cipherKey);
 
-        List<Field> fields =
+        return SupplementInformationRequester.fromSupplementalFields(
                 supplementalInformationFormer.formChallengeResponseFields(
-                        Key.SIGN_CODE_DESCRIPTION, Key.SIGN_CODE_INPUT, signChallengeCode);
-        return Optional.of(new SupplementInformationRequester.Builder().withFields(fields).build());
+                        Key.SIGN_CODE_DESCRIPTION, Key.SIGN_CODE_INPUT, signChallengeCode));
+    }
+
+    @Override
+    public Optional<SupplementInformationRequester> execute(
+            AuthenticationRequest request, Object persistentData)
+            throws AuthenticationException, AuthorizationException {
+        throw new AssertionError("Not yet implemented");
     }
 }

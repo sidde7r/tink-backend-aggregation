@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 
@@ -20,6 +21,30 @@ public final class SupplementInformationRequester {
 
     public static SupplementInformationRequester empty() {
         return new SupplementInformationRequester();
+    }
+
+    @Deprecated
+    public static SupplementInformationRequester fromSupplementalFields(
+            @Nonnull List<Field> fields) {
+        final SupplementInformationRequester response = new SupplementInformationRequester();
+        response.fields = ImmutableList.copyOf(fields);
+        return response;
+    }
+
+    @Deprecated
+    public static SupplementInformationRequester openThirdPartyApp(
+            final ThirdPartyAppAuthenticationPayload payload) {
+        final SupplementInformationRequester response = new SupplementInformationRequester();
+        response.payload = payload;
+        return response;
+    }
+
+    @Deprecated
+    public static SupplementInformationRequester requestWaitingForSupplementalInformation(
+            final SupplementalWaitRequest supplementalWaitRequest) {
+        final SupplementInformationRequester response = new SupplementInformationRequester();
+        response.supplementalWaitRequest = supplementalWaitRequest;
+        return response;
     }
 
     public Optional<ImmutableList<Field>> getFields() {

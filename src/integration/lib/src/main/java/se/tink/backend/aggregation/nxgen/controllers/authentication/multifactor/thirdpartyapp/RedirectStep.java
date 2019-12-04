@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
@@ -16,7 +18,7 @@ final class RedirectStep implements AuthenticationStep {
     }
 
     @Override
-    public Optional<SupplementInformationRequester> execute(final AuthenticationRequest request) {
+    public SupplementInformationRequester respond(final AuthenticationRequest request) {
 
         SupplementalWaitRequest waitRequest =
                 new SupplementalWaitRequest(
@@ -24,9 +26,13 @@ final class RedirectStep implements AuthenticationStep {
                         authenticator.getWaitForMinutes(),
                         TimeUnit.MINUTES);
 
-        return Optional.of(
-                new SupplementInformationRequester.Builder()
-                        .withSupplementalWaitRequest(waitRequest)
-                        .build());
+        return SupplementInformationRequester.requestWaitingForSupplementalInformation(waitRequest);
+    }
+
+    @Override
+    public Optional<SupplementInformationRequester> execute(
+            AuthenticationRequest request, Object persistentData)
+            throws AuthenticationException, AuthorizationException {
+        throw new AssertionError("Not yet implemented");
     }
 }
