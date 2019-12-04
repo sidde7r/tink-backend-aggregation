@@ -25,10 +25,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstants.ErrorStrings;
 
-public abstract class NemidAuthenticationControllerV1 {
+public abstract class NemidAuthenticationController {
 
     private static final AggregationLogger LOGGER =
-            new AggregationLogger(NemidAuthenticationControllerV1.class);
+            new AggregationLogger(NemidAuthenticationController.class);
     private static final Pattern PATTERN_INCORRECT_CREDENTIALS =
             Pattern.compile("^incorrect (user|password).*");
 
@@ -60,7 +60,7 @@ public abstract class NemidAuthenticationControllerV1 {
     private final NemIdAuthenticator authenticator;
     private WebDriver driver;
 
-    public NemidAuthenticationControllerV1(NemIdAuthenticator authenticator) {
+    public NemidAuthenticationController(NemIdAuthenticator authenticator) {
         this.authenticator = authenticator;
     }
 
@@ -216,7 +216,7 @@ public abstract class NemidAuthenticationControllerV1 {
                     "--load-images=false",
                     // For debugging, activate these:
                     //                "--webdriver-loglevel=DEBUG",
-                    "--debug=true",
+                    // "--debug=true",
                     //                "--proxy=127.0.0.1:8888",
                     //                "--ignore-ssl-errors=true",
                     //                "--webdriver-logfile=/tmp/phantomjs.log"

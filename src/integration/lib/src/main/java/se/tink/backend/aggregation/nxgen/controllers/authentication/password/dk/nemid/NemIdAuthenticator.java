@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid;
 
-import java.util.List;
-import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 
@@ -17,6 +15,4 @@ public interface NemIdAuthenticator {
     // Exchange the NemId token for a service provider authentication token
     void exchangeNemIdToken(String nemIdToken)
             throws AuthenticationException, AuthorizationException;
-
-    List<Cookie> getCookies();
 }

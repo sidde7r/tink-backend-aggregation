@@ -11,8 +11,6 @@ public class NemIdConstants {
         public static final String NEMID_NOT_ACTIVATED = "Enter activation password";
     }
 
-    // TODO: make sure Nordea will use the old one
-
     // This html is taken from Nordea DK iOS and android. It has been modified to only include
     // necessary parts.
     public static final String BASE_HTML =
@@ -22,12 +20,7 @@ public class NemIdConstants {
                     + "        <script>\n"
                     + "            window.addEventListener(\"message\", function(e) {\n"
                     + "                var message = JSON.parse(e.data);\n"
-                    + " console.log('test', message, JSON.stringify(message));\n"
-                    + "               if (message.command === 'SendParameters') {\n"
-                    + "                     var params = document.getElementById('nemid_parameters').innerHTML;\n"
-                    + "                     var postMessage = {command: 'parameters', content: params };\n"
-                    + "                     document.getElementById('nemid_iframe').contentWindow.postMessage(JSON.stringify(postMessage), 'https://applet.danid.dk');\n"
-                    + "               } else if (message.command === \"changeResponseAndSubmit\" && message.content.length > 100) {\n"
+                    + "                if (message.command === \"changeResponseAndSubmit\") {\n"
                     + "                     if (!document.getElementById(\"tink_nemIdToken\")) {\n"
                     + "                         document.body.innerHTML += '<div id=\\\"tink_nemIdToken\\\"/>';\n"
                     + "                     }\n"
