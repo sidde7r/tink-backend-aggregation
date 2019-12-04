@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.workers.commands.login;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -43,22 +42,19 @@ public class LoginExecutor {
     }
 
     public AgentWorkerCommandResult executeLogin(
-            final Agent agent,
-            final MetricActionIface metricAction,
-            final Credentials credentials) {
+            final Agent agent, final MetricActionIface metricAction) {
         try {
-            return processLoginHandlerChain(agent, metricAction, credentials);
+            return processLoginHandlerChain(agent, metricAction);
         } catch (Exception ex) {
             return processLoginExceptionHandlerChain(ex, metricAction);
         }
     }
 
     private AgentWorkerCommandResult processLoginHandlerChain(
-            final Agent agent, final MetricActionIface metricAction, final Credentials credentials)
-            throws Exception {
+            final Agent agent, final MetricActionIface metricAction) throws Exception {
         for (LoginHandler loginHandler : loginHandlerChain) {
             Optional<AgentWorkerCommandResult> result =
-                    loginHandler.handleLogin(agent, metricAction, credentials);
+                    loginHandler.handleLogin(agent, metricAction);
             if (result.isPresent()) {
                 return result.get();
             }

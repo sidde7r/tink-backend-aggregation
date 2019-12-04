@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.standalone;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -15,17 +13,11 @@ import se.tink.backend.aggregation.agents.standalone.grpc.CheckingService;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckingAccountsExecutor {
 
-    private static final long SUPPLEMENTAL_WAIT_REQUEST_MINUTES = 10L;
-
-    private final PersistentStorage persistentStorage;
     private GenericAgentConfiguration genericAgentConfiguration;
     private CheckingService checkingService;
     private AgentsServiceConfiguration agentsServiceConfiguration;
@@ -48,7 +40,6 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
                         .usePlaintext()
                         .build();
 
-        this.persistentStorage = new PersistentStorage();
         this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
 
         authenticationService =
@@ -62,29 +53,7 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
     @Override
     public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
             throws Exception {
-        if (request.getPayload() != null && request.getPayload().getCallbackData() != null) {
-            processCallbackData(request.getPayload().getCallbackData());
-            return SteppableAuthenticationResponse.finalResponse();
-        }
-        ThirdPartyAppAuthenticationStep step =
-                new ThirdPartyAppAuthenticationStep(
-                        authenticationService.login(request),
-                        bouildSupplementalWaitRequest(),
-                        this::processCallbackData);
-        return SteppableAuthenticationResponse.intermediateResponse(
-                step.getIdentifier(), step.execute(request.getPayload()).get());
-    }
-
-    private SupplementalWaitRequest bouildSupplementalWaitRequest() {
-        return new SupplementalWaitRequest(
-                strongAuthenticationState.getSupplementalKey(),
-                SUPPLEMENTAL_WAIT_REQUEST_MINUTES,
-                TimeUnit.MINUTES);
-    }
-
-    private void processCallbackData(final Map<String, String> callbackData) {
-        // TODO: persist callbackData
-        //  debug to find out what data are in callbackData
+        return authenticationService.login(request);
     }
 
     @Override

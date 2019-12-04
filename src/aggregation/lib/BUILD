@@ -69,7 +69,6 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/creditcards/ICS",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/dnb",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/danskebank",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/bancobpi",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/caixa",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/montepio",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/novobanco",

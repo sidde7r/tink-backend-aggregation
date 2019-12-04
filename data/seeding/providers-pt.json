@@ -57,47 +57,6 @@
             "type": "BANK"
         },
         {
-            "accessType": "OTHER",
-            "className": "nxgen.pt.banks.bancobpi.BancoBpiAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Banco BPI (Test)",
-            "fields": [
-                {
-                    "description": "Username",
-                    "immutable": true,
-                    "name": "username"
-                },
-                {
-                    "description": "Password",
-                    "masked": true,
-                    "name": "password",
-                    "sensitive": true
-                }
-            ],
-            "supplementalFields": [
-                {
-                    "description": "Authorization code, 6 digits.",
-                    "immutable": false,
-                    "masked": false,
-                    "name": "otpinput",
-                    "numeric": true,
-                    "pattern": "^[0-9]{6}$",
-                    "patternError": "Please enter your SMS 6 digit authorization code"
-                }
-            ],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
-            "financialInstitutionName": "Banco BPI",
-            "multiFactor": true,
-            "name": "pt-bancobpi-password",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.pt.openbanking.bancoctt.BancoCttAgent",
             "credentialsType": "THIRD_PARTY_APP",
