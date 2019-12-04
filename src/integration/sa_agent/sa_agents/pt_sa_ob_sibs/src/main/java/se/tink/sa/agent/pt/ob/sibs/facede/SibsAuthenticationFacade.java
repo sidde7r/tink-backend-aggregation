@@ -35,6 +35,10 @@ public class SibsAuthenticationFacade implements AuthenticationFacade {
         AuthenticationResponse.Builder responseBuilder = AuthenticationResponse.newBuilder();
         responseBuilder.setCorrelationId(request.getCorrelationId());
 
+        ThirdPartyAppAuthenticationPayload.Android.Builder android =
+                ThirdPartyAppAuthenticationPayload.Android.newBuilder();
+        android.setIntent(consentResponse.getLinks().getRedirect());
+
         ThirdPartyAppAuthenticationPayload.Ios.Builder ios =
                 ThirdPartyAppAuthenticationPayload.Ios.newBuilder();
         ios.setDeepLinkUrl(consentResponse.getLinks().getRedirect());
@@ -42,6 +46,7 @@ public class SibsAuthenticationFacade implements AuthenticationFacade {
         ThirdPartyAppAuthenticationPayload.Builder tppPl =
                 ThirdPartyAppAuthenticationPayload.newBuilder();
         tppPl.setIos(ios.build());
+        tppPl.setAndroid(android.build());
 
         responseBuilder.setPayload(tppPl.build());
 

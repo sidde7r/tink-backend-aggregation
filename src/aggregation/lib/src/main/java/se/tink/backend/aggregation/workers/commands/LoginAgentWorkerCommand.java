@@ -224,7 +224,10 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
         try {
             return new LoginExecutor(statusUpdater, context, supplementalInformationController)
-                    .executeLogin(agent, createLoginMetricAction());
+                    .executeLogin(
+                            agent,
+                            createLoginMetricAction(),
+                            context.getRequest().getCredentials());
         } finally {
             stopCommandContexts(loginTimerContext);
 
