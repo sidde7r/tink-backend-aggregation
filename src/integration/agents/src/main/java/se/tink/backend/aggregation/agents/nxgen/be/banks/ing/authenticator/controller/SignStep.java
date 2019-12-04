@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller;
 
 import com.google.common.base.Strings;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
@@ -11,8 +10,8 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 
 public final class SignStep implements AuthenticationStep {
@@ -33,13 +32,13 @@ public final class SignStep implements AuthenticationStep {
     }
 
     @Override
-    public SupplementInformationRequester respond(final AuthenticationRequest request)
+    public AuthenticationResponse respond(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        logger.info("ING SignStep: {}", request.getUserInputsAsList());
+        logger.info("ING SignStep: {}", request.getUserInputs());
 
         String username = request.getCredentials().getField(Field.Key.USERNAME);
         String cardNumber = request.getCredentials().getField(CARD_ID_FIELD);
-        String otp = request.getUserInputsAsList().get(0);
+        String otp = request.getUserInputs().get(0);
         if (Strings.isNullOrEmpty(username)
                 || Strings.isNullOrEmpty(cardNumber)
                 || Strings.isNullOrEmpty(otp)) {
@@ -49,17 +48,10 @@ public final class SignStep implements AuthenticationStep {
                 authenticator.initEnroll(username, cardNumber, otp);
         request.getCredentials()
                 .setSensitivePayload(SIGN_ID, challengeExchangeValues.getSigningId());
-        return SupplementInformationRequester.fromSupplementalFields(
+        return AuthenticationResponse.fromSupplementalFields(
                 supplementalInformationFormer.formChallengeResponseFields(
                         Key.SIGN_CODE_DESCRIPTION,
                         Key.SIGN_CODE_INPUT,
                         challengeExchangeValues.getChallenge()));
-    }
-
-    @Override
-    public Optional<SupplementInformationRequester> execute(
-            AuthenticationRequest request, Object persistentData)
-            throws AuthenticationException, AuthorizationException {
-        throw new AssertionError("Not yet implemented");
     }
 }

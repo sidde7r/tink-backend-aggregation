@@ -8,46 +8,32 @@ import org.assertj.core.util.Preconditions;
  * In progressive authentication, carry request information such as step, userInputs and credential.
  */
 public final class SteppableAuthenticationRequest implements AuthenticationSteppable {
-    private final Optional<String> stepIdentifier;
+    private final Class<? extends AuthenticationStep> step;
     private final AuthenticationRequest payload;
-    private String persistentData;
 
     private SteppableAuthenticationRequest(
-            final String stepIdentifier,
-            final AuthenticationRequest payload,
-            final String persistentData) {
-        this.stepIdentifier = Optional.of(stepIdentifier);
+            final Class<? extends AuthenticationStep> step, final AuthenticationRequest payload) {
+        this.step = step;
         this.payload = payload;
-        this.persistentData = persistentData;
-    }
-
-    private SteppableAuthenticationRequest() {
-        stepIdentifier = Optional.empty();
-        payload = AuthenticationRequest.empty();
     }
 
     public static SteppableAuthenticationRequest initialRequest() {
-        return new SteppableAuthenticationRequest();
+        return new SteppableAuthenticationRequest(null, AuthenticationRequest.empty());
     }
 
     public static SteppableAuthenticationRequest subsequentRequest(
-            @Nonnull final String stepIdentifier,
-            @Nonnull final AuthenticationRequest payload,
-            final String persistentData) {
+            @Nonnull final Class<? extends AuthenticationStep> klass,
+            @Nonnull final AuthenticationRequest payload) {
         return new SteppableAuthenticationRequest(
-                stepIdentifier, Preconditions.checkNotNull(payload), persistentData);
+                Preconditions.checkNotNull(klass), Preconditions.checkNotNull(payload));
     }
 
     @Override
-    public Optional<String> getStepIdentifier() {
-        return stepIdentifier;
+    public Optional<Class<? extends AuthenticationStep>> getStep() {
+        return Optional.ofNullable(step);
     }
 
     public AuthenticationRequest getPayload() {
         return payload;
-    }
-
-    public String getPersistentData() {
-        return persistentData;
     }
 }

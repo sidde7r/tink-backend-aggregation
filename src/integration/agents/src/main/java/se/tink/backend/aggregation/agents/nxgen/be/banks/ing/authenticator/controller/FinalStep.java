@@ -1,16 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 
 public final class FinalStep implements AuthenticationStep {
 
@@ -25,23 +23,16 @@ public final class FinalStep implements AuthenticationStep {
     }
 
     @Override
-    public SupplementInformationRequester respond(final AuthenticationRequest request)
+    public AuthenticationResponse respond(final AuthenticationRequest request)
             throws AuthenticationException {
-        logger.info("ING FinalStep: {}", request.getUserInputsAsList());
+        logger.info("ING FinalStep: {}", request.getUserInputs());
 
         authenticator.confirmEnroll(
                 request.getCredentials().getField(Field.Key.USERNAME),
-                extractSignCodeInput(request.getUserInputsAsList()),
+                extractSignCodeInput(request.getUserInputs()),
                 request.getCredentials().getSensitivePayload(SIGN_ID));
         authenticator.authenticate(request.getCredentials().getField(Field.Key.USERNAME));
-        return SupplementInformationRequester.empty();
-    }
-
-    @Override
-    public Optional<SupplementInformationRequester> execute(
-            AuthenticationRequest request, Object persistentData)
-            throws AuthenticationException, AuthorizationException {
-        throw new AssertionError("Not yet implemented");
+        return AuthenticationResponse.empty();
     }
 
     private static String extractSignCodeInput(final ImmutableList<String> userInputs) {
