@@ -108,19 +108,6 @@ public class SerializationUtils {
         }
     }
 
-    public static <T> T deserializeFromBytes(byte[] bytes, Class<T> cls) {
-        if (bytes == null) {
-            return null;
-        }
-
-        try {
-            return STRING_MAPPER.readValue(bytes, cls);
-        } catch (Exception e) {
-            log.error("Could not deserialize object", e);
-            return null;
-        }
-    }
-
     public static <T> T deserializeFromString(String data, Class<T> cls) {
         return deserializeFromString(data, cls, e -> log.error("Could not deserialize object", e));
     }
