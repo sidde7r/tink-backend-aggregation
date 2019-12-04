@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -18,8 +17,7 @@ public class StatelessProgressiveAuthenticatorTest {
             processAuthenticationShouldRespondWithFinalResponseWhenContainsOnlyOneAutomaticStep()
                     throws AuthenticationException, AuthorizationException {
         // given
-        SteppableAuthenticationRequest request =
-                SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
+        SteppableAuthenticationRequest request = SteppableAuthenticationRequest.initialRequest();
         AuthenticationStep automaticStep =
                 mockAuthenticationStep("stepId", request.getPayload(), null);
         Iterable<AuthenticationStep> steps = Lists.newArrayList(automaticStep);
@@ -47,7 +45,7 @@ public class StatelessProgressiveAuthenticatorTest {
         // given
         final String stepId = "stepId";
         SteppableAuthenticationRequest firstRequest =
-                SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
+                SteppableAuthenticationRequest.initialRequest();
 
         SupplementInformationRequester supplementInformationRequester =
                 SupplementInformationRequester.empty();
@@ -73,8 +71,7 @@ public class StatelessProgressiveAuthenticatorTest {
         SteppableAuthenticationRequest request =
                 SteppableAuthenticationRequest.subsequentRequest(
                         stepIdToExecute,
-                        new AuthenticationRequest(Mockito.mock(Credentials.class))
-                                .withCallbackData(ImmutableMap.of("key", "value")));
+                        AuthenticationRequest.fromCallbackData(ImmutableMap.of("key", "value")));
         AuthenticationStep stepToOmit = Mockito.mock(AuthenticationStep.class);
         Mockito.when(stepToOmit.execute(Mockito.any()))
                 .thenReturn(Optional.of(SupplementInformationRequester.empty()));
@@ -97,8 +94,7 @@ public class StatelessProgressiveAuthenticatorTest {
         SteppableAuthenticationRequest request =
                 SteppableAuthenticationRequest.subsequentRequest(
                         "wrongStepId",
-                        new AuthenticationRequest(Mockito.mock(Credentials.class))
-                                .withCallbackData(ImmutableMap.of("key", "value")));
+                        AuthenticationRequest.fromCallbackData(ImmutableMap.of("key", "value")));
         AuthenticationStep step = Mockito.mock(AuthenticationStep.class);
         Mockito.when(step.getIdentifier()).thenReturn("stepId");
 

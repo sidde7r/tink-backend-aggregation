@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.assertj.core.util.Preconditions;
-import se.tink.backend.agents.rpc.Credentials;
 
 /**
  * In progressive authentication, carry request information such as step, userInputs and credential.
@@ -18,13 +17,13 @@ public final class SteppableAuthenticationRequest implements AuthenticationStepp
         this.payload = payload;
     }
 
-    private SteppableAuthenticationRequest(final Credentials credentials) {
+    private SteppableAuthenticationRequest() {
         stepIdentifier = null;
-        payload = new AuthenticationRequest(credentials);
+        payload = AuthenticationRequest.empty();
     }
 
-    public static SteppableAuthenticationRequest initialRequest(final Credentials credentials) {
-        return new SteppableAuthenticationRequest(credentials);
+    public static SteppableAuthenticationRequest initialRequest() {
+        return new SteppableAuthenticationRequest();
     }
 
     public static SteppableAuthenticationRequest subsequentRequest(
