@@ -62,8 +62,7 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
                 .setDescription(description)
                 .setPending(isPending)
                 .setPayload(
-                        TransactionPayloadTypes.DETAILS,
-                        transaction.getRaboDetailedTransactionType())
+                        TransactionPayloadTypes.DETAILS, transaction.getRaboTransactionTypeName())
                 .build();
     }
 
