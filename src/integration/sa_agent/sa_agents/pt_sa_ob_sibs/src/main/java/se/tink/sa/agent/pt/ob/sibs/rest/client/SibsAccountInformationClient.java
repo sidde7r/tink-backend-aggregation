@@ -118,19 +118,4 @@ public class SibsAccountInformationClient extends AbstractSibsRestClient {
 
         return response.getBody();
     }
-
-    //    public TransactionKeyPaginatorResponse<String> getAccountTransactions(
-    //            TransactionalAccount account) {
-    //        URL accountTransactions =
-    //                createUrl(SibsConstants.Urls.ACCOUNT_TRANSACTIONS)
-    //                        .parameter(PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier());
-    //        String transactionFetchFromDate = userState.getTransactionsFetchBeginDate(account);
-    //        return client.request(accountTransactions)
-    //                .queryParam(QueryKeys.WITH_BALANCE, TRUE)
-    //                .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
-    //                .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
-    //                .queryParam(QueryKeys.DATE_FROM, transactionFetchFromDate)
-    //                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
-    //                .get(TransactionsResponse.class);
-    //    }
 }

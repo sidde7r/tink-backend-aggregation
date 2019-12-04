@@ -8,6 +8,6 @@ option java_outer_classname = "OuterService";
 import "src/integration/sa_agent/sa_grpc_api/proto/fetch/trans/model.proto";
 
 service FetchTransactionsService {
-  rpc fetchCheckingAccounts (FetchTransactionsRequest) returns (FetchTransactionsResponse);
+  rpc fetchCheckingAccountsTransactions (FetchTransactionsRequest) returns (FetchTransactionsResponse);
 }
 

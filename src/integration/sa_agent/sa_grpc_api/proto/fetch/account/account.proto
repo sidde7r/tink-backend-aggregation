@@ -46,8 +46,9 @@ enum AccountExclusion {
 }
 
 message ExactCurrencyAmount {
-  string value = 1;
-  string currencyCode = 2;
+  int64 unscaledValue = 1;
+  int32 scale = 2;
+  string currencyCode = 3;
 }
 
 message TransferDestination {

@@ -36,7 +36,7 @@ public class CheckingService {
 
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return TransactionsMapperService.mapFetchTransactionsResponse(
-                fetchTransactionsServiceBlockingStub.fetchCheckingAccounts(
+                fetchTransactionsServiceBlockingStub.fetchCheckingAccountsTransactions(
                         TransactionsMapperService.mapFetchTransactionsRequest()));
     }
 }

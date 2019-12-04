@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.standalone.grpc;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Calendar;
 import java.util.Collection;
@@ -135,8 +136,11 @@ public class AccountMapperService {
 
     private static ExactCurrencyAmount mapExactCurrencyAmount(
             final se.tink.sa.services.fetch.account.ExactCurrencyAmount exactCurrencyAmount) {
+        long value = exactCurrencyAmount.getUnscaledValue();
+        int scale = exactCurrencyAmount.getScale();
+
         return ExactCurrencyAmount.of(
-                exactCurrencyAmount.getValue(), exactCurrencyAmount.getCurrencyCode());
+                BigDecimal.valueOf(value, scale), exactCurrencyAmount.getCurrencyCode());
     }
 
     private static AccountTypes mapAccountTypes(final TransactionalAccountType type) {
