@@ -2,7 +2,6 @@ package se.tink.sa.agent.pt.ob.sibs.rest.client;
 
 import static junit.framework.TestCase.assertNotNull;
 
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,8 +20,8 @@ import se.tink.sa.agent.pt.ob.sibs.SibsStandaloneAgent;
 public class SibsConsentRestClientTest extends AbstractRestClientTest {
 
     @Test
-    public void testeConsent() {
-        String state = UUID.randomUUID().toString().replace("-", "") + UUID_TINK_TAG;
+    public void testConsent() {
+        String state = generateNewTestState();
         String bankCode = "BCPPT";
         String consentId = getVerifiedConsentId(state, bankCode);
         assertNotNull(consentId);
