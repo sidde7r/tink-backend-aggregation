@@ -275,7 +275,9 @@ public class Field {
         SIGN_FOR_BENEFICIARY_INPUT("signforbeneficiaryinput"),
         SIGN_FOR_TRANSFER_DESCRIPTION("signfortransferdescription"),
         SIGN_FOR_TRANSFER_EXTRA_DESCRIPTION("signfortransferextradescription"),
-        SIGN_FOR_TRANSFER_INPUT("signfortransferinput");
+        SIGN_FOR_TRANSFER_INPUT("signfortransferinput"),
+        ACCESS_PIN("accesspininput"),
+        ACCESS_PIN_CONFIRMATION("confirmaccesspininput");
 
         private final String fieldKey;
 

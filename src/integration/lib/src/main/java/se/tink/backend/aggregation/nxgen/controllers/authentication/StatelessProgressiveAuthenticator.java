@@ -34,7 +34,9 @@ public abstract class StatelessProgressiveAuthenticator implements Authenticatio
                 }
             }
             throw new IllegalStateException(
-                    "Step with identifier [" + request.getStepIdentifier() + "] doesn't exist");
+                    "Step with identifier ["
+                            + request.getStepIdentifier().get()
+                            + "] doesn't exist");
         } else {
             return authSteps;
         }
