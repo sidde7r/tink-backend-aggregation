@@ -12,6 +12,7 @@ public class BookedTransactionEntity {
     private String transactionId;
     private BalanceAmountEntity transactionAmount;
     private RemittanceInformationStructuredEntity remittanceInformationStructured;
+    private String remittanceInformationUnstructured;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date valueDate;
@@ -21,11 +22,14 @@ public class BookedTransactionEntity {
 
     @JsonIgnore
     private String getTransactionDescription() {
-        if (remittanceInformationStructured == null
-                || remittanceInformationStructured.getReference() == null) {
-            return "";
+        if (remittanceInformationStructured != null
+                && remittanceInformationStructured.getReference() != null) {
+            return remittanceInformationStructured.getReference();
         }
-        return remittanceInformationStructured.getReference();
+        if (remittanceInformationUnstructured != null) {
+            return remittanceInformationUnstructured;
+        }
+        return "";
     }
 
     public Transaction toTinkTransaction() {
