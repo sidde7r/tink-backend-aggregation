@@ -17,6 +17,6 @@ junit_test(
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
-        "//third_party:snakeyaml",
+        "//third_party:org_yaml_snakeyaml",
     ],
 )
