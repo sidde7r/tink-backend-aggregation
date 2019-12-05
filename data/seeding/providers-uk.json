@@ -33,36 +33,6 @@
             "type": "BANK"
         },
         {
-            "accessType": "OPEN_BANKING",
-            "capabilities": [
-                "TRANSFERS"
-            ],
-            "className": "nxgen.uk.openbanking.firsttrust.FirstTrustV31Agent",
-            "credentialsType": "PASSWORD",
-            "displayName": "First Trust",
-            "fields": [
-                {
-                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true,
-                    "name": "info",
-                    "value": "Connecting your bank"
-                }
-            ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "groupDisplayName": "",
-            "multiFactor": false,
-            "name": "uk-firsttrust-oauth2",
-            "passwordhelptext": "Authentication is done on external page",
-            "payload": "tink:firsttrust",
-            "popular": false,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
             "accessType": "OTHER",
             "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
             "credentialsType": "PASSWORD",
@@ -235,6 +205,36 @@
             "name": "uk-firstdirect-oauth2",
             "passwordhelptext": "Authentication is done on external page",
             "payload": "tink:firstdirect",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.firsttrust.FirstTrustV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "First Trust",
+            "fields": [
+                {
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true,
+                    "name": "info",
+                    "value": "Connecting your bank"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "name": "uk-firsttrust-oauth2",
+            "passwordhelptext": "Authentication is done on external page",
+            "payload": "tink:firsttrust",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
@@ -434,6 +434,33 @@
         },
         {
             "accessType": "OPEN_BANKING",
+            "className": "nxgen.uk.openbanking.nationwide.NationwideV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Nationwide Bank",
+            "fields": [
+                {
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true,
+                    "name": "info",
+                    "value": "Connecting your bank"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "name": "uk-nationwide-oauth2",
+            "passwordhelptext": "Authentication is done on external page",
+            "payload": "tink4:nationwide",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -574,6 +601,33 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.uk.openbanking.tesco.TescoV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Tesco Bank",
+            "fields": [
+                {
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true,
+                    "name": "info",
+                    "value": "Connecting your bank"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "name": "uk-tesco-oauth2",
+            "passwordhelptext": "Authentication is done on external page",
+            "payload": "tink3:tesco",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
@@ -629,6 +683,33 @@
         },
         {
             "accessType": "OPEN_BANKING",
+            "className": "nxgen.uk.openbanking.tsb.TsbV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "TSB Bank",
+            "fields": [
+                {
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true,
+                    "name": "info",
+                    "value": "Connecting your bank"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "name": "uk-tsb-oauth2",
+            "passwordhelptext": "Authentication is done on external page",
+            "payload": "tsb",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -650,87 +731,6 @@
             "name": "uk-ulster-oauth2",
             "passwordhelptext": "Authentication is done on external page",
             "payload": "tink2:ulster",
-            "popular": false,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
-            "className": "nxgen.uk.openbanking.tesco.TescoV31Agent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Tesco Bank",
-            "fields": [
-                {
-                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true,
-                    "name": "info",
-                    "value": "Connecting your bank"
-                }
-            ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "groupDisplayName": "",
-            "multiFactor": false,
-            "name": "uk-tesco-oauth2",
-            "passwordhelptext": "Authentication is done on external page",
-            "payload": "tink3:tesco",
-            "popular": false,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
-            "className": "nxgen.uk.openbanking.nationwide.NationwideV31Agent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Nationwide Bank",
-            "fields": [
-                {
-                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true,
-                    "name": "info",
-                    "value": "Connecting your bank"
-                }
-            ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "groupDisplayName": "",
-            "multiFactor": false,
-            "name": "uk-nationwide-oauth2",
-            "passwordhelptext": "Authentication is done on external page",
-            "payload": "tink4:nationwide",
-            "popular": false,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
-            "className": "nxgen.uk.openbanking.tsb.TsbV31Agent",
-            "credentialsType": "PASSWORD",
-            "displayName": "TSB Bank",
-            "fields": [
-                {
-                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true,
-                    "name": "info",
-                    "value": "Connecting your bank"
-                }
-            ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "groupDisplayName": "",
-            "multiFactor": false,
-            "name": "uk-tsb-oauth2",
-            "passwordhelptext": "Authentication is done on external page",
-            "payload": "tsb",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,

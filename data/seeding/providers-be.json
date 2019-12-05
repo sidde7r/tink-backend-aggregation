@@ -295,23 +295,6 @@
             "type": "BANK"
         },
         {
-            "accessType": "OPEN_BANKING",
-            "className": "nxgen.be.openbanking.kbc.KbcAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "KBC",
-            "fields": [],
-            "financialInstitutionId": "7802078d8a7049398f9668e5478934ea",
-            "multiFactor": false,
-            "name": "be-kbc-ob",
-            "passwordHelpText": null,
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": "true",
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
             "accessType": "OTHER",
             "className": "nxgen.be.banks.beobank.BeobankAgent",
             "credentialsType": "PASSWORD",
@@ -531,24 +514,6 @@
             "type": "BANK"
         },
         {
-            "accessType": "OPEN_BANKING",
-            "className": "nxgen.be.openbanking.ing.IngAgent",
-            "credentialsType": "THIRD_PARTY_APP",
-            "displayName": "ING",
-            "fields": [],
-            "financialInstitutionId": "0df5af8e4bf84df686a9b4a07fc205bf",
-            "financialInstitutionName": "Ing",
-            "multiFactor": false,
-            "name": "be-ing-ob",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": "true",
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
             "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS"
@@ -612,6 +577,24 @@
                 }
             ],
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.ing.IngAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "ING",
+            "fields": [],
+            "financialInstitutionId": "0df5af8e4bf84df686a9b4a07fc205bf",
+            "financialInstitutionName": "Ing",
+            "multiFactor": false,
+            "name": "be-ing-ob",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -705,6 +688,23 @@
                 }
             ],
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.kbc.KbcAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "KBC",
+            "fields": [],
+            "financialInstitutionId": "7802078d8a7049398f9668e5478934ea",
+            "multiFactor": false,
+            "name": "be-kbc-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {

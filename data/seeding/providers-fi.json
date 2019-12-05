@@ -132,6 +132,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.fi.openbanking.danskebank.DanskebankV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Danske Bank",
@@ -142,8 +143,7 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK",
-            "accessType": "OPEN_BANKING"
+            "type": "BANK"
         },
         {
             "accessType": "OTHER",
