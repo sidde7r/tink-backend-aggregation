@@ -27,6 +27,8 @@ public class CredentialsEventProducer {
                         .setAppId(Strings.nullToEmpty(appId))
                         .setUserId(credentials.getUserId())
                         .setCredentialsId(credentials.getId())
+                        .setCredentialStatus(
+                                CredentialsStatusConverter.convert(credentials.getStatus()))
                         .setProviderName(credentials.getProviderName())
                         .setCorrelationId(correlationId)
                         .build();
