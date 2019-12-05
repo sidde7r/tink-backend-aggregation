@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -41,9 +42,13 @@ public class TransactionsEntity {
         return map;
     }
 
-    public List<Transaction> toTinkTransactions() {
-
+    public List<Transaction> toTinkTransactions(Date limitDate) {
         return booked.stream()
+                .filter(bookedEntity -> Objects.nonNull(bookedEntity.getEntryReference()))
+                .filter(
+                        bookedEntity ->
+                                !VolksbankUtils.IsEntryReferenceFromAfterDate(
+                                        bookedEntity.getEntryReference(), limitDate))
                 .map(
                         movement ->
                                 Transaction.builder()
