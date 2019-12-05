@@ -34,7 +34,6 @@ import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCom
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CreateLogMaskerWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.CredentialsRefreshStartEventCommand;
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
@@ -45,6 +44,7 @@ import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.RefreshCommandChainEventTriggerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
@@ -287,8 +287,13 @@ public class AgentWorkerOperationFactory {
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
         commands.add(
-                new CredentialsRefreshStartEventCommand(
-                        credentialsEventProducer, request.getCredentials(), clientInfo.getAppId()));
+                new RefreshCommandChainEventTriggerCommand(
+                        credentialsEventProducer,
+                        request.getCredentials(),
+                        clientInfo.getAppId(),
+                        request.getItemsToRefresh(),
+                        request.isManual(),
+                        clientInfo.getClusterId()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(

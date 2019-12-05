@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.events;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.Collections;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +19,10 @@ import se.tink.libraries.uuid.UUIDUtils;
 @RunWith(MockitoJUnitRunner.class)
 public class CredentialsEventProducerTest {
     private static final String CORRELATION_ID = "correlationId";
+    private static final String CLUSTER_ID = "clusterId";
+    private static final boolean MANUAL = true;
+    private static final Set<CredentialsRefreshCommandChainStarted.RefreshableItems>
+            REFRESHABLE_ITEMS = Collections.emptySet();
     private EventProducerServiceClient eventProducerServiceClient;
     private CredentialsEventProducer credentialsEventProducer;
     private Credentials validCredentials;
@@ -34,7 +40,12 @@ public class CredentialsEventProducerTest {
     public void testCredentialsRefreshCommandChainStarted() throws InvalidProtocolBufferException {
         ArgumentCaptor<Any> capture = ArgumentCaptor.forClass(Any.class);
         credentialsEventProducer.sendCredentialsRefreshCommandChainStarted(
-                validCredentials, appId, CORRELATION_ID);
+                validCredentials,
+                appId,
+                CORRELATION_ID,
+                CLUSTER_ID,
+                MANUAL,
+                Collections.emptySet());
         Mockito.verify(eventProducerServiceClient, Mockito.times(1))
                 .postEventAsync(capture.capture());
 
@@ -49,6 +60,9 @@ public class CredentialsEventProducerTest {
                         .setCredentialsId(validCredentials.getId())
                         .setProviderName(validCredentials.getProviderName())
                         .setCorrelationId(CORRELATION_ID)
+                        .setClusterId(CLUSTER_ID)
+                        .setManual(MANUAL)
+                        .addAllRefreshableItems(REFRESHABLE_ITEMS)
                         .build();
 
         Assert.assertEquals(data, output);
