@@ -42,9 +42,6 @@ public class CardDetailsEntity {
     @JsonProperty("Estado")
     private String state;
 
-    //    @JsonProperty("Url")
-    //    private String imageUrl;
-
     @JsonProperty("Validade")
     private String expiration;
 

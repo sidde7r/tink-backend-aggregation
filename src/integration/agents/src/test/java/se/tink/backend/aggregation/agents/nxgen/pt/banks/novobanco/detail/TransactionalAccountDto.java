@@ -5,12 +5,17 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class TransactionalAccountDto {
     private String accountNumber;
     private String uniqueIdentifier;
+    private String description;
     private ExactCurrencyAmount exactBalance;
 
     public TransactionalAccountDto(
-            String accountNumber, String uniqueIdentifier, ExactCurrencyAmount exactBalance) {
+            String accountNumber,
+            String uniqueIdentifier,
+            String description,
+            ExactCurrencyAmount exactBalance) {
         this.accountNumber = accountNumber;
         this.uniqueIdentifier = uniqueIdentifier;
+        this.description = description;
         this.exactBalance = exactBalance;
     }
 
@@ -20,6 +25,10 @@ public class TransactionalAccountDto {
 
     public String getUniqueIdentifier() {
         return uniqueIdentifier;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public ExactCurrencyAmount getExactBalance() {

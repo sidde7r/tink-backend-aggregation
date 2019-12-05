@@ -7,7 +7,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class Login0TestData {
     public static final String SUCCESSFUL_LOGIN = "SUCCESSFUL_LOGIN";
-    public static final String FAILED_LOGIN = "FAILED_LOGIN";
+    public static final String INCORRECT_CREDENTIALS = "INCORRECT_CREDENTIALS";
+    public static final String FAILED_REQUEST_REJECTED = "FAILED_REQUEST_REJECTED";
     private static final Map<String, String> requests = new HashMap<>();
 
     public static Login0Response getResponse(String payloadLabel) {
@@ -17,7 +18,7 @@ public class Login0TestData {
 
     static {
         requests.put(
-                FAILED_LOGIN,
+                FAILED_REQUEST_REJECTED,
                 "{\n"
                         + "  \"Header\": {\n"
                         + "    \"ResponseId\": \"821079cc56c740fdb445737147c0452a\",\n"
@@ -30,6 +31,28 @@ public class Login0TestData {
                         + "      \"Codigo\": 50\n"
                         + "    }\n"
                         + "  }\n"
+                        + "}");
+
+        requests.put(
+                INCORRECT_CREDENTIALS,
+                "{  \n"
+                        + "   \"Header\":{  \n"
+                        + "      \"ResponseId\":\"06bdc6ddbfff4c088b7c645065a4d3e1\",\n"
+                        + "      \"OpToken\":null,\n"
+                        + "      \"Time\":\"2019-11-29T21:00:04.7561665Z\",\n"
+                        + "      \"SessionTimeout\":0,\n"
+                        + "      \"Status\":{  \n"
+                        + "         \"Mensagem\":\"O NBnet está momentaneamente indisponível. Por favor tente mais tarde\",\n"
+                        + "         \"Severidade\":3,\n"
+                        + "         \"Codigo\":32\n"
+                        + "      }\n"
+                        + "   },\n"
+                        + "   \"Body\":{  \n"
+                        + "\n"
+                        + "   },\n"
+                        + "   \"Login\":{  \n"
+                        + "\n"
+                        + "   }\n"
                         + "}");
 
         requests.put(

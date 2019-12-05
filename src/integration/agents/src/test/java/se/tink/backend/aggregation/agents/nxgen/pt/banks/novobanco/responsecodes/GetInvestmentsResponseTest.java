@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.responsecode
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.component.investment.detail.InvestmentTestData.FAILED_CALL;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.component.investment.detail.InvestmentTestData.SUCCESSFUL_CALL;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.component.investment.detail.InvestmentTestData.INVESTMENTS_AVAILABLE;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.component.investment.detail.InvestmentTestData;
@@ -13,7 +13,7 @@ public class GetInvestmentsResponseTest {
 
     @Test
     public void shouldReportSuccessIfSuccessfulGetInvestmentsResponse() {
-        GetInvestmentsResponse response = InvestmentTestData.getResponse(SUCCESSFUL_CALL);
+        GetInvestmentsResponse response = InvestmentTestData.getResponse(INVESTMENTS_AVAILABLE);
         assertTrue(response.isSuccessful());
     }
 

@@ -98,6 +98,7 @@ public class NovoBancoTransactionalAccountFetcherTest {
             TransactionalAccountDto expected, TransactionalAccount account) {
         assertEquals(expected.getAccountNumber(), account.getAccountNumber());
         assertTrue(account.isUniqueIdentifierEqual(expected.getUniqueIdentifier()));
+        assertEquals(expected.getDescription(), account.getName());
         assertEquals(expected.getExactBalance(), account.getExactBalance());
     }
 }

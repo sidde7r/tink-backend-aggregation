@@ -19,8 +19,12 @@ public class AccountsTestData {
 
     public static final String ACCOUNT_1_BALANCE = "1580.19";
     public static final String ACCOUNT_1_CURRENCY = "EUR";
+    public static final String ACCOUNT_1_DESCR = "Conta DO";
+    public static final String ACCOUNT_1_IBAN = "PT50000201231234567890154";
+
     public static final String ACCOUNT_2_BALANCE = "650.37";
     public static final String ACCOUNT_2_CURRENCY = "EUR";
+    public static final String ACCOUNT_2_DESCR = "Dep. Someone Fancy";
 
     public static final String TRANS_1_BALANCE = "-2500.0";
     public static final String TRANS_1_DESCR = "TRF NBapp 1234567 P/ Ricardo BEST";
@@ -71,13 +75,19 @@ public class AccountsTestData {
                         + "          \"Id\": \""
                         + PAYLOAD_ACCOUNT_ID_1
                         + "\",\n"
-                        + "          \"Iban\": \"PT50000201231234567890154\",\n"
-                        + "          \"Desc\": \"Conta DO\"\n"
+                        + "          \"Iban\": \""
+                        + ACCOUNT_1_IBAN
+                        + "\",\n"
+                        + "          \"Desc\": \""
+                        + ACCOUNT_1_DESCR
+                        + "\"\n"
                         + "        }, {\n"
                         + "          \"Id\": \""
                         + PAYLOAD_ACCOUNT_ID_2
                         + "\",\n"
-                        + "          \"Desc\": \"Dep. Someone Fancy\"\n"
+                        + "          \"Desc\": \""
+                        + ACCOUNT_2_DESCR
+                        + "\"\n"
                         + "        }],\n"
                         + "        \"Selected\": \""
                         + PAYLOAD_ACCOUNT_ID_1
@@ -172,13 +182,19 @@ public class AccountsTestData {
                         + "          \"Id\": \""
                         + PAYLOAD_ACCOUNT_ID_1
                         + "\",\n"
-                        + "          \"Iban\": \"PT50000201231234567890154\",\n"
-                        + "          \"Desc\": \"Conta DO\"\n"
+                        + "          \"Iban\": \""
+                        + ACCOUNT_1_IBAN
+                        + "\",\n"
+                        + "          \"Desc\": \""
+                        + ACCOUNT_1_DESCR
+                        + "\"\n"
                         + "        }, {\n"
                         + "          \"Id\": \""
                         + PAYLOAD_ACCOUNT_ID_2
                         + "\",\n"
-                        + "          \"Desc\": \"Dep. Someone Fancy\"\n"
+                        + "          \"Desc\": \""
+                        + ACCOUNT_2_DESCR
+                        + "\"\n"
                         + "        }],\n"
                         + "        \"Selected\": \""
                         + PAYLOAD_ACCOUNT_ID_2
@@ -276,13 +292,15 @@ public class AccountsTestData {
                 PAYLOAD_ACCOUNT_ID_1,
                 new TransactionalAccountDto(
                         PAYLOAD_ACCOUNT_ID_1,
-                        "PT50000201231234567890154",
+                        ACCOUNT_1_IBAN,
+                        ACCOUNT_1_DESCR,
                         ExactCurrencyAmount.of(ACCOUNT_1_BALANCE, ACCOUNT_1_CURRENCY)));
         referenceTransactionalAccountDtos.put(
                 PAYLOAD_ACCOUNT_ID_2,
                 new TransactionalAccountDto(
                         PAYLOAD_ACCOUNT_ID_2,
                         PAYLOAD_ACCOUNT_ID_2,
+                        ACCOUNT_2_DESCR,
                         ExactCurrencyAmount.of(ACCOUNT_2_BALANCE, ACCOUNT_2_CURRENCY)));
     }
 
