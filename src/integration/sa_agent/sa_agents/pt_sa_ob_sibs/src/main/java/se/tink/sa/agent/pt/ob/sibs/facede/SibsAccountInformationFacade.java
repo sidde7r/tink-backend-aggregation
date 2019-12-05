@@ -4,17 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.tink.sa.agent.pt.ob.sibs.SibsMappingContextKeys;
 import se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc.AccountsResponseMapper;
 import se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc.BalancesResponseMapper;
+import se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc.TransactionsResponseMapper;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.SibsAccountInformationClient;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.common.CommonAccountSibsRequestRequest;
+import se.tink.sa.agent.pt.ob.sibs.rest.client.common.CommonAccountTransactionsSibsRequest;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.common.CommonSibsRequest;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.rpc.AccountsResponse;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.rpc.BalancesResponse;
+import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.sa.framework.facade.AccountInformationFacade;
 import se.tink.sa.framework.mapper.MappingContext;
 import se.tink.sa.services.fetch.account.ExactCurrencyAmount;
@@ -28,13 +31,16 @@ import se.tink.sa.services.fetch.trans.FetchTransactionsResponse;
 public class SibsAccountInformationFacade implements AccountInformationFacade {
 
     private static final String BANK_CODE = "BANK_CODE";
-    private static final String IS_MANUAL = "IS_MANUAL";
+    private static final String NEXT_TR_PAGE_LINK = "NEXT_TR_PAGE_LINK";
+    private static final String FIRST_TRANSACTION_FETCH_DATE = "1970-01-01";
 
     @Autowired private SibsAccountInformationClient sibsAccountInformationClient;
 
     @Autowired private AccountsResponseMapper accountsResponseMapper;
 
     @Autowired private BalancesResponseMapper balancesResponseMapper;
+
+    @Autowired private TransactionsResponseMapper transactionsResponseMapper;
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts(FetchAccountsRequest request) {
@@ -58,7 +64,8 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
 
         MappingContext mappingContext =
                 MappingContext.newInstance()
-                        .put(SibsMappingContextKeys.ACCOUNTS_BALANCES, balances);
+                        .put(SibsMappingContextKeys.ACCOUNTS_BALANCES, balances)
+                        .put(SibsMappingContextKeys.REQUEST_COMMON, request.getRequestCommon());
 
         FetchAccountsResponse fetchAccountsResponse =
                 accountsResponseMapper.mapToTransferModel(accountsResponse, mappingContext);
@@ -70,7 +77,44 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
     public FetchTransactionsResponse fetchCheckingAccountsTransactions(
             FetchTransactionsRequest request) {
         FetchTransactionsResponse response = null;
+        TransactionsResponse transactionsResponse = null;
+        String nextPageLink = request.getExternalParametersOrDefault(NEXT_TR_PAGE_LINK, null);
+
+        if (StringUtils.isBlank(nextPageLink)) {
+            CommonAccountTransactionsSibsRequest sibsRequest =
+                    buildFirstTransactionsRequest(request);
+            transactionsResponse = sibsAccountInformationClient.getAccountTransactions(sibsRequest);
+        } else {
+            CommonAccountTransactionsSibsRequest sibsRequest =
+                    buildNextTransactionsRequest(request, nextPageLink);
+            transactionsResponse = sibsAccountInformationClient.getTransactionsForKey(sibsRequest);
+        }
+
+        response = transactionsResponseMapper.mapToTransferModel(transactionsResponse);
+
         return response;
+    }
+
+    private se.tink.sa.agent.pt.ob.sibs.rest.client.common.CommonAccountTransactionsSibsRequest
+            buildFirstTransactionsRequest(FetchTransactionsRequest request) {
+        CommonAccountTransactionsSibsRequest sibsRequest =
+                new CommonAccountTransactionsSibsRequest();
+        sibsRequest.setDateFromTransactionFetch(FIRST_TRANSACTION_FETCH_DATE);
+        sibsRequest.setAccountId(request.getAccountId());
+        sibsRequest.setIsPsuInvolved(request.getRequestCommon().getManual());
+        sibsRequest.setBankCode(request.getExternalParametersOrDefault(BANK_CODE, null));
+        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getSecurityToken());
+        return sibsRequest;
+    }
+
+    private CommonAccountTransactionsSibsRequest buildNextTransactionsRequest(
+            FetchTransactionsRequest request, String nextLink) {
+        CommonAccountTransactionsSibsRequest sibsRequest =
+                new CommonAccountTransactionsSibsRequest();
+        sibsRequest.setIsPsuInvolved(request.getRequestCommon().getManual());
+        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getSecurityToken());
+        sibsRequest.setNextPageUri(nextLink);
+        return sibsRequest;
     }
 
     private ExactCurrencyAmount findAndMapBalance(FetchAccountsRequest request, String accountId) {
@@ -83,24 +127,19 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
     }
 
     private CommonSibsRequest getCommonRequest(FetchAccountsRequest request) {
-        String bankCode = request.getExternalParametersOrDefault(BANK_CODE, null);
-        String consentId = request.getSecurityInfo().getSecurityToken();
-
-        return CommonSibsRequest.builder().bankCode(bankCode).consentId(consentId).build();
+        CommonSibsRequest sibsRequest = new CommonSibsRequest();
+        sibsRequest.setBankCode(request.getExternalParametersOrDefault(BANK_CODE, null));
+        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getSecurityToken());
+        return sibsRequest;
     }
 
     private CommonAccountSibsRequestRequest buildCommonAccountSibsRequestRequest(
-            FetchAccountsRequest accountsRequest, String accountId) {
-
-        String bankCode = accountsRequest.getExternalParametersOrDefault(BANK_CODE, null);
-        String consentId = accountsRequest.getSecurityInfo().getSecurityToken();
-        String psuInvolved = accountsRequest.getExternalParametersOrDefault(IS_MANUAL, "false");
-
-        CommonAccountSibsRequestRequest request = new CommonAccountSibsRequestRequest();
-        request.setAccountId(accountId);
-        request.setIsPsuInvolved(BooleanUtils.toBoolean(psuInvolved));
-        request.setConsentId(consentId);
-        request.setBankCode(bankCode);
-        return request;
+            FetchAccountsRequest request, String accountId) {
+        CommonAccountSibsRequestRequest sibsRequest = new CommonAccountSibsRequestRequest();
+        sibsRequest.setAccountId(accountId);
+        sibsRequest.setIsPsuInvolved(request.getRequestCommon().getManual());
+        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getSecurityToken());
+        sibsRequest.setBankCode(request.getExternalParametersOrDefault(BANK_CODE, null));
+        return sibsRequest;
     }
 }

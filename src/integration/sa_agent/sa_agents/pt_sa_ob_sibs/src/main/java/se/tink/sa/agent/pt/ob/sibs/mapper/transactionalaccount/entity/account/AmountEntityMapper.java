@@ -1,4 +1,4 @@
-package se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.entity;
+package src.integration.sa_agent.sa_agents.pt_sa_ob_sibs.src.main.java.se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.entity.account;
 
 import java.math.BigDecimal;
 import org.springframework.stereotype.Component;

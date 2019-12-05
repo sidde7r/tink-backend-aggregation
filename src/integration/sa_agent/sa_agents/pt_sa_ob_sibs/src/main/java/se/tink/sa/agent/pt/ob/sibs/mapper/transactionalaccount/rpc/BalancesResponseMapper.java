@@ -3,13 +3,13 @@ package se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.tink.sa.agent.pt.ob.sibs.SibsConstants;
-import se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.entity.AmountEntityMapper;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.entity.account.AmountEntity;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.rpc.BalancesResponse;
 import se.tink.sa.framework.common.exceptions.StandaloneAgentIllegalStateException;
 import se.tink.sa.framework.mapper.MappingContext;
 import se.tink.sa.framework.mapper.ToDomainMapper;
 import se.tink.sa.services.fetch.account.ExactCurrencyAmount;
+import src.integration.sa_agent.sa_agents.pt_sa_ob_sibs.src.main.java.se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.entity.account.AmountEntityMapper;
 
 @Component
 public class BalancesResponseMapper
