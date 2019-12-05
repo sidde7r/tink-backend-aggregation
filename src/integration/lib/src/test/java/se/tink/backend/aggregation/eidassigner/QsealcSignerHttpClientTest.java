@@ -1,11 +1,24 @@
 package se.tink.backend.aggregation.eidassigner;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.io.Files;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.Security;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +26,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -29,7 +47,7 @@ import se.tink.libraries.simple_http_server.SimpleHTTPServer;
 public class QsealcSignerHttpClientTest {
 
     private static InternalEidasProxyConfiguration configuration;
-    static SimpleHTTPServer proxyServer;
+    private static SimpleHTTPServer proxyServer;
 
     @BeforeClass
     public static void startupProxyWithTestConfiguration() throws Exception {
@@ -37,9 +55,11 @@ public class QsealcSignerHttpClientTest {
         Security.addProvider(new BouncyCastleProvider());
 
         configuration =
-                getConfiguration("data/test/qsealc/test-configuration.yaml", EidasProxy.class)
+                Utils.getConfiguration("data/test/qsealc/test-configuration.yaml", EidasProxy.class)
                         .toInternalConfig();
-        proxyServer = new SimpleHTTPServer(12345);
+
+        proxyServer = new SimpleHTTPServer(11111);
+        proxyServer.configureSsl(Utils.buildSslContextFactoryFromConfig(), 12345, false);
         proxyServer.addContext("/", new ProxyServerHandler());
         proxyServer.addContext("/test", new ProxyServerHandler());
         proxyServer.start();
@@ -52,24 +72,23 @@ public class QsealcSignerHttpClientTest {
 
     @Test
     public void qsealcSignerHttpClientTest() throws Exception {
+        Assert.assertEquals("development", configuration.getEnvironment());
+
+        HttpClient httpClient_first_get = QsealcSignerHttpClient.getHttpClient(configuration);
+        HttpClient httpClient_second_get = QsealcSignerHttpClient.getHttpClient(configuration);
+        Assert.assertEquals(httpClient_first_get, httpClient_second_get);
+
         HttpClient httpClient = QsealcSignerHttpClient.getHttpClient(configuration);
-        HttpPost post = new HttpPost("http://127.0.0.1:12345/test/");
+        HttpPost post = new HttpPost("http://127.0.0.1:11111/test/");
         HttpResponse response = httpClient.execute(post);
         Assert.assertEquals(200, response.getStatusLine().getStatusCode());
-        Assert.assertEquals("development", configuration.getEnvironment());
+
+        HttpPost postHttps = new HttpPost("https://127.0.0.1:12345/test/");
+        HttpResponse responseHttps = httpClient.execute(postHttps);
+        Assert.assertEquals(200, responseHttps.getStatusLine().getStatusCode());
     }
 
-    static <T> T getConfiguration(String fileName, Class<T> cls) throws FileNotFoundException {
-        FileInputStream configFileStream = new FileInputStream(new File(fileName));
-
-        Representer representer = new Representer();
-
-        Yaml yaml = new Yaml(new Constructor(cls), representer);
-
-        return cls.cast(yaml.load(configFileStream));
-    }
-
-    static class ProxyServerHandler extends AbstractHandler {
+    private static class ProxyServerHandler extends AbstractHandler {
         @Override
         public void handle(
                 String s,
@@ -79,6 +98,109 @@ public class QsealcSignerHttpClientTest {
                 throws IOException, ServletException {
             httpServletResponse.setStatus(200);
             request.setHandled(true);
+        }
+    }
+
+    private static class Utils {
+        private static <T> T getConfiguration(String fileName, Class<T> cls)
+                throws FileNotFoundException {
+            FileInputStream configFileStream = new FileInputStream(new File(fileName));
+
+            Representer representer = new Representer();
+
+            Yaml yaml = new Yaml(new Constructor(cls), representer);
+
+            return cls.cast(yaml.load(configFileStream));
+        }
+
+        private static SslContextFactory buildSslContextFactoryFromConfig()
+                throws IOException, KeyStoreException, CertificateException,
+                        NoSuchAlgorithmException {
+            final SslContextFactory sslContextFactory = new SslContextFactory();
+
+            sslContextFactory.setKeyStore(buildServerKeyStore("changeme"));
+            sslContextFactory.setKeyStorePassword("changeme");
+
+            KeyStore clientTrustStore = buildClientTrustStore();
+
+            sslContextFactory.setNeedClientAuth(false);
+
+            sslContextFactory.setTrustStore(clientTrustStore);
+            sslContextFactory.setEndpointIdentificationAlgorithm(null);
+            return sslContextFactory;
+        }
+
+        private static KeyStore buildServerKeyStore(String password)
+                throws IOException, KeyStoreException, CertificateException,
+                        NoSuchAlgorithmException {
+
+            KeyStore keyStore = KeyStore.getInstance("JKS");
+            keyStore.load(null, password.toCharArray());
+            List<Certificate> certificateChain = new ArrayList<>();
+            certificateChain.add(getCertificateFromPath("data/test/qsealc/proxytls.crt"));
+            Certificate[] certificateChainArray = certificateChain.toArray(new Certificate[0]);
+            keyStore.setKeyEntry(
+                    "clientcert",
+                    getPrivateKeyFromPath("data/test/qsealc/proxytls.key"),
+                    password.toCharArray(),
+                    certificateChainArray);
+
+            return keyStore;
+        }
+
+        private static Certificate getCertificateFromPath(String path) throws IOException {
+            return getCertificateFromBytes(Files.toByteArray(new File(path)));
+        }
+
+        private static Certificate getCertificateFromBytes(byte[] certificate) {
+            try {
+                CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+
+                return certificateFactory.generateCertificate(
+                        new ByteArrayInputStream(certificate));
+
+            } catch (CertificateException ex) {
+                throw new IllegalArgumentException(
+                        "Could not parse certificate: " + ex.getMessage(), ex);
+            }
+        }
+
+        private static PrivateKey getPrivateKeyFromPath(String keyPath) throws IOException {
+            try (InputStreamReader reader = new InputStreamReader(new FileInputStream(keyPath))) {
+                return getPrivateKeyFromReader(reader);
+            }
+        }
+
+        private static PrivateKey getPrivateKeyFromReader(Reader reader) throws IOException {
+            try (PEMParser pemReader = new PEMParser(reader)) {
+
+                Object pemObject = pemReader.readObject();
+                PrivateKeyInfo privateKeyInfo;
+                if (pemObject instanceof PEMKeyPair) {
+                    privateKeyInfo = ((PEMKeyPair) pemObject).getPrivateKeyInfo();
+                } else if (pemObject instanceof PrivateKeyInfo) {
+                    privateKeyInfo = (PrivateKeyInfo) pemObject;
+                } else {
+                    throw new IllegalArgumentException(
+                            "Private key not in expected format. Got "
+                                    + (pemObject != null
+                                            ? pemObject.getClass().getCanonicalName()
+                                            : "null pemObject"));
+                }
+
+                JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+                return converter.getPrivateKey(privateKeyInfo);
+            }
+        }
+
+        private static KeyStore buildClientTrustStore()
+                throws KeyStoreException, IOException, NoSuchAlgorithmException,
+                        CertificateException {
+            KeyStore trustStore = KeyStore.getInstance("JKS");
+            trustStore.load(null, "changeme".toCharArray());
+            Certificate certificate = getCertificateFromPath("data/test/qsealc/ca.crt");
+            trustStore.setCertificateEntry("cert-0", certificate);
+            return trustStore;
         }
     }
 
@@ -92,7 +214,7 @@ public class QsealcSignerHttpClientTest {
 
         public EidasProxy() {}
 
-        public InternalEidasProxyConfiguration toInternalConfig() {
+        InternalEidasProxyConfiguration toInternalConfig() {
             return new InternalEidasProxyConfiguration(
                     host, caPath, tlsCrtPath, tlsKeyPath, environment, localEidasDev);
         }
