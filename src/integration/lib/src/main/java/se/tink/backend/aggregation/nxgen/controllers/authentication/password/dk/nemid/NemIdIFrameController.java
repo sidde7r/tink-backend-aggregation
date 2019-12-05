@@ -46,7 +46,7 @@ public class NemIdIFrameController {
         webdriverHelper.clickButton(SUBMIT_BUTTON);
     }
 
-    String doLoginWith(String username, String password, NemIdParametersV1 nemIdParameters)
+    String doLoginWith(String username, String password, NemIdParametersV2 nemIdParameters)
             throws AuthenticationException, AuthorizationException {
         try {
             driver = webdriverHelper.constructWebDriver();
