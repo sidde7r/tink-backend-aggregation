@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
@@ -21,10 +19,10 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.InitialParametersResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemIdAuthenticateUserRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdAuthenticatorV1;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdParametersV1;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdParameters;
 
-public class NordeaNemIdAuthenticator implements NemIdAuthenticatorV1 {
+public class NordeaNemIdAuthenticator implements NemIdAuthenticator {
 
     private final NordeaDkApiClient bankClient;
     private final NordeaDkSessionStorage sessionStorage;
@@ -37,11 +35,11 @@ public class NordeaNemIdAuthenticator implements NemIdAuthenticatorV1 {
     }
 
     @Override
-    public NemIdParametersV1 getNemIdParameters() throws AuthenticationException {
+    public NemIdParameters getNemIdParameters() throws AuthenticationException {
         InitialParametersResponse initialParametersResponse = bankClient.fetchInitialParameters();
         sessionStorage.setSessionId(
                 initialParametersResponse.getInitialParametersResponse().getSessionId());
-        return new NemIdParametersV1(
+        return new NemIdParameters(
                 initialParametersResponse
                         .getInitialParametersResponse()
                         .getInitialParameters()
@@ -106,10 +104,5 @@ public class NordeaNemIdAuthenticator implements NemIdAuthenticatorV1 {
                         .getAuthenticationToken()
                         .getToken();
         bankClient.setToken(token);
-    }
-
-    @Override
-    public List<Cookie> getCookies() {
-        return Collections.emptyList();
     }
 }

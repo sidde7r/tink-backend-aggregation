@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk
 
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class NemIdConstantsV1 {
+public class NemIdConstants {
 
     public static final URL BASE_URL = new URL("https://applet.danid.dk");
 
