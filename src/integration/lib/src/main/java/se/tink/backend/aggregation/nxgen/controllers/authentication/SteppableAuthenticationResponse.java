@@ -2,38 +2,39 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
 import com.google.common.base.Preconditions;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 public final class SteppableAuthenticationResponse implements AuthenticationSteppable {
 
-    private final Class<? extends AuthenticationStep> klass;
-    private final AuthenticationResponse response;
+    private final Optional<String> nextStepIdentifier;
+    private final SupplementInformationRequester supplementInformationRequester;
 
     private SteppableAuthenticationResponse(
-            final Class<? extends AuthenticationStep> klass,
-            @Nonnull final AuthenticationResponse response) {
-        this.klass = klass;
-        this.response = Preconditions.checkNotNull(response);
+            final String nextStepIdentifier, final SupplementInformationRequester response) {
+        this.nextStepIdentifier = Optional.of(nextStepIdentifier);
+        this.supplementInformationRequester = Preconditions.checkNotNull(response);
+    }
+
+    private SteppableAuthenticationResponse() {
+        nextStepIdentifier = Optional.empty();
+        supplementInformationRequester = null;
     }
 
     public static SteppableAuthenticationResponse intermediateResponse(
-            @Nonnull final Class<? extends AuthenticationStep> klass,
-            @Nonnull final AuthenticationResponse response) {
+            final String nextStepIdentifier, final SupplementInformationRequester response) {
 
-        return new SteppableAuthenticationResponse(Preconditions.checkNotNull(klass), response);
+        return new SteppableAuthenticationResponse(nextStepIdentifier, response);
     }
 
-    public static SteppableAuthenticationResponse finalResponse(
-            @Nonnull final AuthenticationResponse response) {
-        return new SteppableAuthenticationResponse(null, response);
+    public static SteppableAuthenticationResponse finalResponse() {
+        return new SteppableAuthenticationResponse();
     }
 
     @Override
-    public Optional<Class<? extends AuthenticationStep>> getStep() {
-        return Optional.ofNullable(klass);
+    public Optional<String> getStepIdentifier() {
+        return nextStepIdentifier;
     }
 
-    public AuthenticationResponse getPayload() {
-        return response;
+    public SupplementInformationRequester getSupplementInformationRequester() {
+        return supplementInformationRequester;
     }
 }

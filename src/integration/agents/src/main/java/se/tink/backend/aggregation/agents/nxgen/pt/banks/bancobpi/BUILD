@@ -1,0 +1,18 @@
+java_library(
+    name = "bancobpi",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/i18n",
+        "//third_party:com_google_code_gson_gson",
+        "//third_party:com_google_guava_guava",
+        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:org_json_json",
+        "//third_party:org_slf4j_slf4j_api",
+    ],
+)
