@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.framework.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaNemIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.rpc.filter.NordeaDkFilter;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemidPasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemidPasswordAuthenticationControllerV1;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class NordeaTestBase {
     protected String username;
     protected String password;
-    protected NemidPasswordAuthenticationController authenticator;
+    protected NemidPasswordAuthenticationControllerV1 authenticator;
     protected NordeaDkApiClient bankClient;
     protected Credentials credentials;
     protected AgentContext context;
@@ -50,7 +50,7 @@ public class NordeaTestBase {
         bankClient = new NordeaDkApiClient(sessionStorage, tinkHttpClient, credentials, "DK");
         NordeaNemIdAuthenticator nordeaNemIdAuthenticator =
                 new NordeaNemIdAuthenticator(bankClient, sessionStorage);
-        authenticator = new NemidPasswordAuthenticationController(nordeaNemIdAuthenticator);
+        authenticator = new NemidPasswordAuthenticationControllerV1(nordeaNemIdAuthenticator);
     }
 
     protected void authenticateTestUser() throws Exception {

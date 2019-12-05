@@ -23,12 +23,12 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstants.ErrorStrings;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstantsV1.ErrorStrings;
 
-public abstract class NemidAuthenticationController {
+public abstract class NemidAuthenticationControllerV1 {
 
     private static final AggregationLogger LOGGER =
-            new AggregationLogger(NemidAuthenticationController.class);
+            new AggregationLogger(NemidAuthenticationControllerV1.class);
     private static final Pattern PATTERN_INCORRECT_CREDENTIALS =
             Pattern.compile("^incorrect (user|password).*");
 
@@ -57,10 +57,10 @@ public abstract class NemidAuthenticationController {
         }
     }
 
-    private final NemIdAuthenticator authenticator;
+    private final NemIdAuthenticatorV1 authenticator;
     private WebDriver driver;
 
-    public NemidAuthenticationController(NemIdAuthenticator authenticator) {
+    public NemidAuthenticationControllerV1(NemIdAuthenticatorV1 authenticator) {
         this.authenticator = authenticator;
     }
 
@@ -82,13 +82,13 @@ public abstract class NemidAuthenticationController {
             //  3. The new contents will execute and we can go forward
 
             // 1 - normal request to base URL
-            NemIdParameters nemIdParameters = authenticator.getNemIdParameters();
+            NemIdParametersV1 nemIdParameters = authenticator.getNemIdParameters();
             initBrowser(nemIdParameters);
 
             // 2 - Inject javascript to do magic
 
             String html =
-                    String.format(NemIdConstants.BASE_HTML, nemIdParameters.getNemIdElements());
+                    String.format(NemIdConstantsV1.BASE_HTML, nemIdParameters.getNemIdElements());
             String b64Html = Base64.getEncoder().encodeToString(html.getBytes());
             ((JavascriptExecutor) driver)
                     .executeScript("document.write(atob(\"" + b64Html + "\"));");
@@ -224,7 +224,7 @@ public abstract class NemidAuthenticationController {
         capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
         capabilities.setCapability(
                 PhantomJSDriverService.PHANTOMJS_PAGE_SETTINGS_PREFIX + "userAgent",
-                NemIdConstants.USER_AGENT);
+                NemIdConstantsV1.USER_AGENT);
         WebDriver thePhantom = null;
 
         try {
@@ -315,7 +315,7 @@ public abstract class NemidAuthenticationController {
     }
     // fetch a page from danid to init session, check that we are not redirected
 
-    private void initBrowser(NemIdParameters nemIdParameters) {
+    private void initBrowser(NemIdParametersV1 nemIdParameters) {
         String baseUrl = nemIdParameters.getInitialUrl().get();
         driver.get(baseUrl);
 
