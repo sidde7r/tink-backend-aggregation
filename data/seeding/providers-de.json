@@ -1480,34 +1480,6 @@
             "type": "BANK"
         },
         {
-            "accessType": "OPEN_BANKING",
-            "authenticationFlow": "REDIRECT",
-            "backgroundRefreshEnabled": true,
-            "backgroundRefreshMaxFrequency": 4,
-            "className": "nxgen.de.openbanking.comdirect.ComdirectAgent",
-            "credentialsType": "PASSWORD",
-            "displayDescription": "Password",
-            "displayName": "Comdirect",
-            "fields": [
-                {
-                    "description": "Iban",
-                    "immutable": true,
-                    "name": "iban"
-                }
-            ],
-            "financialInstitutionId": "5a86a5830c51e3230ed2f5e460f51b39",
-            "financialInstitutionName": "Comdirect Open Banking",
-            "multiFactor": false,
-            "name": "de-comdirect-ob",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
             "accessType": "OTHER",
             "backgroundRefreshEnabled": true,
             "backgroundRefreshMaxFrequency": 1,
@@ -1633,34 +1605,6 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
-            "authenticationFlow": "REDIRECT",
-            "backgroundRefreshEnabled": true,
-            "backgroundRefreshMaxFrequency": 4,
-            "className": "nxgen.de.openbanking.commerzbank.CommerzBankAgent",
-            "credentialsType": "PASSWORD",
-            "displayDescription": "Password",
-            "displayName": "CommerzBank",
-            "fields": [
-                {
-                    "description": "Iban",
-                    "immutable": true,
-                    "name": "iban"
-                }
-            ],
-            "financialInstitutionId": "b508582f39150e17ca7be36b1e63a92d",
-            "financialInstitutionName": "CommerzBank Open Banking",
-            "multiFactor": false,
-            "name": "de-commerzbank-ob",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -11166,47 +11110,6 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
-            "backgroundRefreshEnabled": true,
-            "backgroundRefreshMaxFrequency": 4,
-            "className": "nxgen.de.openbanking.dkb.DkbAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "DKB (Sandbox)",
-            "fields": [
-                {
-                    "description": "iban",
-                    "immutable": true,
-                    "name": "iban"
-                },
-                {
-                    "description": "Username",
-                    "immutable": true,
-                    "name": "username"
-                },
-                {
-                    "description": "Password",
-                    "masked": true,
-                    "minLength": 1,
-                    "name": "password",
-                    "numeric": true,
-                    "sensitive": true
-                }
-            ],
-            "financialInstitutionId": "3095115aff5a405a8b17b49939f90024",
-            "financialInstitutionName": "DKB",
-            "multiFactor": false,
-            "name": "de-dkb-ob",
-            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-            "payload": "tink",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -29231,25 +29134,6 @@
             "name": "de-umweltbank-password",
             "passwordHelpText": "Use the same password as you would in your bank's web login.",
             "payload": "76035000 https://fints.umweltbank.de",
-            "popular": false,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
-            "backgroundRefreshEnabled": true,
-            "backgroundRefreshMaxFrequency": 4,
-            "className": "nxgen.de.openbanking.unicredit.UnicreditAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "HypoVereinsbank",
-            "fields": [],
-            "financialInstitutionId": "9406fceceb4011e981b42a2ae2dbcce4",
-            "financialInstitutionName": "UniCredit Bank AG",
-            "groupDisplayName": "HypoVereinsbank",
-            "multiFactor": true,
-            "name": "de-unicredit-ob",
-            "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
             "popular": false,
             "status": "ENABLED",
             "transactional": true,

@@ -2487,23 +2487,6 @@
             "type": "BANK"
         },
         {
-            "accessType": "OPEN_BANKING",
-            "className": "nxgen.fr.openbanking.labanquepostale.LaBanquePostaleAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "La Banque Postale (Test only)",
-            "fields": [],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
-            "multiFactor": false,
-            "name": "fr-labanquepostale-ob",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
             "accessType": "OTHER",
             "className": "nxgen.fr.banks.labanquepostale.LaBanquePostaleAgent",
             "credentialsType": "PASSWORD",
