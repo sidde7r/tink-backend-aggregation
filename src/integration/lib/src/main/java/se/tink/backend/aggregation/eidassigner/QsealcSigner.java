@@ -69,23 +69,33 @@ public class QsealcSigner {
             EidasIdentity eidasIdentity,
             String oldCertId) {
         try {
+            if ("staging".equalsIgnoreCase(conf.getEnvironment())) {
+                log.info("Return a singleton httpclient");
+                return new QsealcSigner(
+                        QsealcSignerHttpClient.getHttpClient(conf),
+                        alg,
+                        conf.getHost(),
+                        oldCertId,
+                        eidasIdentity);
+            } else {
+                log.info("Create a new httpclient instance");
+                KeyStore trustStore = conf.getRootCaTrustStore();
+                KeyStore keyStore = conf.getClientCertKeystore();
+                SSLContext sslContext =
+                        new SSLContextBuilder()
+                                .loadTrustMaterial(
+                                        trustStore,
+                                        TrustRootCaStrategy.createWithoutFallbackTrust(trustStore))
+                                .loadKeyMaterial(keyStore, "changeme".toCharArray())
+                                .build();
 
-            KeyStore trustStore = conf.getRootCaTrustStore();
-            KeyStore keyStore = conf.getClientCertKeystore();
-            SSLContext sslContext =
-                    new SSLContextBuilder()
-                            .loadTrustMaterial(
-                                    trustStore,
-                                    TrustRootCaStrategy.createWithoutFallbackTrust(trustStore))
-                            .loadKeyMaterial(keyStore, "changeme".toCharArray())
-                            .build();
-
-            HttpClient httpClient =
-                    HttpClients.custom()
-                            .setHostnameVerifier(new AllowAllHostnameVerifier())
-                            .setSslcontext(sslContext)
-                            .build();
-            return new QsealcSigner(httpClient, alg, conf.getHost(), oldCertId, eidasIdentity);
+                HttpClient httpClient =
+                        HttpClients.custom()
+                                .setHostnameVerifier(new AllowAllHostnameVerifier())
+                                .setSslcontext(sslContext)
+                                .build();
+                return new QsealcSigner(httpClient, alg, conf.getHost(), oldCertId, eidasIdentity);
+            }
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

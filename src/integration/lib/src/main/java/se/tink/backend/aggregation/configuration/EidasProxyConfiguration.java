@@ -9,6 +9,7 @@ public class EidasProxyConfiguration {
     private String caPath;
     private String tlsCrtPath;
     private String tlsKeyPath;
+    private String environment;
     private boolean localEidasDev;
 
     public EidasProxyConfiguration() {}
@@ -27,6 +28,6 @@ public class EidasProxyConfiguration {
 
     public InternalEidasProxyConfiguration toInternalConfig() {
         return new InternalEidasProxyConfiguration(
-                host, caPath, tlsCrtPath, tlsKeyPath, localEidasDev);
+                host, caPath, tlsCrtPath, tlsKeyPath, environment, localEidasDev);
     }
 }
