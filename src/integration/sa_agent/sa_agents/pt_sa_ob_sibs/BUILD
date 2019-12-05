@@ -14,6 +14,7 @@ java_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/sa_agent/sa_agent_framework:sa-agent-framework",
+        "//src/integration/sa_agent/sa_common:sa-common",
         "//src/integration/sa_agent/sa_grpc_api:sa-grpc-api",
         "//third_party:standalone_agent_libs",
         "//third_party/sa_agent:grpc_client_libs",
@@ -33,6 +34,7 @@ junit_test(
     deps = [
         ":standalone-agent-ob-sibs-bin",
         "//src/integration/sa_agent/sa_agent_framework:sa-agent-framework",
+        "//src/integration/sa_agent/sa_common:sa-common",
         "//src/integration/sa_agent/sa_grpc_api:sa-grpc-api",
         "//third_party:standalone_agent_test_libs",
         "//third_party/sa_agent:grpc_client_libs",

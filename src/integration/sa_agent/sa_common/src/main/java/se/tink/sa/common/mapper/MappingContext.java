@@ -1,4 +1,4 @@
-package se.tink.sa.framework.mapper;
+package se.tink.sa.common.mapper;
 
 import java.util.HashMap;
 import java.util.Map;
