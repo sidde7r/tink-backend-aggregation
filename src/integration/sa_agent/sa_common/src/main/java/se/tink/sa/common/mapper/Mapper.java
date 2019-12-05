@@ -1,6 +1,6 @@
-package se.tink.sa.framework.mapper;
+package se.tink.sa.common.mapper;
 
-public interface ToDomainMapper<D, S> {
+public interface Mapper<D, S> {
 
     default D mapToTransferModel(S source) {
         return mapToTransferModel(source, MappingContext.newInstance());

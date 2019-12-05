@@ -10,8 +10,8 @@ import se.tink.sa.agent.pt.ob.sibs.rest.client.SibsConsentRestClient;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.authentication.entity.ConsentAccessEntity;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.authentication.rpc.ConsentRequest;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.authentication.rpc.ConsentResponse;
+import se.tink.sa.common.mapper.MappingContext;
 import se.tink.sa.framework.facade.AuthenticationFacade;
-import se.tink.sa.framework.mapper.MappingContext;
 import se.tink.sa.model.auth.AuthenticationRequest;
 import se.tink.sa.model.auth.AuthenticationResponse;
 
