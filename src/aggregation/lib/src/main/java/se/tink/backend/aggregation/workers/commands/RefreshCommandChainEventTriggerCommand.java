@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.uuid.UUIDUtils;
 
-public class CredentialsRefreshStartEventCommand extends AgentWorkerCommand {
+public class RefreshCommandChainEventTriggerCommand extends AgentWorkerCommand {
     private final Credentials credentials;
     private final String appId;
     private final CredentialsEventProducer credentialsEventProducer;
@@ -17,7 +17,7 @@ public class CredentialsRefreshStartEventCommand extends AgentWorkerCommand {
     private final boolean manual;
     private final String clusterId;
 
-    public CredentialsRefreshStartEventCommand(
+    public RefreshCommandChainEventTriggerCommand(
             CredentialsEventProducer credentialsEventProducer,
             Credentials credentials,
             String appId,
