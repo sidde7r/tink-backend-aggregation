@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.santander;
+package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.bancoctt;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -12,29 +12,28 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 @Ignore
-public class SantanderAgentPaymentTest {
+public class BancoCttAgentPaymentTest {
 
     private AgentIntegrationTest.Builder builder;
 
     private final String currency = "EUR";
     private final LocalDate executionDate = LocalDate.now();
     private final int AMOUNT = 1;
-    private final String IBAN_SANTANDER = "";
+    private final String IBAN_BANCO_CTT = "";
     private final String IBAN_MILLENNIUM = "";
     private final String ACCOUNT_HOLDER_MILLENNIUM = "";
 
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("pt", "pt-santander-oauth2")
-                        .setFinancialInstitutionId("santander-pt")
+                new AgentIntegrationTest.Builder("pt", "pt-bancoctt-oauth2")
+                        .setFinancialInstitutionId("bancoctt")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
@@ -56,8 +55,8 @@ public class SantanderAgentPaymentTest {
             doReturn(ACCOUNT_HOLDER_MILLENNIUM).when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(IBAN_SANTANDER).when(debtor).getAccountNumber();
+            doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
+            doReturn(IBAN_BANCO_CTT).when(debtor).getAccountNumber();
 
             listOfMockedPayments.add(
                     new Payment.Builder()
