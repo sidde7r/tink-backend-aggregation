@@ -74,6 +74,14 @@
                     "sensitive": true
                 }
             ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionName": "Banco BPI",
+            "multiFactor": true,
+            "name": "pt-bancobpi-password",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
             "supplementalFields": [
                 {
                     "description": "Authorization code, 6 digits.",
@@ -85,14 +93,6 @@
                     "patternError": "Please enter your SMS 6 digit authorization code"
                 }
             ],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
-            "financialInstitutionName": "Banco BPI",
-            "multiFactor": true,
-            "name": "pt-bancobpi-password",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": null,
             "type": "BANK"
@@ -206,6 +206,37 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
+            "className": "nxgen.pt.banks.caixa.CaixaAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "EUR",
+            "displayName": "Caixa",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "market": "PT",
+            "multiFactor": false,
+            "name": "pt-caixa-password",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.pt.openbanking.caixacrl.CaixaCrlAgent",
             "credentialsType": "THIRD_PARTY_APP",
@@ -314,6 +345,37 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
+            "className": "nxgen.pt.banks.montepio.MontepioAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Banco Montepio",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionName": "Banco Montepio",
+            "groupDisplayName": "Banco Montepio",
+            "multiFactor": false,
+            "name": "pt-montepio-password",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.pt.openbanking.novobanco.NovoBancoAgent",
             "credentialsType": "THIRD_PARTY_APP",
@@ -326,6 +388,39 @@
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
             "payload": "tink",
             "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
+            "className": "nxgen.pt.banks.novobanco.NovoBancoAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Novo Banco",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionName": "Novo Banco",
+            "groupDisplayName": "Novo Banco",
+            "multiFactor": false,
+            "name": "pt-novobanco-password",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "payload": "tink",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": null,
@@ -399,37 +494,6 @@
             "type": "BANK"
         },
         {
-            "currency": "EUR",
-            "market": "PT",
-            "className": "nxgen.pt.banks.caixa.CaixaAgent",
-            "name": "pt-caixa-password",
-            "accessType": "OTHER",
-            "credentialsType": "PASSWORD",
-            "displayName": "Caixa",
-            "fields": [
-                {
-                    "description": "Username",
-                    "immutable": true,
-                    "name": "username"
-                },
-                {
-                    "description": "Password",
-                    "masked": true,
-                    "name": "password",
-                    "sensitive": true
-                }
-            ],
-            "multiFactor": false,
-            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK",
-            "financialInstitutionId": "dummyFinancialInstitutionId"
-        },
-        {
             "accessType": "OTHER",
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
@@ -498,70 +562,6 @@
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
             "payload": "tink",
             "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OTHER",
-            "className": "nxgen.pt.banks.montepio.MontepioAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Banco Montepio",
-            "fields": [
-                {
-                    "description": "Username",
-                    "immutable": true,
-                    "name": "username"
-                },
-                {
-                    "description": "Password",
-                    "masked": true,
-                    "name": "password",
-                    "sensitive": true
-                }
-            ],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
-            "financialInstitutionName": "Banco Montepio",
-            "groupDisplayName": "Banco Montepio",
-            "multiFactor": false,
-            "name": "pt-montepio-password",
-            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OTHER",
-            "className": "nxgen.pt.banks.novobanco.NovoBancoAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Novo Banco",
-            "fields": [
-                {
-                    "description": "Username",
-                    "immutable": true,
-                    "name": "username"
-                },
-                {
-                    "description": "Password",
-                    "masked": true,
-                    "name": "password",
-                    "sensitive": true
-                }
-            ],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
-            "financialInstitutionName": "Novo Banco",
-            "groupDisplayName": "Novo Banco",
-            "multiFactor": false,
-            "name": "pt-novobanco-password",
-            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-            "payload": "tink",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": null,

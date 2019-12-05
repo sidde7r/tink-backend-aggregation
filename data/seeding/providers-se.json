@@ -441,20 +441,6 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.se.openbanking.danskebank.DanskebankV31Agent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Danske Bank",
-            "fields": [],
-            "multiFactor": false,
-            "name": "se-danskebank-ob",
-            "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK",
-            "accessType": "OPEN_BANKING"
-        },
-        {
             "accessType": "OTHER",
             "className": "demo.DemoAgent",
             "credentialsType": "PASSWORD",
@@ -1496,6 +1482,124 @@
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"
             ],
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayDescription": "Security token",
+            "displayName": "Sparbankerna",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "groupDisplayName": "Swedbank och Sparbankerna",
+            "market": "SE",
+            "multiFactor": true,
+            "name": "savingsbank-token",
+            "passwordHelpText": "You need access to your Security token to create a screen code.",
+            "payload": "savingsbank",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "supplementalFields": [
+                {
+                    "description": "One time code",
+                    "helpText": "Start your Security token by using the arrow button.\nEnter PIN code.\nSelect number 1 when 'APPLI' appears.\nEnter the code from the Security token.",
+                    "hint": "NNNNNNNN",
+                    "masked": true,
+                    "maxLength": 8,
+                    "minLength": 8,
+                    "name": "logininput",
+                    "numeric": true,
+                    "pattern": "([0-9]{8})",
+                    "patternError": "Please enter eight digits.",
+                    "sensitive": true
+                },
+                {
+                    "description": "Challenge",
+                    "helpText": "Sign for transfer.",
+                    "hint": null,
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signfortransferdescription",
+                    "value": null
+                },
+                {
+                    "helpText": "Press the arrow button.\nSelect number '2'.\nEnter the challenge in your Security token.\nEnter the code from the Security token.",
+                    "hint": "NNNNNNNN",
+                    "immutable": false,
+                    "masked": false,
+                    "maxLength": 8,
+                    "minLength": 8,
+                    "name": "signfortransferinput",
+                    "numeric": true,
+                    "pattern": "^[0-9]{8}$",
+                    "patternError": "Please enter eight digits.",
+                    "value": null
+                },
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
+                },
+                {
+                    "description": "Challenge",
+                    "helpText": "You have to confirm that you want to add a new recipient.\n",
+                    "hint": null,
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signforbeneficiarydescription"
+                },
+                {
+                    "description": "Recipient challenge",
+                    "helpText": "Press the arrow button.\nSelect number '2'.\nEnter the challenge in your Security token.\nEnter the code from the Security token.",
+                    "hint": "NNNNNNNN",
+                    "immutable": true,
+                    "masked": false,
+                    "maxLength": 8,
+                    "minLength": 8,
+                    "name": "signforbeneficiaryinput",
+                    "numeric": true,
+                    "pattern": "^[0-9]{8}$",
+                    "patternError": "Please enter eight digits.",
+                    "value": null
+                },
+                {
+                    "description": "Response Code",
+                    "helpText": "Enter the code from the Security token",
+                    "hint": "NNNNNNNN",
+                    "immutable": true,
+                    "masked": false,
+                    "maxLength": 8,
+                    "minLength": 8,
+                    "name": "signcodeinput",
+                    "numeric": true,
+                    "pattern": "([0-9]{8})",
+                    "patternError": "Please enter eight digits."
+                }
+            ],
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
             "className": "banks.sbab.SBABAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -1613,6 +1717,20 @@
             "name": "se-danskebank-bankid",
             "passwordHelpText": "Use Mobile BankID the same way as with the Danske Bank mobile app. You can order a Mobile BankID using the bank's web service.",
             "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.se.openbanking.danskebank.DanskebankV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Danske Bank",
+            "fields": [],
+            "multiFactor": false,
+            "name": "se-danskebank-ob",
+            "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
+            "popular": true,
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
@@ -1771,6 +1889,35 @@
         },
         {
             "accessType": "OTHER",
+            "backgroundRefreshEnabled": true,
+            "backgroundRefreshMaxFrequency": 4,
+            "className": "nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "currency": "SEK",
+            "displayName": "Nordea",
+            "fields": [
+                {
+                    "description": "Partner User Id",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "financialInstitutionId": "dde2463acf40501389de4fca5a3693a4",
+            "financialInstitutionName": "Nordea",
+            "groupDisplayName": "Nordea",
+            "market": "SE",
+            "multiFactor": false,
+            "name": "se-nordeapartner-jwt",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": null,
+            "popular": true,
+            "status": "DISABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
             "className": "nxgen.se.banks.sbab.SbabAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "currency": "SEK",
@@ -1801,6 +1948,27 @@
             "status": "DISABLED",
             "transactional": true,
             "tutorialUrl": "http://www.sbab.se",
+            "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
+            "className": "nxgen.se.banks.seb.SebAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SEB",
+            "fields": [],
+            "financialInstitutionId": "dummyInstitutionId",
+            "groupDisplayName": "SEB",
+            "market": "SE",
+            "multiFactor": false,
+            "name": "se-seb-bankid",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": "http://www.seb.se/pow/wcp/index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se",
             "type": "BANK"
         },
         {
@@ -1836,6 +2004,45 @@
             "popular": true,
             "status": "DISABLED",
             "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
+            "className": "nxgen.se.banks.skandiabanken.SkandiaBankenAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Skandiabanken",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "market": "SE",
+            "multiFactor": false,
+            "name": "se-skandiabanken-bankid",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "authenticationFlow": "REDIRECT",
+            "className": "nxgen.dk.openbanking.sdc.SdcAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "Sparbanken Syd",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": true,
+            "name": "se-sparbankensyd-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
             "tutorialUrl": null,
             "type": "BANK"
         },
@@ -2146,34 +2353,12 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
-            "financialInstitutionId": "dummyId",
+            "financialInstitutionId": "SEB",
             "financialInstitutionName": "dummyName",
             "groupDisplayName": "SEB",
             "market": "SE",
             "multiFactor": true,
             "name": "seb-bankid",
-            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-            "popular": true,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": "http://www.seb.se/pow/wcp/index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se",
-            "type": "BANK",
-            "financialInstitutionId": "SEB"
-        },
-        {
-            "accessType": "OTHER",
-            "className": "nxgen.se.banks.seb.SebAgent",
-            "credentialsType": "MOBILE_BANKID",
-            "currency": "SEK",
-            "displayName": "SEB",
-            "fields": [],
-            "financialInstitutionId": "dummyInstitutionId",
-            "groupDisplayName": "SEB",
-            "market": "SE",
-            "multiFactor": false,
-            "name": "se-seb-bankid",
             "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "popular": true,
             "refreshFrequency": 0,
@@ -2306,26 +2491,6 @@
         },
         {
             "accessType": "OTHER",
-            "className": "nxgen.se.banks.skandiabanken.SkandiaBankenAgent",
-            "credentialsType": "MOBILE_BANKID",
-            "currency": "SEK",
-            "displayName": "Skandiabanken",
-            "fields": [],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "market": "SE",
-            "multiFactor": false,
-            "name": "se-skandiabanken-bankid",
-            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-            "popular": true,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OTHER",
             "className": "banks.SkandiabankenAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2411,25 +2576,6 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
-            "authenticationFlow": "REDIRECT",
-            "className": "nxgen.dk.openbanking.sdc.SdcAgent",
-            "credentialsType": "THIRD_PARTY_APP",
-            "displayName": "Sparbanken Syd",
-            "fields": [],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "multiFactor": true,
-            "name": "se-sparbankensyd-ob",
-            "passwordHelpText": null,
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -2542,6 +2688,90 @@
                     "name": "addbeneficiaryinput"
                 }
             ],
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Swedbank Ung",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "groupDisplayName": "Swedbank och Sparbankerna",
+            "market": "SE",
+            "multiFactor": true,
+            "name": "swedbank-bankid-youth",
+            "payload": "swedbank-youth",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "OBSOLETE",
+            "supplementalFields": [
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
+                }
+            ],
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgentPaymentsRevamp",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Swedbank Payment Revamp",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "groupDisplayName": "Swedbank Payment Revamp",
+            "market": "SE",
+            "multiFactor": true,
+            "name": "swedbank-payment-revamp-bankid",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "payload": "swedbank",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
         },
@@ -2665,208 +2895,6 @@
         },
         {
             "accessType": "OTHER",
-            "capabilities": [
-                "TRANSFERS",
-                "MORTGAGE_AGGREGATION"
-            ],
-            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
-            "credentialsType": "PASSWORD",
-            "currency": "SEK",
-            "displayDescription": "Security token",
-            "displayName": "Sparbankerna",
-            "fields": [
-                {
-                    "description": "Social security number",
-                    "hint": "YYYYMMDDNNNN",
-                    "immutable": true,
-                    "maxLength": 12,
-                    "minLength": 12,
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
-                    "patternError": "Please enter a valid social security number."
-                }
-            ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "groupDisplayName": "Swedbank och Sparbankerna",
-            "market": "SE",
-            "multiFactor": true,
-            "name": "savingsbank-token",
-            "passwordHelpText": "You need access to your Security token to create a screen code.",
-            "payload": "savingsbank",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "supplementalFields": [
-                {
-                    "description": "One time code",
-                    "helpText": "Start your Security token by using the arrow button.\nEnter PIN code.\nSelect number 1 when 'APPLI' appears.\nEnter the code from the Security token.",
-                    "hint": "NNNNNNNN",
-                    "masked": true,
-                    "maxLength": 8,
-                    "minLength": 8,
-                    "name": "logininput",
-                    "numeric": true,
-                    "pattern": "([0-9]{8})",
-                    "patternError": "Please enter eight digits.",
-                    "sensitive": true
-                },
-                {
-                    "description": "Challenge",
-                    "helpText": "Sign for transfer.",
-                    "hint": null,
-                    "immutable": true,
-                    "masked": false,
-                    "name": "signfortransferdescription",
-                    "value": null
-                },
-                {
-                    "helpText": "Press the arrow button.\nSelect number '2'.\nEnter the challenge in your Security token.\nEnter the code from the Security token.",
-                    "hint": "NNNNNNNN",
-                    "immutable": false,
-                    "masked": false,
-                    "maxLength": 8,
-                    "minLength": 8,
-                    "name": "signfortransferinput",
-                    "numeric": true,
-                    "pattern": "^[0-9]{8}$",
-                    "patternError": "Please enter eight digits.",
-                    "value": null
-                },
-                {
-                    "description": "Beneficiary Name",
-                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
-                    "hint": "Name",
-                    "masked": false,
-                    "name": "addbeneficiaryinput"
-                },
-                {
-                    "description": "Challenge",
-                    "helpText": "You have to confirm that you want to add a new recipient.\n",
-                    "hint": null,
-                    "immutable": true,
-                    "masked": false,
-                    "name": "signforbeneficiarydescription"
-                },
-                {
-                    "description": "Recipient challenge",
-                    "helpText": "Press the arrow button.\nSelect number '2'.\nEnter the challenge in your Security token.\nEnter the code from the Security token.",
-                    "hint": "NNNNNNNN",
-                    "immutable": true,
-                    "masked": false,
-                    "maxLength": 8,
-                    "minLength": 8,
-                    "name": "signforbeneficiaryinput",
-                    "numeric": true,
-                    "pattern": "^[0-9]{8}$",
-                    "patternError": "Please enter eight digits.",
-                    "value": null
-                },
-                {
-                    "description": "Response Code",
-                    "helpText": "Enter the code from the Security token",
-                    "hint": "NNNNNNNN",
-                    "immutable": true,
-                    "masked": false,
-                    "maxLength": 8,
-                    "minLength": 8,
-                    "name": "signcodeinput",
-                    "numeric": true,
-                    "pattern": "([0-9]{8})",
-                    "patternError": "Please enter eight digits."
-                }
-            ],
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OTHER",
-            "capabilities": [
-                "TRANSFERS",
-                "MORTGAGE_AGGREGATION"
-            ],
-            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
-            "credentialsType": "MOBILE_BANKID",
-            "currency": "SEK",
-            "displayName": "Swedbank Ung",
-            "fields": [
-                {
-                    "description": "Social security number",
-                    "hint": "YYYYMMDDNNNN",
-                    "immutable": true,
-                    "maxLength": 12,
-                    "minLength": 12,
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
-                    "patternError": "Please enter a valid social security number."
-                }
-            ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "groupDisplayName": "Swedbank och Sparbankerna",
-            "market": "SE",
-            "multiFactor": true,
-            "name": "swedbank-bankid-youth",
-            "payload": "swedbank-youth",
-            "popular": true,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
-            "status": "OBSOLETE",
-            "supplementalFields": [
-                {
-                    "description": "Beneficiary Name",
-                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
-                    "hint": "Name",
-                    "masked": false,
-                    "name": "addbeneficiaryinput"
-                }
-            ],
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OTHER",
-            "capabilities": [
-                "TRANSFERS",
-                "MORTGAGE_AGGREGATION"
-            ],
-            "className": "nxgen.se.banks.swedbank.SwedbankSEAgentPaymentsRevamp",
-            "credentialsType": "MOBILE_BANKID",
-            "currency": "SEK",
-            "displayName": "Swedbank Payment Revamp",
-            "fields": [
-                {
-                    "description": "Social security number",
-                    "hint": "YYYYMMDDNNNN",
-                    "immutable": true,
-                    "maxLength": 12,
-                    "minLength": 12,
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
-                    "patternError": "Please enter a valid social security number."
-                }
-            ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "groupDisplayName": "Swedbank Payment Revamp",
-            "market": "SE",
-            "multiFactor": true,
-            "name": "swedbank-payment-revamp-bankid",
-            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-            "payload": "swedbank",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OTHER",
             "className": "creditcards.ikano.api.IkanoApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2925,35 +2953,6 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OTHER",
-            "backgroundRefreshEnabled": true,
-            "backgroundRefreshMaxFrequency": 4,
-            "className": "nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerAgent",
-            "credentialsType": "THIRD_PARTY_APP",
-            "currency": "SEK",
-            "displayName": "Nordea",
-            "fields": [
-                {
-                    "description": "Partner User Id",
-                    "immutable": true,
-                    "name": "username"
-                }
-            ],
-            "financialInstitutionId": "dde2463acf40501389de4fca5a3693a4",
-            "financialInstitutionName": "Nordea",
-            "groupDisplayName": "Nordea",
-            "market": "SE",
-            "multiFactor": false,
-            "name": "se-nordeapartner-jwt",
-            "passwordHelpText": "Please authenticate to use this bank.",
-            "payload": null,
-            "popular": true,
-            "status": "DISABLED",
-            "transactional": true,
-            "tutorialUrl": null,
             "type": "BANK"
         }
     ]
