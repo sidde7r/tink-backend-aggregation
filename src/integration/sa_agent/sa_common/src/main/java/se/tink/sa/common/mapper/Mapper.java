@@ -2,9 +2,9 @@ package se.tink.sa.common.mapper;
 
 public interface Mapper<D, S> {
 
-    default D mapToTransferModel(S source) {
-        return mapToTransferModel(source, MappingContext.newInstance());
+    default D map(S source) {
+        return map(source, MappingContext.newInstance());
     }
 
-    D mapToTransferModel(S source, MappingContext context);
+    D map(S source, MappingContext mappingContext);
 }

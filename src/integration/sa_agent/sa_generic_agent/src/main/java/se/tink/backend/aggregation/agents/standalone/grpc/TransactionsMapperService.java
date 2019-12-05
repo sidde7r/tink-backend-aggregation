@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.agents.standalone.grpc;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.FetchAccountsResponseMapperFactory;
+import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.TransactionaAccountMapper;
 import se.tink.sa.services.fetch.trans.PayloadMap;
 import se.tink.sa.services.fetch.trans.TransactionsMapEntity;
 
@@ -29,12 +28,14 @@ public class TransactionsMapperService {
 
     private static Map<Account, List<Transaction>> mapTransactions(
             final List<TransactionsMapEntity> transactionsMapEntityList) {
+        TransactionaAccountMapper transactionaAccountMapper =
+                FetchAccountsResponseMapperFactory.transactionaAccountMapper();
         return Optional.ofNullable(transactionsMapEntityList).orElse(Collections.emptyList())
                 .stream()
                 .collect(
                         Collectors.toMap(
                                 transactionsMapEntity ->
-                                        AccountMapperService.mapAccount(
+                                        transactionaAccountMapper.map(
                                                 transactionsMapEntity.getKey()),
                                 transactionsMapEntity ->
                                         TransactionsMapperService.mapTransactionList(
@@ -54,7 +55,7 @@ public class TransactionsMapperService {
         resp.setAccountId(transaction.getAccountId());
         resp.setAmount(transaction.getAmount());
         resp.setCredentialsId(transaction.getCredentialsId());
-        resp.setDate(AccountMapperService.mapFromGoogleDate(transaction.getDate()));
+        resp.setDate(mapFromGoogleDate(transaction.getDate()));
         resp.setDescription(transaction.getDescription());
         resp.setId(transaction.getId());
         setInternalPayload(resp, transaction.getInternalPayloadMap());
@@ -91,5 +92,13 @@ public class TransactionsMapperService {
     private static TransactionTypes mapTransactionTypes(
             final se.tink.sa.services.fetch.trans.TransactionTypes type) {
         return TransactionTypes.values()[type.getNumber()];
+    }
+
+    public static Date mapFromGoogleDate(final com.google.type.Date date) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, date.getYear());
+        calendar.set(Calendar.MONTH, date.getMonth());
+        calendar.set(Calendar.DAY_OF_MONTH, date.getDay());
+        return calendar.getTime();
     }
 }
