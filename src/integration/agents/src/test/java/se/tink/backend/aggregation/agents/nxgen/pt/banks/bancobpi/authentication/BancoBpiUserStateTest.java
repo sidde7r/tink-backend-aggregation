@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authenticatio
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiUserState;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.MobileChallengeRequestedToken;
 
 public class BancoBpiUserStateTest {
 

@@ -1,10 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity;
 
 public class BancoBpiUserState {
 
     private String accessPin;
     private String deviceUUID;
     private String sessionCSRFToken;
+    private String moduleVersion;
     private boolean deviceActivationFinished;
     private MobileChallengeRequestedToken mobileChallengeRequestedToken;
 
@@ -32,6 +33,18 @@ public class BancoBpiUserState {
         this.sessionCSRFToken = sessionCSRFToken;
     }
 
+    public String getModuleVersion() {
+        return moduleVersion;
+    }
+
+    public void setModuleVersion(String moduleVersion) {
+        this.moduleVersion = moduleVersion;
+    }
+
+    public void setDeviceActivationFinished(boolean deviceActivationFinished) {
+        this.deviceActivationFinished = deviceActivationFinished;
+    }
+
     public MobileChallengeRequestedToken getMobileChallengeRequestedToken() {
         return mobileChallengeRequestedToken;
     }
@@ -41,7 +54,7 @@ public class BancoBpiUserState {
         this.mobileChallengeRequestedToken = mobileChallengeRequestedToken;
     }
 
-    void clearAuthData() {
+    public void clearAuthData() {
         accessPin = null;
         deviceUUID = null;
         mobileChallengeRequestedToken = null;

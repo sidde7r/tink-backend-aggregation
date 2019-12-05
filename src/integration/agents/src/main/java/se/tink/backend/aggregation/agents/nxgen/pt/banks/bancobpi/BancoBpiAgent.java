@@ -16,12 +16,6 @@ public class BancoBpiAgent extends SubsequentProgressiveGenerationAgent {
     public BancoBpiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
-        authenticator =
-                new BancoBpiAuthenticator(
-                        client,
-                        new SupplementalInformationFormer(request.getProvider()),
-                        sessionStorage);
     }
 
     @Override
@@ -31,6 +25,13 @@ public class BancoBpiAgent extends SubsequentProgressiveGenerationAgent {
 
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
+        if (authenticator == null) {
+            authenticator =
+                    new BancoBpiAuthenticator(
+                            client,
+                            new SupplementalInformationFormer(request.getProvider()),
+                            persistentStorage);
+        }
         return authenticator;
     }
 }

@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.BancoBpiUserState;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiUserState;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -62,10 +62,6 @@ public class DefaultRequestTest {
     }
 
     private class TestDefaultRequest extends DefaultRequest {
-
-        public TestDefaultRequest(String csrfToken, String deviceUUID, String url) {
-            super(csrfToken, deviceUUID, url);
-        }
 
         public TestDefaultRequest(BancoBpiUserState userState, String url) {
             super(userState, url);

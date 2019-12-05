@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.MobileChallengeRequestedToken;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.MobileChallengeRequestedToken;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class SetupAccessPinResponse extends AuthenticationResponse {

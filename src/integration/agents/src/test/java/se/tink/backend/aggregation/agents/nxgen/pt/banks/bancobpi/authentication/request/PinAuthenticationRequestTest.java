@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.BancoBpiUserState;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiUserState;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -23,6 +23,7 @@ public class PinAuthenticationRequestTest {
             "{\"data\": {},\"exception\": {\"name\": \"ServerException\",\"specificType\": \"OutSystems.RESTService.ErrorHandling.ExposeRestException\",\"message\": \"Invalid Login\"}}";
     private static final String PIN = "1234";
     private static final String DEVICE_UUID = "1234567890";
+    private static final String MODULE_VERSION = "fkXs_sGDv6trPlpganAgKA";
 
     private TinkHttpClient httpClient;
     private RequestBuilder requestBuilder;
@@ -41,6 +42,7 @@ public class PinAuthenticationRequestTest {
         userState = Mockito.mock(BancoBpiUserState.class);
         Mockito.when(userState.getAccessPin()).thenReturn(PIN);
         Mockito.when(userState.getDeviceUUID()).thenReturn(DEVICE_UUID);
+        Mockito.when(userState.getModuleVersion()).thenReturn(MODULE_VERSION);
     }
 
     @Test

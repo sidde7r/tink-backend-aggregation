@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity;
 
 public class MobileChallengeRequestedToken {
     private String id;

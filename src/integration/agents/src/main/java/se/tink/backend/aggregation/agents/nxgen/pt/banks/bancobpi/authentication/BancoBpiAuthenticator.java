@@ -13,9 +13,12 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.ConfirmPinByOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.ModuleVersionAuthenticationStep;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.ModuleVersionRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.PinAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.SetupAccessPinRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.SetupAccessPinResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiUserState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
@@ -26,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.PinCode
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -40,23 +43,24 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
     private final SupplementalInformationFormer supplementalInformationFormer;
     private boolean manualAuthenticationFlag = true;
     private BancoBpiUserState userState;
-    private SessionStorage sessionStorage;
+    private PersistentStorage storage;
     private static final Gson gson = new Gson();
 
     public BancoBpiAuthenticator(
             final TinkHttpClient httpClient,
             final SupplementalInformationFormer supplementalInformationFormer,
-            SessionStorage sessionStorage) {
+            PersistentStorage persistentStorage) {
         this.httpClient = httpClient;
         this.supplementalInformationFormer = supplementalInformationFormer;
-        this.sessionStorage = sessionStorage;
+        this.storage = persistentStorage;
         loadUserState();
         initManualAuthenticationSteps();
         initAutoAuthenticationSteps();
     }
 
     private void initManualAuthenticationSteps() {
-        List<AuthenticationStep> steps = new ArrayList<>(3);
+        List<AuthenticationStep> steps = new ArrayList<>(4);
+        steps.add(new ModuleVersionAuthenticationStep(this::processModuleVersionGetting));
         steps.add(new UsernamePasswordAuthenticationStep(this::processLogin));
         steps.add(new PinCodeGeneratorAuthenticationStep(this::processAccessPinSetup));
         steps.add(new OtpStep(this::processOtp, supplementalInformationFormer));
@@ -64,8 +68,11 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     private void initAutoAuthenticationSteps() {
-        List<AuthenticationStep> steps = new ArrayList<>(1);
-        steps.add(new AutomaticAuthenticationStep(this::processPinAuthentication));
+        List<AuthenticationStep> steps = new ArrayList<>(2);
+        steps.add(new ModuleVersionAuthenticationStep(this::processModuleVersionGetting));
+        steps.add(
+                new AutomaticAuthenticationStep(
+                        this::processPinAuthentication, "pinAuthentication"));
         autoAuthenticationSteps = Collections.unmodifiableList(steps);
     }
 
@@ -118,6 +125,10 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
         userState.setMobileChallengeRequestedToken(response.getMobileChallengeRequestedToken());
     }
 
+    private void processModuleVersionGetting() throws LoginException {
+        userState.setModuleVersion(new ModuleVersionRequest(userState).call(httpClient));
+    }
+
     private void handleResponse(final AuthenticationResponse response, final LoginError loginError)
             throws LoginException {
         if (!response.isSuccess()) {
@@ -143,11 +154,15 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     private void loadUserState() {
-        userState =
-                gson.fromJson(sessionStorage.get(PERSISTENCE_STORAGE_KEY), BancoBpiUserState.class);
+        if (storage.containsKey(PERSISTENCE_STORAGE_KEY)) {
+            userState =
+                    gson.fromJson(storage.get(PERSISTENCE_STORAGE_KEY), BancoBpiUserState.class);
+        } else {
+            userState = new BancoBpiUserState();
+        }
     }
 
     private void saveUserState() {
-        sessionStorage.put(PERSISTENCE_STORAGE_KEY, gson.toJson(userState));
+        storage.put(PERSISTENCE_STORAGE_KEY, gson.toJson(userState));
     }
 }

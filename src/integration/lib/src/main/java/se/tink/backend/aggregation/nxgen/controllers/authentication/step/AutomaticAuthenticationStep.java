@@ -10,13 +10,15 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementIn
 public class AutomaticAuthenticationStep implements AuthenticationStep {
 
     private ProcessCallback processCallback;
+    private String stepId;
 
     public interface ProcessCallback {
         void process() throws AuthenticationException;
     }
 
-    public AutomaticAuthenticationStep(ProcessCallback processCallback) {
+    public AutomaticAuthenticationStep(ProcessCallback processCallback, String stepId) {
         this.processCallback = processCallback;
+        this.stepId = stepId;
     }
 
     @Override
@@ -24,5 +26,10 @@ public class AutomaticAuthenticationStep implements AuthenticationStep {
             throws AuthenticationException, AuthorizationException {
         processCallback.process();
         return Optional.empty();
+    }
+
+    @Override
+    public String getIdentifier() {
+        return stepId;
     }
 }
