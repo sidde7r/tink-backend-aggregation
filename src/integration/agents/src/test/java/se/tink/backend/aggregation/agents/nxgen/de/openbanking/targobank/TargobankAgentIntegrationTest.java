@@ -162,7 +162,7 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
                         new ProgressiveLoginExecutor(
                                 this.supplementalInformationController,
                                 (ProgressiveAuthAgent) agent);
-                executor.login();
+                executor.login(credential);
             } else {
                 boolean loginSuccessful = agent.login();
                 Assert.assertTrue("Agent could not login successfully.", loginSuccessful);
