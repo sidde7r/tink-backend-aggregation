@@ -40,7 +40,8 @@ public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorker
                         .add("className", Optional.ofNullable(provider.getClassName()).orElse(""))
                         .add("operation", operationName)
                         .add("status", status.name())
-                        .add("transfer_type", type.toString().toLowerCase().replace("_", "-"));
+                        .add("transfer_type", type.toString().toLowerCase().replace("_", "-"))
+                        .add("market", provider.getMarket());
 
         return metricId.label(metricLabels);
     }

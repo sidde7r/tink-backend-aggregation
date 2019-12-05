@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 
@@ -9,21 +10,25 @@ import se.tink.backend.agents.rpc.Credentials;
 public final class AuthenticationRequest implements Credentialsable {
 
     private Credentials credentials;
-    private ImmutableMap<String, String> userInputs;
+    private ImmutableList<String> userInputs;
     private ImmutableMap<String, String> callbackData;
 
-    AuthenticationRequest(final Credentials credentials) {
-        this.credentials = credentials;
+    private AuthenticationRequest() {}
+
+    public static AuthenticationRequest empty() {
+        return new AuthenticationRequest();
     }
 
-    public AuthenticationRequest withCallbackData(final Map<String, String> callbackData) {
-        this.callbackData = ImmutableMap.copyOf(callbackData);
-        return this;
+    public static AuthenticationRequest fromCallbackData(final Map<String, String> callbackData) {
+        AuthenticationRequest request = new AuthenticationRequest();
+        request.callbackData = ImmutableMap.copyOf(callbackData);
+        return request;
     }
 
-    public AuthenticationRequest withUserInputs(final Map<String, String> userInputs) {
-        this.userInputs = ImmutableMap.copyOf(userInputs);
-        return this;
+    public static AuthenticationRequest fromUserInputs(final List<String> userInputs) {
+        final AuthenticationRequest request = new AuthenticationRequest();
+        request.userInputs = ImmutableList.copyOf(userInputs);
+        return request;
     }
 
     @Override
@@ -31,22 +36,19 @@ public final class AuthenticationRequest implements Credentialsable {
         return credentials;
     }
 
-    public ImmutableMap<String, String> getUserInputs() {
+    public ImmutableList<String> getUserInputs() {
         return userInputs;
-    }
-
-    @Deprecated
-    public ImmutableList<String> getUserInputsAsList() {
-        return ImmutableList.copyOf(userInputs.values());
     }
 
     public ImmutableMap<String, String> getCallbackData() {
         return callbackData;
     }
 
-    @Deprecated
-    public AuthenticationRequest withCredentials(final Credentials credentials) {
-        this.credentials = credentials;
-        return this;
+    public AuthenticationRequest withCredentials(final Credentials newCredentials) {
+        final AuthenticationRequest request = new AuthenticationRequest();
+        request.userInputs = userInputs;
+        request.callbackData = callbackData;
+        request.credentials = newCredentials;
+        return request;
     }
 }

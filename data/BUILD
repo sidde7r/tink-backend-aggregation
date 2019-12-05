@@ -83,3 +83,14 @@ filegroup(
     ),
     visibility = ["//visibility:public"],
 )
+
+filegroup(
+    name = "qsealc_crt",
+    srcs = [
+        "test/qsealc/ca.crt",
+        "test/qsealc/proxytls.crt",
+        "test/qsealc/proxytls.key",
+        "test/qsealc/test-configuration.yaml",
+    ],
+    visibility = ["//visibility:public"],
+)

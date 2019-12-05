@@ -29,7 +29,7 @@ public class RevolutInvestmentFetcher implements AccountFetcher<InvestmentAccoun
         try {
             return Optional.of(apiClient.fetchInvestmentAccounts());
         } catch (HttpResponseException hre) {
-            LOGGER.error(
+            LOGGER.info(
                     "{} Unable to fetch investments: [{}]",
                     RevolutConstants.Tags.PORTFOLIO_FETCHING_ERROR,
                     hre.toString());

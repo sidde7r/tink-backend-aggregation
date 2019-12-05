@@ -72,16 +72,16 @@ git_repository(
 
 git_repository(
     name = "tink_backend_integration_openbanking",
-    commit = "d4bef40a23271793a471668807cae4f675117cab",
+    commit = "047164fb06fce04511c1dfc2c73e8205748bc6d1",
     remote = "git@github.com:tink-ab/tink-backend-integration-openbanking.git",
     shallow_since = "1572535216 +0000",
 )
 
 git_repository(
     name = "com_tink_api_grpc",
-    commit = "fbdc9dc561b8d80d81f642d49dfbf7aee2ecc63e",
+    commit = "5d60e5719749287d076bf8c84729bdd86d119823",
     remote = "git@github.com:tink-ab/tink-grpc.git",
-    #shallow_since = "1563525421 +0000",
+    shallow_since = "1575523605 +0000",
 )
 
 git_repository(

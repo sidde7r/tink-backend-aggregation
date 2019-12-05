@@ -8,7 +8,9 @@ import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants;
@@ -47,7 +49,8 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
     }
 
     @Override
-    public BankIdStatus collect(String reference) throws AuthenticationException {
+    public BankIdStatus collect(String reference)
+            throws AuthenticationException, AuthorizationException {
         final BankIdResponse bankIdResponse = apiClient.collectBankId(reference);
         final String redirectUrl = bankIdResponse.getRedirectUrl();
 
@@ -55,7 +58,12 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
             String message = apiClient.fetchMessage();
             if (isNotCustomerMessage(message)) {
                 throw LoginError.NOT_CUSTOMER.exception();
+            } else {
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
             }
+        }
+        if (redirectUrl.equalsIgnoreCase("/otpchooser/")) {
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         }
 
         if (!Strings.isNullOrEmpty(redirectUrl)) {

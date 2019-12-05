@@ -20,6 +20,7 @@ public class InternalEidasProxyConfiguration {
     private final String caPath;
     private final String tlsCrtPath;
     private final String tlsKeyPath;
+    private final String environment;
     private final boolean localEidasDev;
 
     public InternalEidasProxyConfiguration(
@@ -27,16 +28,22 @@ public class InternalEidasProxyConfiguration {
             String caPath,
             String tlsCrtPath,
             String tlsKeyPath,
+            String environment,
             boolean localEidasDev) {
         this.host = host;
         this.caPath = caPath;
         this.tlsCrtPath = tlsCrtPath;
         this.tlsKeyPath = tlsKeyPath;
+        this.environment = environment;
         this.localEidasDev = localEidasDev;
     }
 
     public String getHost() {
         return host;
+    }
+
+    public String getEnvironment() {
+        return environment;
     }
 
     public KeyStore getRootCaTrustStore()

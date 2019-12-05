@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.Collections;
+import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,28 +11,40 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.uuid.UUIDUtils;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CredentialsRefreshStartEventCommandTest {
+public class RefreshCommandChainEventTriggerCommandTest {
 
     private Credentials validCredentials;
     private String appId;
     private CredentialsEventProducer credentialsEventProducer;
+    private String clusterId;
+    private boolean manual;
+    private Set<RefreshableItem> refreshableItems;
 
     @Before
     public void setup() {
         this.credentialsEventProducer = Mockito.mock(CredentialsEventProducer.class);
         this.validCredentials = buildValidCredentials();
         this.appId = UUIDUtils.generateUUID();
+        this.clusterId = "clusterId";
+        this.manual = true;
+        this.refreshableItems = Collections.emptySet();
     }
 
     @Test
     public void testCredentialsRefreshStartEventCommand() throws Exception {
-        CredentialsRefreshStartEventCommand credentialsRefreshStartEventCommand =
-                new CredentialsRefreshStartEventCommand(
-                        credentialsEventProducer, validCredentials, appId);
-        Assertions.assertThat(credentialsRefreshStartEventCommand.execute())
+        RefreshCommandChainEventTriggerCommand refreshCommandChainEventTriggerCommand =
+                new RefreshCommandChainEventTriggerCommand(
+                        credentialsEventProducer,
+                        validCredentials,
+                        appId,
+                        refreshableItems,
+                        manual,
+                        clusterId);
+        Assertions.assertThat(refreshCommandChainEventTriggerCommand.execute())
                 .isEqualTo(AgentWorkerCommandResult.CONTINUE);
     }
 

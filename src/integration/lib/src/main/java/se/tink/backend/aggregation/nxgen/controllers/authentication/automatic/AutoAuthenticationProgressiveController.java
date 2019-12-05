@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.automatic;
 import com.google.common.base.Preconditions;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
@@ -11,11 +10,10 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
@@ -108,15 +106,7 @@ public class AutoAuthenticationProgressiveController
             throws AuthenticationException, AuthorizationException {
         try {
             autoAuthenticator.autoAuthenticate();
-            return Collections.singletonList(
-                    new AuthenticationStep() {
-                        @Override
-                        public Optional<SupplementInformationRequester> execute(
-                                AuthenticationRequest request)
-                                throws AuthenticationException, AuthorizationException {
-                            return Optional.empty();
-                        }
-                    });
+            return Collections.singletonList(request -> AuthenticationResponse.empty());
         } catch (SessionException autoException) {
             if (!requestIsManual) {
                 credentials.setType(manualAuthenticator.getType());

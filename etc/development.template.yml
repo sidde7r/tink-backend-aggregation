@@ -606,6 +606,7 @@ agentsServiceConfiguration:
   featureFlags:
     esProxy: false
     beProxy: false
+    swedbankKeepAlive: true
 
 providerConfigurationServiceConfiguration:
   host: provider-configuration-api.provider-configuration.svc.cluster.local # add to your /etc/hosts with 127.0.0.1

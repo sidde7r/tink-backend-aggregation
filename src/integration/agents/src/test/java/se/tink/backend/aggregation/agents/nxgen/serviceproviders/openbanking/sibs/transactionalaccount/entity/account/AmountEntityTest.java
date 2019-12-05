@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.math.BigDecimal;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,7 @@ public class AmountEntityTest {
 
     @Before
     public void setup() {
-        mapper.setVisibilityChecker(
+        mapper.setVisibility(
                 mapper.getSerializationConfig()
                         .getDefaultVisibilityChecker()
                         .withFieldVisibility(JsonAutoDetect.Visibility.ANY));

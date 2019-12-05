@@ -29,13 +29,11 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
@@ -58,6 +56,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LFUtils;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.Session;
@@ -308,7 +307,7 @@ public class LansforsakringarAgent extends AbstractAgent
 
         int status = bankIdloginClientResponse.getStatus();
 
-        if (status != Status.OK.getStatusCode()) {
+        if (status != HttpStatus.SC_OK) {
             String errorCode = bankIdloginClientResponse.getHeaders().getFirst("Error-Code");
             String errorMessage = bankIdloginClientResponse.getHeaders().getFirst("Error-Message");
 
@@ -338,10 +337,7 @@ public class LansforsakringarAgent extends AbstractAgent
         BankIdLoginResponse bankIdloginResponse =
                 bankIdloginClientResponse.getEntity(BankIdLoginResponse.class);
 
-        credentials.setSupplementalInformation(null);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.openBankId();
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             ClientResponse clientLoginResponse =
@@ -353,13 +349,13 @@ public class LansforsakringarAgent extends AbstractAgent
 
             status = clientLoginResponse.getStatus();
 
-            if (status == Status.OK.getStatusCode()) {
+            if (status == HttpStatus.SC_OK) {
                 LoginResponse loginResponse = clientLoginResponse.getEntity(LoginResponse.class);
                 loginName = loginResponse.getName();
                 loginSsn = loginResponse.getSsn();
                 return loginResponse;
-            } else if (status == Status.UNAUTHORIZED.getStatusCode()
-                    || status == Status.BAD_REQUEST.getStatusCode()) {
+            } else if (status == HttpStatus.SC_UNAUTHORIZED
+                    || status == HttpStatus.SC_BAD_REQUEST) {
                 switch (clientLoginResponse.getHeaders().getFirst("Error-Code")) {
                     case "00013":
                     case "00014":
@@ -438,10 +434,19 @@ public class LansforsakringarAgent extends AbstractAgent
 
     private <T> T handleRequestResponse(ClientResponse response, Class<T> returnClass)
             throws HttpStatusCodeErrorException {
-        if (response.getStatus() == 200) {
+        if (response.getStatus() == HttpStatus.SC_OK) {
             return response.getEntity(returnClass);
         } else {
             String errorMsg = response.getHeaders().getFirst("Error-Message");
+
+            // Looking at error message to decide if bank side failure as LF seem to have a bunch
+            // of different codes for the same errors.
+            if (!Strings.isNullOrEmpty(errorMsg)
+                    && errorMsg.toLowerCase()
+                            .contains("tyvärr har det uppstått ett tekniskt fel")) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception("Message:" + errorMsg);
+            }
+
             throw new HttpStatusCodeErrorException(
                     response,
                     "Request status code " + response.getStatus() + ": '" + errorMsg + "'");
@@ -642,23 +647,13 @@ public class LansforsakringarAgent extends AbstractAgent
         if (!Objects.equal(
                 transfer.getDestinationMessage(), originalTransfer.getDestinationMessage())) {
 
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setMessage("Not allowed to change destination message")
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage
-                                            .EINVOICE_MODIFY_DESTINATION_MESSAGE))
-                    .build();
+            throw cancelTransfer(
+                    TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE);
         }
 
         if (!Objects.equal(transfer.getSourceMessage(), originalTransfer.getSourceMessage())) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setMessage("Not allowed to change source message")
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage
-                                            .EINVOICE_MODIFY_SOURCE_MESSAGE))
-                    .build();
+            throw cancelTransfer(
+                    TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_SOURCE_MESSAGE);
         }
     }
 
@@ -682,12 +677,7 @@ public class LansforsakringarAgent extends AbstractAgent
             }
         }
 
-        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setEndUserMessage(
-                        catalog.getString(
-                                TransferExecutionException.EndUserMessage
-                                        .EXISTING_UNSIGNED_TRANSFERS))
-                .build();
+        throw cancelTransfer(TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS);
     }
 
     private void signEInvoice(PaymentEntity paymentEntityToSign) {
@@ -699,9 +689,7 @@ public class LansforsakringarAgent extends AbstractAgent
                     createGetRequest(CREATE_BANKID_REFERENCE_PAYMENTS_URL);
             validateTransactionClientResponse(createReferenceResponse);
 
-            credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-            credentials.setStatusPayload(null);
-            supplementalRequester.requestSupplementalInformation(credentials, false);
+            supplementalRequester.openBankId();
 
             ClientResponse bankIdResponse = createGetRequest(SEND_UNSIGNED_PAYMENT_URL);
             validateTransactionClientResponse(bankIdResponse);
@@ -746,9 +734,9 @@ public class LansforsakringarAgent extends AbstractAgent
                 transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID);
 
         if (!electronicInvoiceId.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("No electronicInvoiceId on transfer")
-                    .build();
+            throw failTransferWithMessage(
+                    "No electronicInvoiceId on transfer",
+                    TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
         }
 
         EInvoicesListResponse invoicesListResponse =
@@ -760,11 +748,7 @@ public class LansforsakringarAgent extends AbstractAgent
                         .findFirst();
 
         if (!eInvoice.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
-                    .build();
+            throw failTransfer(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES);
         }
 
         return eInvoice.get();
@@ -774,11 +758,7 @@ public class LansforsakringarAgent extends AbstractAgent
         Optional<AccountEntity> sourceAccount = GeneralUtils.find(source, fetchPaymentAccounts());
 
         if (!sourceAccount.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
-                    .build();
+            throw failTransfer(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND);
         }
 
         return sourceAccount.get();
@@ -807,10 +787,7 @@ public class LansforsakringarAgent extends AbstractAgent
         }
 
         if (!payment.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Cannot find payment in list from bank.")
-                    .setEndUserMessage(catalog.getString("Something went wrong."))
-                    .build();
+            throw failTransfer(TransferExecutionException.EndUserMessage.PAYMENT_NO_MATCHES);
         }
 
         AccountEntity source = validatePaymentSourceAccount(transfer.getSource());
@@ -829,9 +806,7 @@ public class LansforsakringarAgent extends AbstractAgent
                 createPostRequest(SIGN_PAYMENT_CREATE_REFERENCE_URL, paymentRequest);
         validateTransactionClientResponse(createPaymentClientResponse);
 
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        credentials.setStatusPayload(null);
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.openBankId();
 
         ClientResponse sendPaymentClientResponse =
                 createPostRequest(SIGN_PAYMENT_SEND_PAYMENT_URL, paymentRequest);
@@ -879,11 +854,7 @@ public class LansforsakringarAgent extends AbstractAgent
             }
 
             // if we fail to remove a payment after
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    "We encountered problems signing the payment/transfer with your bank. Please log in to your bank app and validate the payment/transfer."))
-                    .build();
+            throw failTransfer(TransferExecutionException.EndUserMessage.SIGN_AND_REMOVAL_FAILED);
         }
     }
 
@@ -1039,9 +1010,7 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     private void signAndValidatePayment(PaymentRequest paymentRequest) throws BankIdException {
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        credentials.setStatusPayload(null);
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.openBankId();
 
         collectTransferResponse(SEND_PAYMENT_URL, paymentRequest);
     }
@@ -1053,10 +1022,10 @@ public class LansforsakringarAgent extends AbstractAgent
 
             int status = clientResponse.getStatus();
 
-            if (status == Status.OK.getStatusCode()) {
+            if (status == HttpStatus.SC_OK) {
                 return;
-            } else if (status == Status.UNAUTHORIZED.getStatusCode()
-                    || status == Status.BAD_REQUEST.getStatusCode()) {
+            } else if (status == HttpStatus.SC_UNAUTHORIZED
+                    || status == HttpStatus.SC_BAD_REQUEST) {
                 switch (clientResponse.getHeaders().getFirst("Error-Code")) {
                     case "00153":
                     case "00154":
@@ -1073,26 +1042,21 @@ public class LansforsakringarAgent extends AbstractAgent
                         throw BankIdError.TIMEOUT.exception();
                     default:
                         if (clientResponse.getHeaders().getFirst("Error-Message") != null) {
-                            throw TransferExecutionException.builder(
-                                            SignableOperationStatuses.FAILED)
-                                    .setEndUserMessage(
-                                            clientResponse.getHeaders().getFirst("Error-Message"))
-                                    .build();
+                            throw failTransferWithMessage(
+                                    String.format(
+                                            "Error code: %s, error message: %s",
+                                            clientResponse.getHeaders().getFirst("Error-Code"),
+                                            clientResponse.getHeaders().getFirst("Error-Message")),
+                                    TransferExecutionException.EndUserMessage
+                                            .BANKID_TRANSFER_FAILED);
                         } else {
-                            throw TransferExecutionException.builder(
-                                            SignableOperationStatuses.FAILED)
-                                    .setEndUserMessage(
-                                            catalog.getString(
-                                                    "Failed to sign using BankID, please try again later"))
-                                    .build();
+                            throw failTransfer(
+                                    TransferExecutionException.EndUserMessage
+                                            .BANKID_TRANSFER_FAILED);
                         }
                 }
             } else {
-                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage(
-                                catalog.getString(
-                                        "Failed to sign using BankID, please try again later"))
-                        .build();
+                throw failTransfer(TransferExecutionException.EndUserMessage.BANKID_FAILED);
             }
             Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
         }
@@ -1110,15 +1074,16 @@ public class LansforsakringarAgent extends AbstractAgent
     /** Helper method to validate a client response in the payment process. */
     private void validateTransactionClientResponse(ClientResponse clientResponse)
             throws TransferExecutionException {
-        if (clientResponse.getStatus() == 400
+        if (clientResponse.getStatus() == HttpStatus.SC_BAD_REQUEST
                 && clientResponse.getHeaders().getFirst("Error-Message") != null) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(clientResponse.getHeaders().getFirst("Error-Message"))
-                    .build();
-        } else if (clientResponse.getStatus() != 200) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString("Failed to sign payment using BankID"))
-                    .build();
+            throw failTransferWithMessage(
+                    String.format(
+                            "Error code: %s, error message: %s",
+                            clientResponse.getHeaders().getFirst("Error-Code"),
+                            clientResponse.getHeaders().getFirst("Error-Message")),
+                    TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
+        } else if (clientResponse.getStatus() != HttpStatus.SC_OK) {
+            throw failTransfer(TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
         }
     }
 
@@ -1131,17 +1096,20 @@ public class LansforsakringarAgent extends AbstractAgent
         AccountIdentifier source = transfer.getSource();
         AccountIdentifier destination = transfer.getDestination();
 
+        if (!destination.is(AccountIdentifier.Type.SE)) {
+            throw cancelTransferWithMessage(
+                    "Transfer account identifiers other than Swedish are not supported.",
+                    TransferExecutionException.EndUserMessage.INVALID_SOURCE);
+        }
+
         TransferrableResponse sourceAccounts = fetchTransferSourceAccounts();
         validateSourceAccount(source, sourceAccounts);
 
         // Find the destination account or the bank of the destination account.
-
         TransferrableResponse destinationAccounts = fetchTransferDestinationAccounts();
 
         Preconditions.checkState(
                 destinationAccounts != null, "Could not collect transfer accounts");
-
-        TransferRequest transferRequest = new TransferRequest();
 
         // Ensure correctly formatted transfer messages
         boolean isBetweenSameUserAccounts =
@@ -1149,31 +1117,52 @@ public class LansforsakringarAgent extends AbstractAgent
         TransferMessageFormatter.Messages formattedMessages =
                 transferMessageFormatter.getMessages(transfer, isBetweenSameUserAccounts);
 
-        transferRequest.setBankName(findBankName(destination, destinationAccounts));
-        transferRequest.setAmount(transfer.getAmount().getValue());
-        transferRequest.setToText(formattedMessages.getDestinationMessage());
-        transferRequest.setFromText(formattedMessages.getSourceMessage());
-        transferRequest.setChallenge("");
-        transferRequest.setResponse("");
-        transferRequest.setFromAccount(source.getIdentifier(DEFAULT_FORMATTER));
-
-        String apiFormattedDestination = getToAccount(destination);
-        transferRequest.setToAccount(apiFormattedDestination);
-
-        // Execute the transfer.
+        TransferRequest transferRequest =
+                TransferRequest.create(
+                        findBankName(destination, destinationAccounts),
+                        transfer.getAmount().getValue(),
+                        formattedMessages,
+                        source.getIdentifier(DEFAULT_FORMATTER),
+                        LFUtils.getApiAdaptedToAccount(destination.to(SwedishIdentifier.class)));
 
         if (Strings.isNullOrEmpty(transferRequest.getBankName())) {
             // Local transfer, no need for signing.
-
             createPostRequest(INTERNAL_TRANSFER_URL, transferRequest);
         } else {
-            // External transfer, need to sign.
-            try {
-                signAndValidateTransfer(transferRequest);
-            } catch (Exception initialException) {
-                deleteSignedTransaction(transferRequest);
-                throw initialException;
+            executeExternalBankTransfer(transferRequest);
+        }
+    }
+
+    private void executeExternalBankTransfer(TransferRequest transferRequest) throws Exception {
+        ClientResponse createTransferResponse =
+                createPostRequest(CREATE_BANKID_REFERENCE_URL, transferRequest);
+
+        if (createTransferResponse.getStatus() != HttpStatus.SC_OK) {
+            String errorCode = createTransferResponse.getHeaders().getFirst("Error-Code");
+
+            if (!Strings.isNullOrEmpty(errorCode)) {
+                if ("502203".equals(errorCode)) { // Destination account incorrect
+                    throw cancelTransfer(EndUserMessage.INVALID_DESTINATION);
+                }
+
+                throw failTransferWithMessage(
+                        String.format(
+                                "Transfer failed with error code: %s and message: %s",
+                                errorCode,
+                                createTransferResponse.getHeaders().getFirst("Error-Message")),
+                        EndUserMessage.TRANSFER_EXECUTE_FAILED);
             }
+
+            throw failTransfer(EndUserMessage.TRANSFER_EXECUTE_FAILED);
+        }
+
+        supplementalRequester.openBankId();
+
+        try {
+            collectTransferResponse(BANKID_COLLECT_DIRECT_TRANSFER_URL, transferRequest);
+        } catch (Exception initialException) {
+            deleteSignedTransaction(transferRequest);
+            throw initialException;
         }
     }
 
@@ -1183,11 +1172,7 @@ public class LansforsakringarAgent extends AbstractAgent
                 LFUtils.find(source, sourceAccounts.getAccounts());
 
         if (!fromAccountDetails.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            catalog.getString(
-                                    TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
-                    .build();
+            throw failTransfer(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND);
         }
     }
 
@@ -1222,34 +1207,11 @@ public class LansforsakringarAgent extends AbstractAgent
                             LFUtils.getClearingNumberDetails(swedishDestination);
                     return clearingNumber.getBankName();
                 } else {
-                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setEndUserMessage(
-                                    catalog.getString(
-                                            "Could not find a bank for the given destination account. Check the account number and try again."))
-                            .build();
+                    throw cancelTransfer(
+                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION);
                 }
             }
         }
-    }
-
-    private void signAndValidateTransfer(TransferRequest transferRequest) throws BankIdException {
-        createPostRequest(CREATE_BANKID_REFERENCE_URL, transferRequest);
-
-        credentials.setSupplementalInformation(null);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, false);
-
-        collectTransferResponse(BANKID_COLLECT_DIRECT_TRANSFER_URL, transferRequest);
-    }
-
-    private String getToAccount(AccountIdentifier destination) throws Exception {
-        if (!destination.is(AccountIdentifier.Type.SE)) {
-            throw new Exception(
-                    "Transfer account identifiers other than Swedish ones not implemented yet.");
-        }
-
-        return LFUtils.getApiAdaptedToAccount(destination.to(SwedishIdentifier.class));
     }
 
     private String fetchToken() {
@@ -1365,7 +1327,7 @@ public class LansforsakringarAgent extends AbstractAgent
     @Override
     public boolean keepAlive() throws Exception {
         try {
-            return createGetRequest(OVERVIEW_URL).getStatus() == Status.OK.getStatusCode();
+            return createGetRequest(OVERVIEW_URL).getStatus() == HttpStatus.SC_OK;
         } catch (ClientHandlerException exception) {
             // There are various messages in this exception like 'Connection reset', 'Connection
             // timed out', 'No route to host', 'Temporary failure in name resolution' etc and in
@@ -2052,5 +2014,31 @@ public class LansforsakringarAgent extends AbstractAgent
         }
         IdentityData identityData = SeIdentityData.of(loginName, loginSsn);
         return new FetchIdentityDataResponse(identityData);
+    }
+
+    private TransferExecutionException cancelTransfer(
+            TransferExecutionException.EndUserMessage endUserMessage) {
+        return cancelTransferWithMessage(endUserMessage.getKey().get(), endUserMessage);
+    }
+
+    private TransferExecutionException cancelTransferWithMessage(
+            String message, TransferExecutionException.EndUserMessage endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(message)
+                .setEndUserMessage(catalog.getString(endUserMessage))
+                .build();
+    }
+
+    private TransferExecutionException failTransfer(
+            TransferExecutionException.EndUserMessage endUserMessage) {
+        return failTransferWithMessage(endUserMessage.getKey().get(), endUserMessage);
+    }
+
+    private TransferExecutionException failTransferWithMessage(
+            String message, TransferExecutionException.EndUserMessage endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(message)
+                .setEndUserMessage(catalog.getString(endUserMessage))
+                .build();
     }
 }

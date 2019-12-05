@@ -174,7 +174,12 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             return AgentWorkerCommandResult.ABORT;
         } catch (BankServiceException e) {
             metricAction.unavailable();
-            log.error(transfer, "Could not execute transfer.", e);
+
+            log.info(
+                    transfer,
+                    String.format(
+                            "Could not execute transfer due to bank side failure. %s",
+                            e.getMessage()));
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
             signableOperation.setStatusMessage(catalog.getString(e.getUserMessage()));
