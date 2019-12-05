@@ -62,6 +62,7 @@ public class QsealcSignerHttpClientTest {
         proxyServer.configureSsl(Utils.buildSslContextFactoryFromConfig(), 12345, false);
         proxyServer.addContext("/", new ProxyServerHandler());
         proxyServer.addContext("/test", new ProxyServerHandler());
+        proxyServer.addContext("/jwt-rsa-sha256", new ProxyServerHandler());
         proxyServer.start();
     }
 
@@ -86,6 +87,14 @@ public class QsealcSignerHttpClientTest {
         HttpPost postHttps = new HttpPost("https://127.0.0.1:12345/test/");
         HttpResponse responseHttps = httpClient.execute(postHttps);
         Assert.assertEquals(200, responseHttps.getStatusLine().getStatusCode());
+
+        QsealcSigner signer =
+                QsealcSigner.build(
+                        configuration,
+                        QsealcAlg.EIDAS_JWT_RSA_SHA256,
+                        new EidasIdentity("", "", ""));
+        String result = signer.getJWSToken("".getBytes());
+        Assert.assertEquals("", result);
     }
 
     private static class ProxyServerHandler extends AbstractHandler {
