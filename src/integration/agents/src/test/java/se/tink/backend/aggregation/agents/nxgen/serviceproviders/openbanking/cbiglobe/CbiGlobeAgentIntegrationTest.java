@@ -170,15 +170,16 @@ public final class CbiGlobeAgentIntegrationTest extends AbstractConfigurationBas
 
         Map map;
         for (SteppableAuthenticationResponse response =
-                        progressiveAgent.login(SteppableAuthenticationRequest.initialRequest());
-                response.getStep().isPresent();
+                        progressiveAgent.login(
+                                SteppableAuthenticationRequest.initialRequest(credential));
+                response.getStepIdentifier().isPresent();
                 response =
                         progressiveAgent.login(
                                 SteppableAuthenticationRequest.subsequentRequest(
-                                        response.getStep().get(),
-                                        AuthenticationRequest.fromUserInputs(
-                                                new ArrayList(map.values()))))) {
-            List<Field> fields = response.getPayload().getFields().get();
+                                        response.getStepIdentifier().get(),
+                                        new AuthenticationRequest(credential)
+                                                .withUserInputs(map)))) {
+            List<Field> fields = response.getSupplementInformationRequester().getFields().get();
             map =
                     this.supplementalInformationController.askSupplementalInformation(
                             (Field[]) fields.toArray(new Field[fields.size()]));

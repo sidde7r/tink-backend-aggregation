@@ -213,20 +213,20 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
     private void progressiveLogin(final Agent agent) throws Exception {
         final ProgressiveAuthAgent progressiveAgent = (ProgressiveAuthAgent) agent;
         SteppableAuthenticationResponse response =
-                progressiveAgent.login(SteppableAuthenticationRequest.initialRequest());
-        while (response.getStep().isPresent()) {
+                progressiveAgent.login(SteppableAuthenticationRequest.initialRequest(credential));
+        while (response.getStepIdentifier().isPresent()) {
             // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
             // etc.
-            final List<Field> fields = response.getPayload().getFields().get();
+            final List<Field> fields =
+                    response.getSupplementInformationRequester().getFields().get();
             final Map<String, String> map =
                     supplementalInformationController.askSupplementalInformation(
                             fields.toArray(new Field[fields.size()]));
             response =
                     progressiveAgent.login(
                             SteppableAuthenticationRequest.subsequentRequest(
-                                    response.getStep().get(),
-                                    AuthenticationRequest.fromUserInputs(
-                                            new ArrayList<>(map.values()))));
+                                    response.getStepIdentifier().get(),
+                                    new AuthenticationRequest(credential).withUserInputs(map)));
         }
     }
 
