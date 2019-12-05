@@ -2,6 +2,27 @@ package se.tink.backend.aggregation.eidassigner;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.io.Files;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.Security;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -22,28 +43,6 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.libraries.simple_http_server.SimpleHTTPServer;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.Security;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 public class QsealcSignerHttpClientTest {
 
@@ -103,7 +102,8 @@ public class QsealcSignerHttpClientTest {
     }
 
     private static class Utils {
-        private static <T> T getConfiguration(String fileName, Class<T> cls) throws FileNotFoundException {
+        private static <T> T getConfiguration(String fileName, Class<T> cls)
+                throws FileNotFoundException {
             FileInputStream configFileStream = new FileInputStream(new File(fileName));
 
             Representer representer = new Representer();

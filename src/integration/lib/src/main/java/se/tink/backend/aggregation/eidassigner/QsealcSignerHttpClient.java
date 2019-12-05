@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.eidassigner;
 
+import java.security.KeyStore;
+import javax.net.ssl.SSLContext;
 import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.config.RegistryBuilder;
@@ -14,9 +16,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
-
-import javax.net.ssl.SSLContext;
-import java.security.KeyStore;
 
 public class QsealcSignerHttpClient {
     private static HttpClient httpClient;
