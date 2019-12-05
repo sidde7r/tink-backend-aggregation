@@ -7,15 +7,15 @@ option go_package = "proto";
 
 import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/account.proto";
 import "src/integration/sa_agent/sa_grpc_api/proto/security/model.proto";
+import "src/integration/sa_agent/sa_grpc_api/proto/common/io_common.proto";
 
 message FetchAccountsRequest {
-  string correlationId = 1;
-  SecurityInfo securityInfo = 2;
-  map<string, string> externalParameters = 3;
+  RequestCommon requestCommon = 1;
+  map<string, string> externalParameters = 2;
 }
 
 message FetchAccountsResponse {
-  string correlationId = 1;
+  ResponseCommon responseCommon = 1;
   repeated TransactionalAccount account = 2;
 }
 

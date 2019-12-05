@@ -4,9 +4,9 @@ import static junit.framework.TestCase.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.entity.AmountEntityMapper;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.entity.account.AmountEntity;
 import se.tink.sa.services.fetch.account.ExactCurrencyAmount;
+import src.integration.sa_agent.sa_agents.pt_sa_ob_sibs.src.main.java.se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.entity.account.AmountEntityMapper;
 
 public class AmountEntityMapperTest {
 

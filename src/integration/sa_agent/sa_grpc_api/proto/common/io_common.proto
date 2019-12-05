@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "se.tink.sa.services.common";
+option java_outer_classname = "OuterModel";
+option go_package = "proto";
+
+import "src/integration/sa_agent/sa_grpc_api/proto/security/model.proto";
+
+message RequestCommon {
+  string correlationId = 1;
+  SecurityInfo securityInfo = 2;
+  bool manual = 3;
+}
+
+message ResponseCommon {
+  string correlationId = 1;
+}

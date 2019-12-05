@@ -17,6 +17,7 @@ import se.tink.sa.model.auth.AuthenticationResponse;
 import se.tink.sa.model.auth.Credentials;
 import se.tink.sa.model.auth.Field;
 import se.tink.sa.services.auth.ProgressiveAuthAgentServiceGrpc;
+import se.tink.sa.services.common.RequestCommon;
 
 public class AuthenticationService {
     private final ProgressiveAuthAgentServiceGrpc.ProgressiveAuthAgentServiceBlockingStub
@@ -48,7 +49,7 @@ public class AuthenticationService {
 
     private AuthenticationRequest mapRequest(final SteppableAuthenticationRequest request) {
         AuthenticationRequest.Builder builder = AuthenticationRequest.newBuilder();
-        builder.setCorrelationId(UUID.randomUUID().toString());
+        builder.setRequestCommon(mapRequestCommon());
 
         Credentials mappedCredentials = mapCredentials(request.getPayload());
         if (mappedCredentials != null) {
@@ -66,6 +67,12 @@ public class AuthenticationService {
         cb.put(STATE, strongAuthenticationState.getState());
         cb.put(BANK_CODE, configuration.getBankCode());
         builder.putAllCallbackData(cb);
+        return builder.build();
+    }
+
+    private RequestCommon mapRequestCommon() {
+        RequestCommon.Builder builder = RequestCommon.newBuilder();
+        builder.setCorrelationId(UUID.randomUUID().toString());
         return builder.build();
     }
 

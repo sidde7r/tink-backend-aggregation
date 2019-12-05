@@ -7,12 +7,18 @@ option go_package = "proto";
 
 import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/account.proto";
 import "google/type/date.proto";
+import "src/integration/sa_agent/sa_grpc_api/proto/security/model.proto";
+import "src/integration/sa_agent/sa_grpc_api/proto/common/io_common.proto";
 
 message FetchTransactionsRequest {
+  RequestCommon requestCommon = 1;
+  string accountId = 2;
+  map<string, string> externalParameters = 3;
 }
 
 message FetchTransactionsResponse {
-  repeated TransactionsMapEntity transactions = 1;
+  ResponseCommon responseCommon = 1;
+  repeated TransactionsMapEntity transactions = 2;
 }
 
 message TransactionsMapEntity {

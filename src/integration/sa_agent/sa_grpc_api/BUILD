@@ -13,6 +13,7 @@ proto_library(
     srcs = [
         "proto/auth/model.proto",
         "proto/auth/services.proto",
+        "proto/common/io_common.proto",
         "proto/fetch/account/account.proto",
         "proto/fetch/account/model.proto",
         "proto/fetch/account/services.proto",
