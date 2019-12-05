@@ -29,10 +29,6 @@ junit_test(
     resources = glob([
         "src/test/resources/**/*",
     ]),
-    tags = [
-        "external",
-        "manual",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         ":standalone-agent-ob-sibs-bin",
