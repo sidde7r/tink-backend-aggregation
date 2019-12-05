@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
@@ -95,7 +95,7 @@ public class VolksbankAgent
                                 volksbankApiClient, consentFetcher, persistentStorage),
                         new TransactionFetcherController<>(
                                 this.transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(
+                                new TransactionDatePaginationController<>(
                                         new VolksbankTransactionFetcher(
                                                 volksbankApiClient,
                                                 consentFetcher,
