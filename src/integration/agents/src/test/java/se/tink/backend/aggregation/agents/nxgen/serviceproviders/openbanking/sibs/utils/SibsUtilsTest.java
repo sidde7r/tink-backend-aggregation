@@ -70,6 +70,11 @@ public class SibsUtilsTest {
         Assertions.assertThat(SibsUtils.convertStringToLocalDate("")).isNull();
     }
 
+    @Test
+    public void shouldReturnNullWhenLocalDateIsNullConvertLocalDateToString() {
+        Assertions.assertThat(SibsUtils.convertLocalDateToString(null)).isNull();
+    }
+
     private ConsentRequest getConsentRequest() {
         LocalDateTime now = LocalDateTime.of(2019, 12, 25, 5, 27, 21);
         String date = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss").format(now);
