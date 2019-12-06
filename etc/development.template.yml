@@ -1,571 +1,557 @@
-server:
-  shutdownGracePeriod: 20s
-  applicationConnectors:
-    - type: http
-      port: 9090
-    - type: https
-      port: 9091
-      keyStorePath: data/security/developer.keystore
-      keyStorePassword: changeme
-      certAlias: developer.internal.tink.se
-      trustStorePath: data/security/TinkCA.truststore
-      trustStorePassword: changeme
-      # Validation disabled since Dropwizard/Jetty tries to check revocation of our homebrewed certs, which fails.
-      validateCerts: false
-  adminConnectors:
-    - type: http
-      port: 8090
-
-grpc:
-  port: 9998
-
+agentsServiceConfiguration:
+  countryProxies:
+    be:
+      host: http://zproxy.lum-superproxy.io:22225
+      password: dummyPassword
+      username: lum-customer-tink_ab-zone-belgium
+    es:
+      host: http://zproxy.lum-superproxy.io:22225
+      password: dummyPassword
+      username: lum-customer-tink_ab-zone-spain-country-es
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
+  featureFlags:
+    beProxy: false
+    esProxy: false
+    swedbankKeepAlive: true
+  integrations:
+    activobank:
+      tink:
+        aspspCode: ABPT
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    aggregationWorker:
+      collectorSubscriptionKey: ASK_JOHANNES
+    aib:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        organizationId: ''
+        redirectUrl: ''
+        rootCAData: ''
+        rootCAPassword: ''
+        signingKey: ''
+        signingKeyId: ''
+        signingKeyPassword: ''
+        softwareId: ''
+        softwareStatementAssertion: ''
+        transportKey: ''
+        transportKeyId: ''
+        transportKeyPassword: ''
+    alandsbank-fi:
+      tink:
+        baseAPIUrl: https://alandsbanken-fi-api-sandbox.crosskey.io
+        baseAuthUrl: https://alandsbanken-fi-sandbox.crosskey.io
+        clientId: ''
+        clientKeyStorePassword: '123456'
+        clientKeyStorePath: data/test/cryptography/crosskey/client.p12
+        clientSecret: ''
+        clientSigningCertificatePath: data/test/cryptography/crosskey/signing.cer
+        clientSigningKeyPath: data/test/cryptography/crosskey/signing.key
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        xFapiFinancialId: alandsbanken-fi
+    alandsbank-se:
+      tink:
+        baseAPIUrl: https://alandsbanken-se-api-sandbox.crosskey.io
+        baseAuthUrl: https://alandsbanken-se-sandbox.crosskey.io
+        clientId: ''
+        clientKeyStorePassword: '123456'
+        clientKeyStorePath: data/test/cryptography/crosskey/client.p12
+        clientSecret: ''
+        clientSigningCertificatePath: data/test/cryptography/crosskey/signing.cer
+        clientSigningKeyPath: data/test/cryptography/crosskey/signing.key
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        xFapiFinancialId: alandsbanken-se
+    atlanticoeuropa:
+      tink:
+        aspspCode: ATLEU
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bancobpi-pt:
+      tink:
+        aspspCode: BBPI
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bancoctt:
+      tink:
+        aspspCode: BCTT
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bancomontepio:
+      tink:
+        aspspCode: CEMG
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bankinter:
+      tink:
+        aspspCode: BNKI
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bankofscotland:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        organizationId: ''
+        redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+        rootCAData: ''
+        rootCAPassword: ''
+        signingKey: ''
+        signingKeyId: ''
+        signingKeyPassword: ''
+        softwareId: ''
+        softwareStatementAssertion: ''
+        transportKey: ''
+        transportKeyId: ''
+        transportKeyPassword: ''
+    big:
+      tink:
+        aspspCode: BIG
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bpg:
+      tink:
+        aspspCode: BPG
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bunq:
+      abn:
+        clientId: ''
+        clientSecret: ''
+        psd2ApiKey: ''
+        psd2ClientAuthToken: ''
+        psd2InstallationKeyPair: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
+      tink:
+        clientId: ''
+        clientSecret: ''
+        psd2ApiKey: ''
+        psd2ClientAuthToken: ''
+        psd2InstallationKeyPair: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
+    caixa-fr:
+      tink:
+        aspspCode: CGDFR
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    caixa-pt:
+      tink:
+        aspspCode: CGDPT
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    caixa-redirect-pt:
+      tink:
+        aspspCode: CGDPT
+        baseUrl: https://site1.sibsapimarket.com/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    caixacrl-pt:
+      tink:
+        aspspCode: CCAML
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    cemah:
+      tink:
+        aspspCode: CEMAH
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    cofidis:
+      tink:
+        aspspCode: COF
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    creditoagricola:
+      tink:
+        aspspCode: GCA
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        clientSigningKeyPath: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    creditsafe:
+      password: cU7356rwx
+      username: TINKTESTIN
+    demoFinancialInstitution:
+      mobilebanking:
+        baseUrl: http://localhost:9271/mobilebanking
+      openbanking:
+        baseUrl: http://localhost:9271/openbanking
+    deutschebank:
+      tink:
+        baseUrl: https://simulator-api.db.com
+        clientId: ''
+        clientSecret: ''
+        redirectUri: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    eurobic-pt:
+      tink:
+        aspspCode: BIC
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        clientSigningKeyPath: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    excludedDebugClusters:
+      excludedClusters:
+      - local-development
+    fints:
+      regNumber: dummyId
+    icsConfiguration:
+      abn:
+        clientId: dummyId
+        clientSecret: dummySecret
+      abn-qwac-psd2:
+        clientId: dummyId
+        clientSecret: dummySecret
+    millenniumbcp:
+      tink:
+        aspspCode: BCPPT
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        clientSigningKeyPath: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    monzo:
+      tink:
+        clientId: dummyId
+        clientSecret: dummySecret
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    nordeapartner:
+      tink:
+        baseUrl: https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2
+        keyId: tink-nordea-encrypt
+        nordeaEncryptionPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzTHUSrVhLcbA59fdf+utR2w1MdWTG0fUnsmJa9YlgaI3mVFQDlKXc0+oflTqLnIMDchn74a74sPbCZ20Tv3U8upFZ8WPZlqjGlGRv5OVGf5yHxaybjS0kpByhLaZZrRzeC2AGXL9FJ/V2wyUz+RQLWWf3/VQcTjMXxoMOxIYY/3mOla2TgU/Xsa5SNEVaYvsoysrVqMA6YZqGfdLzNSU8tbVrC0j1SvWXmW+8fjXHR+HY7T4EyJTw/pqfrk8s5KIBijgQDhOv7AvACOb1AkykljFQ182bTZv6gzBBGc2DALA7IKG4oq0bzMgn77w7zRkVpnOQTwHIBybhvsdPvgmlwIDAQAB
+        nordeaSigningPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAg8UDNd14d/Idf5i6D0IzK/sYa5dHd6dufyfjFGX6Y+NEu7vR91mT2M5pskvRlIfNgWQLdrYVuKqN2ZSlDd66QM0ML3D+5d+fWPPsCZ6mvXr3HNRduUgTqruUwNl/JgL1MHSq2FstFpT+lT5JR+C6mi6POKLtiXaUtA/44wXTmfxSQKSTpsSBVNS93WLfOA4gKqG6FnO7QiauedMQWScMpBzUo+cC3Y1tIndVnm2DOJtkZ3PgiGqnsjD3sHbfJj0ASsnNtQ+29j3x/QkxfPr6ASOywn/QjKsklxEd7fKYL7R5DCHn5Jfa/MKnjwSxMAx3+LRoqGqqogU7ubiGwideoQIDAQAB
+        partnerId: bf873fdc-035b-48ef-a616-3b3c3fc243df
+        tinkEncryptionPrivateKey: dummykey
+        tinkEncryptionPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqHJbKfWjKYnnY8jwMWq0VKU/EGb/+mi8D2fZdlU5f2QiFxvIj8du7hBt5Pju9xjowzFd1oLsW3uI1AIV/KUAhhB7Lr4Q2cAt7IQQdWZg9lYYez+qssYq5ytyMfBHwHsqRv6zBKaMiXkZ0A8VCFaoSZgF867IT9l094qdbhH92XKkNlaH8AHplSl9v22U8YdzWomIpy8HV1OpKcvHfJY1pHH+/1iO6bER661LG2fRXMCtCQXro9pHsPzZm+eJ0qKBx4jy2+obPU5qu0hT0XGz4zPIOIr+I5xvG0GVWbrZHmDDmA1EBvGPT+yQjXWBtpws3AHzZoPX/Bbt73Ky4lBGzwIDAQAB
+        tinkSingingPrivateKey: dummykey
+        tinkSingingPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA462xN1CMeCqpIqb7NMGkpn4g2CZWYVpWqAW5UqMCojLcX+lpy72JTHgcEYvBpq7tTq8cR0HvAb2xagQ+273KRvhuvMCrPyi8UEH8QIgSiGceaivqu6hK7ieemvoh0cOaQnkL54PSdVUIlmGm0/BOInmgviS+Lwi6IHCORTdYsxSafNH/n98qkOUJLluRtP/XyRWLpHL/mTB2t+foCsrTlCWAxvyxXn+R+JDd6c8UZO4V0gxrYoKTmx4T0rW9AuC+mzPKIM4CfHeuTf65zRm+nhUNjvnZZC+34YQeFFEhbaV77io8CJBOc8Yz2RayPlfuqumkwCpjA6N1zgj6XUGTVwIDAQAB
+    novobanco:
+      tink:
+        aspspCode: NVB
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        clientSigningKeyPath: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    novobancoacores:
+      tink:
+        aspspCode: NVBA
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        clientSigningKeyPath: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    rabobank:
+      abnamro:
+        baseUrl: https://api.rabobank.nl/openapi
+        clientId: dummyClientId
+        clientSSLKeyPassword: ''
+        clientSSLP12: dummyCertificateBase64
+        clientSecret: dummyClientSecret
+        qsealcPem: dummyCertificateBase64
+        redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+      tink:
+        baseUrl: https://api.rabobank.nl/openapi
+        clientId: dummyClientId
+        clientSSLKeyPassword: ''
+        clientSSLP12: dummyCertificateBase64
+        clientSecret: dummyClientSecret
+        qsealcPem: dummyCertificateBase64
+        redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+      tink-sandbox:
+        baseUrl: https://api-sandbox.rabobank.nl/openapi/sandbox
+        clientId: dummyClientId
+        clientSSLKeyPassword: ''
+        clientSSLP12: dummyCertificateBase64
+        clientSecret: dummyClientSecret
+        qsealcPem: dummyCertificateBase64
+        redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+    resursbank:
+      tink:
+        baseAPIUrl: https://resursbank-api-sandbox.crosskey.io
+        baseAuthUrl: https://resursbank-sandbox.crosskey.io
+        clientId: ''
+        clientKeyStorePassword: '123456'
+        clientKeyStorePath: data/test/cryptography/crosskey/client.p12
+        clientSecret: ''
+        clientSigningCertificatePath: data/test/cryptography/crosskey/signing.cer
+        clientSigningKeyPath: data/test/cryptography/crosskey/signing.key
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        xFapiFinancialId: resursbank
+    santander-pt:
+      tink:
+        aspspCode: BST
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        clientSigningKeyPath: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    sdc:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        ocpApimSubscriptionKey: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+    sebopenbanking:
+      tink:
+        baseUrl: https://api-sandbox.sebgroup.com
+        clientId: dummyId
+        clientSecret: dummySecret
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    spankki:
+      tink:
+        baseAPIUrl: https://s-pankki-api-sandbox.crosskey.io
+        baseAuthUrl: https://s-pankki-sandbox.crosskey.io
+        clientId: ''
+        clientKeyStorePassword: '123456'
+        clientKeyStorePath: data/test/cryptography/crosskey/client.p12
+        clientSecret: ''
+        clientSigningCertificatePath: data/test/cryptography/crosskey/signing.cer
+        clientSigningKeyPath: data/test/cryptography/crosskey/signing.key
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        xFapiFinancialId: s-pankki
+    sparebank1:
+      tink: null
+    starling:
+      tink:
+        aisClientId: dummyId
+        aisClientSecret: dummySecret
+        keyUid: dummyUid
+        pisClientId: dummyId
+        pisClientSecret: dummySecret
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        signingKey: signingKeyInBase64
+    unicre-pt:
+      tink:
+        aspspCode: UNICR
+        baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
+        certificateId: Tink
+        clientId: ''
+        clientSecret: ''
+        clientSigningCertificate: ''
+        clientSigningCertificateSerialNumber: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    volksbank:
+      tink:
+        certificateId: Tink
+        clientId: dummyId
+        clientSecret: dummyClient
+        redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+      tink-sandbox:
+        certificateId: Tink
+        clientId: dummyId
+        clientSecret: dummyClient
+        redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+  signatureKeyPair:
+    privateKeyPath: data/test/cryptography/private_rsa_key.pem
+    publicKeyPath: data/test/cryptography/public_rsa_key.pub
+  testConfiguration:
+    censorSensitiveHeaders: false
+    debugOutput: true
+  tppSecretsServiceConfiguration:
+    certificatesLocation: development-staging
+    enabled: false
+    host: tink-integration-eidas-secrets-service.eidas-secrets-service.svc.cluster.local
+    port: 30787
+cache:
+  enabled: true
+  hosts: 172.16.42.2:11211
+cluster: TINK
+coordination:
+  hosts: 172.16.42.2:2181
+database:
+  driverClass: com.mysql.jdbc.Driver
+  generateDdl: true
+  maxPoolSize: 40
+  password: tink
+  persistenceUnitName: tink-aggregation-api
+  showSql: false
+  url: jdbc:mysql://172.16.42.2/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+  username: tink
+developmentMode: true
+distributedDatabase:
+  enabled: true
+  seeds:
+  - 172.16.42.2
 endpoints:
-  api:
-    url: http://www.staging.tink.se/api/v1
-  main:
-    url: http://localhost:9090/
-  system:
-    url: http://localhost:9090/
-    accessToken: devtoken
   aggregation:
-    url: http://localhost:9090/
     accessToken: devtoken
+    url: http://localhost:9090/
   analytics:
     url: http://localhost:9090/
-  encryption:
-    url: http://localhost:9090/
-    accessToken: devtoken
+  api:
+    url: http://www.staging.tink.se/api/v1
   connector:
+    url: http://localhost:9090/
+  encryption:
+    accessToken: devtoken
     url: http://localhost:9090/
   fasttext:
     url: http://localhost:9090/
+  main:
+    url: http://localhost:9090/
   providerConfiguration:
     url: http://localhost:9047/
-
-cluster: TINK
-
+  system:
+    accessToken: devtoken
+    url: http://localhost:9090/
 flags:
-  register:
-    SE:
-      FRAUD_PROTECTION: 1
-      TINK_EMPLOYEE: 1
-      APPLICATIONS: 1
   dynamicInheritance:
     APPLICATIONS:
-      - TRANSFERS
-      - BILLPAY
-      - SHOW_BANK_LOGO
-      - APPLICATIONS_INTERCOM_CHAT
-      - RESIDENCE_TAB
-      - IOS_MORTGAGE_TAKE_OVER
+    - TRANSFERS
+    - BILLPAY
+    - SHOW_BANK_LOGO
+    - APPLICATIONS_INTERCOM_CHAT
+    - RESIDENCE_TAB
+    - IOS_MORTGAGE_TAKE_OVER
     IOS_BETA:
-      - RESIDENCE_VALUATION
+    - RESIDENCE_VALUATION
     TINK_EMPLOYEE:
-      - RESIDENCE_VALUATION
-
-developmentMode: true
-
-distributedDatabase:
-  seeds:
-    - 172.16.42.2
-  enabled: true
-
-database:
-  driverClass: com.mysql.jdbc.Driver
-  username: tink
-  password: tink
-  url: jdbc:mysql://172.16.42.2/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
-  showSql: false
-  persistenceUnitName: tink-aggregation-api
-  generateDdl: true
-  maxPoolSize: 40
-
-cache:
-  hosts: 172.16.42.2:11211
-  enabled: true
-
-coordination:
-  hosts: 172.16.42.2:2181
-
+    - RESIDENCE_VALUATION
+  register:
+    SE:
+      APPLICATIONS: 1
+      FRAUD_PROTECTION: 1
+      TINK_EMPLOYEE: 1
+grpc:
+  port: 9998
+logging:
+  appenders:
+  - logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread]
+      R:%X{requestId} %blue(%logger) %message%n%xException'
+    threshold: ALL
+    timeZone: Europe/Stockholm
+    type: console
+  level: INFO
+  loggers:
+    org.apache.hadoop: INFO
+    org.apache.http.client.protocol.ResponseProcessCookies: ERROR
+    org.hibernate: WARN
+    se.tink: DEBUG
+    se.tink.org.eclipse: INFO
 notifications:
-  startHourOfDay: 9
-  endHourOfDay: 22
   applications:
     se.tink.frontend.mobile:
       apple:
-        topic: se.tink.iphone
         keystore:
           filename: enterprise.p12
           password: AgtZfUBuvQhF9Cr9nHsbqx]RBLfat2CH
+        topic: se.tink.iphone
       google:
         apiKey: AIzaSyBbD-9t5m3EnL9U8vxD-3qrg9OKUrVZ92g
-
-agentsServiceConfiguration:
-  countryProxies:
-    es:
-      host: "http://zproxy.lum-superproxy.io:22225"
-      username: "lum-customer-tink_ab-zone-spain-country-es"
-      password: "dummyPassword"
-    be:
-      host: "http://zproxy.lum-superproxy.io:22225"
-      username: "lum-customer-tink_ab-zone-belgium"
-      password: "dummyPassword"
-  integrations:
-    icsConfiguration:
-      abn:
-        clientId: "dummyId"
-        clientSecret: "dummySecret"
-      abn-qwac-psd2:
-        clientId: "dummyId"
-        clientSecret: "dummySecret"
-    fints:
-      regNumber: "dummyId"
-    monzo:
-      tink:
-        clientId: "dummyId"
-        clientSecret: "dummySecret"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-    rabobank:
-      tink-sandbox:
-        clientId: "dummyClientId"
-        clientSecret: "dummyClientSecret"
-        redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
-        baseUrl: "https://api-sandbox.rabobank.nl/openapi/sandbox"
-        clientSSLP12: "dummyCertificateBase64"
-        clientSSLKeyPassword: ""
-        qsealcPem: "dummyCertificateBase64"
-      tink:
-        clientId: "dummyClientId"
-        clientSecret: "dummyClientSecret"
-        redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
-        baseUrl: "https://api.rabobank.nl/openapi"
-        clientSSLP12: "dummyCertificateBase64"
-        clientSSLKeyPassword: ""
-        qsealcPem: "dummyCertificateBase64"
-      abnamro:
-        clientId: "dummyClientId"
-        clientSecret: "dummyClientSecret"
-        redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
-        baseUrl: "https://api.rabobank.nl/openapi"
-        clientSSLP12: "dummyCertificateBase64"
-        clientSSLKeyPassword: ""
-        qsealcPem: "dummyCertificateBase64"
-    sebopenbanking:
-      tink:
-        baseUrl: "https://api-sandbox.sebgroup.com"
-        clientId: "dummyId"
-        clientSecret: "dummySecret"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-    starling:
-      tink:
-        aisClientId: "dummyId"
-        aisClientSecret: "dummySecret"
-        pisClientId: "dummyId"
-        pisClientSecret: "dummySecret"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        keyUid: "dummyUid"
-        signingKey: "signingKeyInBase64"
-    volksbank:
-      tink:
-        clientId: "dummyId"
-        clientSecret: "dummyClient"
-        certificateId: "Tink"
-        redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
-      tink-sandbox:
-        clientId: "dummyId"
-        clientSecret: "dummyClient"
-        certificateId: "Tink"
-        redirectUrl: "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback"
-    bunq:
-      tink:
-        clientId: ""
-        clientSecret: ""
-        psd2ApiKey: ""
-        psd2ClientAuthToken: ""
-        psd2InstallationKeyPair: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/credentials/third-party/callback"
-      abn:
-        clientId: ""
-        clientSecret: ""
-        psd2ApiKey: ""
-        psd2ClientAuthToken: ""
-        psd2InstallationKeyPair: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/credentials/third-party/callback"
-    activobank:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "ABPT"
-    atlanticoeuropa:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "ATLEU"
-    bancobpi-pt:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "BBPI"
-    bancoctt:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "BCTT"
-    bancomontepio:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "CEMG"
-    bankinter:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "BNKI"
-    big:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "BIG"
-    bpg:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "BPG"
-    caixa-pt:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "CGDPT"
-    caixa-redirect-pt:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "CGDPT"
-    caixacrl-pt:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "CCAML"
-    caixa-fr:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "CGDFR"
-    cemah:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "CEMAH"
-    cofidis:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "COF"
-    creditoagricola:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningKeyPath: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "GCA"
-    eurobic-pt:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningKeyPath: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "BIC"
-    millenniumbcp:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningKeyPath: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "BCPPT"
-    novobanco:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningKeyPath: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "NVB"
-    novobancoacores:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningKeyPath: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "NVBA"
-    santander-pt:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningKeyPath: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "BST"
-    unicre-pt:
-      tink:
-        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
-        certificateId: Tink
-        clientId: ""
-        clientSecret: ""
-        clientSigningCertificate: ""
-        clientSigningCertificateSerialNumber: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        aspspCode: "UNICR"
-    creditsafe:
-      username: TINKTESTIN
-      password: cU7356rwx
-    excludedDebugClusters:
-      excludedClusters:
-        - local-development
-    aggregationWorker:
-      collectorSubscriptionKey: ASK_JOHANNES
-    sparebank1:
-      tink:
-    deutschebank:
-      tink:
-        baseUrl: "https://simulator-api.db.com"
-        clientId: ""
-        clientSecret: ""
-        redirectUri: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-    spankki:
-      tink:
-        clientId: ""
-        clientSecret: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        baseAuthUrl: "https://s-pankki-sandbox.crosskey.io"
-        baseAPIUrl: "https://s-pankki-api-sandbox.crosskey.io"
-        clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
-        clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
-        clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
-        clientKeyStorePassword: "123456"
-        xFapiFinancialId: "s-pankki"
-    resursbank:
-      tink:
-        clientId: ""
-        clientSecret: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        baseAuthUrl: "https://resursbank-sandbox.crosskey.io"
-        baseAPIUrl: "https://resursbank-api-sandbox.crosskey.io"
-        clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
-        clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
-        clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
-        clientKeyStorePassword: "123456"
-        xFapiFinancialId: "resursbank"
-    alandsbank-se:
-      tink:
-        clientId: ""
-        clientSecret: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        baseAuthUrl: "https://alandsbanken-se-sandbox.crosskey.io"
-        baseAPIUrl: "https://alandsbanken-se-api-sandbox.crosskey.io"
-        clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
-        clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
-        clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
-        clientKeyStorePassword: "123456"
-        xFapiFinancialId: "alandsbanken-se"
-    alandsbank-fi:
-      tink:
-        clientId: ""
-        clientSecret: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        baseAuthUrl: "https://alandsbanken-fi-sandbox.crosskey.io"
-        baseAPIUrl: "https://alandsbanken-fi-api-sandbox.crosskey.io"
-        clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
-        clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
-        clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
-        clientKeyStorePassword: "123456"
-        xFapiFinancialId: "alandsbanken-fi"
-    sdc:
-      tink:
-        clientId: ""
-        clientSecret: ""
-        redirectUrl: "https://api.tink.com/api/v1/credentials/third-party/callback"
-        ocpApimSubscriptionKey: ""
-    aib:
-      tink:
-        organizationId: ""
-        clientId: ""
-        signingKey: ""
-        signingKeyId: ""
-        softwareStatementAssertion: ""
-        redirectUrl: ""
-        softwareId: ""
-        transportKey: ""
-        transportKeyId: ""
-        rootCAData: ""
-        clientSecret: ""
-        transportKeyPassword: ""
-        signingKeyPassword: ""
-        rootCAPassword: ""
-    bankofscotland:
-      tink:
-        organizationId: ""
-        clientId: ""
-        signingKey: ""
-        signingKeyId: ""
-        softwareStatementAssertion: ""
-        redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
-        softwareId: ""
-        transportKey: ""
-        transportKeyId: ""
-        rootCAData: ""
-        clientSecret: ""
-        transportKeyPassword: ""
-        signingKeyPassword: ""
-        rootCAPassword: ""
-    nordeapartner:
-      tink:
-        partnerId: "bf873fdc-035b-48ef-a616-3b3c3fc243df"
-        baseUrl: "https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2"
-        nordeaSigningPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAg8UDNd14d/Idf5i6D0IzK/sYa5dHd6dufyfjFGX6Y+NEu7vR91mT2M5pskvRlIfNgWQLdrYVuKqN2ZSlDd66QM0ML3D+5d+fWPPsCZ6mvXr3HNRduUgTqruUwNl/JgL1MHSq2FstFpT+lT5JR+C6mi6POKLtiXaUtA/44wXTmfxSQKSTpsSBVNS93WLfOA4gKqG6FnO7QiauedMQWScMpBzUo+cC3Y1tIndVnm2DOJtkZ3PgiGqnsjD3sHbfJj0ASsnNtQ+29j3x/QkxfPr6ASOywn/QjKsklxEd7fKYL7R5DCHn5Jfa/MKnjwSxMAx3+LRoqGqqogU7ubiGwideoQIDAQAB"
-        nordeaEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzTHUSrVhLcbA59fdf+utR2w1MdWTG0fUnsmJa9YlgaI3mVFQDlKXc0+oflTqLnIMDchn74a74sPbCZ20Tv3U8upFZ8WPZlqjGlGRv5OVGf5yHxaybjS0kpByhLaZZrRzeC2AGXL9FJ/V2wyUz+RQLWWf3/VQcTjMXxoMOxIYY/3mOla2TgU/Xsa5SNEVaYvsoysrVqMA6YZqGfdLzNSU8tbVrC0j1SvWXmW+8fjXHR+HY7T4EyJTw/pqfrk8s5KIBijgQDhOv7AvACOb1AkykljFQ182bTZv6gzBBGc2DALA7IKG4oq0bzMgn77w7zRkVpnOQTwHIBybhvsdPvgmlwIDAQAB"
-        tinkSingingPrivateKey: "dummykey"
-        tinkSingingPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA462xN1CMeCqpIqb7NMGkpn4g2CZWYVpWqAW5UqMCojLcX+lpy72JTHgcEYvBpq7tTq8cR0HvAb2xagQ+273KRvhuvMCrPyi8UEH8QIgSiGceaivqu6hK7ieemvoh0cOaQnkL54PSdVUIlmGm0/BOInmgviS+Lwi6IHCORTdYsxSafNH/n98qkOUJLluRtP/XyRWLpHL/mTB2t+foCsrTlCWAxvyxXn+R+JDd6c8UZO4V0gxrYoKTmx4T0rW9AuC+mzPKIM4CfHeuTf65zRm+nhUNjvnZZC+34YQeFFEhbaV77io8CJBOc8Yz2RayPlfuqumkwCpjA6N1zgj6XUGTVwIDAQAB"
-        tinkEncryptionPrivateKey: "dummykey"
-        tinkEncryptionPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqHJbKfWjKYnnY8jwMWq0VKU/EGb/+mi8D2fZdlU5f2QiFxvIj8du7hBt5Pju9xjowzFd1oLsW3uI1AIV/KUAhhB7Lr4Q2cAt7IQQdWZg9lYYez+qssYq5ytyMfBHwHsqRv6zBKaMiXkZ0A8VCFaoSZgF867IT9l094qdbhH92XKkNlaH8AHplSl9v22U8YdzWomIpy8HV1OpKcvHfJY1pHH+/1iO6bER661LG2fRXMCtCQXro9pHsPzZm+eJ0qKBx4jy2+obPU5qu0hT0XGz4zPIOIr+I5xvG0GVWbrZHmDDmA1EBvGPT+yQjXWBtpws3AHzZoPX/Bbt73Ky4lBGzwIDAQAB"
-        keyId: "tink-nordea-encrypt"
-    demoFinancialInstitution:
-      mobilebanking:
-        baseUrl: "http://localhost:9271/mobilebanking"
-      openbanking:
-        baseUrl: "http://localhost:9271/openbanking"
-  signatureKeyPair:
-    privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
-    publicKeyPath: "data/test/cryptography/public_rsa_key.pub"
-  eidasProxy:
-    host: "https://eidas-proxy.staging.aggregation.tink.network"
-    localEidasDev: true
-  tppSecretsServiceConfiguration:
-    host: "tink-integration-eidas-secrets-service.eidas-secrets-service.svc.cluster.local" # add to your /etc/hosts with the (minikube ip)
-    port: 30787
-    certificatesLocation: "development-staging"
-    enabled: false
-  testConfiguration:
-    debugOutput: true
-    censorSensitiveHeaders: false
-  featureFlags:
-    esProxy: false
-    beProxy: false
-    swedbankKeepAlive: true
-
+  endHourOfDay: 22
+  startHourOfDay: 9
 providerConfigurationServiceConfiguration:
-  host: provider-configuration-api.provider-configuration.svc.cluster.local # add to your /etc/hosts with 127.0.0.1
-  port: 9048
   enabled: false
-
+  host: provider-configuration-api.provider-configuration.svc.cluster.local
+  port: 9048
+server:
+  adminConnectors:
+  - port: 8090
+    type: http
+  applicationConnectors:
+  - port: 9090
+    type: http
+  - certAlias: developer.internal.tink.se
+    keyStorePassword: changeme
+    keyStorePath: data/security/developer.keystore
+    port: 9091
+    trustStorePassword: changeme
+    trustStorePath: data/security/TinkCA.truststore
+    type: https
+    validateCerts: false
+  shutdownGracePeriod: 20s
 transfers:
-  enabled: true
-  duplicateTime: 1
   aggregationTime: 5
   bankTransferThreshold: 1000
+  duplicateTime: 1
+  enabled: true
   paymentThreshold: 20000
-
-logging:
-  level: INFO
-  loggers:
-    se.tink: DEBUG
-    se.tink.org.eclipse: INFO
-    org.hibernate: WARN
-    org.apache.hadoop: INFO
-    org.apache.http.client.protocol.ResponseProcessCookies: ERROR
-  appenders:
-    - type: console
-      threshold: ALL
-      timeZone: Europe/Stockholm
-      logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread] R:%X{requestId} %blue(%logger) %message%n%xException'
