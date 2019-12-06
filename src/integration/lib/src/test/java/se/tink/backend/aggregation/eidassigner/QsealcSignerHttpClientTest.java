@@ -62,6 +62,7 @@ public class QsealcSignerHttpClientTest {
         proxyServer.configureSsl(Utils.buildSslContextFactoryFromConfig(), 12345, false);
         proxyServer.addContext("/", new ProxyServerHandler());
         proxyServer.addContext("/test", new ProxyServerHandler());
+        proxyServer.addContext("/jwt-rsa-sha256", new ProxyServerHandler());
         proxyServer.start();
     }
 
@@ -71,21 +72,33 @@ public class QsealcSignerHttpClientTest {
     }
 
     @Test
-    public void qsealcSignerHttpClientTest() throws Exception {
-        Assert.assertEquals("development", configuration.getEnvironment());
+    public void qsealcSignerHttpClientTest() {
+        try {
+            Assert.assertEquals("development", configuration.getEnvironment());
 
-        HttpClient httpClient_first_get = QsealcSignerHttpClient.getHttpClient(configuration);
-        HttpClient httpClient_second_get = QsealcSignerHttpClient.getHttpClient(configuration);
-        Assert.assertEquals(httpClient_first_get, httpClient_second_get);
+            HttpClient httpClient_first_get = QsealcSignerHttpClient.getHttpClient(configuration);
+            HttpClient httpClient_second_get = QsealcSignerHttpClient.getHttpClient(configuration);
+            Assert.assertEquals(httpClient_first_get, httpClient_second_get);
 
-        HttpClient httpClient = QsealcSignerHttpClient.getHttpClient(configuration);
-        HttpPost post = new HttpPost("http://127.0.0.1:11111/test/");
-        HttpResponse response = httpClient.execute(post);
-        Assert.assertEquals(200, response.getStatusLine().getStatusCode());
+            HttpClient httpClient = QsealcSignerHttpClient.getHttpClient(configuration);
+            HttpPost post = new HttpPost("http://127.0.0.1:11111/test/");
+            HttpResponse response = httpClient.execute(post);
+            Assert.assertEquals(200, response.getStatusLine().getStatusCode());
 
-        HttpPost postHttps = new HttpPost("https://127.0.0.1:12345/test/");
-        HttpResponse responseHttps = httpClient.execute(postHttps);
-        Assert.assertEquals(200, responseHttps.getStatusLine().getStatusCode());
+            HttpPost postHttps = new HttpPost("https://127.0.0.1:12345/test/");
+            HttpResponse responseHttps = httpClient.execute(postHttps);
+            Assert.assertEquals(200, responseHttps.getStatusLine().getStatusCode());
+
+            QsealcSigner signer =
+                    QsealcSigner.build(
+                            configuration,
+                            QsealcAlg.EIDAS_JWT_RSA_SHA256,
+                            new EidasIdentity("", "", ""));
+            String result = signer.getJWSToken("".getBytes());
+            Assert.assertEquals("", result);
+        } catch (Exception e) {
+            Assert.fail("Exception occurred");
+        }
     }
 
     private static class ProxyServerHandler extends AbstractHandler {

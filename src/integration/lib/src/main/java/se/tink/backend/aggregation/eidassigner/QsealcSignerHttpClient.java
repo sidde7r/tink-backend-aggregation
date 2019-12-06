@@ -44,8 +44,9 @@ public class QsealcSignerHttpClient {
                                                 PlainConnectionSocketFactory.getSocketFactory())
                                         .register("https", sslsf)
                                         .build());
-                connectionManager.setDefaultMaxPerRoute(4);
-                connectionManager.setMaxPerRoute(new HttpRoute(new HttpHost(conf.getHost())), 10);
+                connectionManager.setMaxTotal(30);
+                connectionManager.setDefaultMaxPerRoute(5);
+                connectionManager.setMaxPerRoute(new HttpRoute(new HttpHost(conf.getHost())), 25);
 
                 ConnectionKeepAliveStrategy ttl = (r, c) -> 60 * 1000;
                 httpClient =
