@@ -7,8 +7,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.FetchAccountsResponseMapperFactory;
-import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.TransactionaAccountMapper;
 import se.tink.sa.services.fetch.trans.PayloadMap;
 import se.tink.sa.services.fetch.trans.TransactionsMapEntity;
 
@@ -28,18 +26,20 @@ public class TransactionsMapperService {
 
     private static Map<Account, List<Transaction>> mapTransactions(
             final List<TransactionsMapEntity> transactionsMapEntityList) {
-        TransactionaAccountMapper transactionaAccountMapper =
-                FetchAccountsResponseMapperFactory.transactionaAccountMapper();
-        return Optional.ofNullable(transactionsMapEntityList).orElse(Collections.emptyList())
-                .stream()
-                .collect(
-                        Collectors.toMap(
-                                transactionsMapEntity ->
-                                        transactionaAccountMapper.map(
-                                                transactionsMapEntity.getKey()),
-                                transactionsMapEntity ->
-                                        TransactionsMapperService.mapTransactionList(
-                                                transactionsMapEntity.getValueList())));
+        throw new UnsupportedOperationException("not just yet");
+        //        TransactionaAccountMapper transactionaAccountMapper =
+        //                FetchAccountsResponseMapperFactory.transactionaAccountMapper();
+        //        return
+        // Optional.ofNullable(transactionsMapEntityList).orElse(Collections.emptyList())
+        //                .stream()
+        //                .collect(
+        //                        Collectors.toMap(
+        //                                transactionsMapEntity ->
+        //                                        transactionaAccountMapper.map(
+        //                                                transactionsMapEntity.getKey()),
+        //                                transactionsMapEntity ->
+        //                                        TransactionsMapperService.mapTransactionList(
+        //                                                transactionsMapEntity.getValueList())));
     }
 
     private static List<Transaction> mapTransactionList(

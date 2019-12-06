@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg;
+package se.tink.backend.aggregation.agents.standalone.mapper.common;
 
 import java.util.Calendar;
 import java.util.Date;

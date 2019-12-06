@@ -7,4 +7,5 @@ option go_package = "proto";
 
 message SecurityInfo {
   string securityToken = 1;
+  string state = 2;
 }
