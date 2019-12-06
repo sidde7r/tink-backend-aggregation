@@ -5,7 +5,6 @@ java_library(
     srcs = glob(["src/main/java/**/*.java"]),
     resources = [
         "//src/integration/agents/src/main/resources:config-templates",
-        "@tink_backend_integration_openbanking//src/integration/agents/src/main/resources:config-templates",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -136,7 +135,6 @@ junit_test(
     ],
     resources = [
         "//src/integration/agents/src/main/resources:config-templates",
-        "@tink_backend_integration_openbanking//src/integration/agents/src/main/resources:config-templates",
     ],
     tags = ["manual"],
     visibility = ["//visibility:public"],
