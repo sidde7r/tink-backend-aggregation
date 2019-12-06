@@ -4,8 +4,8 @@ import io.grpc.ManagedChannel;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.standalone.GenericAgentConfiguration;
+import se.tink.backend.aggregation.agents.standalone.mapper.factory.MappersController;
 import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.FetchAccountsResponseMapper;
-import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.FetchAccountsResponseMapperFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.sa.services.fetch.account.FetchAccountsRequest;
 import se.tink.sa.services.fetch.account.FetchAccountsServiceGrpc;
@@ -19,24 +19,26 @@ public class CheckingService {
             fetchTransactionsServiceBlockingStub;
     private final GenericAgentConfiguration configuration;
     private final StrongAuthenticationState strongAuthenticationState;
+    private final MappersController mappersController;
 
     public CheckingService(
             final ManagedChannel channel,
             StrongAuthenticationState strongAuthenticationState,
-            GenericAgentConfiguration configuration) {
+            GenericAgentConfiguration configuration,
+            MappersController mappersController) {
         fetchAccountsServiceBlockingStub = FetchAccountsServiceGrpc.newBlockingStub(channel);
         fetchTransactionsServiceBlockingStub =
                 FetchTransactionsServiceGrpc.newBlockingStub(channel);
         this.configuration = configuration;
         this.strongAuthenticationState = strongAuthenticationState;
+        this.mappersController = mappersController;
     }
 
     public FetchAccountsResponse fetchCheckingAccounts() {
         FetchAccountsRequest fetchAccountsRequest = null;
         se.tink.sa.services.fetch.account.FetchAccountsResponse fetchAccountsResponse =
                 fetchAccountsServiceBlockingStub.fetchCheckingAccounts(fetchAccountsRequest);
-        FetchAccountsResponseMapper mapper =
-                FetchAccountsResponseMapperFactory.buildFetchAccountsResponseMapper();
+        FetchAccountsResponseMapper mapper = mappersController.fetchAccountsResponseMapper();
         return mapper.map(fetchAccountsResponse);
     }
 

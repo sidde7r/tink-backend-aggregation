@@ -7,7 +7,6 @@ option go_package = "proto";
 
 import "src/integration/sa_agent/sa_grpc_api/proto/fetch/account/account.proto";
 import "google/type/date.proto";
-import "src/integration/sa_agent/sa_grpc_api/proto/security/model.proto";
 import "src/integration/sa_agent/sa_grpc_api/proto/common/io_common.proto";
 
 message FetchTransactionsRequest {

@@ -19,7 +19,6 @@ import se.tink.sa.model.auth.AuthenticationResponse;
 public class SibsAuthenticationFacade implements AuthenticationFacade {
 
     private static final String BANK_CODE = "BANK_CODE";
-    private static final String STATE = "STATE";
 
     @Autowired private SibsConsentRestClient sibsConsentRestClient;
 
@@ -27,8 +26,8 @@ public class SibsAuthenticationFacade implements AuthenticationFacade {
 
     @Override
     public AuthenticationResponse getConsent(AuthenticationRequest request) {
-        String bankCode = request.getCallbackDataOrDefault(BANK_CODE, null);
-        String state = request.getCallbackDataOrDefault(STATE, null);
+        String bankCode = request.getRequestCommon().getExternalParametersOrThrow(BANK_CODE);
+        String state = request.getRequestCommon().getSecurityInfo().getState();
         ConsentResponse consentResponse =
                 sibsConsentRestClient.getConsent(getConsentRequest(), bankCode, state);
 

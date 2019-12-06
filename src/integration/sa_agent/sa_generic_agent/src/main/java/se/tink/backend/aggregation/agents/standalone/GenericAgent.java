@@ -12,6 +12,9 @@ import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.standalone.grpc.AuthenticationService;
 import se.tink.backend.aggregation.agents.standalone.grpc.CheckingService;
+import se.tink.backend.aggregation.agents.standalone.mapper.factory.MappersController;
+import se.tink.backend.aggregation.agents.standalone.mapper.providers.CommonExternalParametersProvider;
+import se.tink.backend.aggregation.agents.standalone.mapper.providers.impl.MockCommonExternalParametersProvider;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
@@ -33,6 +36,7 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
     private final AuthenticationService authenticationService;
     private final CredentialsRequest credentialsRequest;
     private final StrongAuthenticationState strongAuthenticationState;
+    private final MappersController mappersController;
 
     public GenericAgent(
             CredentialsRequest request,
@@ -50,13 +54,24 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
 
         this.persistentStorage = new PersistentStorage();
         this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
+        credentialsRequest = request;
+        CommonExternalParametersProvider commonExternalParametersProvider =
+                new MockCommonExternalParametersProvider();
+        mappersController =
+                MappersController.newInstance(commonExternalParametersProvider, credentialsRequest);
 
         authenticationService =
                 new AuthenticationService(
-                        channel, strongAuthenticationState, genericAgentConfiguration);
+                        channel,
+                        strongAuthenticationState,
+                        genericAgentConfiguration,
+                        mappersController);
         checkingService =
-                new CheckingService(channel, strongAuthenticationState, genericAgentConfiguration);
-        credentialsRequest = request;
+                new CheckingService(
+                        channel,
+                        strongAuthenticationState,
+                        genericAgentConfiguration,
+                        mappersController);
     }
 
     @Override
