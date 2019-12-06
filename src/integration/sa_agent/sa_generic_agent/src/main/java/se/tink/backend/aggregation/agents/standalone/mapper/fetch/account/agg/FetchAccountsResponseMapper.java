@@ -13,9 +13,9 @@ public class FetchAccountsResponseMapper
         implements Mapper<
                 FetchAccountsResponse, se.tink.sa.services.fetch.account.FetchAccountsResponse> {
 
-    private TransactionaAccountMapper transactionaAccountMapper;
+    private TransactionAccountMapper transactionaAccountMapper;
 
-    public void setTransactionaAccountMapper(TransactionaAccountMapper transactionaAccountMapper) {
+    public void setTransactionaAccountMapper(TransactionAccountMapper transactionaAccountMapper) {
         this.transactionaAccountMapper = transactionaAccountMapper;
     }
 

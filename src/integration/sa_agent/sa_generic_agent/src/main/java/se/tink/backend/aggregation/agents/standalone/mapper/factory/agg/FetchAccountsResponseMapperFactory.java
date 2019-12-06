@@ -22,8 +22,8 @@ public final class FetchAccountsResponseMapperFactory {
         return mapper;
     }
 
-    public TransactionaAccountMapper transactionaAccountMapper() {
-        TransactionaAccountMapper mapper = new TransactionaAccountMapper();
+    public TransactionAccountMapper transactionaAccountMapper() {
+        TransactionAccountMapper mapper = new TransactionAccountMapper();
         mapper.setAccountExclusionMapper(accountExclusionMapper());
         mapper.setExactCurrencyAmountMapper(exactCurrencyAmountMapper());
         mapper.setGoogleDateMapper(commonMappersFactory.googleDateMapper());

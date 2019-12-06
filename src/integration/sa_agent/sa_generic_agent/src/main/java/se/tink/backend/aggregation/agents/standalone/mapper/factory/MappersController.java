@@ -4,11 +4,15 @@ import se.tink.backend.aggregation.agents.standalone.mapper.auth.agg.ThirdPartyA
 import se.tink.backend.aggregation.agents.standalone.mapper.auth.sa.AuthenticationRequestMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.AuthenticationResponseMappersFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.FetchAccountsResponseMapperFactory;
+import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.FetchTransactionsResponseMapperFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.sa.AuthenticationRequestMapperFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.sa.CheckingRequestMappersFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.sa.CommonMappersFactory;
+import se.tink.backend.aggregation.agents.standalone.mapper.factory.sa.FetchTransactionsRequestMappersFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.FetchAccountsResponseMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.sa.FetchAccountsRequestMapper;
+import se.tink.backend.aggregation.agents.standalone.mapper.fetch.trans.agg.FetchTransactionsResponseMapper;
+import se.tink.backend.aggregation.agents.standalone.mapper.fetch.trans.sa.FetchTransactionsRequestMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.CommonExternalParametersProvider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -26,11 +30,17 @@ public class MappersController {
     private FetchAccountsResponseMapper fetchAccountsResponseMapper;
     private FetchAccountsRequestMapper fetchAccountsRequestMapper;
 
+    private FetchTransactionsRequestMapper fetchTransactionsRequestMapper;
+    private FetchTransactionsResponseMapper fetchTransactionsResponseMapper;
+
     private final AuthenticationRequestMapperFactory authenticationRequestMapperFactory;
     private final AuthenticationResponseMappersFactory authenticationResponseMappersFactory;
 
     private final CheckingRequestMappersFactory checkingRequestMappersFactory;
     private final FetchAccountsResponseMapperFactory fetchAccountsResponseMapperFactory;
+
+    private final FetchTransactionsRequestMappersFactory fetchTransactionsRequestsFactory;
+    private final FetchTransactionsResponseMapperFactory fetchTransactionsResponseMapperFactory;
 
     private MappersController(
             CommonExternalParametersProvider commonExternalParametersProvider,
@@ -48,6 +58,11 @@ public class MappersController {
 
         checkingRequestMappersFactory =
                 CheckingRequestMappersFactory.newInstance(commonExternalParametersProvider);
+
+        fetchTransactionsRequestsFactory = FetchTransactionsRequestMappersFactory.newInstance();
+        fetchTransactionsResponseMapperFactory =
+                FetchTransactionsResponseMapperFactory.newInstance(
+                        fetchAccountsResponseMapperFactory, commonMappersFactory);
     }
 
     public static MappersController newInstance(
@@ -86,5 +101,21 @@ public class MappersController {
                     authenticationResponseMappersFactory.thirdPartyAppAuthenticationPayloadMapper();
         }
         return thirdPartyAppAuthenticationPayloadMapper;
+    }
+
+    public FetchTransactionsRequestMapper fetchTransactionsRequestMapper() {
+        if (fetchTransactionsRequestMapper == null) {
+            fetchTransactionsRequestMapper =
+                    fetchTransactionsRequestsFactory.fetchTransactionsRequestMapper();
+        }
+        return fetchTransactionsRequestMapper;
+    }
+
+    public FetchTransactionsResponseMapper fetchTransactionsResponseMapper() {
+        if (fetchTransactionsResponseMapper == null) {
+            fetchTransactionsResponseMapper =
+                    fetchTransactionsResponseMapperFactory.fetchTransactionsResponseMapper();
+        }
+        return fetchTransactionsResponseMapper;
     }
 }

@@ -14,7 +14,7 @@ import se.tink.sa.common.mapper.Mapper;
 import se.tink.sa.common.mapper.MappingContext;
 import se.tink.sa.services.fetch.account.TransactionalAccount;
 
-public class TransactionaAccountMapper
+public class TransactionAccountMapper
         implements Mapper<Account, se.tink.sa.services.fetch.account.TransactionalAccount> {
 
     private AccountExclusionMapper accountExclusionMapper;
