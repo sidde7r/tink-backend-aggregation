@@ -6,6 +6,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -35,6 +36,7 @@ public class LocalEidasServiceVerificationCertsLoaderImpl
     protected KeyStore loadClientKeyStore()
             throws NoSuchProviderException, KeyStoreException, IOException, CertificateException,
                     NoSuchAlgorithmException {
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         File clientCertificateFile = new File(System.getProperty("user.home"), "eidas_client.p12");
         KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
         keyStore.load(new FileInputStream(clientCertificateFile), "changeme".toCharArray());
