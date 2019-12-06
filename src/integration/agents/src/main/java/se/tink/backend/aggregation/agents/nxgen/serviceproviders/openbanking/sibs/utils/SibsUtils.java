@@ -22,6 +22,8 @@ public final class SibsUtils {
     private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
             DateTimeFormatter.ofPattern(SibsConstants.Formats.CONSENT_BODY_DATE_FORMAT);
     private static final String DASH = "-";
+    private static final DateTimeFormatter TRANSACTION_DATE_FORMAT =
+            DateTimeFormatter.ofPattern(SibsConstants.Formats.TRANSACTION_DATE_FORMAT);
 
     private SibsUtils() {}
 
@@ -60,16 +62,12 @@ public final class SibsUtils {
     }
 
     public static LocalDate convertStringToLocalDate(String localDate) {
-        DateTimeFormatter formatter =
-                DateTimeFormatter.ofPattern(SibsConstants.Formats.TRANSACTION_DATE_FORMAT);
-        LocalDate lDate = (localDate == null) ? null : LocalDate.parse(localDate, formatter);
-        return lDate;
+        return (StringUtils.isEmpty(localDate))
+                ? null
+                : LocalDate.parse(localDate, TRANSACTION_DATE_FORMAT);
     }
 
     public static String convertLocalDateToString(LocalDate localDate) {
-        DateTimeFormatter customFormatter =
-                DateTimeFormatter.ofPattern(SibsConstants.Formats.TRANSACTION_DATE_FORMAT);
-        String lDate = (localDate == null) ? null : customFormatter.format(localDate);
-        return lDate;
+        return (localDate == null) ? null : TRANSACTION_DATE_FORMAT.format(localDate);
     }
 }
