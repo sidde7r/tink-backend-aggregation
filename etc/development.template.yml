@@ -120,24 +120,6 @@ agentsServiceConfiguration:
         clientSecret: "dummySecret"
     fints:
       regNumber: "dummyId"
-    sbab:
-      signBaseUrl: "https://secure.sbab.se"
-      tink:
-        clientId: "tink"
-        environment: "sandbox"
-        basicAuthUsername: "dummyUser"
-        basicAuthPassword: "dummyPass"
-        accessToken: "sandboxToken"
-        redirectUri: "https://api.tink.se/api/v1/credentials/third-party/callback"
-    handelsbanken:
-      tink:
-        appId: "dummyAppId"
-        clientId: "dummyClientId"
-        psuIpAddress: "dummyPsuIpAddress"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        appName: "Tink"
-        appDesc: "Tink app"
-        eidasUrl: "https://eidas-proxy.staging.aggregation.tink.network"
     monzo:
       tink:
         clientId: "dummyId"
@@ -168,13 +150,6 @@ agentsServiceConfiguration:
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
         qsealcPem: "dummyCertificateBase64"
-    abnamro:
-      tink:
-        clientId: "dummyClientId"
-        apiKey: "dummyApiKey"
-        redirectUrl: "https://localhost/auth"
-        clientSSLP12: "dummyCertificateBase64"
-        clientSSLKeyPassword: ""
     sebopenbanking:
       tink:
         baseUrl: "https://api-sandbox.sebgroup.com"
@@ -440,46 +415,14 @@ agentsServiceConfiguration:
         - local-development
     aggregationWorker:
       collectorSubscriptionKey: ASK_JOHANNES
-    bec:
     sparebank1:
       tink:
-    ing:
-      tink:
-        baseUrl: "https://api.sandbox.ing.com"
-        clientId: "dummyId"
-        clientSigningKeyPath: "data/test/cryptography/ing/signing.key"
-        clientSigningCertificatePath: "data/test/cryptography/ing/signing.cer"
-        clientKeyStorePath: "data/test/cryptography/ing/client.p12"
-        clientKeyStorePassword: "123456"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     deutschebank:
       tink:
         baseUrl: "https://simulator-api.db.com"
         clientId: ""
         clientSecret: ""
         redirectUri: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-    seb:
-      tink:
-        baseUrl: "https://sandbox.sebgroup.com"
-        clientId: ""
-        clientSecret: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-    lansforsakringar:
-      tink:
-    belfius:
-      tink:
-        clientId: ""
-        baseUrl: "https://sandbox.api.belfius.be:8443"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-    bnpparibasfortis:
-      tink:
-        clientId: ""
-        clientSecret: ""
-        redirectUri: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        authBaseUrl: "https://sandbox.auth.bnpparibasfortis.com"
-        apiBaseUrl: "https://sandbox.api.bnpparibasfortis.com"
-        organisationId: ""
-        openbankStetVersion: "1.4.0.47.develop"
     spankki:
       tink:
         clientId: ""
@@ -528,13 +471,6 @@ agentsServiceConfiguration:
         clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
         clientKeyStorePassword: "123456"
         xFapiFinancialId: "alandsbanken-fi"
-    bbva:
-      tink:
-        baseAuthUrl: "https://connect.bbva.com"
-        baseApiUrl: "https://apis.bbva.com"
-        clientId: "app.bbva.bbvatestapp"
-        clientSecret: "9$YyzM4UTAI9$xlH5faHRybL$lJJVYBcIhYvaVFJWE1HJGwyfOz8WTAlAtDDcxb7"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     sdc:
       tink:
         clientId: ""
