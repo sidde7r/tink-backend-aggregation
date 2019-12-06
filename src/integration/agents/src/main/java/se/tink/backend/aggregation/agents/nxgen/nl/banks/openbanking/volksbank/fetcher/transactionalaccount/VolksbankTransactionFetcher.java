@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import org.apache.commons.lang3.time.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
@@ -57,12 +58,16 @@ public class VolksbankTransactionFetcher implements TransactionDatePaginator<Tra
         responseList.add(response);
         String link = response.getNextLink();
         while (link != null) {
+            Map<String, String> urlParams = VolksbankUtils.splitURLQuery(link);
+            if (VolksbankUtils.IsEntryReferenceFromAfterDate(
+                    urlParams.get("entryReferenceFrom"), toDate)) {
+                break;
+            }
             response =
-                    apiClient.readTransactionsWithLink(
-                            account, VolksbankUtils.splitURLQuery(link), consentId, oauthToken);
+                    apiClient.readTransactionsWithLink(account, urlParams, consentId, oauthToken);
             link = response.getNextLink();
             responseList.add(response);
         }
-        return new TransactionsResponse(responseList);
+        return new TransactionsResponse(responseList, toDate);
     }
 }

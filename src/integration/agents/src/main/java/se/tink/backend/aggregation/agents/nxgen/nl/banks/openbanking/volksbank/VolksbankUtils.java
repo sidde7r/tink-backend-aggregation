@@ -10,8 +10,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class VolksbankUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(VolksbankUtils.class);
 
     private VolksbankUtils() {
         throw new AssertionError();
@@ -37,6 +41,22 @@ public final class VolksbankUtils {
             query_pairs.put(parts[0], parts[1]);
         }
         return query_pairs;
+    }
+
+    public static boolean IsEntryReferenceFromAfterDate(String entryReferenceFrom, Date date) {
+        try {
+            if (VolksbankConstants.Transaction.ENTRY_REFERENCE_DATE_FORMAT
+                            .parse(entryReferenceFrom.substring(0, 8))
+                            .compareTo(date)
+                    > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            log.warn("Unable to parse entryReferenceFrom to date: " + entryReferenceFrom);
+            return true;
+        }
     }
 
     public static String getAccountNumber(String iban) {

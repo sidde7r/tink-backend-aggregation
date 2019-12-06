@@ -41,8 +41,10 @@ public class VolksbankConstants {
 
     public static class Transaction {
         public static final int DEFAULT_HISTORY_DAYS = -730;
-        public static final SimpleDateFormat TRANSACTION_FORMAT =
+        public static final SimpleDateFormat TRANSACTION_DATE_FORMAT =
                 new SimpleDateFormat("yyyy-MM-dd");
+        public static final SimpleDateFormat ENTRY_REFERENCE_DATE_FORMAT =
+                new SimpleDateFormat("yyyyMMdd");
     }
 
     public static class TransactionFetcherParams {
