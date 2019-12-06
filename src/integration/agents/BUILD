@@ -2,7 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "agents",
-    srcs = glob(["src/main/java/**/*.java"]) + ["@tink_backend_integration_openbanking//src/integration/agents:agents_srcs"],
+    srcs = glob(["src/main/java/**/*.java"]),
     resources = [
         "//src/integration/agents/src/main/resources:config-templates",
         "@tink_backend_integration_openbanking//src/integration/agents/src/main/resources:config-templates",
