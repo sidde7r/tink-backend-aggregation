@@ -4,7 +4,10 @@ import io.grpc.ManagedChannel;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.standalone.GenericAgentConfiguration;
+import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.FetchAccountsResponseMapper;
+import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.FetchAccountsResponseMapperFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.sa.services.fetch.account.FetchAccountsRequest;
 import se.tink.sa.services.fetch.account.FetchAccountsServiceGrpc;
 import se.tink.sa.services.fetch.trans.FetchTransactionsServiceGrpc;
 
@@ -29,9 +32,12 @@ public class CheckingService {
     }
 
     public FetchAccountsResponse fetchCheckingAccounts() {
-        return AccountMapperService.mapFetchAccountsResponse(
-                fetchAccountsServiceBlockingStub.fetchCheckingAccounts(
-                        AccountMapperService.mapFetchAccountRequest()));
+        FetchAccountsRequest fetchAccountsRequest = null;
+        se.tink.sa.services.fetch.account.FetchAccountsResponse fetchAccountsResponse =
+                fetchAccountsServiceBlockingStub.fetchCheckingAccounts(fetchAccountsRequest);
+        FetchAccountsResponseMapper mapper =
+                FetchAccountsResponseMapperFactory.buildFetchAccountsResponseMapper();
+        return mapper.map(fetchAccountsResponse);
     }
 
     public FetchTransactionsResponse fetchCheckingTransactions() {

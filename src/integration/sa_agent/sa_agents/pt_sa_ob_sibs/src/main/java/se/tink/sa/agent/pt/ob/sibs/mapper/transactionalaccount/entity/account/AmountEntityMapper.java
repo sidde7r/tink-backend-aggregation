@@ -11,8 +11,7 @@ import se.tink.sa.services.fetch.account.ExactCurrencyAmount;
 public class AmountEntityMapper implements Mapper<ExactCurrencyAmount, AmountEntity> {
 
     @Override
-    public ExactCurrencyAmount mapToTransferModel(
-            AmountEntity source, MappingContext mappingContext) {
+    public ExactCurrencyAmount map(AmountEntity source, MappingContext mappingContext) {
         BigDecimal amount = new BigDecimal(source.getContent());
         ExactCurrencyAmount dest =
                 ExactCurrencyAmount.newBuilder()

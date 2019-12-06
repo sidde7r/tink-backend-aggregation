@@ -17,12 +17,10 @@ public class AccountsResponseMapper implements Mapper<FetchAccountsResponse, Acc
     @Autowired private RequestToResponseCommonMapper requestToResponseCommonMapper;
 
     @Override
-    public FetchAccountsResponse mapToTransferModel(
-            AccountsResponse source, MappingContext mappingContext) {
+    public FetchAccountsResponse map(AccountsResponse source, MappingContext mappingContext) {
         FetchAccountsResponse.Builder destBuilder = FetchAccountsResponse.newBuilder();
         RequestCommon rc = mappingContext.get(SibsMappingContextKeys.REQUEST_COMMON);
-        ResponseCommon responseCommon =
-                requestToResponseCommonMapper.mapToTransferModel(rc, mappingContext);
+        ResponseCommon responseCommon = requestToResponseCommonMapper.map(rc, mappingContext);
         destBuilder.setResponseCommon(responseCommon);
 
         return destBuilder.build();

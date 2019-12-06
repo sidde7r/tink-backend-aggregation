@@ -18,12 +18,11 @@ public class TransactionsResponseMapper
     @Autowired private RequestToResponseCommonMapper requestToResponseCommonMapper;
 
     @Override
-    public FetchTransactionsResponse mapToTransferModel(
+    public FetchTransactionsResponse map(
             TransactionsResponse source, MappingContext mappingContext) {
         FetchTransactionsResponse.Builder destBuilder = FetchTransactionsResponse.newBuilder();
         RequestCommon rc = mappingContext.get(SibsMappingContextKeys.REQUEST_COMMON);
-        ResponseCommon responseCommon =
-                requestToResponseCommonMapper.mapToTransferModel(rc, mappingContext);
+        ResponseCommon responseCommon = requestToResponseCommonMapper.map(rc, mappingContext);
         destBuilder.setResponseCommon(responseCommon);
 
         return destBuilder.build();

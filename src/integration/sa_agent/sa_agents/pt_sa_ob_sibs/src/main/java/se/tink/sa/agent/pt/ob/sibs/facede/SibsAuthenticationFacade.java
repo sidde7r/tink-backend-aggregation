@@ -35,7 +35,7 @@ public class SibsAuthenticationFacade implements AuthenticationFacade {
         MappingContext mappingContext =
                 MappingContext.newInstance()
                         .put(SibsMappingContextKeys.REQUEST_COMMON, request.getRequestCommon());
-        return consentResponseMapper.mapToTransferModel(consentResponse, mappingContext);
+        return consentResponseMapper.map(consentResponse, mappingContext);
     }
 
     private ConsentRequest getConsentRequest() {

@@ -22,7 +22,7 @@ public class AmountEntityMapperTest {
         AmountEntity amount = new AmountEntity();
         amount.setContent("1234.56789");
         amount.setCurrency("EUR");
-        ExactCurrencyAmount exactCurrencyAmount = amountEntityMapper.mapToTransferModel(amount);
+        ExactCurrencyAmount exactCurrencyAmount = amountEntityMapper.map(amount);
 
         assertNotNull(exactCurrencyAmount);
         assertEquals("EUR", exactCurrencyAmount.getCurrencyCode());

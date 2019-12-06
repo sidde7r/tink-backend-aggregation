@@ -17,8 +17,7 @@ public class BalancesResponseMapper implements Mapper<ExactCurrencyAmount, Balan
     @Autowired private AmountEntityMapper amountEntityMapper;
 
     @Override
-    public ExactCurrencyAmount mapToTransferModel(
-            BalancesResponse source, MappingContext mappingContext) {
+    public ExactCurrencyAmount map(BalancesResponse source, MappingContext mappingContext) {
 
         AmountEntity amount =
                 source.getBalances().stream()
@@ -29,7 +28,7 @@ public class BalancesResponseMapper implements Mapper<ExactCurrencyAmount, Balan
                                                 SibsConstants.ErrorMessages.NO_BALANCE))
                         .getInterimAvailable()
                         .getAmount();
-        ExactCurrencyAmount exactCurrencyAmount = amountEntityMapper.mapToTransferModel(amount);
+        ExactCurrencyAmount exactCurrencyAmount = amountEntityMapper.map(amount);
         return exactCurrencyAmount;
     }
 }

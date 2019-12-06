@@ -68,7 +68,7 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
                         .put(SibsMappingContextKeys.REQUEST_COMMON, request.getRequestCommon());
 
         FetchAccountsResponse fetchAccountsResponse =
-                accountsResponseMapper.mapToTransferModel(accountsResponse, mappingContext);
+                accountsResponseMapper.map(accountsResponse, mappingContext);
 
         return fetchAccountsResponse;
     }
@@ -90,7 +90,7 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
             transactionsResponse = sibsAccountInformationClient.getTransactionsForKey(sibsRequest);
         }
 
-        response = transactionsResponseMapper.mapToTransferModel(transactionsResponse);
+        response = transactionsResponseMapper.map(transactionsResponse);
 
         return response;
     }
@@ -122,7 +122,7 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
                 buildCommonAccountSibsRequestRequest(request, accountId);
         BalancesResponse accountBalances =
                 sibsAccountInformationClient.getAccountBalances(balancesRequest);
-        ExactCurrencyAmount balance = balancesResponseMapper.mapToTransferModel(accountBalances);
+        ExactCurrencyAmount balance = balancesResponseMapper.map(accountBalances);
         return balance;
     }
 

@@ -10,7 +10,7 @@ import se.tink.sa.services.common.ResponseCommon;
 public class RequestToResponseCommonMapper implements Mapper<ResponseCommon, RequestCommon> {
 
     @Override
-    public ResponseCommon mapToTransferModel(RequestCommon source, MappingContext context) {
+    public ResponseCommon map(RequestCommon source, MappingContext context) {
         ResponseCommon.Builder destBuilder = ResponseCommon.newBuilder();
         destBuilder.setCorrelationId(source.getCorrelationId());
         return destBuilder.build();

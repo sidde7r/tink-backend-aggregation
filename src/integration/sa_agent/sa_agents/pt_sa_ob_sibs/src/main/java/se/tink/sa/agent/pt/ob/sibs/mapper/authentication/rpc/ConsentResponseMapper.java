@@ -18,12 +18,10 @@ public class ConsentResponseMapper implements Mapper<AuthenticationResponse, Con
     @Autowired private RequestToResponseCommonMapper requestToResponseCommonMapper;
 
     @Override
-    public AuthenticationResponse mapToTransferModel(
-            ConsentResponse source, MappingContext mappingContext) {
+    public AuthenticationResponse map(ConsentResponse source, MappingContext mappingContext) {
         AuthenticationResponse.Builder destBuilder = AuthenticationResponse.newBuilder();
         RequestCommon rc = mappingContext.get(SibsMappingContextKeys.REQUEST_COMMON);
-        ResponseCommon responseCommon =
-                requestToResponseCommonMapper.mapToTransferModel(rc, mappingContext);
+        ResponseCommon responseCommon = requestToResponseCommonMapper.map(rc, mappingContext);
         destBuilder.setResponseCommon(responseCommon);
 
         ThirdPartyAppAuthenticationPayload.Android.Builder android =
