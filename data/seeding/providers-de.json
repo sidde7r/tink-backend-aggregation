@@ -99,6 +99,38 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.ahoisandbox.AhoiSandboxAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Ahoi Sandbox",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password",
+                    "numeric": true,
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "de-ahoisandbox-ob",
+            "passwordHelpText": "Please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "backgroundRefreshEnabled": true,
             "backgroundRefreshMaxFrequency": 1,
@@ -1480,6 +1512,29 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.comdirect.ComdirectAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Comdirect",
+            "fields": [
+                {
+                    "description": "Iban",
+                    "immutable": true,
+                    "name": "iban"
+                }
+            ],
+            "financialInstitutionId": "5a86a5830c51e3230ed2f5e460f51b39",
+            "multiFactor": false,
+            "name": "de-comdirect-ob",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "backgroundRefreshEnabled": true,
             "backgroundRefreshMaxFrequency": 1,
@@ -1605,6 +1660,30 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.commerzbank.CommerzBankAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "CommerzBank",
+            "fields": [
+                {
+                    "description": "Iban",
+                    "immutable": true,
+                    "name": "iban"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "de-commerzbank-ob",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -11081,6 +11160,34 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.deutschebank.DeutscheBankDEAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "DeutscheBank",
+            "fields": [
+                {
+                    "description": "iban",
+                    "immutable": true,
+                    "name": "iban"
+                },
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "financialInstitutionId": "aacb80376475da160ee8bfa6b7155e63",
+            "multiFactor": false,
+            "name": "de-deutschebank-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "DISABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "backgroundRefreshEnabled": true,
             "backgroundRefreshMaxFrequency": 1,
@@ -11110,6 +11217,43 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.dkb.DkbAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "DKB (Sandbox)",
+            "fields": [
+                {
+                    "description": "iban",
+                    "immutable": true,
+                    "name": "iban"
+                },
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password",
+                    "numeric": true,
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "de-dkb-ob",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -11625,6 +11769,42 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.fidor.FidorAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Fidor",
+            "fields": [
+                {
+                    "description": "iban",
+                    "immutable": true,
+                    "name": "iban"
+                },
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password",
+                    "numeric": true,
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "3160a845c40c4da980ceb9b9a36f883a",
+            "multiFactor": false,
+            "name": "de-fidor-ob",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "backgroundRefreshEnabled": true,
             "backgroundRefreshMaxFrequency": 1,
@@ -11653,6 +11833,43 @@
             "popular": false,
             "status": "DISABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.fiducia.FiduciaAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Fiducia & GAD",
+            "fields": [
+                {
+                    "description": "iban",
+                    "immutable": true,
+                    "name": "iban"
+                },
+                {
+                    "description": "Psu ID",
+                    "immutable": true,
+                    "name": "psu-id"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password",
+                    "numeric": true,
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "de-fiducia-ob",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -12420,6 +12637,24 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.ing.IngAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "Ing",
+            "fields": [],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionName": "Ing",
+            "multiFactor": false,
+            "name": "de-ing-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -13933,6 +14168,34 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.norisbank.NorisbankAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Norisbank",
+            "fields": [
+                {
+                    "description": "iban",
+                    "immutable": true,
+                    "name": "iban"
+                },
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "financialInstitutionId": "32e8c92187d0e669960b2fc1a3a8f74e",
+            "multiFactor": false,
+            "name": "de-norisbank-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "DISABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "backgroundRefreshEnabled": true,
             "backgroundRefreshMaxFrequency": 1,
@@ -14186,6 +14449,24 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.serviceproviders.openbanking.paypal.PayPalAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "PayPal",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "de-paypal-ob",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -14570,6 +14851,42 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.postbank.PostbankAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Postbank",
+            "fields": [
+                {
+                    "description": "iban",
+                    "immutable": true,
+                    "name": "iban"
+                },
+                {
+                    "description": "Psu ID",
+                    "immutable": true,
+                    "name": "psu-id"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password",
+                    "numeric": true,
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "a3f69fb91c94f865d2d205cc338fac3e",
+            "multiFactor": false,
+            "name": "de-postbank-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "DISABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -15460,6 +15777,24 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.santander.SantanderAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Santander Sandbox",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "de-santander-ob",
+            "passwordHelpText": "Please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -27206,6 +27541,32 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.sparkassen.SparkassenAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sparkassen Sandbox",
+            "fields": [],
+            "financialInstitutionId": "Sparkassen",
+            "multiFactor": false,
+            "name": "de-sparkassen-ob",
+            "passwordHelpText": "Please authenticate yourself.",
+            "payload": "tink,70150000",
+            "popular": true,
+            "status": "ENABLED",
+            "supplementalFields": [
+                {
+                    "description": "OTP",
+                    "helpText": "Please enter OTP code",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "otpValue"
+                }
+            ],
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "backgroundRefreshEnabled": true,
             "backgroundRefreshMaxFrequency": 1,
@@ -28934,6 +29295,24 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.targobank.TargobankAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Targobank Germany",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "de-targobank-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "backgroundRefreshEnabled": true,
             "backgroundRefreshMaxFrequency": 1,
@@ -29137,6 +29516,24 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.de.openbanking.unicredit.UnicreditAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Unicredit Germany",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "de-unicredit-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
