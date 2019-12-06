@@ -16,11 +16,15 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/bancomontepio",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs",
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/models",
+        "//src/integration/payment:rpc",
+        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
+        "//third_party:org_mockito3_mockito_core",
     ],
 )
