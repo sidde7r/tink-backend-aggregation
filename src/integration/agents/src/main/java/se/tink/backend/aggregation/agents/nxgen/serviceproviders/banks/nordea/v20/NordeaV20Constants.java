@@ -238,4 +238,8 @@ public class NordeaV20Constants {
             public static final String DERIVATIVE = "derivative";
         }
     }
+
+    public static class ErrorCode {
+        public static final String TEMPORARY_TECHNICAL_ERROR = "MAS9001";
+    }
 }
