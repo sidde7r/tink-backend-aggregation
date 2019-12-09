@@ -26,6 +26,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
         "//src/integration/api",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
