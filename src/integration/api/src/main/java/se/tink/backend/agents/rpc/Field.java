@@ -168,12 +168,12 @@ public class Field {
             return this;
         }
 
-        public Builder maxLength(int maxLength) {
+        public Builder maxLength(Integer maxLength) {
             this.maxLength = maxLength;
             return this;
         }
 
-        public Builder minLength(int minLength) {
+        public Builder minLength(Integer minLength) {
             this.minLength = minLength;
             return this;
         }
