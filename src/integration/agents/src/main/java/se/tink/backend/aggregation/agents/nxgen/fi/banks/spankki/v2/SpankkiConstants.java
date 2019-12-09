@@ -91,9 +91,9 @@ public class SpankkiConstants {
     }
 
     public static class Authentication {
-        public static final String REQUEST_TOKEN_HASH_SALT = "f3803b2dcc4d4a718c01f1efc0da0f16";
+        public static final String REQUEST_TOKEN_HASH_SALT = "85c1ff015deb4ea7a2895ad015dda51b";
         public static final String CHALLENGE_RESPONSE_HASH_SALT =
-                "439aa95dc6c943e1a88611f1f466b27d";
+                "ebcfc080e3774494a527090215fa6cfe";
         public static final String B64_ELLIPTIC_CURVE_PUBLIC_KEY =
                 "MFIwEAYHKoZIzj0CAQYFK4EEABoDPgAEAdI87D0d2WOaZq5LBZRBxbmeZnaDvpNutQJNjvb3AVtGSsf2rq1lu4PAmk4bnl2DRlSbtV8spT4l4tDi";
         public static final int KEY_CARD_VALUE_LENGTH = 4;
