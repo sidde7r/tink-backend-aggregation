@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.cookie.Cookie;
 import org.jsoup.Jsoup;
@@ -45,11 +44,6 @@ public class BankdataApiClient {
 
     private final TinkHttpClient client;
     private final String bankdataBankNumber;
-
-    private String actionPath;
-
-    private final String ga = "GA1.2.39989436.1571391364";
-    private final String gid = "GA1.2.389189714.1574003824";
 
     public BankdataApiClient(TinkHttpClient client, Provider provider) {
         this.client = client;
@@ -130,9 +124,7 @@ public class BankdataApiClient {
                 .header("Accept-Charset", "utf-8")
                 .header("Accept-Language", "da")
                 .header("Accept-Encoding", "gzip")
-                .header("Connection", "keep-alive")
-                .cookie("_ga", ga)
-                .cookie("_gid", gid);
+                .header("Connection", "keep-alive");
     }
 
     public HttpResponse eventDoContinue(String token) {
@@ -175,14 +167,6 @@ public class BankdataApiClient {
             // todo: Handle this, it should have a body!
         }
 
-        // We need the url
-        MultivaluedMap<String, String> headers = httpResponse.getHeaders();
-        String nemidUrlString = String.valueOf(headers.get("Content-Location"));
-        // fixme: Find a cleaner way of removing the square brackets and the first slash
-        // nemidUrlString = nemidUrlString.replaceFirst("\\[/", "").replaceFirst("\\]", "");
-
-        // todo: Before doing the enrollment thing I have to deal with nemid via phantomjs/selenium
-        // stuff
         String responseString = httpResponse.getBody(String.class);
         Document responseBody = Jsoup.parse(responseString);
         String launcher =
@@ -199,14 +183,7 @@ public class BankdataApiClient {
                 responseBody.getElementById("nemid_parameters").toString();
         String nemidParametersElement = nemidParametersScriptTag + formattedIframe;
 
-        // URL nemidUrl = new URL(BankdataConstants.Url.BASE_URL + nemidUrlString);
-
-        // get action path
-        actionPath = responseBody.getElementsByTag("form").attr("action");
-
-        NemIdParametersV2 nemIdParameters = new NemIdParametersV2(nemidParametersElement);
-
-        return nemIdParameters;
+        return new NemIdParametersV2(nemidParametersElement);
     }
 
     public CompleteEnrollResponse completeEnrollment(final CryptoHelper cryptoHelper) {
@@ -232,14 +209,8 @@ public class BankdataApiClient {
         byte[] b64Entity = SerializationUtils.serializeToString(installedEntity).getBytes();
         String encrypted = escapeB64Data(cryptoHelper.encrypt(b64Entity));
 
-        String response =
-                createRequest(
-                                new URL(
-                                        "https://mobil.bankdata.dk/mobilbank/nemid/login_with_installid"))
-                        .post(EncryptedResponse.class, new DataRequest(encrypted))
-                        .decrypt(cryptoHelper);
-
-        System.out.println(response);
+        createRequest(new URL("https://mobil.bankdata.dk/mobilbank/nemid/login_with_installid"))
+                .post(EncryptedResponse.class, new DataRequest(encrypted));
     }
 
     // TODO: Bankdata has some formatting that we don't get with our lib.
