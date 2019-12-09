@@ -9,6 +9,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Currency;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.AccountEntity;
@@ -50,6 +51,7 @@ public abstract class HandelsbankenBasePaymentExecutor
         final Creditor creditor = payment.getCreditor();
 
         validateExecutionDate(payment.getExecutionDate());
+        validateRemittanceInformation(paymentProduct, payment);
         final CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest(
                         getCreditorAccountEntity(creditor),
@@ -151,4 +153,8 @@ public abstract class HandelsbankenBasePaymentExecutor
                 "",
                 new NotImplementedException("Specifying execution date not supported."));
     }
+
+    protected void validateRemittanceInformation(
+            HandelsbankenPaymentType paymentType, Payment payment)
+            throws ReferenceValidationException {}
 }
