@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.PoolAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.filter.RuntimeErrorFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdParametersV2;
 import se.tink.backend.aggregation.nxgen.http.Form;
@@ -49,6 +50,8 @@ public class BankdataApiClient {
     public BankdataApiClient(TinkHttpClient client, Provider provider) {
         this.client = client;
         this.bankdataBankNumber = provider.getPayload();
+
+        client.addFilter(new RuntimeErrorFilter());
     }
 
     private RequestBuilder createJsonRequest(URL url) {
