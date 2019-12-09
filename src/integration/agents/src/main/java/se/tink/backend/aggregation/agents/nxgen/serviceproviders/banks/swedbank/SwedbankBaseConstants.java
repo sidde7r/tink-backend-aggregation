@@ -50,6 +50,7 @@ public class SwedbankBaseConstants {
         LOGOUT(createUrlWithHost("/v5/identification/logout")),
         PROFILE("/v5/profile/");
 
+        public static final String IDENTIFICATION = createUrlWithHost("/v5/identification");
         public static final String DSID_KEY = "dsid";
         private URL url;
 
