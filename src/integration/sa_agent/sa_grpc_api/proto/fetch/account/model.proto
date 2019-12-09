@@ -10,7 +10,6 @@ import "src/integration/sa_agent/sa_grpc_api/proto/common/io_common.proto";
 
 message FetchAccountsRequest {
   RequestCommon requestCommon = 1;
-  map<string, string> externalParameters = 2;
 }
 
 message FetchAccountsResponse {
