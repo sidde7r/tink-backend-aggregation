@@ -30,17 +30,20 @@ public class HandelsbankenNOAutoAuthenticator implements AutoAuthenticator {
     @Override
     public void autoAuthenticate() throws SessionException {
         apiClient.fetchAppInformation();
+        try {
+            String evryToken =
+                    encapClient
+                            .authenticateDevice(AuthenticationMethod.DEVICE_AND_PIN)
+                            .getDeviceToken();
+            sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
 
-        String evryToken =
-                encapClient
-                        .authenticateDevice(AuthenticationMethod.DEVICE_AND_PIN)
-                        .getDeviceToken();
-        sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
-
-        if (evryToken == null) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            if (evryToken == null) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+            executeLogin(evryToken);
+        } finally {
+            encapClient.saveDevice();
         }
-        executeLogin(evryToken);
     }
 
     private void executeLogin(String evryToken) throws HttpResponseException {
