@@ -11,6 +11,7 @@ import org.apache.http.cookie.Cookie;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.CookieName;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.UrlParam;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.CompleteEnrollResponse;
@@ -191,8 +192,7 @@ public class BankdataApiClient {
         String data = escapeB64Data(cryptoHelper.enrollCrypt());
 
         NemIdEnrollmentRequest request = new NemIdEnrollmentRequest(data);
-        return createJsonRequest(
-                        new URL("https://mobil.bankdata.dk/mobilbank/nemid/complete_enroll"))
+        return createJsonRequest(BankdataConstants.Url.COMPLETE_ENROLL)
                 .post(EncryptedResponse.class, request)
                 .decrypt(cryptoHelper, CompleteEnrollResponse.class);
     }
@@ -209,7 +209,7 @@ public class BankdataApiClient {
         byte[] b64Entity = SerializationUtils.serializeToString(installedEntity).getBytes();
         String encrypted = escapeB64Data(cryptoHelper.encrypt(b64Entity));
 
-        createRequest(new URL("https://mobil.bankdata.dk/mobilbank/nemid/login_with_installid"))
+        createRequest(Url.LOGIN_WITH_INSTALL_ID)
                 .post(EncryptedResponse.class, new DataRequest(encrypted));
     }
 
@@ -218,7 +218,6 @@ public class BankdataApiClient {
     private String escapeB64Data(final String data) {
 
         String dataWithBackslash = data.replace("/", "\\/");
-        //        return dataWithBackslash;
         return "\"" + dataWithBackslash + "\"";
     }
 
@@ -248,16 +247,18 @@ public class BankdataApiClient {
                         .filter(this::isNotMobileCookie)
                         .collect(Collectors.toList());
 
-        cookies.add(createCookieForDomain("mobile", "350|275|MobileBank", "mobil.bankdata.dk"));
+        cookies.add(
+                createCookieForDomain(
+                        CookieName.MOBILE, "350|275|MobileBank", "mobil.bankdata.dk"));
         client.clearCookies();
         cookies.forEach(client::addCookie);
     }
 
     private boolean isVPCookie(Cookie cookie) {
-        return Objects.equals(cookie.getName(), "vp");
+        return Objects.equals(cookie.getName(), CookieName.VP);
     }
 
     private boolean isNotMobileCookie(Cookie cookie) {
-        return !Objects.equals(cookie.getName(), "mobile");
+        return !Objects.equals(cookie.getName(), CookieName.MOBILE);
     }
 }

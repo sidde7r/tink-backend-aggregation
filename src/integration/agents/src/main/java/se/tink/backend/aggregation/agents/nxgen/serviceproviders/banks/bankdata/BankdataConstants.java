@@ -14,32 +14,35 @@ public class BankdataConstants {
 
     public static class Url {
         public static final String BASE_URL = "https://mobil.bankdata.dk/mobilbank/";
-        public static final URL LOGIN = new URL(BASE_URL + "login");
+
+        // Auth
+        public static final URL NEMID_INIT = new URL(BASE_URL + "nemid/init");
+        public static final URL PORTAL =
+                new URL(
+                        "https://mobil.bankdata.dk/wps/portal/{"
+                                + UrlParam.BRANCH_NAME
+                                + "}/mobilnemid");
+        public static final URL NEMID_EXCHANGE =
+                new URL(
+                        "https://mobil.bankdata.dk/wps/portal/{"
+                                + UrlParam.BRANCH_NAME
+                                + "}/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziPS1NTAw9DQw9LAycXAwcjd1M3SyC_YwM3M30w8EKgs2DXTzDPC0MDE1CHZ0C3EPNzIwMwEA_ihz9gb7GBqToN8ABHInUj0dBFH7jw_WjwErwhQBWBcheJGRJQW5oaGiEQaano6IiAHrmNso!/dz/d5/L2dBISEvZ0FBIS9nQSEh/p0/IZ7_79M422G0N82EB0QS3MJBS430G6=CZ6_I9441I01H80BD0A3F5F8SN20G6=LA0=Ejavax.portlet.action!login==/");
+        public static final URL COMPLETE_ENROLL =
+                new URL("https://mobil.bankdata.dk/mobilbank/nemid/complete_enroll");
+        public static final URL LOGIN_WITH_INSTALL_ID =
+                new URL("https://mobil.bankdata.dk/mobilbank/nemid/login_with_installid");
+
+        // AIS
         public static final URL ACCOUNTS = new URL(BASE_URL + "accounts");
         public static final URL PFM_TRANSACTIONS = new URL(BASE_URL + "pfm/transactions");
         public static final URL PFM_TRANSACTIONS_FUTURE =
                 new URL(BASE_URL + "pfm/transactions/future");
-
         public static final URL CARDS = new URL(BASE_URL + "cards");
         public static final URL INVESTMENT_POOL_ACCOUNTS =
                 new URL(BASE_URL + "investment/poolaccounts");
         public static final URL DEPOSITS = new URL(BASE_URL + "deposits");
         public static final URL DEPOSITS_CONTENT_LIST = new URL(BASE_URL + "deposits/contentlist");
         public static final URL ASSET_DETAILS = new URL(BASE_URL + "asset/details");
-
-        public static final URL NEMID_INIT = new URL(BASE_URL + "nemid/init");
-
-        public static final URL PORTAL =
-                new URL(
-                        "https://mobil.bankdata.dk/wps/portal/{"
-                                + UrlParam.BRANCH_NAME
-                                + "}/mobilnemid");
-
-        public static final URL NEMID_EXCHANGE =
-                new URL(
-                        "https://mobil.bankdata.dk/wps/portal/{"
-                                + UrlParam.BRANCH_NAME
-                                + "}/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziPS1NTAw9DQw9LAycXAwcjd1M3SyC_YwM3M30w8EKgs2DXTzDPC0MDE1CHZ0C3EPNzIwMwEA_ihz9gb7GBqToN8ABHInUj0dBFH7jw_WjwErwhQBWBcheJGRJQW5oaGiEQaano6IiAHrmNso!/dz/d5/L2dBISEvZ0FBIS9nQSEh/p0/IZ7_79M422G0N82EB0QS3MJBS430G6=CZ6_I9441I01H80BD0A3F5F8SN20G6=LA0=Ejavax.portlet.action!login==/");
     }
 
     public static class UrlParam {
@@ -52,6 +55,11 @@ public class BankdataConstants {
         public static final String X_BANK_NO = "x-bankNo";
         public static final String X_APPID = "x-appid";
         public static final String X_APPID_VALUE = "iphonemobilbank";
+    }
+
+    public static class CookieName {
+        public static final String MOBILE = "mobile";
+        public static final String VP = "vp";
     }
 
     public static final class Crypto {
