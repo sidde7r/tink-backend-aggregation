@@ -6,12 +6,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.cookie.Cookie;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.Url;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.UrlParam;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.CompleteEnrollResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.DataRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.EncryptedResponse;
@@ -43,11 +44,6 @@ public class BankdataApiClient {
 
     private final TinkHttpClient client;
     private final String bankdataBankNumber;
-
-    private String actionPath;
-
-    private final String ga = "GA1.2.39989436.1571391364";
-    private final String gid = "GA1.2.389189714.1574003824";
 
     public BankdataApiClient(TinkHttpClient client, Provider provider) {
         this.client = client;
@@ -111,10 +107,6 @@ public class BankdataApiClient {
         return createRequest(url, MediaType.APPLICATION_JSON_TYPE);
     }
 
-    private boolean isNotMobileCookie(Cookie cookie) {
-        return !Objects.equals(cookie.getName(), "mobile");
-    }
-
     private RequestBuilder createRequest(URL url, MediaType type) {
         cookieOverride();
 
@@ -132,21 +124,22 @@ public class BankdataApiClient {
                 .header("Accept-Charset", "utf-8")
                 .header("Accept-Language", "da")
                 .header("Accept-Encoding", "gzip")
-                .header("Connection", "keep-alive")
-                .cookie("_ga", ga)
-                .cookie("_gid", gid);
+                .header("Connection", "keep-alive");
     }
 
     public HttpResponse eventDoContinue(String token) {
-        Form form =
-                Form.builder().put("eventSubmit_doContinue", "Send").put("response", token).build();
 
-        URL url =
-                new URL(
-                        "https://mobil.bankdata.dk/wps/portal/almbrand-dk/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziPS1NTAw9DQw9LAycXAwcjd1M3SyC_YwM3M30w8EKgs2DXTzDPC0MDE1CHZ0C3EPNzIwMwEA_ihz9gb7GBqToN8ABHInUj0dBFH7jw_WjwErwhQBWBcheJGRJQW5oaGiEQaano6IiAHrmNso!/dz/d5/L2dBISEvZ0FBIS9nQSEh/p0/IZ7_79M422G0N82EB0QS3MJBS430G6=CZ6_I9441I01H80BD0A3F5F8SN20G6=LA0=Ejavax.portlet.action!login==/");
+        final String form =
+                Form.builder()
+                        .put("eventSubmit_doContinue", "Send")
+                        .put("response", token)
+                        .build()
+                        .serialize();
+
+        final URL url = Url.NEMID_EXCHANGE.parameter(UrlParam.BRANCH_NAME, getBranchFromCookie());
 
         return createRequest(url, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post(HttpResponse.class, form.serialize());
+                .post(HttpResponse.class, form);
     }
 
     public NemIdLoginResponse nemIdInit(final CryptoHelper cryptoHelper) {
@@ -164,22 +157,9 @@ public class BankdataApiClient {
                 .decrypt(cryptoHelper, NemIdLoginResponse.class);
     }
 
-    // TODO: Refactor
     public HttpResponse portal() {
-        cookieOverride();
-        HttpResponse httpResponse =
-                client.request(
-                                new URL(
-                                        "https://mobil.bankdata.dk/wps/portal/almbrand-dk/mobilnemid"))
-                        .header(
-                                HttpHeaders.USER_AGENT,
-                                "AlmBrandMobilBank/15773 CFNetwork/978.0.7 Darwin/18.7.0")
-                        .header("Accept", "*/*")
-                        .header("Accept-Language", "en-us")
-                        .header("Accept-Encoding", "br, gzip, deflate")
-                        .header("Connection", "keep-alive")
-                        .get(HttpResponse.class);
-        return httpResponse;
+        final URL url = Url.PORTAL.parameter(UrlParam.BRANCH_NAME, getBranchFromCookie());
+        return createRequest(url).get(HttpResponse.class);
     }
 
     public NemIdParametersV2 fetchNemIdParameters(HttpResponse httpResponse) {
@@ -187,14 +167,6 @@ public class BankdataApiClient {
             // todo: Handle this, it should have a body!
         }
 
-        // We need the url
-        MultivaluedMap<String, String> headers = httpResponse.getHeaders();
-        String nemidUrlString = String.valueOf(headers.get("Content-Location"));
-        // fixme: Find a cleaner way of removing the square brackets and the first slash
-        // nemidUrlString = nemidUrlString.replaceFirst("\\[/", "").replaceFirst("\\]", "");
-
-        // todo: Before doing the enrollment thing I have to deal with nemid via phantomjs/selenium
-        // stuff
         String responseString = httpResponse.getBody(String.class);
         Document responseBody = Jsoup.parse(responseString);
         String launcher =
@@ -211,14 +183,7 @@ public class BankdataApiClient {
                 responseBody.getElementById("nemid_parameters").toString();
         String nemidParametersElement = nemidParametersScriptTag + formattedIframe;
 
-        // URL nemidUrl = new URL(BankdataConstants.Url.BASE_URL + nemidUrlString);
-
-        // get action path
-        actionPath = responseBody.getElementsByTag("form").attr("action");
-
-        NemIdParametersV2 nemIdParameters = new NemIdParametersV2(nemidParametersElement);
-
-        return nemIdParameters;
+        return new NemIdParametersV2(nemidParametersElement);
     }
 
     public CompleteEnrollResponse completeEnrollment(final CryptoHelper cryptoHelper) {
@@ -238,21 +203,14 @@ public class BankdataApiClient {
             final String installId,
             final CryptoHelper cryptoHelper) {
 
-        // TODO: Hardcoded pin/userid here. Removed in order not to commit.
         LoginInstalledRequest installedEntity =
                 new LoginInstalledRequest(userId, pinCode, installId);
 
         byte[] b64Entity = SerializationUtils.serializeToString(installedEntity).getBytes();
         String encrypted = escapeB64Data(cryptoHelper.encrypt(b64Entity));
 
-        String response =
-                createRequest(
-                                new URL(
-                                        "https://mobil.bankdata.dk/mobilbank/nemid/login_with_installid"))
-                        .post(EncryptedResponse.class, new DataRequest(encrypted))
-                        .decrypt(cryptoHelper);
-
-        System.out.println(response);
+        createRequest(new URL("https://mobil.bankdata.dk/mobilbank/nemid/login_with_installid"))
+                .post(EncryptedResponse.class, new DataRequest(encrypted));
     }
 
     // TODO: Bankdata has some formatting that we don't get with our lib.
@@ -275,6 +233,15 @@ public class BankdataApiClient {
         return newCookie;
     }
 
+    private String getBranchFromCookie() {
+
+        return client.getCookies().stream()
+                .filter(this::isVPCookie)
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Could not find VP cookie."))
+                .getValue();
+    }
+
     private void cookieOverride() {
         List<Cookie> cookies =
                 client.getCookies().stream()
@@ -284,5 +251,13 @@ public class BankdataApiClient {
         cookies.add(createCookieForDomain("mobile", "350|275|MobileBank", "mobil.bankdata.dk"));
         client.clearCookies();
         cookies.forEach(client::addCookie);
+    }
+
+    private boolean isVPCookie(Cookie cookie) {
+        return Objects.equals(cookie.getName(), "vp");
+    }
+
+    private boolean isNotMobileCookie(Cookie cookie) {
+        return !Objects.equals(cookie.getName(), "mobile");
     }
 }
