@@ -1,0 +1,24 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities;
+
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
+public class AccountLinksEntity {
+    private String balances;
+    private String transactions;
+
+    public String getTransactionLink() {
+        return transactions;
+    }
+
+    public AccountLinksEntity() {}
+
+    public AccountLinksEntity(String balances, String transactions) {
+        this.balances = balances;
+        this.transactions = transactions;
+    }
+
+    public String getBalanceLink() {
+        return balances;
+    }
+}

@@ -70,6 +70,30 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.at.openbanking.bawag.BawagAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Bawag",
+            "fields": [
+                {
+                    "description": "iban",
+                    "immutable": true,
+                    "name": "iban"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "at-bawagpsk-ob",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
             "credentialsType": "PASSWORD",
@@ -102,6 +126,30 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.at.openbanking.bawag.BawagAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Bawag",
+            "fields": [
+                {
+                    "description": "iban",
+                    "immutable": true,
+                    "name": "iban"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "at-easybank-ob",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
             "credentialsType": "PASSWORD",
@@ -130,6 +178,24 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.at.openbanking.erstebank.ErstebankAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Erstebank",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "at-erstebank-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
             "tutorialUrl": null,
             "type": "BANK"
         },
@@ -197,6 +263,24 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.at.openbanking.ing.IngAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "Ing",
+            "fields": [],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionName": "Ing",
+            "multiFactor": false,
+            "name": "at-ing-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.at.banks.ing.IngAtAgent",
             "credentialsType": "PASSWORD",
@@ -255,6 +339,48 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.serviceproviders.openbanking.paypal.PayPalAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "PayPal",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "at-paypal-oauth2",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.at.openbanking.raiffeisen.RaiffeisenAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Raiffeisen",
+            "fields": [
+                {
+                    "description": "iban",
+                    "immutable": true,
+                    "name": "iban"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "at-raiffeisen-ob",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -855,6 +981,42 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.at.openbanking.unicredit.UnicreditAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Unicredit Austria",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "at-unicredit-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.at.openbanking.volksbank.VolksbankAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Volksbank",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "at-volksbank-ob",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
         },
         {
             "accessType": "OTHER",
