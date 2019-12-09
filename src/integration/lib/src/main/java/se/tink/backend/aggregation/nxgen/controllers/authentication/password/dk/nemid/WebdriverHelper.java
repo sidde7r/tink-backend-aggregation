@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid;
 
+import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.net.URI;
 import java.util.Base64;
@@ -32,8 +33,13 @@ public class WebdriverHelper {
     private static final long PHANTOMJS_TIMEOUT_SECONDS = 30;
     private static final Logger LOGGER = LoggerFactory.getLogger(WebdriverHelper.class);
 
-    private static final Pattern PATTERN_INCORRECT_CREDENTIALS =
-            Pattern.compile("^incorrect (user|password).*");
+    private static final ImmutableList<Pattern> INCORRECT_CREDENTIALS_ERROR_PATTERNS =
+            ImmutableList.<Pattern>builder()
+                    .add(
+                            Pattern.compile("^incorrect (user|password).*"),
+                            Pattern.compile("^fejl (bruger|adgangskode).*"))
+                    .build();
+
     private static final By ERROR_MESSAGE = By.cssSelector("p.error");
 
     private WebDriver driver;
@@ -101,9 +107,10 @@ public class WebdriverHelper {
         // - "Incorrect password."
         String err = errorText.toLowerCase();
 
-        Matcher matcher = PATTERN_INCORRECT_CREDENTIALS.matcher(err);
-        if (matcher.matches()) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        if (INCORRECT_CREDENTIALS_ERROR_PATTERNS.stream()
+                .map(p -> p.matcher(err))
+                .anyMatch(Matcher::matches)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception(err);
         }
 
         throw new IllegalStateException(
