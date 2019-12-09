@@ -1,0 +1,27 @@
+package se.tink.backend.aggregation.agents.nxgen.es.openbanking.ing;
+
+import java.time.LocalDate;
+import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseAgent;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+
+public class IngAgent extends IngBaseAgent {
+
+    public IngAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
+    }
+
+    @Override
+    protected boolean shouldReturnLowercaseAccountId() {
+        // ING Spain RE agent uses lowercase account IDs
+        return true;
+    }
+
+    @Override
+    protected LocalDate earliestTransactionHistoryDate() {
+        // All transaction information since the payment account was opened
+        return LocalDate.now().minusYears(7);
+    }
+}

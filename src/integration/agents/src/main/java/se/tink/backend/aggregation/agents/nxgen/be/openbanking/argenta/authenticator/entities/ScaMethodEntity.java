@@ -1,0 +1,24 @@
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.entities;
+
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
+public class ScaMethodEntity {
+
+    private String authenticationType;
+    private String authenticationMethodId;
+    private DataEntity name;
+    private DataEntity explanation;
+
+    public String getAuthenticationMethodId() {
+        return authenticationMethodId;
+    }
+
+    /* 1. display option for SCA method
+       2. remove "_" in option "NO_PREFERENCE"
+    */
+    public String toString() {
+        return StringUtils.capitalize(authenticationType.replaceAll("_", " ").toLowerCase());
+    }
+}

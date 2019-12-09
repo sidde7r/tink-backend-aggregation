@@ -32,6 +32,24 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.serviceproviders.openbanking.paypal.PayPalAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "PayPal",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "ro-paypal-oauth2",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.ro.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",

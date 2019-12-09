@@ -86,6 +86,23 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.argenta.ArgentaAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Argenta",
+            "fields": [],
+            "financialInstitutionId": "Argenta",
+            "multiFactor": false,
+            "name": "be-argenta-oauth2",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "backgroundRefreshEnabled": true,
             "backgroundRefreshMaxFrequency": 1,
@@ -130,6 +147,30 @@
                 }
             ],
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.axa.AxaAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Axa",
+            "fields": [
+                {
+                    "description": "Iban",
+                    "immutable": true,
+                    "name": "iban"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "be-axa-ob",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -268,6 +309,48 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.belfius.BelfiusAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Belfius",
+            "fields": [
+                {
+                    "description": "Iban",
+                    "immutable": true,
+                    "name": "iban"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "be-belfius-oauth2",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.beobank.BeoBankAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Beobank",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "be-beobank-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.be.banks.beobank.BeobankAgent",
             "credentialsType": "PASSWORD",
@@ -300,6 +383,24 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "BNP Paribas Fortis(Sandbox)",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "be-bnpparibasfortis-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.be.banks.bnppf.BnpPfAgent",
             "credentialsType": "PASSWORD",
@@ -317,6 +418,54 @@
             "popular": false,
             "status": "OBSOLETE",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.bpost.BpostAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Bpost Bank",
+            "fields": [
+                {
+                    "description": "Iban",
+                    "immutable": true,
+                    "name": "iban"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "be-bpost-ob",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.crelan.CrelanAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Crelan",
+            "fields": [
+                {
+                    "description": "Iban",
+                    "immutable": true,
+                    "name": "iban"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "be-crelan-ob",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
@@ -344,6 +493,52 @@
             "status": "ENABLED",
             "transactional": "true",
             "type": "TEST"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.deutschebank.DeutscheBankAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "DeutscheBank",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "be-deutschebank-oauth2",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.deutschebank.DeutscheBankBEAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "DeutscheBank",
+            "fields": [
+                {
+                    "description": "iban",
+                    "immutable": true,
+                    "name": "iban"
+                },
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "financialInstitutionId": "aacb80376475da160ee8bfa6b7155e63",
+            "multiFactor": false,
+            "name": "be-deutschebank-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "DISABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
         },
         {
             "accessType": "OTHER",
@@ -553,6 +748,24 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.ing.IngAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "ING",
+            "fields": [],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionName": "Ing",
+            "multiFactor": false,
+            "name": "be-ing-ob",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "capabilities": [
                 "TRANSFERS"
@@ -646,6 +859,29 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.be.openbanking.kbc.KbcAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "KBC",
+            "fields": [
+                {
+                    "description": "Iban",
+                    "immutable": true,
+                    "name": "iban"
+                }
+            ],
+            "financialInstitutionId": 1,
+            "multiFactor": false,
+            "name": "be-kbc-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.n26.N26Agent",
             "credentialsType": "PASSWORD",
@@ -673,6 +909,24 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.serviceproviders.openbanking.paypal.PayPalAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "PayPal",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "multiFactor": false,
+            "name": "be-paypal-oauth2",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {

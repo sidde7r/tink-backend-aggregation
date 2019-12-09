@@ -2,10 +2,9 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "agents",
-    srcs = glob(["src/main/java/**/*.java"]) + ["@tink_backend_integration_openbanking//src/integration/agents:agents_srcs"],
+    srcs = glob(["src/main/java/**/*.java"]),
     resources = [
         "//src/integration/agents/src/main/resources:config-templates",
-        "@tink_backend_integration_openbanking//src/integration/agents/src/main/resources:config-templates",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -136,7 +135,6 @@ junit_test(
     ],
     resources = [
         "//src/integration/agents/src/main/resources:config-templates",
-        "@tink_backend_integration_openbanking//src/integration/agents/src/main/resources:config-templates",
     ],
     tags = ["manual"],
     visibility = ["//visibility:public"],
@@ -165,6 +163,7 @@ junit_test(
         "//src/integration/lib:annotations",
         "//src/integration/lib:lib_test",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/password/dk/nemid",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/framework/validation",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
@@ -172,6 +171,7 @@ junit_test(
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:mocks",
         "//src/integration/transfer:rpc",
