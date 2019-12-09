@@ -25,9 +25,9 @@ public class BancoBpiAgentPaymentsTest {
     private final String currency = "EUR";
     private final LocalDate executionDate = LocalDate.now();
     private final int AMOUNT = 1;
-    private final String IBAN_BANCO_BPI = "";
-    private final String IBAN_MILLENNIUM = "";
-    private final String ACCOUNT_HOLDER_MILLENNIUM = "";
+    private final String IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY = "";
+    private final String IBAN_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
+    private final String NAME_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
 
     @Before
     public void setup() {
@@ -35,8 +35,8 @@ public class BancoBpiAgentPaymentsTest {
                 new AgentIntegrationTest.Builder("pt", "pt-bancobpi-oauth2")
                         .setFinancialInstitutionId("bancobpi-pt")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true)
                         .expectLoggedIn(false);
     }
 
@@ -51,12 +51,12 @@ public class BancoBpiAgentPaymentsTest {
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(IBAN_MILLENNIUM).when(creditor).getAccountNumber();
-            doReturn(ACCOUNT_HOLDER_MILLENNIUM).when(creditor).getName();
+            doReturn(IBAN_OF_THE_PERSON_WHO_GETS_THE_MONEY).when(creditor).getAccountNumber();
+            doReturn(NAME_OF_THE_PERSON_WHO_GETS_THE_MONEY).when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(IBAN_BANCO_BPI).when(debtor).getAccountNumber();
+            doReturn(IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY).when(debtor).getAccountNumber();
 
             listOfMockedPayments.add(
                     new Payment.Builder()

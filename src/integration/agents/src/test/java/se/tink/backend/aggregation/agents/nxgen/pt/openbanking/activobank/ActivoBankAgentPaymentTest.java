@@ -25,7 +25,6 @@ public class ActivoBankAgentPaymentTest {
     private AgentIntegrationTest.Builder builder;
 
     private final String IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY = "";
-
     private final String IBAN_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
     private final String NAME_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
 
@@ -39,8 +38,8 @@ public class ActivoBankAgentPaymentTest {
                 new AgentIntegrationTest.Builder("pt", "pt-activobank-oauth2")
                         .setFinancialInstitutionId("activobank")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true)
                         .expectLoggedIn(false);
     }
 
