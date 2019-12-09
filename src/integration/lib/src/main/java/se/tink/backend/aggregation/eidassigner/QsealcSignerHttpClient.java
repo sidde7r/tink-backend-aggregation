@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.eidassigner;
 
 import java.security.KeyStore;
 import javax.net.ssl.SSLContext;
+import org.apache.http.HeaderElement;
+import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.config.RegistryBuilder;
@@ -14,6 +16,8 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicHeaderElementIterator;
+import org.apache.http.protocol.HTTP;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 
@@ -46,9 +50,24 @@ public class QsealcSignerHttpClient {
                                         .build());
                 connectionManager.setMaxTotal(30);
                 connectionManager.setDefaultMaxPerRoute(5);
-                connectionManager.setMaxPerRoute(new HttpRoute(new HttpHost(conf.getHost())), 25);
+                connectionManager.setMaxPerRoute(new HttpRoute(new HttpHost(conf.getHost())), 16);
 
-                ConnectionKeepAliveStrategy ttl = (r, c) -> 60 * 1000;
+                ConnectionKeepAliveStrategy ttl =
+                        (response, context) -> {
+                            HeaderElementIterator it =
+                                    new BasicHeaderElementIterator(
+                                            response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+                            while (it.hasNext()) {
+                                HeaderElement he = it.nextElement();
+                                String param = he.getName();
+                                String value = he.getValue();
+                                if (value != null && "timeout".equalsIgnoreCase(param)) {
+                                    return Long.parseLong(value) * 1000;
+                                }
+                            }
+                            return 5 * 1000;
+                        };
+
                 httpClient =
                         HttpClients.custom()
                                 .setConnectionManager(connectionManager)
