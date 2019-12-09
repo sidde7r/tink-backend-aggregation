@@ -173,13 +173,16 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
 
         Map<String, String> activationCodeResponse =
                 supplementalInformationHelper.askSupplementalInformation(getActivationCodeField());
-
-        DeviceRegistrationResponse deviceRegistrationResponse =
-                encapClient.registerDevice(
-                        username, activationCodeResponse.get(ACTIVATION_CODE_FIELD_KEY));
-        evryToken = deviceRegistrationResponse.getDeviceToken();
-        sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
-        executeLogin(evryToken);
+        try {
+            DeviceRegistrationResponse deviceRegistrationResponse =
+                    encapClient.registerDevice(
+                            username, activationCodeResponse.get(ACTIVATION_CODE_FIELD_KEY));
+            evryToken = deviceRegistrationResponse.getDeviceToken();
+            sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
+            executeLogin(evryToken);
+        } finally {
+            encapClient.saveDevice();
+        }
     }
 
     private void executeLogin(String evryToken) {
