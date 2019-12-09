@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.Field;
 public class FieldTest {
 
     @Test
-    public void testFieldForCommerzbankSecrets() throws Exception{
+    public void testFieldForCommerzbankSecrets() throws Exception {
         Field field = new Field();
         field.setDescription("iban");
         field.setImmutable(true);
