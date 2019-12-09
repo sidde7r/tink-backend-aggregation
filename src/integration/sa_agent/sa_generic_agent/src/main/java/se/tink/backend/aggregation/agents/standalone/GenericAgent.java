@@ -100,7 +100,7 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
                 step.getIdentifier(), step.execute(request.getPayload()).get());
     }
 
-    private SupplementalWaitRequest bouildSupplementalWaitRequest() {
+    private SupplementalWaitRequest buildSupplementalWaitRequest() {
         return new SupplementalWaitRequest(
                 strongAuthenticationState.getSupplementalKey(),
                 SUPPLEMENTAL_WAIT_REQUEST_MINUTES,
@@ -108,8 +108,7 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
     }
 
     private void processCallbackData(final Map<String, String> callbackData) {
-        // TODO: persist callbackData in persistentStorage
-        //  debug to find out what data are in callbackData
+        String state = callbackData.get("state");
     }
 
     private LinkedList<? extends AuthenticationStep> buildAuthenticationSteps(
@@ -119,12 +118,12 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
         ThirdPartyAppAuthenticationStep openThirdPartyApp =
                 new ThirdPartyAppAuthenticationStep(
                         authenticationService.login(request),
-                        bouildSupplementalWaitRequest(),
+                        buildSupplementalWaitRequest(),
                         this::processCallbackData);
 
         ThirdPartyAppAuthenticationStep waitForResponse =
                 new ThirdPartyAppAuthenticationStep(
-                        null, bouildSupplementalWaitRequest(), this::processCallbackData);
+                        null, buildSupplementalWaitRequest(), this::processCallbackData);
 
         linkedList.add(openThirdPartyApp);
         linkedList.add(waitForResponse);

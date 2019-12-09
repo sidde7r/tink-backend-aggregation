@@ -39,7 +39,9 @@ public class CheckingService {
     }
 
     public FetchAccountsResponse fetchCheckingAccounts() {
-        FetchAccountsRequest fetchAccountsRequest = null;
+        MappingContext mappingContext = MappingContext.newInstance();
+        FetchAccountsRequest fetchAccountsRequest =
+                mappersController.fetchAccountsRequestMapper().map(null, mappingContext);
         se.tink.sa.services.fetch.account.FetchAccountsResponse fetchAccountsResponse =
                 fetchAccountsServiceBlockingStub.fetchCheckingAccounts(fetchAccountsRequest);
         FetchAccountsResponseMapper mapper = mappersController.fetchAccountsResponseMapper();

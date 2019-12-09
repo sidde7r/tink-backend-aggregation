@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.standalone.mapper.common;
 import se.tink.backend.aggregation.agents.standalone.mapper.MappingContextKeys;
 import se.tink.sa.common.mapper.Mapper;
 import se.tink.sa.common.mapper.MappingContext;
+import se.tink.sa.common.mapper.ProtoObjSetter;
 import se.tink.sa.services.security.SecurityInfo;
 
 public class SecurityInfoMapper implements Mapper<SecurityInfo, Void> {
@@ -14,7 +15,9 @@ public class SecurityInfoMapper implements Mapper<SecurityInfo, Void> {
             builder.setState(mappingContext.get(MappingContextKeys.STATE));
         }
 
-        builder.setSecurityToken(mappingContext.get(MappingContextKeys.SECURITY_TOKEN));
+        String securityToken = mappingContext.get(MappingContextKeys.SECURITY_TOKEN);
+        ProtoObjSetter.setValue(SecurityInfo.Builder::setSecurityToken, builder, securityToken);
+
         return builder.build();
     }
 

@@ -57,7 +57,7 @@ public class MappersController {
                 FetchAccountsResponseMapperFactory.newInstance(commonMappersFactory);
 
         checkingRequestMappersFactory =
-                CheckingRequestMappersFactory.newInstance(commonExternalParametersProvider);
+                CheckingRequestMappersFactory.newInstance(commonMappersFactory);
 
         fetchTransactionsRequestsFactory = FetchTransactionsRequestMappersFactory.newInstance();
         fetchTransactionsResponseMapperFactory =

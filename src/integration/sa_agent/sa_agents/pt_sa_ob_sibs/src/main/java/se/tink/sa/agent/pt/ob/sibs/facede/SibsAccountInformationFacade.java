@@ -102,7 +102,8 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
         sibsRequest.setDateFromTransactionFetch(FIRST_TRANSACTION_FETCH_DATE);
         sibsRequest.setAccountId(request.getAccountId());
         sibsRequest.setIsPsuInvolved(request.getRequestCommon().getManual());
-        sibsRequest.setBankCode(request.getExternalParametersOrDefault(BANK_CODE, null));
+        sibsRequest.setBankCode(
+                request.getRequestCommon().getExternalParametersOrDefault(BANK_CODE, null));
         sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getSecurityToken());
         return sibsRequest;
     }
@@ -128,7 +129,8 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
 
     private CommonSibsRequest getCommonRequest(FetchAccountsRequest request) {
         CommonSibsRequest sibsRequest = new CommonSibsRequest();
-        sibsRequest.setBankCode(request.getExternalParametersOrDefault(BANK_CODE, null));
+        sibsRequest.setBankCode(
+                request.getRequestCommon().getExternalParametersOrDefault(BANK_CODE, null));
         sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getSecurityToken());
         return sibsRequest;
     }
@@ -139,7 +141,8 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
         sibsRequest.setAccountId(accountId);
         sibsRequest.setIsPsuInvolved(request.getRequestCommon().getManual());
         sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getSecurityToken());
-        sibsRequest.setBankCode(request.getExternalParametersOrDefault(BANK_CODE, null));
+        sibsRequest.setBankCode(
+                request.getRequestCommon().getExternalParametersOrDefault(BANK_CODE, null));
         return sibsRequest;
     }
 }
