@@ -148,19 +148,22 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
         Map<String, String> activationCodeResponse =
                 supplementalInformationController.askSupplementalInformation(
                         getActivationCodeField());
+        try {
+            String activateEvryToken =
+                    encapClient
+                            .registerDevice(
+                                    nationalId,
+                                    activationCodeResponse.get(ActivationCodeFieldConstants.NAME))
+                            .getDeviceToken();
 
-        String activateEvryToken =
-                encapClient
-                        .registerDevice(
-                                nationalId,
-                                activationCodeResponse.get(ActivationCodeFieldConstants.NAME))
-                        .getDeviceToken();
-
-        sessionStorage.put(Storage.ACTIVATE_EVRY_TOKEN, activateEvryToken);
-        if (activateEvryToken == null) {
-            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+            sessionStorage.put(Storage.ACTIVATE_EVRY_TOKEN, activateEvryToken);
+            if (activateEvryToken == null) {
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+            }
+            return activateEvryToken;
+        } finally {
+            encapClient.saveDevice();
         }
-        return activateEvryToken;
     }
 
     private void executeLogin(String evryToken) {

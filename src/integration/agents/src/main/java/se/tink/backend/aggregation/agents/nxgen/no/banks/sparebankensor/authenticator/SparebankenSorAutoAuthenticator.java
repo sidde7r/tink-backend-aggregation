@@ -30,12 +30,15 @@ public class SparebankenSorAutoAuthenticator implements AutoAuthenticator {
     public void autoAuthenticate() throws SessionException {
         apiClient.fetchAppInformation(); // only for getting a cookie, possible we must save this
         // cookie for later use in the first login request
-
-        DeviceAuthenticationResponse deviceAuthenticationResponse =
-                encapClient.authenticateDevice(AuthenticationMethod.DEVICE_AND_PIN);
-        String evryToken = deviceAuthenticationResponse.getDeviceToken();
-        sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
-        executeLogin(evryToken);
+        try {
+            DeviceAuthenticationResponse deviceAuthenticationResponse =
+                    encapClient.authenticateDevice(AuthenticationMethod.DEVICE_AND_PIN);
+            String evryToken = deviceAuthenticationResponse.getDeviceToken();
+            sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
+            executeLogin(evryToken);
+        } finally {
+            encapClient.saveDevice();
+        }
     }
 
     private void executeLogin(String evryToken) {
