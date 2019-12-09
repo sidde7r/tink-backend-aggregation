@@ -213,4 +213,17 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
                     new IllegalArgumentException());
         }
     }
+
+    @Override
+    protected void validateCreditor(Creditor creditor) throws CreditorValidationException {
+        if (Strings.nullToEmpty(creditor.getName()).length()
+                > PaymentValue.MAX_CREDITOR_NAME_LENGTH) {
+            throw new CreditorValidationException(
+                    String.format(
+                            ExceptionMessages.PAYMENT_CREDITOR_NAME_TOO_LONG,
+                            PaymentValue.MAX_CREDITOR_NAME_LENGTH),
+                    "",
+                    new IllegalArgumentException());
+        }
+    }
 }

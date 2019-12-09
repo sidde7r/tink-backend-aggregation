@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
@@ -50,8 +51,10 @@ public abstract class HandelsbankenBasePaymentExecutor
         final HandelsbankenPaymentType paymentProduct = getPaymentType(paymentRequest);
         final Creditor creditor = payment.getCreditor();
 
+        validateCreditor(creditor);
         validateExecutionDate(payment.getExecutionDate());
         validateRemittanceInformation(paymentProduct, payment);
+
         final CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest(
                         getCreditorAccountEntity(creditor),
@@ -157,4 +160,6 @@ public abstract class HandelsbankenBasePaymentExecutor
     protected void validateRemittanceInformation(
             HandelsbankenPaymentType paymentType, Payment payment)
             throws ReferenceValidationException {}
+
+    protected void validateCreditor(Creditor creditor) throws CreditorValidationException {}
 }

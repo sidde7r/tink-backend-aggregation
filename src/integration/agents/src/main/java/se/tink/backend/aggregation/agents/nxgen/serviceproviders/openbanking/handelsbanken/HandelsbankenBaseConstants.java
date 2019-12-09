@@ -127,6 +127,8 @@ public final class HandelsbankenBaseConstants {
         public static final String TOKEN_NOT_FOUND = "Could not find token";
         public static final String PAYMENT_REF_TOO_LONG =
                 "Supplied payment reference is too long, max is %s characters.";
+        public static final String PAYMENT_CREDITOR_NAME_TOO_LONG =
+                "Supplied beneficiary name is too long, max is %s characters.";
     }
 
     public static class Errors {

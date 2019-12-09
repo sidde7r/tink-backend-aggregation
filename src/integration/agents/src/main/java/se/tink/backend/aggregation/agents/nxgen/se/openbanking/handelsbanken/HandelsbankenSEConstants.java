@@ -36,5 +36,6 @@ public class HandelsbankenSEConstants {
         public static final int MAX_DEST_MSG_LEN_DOMESTIC_SHB = 14;
         public static final int MAX_DEST_MSG_LEN_GIRO = 210;
         public static final int MAX_DEST_MSG_LEN_CROSS_CURRENCY = 140;
+        public static final int MAX_CREDITOR_NAME_LENGTH = 35;
     }
 }
