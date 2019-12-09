@@ -33,7 +33,7 @@ public class ThirdPartyAppAuthenticationStep implements AuthenticationStep {
     @Override
     public Optional<SupplementInformationRequester> execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        if (request.getCallbackData().isEmpty()) {
+        if (request.getCallbackData() == null || request.getCallbackData().isEmpty()) {
             return Optional.of(
                     new SupplementInformationRequester.Builder()
                             .withThirdPartyAppAuthenticationPayload(payload)

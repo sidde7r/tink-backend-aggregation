@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.standalone;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.Agent;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.agents.standalone.mapper.factory.MappersContr
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.CommonExternalParametersProvider;
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.impl.MockCommonExternalParametersProvider;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
@@ -36,6 +38,7 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
     private final AuthenticationService authenticationService;
     private final CredentialsRequest credentialsRequest;
     private final StrongAuthenticationState strongAuthenticationState;
+    private LinkedList<? extends AuthenticationStep> authenticationSteps;
     private final MappersController mappersController;
 
     public GenericAgent(
@@ -77,15 +80,22 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
     @Override
     public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
             throws Exception {
-        if (request.getPayload() != null && request.getPayload().getCallbackData() != null) {
+        if (request.getPayload() != null
+                && request.getPayload().getCallbackData() != null
+                && !request.getPayload().getCallbackData().isEmpty()) {
             processCallbackData(request.getPayload().getCallbackData());
             return SteppableAuthenticationResponse.finalResponse();
         }
-        ThirdPartyAppAuthenticationStep step =
-                new ThirdPartyAppAuthenticationStep(
-                        authenticationService.login(request),
-                        bouildSupplementalWaitRequest(),
-                        this::processCallbackData);
+
+        // TODO: when ProgressiveLoginExecutor will be ready to properly deal with
+        //  ThirdPartyAppAuthenticationStep
+        //  remove authenticationSteps and return only one ThirdPartyAppAuthenticationStep (first
+        //  from current list
+        if (authenticationSteps == null || authenticationSteps.isEmpty()) {
+            authenticationSteps = buildAuthenticationSteps(request);
+        }
+
+        AuthenticationStep step = authenticationSteps.poll();
         return SteppableAuthenticationResponse.intermediateResponse(
                 step.getIdentifier(), step.execute(request.getPayload()).get());
     }
@@ -98,8 +108,28 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
     }
 
     private void processCallbackData(final Map<String, String> callbackData) {
-        // TODO: persist callbackData
+        // TODO: persist callbackData in persistentStorage
         //  debug to find out what data are in callbackData
+    }
+
+    private LinkedList<? extends AuthenticationStep> buildAuthenticationSteps(
+            SteppableAuthenticationRequest request) {
+        LinkedList<AuthenticationStep> linkedList = new LinkedList<>();
+
+        ThirdPartyAppAuthenticationStep openThirdPartyApp =
+                new ThirdPartyAppAuthenticationStep(
+                        authenticationService.login(request),
+                        bouildSupplementalWaitRequest(),
+                        this::processCallbackData);
+
+        ThirdPartyAppAuthenticationStep waitForResponse =
+                new ThirdPartyAppAuthenticationStep(
+                        null, bouildSupplementalWaitRequest(), this::processCallbackData);
+
+        linkedList.add(openThirdPartyApp);
+        linkedList.add(waitForResponse);
+
+        return linkedList;
     }
 
     @Override
