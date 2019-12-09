@@ -31,10 +31,26 @@ public class BankdataConstants {
         public static final URL ASSET_DETAILS = new URL(BASE_URL + "asset/details");
 
         public static final URL NEMID_INIT = new URL(BASE_URL + "nemid/init");
+
+        public static final URL PORTAL =
+                new URL(
+                        "https://mobil.bankdata.dk/wps/portal/{"
+                                + UrlParam.BRANCH_NAME
+                                + "}/mobilnemid");
+
+        public static final URL NEMID_EXCHANGE =
+                new URL(
+                        "https://mobil.bankdata.dk/wps/portal/{"
+                                + UrlParam.BRANCH_NAME
+                                + "}/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziPS1NTAw9DQw9LAycXAwcjd1M3SyC_YwM3M30w8EKgs2DXTzDPC0MDE1CHZ0C3EPNzIwMwEA_ihz9gb7GBqToN8ABHInUj0dBFH7jw_WjwErwhQBWBcheJGRJQW5oaGiEQaano6IiAHrmNso!/dz/d5/L2dBISEvZ0FBIS9nQSEh/p0/IZ7_79M422G0N82EB0QS3MJBS430G6=CZ6_I9441I01H80BD0A3F5F8SN20G6=LA0=Ejavax.portlet.action!login==/");
         public static final URL NEMID_ENROLL = new URL(BASE_URL + "/nemid/complete_enroll");
         public static final URL NEMID_LOGIN = new URL(BASE_URL + "/nemid/login_with_installid");
 
         public static final URL NEMID_GET_CHALLENGE = new URL(BASE_URL + "/nemid/get_challenge");
+    }
+
+    public static class UrlParam {
+        public static final String BRANCH_NAME = "BRANCH_NAME";
     }
 
     public static class Headers {

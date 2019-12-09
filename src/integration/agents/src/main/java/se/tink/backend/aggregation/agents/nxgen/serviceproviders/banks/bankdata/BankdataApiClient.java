@@ -12,6 +12,8 @@ import org.apache.http.cookie.Cookie;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.Url;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.UrlParam;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.CompleteEnrollResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.DataRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.EncryptedResponse;
@@ -111,10 +113,6 @@ public class BankdataApiClient {
         return createRequest(url, MediaType.APPLICATION_JSON_TYPE);
     }
 
-    private boolean isNotMobileCookie(Cookie cookie) {
-        return !Objects.equals(cookie.getName(), "mobile");
-    }
-
     private RequestBuilder createRequest(URL url, MediaType type) {
         cookieOverride();
 
@@ -138,15 +136,18 @@ public class BankdataApiClient {
     }
 
     public HttpResponse eventDoContinue(String token) {
-        Form form =
-                Form.builder().put("eventSubmit_doContinue", "Send").put("response", token).build();
 
-        URL url =
-                new URL(
-                        "https://mobil.bankdata.dk/wps/portal/almbrand-dk/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziPS1NTAw9DQw9LAycXAwcjd1M3SyC_YwM3M30w8EKgs2DXTzDPC0MDE1CHZ0C3EPNzIwMwEA_ihz9gb7GBqToN8ABHInUj0dBFH7jw_WjwErwhQBWBcheJGRJQW5oaGiEQaano6IiAHrmNso!/dz/d5/L2dBISEvZ0FBIS9nQSEh/p0/IZ7_79M422G0N82EB0QS3MJBS430G6=CZ6_I9441I01H80BD0A3F5F8SN20G6=LA0=Ejavax.portlet.action!login==/");
+        final String form =
+                Form.builder()
+                        .put("eventSubmit_doContinue", "Send")
+                        .put("response", token)
+                        .build()
+                        .serialize();
+
+        final URL url = Url.NEMID_EXCHANGE.parameter(UrlParam.BRANCH_NAME, getBranchFromCookie());
 
         return createRequest(url, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post(HttpResponse.class, form.serialize());
+                .post(HttpResponse.class, form);
     }
 
     public NemIdLoginResponse nemIdInit(final CryptoHelper cryptoHelper) {
@@ -164,22 +165,9 @@ public class BankdataApiClient {
                 .decrypt(cryptoHelper, NemIdLoginResponse.class);
     }
 
-    // TODO: Refactor
     public HttpResponse portal() {
-        cookieOverride();
-        HttpResponse httpResponse =
-                client.request(
-                                new URL(
-                                        "https://mobil.bankdata.dk/wps/portal/almbrand-dk/mobilnemid"))
-                        .header(
-                                HttpHeaders.USER_AGENT,
-                                "AlmBrandMobilBank/15773 CFNetwork/978.0.7 Darwin/18.7.0")
-                        .header("Accept", "*/*")
-                        .header("Accept-Language", "en-us")
-                        .header("Accept-Encoding", "br, gzip, deflate")
-                        .header("Connection", "keep-alive")
-                        .get(HttpResponse.class);
-        return httpResponse;
+        final URL url = Url.PORTAL.parameter(UrlParam.BRANCH_NAME, getBranchFromCookie());
+        return createRequest(url).get(HttpResponse.class);
     }
 
     public NemIdParametersV2 fetchNemIdParameters(HttpResponse httpResponse) {
@@ -238,7 +226,6 @@ public class BankdataApiClient {
             final String installId,
             final CryptoHelper cryptoHelper) {
 
-        // TODO: Hardcoded pin/userid here. Removed in order not to commit.
         LoginInstalledRequest installedEntity =
                 new LoginInstalledRequest(userId, pinCode, installId);
 
@@ -275,6 +262,15 @@ public class BankdataApiClient {
         return newCookie;
     }
 
+    private String getBranchFromCookie() {
+
+        return client.getCookies().stream()
+                .filter(this::isVPCookie)
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Could not find VP cookie."))
+                .getValue();
+    }
+
     private void cookieOverride() {
         List<Cookie> cookies =
                 client.getCookies().stream()
@@ -284,5 +280,13 @@ public class BankdataApiClient {
         cookies.add(createCookieForDomain("mobile", "350|275|MobileBank", "mobil.bankdata.dk"));
         client.clearCookies();
         cookies.forEach(client::addCookie);
+    }
+
+    private boolean isVPCookie(Cookie cookie) {
+        return Objects.equals(cookie.getName(), "vp");
+    }
+
+    private boolean isNotMobileCookie(Cookie cookie) {
+        return !Objects.equals(cookie.getName(), "mobile");
     }
 }
