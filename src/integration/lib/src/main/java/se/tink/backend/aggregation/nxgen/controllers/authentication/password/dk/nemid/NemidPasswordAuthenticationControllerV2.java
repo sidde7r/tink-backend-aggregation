@@ -41,6 +41,7 @@ public class NemidPasswordAuthenticationControllerV2
                 .name(SUPPLEMENTAL_FIELD_ID)
                 .description(
                         "During your first login you will need to authenticate using the NemId app. Please enter your online banking password and then open the NemId app.")
+                .hint("Online Banking Password")
                 .masked(true)
                 .numeric(false)
                 .build();
