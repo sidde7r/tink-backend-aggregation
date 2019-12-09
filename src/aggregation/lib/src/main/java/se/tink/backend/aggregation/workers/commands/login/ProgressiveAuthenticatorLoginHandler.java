@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands.login;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
@@ -19,12 +20,13 @@ public class ProgressiveAuthenticatorLoginHandler implements LoginHandler {
 
     @Override
     public Optional<AgentWorkerCommandResult> handleLogin(
-            final Agent agent, final MetricActionIface metricAction) throws Exception {
+            final Agent agent, final MetricActionIface metricAction, Credentials credentials)
+            throws Exception {
         if (agent instanceof ProgressiveAuthAgent) {
             final ProgressiveLoginExecutor executor =
                     new ProgressiveLoginExecutor(
                             supplementalInformationController, (ProgressiveAuthAgent) agent);
-            executor.login();
+            executor.login(credentials);
             metricAction.completed();
             return Optional.of(AgentWorkerCommandResult.CONTINUE);
         }

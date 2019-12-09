@@ -148,6 +148,35 @@
         },
         {
             "accessType": "OTHER",
+            "className": "nxgen.es.banks.bankinter.BankinterAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Bankinter",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "minLength": 6,
+                    "name": "password",
+                    "numeric": false,
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "e8ce90be687146e388286f976e6aaf81",
+            "financialInstitutionName": "Bankinter",
+            "name": "es-bankinter-password",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
             "className": "nxgen.es.banks.bbva.BbvaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "BBVA",
@@ -172,35 +201,6 @@
             "name": "es-bbva-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OTHER",
-            "className": "nxgen.es.banks.bankinter.BankinterAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Bankinter",
-            "fields": [
-                {
-                    "description": "Username",
-                    "immutable": true,
-                    "name": "username"
-                },
-                {
-                    "description": "Password",
-                    "masked": true,
-                    "minLength": 6,
-                    "name": "password",
-                    "numeric": false,
-                    "sensitive": true
-                }
-            ],
-            "financialInstitutionId": "e8ce90be687146e388286f976e6aaf81",
-            "financialInstitutionName": "Bankinter",
-            "name": "es-bankinter-password",
-            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-            "popular": false,
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"

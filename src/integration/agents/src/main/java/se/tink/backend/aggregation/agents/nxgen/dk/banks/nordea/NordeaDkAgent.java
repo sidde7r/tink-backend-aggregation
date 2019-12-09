@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemidPasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemidPasswordAuthenticationControllerV1;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -54,6 +54,6 @@ public class NordeaDkAgent extends NordeaV20Agent {
 
         return new TypedAuthenticationController(
                 new PasswordAuthenticationController(
-                        new NemidPasswordAuthenticationController(nemIdAuthenticator)));
+                        new NemidPasswordAuthenticationControllerV1(nemIdAuthenticator)));
     }
 }

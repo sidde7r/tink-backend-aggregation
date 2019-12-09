@@ -11,7 +11,8 @@ public class Login0ResponseTest {
 
     @Test
     public void shouldReportSuccessIfFailedLoginResponse() {
-        Login0Response response = Login0TestData.getResponse(Login0TestData.FAILED_LOGIN);
+        Login0Response response =
+                Login0TestData.getResponse(Login0TestData.FAILED_REQUEST_REJECTED);
         assertFalse(response.isValidCredentials());
     }
 

@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,13 +10,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-public class TransactionsEntity implements TransactionKeyPaginatorResponse<String> {
+public class TransactionsEntity {
 
     @JsonProperty("_links")
     private LinksEntity links;
@@ -43,15 +42,13 @@ public class TransactionsEntity implements TransactionKeyPaginatorResponse<Strin
         return map;
     }
 
-    @Override
-    public String nextKey() {
-        return this.getLinks().getNext().getHref().split("\\?")[1];
-    }
-
-    @Override
-    public Collection<? extends Transaction> getTinkTransactions() {
-
+    public List<Transaction> toTinkTransactions(Date limitDate) {
         return booked.stream()
+                .filter(bookedEntity -> Objects.nonNull(bookedEntity.getEntryReference()))
+                .filter(
+                        bookedEntity ->
+                                !VolksbankUtils.IsEntryReferenceFromAfterDate(
+                                        bookedEntity.getEntryReference(), limitDate))
                 .map(
                         movement ->
                                 Transaction.builder()
@@ -97,10 +94,5 @@ public class TransactionsEntity implements TransactionKeyPaginatorResponse<Strin
             return String.join(" ", words);
         }
         throw new IllegalStateException("Couldn't find description");
-    }
-
-    @Override
-    public Optional<Boolean> canFetchMore() {
-        return Optional.of(this.getLinks() != null && this.getLinks().getNext() != null);
     }
 }

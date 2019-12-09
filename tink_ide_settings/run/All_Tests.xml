@@ -1,7 +1,7 @@
-<configuration default="false" name="All Tests"
+<configuration default="false" name="All Tests (except manual)"
                type="BlazeCommandRunConfigurationType" factoryName="Bazel Command"
                keep-in-sync="true"
                handler-id="BlazeCommandGenericRunConfigurationHandlerProvider"
                blaze-command="test">
-    <blaze-target>//:all_tests</blaze-target>
+    <blaze-target>//...:all</blaze-target>
 </configuration>

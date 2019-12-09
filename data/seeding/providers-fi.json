@@ -132,6 +132,7 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
             "className": "nxgen.fi.openbanking.danskebank.DanskebankV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Danske Bank",
@@ -142,8 +143,7 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK",
-            "accessType": "OPEN_BANKING"
+            "type": "BANK"
         },
         {
             "accessType": "OTHER",
@@ -271,34 +271,6 @@
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
-            "className": "nxgen.fi.openbanking.opbank.OpBankAgent",
-            "credentialsType": "PASSWORD",
-            "fields": [
-                {
-                    "description": "Username",
-                    "immutable": true,
-                    "name": "username"
-                },
-                {
-                    "description": "Password",
-                    "masked": true,
-                    "name": "password",
-                    "sensitive": true
-                }
-            ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "name": "fi-opbank-openbanking",
-            "payload": "tink",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "DISABLED",
             "transactional": true,
             "type": "BANK"
         },

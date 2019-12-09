@@ -1,0 +1,7 @@
+<configuration default="false" name="Most Tests"
+               type="BlazeCommandRunConfigurationType" factoryName="Bazel Command"
+               keep-in-sync="true"
+               handler-id="BlazeCommandGenericRunConfigurationHandlerProvider"
+               blaze-command="test">
+    <blaze-target>//:most_tests</blaze-target>
+</configuration>

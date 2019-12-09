@@ -4,7 +4,8 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.component.authenticator.detail.Login0TestData.FAILED_LOGIN;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.component.authenticator.detail.Login0TestData.FAILED_REQUEST_REJECTED;
+import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.component.authenticator.detail.Login0TestData.INCORRECT_CREDENTIALS;
 import static se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.component.authenticator.detail.Login0TestData.SUCCESSFUL_LOGIN;
 
 import org.junit.Test;
@@ -45,11 +46,26 @@ public class NovoBancoAuthenticatorTest {
         // given
         NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
         when(apiClient.loginStep0("wrong", "credentials"))
-                .thenReturn(Login0TestData.getResponse(FAILED_LOGIN));
+                .thenReturn(Login0TestData.getResponse(INCORRECT_CREDENTIALS));
 
         NovoBancoAuthenticator authenticator =
                 new NovoBancoAuthenticator(apiClient, new SessionStorage());
         // when
         authenticator.authenticate("wrong", "credentials");
+    }
+
+    @Test(expected = LoginException.class)
+    public void shouldThrowIfLoginWithInvalidRequest()
+            throws AuthenticationException, AuthorizationException {
+        // given
+        NovoBancoApiClient apiClient = mock(NovoBancoApiClient.class);
+        // bank answers like below when e.g. when encryption is incorrect (or digest does not match)
+        when(apiClient.loginStep0("wrong", "request"))
+                .thenReturn(Login0TestData.getResponse(FAILED_REQUEST_REJECTED));
+
+        NovoBancoAuthenticator authenticator =
+                new NovoBancoAuthenticator(apiClient, new SessionStorage());
+        // when
+        authenticator.authenticate("wrong", "request");
     }
 }

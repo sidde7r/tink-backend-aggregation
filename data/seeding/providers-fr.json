@@ -2516,23 +2516,6 @@
             "type": "BANK"
         },
         {
-            "accessType": "OPEN_BANKING",
-            "className": "nxgen.fr.openbanking.labanquepostale.LaBanquePostaleAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "La Banque Postale (Test only)",
-            "fields": [],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
-            "multiFactor": false,
-            "name": "fr-labanquepostale-ob",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
             "accessType": "OTHER",
             "className": "nxgen.fr.banks.lcl.LclAgent",
             "credentialsType": "PASSWORD",
@@ -2561,6 +2544,23 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.fr.openbanking.monabanq.MonabanqAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "Monabanq (Test)",
+            "fields": [],
+            "financialInstitutionId": "dummy",
+            "multiFactor": false,
+            "name": "fr-monabanq-oauth2",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.fr.banks.monabanq.MonaBanqAgent",
             "credentialsType": "PASSWORD",
@@ -2585,23 +2585,6 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": "true",
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
-            "className": "nxgen.fr.openbanking.monabanq.MonabanqAgent",
-            "credentialsType": "THIRD_PARTY_APP",
-            "displayName": "Monabanq (Test)",
-            "fields": [],
-            "financialInstitutionId": "dummy",
-            "multiFactor": false,
-            "name": "fr-monabanq-oauth2",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
             "tutorialUrl": null,
             "type": "BANK"
         },

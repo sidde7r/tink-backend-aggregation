@@ -13,11 +13,13 @@ proto_library(
     srcs = [
         "proto/auth/model.proto",
         "proto/auth/services.proto",
+        "proto/common/io_common.proto",
         "proto/fetch/account/account.proto",
         "proto/fetch/account/model.proto",
         "proto/fetch/account/services.proto",
         "proto/fetch/trans/model.proto",
         "proto/fetch/trans/services.proto",
+        "proto/security/model.proto",
     ],
     visibility = ["//visibility:public"],
     deps = [

@@ -208,24 +208,6 @@
             "type": "BANK"
         },
         {
-            "accessType": "OPEN_BANKING",
-            "authenticationFlow": "REDIRECT",
-            "className": "nxgen.dk.openbanking.sdc.SdcAgent",
-            "credentialsType": "THIRD_PARTY_APP",
-            "displayName": "BankNordik",
-            "fields": [],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "multiFactor": true,
-            "name": "dk-banknordik-ob",
-            "passwordHelpText": null,
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
             "accessType": "OTHER",
             "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
             "credentialsType": "PASSWORD",
@@ -387,6 +369,20 @@
             "type": "BANK"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.dk.openbanking.danskebank.DanskebankV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Danske Bank",
+            "fields": [],
+            "multiFactor": false,
+            "name": "dk-danskebank-ob",
+            "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.dk.banks.danskebank.DanskeBankDKAgent",
             "credentialsType": "PASSWORD",
@@ -422,24 +418,10 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.dk.openbanking.danskebank.DanskebankV31Agent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Danske Bank",
-            "fields": [],
-            "multiFactor": false,
-            "name": "dk-danskebank-ob",
-            "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK",
-            "accessType": "OPEN_BANKING"
-        },
-        {
+            "accessType": "OTHER",
             "className": "nxgen.serviceproviders.banks.bec.BecAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Den Jyske Sparekasse",
-            "accessType": "OTHER",
             "fields": [
                 {
                     "description": "CPR no./User no.",
@@ -1653,26 +1635,6 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
-            "className": "nxgen.dk.openbanking.ringkjobinglandbobank.RingkjobingLandbobankAgent",
-            "credentialsType": "PASSWORD",
-            "currency": "DKK",
-            "displayName": "Ringkjøbing Landbobank",
-            "fields": [],
-            "financialInstitutionId": "53c8b70749624122959aa524421ca93d",
-            "financialInstitutionName": "Ringkjøbing Landbobank",
-            "market": "DK",
-            "multiFactor": false,
-            "name": "dk-ringkjobinglandbobank-ob",
-            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-            "payload": "tink",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "tutorialUrl": null,
             "type": "BANK"
         },
         {

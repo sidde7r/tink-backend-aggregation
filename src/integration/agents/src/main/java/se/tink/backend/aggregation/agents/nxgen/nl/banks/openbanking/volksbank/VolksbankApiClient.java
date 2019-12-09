@@ -45,10 +45,10 @@ public class VolksbankApiClient {
                 client.request(getTransactionsUrl(account))
                         .queryParam(
                                 TransactionFetcherParams.DATE_FROM,
-                                Transaction.TRANSACTION_FORMAT.format(fromDate))
+                                Transaction.TRANSACTION_DATE_FORMAT.format(fromDate))
                         .queryParam(
                                 TransactionFetcherParams.DATE_TO,
-                                Transaction.TRANSACTION_FORMAT.format(toDate))
+                                Transaction.TRANSACTION_DATE_FORMAT.format(toDate))
                         .queryParam(
                                 TransactionFetcherParams.BOOKING_STATUS,
                                 TransactionFetcherParams.BOOKING_STATUS_VALUE)

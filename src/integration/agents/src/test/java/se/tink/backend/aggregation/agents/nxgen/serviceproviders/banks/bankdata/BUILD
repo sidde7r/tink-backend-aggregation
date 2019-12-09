@@ -20,5 +20,6 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:commons_codec_commons_codec",
     ],
 )

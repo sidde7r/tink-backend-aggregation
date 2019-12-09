@@ -16,7 +16,7 @@ alias(
 )
 
 test_suite(
-    name = "all_tests",
+    name = "most_tests",
     tests = [
         "//src/aggregation/api:api_test",
         "//src/aggregation/lib:lib_test",

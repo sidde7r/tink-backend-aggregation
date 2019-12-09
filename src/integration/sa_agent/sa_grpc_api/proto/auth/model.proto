@@ -6,16 +6,17 @@ option java_outer_classname = "OuterModel";
 option go_package = "proto";
 
 import "google/type/date.proto";
+import "src/integration/sa_agent/sa_grpc_api/proto/common/io_common.proto";
 
 message AuthenticationRequest {
-  string correlationId = 1;
+  RequestCommon requestCommon = 1;
   Credentials credentials = 2;
   repeated string userInputs = 3;
   map<string, string> callbackData = 4;
 }
 
 message AuthenticationResponse {
-  string correlationId = 1;
+  ResponseCommon responseCommon = 1;
   repeated Field fields = 2;
   ThirdPartyAppAuthenticationPayload payload = 3;
   SupplementalWaitRequest supplementalWaitRequest = 4;
