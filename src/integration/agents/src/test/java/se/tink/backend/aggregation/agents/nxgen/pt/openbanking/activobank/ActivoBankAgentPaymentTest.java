@@ -25,7 +25,6 @@ public class ActivoBankAgentPaymentTest {
     private AgentIntegrationTest.Builder builder;
 
     private final String IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY = "";
-
     private final String IBAN_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
     private final String NAME_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
 

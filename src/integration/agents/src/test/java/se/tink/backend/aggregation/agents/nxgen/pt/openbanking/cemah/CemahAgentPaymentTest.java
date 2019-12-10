@@ -7,14 +7,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -25,10 +22,19 @@ public class CemahAgentPaymentTest {
 
     private AgentIntegrationTest.Builder builder;
 
+    private final String currency = "EUR";
+    private final LocalDate executionDate = LocalDate.now().plusDays(1);
+    private final int AMOUNT = 1;
+    private static final String IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY = "";
+    private static final String IBAN_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
+    private static final String NAME_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
+
     @Before
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-cemah-oauth2")
+                        .setFinancialInstitutionId("cemah")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
@@ -43,27 +49,22 @@ public class CemahAgentPaymentTest {
         List<Payment> listOfMockedPayments = new ArrayList<>();
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
+
             Creditor creditor = mock(Creditor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            //
-            // doReturn(Iban.random(CountryCode.SE).toString()).when(creditor).getAccountNumber();
-            doReturn("PT50005900012230190001669").when(creditor).getAccountNumber();
-            doReturn("Tink AB").when(creditor).getName();
+            doReturn(IBAN_OF_THE_PERSON_WHO_GETS_THE_MONEY).when(creditor).getAccountNumber();
+            doReturn(NAME_OF_THE_PERSON_WHO_GETS_THE_MONEY).when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.SE).toString()).when(debtor).getAccountNumber();
-            //      doReturn("PT50005900012230190001669").when(debtor).getAccountNumber();
-
-            LocalDate executionDate = LocalDate.now();
-            String currency = "EUR";
+            doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
+            doReturn(IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY).when(debtor).getAccountNumber();
 
             listOfMockedPayments.add(
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
                             .withExactCurrencyAmount(
-                                    new ExactCurrencyAmount(new BigDecimal(1), currency))
+                                    new ExactCurrencyAmount(new BigDecimal(AMOUNT), currency))
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());
