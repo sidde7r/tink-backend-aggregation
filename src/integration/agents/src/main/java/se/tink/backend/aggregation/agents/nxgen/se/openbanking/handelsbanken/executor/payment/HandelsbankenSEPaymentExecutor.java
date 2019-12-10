@@ -10,10 +10,13 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CreditorAgentIdentificationType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.PaymentAccountType;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.PaymentValue;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.HandelsbankenBasePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.entities.AccountEntity;
@@ -32,6 +35,7 @@ import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.GiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.se.ClearingNumber.Bank;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -174,5 +178,52 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
         getSigner().sign(paymentMultiStepRequest);
 
         return super.sign(paymentMultiStepRequest);
+    }
+
+    private int getRemittanceInformationMaxLength(
+            HandelsbankenPaymentType paymentType, Creditor creditor) {
+        switch (paymentType) {
+            case SWEDISH_DOMESTIC_GIRO_PAYMENT:
+                return PaymentValue.MAX_DEST_MSG_LEN_GIRO;
+            case SWEDISH_DOMESTIC_CREDIT_TRANSFER:
+                final Bank creditorBank =
+                        new SwedishIdentifier(creditor.getAccountNumber()).getBank();
+                if (creditorBank == Bank.HANDELSBANKEN) {
+                    return PaymentValue.MAX_DEST_MSG_LEN_DOMESTIC_SHB;
+                } else {
+                    return PaymentValue.MAX_DEST_MSG_LEN_DOMESTIC;
+                }
+            default:
+                throw new IllegalStateException(
+                        "Unsupported payment type " + paymentType.toString());
+        }
+    }
+
+    @Override
+    protected void validateRemittanceInformation(
+            HandelsbankenPaymentType paymentType, Payment payment)
+            throws ReferenceValidationException {
+        final String text = Strings.nullToEmpty(payment.getReference().getValue());
+        int maxLength = getRemittanceInformationMaxLength(paymentType, payment.getCreditor());
+
+        if (text.length() > maxLength) {
+            throw new ReferenceValidationException(
+                    String.format(ExceptionMessages.PAYMENT_REF_TOO_LONG, maxLength),
+                    "",
+                    new IllegalArgumentException());
+        }
+    }
+
+    @Override
+    protected void validateCreditor(Creditor creditor) throws CreditorValidationException {
+        if (Strings.nullToEmpty(creditor.getName()).length()
+                > PaymentValue.MAX_CREDITOR_NAME_LENGTH) {
+            throw new CreditorValidationException(
+                    String.format(
+                            ExceptionMessages.PAYMENT_CREDITOR_NAME_TOO_LONG,
+                            PaymentValue.MAX_CREDITOR_NAME_LENGTH),
+                    "",
+                    new IllegalArgumentException());
+        }
     }
 }

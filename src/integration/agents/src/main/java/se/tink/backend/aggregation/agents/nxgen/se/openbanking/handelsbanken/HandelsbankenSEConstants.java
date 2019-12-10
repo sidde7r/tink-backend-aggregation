@@ -30,4 +30,12 @@ public class HandelsbankenSEConstants {
         public static final String PLUSGIRO = "PG";
         public static final String BANKGIRO = "BG";
     }
+
+    public static class PaymentValue {
+        public static final int MAX_DEST_MSG_LEN_DOMESTIC = 12;
+        public static final int MAX_DEST_MSG_LEN_DOMESTIC_SHB = 14;
+        public static final int MAX_DEST_MSG_LEN_GIRO = 210;
+        public static final int MAX_DEST_MSG_LEN_CROSS_CURRENCY = 140;
+        public static final int MAX_CREDITOR_NAME_LENGTH = 35;
+    }
 }
