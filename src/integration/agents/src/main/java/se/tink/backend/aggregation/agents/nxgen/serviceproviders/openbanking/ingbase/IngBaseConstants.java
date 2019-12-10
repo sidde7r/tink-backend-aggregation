@@ -46,7 +46,7 @@ public final class IngBaseConstants {
         public static final String CODE = "code";
         public static final String PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW =
                 "payment-accounts:transactions:view payment-accounts:balances:view";
-        public static final String TRANSACTIONS_LIMIT = "100";
+        public static final String TRANSACTIONS_LIMIT = "50";
     }
 
     public static class HeaderKeys {
