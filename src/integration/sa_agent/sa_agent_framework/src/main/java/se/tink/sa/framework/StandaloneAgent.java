@@ -1,7 +1,5 @@
 package se.tink.sa.framework;
 
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
 import java.io.IOException;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +17,11 @@ public class StandaloneAgent {
 
     @PostConstruct
     public void init() throws IOException, InterruptedException {
-        Server server =
-                ServerBuilder.forPort(grpServerPort).addService(authenticationService).build();
-        server.start();
-        log.info("Server started");
-        server.awaitTermination();
+        //        Server server =
+        //
+        // ServerBuilder.forPort(grpServerPort).addService(authenticationService).build();
+        //        server.start();
+        //        log.info("Server started");
+        //        server.awaitTermination();
     }
 }
