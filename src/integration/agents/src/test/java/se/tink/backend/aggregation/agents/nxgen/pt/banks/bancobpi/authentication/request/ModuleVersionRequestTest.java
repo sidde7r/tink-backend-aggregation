@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiUserState;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -16,18 +16,18 @@ public class ModuleVersionRequestTest {
     private ModuleVersionRequest objectUnderTest;
     private RequestBuilder requestBuilder;
     private TinkHttpClient tinkHttpClient;
-    private BancoBpiUserState userState;
+    private BancoBpiAuthContext userState;
 
     @Before
     public void init() {
         objectUnderTest = null;
-        userState = Mockito.mock(BancoBpiUserState.class);
+        userState = Mockito.mock(BancoBpiAuthContext.class);
         tinkHttpClient = Mockito.mock(TinkHttpClient.class);
         requestBuilder = Mockito.mock(RequestBuilder.class);
     }
 
     @Test
-    public void executeShouldReturnModuleVersion() throws LoginException {
+    public void executeShouldReturnModuleVersion() throws RequestException {
         // given
         final String versionToken = "YmoUqw7QhA7_gxgqkajUrQ";
         Mockito.when(requestBuilder.get(String.class))
@@ -39,9 +39,9 @@ public class ModuleVersionRequestTest {
         Assert.assertEquals(versionToken, result);
     }
 
-    @Test(expected = LoginException.class)
+    @Test(expected = RequestException.class)
     public void executeShouldThrowLoginExceptionWhenResponseHasUnexpectedFormat()
-            throws LoginException {
+            throws RequestException {
         // given
         Mockito.when(requestBuilder.get(String.class)).thenReturn("{}");
         objectUnderTest = new ModuleVersionRequest(userState);

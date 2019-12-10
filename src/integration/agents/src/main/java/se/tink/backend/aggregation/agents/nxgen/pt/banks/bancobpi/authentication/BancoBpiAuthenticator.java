@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication;
 
-import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,51 +8,48 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.ConfirmPinByOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.LoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.ModuleVersionAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.ModuleVersionRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.PinAuthenticationRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.PinAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.SetupAccessPinRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.SetupAccessPinResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiUserState;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.OtpStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.PinCodeGeneratorAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
-
-    private static final String PERSISTENCE_STORAGE_KEY = "BancoBpiUserState";
 
     private List<AuthenticationStep> autoAuthenticationSteps;
     private List<AuthenticationStep> manualAuthenticationSteps;
     private TinkHttpClient httpClient;
     private final SupplementalInformationFormer supplementalInformationFormer;
     private boolean manualAuthenticationFlag = true;
-    private BancoBpiUserState userState;
-    private PersistentStorage storage;
-    private static final Gson gson = new Gson();
+    private BancoBpiAuthContext authContext;
+    private BancoBpiEntityManager entityManager;
 
     public BancoBpiAuthenticator(
             final TinkHttpClient httpClient,
             final SupplementalInformationFormer supplementalInformationFormer,
-            PersistentStorage persistentStorage) {
+            BancoBpiEntityManager entityManager) {
         this.httpClient = httpClient;
         this.supplementalInformationFormer = supplementalInformationFormer;
-        this.storage = persistentStorage;
-        loadUserState();
+        this.entityManager = entityManager;
+        this.authContext = entityManager.getAuthContext();
         initManualAuthenticationSteps();
         initAutoAuthenticationSteps();
     }
@@ -77,18 +73,9 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public SteppableAuthenticationResponse processAuthentication(
-            SteppableAuthenticationRequest request)
-            throws AuthenticationException, AuthorizationException {
-        SteppableAuthenticationResponse response = super.processAuthentication(request);
-        saveUserState();
-        return response;
-    }
-
-    @Override
     public Iterable<? extends AuthenticationStep> authenticationSteps()
             throws AuthenticationException, AuthorizationException {
-        if (userState.isDeviceActivationFinished()) {
+        if (authContext.isDeviceActivationFinished()) {
             manualAuthenticationFlag = false;
             return autoAuthenticationSteps;
         } else {
@@ -99,34 +86,35 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
 
     private void processOtp(final String otpCode) throws AuthenticationException {
         try {
-            ConfirmPinByOtpRequest request = new ConfirmPinByOtpRequest(userState, otpCode);
-            handleResponse(request.call(httpClient), LoginError.NOT_SUPPORTED);
-            userState.finishDeviceActivation();
+            AuthenticationResponse response =
+                    callLoginRequest(new ConfirmPinByOtpRequest(entityManager, otpCode));
+            handleResponse(response, LoginError.NOT_SUPPORTED);
+            authContext.finishDeviceActivation();
         } catch (LoginException ex) {
-            userState.clearAuthData();
+            authContext.clearAuthData();
             throw ex;
         }
     }
 
     private void processLogin(final String username, final String password)
             throws AuthenticationException {
-        userState.setDeviceUUID(UUID.randomUUID().toString());
-        LoginRequest request = new LoginRequest(userState.getDeviceUUID(), username, password);
-        LoginResponse response = request.call(httpClient);
+        authContext.setDeviceUUID(UUID.randomUUID().toString());
+        LoginRequest request = new LoginRequest(authContext, username, password);
+        LoginResponse response = callLoginRequest(request);
         handleResponse(response, LoginError.CREDENTIALS_VERIFICATION_ERROR);
-        userState.setSessionCSRFToken(response.getCsrfToken());
+        authContext.setSessionCSRFToken(response.getCsrfToken());
     }
 
     private void processAccessPinSetup(final String accessPin) throws AuthenticationException {
-        userState.setAccessPin(accessPin);
-        SetupAccessPinRequest request = new SetupAccessPinRequest(userState);
-        SetupAccessPinResponse response = request.call(httpClient);
+        authContext.setAccessPin(accessPin);
+        SetupAccessPinRequest request = new SetupAccessPinRequest(authContext);
+        SetupAccessPinResponse response = callLoginRequest(request);
         handleResponse(response, LoginError.NOT_SUPPORTED);
-        userState.setMobileChallengeRequestedToken(response.getMobileChallengeRequestedToken());
+        authContext.setMobileChallengeRequestedToken(response.getMobileChallengeRequestedToken());
     }
 
     private void processModuleVersionGetting() throws LoginException {
-        userState.setModuleVersion(new ModuleVersionRequest(userState).call(httpClient));
+        authContext.setModuleVersion(callLoginRequest(new ModuleVersionRequest(authContext)));
     }
 
     private void handleResponse(final AuthenticationResponse response, final LoginError loginError)
@@ -137,13 +125,13 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     public void processPinAuthentication() throws AuthenticationException {
-        PinAuthenticationRequest request = new PinAuthenticationRequest(userState);
-        LoginResponse response = request.call(httpClient);
-        userState.setSessionCSRFToken(response.getCsrfToken());
+        PinAuthenticationRequest request = new PinAuthenticationRequest(entityManager);
+        PinAuthenticationResponse response = callLoginRequest(request);
+        authContext.setSessionCSRFToken(response.getCsrfToken());
         try {
             handleResponse(response, LoginError.INCORRECT_CREDENTIALS);
         } catch (LoginException ex) {
-            userState.clearAuthData();
+            authContext.clearAuthData();
             throw ex;
         }
     }
@@ -153,16 +141,11 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
         return manualAuthenticationFlag;
     }
 
-    private void loadUserState() {
-        if (storage.containsKey(PERSISTENCE_STORAGE_KEY)) {
-            userState =
-                    gson.fromJson(storage.get(PERSISTENCE_STORAGE_KEY), BancoBpiUserState.class);
-        } else {
-            userState = new BancoBpiUserState();
+    private <T> T callLoginRequest(DefaultRequest<T> request) throws LoginException {
+        try {
+            return request.call(httpClient);
+        } catch (RequestException e) {
+            throw new LoginException(LoginError.NOT_SUPPORTED, e.getMessage());
         }
-    }
-
-    private void saveUserState() {
-        storage.put(PERSISTENCE_STORAGE_KEY, gson.toJson(userState));
     }
 }

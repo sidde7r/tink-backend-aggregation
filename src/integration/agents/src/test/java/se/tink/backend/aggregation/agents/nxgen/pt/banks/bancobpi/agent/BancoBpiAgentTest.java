@@ -4,6 +4,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -31,10 +32,8 @@ public class BancoBpiAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-bancobpi-password")
-                        /*.addCredentialField(
-                            Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                        .addCredentialField(
-                            Field.Key.PASSWORD, manager.get(Arg.PASSWORD))*/
+                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(false)
                         .loadCredentialsBefore(true)

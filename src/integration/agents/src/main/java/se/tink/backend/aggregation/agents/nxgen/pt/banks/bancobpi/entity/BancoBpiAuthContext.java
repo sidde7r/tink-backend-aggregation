@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity;
 
-public class BancoBpiUserState {
+public class BancoBpiAuthContext {
 
     private String accessPin;
     private String deviceUUID;

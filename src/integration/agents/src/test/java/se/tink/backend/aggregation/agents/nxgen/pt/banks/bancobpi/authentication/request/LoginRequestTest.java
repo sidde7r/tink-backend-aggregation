@@ -6,7 +6,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -30,9 +31,12 @@ public class LoginRequestTest {
 
     @Before
     public void init() {
+        BancoBpiAuthContext authContext = Mockito.mock(BancoBpiAuthContext.class);
+        Mockito.when(authContext.getModuleVersion()).thenReturn("gS+lXxFxC_wWYvNlPJM_Qw");
+        Mockito.when(authContext.getDeviceUUID()).thenReturn(DEVICE_UUID);
         httpClient = Mockito.mock(TinkHttpClient.class);
         requestBuilder = Mockito.mock(RequestBuilder.class);
-        objectUnderTest = new LoginRequest(DEVICE_UUID, USERNAME, PASSWORD);
+        objectUnderTest = new LoginRequest(authContext, USERNAME, PASSWORD);
     }
 
     @Test
@@ -47,7 +51,7 @@ public class LoginRequestTest {
     }
 
     @Test
-    public void executeShouldReturnCorrectResponse() throws LoginException {
+    public void executeShouldReturnCorrectResponse() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_CORRECT);
         Cookie cookie = Mockito.mock(Cookie.class);
@@ -64,7 +68,7 @@ public class LoginRequestTest {
     }
 
     @Test
-    public void executeShouldReturnFailedResponse() throws LoginException {
+    public void executeShouldReturnFailedResponse() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_INCORRECT);
         Cookie cookie = Mockito.mock(Cookie.class);
@@ -80,8 +84,8 @@ public class LoginRequestTest {
         Assert.assertEquals("CIPL_0001", result.getCode());
     }
 
-    @Test(expected = LoginException.class)
-    public void executeShouldThrowLoginException() throws LoginException {
+    @Test(expected = RequestException.class)
+    public void executeShouldThrowLoginException() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_UNEXPECTED);
         // when

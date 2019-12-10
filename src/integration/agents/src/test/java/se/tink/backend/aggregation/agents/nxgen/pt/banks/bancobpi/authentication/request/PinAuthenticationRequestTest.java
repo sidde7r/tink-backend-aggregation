@@ -6,8 +6,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiUserState;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.BancoBpiEntityManager;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiTransactionalAccountsInfo;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -27,22 +29,28 @@ public class PinAuthenticationRequestTest {
 
     private TinkHttpClient httpClient;
     private RequestBuilder requestBuilder;
-    private BancoBpiUserState userState;
+    private BancoBpiAuthContext authContext;
+    private BancoBpiTransactionalAccountsInfo transactionalAccountsInfo;
     private PinAuthenticationRequest objectUnderTest;
 
     @Before
     public void init() {
         httpClient = Mockito.mock(TinkHttpClient.class);
         requestBuilder = Mockito.mock(RequestBuilder.class);
+        transactionalAccountsInfo = Mockito.mock(BancoBpiTransactionalAccountsInfo.class);
         initUserState();
-        objectUnderTest = new PinAuthenticationRequest(userState);
+        BancoBpiEntityManager entityManager = Mockito.mock(BancoBpiEntityManager.class);
+        Mockito.when(entityManager.getAuthContext()).thenReturn(authContext);
+        Mockito.when(entityManager.getTransactionalAccounts())
+                .thenReturn(transactionalAccountsInfo);
+        objectUnderTest = new PinAuthenticationRequest(entityManager);
     }
 
     private void initUserState() {
-        userState = Mockito.mock(BancoBpiUserState.class);
-        Mockito.when(userState.getAccessPin()).thenReturn(PIN);
-        Mockito.when(userState.getDeviceUUID()).thenReturn(DEVICE_UUID);
-        Mockito.when(userState.getModuleVersion()).thenReturn(MODULE_VERSION);
+        authContext = Mockito.mock(BancoBpiAuthContext.class);
+        Mockito.when(authContext.getAccessPin()).thenReturn(PIN);
+        Mockito.when(authContext.getDeviceUUID()).thenReturn(DEVICE_UUID);
+        Mockito.when(authContext.getModuleVersion()).thenReturn(MODULE_VERSION);
     }
 
     @Test
@@ -57,7 +65,7 @@ public class PinAuthenticationRequestTest {
     }
 
     @Test
-    public void executeShouldReturnSuccessResponse() throws LoginException {
+    public void executeShouldReturnSuccessResponse() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_CORRECT);
         Cookie cookie = Mockito.mock(Cookie.class);
@@ -74,7 +82,7 @@ public class PinAuthenticationRequestTest {
     }
 
     @Test
-    public void executeShouldReturnFailedResponse() throws LoginException {
+    public void executeShouldReturnFailedResponse() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_INCORRECT);
         Cookie cookie = Mockito.mock(Cookie.class);
@@ -90,8 +98,8 @@ public class PinAuthenticationRequestTest {
         Assert.assertEquals("Z/QLQRJ71kPfSpIPm+wQD5HlenI=", result.getCsrfToken());
     }
 
-    @Test(expected = LoginException.class)
-    public void executeShouldThrowLoginException() throws LoginException {
+    @Test(expected = RequestException.class)
+    public void executeShouldThrowLoginException() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_UNEXPECTED);
         // when

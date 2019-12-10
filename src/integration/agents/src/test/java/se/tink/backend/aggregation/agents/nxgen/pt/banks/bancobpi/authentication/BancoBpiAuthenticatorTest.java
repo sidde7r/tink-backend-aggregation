@@ -6,22 +6,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.ModuleVersionAuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.BancoBpiEntityManager;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.OtpStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.PinCodeGeneratorAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BancoBpiAuthenticatorTest {
@@ -35,23 +30,28 @@ public class BancoBpiAuthenticatorTest {
 
     private TinkHttpClient httpClient;
     private SupplementalInformationFormer supplementalInformationFormer;
-    private PersistentStorage storage;
+    private BancoBpiEntityManager entityManager;
+    private BancoBpiAuthContext userState;
+    private BancoBpiAuthenticator objectUnderTest;
 
     @Before
     public void init() {
         httpClient = Mockito.mock(TinkHttpClient.class);
         supplementalInformationFormer = Mockito.mock(SupplementalInformationFormer.class);
-        storage = new PersistentStorage();
+        entityManager = Mockito.mock(BancoBpiEntityManager.class);
+        userState = Mockito.mock(BancoBpiAuthContext.class);
+        Mockito.when(entityManager.getAuthContext()).thenReturn(userState);
+        objectUnderTest =
+                new BancoBpiAuthenticator(httpClient, supplementalInformationFormer, entityManager);
     }
 
     @Test
     public void shouldInitWithManualAuthenticationStepChain()
             throws AuthenticationException, AuthorizationException {
         // given
-        storage.put(USER_STATE_KEY, STATE_TO_ACTIVATE);
+        Mockito.when(userState.isDeviceActivationFinished()).thenReturn(false);
         // when
-        BancoBpiAuthenticator objectUnderTest =
-                new BancoBpiAuthenticator(httpClient, supplementalInformationFormer, storage);
+
         List<? extends AuthenticationStep> steps =
                 ImmutableList.copyOf(objectUnderTest.authenticationSteps());
         // then
@@ -68,10 +68,8 @@ public class BancoBpiAuthenticatorTest {
     public void shouldInitWithAutoAuthenticationStepChain()
             throws AuthenticationException, AuthorizationException {
         // given
-        storage.put(USER_STATE_KEY, STATE_ACTIVATED);
+        Mockito.when(userState.isDeviceActivationFinished()).thenReturn(true);
         // when
-        BancoBpiAuthenticator objectUnderTest =
-                new BancoBpiAuthenticator(httpClient, supplementalInformationFormer, storage);
         List<? extends AuthenticationStep> steps =
                 ImmutableList.copyOf(objectUnderTest.authenticationSteps());
         // then
@@ -80,24 +78,5 @@ public class BancoBpiAuthenticatorTest {
                 objectUnderTest.isManualAuthentication(Mockito.mock(CredentialsRequest.class)));
         Assert.assertEquals(ModuleVersionAuthenticationStep.class, steps.get(0).getClass());
         Assert.assertEquals(AutomaticAuthenticationStep.class, steps.get(1).getClass());
-    }
-
-    @Test
-    public void processAuthenticationShouldSaveUserStateOnReturn()
-            throws AuthenticationException, AuthorizationException {
-        // given
-        Mockito.when(supplementalInformationFormer.getField(Key.OTP_INPUT))
-                .thenReturn(Mockito.mock(Field.class));
-        storage.put(USER_STATE_KEY, STATE_WAITING_FOR_OTP);
-        SteppableAuthenticationRequest request =
-                SteppableAuthenticationRequest.subsequentRequest(
-                        OtpStep.class.getName(),
-                        new AuthenticationRequest(Mockito.mock(Credentials.class)));
-        BancoBpiAuthenticator objectUnderTest =
-                new BancoBpiAuthenticator(httpClient, supplementalInformationFormer, storage);
-        // when
-        objectUnderTest.processAuthentication(request);
-        // then
-        Assert.assertEquals(STATE_WAITING_FOR_OTP, storage.get(USER_STATE_KEY));
     }
 }

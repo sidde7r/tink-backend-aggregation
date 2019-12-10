@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiUserState;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -21,20 +21,26 @@ public class SetupAccessPinRequestTest {
             "{\"data\": {},\"exception\": {\"name\": \"ServerException\",\"specificType\": \"OutSystems.RESTService.ErrorHandling.ExposeRestException\",\"message\": \"Invalid Login\"}}";
     private static final String PIN = "1234";
     private static final String DEVICE_UUID = "12345567890";
-    private BancoBpiUserState userState;
+    private static final String MODULE_VERSION = "gS+lXxFxC_wWYvNlPJM_Qw";
+    private BancoBpiAuthContext authContext;
     private RequestBuilder requestBuilder;
     private TinkHttpClient httpClient;
     private SetupAccessPinRequest objectUnderTest;
 
     @Before
     public void init() {
-        userState = Mockito.mock(BancoBpiUserState.class);
-        Mockito.when(userState.getAccessPin()).thenReturn(PIN);
-        Mockito.when(userState.getDeviceUUID()).thenReturn(DEVICE_UUID);
-        Mockito.when(userState.getSessionCSRFToken()).thenReturn("dlksfhewifhjwi");
+        initAuthContext();
         requestBuilder = Mockito.mock(RequestBuilder.class);
         httpClient = Mockito.mock(TinkHttpClient.class);
-        objectUnderTest = new SetupAccessPinRequest(userState);
+        objectUnderTest = new SetupAccessPinRequest(authContext);
+    }
+
+    private void initAuthContext() {
+        authContext = Mockito.mock(BancoBpiAuthContext.class);
+        Mockito.when(authContext.getAccessPin()).thenReturn(PIN);
+        Mockito.when(authContext.getDeviceUUID()).thenReturn(DEVICE_UUID);
+        Mockito.when(authContext.getSessionCSRFToken()).thenReturn("dlksfhewifhjwi");
+        Mockito.when(authContext.getModuleVersion()).thenReturn(MODULE_VERSION);
     }
 
     @Test
@@ -49,7 +55,7 @@ public class SetupAccessPinRequestTest {
     }
 
     @Test
-    public void executeShouldReturnCorrectResponse() throws LoginException {
+    public void executeShouldReturnCorrectResponse() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_CORRECT);
         // when
@@ -70,7 +76,7 @@ public class SetupAccessPinRequestTest {
     }
 
     @Test
-    public void executeShouldReturnFailedResponse() throws LoginException {
+    public void executeShouldReturnFailedResponse() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_INCORRECT);
         // when
@@ -80,8 +86,8 @@ public class SetupAccessPinRequestTest {
         Assert.assertEquals("CIPL_0052", result.getCode());
     }
 
-    @Test(expected = LoginException.class)
-    public void executeShouldThrowLoginException() throws LoginException {
+    @Test(expected = RequestException.class)
+    public void executeShouldThrowLoginException() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_UNEXPECTED);
         // when

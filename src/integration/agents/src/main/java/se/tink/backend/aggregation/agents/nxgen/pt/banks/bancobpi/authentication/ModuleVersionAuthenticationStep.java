@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 
