@@ -1,0 +1,10 @@
+java_library(
+    name = "creditagricole",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+    ],
+)
