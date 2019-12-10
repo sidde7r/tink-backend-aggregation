@@ -110,16 +110,16 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     private void registerDevice(String panNumber, String deviceToken)
             throws AuthenticationException, AuthorizationException {
 
-        sleepForMilliseconds(5869); // Observed from app
+        // sleepForMilliseconds(5869); // Observed from app
         apiClient.openSession();
         apiClient.startFlow();
 
         apiClient.bacProductList();
 
-        sleepForMilliseconds(45724); // Observed from app
+        // sleepForMilliseconds(45724); // Observed from app
         apiClient.sendIsDeviceRegistered(panNumber, BelfiusSecurityUtils.hash(deviceToken));
 
-        sleepForMilliseconds(2911); // Observed from app
+        // sleepForMilliseconds(2911); // Observed from app
         String challenge = apiClient.prepareAuthentication(panNumber);
 
         final String code =
@@ -138,11 +138,11 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         logger.info("Belfius - Generated model name: {}", deviceName);
 
-        sleepForMilliseconds(195); // Observed from app
+        // sleepForMilliseconds(195); // Observed from app
 
         apiClient.consultClientSettings();
 
-        sleepForMilliseconds(135); // Observed from app
+        // sleepForMilliseconds(135); // Observed from app
 
         challenge = apiClient.prepareDeviceRegistration(deviceToken, deviceBrand, deviceName);
 
