@@ -4,9 +4,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.investment.rpc.InvestmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
@@ -17,7 +21,9 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfol
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 
-public class BankinterInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
+public class BankinterInvestmentFetcher
+        implements AccountFetcher<InvestmentAccount>,
+                TransactionKeyPaginator<InvestmentAccount, String> {
     private final BankinterApiClient apiClient;
 
     public BankinterInvestmentFetcher(BankinterApiClient apiClient) {
@@ -84,6 +90,18 @@ public class BankinterInvestmentFetcher implements AccountFetcher<InvestmentAcco
                                         AccountIdentifier.create(
                                                 Type.BBAN, response.getFundAccount()))
                                 .build())
+                .putInTemporaryStorage(StorageKeys.RESPONSE_BODY, response.getBody())
                 .build();
+    }
+
+    @Override
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            InvestmentAccount account, String key) {
+        final InvestmentResponse response =
+                new InvestmentResponse(
+                        account.getFromTemporaryStorage(StorageKeys.RESPONSE_BODY, String.class)
+                                .get());
+
+        return new TransactionKeyPaginatorResponseImpl<String>(response.toTinkTransactions(), null);
     }
 }

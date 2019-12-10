@@ -42,11 +42,16 @@ public final class BankinterAgent extends NextGenerationAgent
         apiClient = new BankinterApiClient(client, persistentStorage);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        final BankinterInvestmentFetcher investmentFetcher =
+                new BankinterInvestmentFetcher(apiClient);
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController,
                         updateController,
-                        new BankinterInvestmentFetcher(apiClient));
+                        investmentFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(investmentFetcher)));
     }
 
     @Override

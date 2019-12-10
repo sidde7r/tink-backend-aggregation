@@ -76,5 +76,6 @@ public final class BankinterConstants {
 
     public static class StorageKeys {
         public static final String FIRST_PAGINATION_KEY = "firstPaginationKey";
+        public static final String RESPONSE_BODY = "responseBody";
     }
 }

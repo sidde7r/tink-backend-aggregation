@@ -1,15 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.investment.rpc;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class InvestmentResponse extends HtmlResponse {
     final Map<String, String> dataValues;
+    static final DateTimeFormatter DATE_FORMAT =
+            DateTimeFormatter.ofPattern("dd MMM yy", new Locale("es", "ES"));
 
     public InvestmentResponse(String body) {
         super(body);
@@ -95,5 +105,47 @@ public class InvestmentResponse extends HtmlResponse {
             return BigDecimal.ZERO;
         }
         return parseAmount(node.getTextContent().replaceAll("\\s+", "")).getExactValue();
+    }
+
+    private Transaction toTinkTransaction(Node node) {
+        final String description =
+                evaluateXPath(
+                                node,
+                                "div[contains(@class,'tableFirst')]/div[contains(@class,'heightRowDetails')]/p",
+                                Node.class)
+                        .getTextContent()
+                        .trim();
+        final String date =
+                evaluateXPath(
+                                node,
+                                "div[contains(@class,'tableFirst')]/div[contains(@class,'heightRowDetails')]/span[contains(@class,'subDate')]",
+                                Node.class)
+                        .getTextContent();
+        final Node amountNode =
+                evaluateXPath(
+                        node,
+                        "div[contains(@class,'tableSecond')]/div[contains(@class,'heightRowDetails')]/p",
+                        Node.class);
+        final ExactCurrencyAmount amount =
+                parseAmount(amountNode.getTextContent().replaceAll("\\s+", ""));
+
+        return new Transaction.Builder()
+                .setAmount(amount)
+                .setDescription(description)
+                .setDate(LocalDate.parse(date, DATE_FORMAT))
+                .setType(TransactionTypes.TRANSFER)
+                .build();
+    }
+
+    public List<Transaction> toTinkTransactions() {
+        final NodeList nodes =
+                evaluateXPath(
+                        "//div[@id='inverForm:tablaOperaciones']/div[contains(@class,'rowSummary')]",
+                        NodeList.class);
+        final ArrayList<Transaction> transactions = new ArrayList<>();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            transactions.add(toTinkTransaction(nodes.item(i)));
+        }
+        return transactions;
     }
 }
