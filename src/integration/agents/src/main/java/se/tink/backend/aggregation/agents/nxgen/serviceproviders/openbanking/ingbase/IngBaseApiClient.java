@@ -299,7 +299,7 @@ public class IngBaseApiClient {
     }
 
     private void setClientIdToSession(final String clientId) {
-        persistentStorage.put(StorageKeys.CLIENT_ID, clientId);
+        persistentStorage.put(StorageKeys.CLIENT_ID, clientId, false);
     }
 
     private OAuth2Token getTokenFromSession() {
