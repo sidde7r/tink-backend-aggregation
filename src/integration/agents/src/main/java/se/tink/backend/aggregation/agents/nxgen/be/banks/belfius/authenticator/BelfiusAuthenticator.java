@@ -203,9 +203,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
     private void loginAuto(String panNumber, String password, String deviceToken)
             throws AuthenticationException, AuthorizationException {
-        final String machineIdentifier = sessionStorage.getMachineIdentifier();
-
-        apiClient.openSessionWithMachineIdentifier(machineIdentifier);
+        apiClient.openSession();
 
         apiClient.startFlow();
 
