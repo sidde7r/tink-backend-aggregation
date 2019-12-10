@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.filter.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -47,6 +48,7 @@ public class NordeaBaseApiClient implements TokenInterface {
         this.persistentStorage = persistentStorage;
 
         this.client.addFilter(new BankSideFailureFilter());
+        this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
     }
 
     public NordeaBaseConfiguration getConfiguration() {
