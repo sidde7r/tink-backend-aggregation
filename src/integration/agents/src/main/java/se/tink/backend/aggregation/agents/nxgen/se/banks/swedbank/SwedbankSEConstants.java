@@ -37,4 +37,8 @@ public class SwedbankSEConstants {
     public static class StorageKey {
         public static final String HAS_EXTENDED_BANKID = "extendedBankId";
     }
+
+    public static class Endpoint {
+        public static final String TRANSACTIONS_BASE = "/v5/engagement/transactions";
+    }
 }
