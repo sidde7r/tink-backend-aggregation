@@ -142,6 +142,15 @@ agentsServiceConfiguration:
         certificateId: Tink
         clientId: PSDSE-FINA-44059
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bancacarige:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        environment: production
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '06175'
+        aspspProductCode: 'ALLPRODUCTCODE'
+        eidasQwac: Tink
     bancobpi-pt:
       tink:
         aspspCode: BBPI
@@ -172,6 +181,15 @@ agentsServiceConfiguration:
         clientSigningCertificate: ''
         clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bancoposta:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        environment: production
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '07601'
+        aspspProductCode: 'BANCOPOSTA'
+        eidasQwac: Tink
     bankinter:
       tink:
         aspspCode: BNKI
@@ -249,6 +267,15 @@ agentsServiceConfiguration:
         clientSigningCertificate: ''
         clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bnl:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        environment: production
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '01005'
+        aspspProductCode: 'contocorrente'
+        eidasQwac: Tink
     bnpparibas:
       tink:
         bankId: bnpparibas.07.fr
@@ -275,14 +302,13 @@ agentsServiceConfiguration:
         clientSecret: fa6fb3ba-15c0-4754-8d0d-c3e7617297cf
     bper:
       tink:
-        aspspCode: 05387
-        aspspProductCode: SMART
-        clientId: 97427d2b-b4c0-45b8-80b3-16b2db6c2a30
-        clientSecret: ffc65646-de7f-4d79-8054-59a35a415831
-        eidasQwac: Tink
-        keystorePassword: '123456'
-        keystorePath: data/test/cryptography/cbiglobe/cbiglobe.p12
+        clientId: ''
+        clientSecret: ''
+        environment: production
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '05387'
+        aspspProductCode: 'SMART'
+        eidasQwac: Tink
     bpg:
       tink:
         aspspCode: BPG
@@ -295,14 +321,13 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     bpm:
       tink:
-        aspspCode: '05034'
-        aspspProductCode: IBP01
-        clientId: 97427d2b-b4c0-45b8-80b3-16b2db6c2a30
-        clientSecret: ffc65646-de7f-4d79-8054-59a35a415831
-        eidasQwac: Tink
-        keystorePassword: '123456'
-        keystorePath: data/test/cryptography/cbiglobe/cbiglobe.p12
+        clientId: ''
+        clientSecret: ''
+        environment: production
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '05034'
+        aspspProductCode: 'IBP01'
+        eidasQwac: Tink
     bpost:
       tink:
         baseUrl: https://api.psd2.bpostbank.be
@@ -311,12 +336,13 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     bpsondrio:
       tink:
-        aspspCode: 05696
-        aspspProductCode: BIR
         clientId: ''
         clientSecret: ''
-        eidasQwac: Tink
+        environment: production
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '05696'
+        aspspProductCode: 'BIR'
+        eidasQwac: Tink
     buddybank-it:
       tink:
         baseUrl: https://api.buddybank.it
@@ -419,12 +445,13 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     credem:
       tink:
-        aspspCode: '03032'
-        aspspProductCode: PR
         clientId: ''
         clientSecret: ''
-        eidasQwac: Tink
+        environment: production
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '03032'
+        aspspProductCode: 'PR'
+        eidasQwac: Tink
     creditagricole:
       tink:
         redirectUrl: https://localhost:7357/api/v1/thirdparty/callback
@@ -529,6 +556,15 @@ agentsServiceConfiguration:
     excludedDebugClusters:
       excludedClusters:
       - local-development
+    fideuram:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        environment: production
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '03296'
+        aspspProductCode: 'ALLPRODUCTS'
+        eidasQwac: Tink
     fidor:
       tink:
         baseUrl: https://xs2a.sandbox.fidorsolutions.cloud
@@ -544,6 +580,15 @@ agentsServiceConfiguration:
         certificatePath: data/test/cryptography/fiducia/qwac.pem
         keyId: 33963f4f00778ff751d36e9eef8458dbf8a2e4d9
         keyPath: data/test/cryptography/fiducia/test.key
+    findomestic:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        environment: production
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '03115'
+        aspspProductCode: 'MSSPSU'
+        eidasQwac: Tink
     finecobank:
       tink:
         certificateId: Tink
@@ -601,12 +646,22 @@ agentsServiceConfiguration:
         redirectUrl: https://localhost:7357/api/v1/thirdparty/callback
     isp:
       tink:
-        aspspCode: 03069
-        aspspProductCode: ALLPRODUCTS
         clientId: ''
         clientSecret: ''
-        eidasQwac: Tink
+        environment: production
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '03069'
+        aspspProductCode: 'ALLPRODUCTS'
+        eidasQwac: Tink
+    ispprivatebanking:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        environment: production
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '03239'
+        aspspProductCode: 'ALLPRODUCTS'
+        eidasQwac: Tink
     jyske:
       tink:
         apiKey: Al5KynAkYTN4oOySVkS8pnhONurdenid
@@ -684,12 +739,22 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     mps:
       tink:
-        aspspCode: '01030'
-        aspspProductCode: retail
         clientId: ''
         clientSecret: ''
-        eidasQwac: Tink
+        environment: production
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '01030'
+        aspspProductCode: 'retail'
+        eidasQwac: Tink
+    nexi:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        environment: production
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '32875'
+        aspspProductCode: 'cartenexi'
+        eidasQwac: Tink
     nordea:
       tink:
         clientId: dummyId
@@ -991,12 +1056,13 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     ubi:
       tink:
-        aspspCode: '03111'
-        aspspProductCode: ContoCorrenteGenerico
         clientId: ''
         clientSecret: ''
-        eidasQwac: Tink
+        environment: production
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '03111'
+        aspspProductCode: 'ContoCorrenteGenerico'
+        eidasQwac: Tink
     unicre-pt:
       tink:
         aspspCode: UNICR
@@ -1044,6 +1110,15 @@ agentsServiceConfiguration:
         clientId: F71sVTDkeSnYwoKuiNARTGRGItJ42XhB
         clientSecret: X0JsLD5hXlvPuX9l
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    widiba:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        environment: production
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        aspspCode: '03442'
+        aspspProductCode: 'widiba'
+        eidasQwac: Tink
   signatureKeyPair:
     privateKeyPath: data/test/cryptography/private_rsa_key.pem
     publicKeyPath: data/test/cryptography/public_rsa_key.pub
