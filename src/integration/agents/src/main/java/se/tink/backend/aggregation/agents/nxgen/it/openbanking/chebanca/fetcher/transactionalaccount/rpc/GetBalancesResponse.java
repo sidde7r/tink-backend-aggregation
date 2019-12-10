@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.transaction.EmbeddedEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.BalancesDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.EmbededEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.ResultEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class GetBalancesResponse {
     @JsonProperty("_embeded")
-    private EmbeddedEntity embedded;
+    private EmbededEntity embedded;
 
     @JsonProperty("_links")
     private LinksEntity links;
