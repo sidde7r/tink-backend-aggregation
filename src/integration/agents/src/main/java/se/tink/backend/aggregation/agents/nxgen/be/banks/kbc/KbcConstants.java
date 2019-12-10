@@ -36,6 +36,10 @@ public class KbcConstants {
         ACCOUNTS(createUrlWithHost("/MOB/A031/accounts/dashboard/1")),
         TRANSACTIONS_HISTORY(createUrlWithHost("/MOB/A031/transactions/history/1")),
         CARDS(createUrlWithHost("/MOB/A031/cards/1")),
+        INVESTMENT_PLAN_OVERVIEW(createUrlWithHost("/MOB/A031/investment-plan/bank/overview/1")),
+        INVESTMENT_PLAN_DETAIL(createUrlWithHost("/MOB/A031/investment-plan/bank/detail/1")),
+        ASSETS(createUrlWithHost("/MOB/A031/saveInvest/assets/1")),
+        ASSETS_DETAIL(createUrlWithHost("/MOB/A031/saveInvest/assets/detail/1")),
         FUTURE_TRANSACTIONS(createUrlWithHost("/MOB/A031/future-transactions/1")),
         ACCOUNTS_FOR_TRANSFER_TO_OWN(createUrlWithHost("/MOB/A031/accounts/for-transfer-to/own/1")),
         ACCOUNTS_FOR_TRANSFER_TO_OTHER(
@@ -195,7 +199,6 @@ public class KbcConstants {
 
     public static class LogTags {
         public static final LogTag ACCOUNTS = LogTag.from("#be_kbc_accounts");
-        public static final LogTag CREDIT_CARDS = LogTag.from("#be_kbc_credit_cards");
         public static final LogTag ERROR_CODE_MESSAGE = LogTag.from("#be_kbc_error_message");
         public static final LogTag DEBUG = LogTag.from("#be_kbc_debug");
     }
@@ -349,6 +352,11 @@ public class KbcConstants {
 
     public static class ErrorHeaders {
         public static final String LOGON_ERROR = "logon-error-code";
+    }
+
+    public static class Investments {
+        public static final String LEFT_TO_INVEST = "left to invest";
+        public static final String INVESTMENTS = "investments";
     }
 
     static class HttpClient {
