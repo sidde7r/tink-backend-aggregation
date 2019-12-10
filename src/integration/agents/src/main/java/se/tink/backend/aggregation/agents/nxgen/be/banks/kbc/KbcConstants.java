@@ -350,4 +350,9 @@ public class KbcConstants {
     public static class ErrorHeaders {
         public static final String LOGON_ERROR = "logon-error-code";
     }
+
+    static class HttpClient {
+        public static final int MAX_RETRIES = 4;
+        public static final int RETRY_SLEEP_MILLISECONDS = 1000;
+    }
 }

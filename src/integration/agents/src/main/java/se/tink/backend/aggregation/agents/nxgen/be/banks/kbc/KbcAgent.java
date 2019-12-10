@@ -35,6 +35,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class KbcAgent
@@ -59,6 +61,13 @@ public final class KbcAgent
         super(request, context, signatureKeyPair, true);
         configureHttpClient(client);
         kbcLanguage = getKbcLanguage(request.getUser().getLocale());
+
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        KbcConstants.HttpClient.MAX_RETRIES,
+                        KbcConstants.HttpClient.RETRY_SLEEP_MILLISECONDS,
+                        HttpResponseException.class));
+
         this.apiClient = new KbcApiClient(client);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
