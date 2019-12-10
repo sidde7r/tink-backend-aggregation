@@ -33,6 +33,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/ing",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/kbc",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/creditcards/amex",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/belfius",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/commerzbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fidor",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fints",
