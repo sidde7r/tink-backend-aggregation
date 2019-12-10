@@ -17,6 +17,10 @@ public class ErrorResponse {
     @JsonProperty("Descripcion")
     private String description;
 
+    public int getNumber() {
+        return number;
+    }
+
     public void logError() {
 
         if (number != IberCajaConstants.ErrorCodes.INCORRECT_USERNAME_PASSWORD) {

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.rpc.LoginResponse;
@@ -11,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.rpc.CreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.rpc.TransactionalDetailsResponse;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -109,11 +109,13 @@ public class IberCajaApiClient {
     }
 
     public boolean isAlive() {
-
         try {
-            createRequestInSession(IberCajaConstants.Urls.KEEP_ALIVE).get(HttpResponse.class);
+            final ErrorResponse response =
+                    createRequestInSession(Urls.KEEP_ALIVE).get(ErrorResponse.class);
+            if (response.getNumber() != 0) {
+                return false;
+            }
         } catch (HttpResponseException e) {
-
             return false;
         }
 
