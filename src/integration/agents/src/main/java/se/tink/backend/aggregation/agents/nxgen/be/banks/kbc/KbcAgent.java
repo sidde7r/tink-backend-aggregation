@@ -68,12 +68,6 @@ public final class KbcAgent
         configureHttpClient(client);
         kbcLanguage = getKbcLanguage(request.getUser().getLocale());
 
-        client.addFilter(
-                new TimeoutRetryFilter(
-                        KbcConstants.HttpClient.MAX_RETRIES,
-                        KbcConstants.HttpClient.RETRY_SLEEP_MILLISECONDS,
-                        HttpResponseException.class));
-
         this.apiClient = new KbcApiClient(client);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
@@ -97,6 +91,11 @@ public final class KbcAgent
     protected void configureHttpClient(TinkHttpClient client) {
         httpFilter = new KbcHttpFilter();
         client.addFilter(httpFilter);
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        KbcConstants.HttpClient.MAX_RETRIES,
+                        KbcConstants.HttpClient.RETRY_SLEEP_MILLISECONDS,
+                        HttpResponseException.class));
         client.setUserAgent(KbcConstants.Headers.USER_AGENT_VALUE);
     }
 
