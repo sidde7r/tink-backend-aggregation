@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator;
 
+import com.github.javafaker.Faker;
 import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -20,6 +23,8 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenticator {
+
+    private static Logger logger = LoggerFactory.getLogger(BelfiusAuthenticator.class);
 
     private final BelfiusApiClient apiClient;
     private final Credentials credentials;
@@ -42,6 +47,11 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.aggregator = aggregator;
+    }
+
+    private static String generateModel() {
+        final Faker faker = new Faker();
+        return faker.name().firstName();
     }
 
     @Override
@@ -99,28 +109,40 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
     private void registerDevice(String panNumber, String deviceToken)
             throws AuthenticationException, AuthorizationException {
+
+        // sleepForMilliseconds(5869); // Observed from app
         apiClient.openSession();
         apiClient.startFlow();
 
         apiClient.bacProductList();
 
+        // sleepForMilliseconds(45724); // Observed from app
         apiClient.sendIsDeviceRegistered(panNumber, BelfiusSecurityUtils.hash(deviceToken));
 
+        // sleepForMilliseconds(2911); // Observed from app
         String challenge = apiClient.prepareAuthentication(panNumber);
-
-        apiClient.keepAlive();
 
         final String code =
                 supplementalInformationHelper
                         .waitForLoginChallengeResponse(challenge)
                         .replace(" ", "");
 
+        apiClient.keepAlive();
+
+        sleepForMilliseconds(500);
+
         apiClient.authenticateWithCode(code);
 
         final String deviceBrand = aggregator;
-        final String deviceName = BelfiusConstants.MODEL;
+        final String deviceName = generateModel();
+
+        logger.info("Belfius - Generated model name: {}", deviceName);
+
+        // sleepForMilliseconds(195); // Observed from app
 
         apiClient.consultClientSettings();
+
+        // sleepForMilliseconds(135); // Observed from app
 
         challenge = apiClient.prepareDeviceRegistration(deviceToken, deviceBrand, deviceName);
 
@@ -174,7 +196,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
                 BelfiusSecurityUtils.createSignaturePw(
                         challenge2, deviceToken, panNumber, contractNumber, password);
 
-        sleepForSeconds(5); // Entering password
+        sleepForMilliseconds(5000); // Entering password
 
         apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
     }
@@ -199,7 +221,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         sessionStorage.setChallenge(challenge2);
 
-        sleepForSeconds(5); // Entering password
+        sleepForMilliseconds(5000); // Entering password
 
         String signaturePw =
                 BelfiusSecurityUtils.createSignaturePw(
@@ -208,9 +230,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
     }
 
-    private static void sleepForSeconds(final int seconds) {
+    private static void sleepForMilliseconds(final int milliseconds) {
         try {
-            Thread.sleep(1000 * seconds);
+            Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }

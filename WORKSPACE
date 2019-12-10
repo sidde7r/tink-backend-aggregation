@@ -2444,6 +2444,7 @@ maven_install(
         "https://repo.maven.apache.org/maven2/",
     ],
 )
+
 load("@java_uuid_generator//:defs.bzl", java_uuid_generator_pin = "pinned_maven_install")
 
 java_uuid_generator_pin()
@@ -2482,6 +2483,7 @@ maven_install(
 )
 
 load("@io_token//:defs.bzl", io_token_pin = "pinned_maven_install")
+
 io_token_pin()
 
 # Use via //third_party/jetty_server9
@@ -2586,14 +2588,35 @@ maven_install(
     artifacts = [
         "com.salesforce.servicelibs:grpc-testing-contrib:0.8.1",
     ],
+    excluded_artifacts = [
+        "io.netty:*",
+    ],
     fetch_sources = True,
     maven_install_json = "//third_party:com_salesforce_servicelibs_grpc_testing_contrib_install.json",
     repositories = [
         "https://repo.maven.apache.org/maven2/",
     ],
-    excluded_artifacts = [
-        "io.netty:*",
-    ]
 )
+
 load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
+
 com_salesforce_servicelibs_grpc_testing_contrib_pin()
+
+maven_install(
+    name = "com_github_javafaker_javafaker",
+    artifacts = [
+        "com.github.javafaker:javafaker:0.11",
+    ],
+    excluded_artifacts = [
+        "com.github.bmoliveira:*",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:com_github_javafaker_javafaker_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+)
+
+load("@com_github_javafaker_javafaker//:defs.bzl", com_github_javafaker_javafaker_pin = "pinned_maven_install")
+
+com_github_javafaker_javafaker_pin()
