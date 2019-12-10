@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.icabanken.IcaBankenSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.ics.ICSSanitizingMigration;
+import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.jyskebank.JyskebankSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordea.NordeaSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.skandiabanken.SkandiaBankenSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.brokers.avanza.AvanzaStripClearingMigration;
@@ -72,6 +73,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
                     .put("nl-ics-oauth2", new ICSSanitizingMigration())
                     .put("nordea-bankid", new NordeaSanitizingMigration())
                     .put("norwegian-bankid", new NorwegianSanitizingMigration())
+                    .put("dk-jyskebank-codecard", new JyskebankSanitizingMigration())
                     .build();
 
     public MigrateCredentialsAndAccountsWorkerCommand(
