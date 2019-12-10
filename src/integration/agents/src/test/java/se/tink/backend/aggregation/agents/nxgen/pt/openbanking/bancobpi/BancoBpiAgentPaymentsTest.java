@@ -35,8 +35,8 @@ public class BancoBpiAgentPaymentsTest {
                 new AgentIntegrationTest.Builder("pt", "pt-bancobpi-oauth2")
                         .setFinancialInstitutionId("bancobpi-pt")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
 

@@ -35,8 +35,8 @@ public class BancoCttAgentPaymentTest {
                 new AgentIntegrationTest.Builder("pt", "pt-bancoctt-oauth2")
                         .setFinancialInstitutionId("bancoctt")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
 

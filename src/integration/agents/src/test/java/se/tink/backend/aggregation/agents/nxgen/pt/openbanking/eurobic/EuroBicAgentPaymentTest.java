@@ -25,9 +25,9 @@ public class EuroBicAgentPaymentTest {
     private final String currency = "EUR";
     private final LocalDate executionDate = LocalDate.now().plusDays(1);
     private final int AMOUNT = 1;
-    private final String IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY = "";
-    private final String IBAN_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
-    private final String NAME_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
+    private static final String IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY = "";
+    private static final String IBAN_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
+    private static final String NAME_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
 
     @Before
     public void setup() {
@@ -35,8 +35,8 @@ public class EuroBicAgentPaymentTest {
                 new AgentIntegrationTest.Builder("pt", "pt-eurobic-oauth2")
                         .setFinancialInstitutionId("eurobic-pt")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
 

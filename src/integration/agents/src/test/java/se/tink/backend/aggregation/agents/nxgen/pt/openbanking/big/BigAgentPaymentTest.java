@@ -35,8 +35,8 @@ public class BigAgentPaymentTest {
                 new AgentIntegrationTest.Builder("pt", "pt-big-oauth2")
                         .setFinancialInstitutionId("big")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
 

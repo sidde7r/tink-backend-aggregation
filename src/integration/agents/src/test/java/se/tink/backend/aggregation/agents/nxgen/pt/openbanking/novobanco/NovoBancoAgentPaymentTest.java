@@ -25,9 +25,9 @@ public class NovoBancoAgentPaymentTest {
     private final String currency = "EUR";
     private final LocalDate executionDate = LocalDate.now().plusDays(1);
     private final int AMOUNT = 1;
-    private final String IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY = "";
-    private final String IBAN_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
-    private final String NAME_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
+    private static final String IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY = "";
+    private static final String IBAN_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
+    private static final String NAME_OF_THE_PERSON_WHO_GETS_THE_MONEY = "";
 
     @Before
     public void setup() {
@@ -35,8 +35,8 @@ public class NovoBancoAgentPaymentTest {
                 new AgentIntegrationTest.Builder("pt", "pt-novobanco-oauth2")
                         .setFinancialInstitutionId("novobanco")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
 
@@ -50,13 +50,11 @@ public class NovoBancoAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
 
-            // gets money:
             Creditor creditor = mock(Creditor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
             doReturn(IBAN_OF_THE_PERSON_WHO_GETS_THE_MONEY).when(creditor).getAccountNumber();
             doReturn(NAME_OF_THE_PERSON_WHO_GETS_THE_MONEY).when(creditor).getName();
 
-            // gives money:
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
             doReturn(IBAN_OF_THE_PERSON_WHO_GIVES_THE_MONEY).when(debtor).getAccountNumber();

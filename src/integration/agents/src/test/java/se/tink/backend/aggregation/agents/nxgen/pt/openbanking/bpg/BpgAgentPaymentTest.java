@@ -35,8 +35,8 @@ public class BpgAgentPaymentTest {
                 new AgentIntegrationTest.Builder("pt", "pt-bpg-oauth2")
                         .setFinancialInstitutionId("bpg")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
 

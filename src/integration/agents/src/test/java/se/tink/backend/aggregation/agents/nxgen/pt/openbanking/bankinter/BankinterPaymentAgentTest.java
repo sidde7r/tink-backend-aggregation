@@ -35,8 +35,8 @@ public class BankinterPaymentAgentTest {
                 new AgentIntegrationTest.Builder("pt", "pt-bankinter-oauth2")
                         .setFinancialInstitutionId("bankinter")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
 

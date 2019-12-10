@@ -38,8 +38,8 @@ public class ActivoBankAgentPaymentTest {
                 new AgentIntegrationTest.Builder("pt", "pt-activobank-oauth2")
                         .setFinancialInstitutionId("activobank")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
 
