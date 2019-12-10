@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
