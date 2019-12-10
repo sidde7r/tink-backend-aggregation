@@ -5,8 +5,10 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.UnicreditApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class UnicreditAuthenticator implements Authenticator {
+public class UnicreditAuthenticator implements Authenticator, AuthenticationControllerType {
 
     private final UnicreditApiClient apiClient;
 
@@ -19,5 +21,11 @@ public class UnicreditAuthenticator implements Authenticator {
             throws AuthenticationException, AuthorizationException {
 
         apiClient.authenticate();
+    }
+
+    @Override
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        // since authenticate always opens the third party app
+        return true;
     }
 }
