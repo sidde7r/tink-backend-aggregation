@@ -26,7 +26,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class HtmlResponse {
@@ -58,13 +57,13 @@ public class HtmlResponse {
         }
     }
 
-    public HtmlResponse(HttpResponse response) {
+    public HtmlResponse(String body) {
         this.amountFormat =
                 new DecimalFormat(
                         "#,##0.##", DecimalFormatSymbols.getInstance(Locale.forLanguageTag("es")));
         this.amountFormat.setParseBigDecimal(true);
 
-        this.body = response.getBody(String.class);
+        this.body = body;
         this.document = parseHTML(this.body);
     }
 
@@ -130,5 +129,9 @@ public class HtmlResponse {
         final String expr =
                 String.format("//form[@id='%s']//input[@name='javax.faces.ViewState']", formId);
         return evaluateXPath(expr, Node.class).getAttributes().getNamedItem("value").getNodeValue();
+    }
+
+    public String getBody() {
+        return body;
     }
 }

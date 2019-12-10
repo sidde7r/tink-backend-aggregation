@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -33,8 +32,8 @@ public class AccountResponse extends HtmlResponse {
             Pattern.compile(
                     "source:'movimientos-cabecera:(j_id[_0-9a-f]+)'\\s*,process:'@all',update:'movimientos-cabecera:head-datos-detalle");
 
-    public AccountResponse(HttpResponse response) {
-        super(response);
+    public AccountResponse(String body) {
+        super(body);
     }
 
     protected String getAccountName() {

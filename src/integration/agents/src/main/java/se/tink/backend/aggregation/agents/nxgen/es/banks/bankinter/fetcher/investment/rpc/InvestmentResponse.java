@@ -7,13 +7,12 @@ import java.util.Objects;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
 public class InvestmentResponse extends HtmlResponse {
     final Map<String, String> dataValues;
 
-    public InvestmentResponse(HttpResponse httpResponse) {
-        super(httpResponse);
+    public InvestmentResponse(String body) {
+        super(body);
         this.dataValues = parseDataValues();
     }
 

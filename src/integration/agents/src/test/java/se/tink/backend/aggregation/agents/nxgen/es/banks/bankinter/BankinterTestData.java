@@ -26,8 +26,8 @@ public class BankinterTestData {
             if (responseClass == HttpResponse.class) {
                 return (C) mockedResponse;
             } else {
-                Constructor constructor = responseClass.getConstructor(HttpResponse.class);
-                return (C) constructor.newInstance(mockedResponse);
+                Constructor constructor = responseClass.getConstructor(String.class);
+                return (C) constructor.newInstance(bodyString);
             }
         } catch (Exception e) {
             throw new IllegalStateException("Could not load test response: " + path, e);

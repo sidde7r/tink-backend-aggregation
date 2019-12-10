@@ -69,7 +69,7 @@ public final class BankinterApiClient {
 
     public GlobalPositionResponse fetchGlobalPosition() {
         return new GlobalPositionResponse(
-                client.request(Urls.GLOBAL_POSITION).get(HttpResponse.class));
+                client.request(Urls.GLOBAL_POSITION).get(HttpResponse.class).getBody(String.class));
     }
 
     public AccountResponse fetchAccount(int accountIndex) {
@@ -77,11 +77,13 @@ public final class BankinterApiClient {
                 client.request(Urls.ACCOUNT)
                         .queryParam(QueryKeys.ACCOUNT_INDEX, Integer.toString(accountIndex))
                         .queryParam(QueryKeys.INDEX, QueryValues.INDEX_N)
-                        .get(HttpResponse.class));
+                        .get(HttpResponse.class)
+                        .getBody(String.class));
     }
 
     public InvestmentResponse fetchInvestmentAccount(String url) {
-        return new InvestmentResponse(client.request(Urls.BASE + url).get(HttpResponse.class));
+        return new InvestmentResponse(
+                client.request(Urls.BASE + url).get(HttpResponse.class).getBody(String.class));
     }
 
     public <T extends JsfUpdateResponse> T fetchJsfUpdate(
@@ -105,8 +107,8 @@ public final class BankinterApiClient {
                                 MediaType.APPLICATION_FORM_URLENCODED)
                         .post(HttpResponse.class);
         try {
-            final Constructor<T> constructor = responseClass.getConstructor(HttpResponse.class);
-            return constructor.newInstance(response);
+            final Constructor<T> constructor = responseClass.getConstructor(String.class);
+            return constructor.newInstance(response.getBody(String.class));
         } catch (InstantiationException
                 | IllegalAccessException
                 | InvocationTargetException

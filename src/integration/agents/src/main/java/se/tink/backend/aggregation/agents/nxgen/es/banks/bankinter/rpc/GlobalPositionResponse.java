@@ -6,14 +6,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
 public class GlobalPositionResponse extends HtmlResponse {
     private static final Pattern INVESTMENT_LINK_PATTERN =
             Pattern.compile("'(/fondos/secure/fondo_inversion\\.xhtml?[^']+)'");
 
-    public GlobalPositionResponse(HttpResponse response) {
-        super(response);
+    public GlobalPositionResponse(String body) {
+        super(body);
     }
 
     private NodeList getAccountNodes() {
