@@ -11,7 +11,9 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
@@ -35,6 +37,7 @@ public class LoginAgentWorkerCommandTest {
     private Credentials credentials;
     private MetricAction metricAction;
     private MetricAction metricActionLoginType;
+    private MetricAction metricActionIsLoggedIn;
 
     @Before
     public void init() {
@@ -49,6 +52,7 @@ public class LoginAgentWorkerCommandTest {
 
         metricAction = Mockito.mock(MetricAction.class);
         metricActionLoginType = Mockito.mock(MetricAction.class);
+        metricActionIsLoggedIn = Mockito.mock(MetricAction.class);
 
         objectUnderTest = new LoginAgentWorkerCommand(context, state, metrics);
     }
@@ -130,6 +134,45 @@ public class LoginAgentWorkerCommandTest {
     }
 
     @Test
+    public void executeForLoginBankServiceExceptionShouldAbortLogin() throws Exception {
+        // given
+        NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
+        Mockito.when(agent.login())
+                .thenThrow(
+                        new BankServiceException(
+                                BankServiceError.BANK_SIDE_FAILURE, new LocalizableKey("key")));
+
+        prepareStateForLogin(agent);
+        // when
+        AgentWorkerCommandResult result = objectUnderTest.execute();
+        // then
+        Mockito.verify(metricAction, Mockito.times(1)).unavailable();
+        Mockito.verify(metricActionLoginType, Mockito.times(1)).unavailable();
+        Mockito.verify(context, Mockito.times(1))
+                .updateStatus(Mockito.eq(CredentialsStatus.TEMPORARY_ERROR));
+        Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
+    }
+
+    @Test
+    public void executeForIsLoggedInBankServiceExceptionShouldAbortLogin() throws Exception {
+        // given
+        NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
+        Mockito.when(agent.isLoggedIn())
+                .thenThrow(
+                        new BankServiceException(
+                                BankServiceError.BANK_SIDE_FAILURE, new LocalizableKey("key")));
+
+        prepareStateForLogin(agent);
+        // when
+        AgentWorkerCommandResult result = objectUnderTest.execute();
+        // then
+        Mockito.verify(metricActionIsLoggedIn, Mockito.times(1)).unavailable();
+        Mockito.verify(context, Mockito.times(1))
+                .updateStatus(Mockito.eq(CredentialsStatus.TEMPORARY_ERROR));
+        Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
+    }
+
+    @Test
     public void executeForAuthenticationExceptionShouldAbortLogin() throws Exception {
         // given
         NextGenerationAgent agent = Mockito.mock(NextGenerationAgent.class);
@@ -193,7 +236,7 @@ public class LoginAgentWorkerCommandTest {
                                 Mockito.eq(
                                         new MetricId.MetricLabels()
                                                 .add("action", MetricName.IS_LOGGED_IN))))
-                .thenReturn(Mockito.mock(MetricAction.class));
+                .thenReturn(metricActionIsLoggedIn);
         Mockito.when(
                         metrics.buildAction(
                                 Mockito.eq(

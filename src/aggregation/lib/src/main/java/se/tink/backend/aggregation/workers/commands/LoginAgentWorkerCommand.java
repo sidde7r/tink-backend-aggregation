@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.commands;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
 import se.tink.backend.agents.rpc.Credentials;
@@ -11,6 +12,7 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -99,13 +101,19 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                                         "Invalid credentials status. Update the credentials before retrying the operation."));
                 result = AgentWorkerCommandResult.ABORT;
 
-            } else if (isLoggedIn()) {
-                result = AgentWorkerCommandResult.CONTINUE;
-            } else if (!acquireLock()) {
-                // If this is a BankID credentials, we need to take a lock around the login method.
-                result = AgentWorkerCommandResult.ABORT;
             } else {
-                result = login();
+                Optional<Boolean> loggedIn = isLoggedIn();
+                if (!loggedIn.isPresent()) {
+                    result = AgentWorkerCommandResult.ABORT;
+                } else if (loggedIn.get()) {
+                    result = AgentWorkerCommandResult.CONTINUE;
+                } else if (!acquireLock()) {
+                    // If this is a BankID credentials, we need to take a lock around the login
+                    // method.
+                    result = AgentWorkerCommandResult.ABORT;
+                } else {
+                    result = login();
+                }
             }
         } finally {
             metrics.stop();
@@ -126,9 +134,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         return new MetricId.MetricLabels().add("action", action);
     }
 
-    private boolean isLoggedIn() throws Exception {
+    private Optional<Boolean> isLoggedIn() throws Exception {
         if (!(agent instanceof PersistentLogin)) {
-            return false;
+            return Optional.of(Boolean.FALSE);
         }
 
         MetricAction action = metrics.buildAction(metricForAction(MetricName.IS_LOGGED_IN));
@@ -139,7 +147,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         PersistentLogin persistentAgent = (PersistentLogin) agent;
         long timeLoadingSession = 0;
         long timeAgentIsLoggedIn = 0;
-        boolean result = false;
+        Boolean result = Boolean.FALSE;
         try {
             long beforeLoad = System.nanoTime();
             persistentAgent.loadLoginSession();
@@ -151,7 +159,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 action.completed();
                 log.info("We're already logged in. Moving along.");
 
-                result = true;
+                result = Boolean.TRUE;
             } else {
                 timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
@@ -159,6 +167,12 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
                 persistentAgent.clearLoginSession();
             }
+        } catch (BankServiceException e) {
+            log.info(String.format("Bank service exception: %s", e.getMessage()), e);
+            action.unavailable();
+            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+            // couldn't determine isLoggedIn or not, return ABORT
+            return Optional.empty();
         } catch (Exception e) {
             action.failed();
             throw e;
@@ -175,7 +189,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                             "Time loading session: %d s, time agent isLoggedIn: %d s",
                             timeLoadingSessionSeconds, timeAgentIsLoggedInSeconds));
         }
-        return result;
+        return Optional.ofNullable(result);
     }
 
     private boolean acquireLock() throws Exception {
