@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.detail.LoanAccountMapper;
@@ -17,7 +16,8 @@ public class NovoBancoLoanAccountFetcher implements AccountFetcher<LoanAccount> 
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        List<NovoBancoApiClient.LoanAggregatedData> loansResponseData = apiClient.getLoanAccounts();
+        Collection<NovoBancoApiClient.LoanAggregatedData> loansResponseData =
+                apiClient.getLoanAccounts();
         return loansResponseData.stream()
                 .map(LoanAccountMapper::mapToTinkAccount)
                 .collect(Collectors.toList());
