@@ -195,6 +195,8 @@ clients:
     aggregatorIdentifier: "Lunarway"
   lunarway-test:
     aggregatorIdentifier: "Lunarway"
+  marginalen-bank-production:
+    aggregatorIdentifier: "Marginalen Bank"
   middelfart-production:
     aggregatorIdentifier: "Middelfart Sparekasse"
   middelfart-testing:
