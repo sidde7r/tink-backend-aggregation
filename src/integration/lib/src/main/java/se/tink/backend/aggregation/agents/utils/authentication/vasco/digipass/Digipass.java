@@ -166,6 +166,7 @@ public class Digipass {
                 this.otpKey,
                 otpCounter,
                 epochTime,
+                true,
                 challenges);
     }
 

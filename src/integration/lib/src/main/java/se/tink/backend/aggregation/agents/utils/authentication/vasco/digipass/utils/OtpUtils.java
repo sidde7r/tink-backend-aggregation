@@ -17,6 +17,7 @@ public class OtpUtils {
             byte[] otpKey,
             int otpCounter,
             long epochTime,
+            boolean xorOtpOutput,
             List<byte[]> challenges) {
 
         byte[] diversifier = FingerPrintUtils.getFingerPrintDiversifier(fingerprint, staticVector);
@@ -24,7 +25,7 @@ public class OtpUtils {
         byte[] mashup = mashupChallenge(otpKey, diversifier, otpCounter, epochTime, challenges);
         byte[] encryptedMashup = CryptoUtils.aes8(otpKey, mashup);
 
-        byte[] rawOtpResponse = convertOtpResponse(encryptedMashup);
+        byte[] rawOtpResponse = convertOtpResponse(xorOtpOutput, encryptedMashup);
         return convertOtpToAscii(rawOtpResponse);
     }
 
@@ -68,9 +69,11 @@ public class OtpUtils {
         return DataUtils.xor(data, epochBytes);
     }
 
-    private static byte[] convertOtpResponse(byte[] data) {
-        // Todo: read configuration from CryptoApplication:1 to decide if we should do this
-        data = DataUtils.xorFirstBlock(data);
+    static byte[] convertOtpResponse(boolean xorFirstBlock, byte[] data) {
+        if (xorFirstBlock) {
+            // Todo: read configuration from CryptoApplication:1 to decide if we should do this
+            data = DataUtils.xorFirstBlock(data);
+        }
 
         // Divide the lower and upper half (32 bit values) of the calculated response value by
         // diminishing powers of 10.
