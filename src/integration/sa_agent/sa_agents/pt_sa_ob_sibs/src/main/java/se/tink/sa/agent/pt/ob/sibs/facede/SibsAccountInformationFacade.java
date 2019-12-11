@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.tink.sa.agent.pt.ob.sibs.SibsMappingContextKeys;
+import se.tink.sa.agent.pt.ob.sibs.mapper.SibsApspCodeMappinngs;
 import se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc.AccountsResponseMapper;
 import se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc.BalancesResponseMapper;
 import se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc.TransactionsResponseMapper;
@@ -103,7 +104,8 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
         sibsRequest.setAccountId(request.getAccountId());
         sibsRequest.setIsPsuInvolved(request.getRequestCommon().getManual());
         sibsRequest.setBankCode(
-                request.getRequestCommon().getExternalParametersOrDefault(BANK_CODE, null));
+                SibsApspCodeMappinngs.findCodeByProviderName(
+                        request.getRequestCommon().getProviderName()));
         sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getConsentId());
         return sibsRequest;
     }
@@ -130,7 +132,8 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
     private CommonSibsRequest getCommonRequest(FetchAccountsRequest request) {
         CommonSibsRequest sibsRequest = new CommonSibsRequest();
         sibsRequest.setBankCode(
-                request.getRequestCommon().getExternalParametersOrDefault(BANK_CODE, null));
+                SibsApspCodeMappinngs.findCodeByProviderName(
+                        request.getRequestCommon().getProviderName()));
         sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getConsentId());
         return sibsRequest;
     }
@@ -142,7 +145,8 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
         sibsRequest.setIsPsuInvolved(request.getRequestCommon().getManual());
         sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getConsentId());
         sibsRequest.setBankCode(
-                request.getRequestCommon().getExternalParametersOrDefault(BANK_CODE, null));
+                SibsApspCodeMappinngs.findCodeByProviderName(
+                        request.getRequestCommon().getProviderName()));
         return sibsRequest;
     }
 }

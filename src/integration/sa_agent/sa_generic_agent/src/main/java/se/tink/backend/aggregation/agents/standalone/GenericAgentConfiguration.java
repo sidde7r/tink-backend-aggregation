@@ -18,8 +18,6 @@ public class GenericAgentConfiguration implements ClientConfiguration {
     @JsonProperty("grpc_port")
     private String grpcPort;
 
-    @JsonProperty private String bankCode;
-
     public String getGrpcHost() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(grpcHost),
@@ -34,14 +32,5 @@ public class GenericAgentConfiguration implements ClientConfiguration {
                 String.format(
                         GenericAgentConstants.ErrorMessages.INVALID_CONFIGURATION, "grpc port"));
         return Integer.parseInt(grpcPort);
-    }
-
-    public String getBankCode() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(bankCode),
-                String.format(
-                        GenericAgentConstants.ErrorMessages.INVALID_CONFIGURATION, "bankCode"));
-
-        return bankCode;
     }
 }

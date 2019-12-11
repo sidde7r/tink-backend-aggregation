@@ -50,7 +50,9 @@ public class MappersController {
             CredentialsRequest request) {
         commonMappersFactory =
                 CommonMappersFactory.newInstance(
-                        commonExternalParametersProvider, request.isManual());
+                        commonExternalParametersProvider,
+                        request.isManual(),
+                        request.getProvider().getName());
 
         authenticationRequestMapperFactory =
                 AuthenticationRequestMapperFactory.newInstance(commonMappersFactory);

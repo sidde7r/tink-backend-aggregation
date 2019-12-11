@@ -6,13 +6,13 @@ import se.tink.backend.aggregation.agents.standalone.mapper.providers.CommonExte
 
 public class MockCommonExternalParametersProvider implements CommonExternalParametersProvider {
 
-    private static final String BANK_CODE = "BANK_CODE";
+    //    private static final String BANK_CODE = "BANK_CODE";
 
     @Override
     public Map<String, String> buildExternalParametersMap() {
 
         Map<String, String> map = new HashMap<>();
-        map.put(BANK_CODE, "BNKI");
+        //        map.put(BANK_CODE, "BCPPT");
 
         return map;
     }
