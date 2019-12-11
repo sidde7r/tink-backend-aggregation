@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class NemidPasswordAuthenticationControllerV2
+public class NemIdAuthenticationController
         implements TypedAuthenticator, AuthenticationControllerType {
 
     private static final String NEMID_INSTALL_ID = "NEMID_INSTALL_ID";
@@ -24,7 +24,7 @@ public class NemidPasswordAuthenticationControllerV2
     private final Storage storage;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
-    public NemidPasswordAuthenticationControllerV2(
+    public NemIdAuthenticationController(
             NemIdIFrameController iFrameController,
             NemIdAuthenticatorV2 authenticator,
             Storage storage,
@@ -65,7 +65,7 @@ public class NemidPasswordAuthenticationControllerV2
         final String token = iFrameController.doLoginWith(username, password, nemIdParameters);
         final String installId = authenticator.exchangeNemIdToken(token);
 
-        authenticator.authenticateUsingInstallId(username, password, installId);
+        authenticator.authenticateUsingInstallId(username, pinCode, installId);
 
         storage.put(NEMID_INSTALL_ID, installId);
     }
