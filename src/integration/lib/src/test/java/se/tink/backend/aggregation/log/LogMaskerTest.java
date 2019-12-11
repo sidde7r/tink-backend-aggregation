@@ -123,18 +123,25 @@ public class LogMaskerTest {
                         .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
                         .build();
 
-        ImmutableSet<String> whitelistedValues = ImmutableSet.of("0000");
-        logMasker.addAgentWhitelistedValues(whitelistedValues);
-
         Subject<Collection<String>> testSecretValuesSubject = BehaviorSubject.create();
         testSecretValuesSubject.onNext(Sets.newHashSet("1111", "0000"));
         logMasker.addSensitiveValuesSetObservable(testSecretValuesSubject);
 
-        String maskedString1 = logMasker.mask("abcd1111abcd2020abcd1010abcd0000");
+        String unmasked = "abcd1111abcd2020abcd1010abcd0000";
+        String maskedString1 = logMasker.mask(unmasked);
+        Assert.assertEquals(
+                "String not masked as expected.",
+                "abcd***MASKED***abcd***MASKED***abcd***MASKED***abcd***MASKED***",
+                maskedString1);
+
+        ImmutableSet<String> whitelistedValues = ImmutableSet.of("0000");
+        logMasker.addAgentWhitelistedValues(whitelistedValues);
+
+        String maskedString2 = logMasker.mask(unmasked);
         Assert.assertEquals(
                 "String not masked as expected.",
                 "abcd***MASKED***abcd***MASKED***abcd***MASKED***abcd0000",
-                maskedString1);
+                maskedString2);
     }
 
     private Credentials mockCredentials() {

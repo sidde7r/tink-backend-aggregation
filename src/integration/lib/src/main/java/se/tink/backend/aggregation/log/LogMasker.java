@@ -48,6 +48,7 @@ public class LogMasker {
 
     public void addAgentWhitelistedValues(ImmutableSet<String> agentWhitelistedValues) {
         this.whitelistedValues.addAll(agentWhitelistedValues);
+        masker.removeValuesToMask(whitelistedValues);
     }
 
     /**
