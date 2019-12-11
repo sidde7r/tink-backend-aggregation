@@ -56,4 +56,9 @@ public class DebitCardEntity extends AbstractContractDetailsEntity {
     public StatusEntity getStatus() {
         return status;
     }
+
+    @Override
+    protected String getAccountNumber() {
+        return null;
+    }
 }

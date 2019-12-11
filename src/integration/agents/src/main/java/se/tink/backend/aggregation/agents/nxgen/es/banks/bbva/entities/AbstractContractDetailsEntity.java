@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.vavr.collection.List;
 import java.util.Date;
+import java.util.Optional;
 
-public class AbstractContractDetailsEntity {
+public abstract class AbstractContractDetailsEntity {
 
     private String country;
     private FormatsEntity formats;
@@ -78,5 +80,27 @@ public class AbstractContractDetailsEntity {
 
     public UserCustomizationEntity getUserCustomization() {
         return userCustomization;
+    }
+
+    protected abstract String getAccountNumber();
+
+    @JsonIgnore
+    private String getDefaultAccountName() {
+        String accountNumber = getAccountNumber();
+        Optional<String> last4AccountNumber =
+                Optional.ofNullable(accountNumber)
+                        .filter(pan -> pan.length() >= 4)
+                        .map(pan -> pan.substring(pan.length() - 4));
+
+        return last4AccountNumber
+                .map(last4 -> product.getName() + " *" + last4)
+                .orElse(accountNumber);
+    }
+
+    @JsonIgnore
+    protected String getAccountName() {
+        return Optional.ofNullable(userCustomization)
+                .map(UserCustomizationEntity::getAlias)
+                .orElse(getDefaultAccountName());
     }
 }

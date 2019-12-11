@@ -36,14 +36,20 @@ public class ConsumerLoanEntity extends BaseLoanEntity {
     public Optional<LoanAccount> toTinkConsumerLoan(LoanDetailsResponse loanDetails) {
 
         Optional<LoanModule> loanModule =
-                loanDetails.getLoanModuleWithTypeAndLoanNumber(getTinkLoanType(), digit);
+                loanDetails.getLoanModuleWithTypeAndLoanNumber(
+                        getTinkLoanType(), getAccountNumber());
 
         return loanModule.map(
                 module ->
                         LoanAccount.nxBuilder()
                                 .withLoanDetails(module)
-                                .withId(getIdModuleWithUniqueIdentifier(digit))
+                                .withId(getIdModule())
                                 .setApiIdentifier(digit)
                                 .build());
+    }
+
+    @Override
+    protected String getAccountNumber() {
+        return digit;
     }
 }

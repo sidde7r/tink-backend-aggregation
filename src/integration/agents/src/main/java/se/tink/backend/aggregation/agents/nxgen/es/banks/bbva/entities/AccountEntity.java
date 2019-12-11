@@ -47,7 +47,7 @@ public class AccountEntity extends AbstractContractDetailsEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkTransactionalAccount() {
-        String iban = getIban();
+        String iban = getAccountNumber();
         String accountProductId = getAccountProductId();
 
         if (Strings.isNullOrEmpty(iban)) {
@@ -65,7 +65,7 @@ public class AccountEntity extends AbstractContractDetailsEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(iban.toUpperCase(Locale.ENGLISH))
                                 .withAccountNumber(formattedIban)
-                                .withAccountName(getProduct().getDescription())
+                                .withAccountName(getAccountName())
                                 .addIdentifier(ibanIdentifier)
                                 .build())
                 .setApiIdentifier(getId())
@@ -86,7 +86,8 @@ public class AccountEntity extends AbstractContractDetailsEntity {
     }
 
     @JsonIgnore
-    private String getIban() {
+    @Override
+    protected String getAccountNumber() {
         return Optional.ofNullable(getFormats())
                 .map(FormatsEntity::getIban)
                 .map(iban -> iban.replaceAll("\\s+", ""))

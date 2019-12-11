@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -33,13 +35,27 @@ public class PensionPlanEntity extends AbstractContractDetailsEntity {
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getId())
-                                .withAccountNumber(getId())
-                                .withAccountName(getProduct().getDescription())
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(getAccountName())
                                 .addIdentifier(AccountIdentifier.create(Type.TINK, getId()))
                                 .setProductName(getProduct().getName())
                                 .build())
                 .setApiIdentifier(getId())
                 .build();
+    }
+
+    @JsonIgnore
+    @Override
+    protected String getAccountName() {
+        return Optional.ofNullable(getUserCustomization())
+                .map(UserCustomizationEntity::getAlias)
+                .orElse(getProduct().getDescription());
+    }
+
+    @JsonIgnore
+    @Override
+    protected String getAccountNumber() {
+        return Optional.ofNullable(getFormats()).map(FormatsEntity::getBocf).orElse(getId());
     }
 
     private ExactCurrencyAmount getCashBalance() {

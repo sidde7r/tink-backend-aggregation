@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
 import java.util.Collections;
@@ -26,12 +27,18 @@ public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
     public InvestmentAccount toInvestmentAccount() {
 
         return InvestmentAccount.builder(getId())
-                .setName(getProduct().getDescription())
-                .setAccountNumber(getFormats().getBocf())
+                .setName(getAccountName())
+                .setAccountNumber(getAccountNumber())
                 .setHolderName(null)
                 .setCashBalance(ExactCurrencyAmount.of(0d, getCurrency().getId()))
                 .setPortfolios(getPortfolio())
                 .build();
+    }
+
+    @JsonIgnore
+    @Override
+    protected String getAccountNumber() {
+        return getFormats().getBocf();
     }
 
     private java.util.List<Portfolio> getPortfolio() {

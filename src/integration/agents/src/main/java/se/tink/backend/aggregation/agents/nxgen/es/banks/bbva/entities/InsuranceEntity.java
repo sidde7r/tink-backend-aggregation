@@ -45,4 +45,9 @@ public class InsuranceEntity extends AbstractContractDetailsEntity {
     public StatusEntity getStatus() {
         return status;
     }
+
+    @Override
+    protected String getAccountNumber() {
+        return null;
+    }
 }

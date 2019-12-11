@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
-public class BaseLoanEntity extends AbstractContractDetailsEntity {
+public abstract class BaseLoanEntity extends AbstractContractDetailsEntity {
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date nextPaymentDate;
@@ -21,11 +21,11 @@ public class BaseLoanEntity extends AbstractContractDetailsEntity {
     private AmountEntity finalFee;
 
     @JsonIgnore
-    protected IdModule getIdModuleWithUniqueIdentifier(String uniqueIdentifier) {
+    protected IdModule getIdModule() {
         return IdModule.builder()
-                .withUniqueIdentifier(uniqueIdentifier)
-                .withAccountNumber(uniqueIdentifier)
-                .withAccountName(getProduct().getDescription())
+                .withUniqueIdentifier(getAccountNumber())
+                .withAccountNumber(getAccountNumber())
+                .withAccountName(getAccountName())
                 .addIdentifier(
                         AccountIdentifier.create(
                                 AccountIdentifier.Type.BBAN, getFormats().getBocf()))

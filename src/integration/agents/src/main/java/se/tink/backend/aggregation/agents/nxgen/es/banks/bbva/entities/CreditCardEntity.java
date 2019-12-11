@@ -74,31 +74,27 @@ public class CreditCardEntity extends AbstractContractDetailsEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkCreditCard() {
-        String uniqueId = createUniqueIdFromName();
-        return CreditCardAccount.builder(uniqueId)
+        return CreditCardAccount.builder(getPanLast4Digits())
                 // Using as number the ID created in previous step as that's how it's shown in the
                 // app
-                .setAccountNumber(getMaskedPan().orElse(uniqueId))
+                .setAccountNumber(getAccountNumber())
                 .putInTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID, getId())
                 .setExactBalance(availableBalance.toTinkAmount())
-                .setName(getProduct().getDescription())
+                .setName(getAccountName())
                 .build();
     }
 
-    private String createUniqueIdFromName() {
-        return getPanLast4Digits()
-                .orElseThrow(() -> new NoSuchElementException("can't determine the card number"));
+    @JsonIgnore
+    @Override
+    protected String getAccountNumber() {
+        return "************" + getPanLast4Digits();
     }
 
     @JsonIgnore
-    private Optional<String> getMaskedPan() {
-        return getPanLast4Digits().map(pan -> "************" + pan);
-    }
-
-    @JsonIgnore
-    private Optional<String> getPanLast4Digits() {
+    private String getPanLast4Digits() {
         return Optional.ofNullable(pan)
                 .filter(pan -> pan.length() >= 4)
-                .map(pan -> pan.substring(pan.length() - 4));
+                .map(pan -> pan.substring(pan.length() - 4))
+                .orElseThrow(() -> new NoSuchElementException("can't determine the card number"));
     }
 }

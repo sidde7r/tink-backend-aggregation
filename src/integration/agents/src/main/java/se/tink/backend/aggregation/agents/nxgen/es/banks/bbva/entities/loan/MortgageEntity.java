@@ -18,17 +18,20 @@ public class MortgageEntity extends BaseLoanEntity {
     @JsonIgnore
     public Optional<LoanAccount> toTinkMortgage(LoanDetailsResponse loanDetails) {
 
-        String loanAccountNumber = getFormats().getBocf();
-
         Optional<LoanModule> loanModule =
-                loanDetails.getLoanModuleWithTypeAndLoanNumber(Type.MORTGAGE, loanAccountNumber);
+                loanDetails.getLoanModuleWithTypeAndLoanNumber(Type.MORTGAGE, getAccountNumber());
 
         return loanModule.map(
                 module ->
                         LoanAccount.nxBuilder()
                                 .withLoanDetails(module)
-                                .withId(getIdModuleWithUniqueIdentifier(loanAccountNumber))
+                                .withId(getIdModule())
                                 .setApiIdentifier(getId())
                                 .build());
+    }
+
+    @Override
+    protected String getAccountNumber() {
+        return getFormats().getBocf();
     }
 }
