@@ -84,6 +84,6 @@ public class NemidPasswordAuthenticationControllerV2
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
-        return request.isUpdate() || request.isCreate();
+        return true;
     }
 }
