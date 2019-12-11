@@ -79,7 +79,7 @@ public class NemidPasswordAuthenticationControllerV2
 
     @Override
     public CredentialsTypes getType() {
-        return CredentialsTypes.PASSWORD;
+        return CredentialsTypes.THIRD_PARTY_APP;
     }
 
     @Override
