@@ -310,9 +310,13 @@ public class IngBaseApiClient {
     }
 
     private String getClientIdFromSession() {
-        return persistentStorage
-                .get(StorageKeys.CLIENT_ID, String.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CLIENT_ID));
+        String clientId =
+                persistentStorage
+                        .get(StorageKeys.CLIENT_ID, String.class)
+                        .orElseThrow(
+                                () -> new IllegalStateException(ErrorMessages.MISSING_CLIENT_ID));
+        logger.debug("ING client id: " + clientId);
+        return clientId;
     }
 
     private String getAuthorization(
