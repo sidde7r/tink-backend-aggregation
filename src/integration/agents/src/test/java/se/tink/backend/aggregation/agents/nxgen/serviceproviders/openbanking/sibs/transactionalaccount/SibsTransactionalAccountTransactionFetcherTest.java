@@ -16,21 +16,27 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SibsTransactionalAccountTransactionFetcherTest {
 
-    private SibsUserState userState;
     private Consent consent;
     private SibsTransactionalAccountTransactionFetcher objectUnderTest;
     private CredentialsRequest credentialsRequest;
-    private SibsBaseApiClient sibsBaseApiClient;
     private se.tink.backend.agents.rpc.Account rpcAccount;
     private Account account;
+    private static final String ACCOUNT_ID = "dummyAccountId";
+    private static final LocalDate BIG_BANG_DATE =
+            SibsTransactionalAccountTransactionFetcher.BIG_BANG_DATE;
+    private static final LocalDate DAYS_BACK_90 =
+            LocalDate.now()
+                    .minusDays(
+                            SibsTransactionalAccountTransactionFetcher
+                                    .DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD);
 
     @Before
     public void init() {
-        userState = Mockito.mock(SibsUserState.class);
+        SibsUserState userState = Mockito.mock(SibsUserState.class);
         consent = Mockito.mock(Consent.class);
         Mockito.when(consent.isConsentOlderThan30Minutes()).thenReturn(false);
         Mockito.when(userState.getConsent()).thenReturn(consent);
-        sibsBaseApiClient = Mockito.mock(SibsBaseApiClient.class);
+        SibsBaseApiClient sibsBaseApiClient = Mockito.mock(SibsBaseApiClient.class);
         credentialsRequest = Mockito.mock(CredentialsRequest.class);
         objectUnderTest =
                 new SibsTransactionalAccountTransactionFetcher(
@@ -38,71 +44,62 @@ public class SibsTransactionalAccountTransactionFetcherTest {
         rpcAccount = Mockito.mock(se.tink.backend.agents.rpc.Account.class);
         account = Mockito.mock(Account.class);
         Mockito.when(credentialsRequest.getAccounts()).thenReturn(Lists.newArrayList(rpcAccount));
+        Mockito.when(rpcAccount.getBankId()).thenReturn(ACCOUNT_ID);
+        Mockito.when(account.isUniqueIdentifierEqual(ACCOUNT_ID)).thenReturn(true);
     }
 
     @Test
-    public void
-            getTransactionsFetchBeginDateShouldReturnTheBeginOfTheWordDateWhenCertainDateIsNull() {
-        // given
-        final String accountId = "accountId";
+    public void shouldReturnBigBangDateWhenCertainDateIsNull() {
         Mockito.when(rpcAccount.getCertainDate()).thenReturn(null);
-        Mockito.when(rpcAccount.getBankId()).thenReturn(accountId);
-        Mockito.when(account.isUniqueIdentifierEqual(accountId)).thenReturn(true);
-        // when
+
         LocalDate result = objectUnderTest.getTransactionsFetchBeginDate(account);
-        // then
-        Assert.assertEquals(1970, result.getYear());
-        Assert.assertEquals(1, result.getMonthValue());
-        Assert.assertEquals(1, result.getDayOfMonth());
+
+        Assert.assertEquals(BIG_BANG_DATE, result);
     }
 
     @Test
-    public void
-            getTransactionsFetchBeginDateShouldReturnTheBeginOfTheWordDateWhenThereIsNoRpcAccount() {
-        final String accountId = "accountId";
+    public void shouldReturnBigBangDateWhenThereIsNoRpcAccount() {
         Mockito.when(credentialsRequest.getAccounts()).thenReturn(Collections.emptyList());
-        Mockito.when(account.isUniqueIdentifierEqual(accountId)).thenReturn(true);
-        // when
+
         LocalDate result = objectUnderTest.getTransactionsFetchBeginDate(account);
-        // then
-        Assert.assertEquals(1970, result.getYear());
-        Assert.assertEquals(1, result.getMonthValue());
-        Assert.assertEquals(1, result.getDayOfMonth());
+
+        Assert.assertEquals(BIG_BANG_DATE, result);
     }
 
     @Test
-    public void getTransactionsFetchBeginDateShouldReturnCertainDate() {
-        // given
-        final String accountId = "accountId";
+    public void shouldReturnFromCertainDateWhenConsentIsOlderThan30Minutes() {
         LocalDate expectedDate = LocalDate.now().minusDays(88);
         Mockito.when(consent.isConsentOlderThan30Minutes()).thenReturn(true);
         Mockito.when(rpcAccount.getCertainDate())
                 .thenReturn(
                         Date.from(expectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        Mockito.when(rpcAccount.getBankId()).thenReturn(accountId);
-        Mockito.when(account.isUniqueIdentifierEqual(accountId)).thenReturn(true);
-        // when
+
         LocalDate result = objectUnderTest.getTransactionsFetchBeginDate(account);
-        // then
-        Assert.assertEquals(expectedDate.getYear(), result.getYear());
-        Assert.assertEquals(expectedDate.getMonthValue(), result.getMonthValue());
-        Assert.assertEquals(expectedDate.getDayOfMonth(), result.getDayOfMonth());
+
+        Assert.assertEquals(expectedDate, result);
+    }
+
+    @Test
+    public void shouldReturn89DaysBackDateWhenCertainDateIsNullAndConsentsAreOlderThan30Minutes() {
+        Mockito.when(consent.isConsentOlderThan30Minutes()).thenReturn(true);
+        Mockito.when(rpcAccount.getCertainDate()).thenReturn(null);
+
+        LocalDate result = objectUnderTest.getTransactionsFetchBeginDate(account);
+
+        Assert.assertEquals(DAYS_BACK_90, result);
     }
 
     @Test
     public void
-            getTransactionsFetchBeginDateShouldReturnNowMinus89DaysDateWhenTheConsentIsOlderThen90Days() {
-        final String accountId = "accountId";
+            shouldReturn89DaysBackDateWhenCertainDateIsOlderThan90DaysAndConsentsAreOlderThan30Minutes() {
+        Date moreThan90CertainDateDays =
+                Date.from(
+                        DAYS_BACK_90.minusDays(2).atStartOfDay(ZoneId.systemDefault()).toInstant());
         Mockito.when(consent.isConsentOlderThan30Minutes()).thenReturn(true);
-        Mockito.when(rpcAccount.getCertainDate()).thenReturn(null);
-        Mockito.when(rpcAccount.getBankId()).thenReturn(accountId);
-        Mockito.when(account.isUniqueIdentifierEqual(accountId)).thenReturn(true);
-        LocalDate expectedDate = LocalDate.now().minusDays(89);
-        // when
+        Mockito.when(rpcAccount.getCertainDate()).thenReturn(moreThan90CertainDateDays);
+
         LocalDate result = objectUnderTest.getTransactionsFetchBeginDate(account);
-        // then
-        Assert.assertEquals(expectedDate.getYear(), result.getYear());
-        Assert.assertEquals(expectedDate.getMonthValue(), result.getMonthValue());
-        Assert.assertEquals(expectedDate.getDayOfMonth(), result.getDayOfMonth());
+
+        Assert.assertEquals(DAYS_BACK_90, result);
     }
 }

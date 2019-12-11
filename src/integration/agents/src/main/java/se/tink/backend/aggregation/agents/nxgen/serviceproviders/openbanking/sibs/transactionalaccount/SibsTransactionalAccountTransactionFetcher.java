@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
@@ -15,11 +16,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class SibsTransactionalAccountTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
 
-    private static final int DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD = 89;
-    private static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
-    private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern(PAGINATION_DATE_FORMAT);
-    private static final LocalDate TRANSACTIONS_FROM_BEGINNING = LocalDate.of(1970, 1, 1);
+    static final int DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD = 89;
+    static final LocalDate BIG_BANG_DATE = LocalDate.of(1970, 1, 1);
 
     private final SibsBaseApiClient apiClient;
     private final CredentialsRequest credentialsRequest;
@@ -51,17 +49,28 @@ public class SibsTransactionalAccountTransactionFetcher
     }
 
     LocalDate getTransactionsFetchBeginDate(final Account account) {
-        Optional<LocalDate> accountCertainDate = getCertainDate(account);
-        LocalDate updateDate = accountCertainDate.orElse(TRANSACTIONS_FROM_BEGINNING);
-        if (isDateABigBang(updateDate) && userState.getConsent().isConsentOlderThan30Minutes()) {
+        LocalDate updateDate = getCertainDate(account).orElse(BIG_BANG_DATE);
+
+        if (isFetchingFromBeginningAllowed(updateDate)
+                || certainDateWasOlderThan90DaysBack(updateDate)) {
             updateDate =
                     LocalDate.now().minusDays(DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD);
         }
         return updateDate;
     }
 
+    private boolean isFetchingFromBeginningAllowed(LocalDate updateDate) {
+        return isDateABigBang(updateDate) && userState.getConsent().isConsentOlderThan30Minutes();
+    }
+
+    private boolean certainDateWasOlderThan90DaysBack(LocalDate updateDate) {
+        return !isDateABigBang(updateDate)
+                && DAYS.between(updateDate, LocalDate.now())
+                        > DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD;
+    }
+
     private boolean isDateABigBang(LocalDate date) {
-        return date.getYear() == TRANSACTIONS_FROM_BEGINNING.getYear();
+        return date.getYear() == BIG_BANG_DATE.getYear();
     }
 
     private Optional<LocalDate> getCertainDate(Account account) {
