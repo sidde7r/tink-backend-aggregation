@@ -15,16 +15,29 @@ public class SessionStorage extends Storage implements SensitiveValuesStorage {
 
     @Override
     public String put(String key, String value) {
-        Optional.ofNullable(value).ifPresent(v -> secretValuesSubject.onNext(ImmutableSet.of(v)));
+        return put(key, value, true);
+    }
+
+    public String put(String key, String value, boolean mask) {
+        if (mask) {
+            Optional.ofNullable(value)
+                    .ifPresent(v -> secretValuesSubject.onNext(ImmutableSet.of(v)));
+        }
         return super.put(key, value);
     }
 
     @Override
     public String put(String key, Object value) {
+        return put(key, value, true);
+    }
+
+    public String put(String key, Object value, boolean mask) {
         final String valueToStore = super.put(key, value);
-        Set<String> newSensitiveValues =
-                SensitiveValuesStorage.extractSensitiveValues(valueToStore);
-        secretValuesSubject.onNext(ImmutableSet.copyOf(newSensitiveValues));
+        if (mask) {
+            Set<String> newSensitiveValues =
+                    SensitiveValuesStorage.extractSensitiveValues(valueToStore);
+            secretValuesSubject.onNext(ImmutableSet.copyOf(newSensitiveValues));
+        }
         return valueToStore;
     }
 
