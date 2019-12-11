@@ -337,7 +337,6 @@ public class DanskeBankApiClient {
         String detailsUrl = DanskeBankUrl.eInvoiceDetails(transactionId);
 
         EInvoiceDetailsResponse response = get(detailsUrl, EInvoiceDetailsResponse.class);
-        handleGenericErrors(response);
         return response;
     }
 

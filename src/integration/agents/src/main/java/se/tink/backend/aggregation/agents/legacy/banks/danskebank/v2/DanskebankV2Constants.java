@@ -15,5 +15,6 @@ public class DanskebankV2Constants {
         public static final int TECHNICAL_ERROR = 3;
         public static final int AUTHORIZATION_NOT_POSSIBLE = 333;
         public static final int UNAUTHORIZED = 6;
+        public static final int INVALID_STATE = 9;
     }
 }

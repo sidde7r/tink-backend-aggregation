@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import se.tink.backend.aggregation.agents.banks.danskebank.v2.DanskebankV2Constants.ErrorCode;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers.GiroParser;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -107,5 +108,10 @@ public class EInvoiceDetailsResponse extends AbstractResponse {
         destination.setName(name);
 
         return destination;
+    }
+
+    @JsonIgnore
+    public boolean isInvalidEInvoice() {
+        return getStatus() != null && ErrorCode.INVALID_STATE == getStatus().getStatusCode();
     }
 }
