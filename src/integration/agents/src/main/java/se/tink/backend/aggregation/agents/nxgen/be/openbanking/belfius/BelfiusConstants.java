@@ -29,6 +29,10 @@ public final class BelfiusConstants {
                 ImmutableList.of(403, 404, 429);
     }
 
+    public static class ErrorCodes {
+        public static final String TRANSACTION_TOO_OLD = "20007";
+    }
+
     public static class Urls {
         public static final String FETCH_ACCOUNT_PATH = "/accounts/";
         public static final String FETCH_TRANSACTIONS_PATH = "/accounts/{logical_id}/transactions";
