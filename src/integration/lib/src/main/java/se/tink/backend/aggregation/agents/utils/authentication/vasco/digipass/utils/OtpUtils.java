@@ -65,11 +65,16 @@ public class OtpUtils {
 
         byte[] stage1 = CryptoUtils.aes8(key, ctr_diversifier);
 
-        // Todo: read configuration from CryptoApplication:1 to decide if we should do this
-        byte[] timeXoredStage1 = xorWithTime(stage1, epochTime);
-        byte[] stage2 = CryptoUtils.aes8(key, timeXoredStage1);
+        byte[] challenge0Xored;
+        if (epochTime != 0) {
+            // Todo: read configuration from CryptoApplication:1 to decide if we should do this
+            byte[] timeXoredStage1 = xorWithTime(stage1, epochTime);
 
-        byte[] challenge0Xored = DataUtils.xor(challenge0, stage2);
+            byte[] stage2 = CryptoUtils.aes8(key, timeXoredStage1);
+            challenge0Xored = DataUtils.xor(challenge0, stage2);
+        } else {
+            challenge0Xored = DataUtils.xor(challenge0, stage1);
+        }
 
         byte[] xorKey = CryptoUtils.getXorKey(key);
 
