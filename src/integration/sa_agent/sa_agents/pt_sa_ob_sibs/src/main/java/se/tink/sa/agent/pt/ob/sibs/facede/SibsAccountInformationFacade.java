@@ -104,7 +104,7 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
         sibsRequest.setIsPsuInvolved(request.getRequestCommon().getManual());
         sibsRequest.setBankCode(
                 request.getRequestCommon().getExternalParametersOrDefault(BANK_CODE, null));
-        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getSecurityToken());
+        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getConsentId());
         return sibsRequest;
     }
 
@@ -113,7 +113,7 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
         CommonAccountTransactionsSibsRequest sibsRequest =
                 new CommonAccountTransactionsSibsRequest();
         sibsRequest.setIsPsuInvolved(request.getRequestCommon().getManual());
-        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getSecurityToken());
+        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getConsentId());
         sibsRequest.setNextPageUri(nextLink);
         return sibsRequest;
     }
@@ -131,7 +131,7 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
         CommonSibsRequest sibsRequest = new CommonSibsRequest();
         sibsRequest.setBankCode(
                 request.getRequestCommon().getExternalParametersOrDefault(BANK_CODE, null));
-        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getSecurityToken());
+        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getConsentId());
         return sibsRequest;
     }
 
@@ -140,7 +140,7 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
         CommonAccountSibsRequestRequest sibsRequest = new CommonAccountSibsRequestRequest();
         sibsRequest.setAccountId(accountId);
         sibsRequest.setIsPsuInvolved(request.getRequestCommon().getManual());
-        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getSecurityToken());
+        sibsRequest.setConsentId(request.getRequestCommon().getSecurityInfo().getConsentId());
         sibsRequest.setBankCode(
                 request.getRequestCommon().getExternalParametersOrDefault(BANK_CODE, null));
         return sibsRequest;

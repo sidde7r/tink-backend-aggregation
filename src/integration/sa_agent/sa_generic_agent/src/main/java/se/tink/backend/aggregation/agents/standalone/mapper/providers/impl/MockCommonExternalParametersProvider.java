@@ -12,7 +12,7 @@ public class MockCommonExternalParametersProvider implements CommonExternalParam
     public Map<String, String> buildExternalParametersMap() {
 
         Map<String, String> map = new HashMap<>();
-        map.put(BANK_CODE, "BCPPT");
+        map.put(BANK_CODE, "BNKI");
 
         return map;
     }

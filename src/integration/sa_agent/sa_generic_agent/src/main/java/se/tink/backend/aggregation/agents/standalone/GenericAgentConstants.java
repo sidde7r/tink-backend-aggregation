@@ -7,4 +7,8 @@ public final class GenericAgentConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
+
+    public static class PersistentStorageKey {
+        public static final String CONSENT_ID = "consentId";
+    }
 }
