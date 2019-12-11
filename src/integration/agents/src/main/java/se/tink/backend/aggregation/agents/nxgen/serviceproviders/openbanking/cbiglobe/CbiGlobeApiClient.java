@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,7 +35,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CbiGlobeApiClient {
@@ -79,7 +79,7 @@ public class CbiGlobeApiClient {
                 .addBearerToken(authToken)
                 .header(HeaderKeys.ASPSP_CODE, configuration.getAspspCode())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(HeaderKeys.DATE, CbiGlobeUtils.getCurrentDateFormatted());
+                .header(HeaderKeys.DATE, CbiGlobeUtils.formatDate(new Date()));
     }
 
     protected RequestBuilder createRequestWithConsent(URL url) {
@@ -157,17 +157,17 @@ public class CbiGlobeApiClient {
     }
 
     public GetTransactionsResponse getTransactions(
-            String apiIdentifier, Date fromDate, Date toDate, String bookingType, int page) {
+            String apiIdentifier,
+            LocalDate fromDate,
+            LocalDate toDate,
+            String bookingType,
+            int page) {
         HttpResponse response =
                 createRequestWithConsent(
                                 getTransactionsUrl().parameter(IdTags.ACCOUNT_ID, apiIdentifier))
                         .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
-                        .queryParam(
-                                QueryKeys.DATE_FROM,
-                                ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                        .queryParam(
-                                QueryKeys.DATE_TO,
-                                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                        .queryParam(QueryKeys.DATE_FROM, fromDate.toString())
+                        .queryParam(QueryKeys.DATE_TO, toDate.toString())
                         .queryParam(QueryKeys.OFFSET, String.valueOf(page))
                         .get(HttpResponse.class);
 

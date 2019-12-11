@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,13 +25,9 @@ public class CbiGlobeUtils {
         }
     }
 
-    private static String formatDate(Date date) {
+    public static String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z");
         return sdf.format(date);
-    }
-
-    public static String getCurrentDateFormatted() {
-        return formatDate(new Date());
     }
 
     public static String encodeValue(String value) {
@@ -41,13 +36,6 @@ public class CbiGlobeUtils {
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex.getCause());
         }
-    }
-
-    public static Date calculateFromDate(Date toDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(toDate);
-        calendar.add(Calendar.DATE, -89);
-        return calendar.getTime();
     }
 
     public static String encodeBlankSpaces(String value) {
