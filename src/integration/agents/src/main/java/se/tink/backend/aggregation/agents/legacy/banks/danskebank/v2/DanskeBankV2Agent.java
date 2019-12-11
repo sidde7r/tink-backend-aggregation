@@ -151,7 +151,6 @@ public class DanskeBankV2Agent extends AbstractAgent
     // Don't change! (requires migration)
     private static final String SENSITIVE_PAYLOAD_SECURITY_KEY = "securityKey";
     private static final int OK_STATUS_CODE = 0;
-    private static final int INVALID_INVOICE_STATUS_CODE = 9;
 
     private final DanskeBankApiClient apiClient;
     private final Credentials credentials;
@@ -375,6 +374,17 @@ public class DanskeBankV2Agent extends AbstractAgent
                     .build();
         }
 
+        if (eInvoiceDetails.isInvalidEInvoice()) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
+                    .setMessage(
+                            String.format(
+                                    "Invalid einvoice: %s",
+                                    eInvoiceDetails.getStatus().getStatusText()))
+                    .build();
+        }
         return eInvoiceDetails;
     }
 
@@ -1051,10 +1061,8 @@ public class DanskeBankV2Agent extends AbstractAgent
 
                 EInvoiceDetailsResponse eInvoiceDetails = apiClient.getEInvoiceDetails(transferId);
 
-                // Old eInvoices are removed
-                if (eInvoiceDetails.getStatus() != null
-                        && eInvoiceDetails.getStatus().getStatusCode()
-                                == INVALID_INVOICE_STATUS_CODE) {
+                // Old eInvoices have the status invalid, ignore those
+                if (eInvoiceDetails.isInvalidEInvoice()) {
                     continue;
                 }
 
