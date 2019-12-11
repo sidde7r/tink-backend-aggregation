@@ -22,8 +22,8 @@ public class SibsTransactionalAccountTransactionFetcherTest {
     private se.tink.backend.agents.rpc.Account rpcAccount;
     private Account account;
     private static final String ACCOUNT_ID = "dummyAccountId";
-    private static final LocalDate BEGIN_OF_THE_WORLD_DATE =
-            SibsTransactionalAccountTransactionFetcher.TRANSACTIONS_FROM_BEGINNING;
+    private static final LocalDate BIG_BANG_DATE =
+            SibsTransactionalAccountTransactionFetcher.BIG_BANG_DATE;
     private static final LocalDate DAYS_BACK_90 =
             LocalDate.now()
                     .minusDays(
@@ -49,21 +49,21 @@ public class SibsTransactionalAccountTransactionFetcherTest {
     }
 
     @Test
-    public void shouldReturnTheBeginOfTheWorldDateWhenCertainDateIsNull() {
+    public void shouldReturnBigBangDateWhenCertainDateIsNull() {
         Mockito.when(rpcAccount.getCertainDate()).thenReturn(null);
 
         LocalDate result = objectUnderTest.getTransactionsFetchBeginDate(account);
 
-        Assert.assertEquals(BEGIN_OF_THE_WORLD_DATE, result);
+        Assert.assertEquals(BIG_BANG_DATE, result);
     }
 
     @Test
-    public void shouldReturnTheBeginOfTheWorldDateWhenThereIsNoRpcAccount() {
+    public void shouldReturnBigBangDateWhenThereIsNoRpcAccount() {
         Mockito.when(credentialsRequest.getAccounts()).thenReturn(Collections.emptyList());
 
         LocalDate result = objectUnderTest.getTransactionsFetchBeginDate(account);
 
-        Assert.assertEquals(BEGIN_OF_THE_WORLD_DATE, result);
+        Assert.assertEquals(BIG_BANG_DATE, result);
     }
 
     @Test

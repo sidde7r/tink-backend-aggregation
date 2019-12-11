@@ -17,7 +17,7 @@ public class SibsTransactionalAccountTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
 
     static final int DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD = 89;
-    static final LocalDate TRANSACTIONS_FROM_BEGINNING = LocalDate.of(1970, 1, 1);
+    static final LocalDate BIG_BANG_DATE = LocalDate.of(1970, 1, 1);
 
     private final SibsBaseApiClient apiClient;
     private final CredentialsRequest credentialsRequest;
@@ -49,7 +49,7 @@ public class SibsTransactionalAccountTransactionFetcher
     }
 
     LocalDate getTransactionsFetchBeginDate(final Account account) {
-        LocalDate updateDate = getCertainDate(account).orElse(TRANSACTIONS_FROM_BEGINNING);
+        LocalDate updateDate = getCertainDate(account).orElse(BIG_BANG_DATE);
 
         if (isFetchingFromBeginningAllowed(updateDate)
                 || certainDateWasOlderThan90DaysBack(updateDate)) {
@@ -70,7 +70,7 @@ public class SibsTransactionalAccountTransactionFetcher
     }
 
     private boolean isDateABigBang(LocalDate date) {
-        return date.getYear() == TRANSACTIONS_FROM_BEGINNING.getYear();
+        return date.getYear() == BIG_BANG_DATE.getYear();
     }
 
     private Optional<LocalDate> getCertainDate(Account account) {
