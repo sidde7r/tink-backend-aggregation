@@ -112,7 +112,7 @@ public class NovoBancoApiClient {
         return response;
     }
 
-    public List<LoanAggregatedData> getLoanAccounts() {
+    public Collection<LoanAggregatedData> getLoanAccounts() {
         List<LoanAggregatedData> loans = new ArrayList<>();
         getAccountDetails()
                 .forEach(
@@ -337,7 +337,7 @@ public class NovoBancoApiClient {
         private String loanContractId;
         private GetLoanDetailsResponse loanDetails;
 
-        LoanAggregatedData(
+        public LoanAggregatedData(
                 AccountDetailsEntity accountDetails,
                 String loanContractId,
                 GetLoanDetailsResponse loanDetails) {

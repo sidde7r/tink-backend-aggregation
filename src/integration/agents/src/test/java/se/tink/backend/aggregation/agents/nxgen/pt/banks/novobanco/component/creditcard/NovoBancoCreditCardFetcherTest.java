@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoApiC
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.component.creditcard.detail.CreditCardData;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.detail.CreditCardDto;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.creditcard.GetCreditCardDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class NovoBancoCreditCardFetcherTest {
@@ -37,7 +36,6 @@ public class NovoBancoCreditCardFetcherTest {
 
     @Test
     public void shouldReturnNonEmptyCollectionIfCreditCardsAvailable() {
-        GetCreditCardDetailsResponse resp;
         CreditCardAggregatedData response =
                 new CreditCardAggregatedData(
                         CreditCardData.getCreditCards(), CreditCardData.getAccounts());
