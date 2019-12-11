@@ -8,13 +8,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class NemIdLoginWithInstallIdResponse {
 
+    private String cprNo;
+    private String personalId;
+    private String advisor;
+    private String customerName;
+    private boolean campaignAvailable;
     private String sessionToken;
-    //    Other possibly interesting fields:
-    //    private String cprNo;
-    //    private String personalId;
-    //    private String advisor;
-    //    private String customerName;
-    //    private boolean campaignAvailable;
 
     public String encrypt(Token token) {
         final byte[] bytes = sessionToken.getBytes(JyskeConstants.CHARSET);

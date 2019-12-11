@@ -8,9 +8,8 @@ public class KeyCardInitValues {
     private final String cardIndex;
 
     public KeyCardInitValues(String cardId, String cardIndex) {
-        this.cardId = cardId;
+        this.cardId = Preconditions.checkNotNull(cardId, "Card Id must be set");
         this.cardIndex = Preconditions.checkNotNull(cardIndex, "Card index must be set");
-        ;
     }
 
     public static KeyCardInitValues createFromCardIdAndCardIndex(String cardId, String cardIndex) {

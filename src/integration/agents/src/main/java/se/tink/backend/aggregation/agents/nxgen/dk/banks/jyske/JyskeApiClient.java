@@ -11,10 +11,13 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.rpc.GetAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.JyskeSecurityHelper;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.KeycardEnrollEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdEnrollEntity;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdGenerateCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdGenericRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdLoginEncryptionEntity;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdLoginInstallIdEncryptionEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdLoginWithInstallIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.rpc.NemIdLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.rpc.NemIdResponse;
@@ -56,13 +59,21 @@ public class JyskeApiClient {
         return doNemIdRequest(JyskeConstants.Url.NEMID_GET_CHALLANGE, token, encryptionEntity);
     }
 
+    public NemIdResponse nemIdEnroll(KeycardEnrollEntity enrollEntity, Token token) {
+        return doNemIdRequest(JyskeConstants.Url.NEMID_ENROLL, token, enrollEntity);
+    }
+
     public NemIdResponse nemIdEnroll(NemIdEnrollEntity enrollEntity, Token token) {
         return doNemIdRequest(JyskeConstants.Url.NEMID_ENROLL, token, enrollEntity);
     }
 
     public NemIdResponse nemIdLoginWithInstallId(
-            NemIdLoginEncryptionEntity encryptionEntity, Token token) {
+            NemIdLoginInstallIdEncryptionEntity encryptionEntity, Token token) {
         return doNemIdRequest(JyskeConstants.Url.NEMID_LOGIN, token, encryptionEntity);
+    }
+
+    public NemIdResponse generateCode(NemIdGenerateCodeRequest request, Token token) {
+        return doNemIdRequest(JyskeConstants.Url.GENERATE_CODE, token, request);
     }
 
     private NemIdResponse doNemIdRequest(URL url, Token token, Encryptable encryptable) {
@@ -73,7 +84,7 @@ public class JyskeApiClient {
                                 token, configuration.getAesPadding(), encryptable));
     }
 
-    public NemIdLoginResponse mobilServiceInit(Token token) {
+    public NemIdLoginResponse sendTransportKey(Token token) {
         NemIdInitRequest request = new NemIdInitRequest();
 
         request.setData(
@@ -104,6 +115,10 @@ public class JyskeApiClient {
         this.accounts = getAccountResponse.getAccountsBrief();
 
         return getAccountResponse;
+    }
+
+    public NemIdResponse changeToKeyCard() {
+        return createJsonRequest(JyskeConstants.Url.CHANGE_TO_KEYCARD).get(NemIdResponse.class);
     }
 
     public GetTransactionsResponse fetchTransactions(Account account, int page) {

@@ -2,9 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.se
 
 import java.security.SecureRandom;
 import org.apache.commons.codec.binary.Base64;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
 public class Token {
-    private final byte[] token;
+    private byte[] token;
+
+    // Empty constructor for serialization to storage
+    public Token() {}
 
     private Token(int length) {
         byte[] randomBytes = new byte[length];

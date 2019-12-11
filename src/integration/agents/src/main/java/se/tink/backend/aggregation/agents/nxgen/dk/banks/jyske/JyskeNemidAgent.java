@@ -1,0 +1,64 @@
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske;
+
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.JyskeNemidAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.session.JyskeSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataAgent;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+
+public class JyskeNemidAgent extends BankdataAgent {
+
+    private final JyskeApiClient apiClient;
+
+    public JyskeNemidAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
+
+        JyskeConfiguration configuration =
+                getAgentConfigurationController()
+                        .getAgentConfigurationFromK8s(
+                                JyskeConstants.INTEGRATION_NAME, JyskeConfiguration.class);
+
+        this.apiClient = new JyskeApiClient(client, configuration);
+        configureHttpClient(client);
+    }
+
+    @Override
+    protected Authenticator constructAuthenticator() {
+
+        String username = credentials.getField(Field.Key.USERNAME);
+        String password = credentials.getField(Field.Key.PASSWORD);
+
+        JyskeNemidAuthenticator jyskeNemidAuthenticator =
+                new JyskeNemidAuthenticator(
+                        apiClient, client, persistentStorage, username, password);
+
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        jyskeNemidAuthenticator, supplementalInformationHelper),
+                jyskeNemidAuthenticator);
+    }
+
+    protected void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        JyskeConstants.TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        JyskeConstants.TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+    }
+
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return new JyskeSessionHandler(
+                apiClient, credentials, new JyskePersistentStorage(persistentStorage));
+    }
+}

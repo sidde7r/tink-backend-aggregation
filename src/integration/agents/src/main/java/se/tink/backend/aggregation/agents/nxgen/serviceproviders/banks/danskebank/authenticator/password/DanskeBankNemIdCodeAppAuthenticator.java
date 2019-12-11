@@ -59,6 +59,9 @@ public class DanskeBankNemIdCodeAppAuthenticator extends NemIdCodeAppAuthenticat
         return initiationResponse.getToken();
     }
 
+    @Override
+    protected void finalizeAuthentication() {}
+
     private <T> T decryptOtpChallenge(String username, String otpChallenge, Class<T> clazz) {
         driver = null;
         try {

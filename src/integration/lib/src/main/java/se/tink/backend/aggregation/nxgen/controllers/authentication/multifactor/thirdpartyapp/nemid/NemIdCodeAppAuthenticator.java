@@ -23,6 +23,7 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
 
     protected final TinkHttpClient client;
     private String pollUrl;
+    private NemIdCodeAppPollResponse pollResponse;
 
     public NemIdCodeAppAuthenticator(TinkHttpClient client) {
         this.client = client;
@@ -46,10 +47,12 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
 
     protected abstract String getInitialReference(T initiationResponse);
 
+    protected abstract void finalizeAuthentication();
+
     @Override
     public NemIdCodeAppResponse collect(String reference)
             throws AuthenticationException, AuthorizationException {
-        NemIdCodeAppPollResponse pollResponse = pollCodeApp(reference);
+        this.pollResponse = pollCodeApp(reference);
 
         String pollStatus = pollResponse.getStatus();
         ThirdPartyAppStatus status;
@@ -59,6 +62,7 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
                         pollResponse.isConfirmation()
                                 ? ThirdPartyAppStatus.DONE
                                 : ThirdPartyAppStatus.CANCELLED;
+                finalizeAuthentication();
                 break;
             case Status.STATUS_TIMEOUT:
                 status = ThirdPartyAppStatus.TIMED_OUT;
@@ -126,5 +130,12 @@ public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthe
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
+    }
+
+    public Optional<NemIdCodeAppPollResponse> getPollResponse() {
+        if (pollResponse == null) {
+            return Optional.empty();
+        }
+        return Optional.of(pollResponse);
     }
 }
