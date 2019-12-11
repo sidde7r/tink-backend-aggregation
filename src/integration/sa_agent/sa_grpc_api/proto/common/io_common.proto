@@ -12,6 +12,7 @@ message RequestCommon {
   SecurityInfo securityInfo = 2;
   bool manual = 3;
   map<string, string> externalParameters = 4;
+  string providerName = 5;
 }
 
 message ResponseCommon {

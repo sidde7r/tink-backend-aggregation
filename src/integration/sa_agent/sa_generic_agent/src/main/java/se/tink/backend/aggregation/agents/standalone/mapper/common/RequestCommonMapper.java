@@ -11,6 +11,7 @@ public class RequestCommonMapper implements Mapper<RequestCommon, Void> {
     private SecurityInfoMapper securityInfoMapper;
 
     private boolean manualRequest;
+    private String providerName;
 
     private CommonExternalParametersProvider commonExternalParametersProvider;
 
@@ -20,6 +21,10 @@ public class RequestCommonMapper implements Mapper<RequestCommon, Void> {
 
     public void setManualRequest(boolean manualRequest) {
         this.manualRequest = manualRequest;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
     }
 
     public void setCommonExternalParametersProvider(
@@ -35,6 +40,7 @@ public class RequestCommonMapper implements Mapper<RequestCommon, Void> {
         builder.setManual(manualRequest);
         builder.putAllExternalParameters(
                 commonExternalParametersProvider.buildExternalParametersMap());
+        builder.setProviderName(providerName);
         return builder.build();
     }
 }

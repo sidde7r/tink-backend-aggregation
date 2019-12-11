@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import se.tink.sa.agent.pt.ob.sibs.SibsConstants;
 import se.tink.sa.agent.pt.ob.sibs.SibsMappingContextKeys;
 import se.tink.sa.agent.pt.ob.sibs.SibsUtils;
+import se.tink.sa.agent.pt.ob.sibs.mapper.SibsApspCodeMappinngs;
 import se.tink.sa.agent.pt.ob.sibs.mapper.authentication.rpc.ConsentResponseMapper;
 import se.tink.sa.agent.pt.ob.sibs.mapper.authentication.rpc.ConsentStatusResponseMapper;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.SibsConsentRestClient;
@@ -33,7 +34,9 @@ public class SibsAuthenticationFacade implements AuthenticationFacade {
 
     @Override
     public AuthenticationResponse getConsent(AuthenticationRequest request) {
-        String bankCode = request.getRequestCommon().getExternalParametersOrThrow(BANK_CODE);
+        String bankCode =
+                SibsApspCodeMappinngs.findCodeByProviderName(
+                        request.getRequestCommon().getProviderName());
         String state = request.getRequestCommon().getSecurityInfo().getState();
         ConsentResponse consentResponse =
                 sibsConsentRestClient.getConsent(getConsentRequest(), bankCode, state);
@@ -47,7 +50,9 @@ public class SibsAuthenticationFacade implements AuthenticationFacade {
     @Override
     public GetConsentStatusResponse getConsentStatus(GetConsentStatusRequest request) {
         ConsentStatusRequest consentStatusRequest = getConsentStatusRequest(request);
-        String bankCode = request.getRequestCommon().getExternalParametersOrThrow(BANK_CODE);
+        String bankCode =
+                SibsApspCodeMappinngs.findCodeByProviderName(
+                        request.getRequestCommon().getProviderName());
 
         ConsentStatusResponse consentStatusResponse =
                 sibsConsentRestClient.checkConsentStatus(consentStatusRequest, bankCode);
