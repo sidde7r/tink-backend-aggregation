@@ -2,12 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc;
 
 import org.w3c.dom.Document;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.FormKeys;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
 public class JsfUpdateResponse extends HtmlResponse {
 
-    public JsfUpdateResponse(HttpResponse response) {
-        super(response);
+    public JsfUpdateResponse(String body) {
+        super(body);
     }
 
     public String getUpdate(String updateId) {

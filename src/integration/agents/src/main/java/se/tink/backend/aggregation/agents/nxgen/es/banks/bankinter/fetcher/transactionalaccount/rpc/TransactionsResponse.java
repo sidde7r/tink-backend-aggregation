@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterCons
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.JsfUpdateResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
 public class TransactionsResponse extends JsfUpdateResponse {
     private final Document navigation;
@@ -27,8 +26,8 @@ public class TransactionsResponse extends JsfUpdateResponse {
     private static final Pattern TRANSACTION_DATE_PATTERN =
             Pattern.compile("(?:\\w+) (\\d{2}/\\d{2}/\\d{4})");
 
-    public TransactionsResponse(HttpResponse response) {
-        super(response);
+    public TransactionsResponse(String body) {
+        super(body);
         this.navigation = getUpdateDocument(JsfPart.TRANSACTIONS_NAVIGATION);
         this.transactions = getUpdateDocument(JsfPart.TRANSACTIONS);
     }
