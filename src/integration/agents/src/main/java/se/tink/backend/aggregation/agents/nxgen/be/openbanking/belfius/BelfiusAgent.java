@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configura
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.BelfiusPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.BelfiusPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.BelfiusTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.CredentialKeys;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -58,7 +57,7 @@ public final class BelfiusAgent extends NextGenerationAgent
                                 apiClient,
                                 persistentStorage,
                                 this.belfiusConfiguration,
-                                credentials.getField(CredentialKeys.IBAN)),
+                                credentials.getField(BelfiusConstants.CredentialKeys.IBAN)),
                         credentials,
                         strongAuthenticationState);
 
