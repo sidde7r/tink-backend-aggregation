@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils.calculateFromDate;
-
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
@@ -24,6 +22,7 @@ public class CbiGlobeTransactionalAccountFetcher
     private final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final String queryValue;
+    private static final int TRANSACTIONS_DAYS_BACK = 90;
 
     private CbiGlobeTransactionalAccountFetcher(
             CbiGlobeApiClient apiClient, PersistentStorage persistentStorage, String queryValue) {
@@ -37,7 +36,6 @@ public class CbiGlobeTransactionalAccountFetcher
         GetAccountsResponse getAccountsResponse =
                 SerializationUtils.deserializeFromString(
                         persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
-
         return getAccountsResponse.getAccounts().stream()
                 .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
                 .map(Optional::get)
@@ -58,8 +56,8 @@ public class CbiGlobeTransactionalAccountFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        Date toDate = new Date();
-        Date fromDate = calculateFromDate(toDate);
+        LocalDate toDate = LocalDate.now();
+        LocalDate fromDate = toDate.minusDays(TRANSACTIONS_DAYS_BACK);
         return apiClient.getTransactions(
                 account.getApiIdentifier(), fromDate, toDate, this.queryValue, page);
     }

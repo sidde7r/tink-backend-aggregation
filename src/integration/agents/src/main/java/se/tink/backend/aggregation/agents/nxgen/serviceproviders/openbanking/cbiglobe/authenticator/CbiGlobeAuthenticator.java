@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
 
+import java.time.LocalDate;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -30,7 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class CbiGlobeAuthenticator {
 
@@ -38,6 +36,7 @@ public class CbiGlobeAuthenticator {
     private final PersistentStorage persistentStorage;
     private final CbiGlobeConfiguration configuration;
     private static final Logger logger = LoggerFactory.getLogger(CbiGlobeAuthenticator.class);
+    private static final int CONSENT_VALID_PERIOD_DAYS = 89;
 
     public CbiGlobeAuthenticator(
             CbiGlobeApiClient apiClient,
@@ -77,7 +76,7 @@ public class CbiGlobeAuthenticator {
                 FormValues.TRUE,
                 FormValues.FREQUENCY_PER_DAY_ONE,
                 FormValues.FALSE,
-                generateValidUntilDate());
+                LocalDate.now().plusDays(CONSENT_VALID_PERIOD_DAYS).toString());
     }
 
     public ConsentRequest createConsentRequestBalancesTransactions(
@@ -92,12 +91,7 @@ public class CbiGlobeAuthenticator {
                 FormValues.TRUE,
                 FormValues.FREQUENCY_PER_DAY,
                 FormValues.TRUE,
-                generateValidUntilDate());
-    }
-
-    private String generateValidUntilDate() {
-        return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                new DateTime(new Date()).plusDays(90).toDate());
+                LocalDate.now().plusDays(CONSENT_VALID_PERIOD_DAYS).toString());
     }
 
     protected String createRedirectUrl(String state, ConsentType consentType) {
