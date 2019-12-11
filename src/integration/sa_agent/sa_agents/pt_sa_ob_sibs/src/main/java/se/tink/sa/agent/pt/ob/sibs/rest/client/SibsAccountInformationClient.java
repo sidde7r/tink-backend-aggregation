@@ -90,6 +90,8 @@ public class SibsAccountInformationClient extends AbstractSibsRestClient {
                         .appendUri(accountTransactionsPath)
                         .pathVariable(
                                 SibsConstants.PathParameterKeys.ASPSP_CDE, request.getBankCode())
+                        .pathVariable(
+                                SibsConstants.PathParameterKeys.ACCOUNT_ID, request.getAccountId())
                         .queryParam(SibsConstants.QueryKeys.WITH_BALANCE, TRUE)
                         .queryParam(
                                 SibsConstants.QueryKeys.BOOKING_STATUS,
@@ -99,9 +101,7 @@ public class SibsAccountInformationClient extends AbstractSibsRestClient {
                                 request.getDateFromTransactionFetch())
                         .queryParam(
                                 SibsConstants.QueryKeys.PSU_INVOLVED,
-                                BooleanUtils.toStringTrueFalse(request.getIsPsuInvolved()))
-                        .queryParam(
-                                SibsConstants.PathParameterKeys.ACCOUNT_ID, request.getAccountId());
+                                BooleanUtils.toStringTrueFalse(request.getIsPsuInvolved()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
