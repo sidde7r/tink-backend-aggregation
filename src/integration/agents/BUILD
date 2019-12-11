@@ -249,6 +249,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/fortis",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/ing",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/kbc",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/argenta",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/axa",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/belfius",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/bpost",
