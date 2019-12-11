@@ -6,7 +6,6 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
@@ -14,10 +13,9 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class NemidPasswordAuthenticationControllerV2
+public class NemIdAuthenticationController
         implements TypedAuthenticator, AuthenticationControllerType {
 
-    private static final String NEMID_INSTALL_ID = "NEMID_INSTALL_ID";
     private static final String SUPPLEMENTAL_FIELD_ID = "online-banking-password";
 
     private final NemIdIFrameController iFrameController;
@@ -25,7 +23,7 @@ public class NemidPasswordAuthenticationControllerV2
     private final Storage storage;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
-    public NemidPasswordAuthenticationControllerV2(
+    public NemIdAuthenticationController(
             NemIdIFrameController iFrameController,
             NemIdAuthenticatorV2 authenticator,
             Storage storage,
@@ -66,24 +64,18 @@ public class NemidPasswordAuthenticationControllerV2
         final String token = iFrameController.doLoginWith(username, password, nemIdParameters);
         final String installId = authenticator.exchangeNemIdToken(token);
 
-        authenticateWithInstallId(username, pinCode, installId);
+        authenticator.authenticateUsingInstallId(username, pinCode, installId);
 
-        storage.put(NEMID_INSTALL_ID, installId);
-    }
-
-    private void authenticateWithInstallId(
-            final String username, final String password, final String installId)
-            throws SessionException {
-        authenticator.authenticateUsingInstallId(username, password, installId);
+        storage.put(NemIdConstantsV2.Storage.NEMID_INSTALL_ID, installId);
     }
 
     @Override
     public CredentialsTypes getType() {
-        return CredentialsTypes.PASSWORD;
+        return CredentialsTypes.THIRD_PARTY_APP;
     }
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
-        return request.isUpdate() || request.isCreate();
+        return true;
     }
 }

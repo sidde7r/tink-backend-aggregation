@@ -11,18 +11,19 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataNemIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.sessionhandler.BankdataSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.storage.BankdataStorage;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdIFrameController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemidPasswordAuthenticationControllerV2;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -74,16 +75,25 @@ public class BankdataAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
 
         BankdataNemIdAuthenticator nemIdAuthenticator =
-                new BankdataNemIdAuthenticator(bankClient, sessionStorage);
+                new BankdataNemIdAuthenticator(bankClient, persistentStorage);
 
-        NemidPasswordAuthenticationControllerV2 nemidPasswordAuthenticationController =
-                new NemidPasswordAuthenticationControllerV2(
+        NemIdAuthenticationController nemidAuthenticationController =
+                new NemIdAuthenticationController(
                         new NemIdIFrameController(),
                         nemIdAuthenticator,
-                        sessionStorage,
+                        persistentStorage,
                         supplementalInformationHelper);
 
-        return new TypedAuthenticationController(nemidPasswordAuthenticationController);
+        BankdataStorage bankdataPersistentStorage = new BankdataStorage(persistentStorage);
+        BankdataPasswordAuthenticator passwordAuthenticator =
+                new BankdataPasswordAuthenticator(
+                        credentials.getField(Key.USERNAME),
+                        credentials.getField(Key.ACCESS_PIN),
+                        nemIdAuthenticator,
+                        bankdataPersistentStorage);
+
+        return new AutoAuthenticationController(
+                request, systemUpdater, nemidAuthenticationController, passwordAuthenticator);
     }
 
     @Override
@@ -173,10 +183,6 @@ public class BankdataAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new BankdataSessionHandler(
-                credentials.getField(Key.USERNAME),
-                credentials.getField(Key.ACCESS_PIN),
-                new BankdataNemIdAuthenticator(bankClient, sessionStorage),
-                sessionStorage);
+        return SessionHandler.alwaysFail();
     }
 }

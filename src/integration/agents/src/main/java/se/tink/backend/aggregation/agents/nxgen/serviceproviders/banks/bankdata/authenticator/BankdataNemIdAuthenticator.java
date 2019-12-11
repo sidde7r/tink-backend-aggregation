@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator;
 
+import com.google.common.base.Strings;
+import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.CryptoHelper;
@@ -53,8 +57,17 @@ public class BankdataNemIdAuthenticator implements NemIdAuthenticatorV2 {
     }
 
     @Override
-    public void authenticateUsingInstallId(String userId, String pinCode, String installId)
-            throws SessionException {
+    public void authenticateUsingInstallId(
+            @Nonnull String userId, @Nonnull String pinCode, @Nonnull String installId)
+            throws SessionException, LoginException {
+
+        if (Strings.isNullOrEmpty(installId)) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        if (Strings.isNullOrEmpty(userId) || Strings.isNullOrEmpty(pinCode)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
 
         if (cryptoHelper == null) {
             cryptoHelper =
