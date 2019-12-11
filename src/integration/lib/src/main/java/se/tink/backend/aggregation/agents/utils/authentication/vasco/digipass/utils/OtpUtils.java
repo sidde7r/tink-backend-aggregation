@@ -163,7 +163,7 @@ public class OtpUtils {
 
     private static String mergeDiversifierAndOtp(String diversifier, String otp) {
         StringBuilder out = new StringBuilder();
-        for (int i = 0; i < Math.min(diversifier.length(), otp.length()); i++) {
+        for (int i = 0; i < diversifier.length(); i++) {
             byte dc = (byte) (diversifier.charAt(i % diversifier.length()) - 0x30);
             byte oc = (byte) (otp.charAt(i % otp.length()) - 0x30);
 
