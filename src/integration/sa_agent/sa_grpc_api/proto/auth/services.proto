@@ -9,5 +9,6 @@ import "src/integration/sa_agent/sa_grpc_api/proto/auth/model.proto";
 
 service ProgressiveAuthAgentService {
   rpc login (AuthenticationRequest) returns (AuthenticationResponse);
+  rpc getConsentStatus(GetConsentStatusRequest) returns (GetConsentStatusResponse);
 }
 

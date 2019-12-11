@@ -7,6 +7,7 @@ option go_package = "proto";
 
 import "google/type/date.proto";
 import "src/integration/sa_agent/sa_grpc_api/proto/common/io_common.proto";
+import "src/integration/sa_agent/sa_grpc_api/proto/security/model.proto";
 
 message AuthenticationRequest {
   RequestCommon requestCommon = 1;
@@ -21,6 +22,7 @@ message AuthenticationResponse {
   ThirdPartyAppAuthenticationPayload payload = 3;
   SupplementalWaitRequest supplementalWaitRequest = 4;
   string stepId = 5;
+  SecurityInfo securityInfo = 6;
 }
 
 message Field {
@@ -130,4 +132,13 @@ message SupplementalWaitRequest {
     HOURS = 5;
     DAYS = 6;
   }
+}
+
+message GetConsentStatusRequest {
+  RequestCommon requestCommon = 1;
+}
+
+message GetConsentStatusResponse {
+  ResponseCommon responseCommon = 1;
+  string transactionStatus = 2;
 }

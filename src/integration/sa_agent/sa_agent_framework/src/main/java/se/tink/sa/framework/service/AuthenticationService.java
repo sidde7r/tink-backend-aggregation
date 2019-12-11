@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import se.tink.sa.framework.facade.AuthenticationFacade;
 import se.tink.sa.model.auth.AuthenticationRequest;
 import se.tink.sa.model.auth.AuthenticationResponse;
+import se.tink.sa.model.auth.GetConsentStatusRequest;
+import se.tink.sa.model.auth.GetConsentStatusResponse;
 import se.tink.sa.services.auth.ProgressiveAuthAgentServiceGrpc;
 
 @Slf4j
@@ -22,6 +24,17 @@ public class AuthenticationService
             StreamObserver<AuthenticationResponse> responseObserver) {
         log.info("Incomming message: {}", request);
         AuthenticationResponse response = authenticationFacade.getConsent(request);
+        log.info("Outgoing message {}", response);
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getConsentStatus(
+            GetConsentStatusRequest request,
+            StreamObserver<GetConsentStatusResponse> responseObserver) {
+        log.info("Incomming message: {}", request);
+        GetConsentStatusResponse response = authenticationFacade.getConsentStatus(request);
         log.info("Outgoing message {}", response);
         responseObserver.onNext(response);
         responseObserver.onCompleted();

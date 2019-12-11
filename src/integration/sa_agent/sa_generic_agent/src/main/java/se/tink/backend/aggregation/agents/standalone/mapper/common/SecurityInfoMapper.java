@@ -18,10 +18,13 @@ public class SecurityInfoMapper implements Mapper<SecurityInfo, Void> {
         String securityToken = mappingContext.get(MappingContextKeys.SECURITY_TOKEN);
         ProtoObjSetter.setValue(SecurityInfo.Builder::setSecurityToken, builder, securityToken);
 
+        String consentId = mappingContext.get(MappingContextKeys.CONSENT_ID);
+        ProtoObjSetter.setValue(SecurityInfo.Builder::setConsentId, builder, consentId);
+
         return builder.build();
     }
 
     private boolean isTrue(Boolean value) {
-        return Boolean.TRUE.equals(value.booleanValue());
+        return value != null && Boolean.TRUE.equals(value.booleanValue());
     }
 }

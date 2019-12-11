@@ -1,18 +1,29 @@
 package se.tink.backend.aggregation.agents.standalone;
 
+import com.github.rholder.retry.RetryException;
+import com.github.rholder.retry.Retryer;
+import com.github.rholder.retry.RetryerBuilder;
+import com.github.rholder.retry.StopStrategies;
+import com.github.rholder.retry.WaitStrategies;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.standalone.caller.GetConsentStatusCaller;
+import se.tink.backend.aggregation.agents.standalone.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.standalone.grpc.AuthenticationService;
 import se.tink.backend.aggregation.agents.standalone.grpc.CheckingService;
+import se.tink.backend.aggregation.agents.standalone.mapper.MappingContextKeys;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.MappersController;
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.CommonExternalParametersProvider;
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.impl.MockCommonExternalParametersProvider;
@@ -25,10 +36,16 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPa
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.sa.common.mapper.MappingContext;
+import se.tink.sa.model.auth.GetConsentStatusRequest;
 
 public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckingAccountsExecutor {
 
+    private static final Logger logger = LoggerFactory.getLogger(GenericAgent.class);
+
     private static final long SUPPLEMENTAL_WAIT_REQUEST_MINUTES = 10L;
+    private static final long RETRYER_SLEEP_TIME = 10L; // in seconds
+    private static final int RETRYER_RETRY_ATTEMPTS = 10;
 
     private final PersistentStorage persistentStorage;
     private GenericAgentConfiguration genericAgentConfiguration;
@@ -40,6 +57,7 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
     private final StrongAuthenticationState strongAuthenticationState;
     private LinkedList<? extends AuthenticationStep> authenticationSteps;
     private final MappersController mappersController;
+    private final Retryer<ConsentStatus> consentStatusRetryer;
 
     public GenericAgent(
             CredentialsRequest request,
@@ -63,6 +81,14 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
         mappersController =
                 MappersController.newInstance(commonExternalParametersProvider, credentialsRequest);
 
+        consentStatusRetryer =
+                RetryerBuilder.<ConsentStatus>newBuilder()
+                        .retryIfResult(status -> status != null && !status.isFinalStatus())
+                        .withWaitStrategy(
+                                WaitStrategies.fixedWait(RETRYER_SLEEP_TIME, TimeUnit.SECONDS))
+                        .withStopStrategy(StopStrategies.stopAfterAttempt(RETRYER_RETRY_ATTEMPTS))
+                        .build();
+
         authenticationService =
                 new AuthenticationService(
                         channel,
@@ -74,7 +100,8 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
                         channel,
                         strongAuthenticationState,
                         genericAgentConfiguration,
-                        mappersController);
+                        mappersController,
+                        persistentStorage);
     }
 
     @Override
@@ -108,7 +135,24 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
     }
 
     private void processCallbackData(final Map<String, String> callbackData) {
-        String state = callbackData.get("state");
+        try {
+            String consentId =
+                    persistentStorage.get(GenericAgentConstants.PersistentStorageKey.CONSENT_ID);
+            MappingContext mappingContext =
+                    MappingContext.newInstance().put(MappingContextKeys.CONSENT_ID, consentId);
+            GetConsentStatusRequest getConsentStatusRequest =
+                    mappersController
+                            .getConsentStatusRequestMapper()
+                            .map(consentId, mappingContext);
+            GetConsentStatusCaller getConsentStatusCaller =
+                    new GetConsentStatusCaller(authenticationService, getConsentStatusRequest);
+
+            ConsentStatus consentStatus = consentStatusRetryer.call(getConsentStatusCaller);
+
+            logger.debug("fetched consentStatus {}", consentStatus);
+        } catch (ExecutionException | RetryException e) {
+            logger.warn("Authorization failed, consents status is not accepted.", e);
+        }
     }
 
     private LinkedList<? extends AuthenticationStep> buildAuthenticationSteps(
@@ -117,7 +161,7 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
 
         ThirdPartyAppAuthenticationStep openThirdPartyApp =
                 new ThirdPartyAppAuthenticationStep(
-                        authenticationService.login(request),
+                        authenticationService.login(request, persistentStorage),
                         buildSupplementalWaitRequest(),
                         this::processCallbackData);
 

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.standalone.mapper.factory;
 
 import se.tink.backend.aggregation.agents.standalone.mapper.auth.agg.ThirdPartyAppAuthenticationPayloadMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.auth.sa.AuthenticationRequestMapper;
+import se.tink.backend.aggregation.agents.standalone.mapper.auth.sa.GetConsentStatusRequestMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.AuthenticationResponseMappersFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.FetchAccountsResponseMapperFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.FetchTransactionsResponseMapperFactory;
@@ -26,6 +27,8 @@ public class MappersController {
 
     private AuthenticationRequestMapper authenticationRequestMapper;
     private ThirdPartyAppAuthenticationPayloadMapper thirdPartyAppAuthenticationPayloadMapper;
+
+    private GetConsentStatusRequestMapper getConsentStatusRequestMapper;
 
     private FetchAccountsResponseMapper fetchAccountsResponseMapper;
     private FetchAccountsRequestMapper fetchAccountsRequestMapper;
@@ -101,6 +104,14 @@ public class MappersController {
                     authenticationResponseMappersFactory.thirdPartyAppAuthenticationPayloadMapper();
         }
         return thirdPartyAppAuthenticationPayloadMapper;
+    }
+
+    public GetConsentStatusRequestMapper getConsentStatusRequestMapper() {
+        if (getConsentStatusRequestMapper == null) {
+            getConsentStatusRequestMapper =
+                    authenticationRequestMapperFactory.getConsentStatusRequestMapper();
+        }
+        return getConsentStatusRequestMapper;
     }
 
     public FetchTransactionsRequestMapper fetchTransactionsRequestMapper() {

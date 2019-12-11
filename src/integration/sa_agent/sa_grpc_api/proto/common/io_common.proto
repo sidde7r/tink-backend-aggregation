@@ -11,7 +11,7 @@ message RequestCommon {
   string correlationId = 1;
   SecurityInfo securityInfo = 2;
   bool manual = 3;
-  map<string, string> externalParameters = 5;
+  map<string, string> externalParameters = 4;
 }
 
 message ResponseCommon {

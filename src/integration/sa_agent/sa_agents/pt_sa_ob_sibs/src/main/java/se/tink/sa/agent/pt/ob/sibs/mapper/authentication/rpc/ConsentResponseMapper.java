@@ -11,11 +11,13 @@ import se.tink.sa.model.auth.AuthenticationResponse;
 import se.tink.sa.model.auth.ThirdPartyAppAuthenticationPayload;
 import se.tink.sa.services.common.RequestCommon;
 import se.tink.sa.services.common.ResponseCommon;
+import se.tink.sa.services.security.SecurityInfo;
 
 @Component
 public class ConsentResponseMapper implements Mapper<AuthenticationResponse, ConsentResponse> {
 
     @Autowired private RequestToResponseCommonMapper requestToResponseCommonMapper;
+    @Autowired private SecurityInfoMapper securityInfoMapper;
 
     @Override
     public AuthenticationResponse map(ConsentResponse source, MappingContext mappingContext) {
@@ -38,6 +40,9 @@ public class ConsentResponseMapper implements Mapper<AuthenticationResponse, Con
         tppPl.setAndroid(android.build());
 
         destBuilder.setPayload(tppPl.build());
+
+        SecurityInfo securityInfo = securityInfoMapper.map(source.getConsentId(), mappingContext);
+        destBuilder.setSecurityInfo(securityInfo);
 
         return destBuilder.build();
     }
