@@ -36,6 +36,7 @@ public class CbiGlobeAuthenticator {
     private final PersistentStorage persistentStorage;
     private final CbiGlobeConfiguration configuration;
     private static final Logger logger = LoggerFactory.getLogger(CbiGlobeAuthenticator.class);
+    private static final int CONSENT_VALID_PERIOD_DAYS = 89;
 
     public CbiGlobeAuthenticator(
             CbiGlobeApiClient apiClient,
@@ -75,7 +76,7 @@ public class CbiGlobeAuthenticator {
                 FormValues.TRUE,
                 FormValues.FREQUENCY_PER_DAY_ONE,
                 FormValues.FALSE,
-                LocalDate.now().plusDays(89).toString());
+                LocalDate.now().plusDays(CONSENT_VALID_PERIOD_DAYS).toString());
     }
 
     public ConsentRequest createConsentRequestBalancesTransactions(
@@ -90,7 +91,7 @@ public class CbiGlobeAuthenticator {
                 FormValues.TRUE,
                 FormValues.FREQUENCY_PER_DAY,
                 FormValues.TRUE,
-                LocalDate.now().plusDays(89).toString());
+                LocalDate.now().plusDays(CONSENT_VALID_PERIOD_DAYS).toString());
     }
 
     protected String createRedirectUrl(String state, ConsentType consentType) {
