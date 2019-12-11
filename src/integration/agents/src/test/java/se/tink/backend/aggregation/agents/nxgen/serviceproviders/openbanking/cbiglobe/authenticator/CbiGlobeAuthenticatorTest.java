@@ -11,23 +11,24 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class CbiGlobeAuthenticatorTest {
-  private CbiGlobeAuthenticator objectToTest;
-  private CbiGlobeApiClient apiClient;
-  private CbiGlobeConfiguration cbiGlobeConfiguration;
-  private PersistentStorage persistentStorage;
+    private CbiGlobeAuthenticator objectToTest;
+    private CbiGlobeApiClient apiClient;
+    private CbiGlobeConfiguration cbiGlobeConfiguration;
+    private PersistentStorage persistentStorage;
 
-  @Before
-  public void init(){
-    apiClient = Mockito.mock(CbiGlobeApiClient.class);
-    persistentStorage = Mockito.mock(PersistentStorage.class);
-    cbiGlobeConfiguration = Mockito.mock(CbiGlobeConfiguration.class);
-    objectToTest = new CbiGlobeAuthenticator(apiClient,persistentStorage,cbiGlobeConfiguration);
-  }
+    @Before
+    public void init() {
+        apiClient = Mockito.mock(CbiGlobeApiClient.class);
+        persistentStorage = Mockito.mock(PersistentStorage.class);
+        cbiGlobeConfiguration = Mockito.mock(CbiGlobeConfiguration.class);
+        objectToTest =
+                new CbiGlobeAuthenticator(apiClient, persistentStorage, cbiGlobeConfiguration);
+    }
 
-  @Test
-  public void consentValidPeriodShouldBe89Days(){
-    ConsentRequest consentRequest = objectToTest.createConsentRequestAccount();
-    LocalDate localDate = LocalDate.parse(consentRequest.getValidUntil());
-    Assert.assertEquals(localDate,LocalDate.now().plusDays(89));
-  }
+    @Test
+    public void consentValidPeriodShouldBe89Days() {
+        ConsentRequest consentRequest = objectToTest.createConsentRequestAccount();
+        LocalDate localDate = LocalDate.parse(consentRequest.getValidUntil());
+        Assert.assertEquals(localDate, LocalDate.now().plusDays(89));
+    }
 }
