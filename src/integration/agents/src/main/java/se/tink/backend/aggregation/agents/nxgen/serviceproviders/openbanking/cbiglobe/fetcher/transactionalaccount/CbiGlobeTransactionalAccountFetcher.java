@@ -22,6 +22,7 @@ public class CbiGlobeTransactionalAccountFetcher
     private final CbiGlobeApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final String queryValue;
+    private static final int TRANSACTIONS_DAYS_BACK = 90;
 
     private CbiGlobeTransactionalAccountFetcher(
             CbiGlobeApiClient apiClient, PersistentStorage persistentStorage, String queryValue) {
@@ -56,7 +57,7 @@ public class CbiGlobeTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
         LocalDate toDate = LocalDate.now();
-        LocalDate fromDate = toDate.minusDays(90);
+        LocalDate fromDate = toDate.minusDays(TRANSACTIONS_DAYS_BACK);
         return apiClient.getTransactions(
                 account.getApiIdentifier(), fromDate, toDate, this.queryValue, page);
     }
