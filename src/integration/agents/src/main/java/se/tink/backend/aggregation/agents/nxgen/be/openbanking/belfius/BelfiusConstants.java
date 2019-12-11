@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
-import com.google.common.collect.ImmutableList;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -25,8 +24,10 @@ public final class BelfiusConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final int INTERNAL_SERVER_ERROR = 500;
-        public static final ImmutableList<Integer> TRANSACTION_ERROR_CODES =
-                ImmutableList.of(403, 404, 429);
+    }
+
+    public static class ErrorCodes {
+        public static final String TRANSACTION_TOO_OLD = "20007";
     }
 
     public static class Urls {
