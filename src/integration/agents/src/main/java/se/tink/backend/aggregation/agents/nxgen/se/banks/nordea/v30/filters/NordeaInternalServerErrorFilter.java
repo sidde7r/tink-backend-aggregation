@@ -30,6 +30,8 @@ public class NordeaInternalServerErrorFilter extends Filter {
         return (lowerCaseBody.contains(ErrorCodes.INTERNAL_SERVER_ERROR)
                         && lowerCaseBody.contains(ErrorCodes.INTERNAL_SERVER_ERROR_MESSAGE))
                 || (lowerCaseBody.contains(ErrorCodes.REMOTE_SERVICE_ERROR)
-                        && lowerCaseBody.contains(ErrorCodes.REMOTE_SERVICE_ERROR_MESSAGE));
+                        && lowerCaseBody.contains(ErrorCodes.REMOTE_SERVICE_ERROR_MESSAGE))
+                || lowerCaseBody.contains(ErrorCodes.HYSTRIX_CIRCUIT_SHORT_CIRCUITED)
+                || lowerCaseBody.contains(ErrorCodes.TIMEOUT_AFTER_MESSAGE);
     }
 }

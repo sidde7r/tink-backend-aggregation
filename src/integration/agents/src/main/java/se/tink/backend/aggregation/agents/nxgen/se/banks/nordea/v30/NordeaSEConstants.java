@@ -308,6 +308,9 @@ public class NordeaSEConstants {
         public static final String REMOTE_SERVICE_ERROR = "unknown_execution_error_remote_service";
         public static final String REMOTE_SERVICE_ERROR_MESSAGE =
                 "An exception has occurred when invoking remote service.".toLowerCase();
+        public static final String HYSTRIX_CIRCUIT_SHORT_CIRCUITED =
+                "Hystrix circuit short".toLowerCase();
+        public static final String TIMEOUT_AFTER_MESSAGE = "Timeout after".toLowerCase();
     }
 
     public static class LogTags {
