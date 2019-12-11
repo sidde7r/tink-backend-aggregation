@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -82,6 +83,7 @@ public class TransactionEntity {
                 .setDescription(description)
                 .setAmount(transactionAmount.toAmount())
                 .setDate(date)
+                .setPayload(TransactionPayloadTypes.DETAILS, transactionType)
                 .build();
     }
 }
