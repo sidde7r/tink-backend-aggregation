@@ -13,6 +13,14 @@ public class StaticVector {
         this.vector = vector;
     }
 
+    public static StaticVector createFromVector(byte[] vector) {
+        return new StaticVector(Arrays.copyOfRange(vector, 4, vector.length));
+    }
+
+    public static StaticVector createFromVector(String vector) {
+        return createFromVector(EncodingUtils.decodeHexString(vector));
+    }
+
     public static StaticVector createFromXfad(byte[] xfad) {
         return new StaticVector(XfadUtils.getStaticVector(xfad));
     }
