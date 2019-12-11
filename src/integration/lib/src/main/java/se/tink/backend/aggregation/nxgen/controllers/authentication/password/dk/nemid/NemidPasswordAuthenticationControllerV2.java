@@ -6,7 +6,6 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
@@ -66,15 +65,9 @@ public class NemidPasswordAuthenticationControllerV2
         final String token = iFrameController.doLoginWith(username, password, nemIdParameters);
         final String installId = authenticator.exchangeNemIdToken(token);
 
-        authenticateWithInstallId(username, pinCode, installId);
+        authenticator.authenticateUsingInstallId(username, password, installId);
 
         storage.put(NEMID_INSTALL_ID, installId);
-    }
-
-    private void authenticateWithInstallId(
-            final String username, final String password, final String installId)
-            throws SessionException {
-        authenticator.authenticateUsingInstallId(username, password, installId);
     }
 
     @Override
