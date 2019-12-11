@@ -3,32 +3,46 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpsondrio;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 @Ignore
 public class BpmSondrioAgentPaymentTest {
+    private AgentIntegrationTest.Builder builder;
 
-    @Test
-    public void testPayments() throws Exception {
+    private final String IBAN_WHO_GETS_MONEY = "";
+    private final String NAME_WHO_GETS_MONEY = "";
 
-        CbiGlobeAgentIntegrationTest.Builder builder =
-                new CbiGlobeAgentIntegrationTest.Builder("it", "it-bpsondrio-oauth2")
+    private final String IBAN_WHO_GIVES_MONEY = "";
+
+    private final String currency = "EUR";
+    private final int AMOUNT = 1;
+
+    @Before
+    public void setup() throws Exception {
+        builder =
+                new AgentIntegrationTest.Builder("it", "it-bpsondrio-oauth2")
+                        .setFinancialInstitutionId("bpsondrio")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
+    }
 
-        builder.build().testGenericPayment(createListMockedDomesticPayment(4));
+    @Test
+    public void testPayments() throws Exception {
+        builder.build().testGenericPayment(createListMockedDomesticPayment(1));
     }
 
     private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
@@ -36,28 +50,26 @@ public class BpmSondrioAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
-            doReturn("name").when(creditor).getName();
+            doReturn(NAME_WHO_GETS_MONEY).when(creditor).getName();
             doReturn(Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn("IT02J0538712900000001617752").when(creditor).getAccountNumber();
+            doReturn(IBAN_WHO_GETS_MONEY).when(creditor).getAccountNumber();
 
             Debtor debtor = mock(Debtor.class);
             doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn("IT02J0538712900000001617752").when(debtor).getAccountNumber();
+            doReturn(IBAN_WHO_GIVES_MONEY).when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inSEK(new Random().nextInt(100));
             LocalDate executionDate = LocalDate.now();
-            String currency = "EUR";
 
             listOfMockedPayments.add(
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(
+                                    new ExactCurrencyAmount(new BigDecimal(AMOUNT), currency))
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());
         }
-
         return listOfMockedPayments;
     }
 }

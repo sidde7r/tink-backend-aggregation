@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ispPrivateBanking;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ispprivatebanking;
 
 import org.junit.Before;
 import org.junit.Ignore;
