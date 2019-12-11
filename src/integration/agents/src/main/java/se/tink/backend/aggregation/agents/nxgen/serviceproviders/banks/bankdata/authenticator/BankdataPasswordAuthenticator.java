@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator;
 
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.storage.BankdataStorage;
@@ -26,8 +26,7 @@ public class BankdataPasswordAuthenticator implements AutoAuthenticator {
     }
 
     @Override
-    public void autoAuthenticate()
-            throws SessionException, BankServiceException, AuthorizationException {
+    public void autoAuthenticate() throws BankServiceException, SessionException, LoginException {
 
         final String installId =
                 storage.getNemidInstallId().orElseThrow(SessionError.SESSION_EXPIRED::exception);

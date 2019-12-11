@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 
 public interface NemIdAuthenticatorV2 {
@@ -18,5 +19,5 @@ public interface NemIdAuthenticatorV2 {
             throws AuthenticationException, AuthorizationException;
 
     void authenticateUsingInstallId(String userId, String pinCode, String installId)
-            throws SessionException;
+            throws SessionException, LoginException;
 }
