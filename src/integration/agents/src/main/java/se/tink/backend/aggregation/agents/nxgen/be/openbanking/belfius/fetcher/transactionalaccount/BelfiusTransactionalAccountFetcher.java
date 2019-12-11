@@ -8,8 +8,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.entity.error.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -64,7 +65,8 @@ public class BelfiusTransactionalAccountFetcher
                                     fromDate, toDate, getOauth2Token(), logicalId)
                             .toTinkTransactions());
         } catch (HttpResponseException e) {
-            if (ErrorMessages.TRANSACTION_ERROR_CODES.contains(e.getResponse().getStatus())) {
+            ErrorResponse response = e.getResponse().getBody(ErrorResponse.class);
+            if (ErrorCodes.TRANSACTION_TOO_OLD.equals(response.getErrorCode())) {
                 return PaginatorResponseImpl.createEmpty(false);
             } else {
                 throw e;
