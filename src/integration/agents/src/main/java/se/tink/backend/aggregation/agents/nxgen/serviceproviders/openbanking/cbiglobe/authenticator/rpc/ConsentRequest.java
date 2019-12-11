@@ -23,4 +23,8 @@ public class ConsentRequest {
         this.recurringIndicator = recurringIndicator;
         this.validUntil = validUntil;
     }
+
+    public String getValidUntil() {
+        return validUntil;
+    }
 }
