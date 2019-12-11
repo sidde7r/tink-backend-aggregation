@@ -94,7 +94,7 @@ public class OtpUtils {
         return Bytes.concat(output, lastChallengeXored);
     }
 
-    public static byte[] xorWithTime(byte[] data, long epochTime) {
+    static byte[] xorWithTime(byte[] data, long epochTime) {
         epochTime >>= 4;
 
         byte[] epochBytes = DataUtils.longToBytes(epochTime);
@@ -128,7 +128,7 @@ public class OtpUtils {
         return output;
     }
 
-    private static String convertOtpToAscii(byte[] otp) {
+    static String convertOtpToAscii(byte[] otp) {
         String s = EncodingUtils.encodeHexAsString(otp);
         return s.substring(s.length() - 16);
     }
@@ -139,8 +139,7 @@ public class OtpUtils {
                 FingerPrintUtils.getFingerPrintDiversifier(fingerprint, staticVector);
 
         // Note: must use Long instead of Int even though the diversifier is only 32 bits. This is
-        // due to
-        // Java and the lack of unsigned ints...
+        // due to Java and the lack of unsigned ints...
         String diversifierString = Long.toString(DataUtils.bytesToLong(diversifierBytes));
 
         Optional<Integer> diversifierLength =
