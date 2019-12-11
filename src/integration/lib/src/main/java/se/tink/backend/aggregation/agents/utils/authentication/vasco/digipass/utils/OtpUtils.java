@@ -2,12 +2,15 @@ package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.u
 
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Bytes;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.DigipassConstants;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.StaticVector;
+import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class OtpUtils {
@@ -29,7 +32,31 @@ public class OtpUtils {
         return convertOtpToAscii(rawOtpResponse);
     }
 
-    public static byte[] mashupChallenge(
+    private static List<byte[]> formatHashedChallenge(byte[] challengesByteArray) {
+        Preconditions.checkArgument(
+                challengesByteArray.length == 32, "Invalid challengesByteArray length.");
+
+        List<byte[]> challenges = new ArrayList<>();
+        // Extract 8 byte chunks from the byte array and treat them as challenges
+        for (int i = 0; i < challengesByteArray.length; i += 8) {
+            byte[] challenge = Arrays.copyOfRange(challengesByteArray, i, i + 8);
+            challenges.add(challenge);
+        }
+        return challenges;
+    }
+
+    public static List<byte[]> constructChallengeArray(String challengeAsHex) {
+        byte[] challenge = EncodingUtils.decodeHexString(challengeAsHex);
+        if (challenge.length == 8) {
+            // Only one challenge block.
+            return Collections.singletonList(challenge);
+        }
+
+        // Hash the challenge and create a list of 4 (32/8) challenge blocks.
+        return formatHashedChallenge(Hash.sha256(challenge));
+    }
+
+    static byte[] mashupChallenge(
             byte[] key, byte[] diversifier, int counter, long epochTime, List<byte[]> challenges) {
         Preconditions.checkArgument(!challenges.isEmpty(), "Challenges were empty.");
 
