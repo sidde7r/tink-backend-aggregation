@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.storage.BankdataStorage;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -83,12 +84,13 @@ public class BankdataAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper);
 
+        BankdataStorage bankdataPersistentStorage = new BankdataStorage(persistentStorage);
         BankdataPasswordAuthenticator passwordAuthenticator =
                 new BankdataPasswordAuthenticator(
                         credentials.getField(Key.USERNAME),
                         credentials.getField(Key.ACCESS_PIN),
                         nemIdAuthenticator,
-                        persistentStorage);
+                        bankdataPersistentStorage);
 
         return new AutoAuthenticationController(
                 request, systemUpdater, nemidAuthenticationController, passwordAuthenticator);

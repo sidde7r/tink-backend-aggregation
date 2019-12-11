@@ -16,7 +16,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class NemIdAuthenticationController
         implements TypedAuthenticator, AuthenticationControllerType {
 
-    private static final String NEMID_INSTALL_ID = "NEMID_INSTALL_ID";
     private static final String SUPPLEMENTAL_FIELD_ID = "online-banking-password";
 
     private final NemIdIFrameController iFrameController;
@@ -67,7 +66,7 @@ public class NemIdAuthenticationController
 
         authenticator.authenticateUsingInstallId(username, pinCode, installId);
 
-        storage.put(NEMID_INSTALL_ID, installId);
+        storage.put(NemIdConstantsV2.Storage.NEMID_INSTALL_ID, installId);
     }
 
     @Override

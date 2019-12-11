@@ -3,22 +3,22 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.storage.BankdataStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class BankdataPasswordAuthenticator implements AutoAuthenticator {
 
     private final BankdataNemIdAuthenticator authenticator;
     private final String username;
     private final String pinCode;
-    private final Storage storage;
+    private final BankdataStorage storage;
 
     public BankdataPasswordAuthenticator(
             String username,
             String pinCode,
             BankdataNemIdAuthenticator authenticator,
-            Storage storage) {
+            BankdataStorage storage) {
         this.username = username;
         this.pinCode = pinCode;
         this.authenticator = authenticator;
@@ -29,7 +29,9 @@ public class BankdataPasswordAuthenticator implements AutoAuthenticator {
     public void autoAuthenticate()
             throws SessionException, BankServiceException, AuthorizationException {
 
-        authenticator.authenticateUsingInstallId(
-                username, pinCode, storage.get(BankdataConstants.Storage.NEMID_INSTALL_ID));
+        final String installId =
+                storage.getNemidInstallId().orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
+        authenticator.authenticateUsingInstallId(username, pinCode, installId);
     }
 }
