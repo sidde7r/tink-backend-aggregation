@@ -1,11 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.BancoBpiUserState;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -18,19 +17,19 @@ public class DefaultRequestTest {
     private static final String URL = "http://localhost";
     private static final String HEADER_CSRF_TOKEN = "X-CSRFToken";
     private static final String HEADER_DEVICE_UUID = "OutSystems-device-uuid";
-    private BancoBpiUserState userState;
+    private BancoBpiAuthContext userState;
     private TinkHttpClient httpClient;
 
     @Before
     public void init() {
-        userState = Mockito.mock(BancoBpiUserState.class);
+        userState = Mockito.mock(BancoBpiAuthContext.class);
         Mockito.when(userState.getDeviceUUID()).thenReturn(DEVICE_UUID);
         Mockito.when(userState.getSessionCSRFToken()).thenReturn(CSRF_TOKEN);
         httpClient = Mockito.mock(TinkHttpClient.class);
     }
 
     @Test
-    public void withHeadersShouldPutMandatoryAndSpecificHeaders() throws LoginException {
+    public void withHeadersShouldPutMandatoryAndSpecificHeaders() throws RequestException {
         // given
         TestDefaultRequest objectUnderTest = new TestDefaultRequest(userState, URL);
         RequestBuilder requestBuilder = Mockito.mock(RequestBuilder.class);
@@ -63,11 +62,7 @@ public class DefaultRequestTest {
 
     private class TestDefaultRequest extends DefaultRequest {
 
-        public TestDefaultRequest(String csrfToken, String deviceUUID, String url) {
-            super(csrfToken, deviceUUID, url);
-        }
-
-        public TestDefaultRequest(BancoBpiUserState userState, String url) {
+        public TestDefaultRequest(BancoBpiAuthContext userState, String url) {
             super(userState, url);
         }
 
@@ -84,7 +79,7 @@ public class DefaultRequestTest {
 
         @Override
         public Object execute(RequestBuilder requestBuilder, TinkHttpClient httpClient)
-                throws LoginException {
+                throws RequestException {
             return null;
         }
     }

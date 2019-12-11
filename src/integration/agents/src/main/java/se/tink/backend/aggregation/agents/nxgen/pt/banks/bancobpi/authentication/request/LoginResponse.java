@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.http.cookie.Cookie;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.libraries.i18n.LocalizableKey;
 
 public class LoginResponse extends AuthenticationResponse {
 
@@ -20,37 +18,28 @@ public class LoginResponse extends AuthenticationResponse {
     private String csrfToken;
 
     LoginResponse(final String rawJsonResponse, final TinkHttpClient httpClient)
-            throws LoginException {
+            throws RequestException {
         super(rawJsonResponse);
         csrfToken = extractCSRFTokenFromCookies(httpClient.getCookies());
     }
 
-    String extractCSRFTokenFromCookies(final List<Cookie> cookies) throws LoginException {
+    String extractCSRFTokenFromCookies(final List<Cookie> cookies) throws RequestException {
         String cookieValue =
                 cookies.stream()
                         .filter(c -> c.getName().equals(CSRF_TOKEN_COOKIE))
                         .map(c -> c.getValue())
                         .findAny()
-                        .orElseThrow(
-                                () ->
-                                        new LoginException(
-                                                LoginError.NOT_SUPPORTED,
-                                                new LocalizableKey("CSRF token cookie not found")));
+                        .orElseThrow(() -> new RequestException("CSRF token cookie not found"));
         try {
             Matcher m =
                     CSRF_TOKEN_PATTERN.matcher(
                             URLDecoder.decode(cookieValue, StandardCharsets.UTF_8.toString()));
             if (!m.find()) {
-                throw new LoginException(
-                        LoginError.NOT_SUPPORTED,
-                        new LocalizableKey("CSRF token not found in cookies"));
+                throw new RequestException("CSRF token not found in cookies");
             }
             return m.group(1);
         } catch (UnsupportedEncodingException e) {
-            throw new LoginException(
-                    LoginError.NOT_SUPPORTED,
-                    new LocalizableKey("Unexpected CSRF token cookie value format"),
-                    e);
+            throw new RequestException("Unexpected CSRF token cookie value format");
         }
     }
 

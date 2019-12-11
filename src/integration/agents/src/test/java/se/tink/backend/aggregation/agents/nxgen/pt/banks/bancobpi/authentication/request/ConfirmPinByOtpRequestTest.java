@@ -4,9 +4,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.BancoBpiUserState;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.MobileChallengeRequestedToken;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.BancoBpiEntityManager;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.MobileChallengeRequestedToken;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -20,6 +21,7 @@ public class ConfirmPinByOtpRequestTest {
     private static final String DEVICE_UUID = "123456123456";
     private static final String PIN = "1234";
     private static final String OTP = "123456";
+    private static final String MODULE_VERSION = "gS+lXxFxC_wWYvNlPJM_Qw";
     private static final String REQUEST_BODY_TEMPLATE =
             "{\"versionInfo\": {\"moduleVersion\": \"gS+lXxFxC_wWYvNlPJM_Qw\",\"apiVersion\": \"jR8qd1rTdzHYUcSU5Wk3nA\"},\"viewName\": \"Fiabilizacao.Code\",\"inputParameters\": {\"IdDispositivo\": \"%s\",\"Pin\": \"%s\",\"MobileChallengeResponse\": {\"Id\": \"%s\",\"Response\": \"{\\\"id\\\":\\\"%s\\\",\\\"data\\\":[{\\\"requestedOTP\\\":\\\"%s\\\",\\\"mobilePhoneNumber\\\":\\\"%s\\\",\\\"processedOn\\\":\\\"%s\\\",\\\"processedOnSpecified\\\":true,\\\"uuid\\\":\\\"%s\\\",\\\"replywith\\\":\\\"%s\\\"}]}\"}}}";
     private static final String REQUEST =
@@ -42,7 +44,7 @@ public class ConfirmPinByOtpRequestTest {
             "{\"data\": {},\"exception\": {\"name\": \"ServerException\",\"specificType\": \"OutSystems.RESTService.ErrorHandling.ExposeRestException\",\"message\": \"Invalid Login\"}}";
     private RequestBuilder requestBuilder;
     private TinkHttpClient httpClient;
-    private BancoBpiUserState userState;
+    private BancoBpiAuthContext authContext;
     private ConfirmPinByOtpRequest objectUnderTest;
     private MobileChallengeRequestedToken mobileChallengeRequestedToken;
 
@@ -51,18 +53,21 @@ public class ConfirmPinByOtpRequestTest {
         requestBuilder = Mockito.mock(RequestBuilder.class);
         httpClient = Mockito.mock(TinkHttpClient.class);
         initMobileChallengeRequestedToken();
-        initUserState();
-        objectUnderTest = new ConfirmPinByOtpRequest(userState, OTP);
+        initAuthContext();
+        BancoBpiEntityManager entityManager = Mockito.mock(BancoBpiEntityManager.class);
+        Mockito.when(entityManager.getAuthContext()).thenReturn(authContext);
+        objectUnderTest = new ConfirmPinByOtpRequest(entityManager, OTP);
     }
 
-    private void initUserState() {
-        userState = Mockito.mock(BancoBpiUserState.class);
-        Mockito.when(userState.getAccessPin()).thenReturn(PIN);
-        Mockito.when(userState.getDeviceUUID()).thenReturn(DEVICE_UUID);
-        Mockito.when(userState.getAccessPin()).thenReturn(PIN);
-        Mockito.when(userState.getSessionCSRFToken()).thenReturn("ewporegoijvkldsjkcso");
-        Mockito.when(userState.getMobileChallengeRequestedToken())
+    private void initAuthContext() {
+        authContext = Mockito.mock(BancoBpiAuthContext.class);
+        Mockito.when(authContext.getAccessPin()).thenReturn(PIN);
+        Mockito.when(authContext.getDeviceUUID()).thenReturn(DEVICE_UUID);
+        Mockito.when(authContext.getAccessPin()).thenReturn(PIN);
+        Mockito.when(authContext.getSessionCSRFToken()).thenReturn("ewporegoijvkldsjkcso");
+        Mockito.when(authContext.getMobileChallengeRequestedToken())
                 .thenReturn(mobileChallengeRequestedToken);
+        Mockito.when(authContext.getModuleVersion()).thenReturn(MODULE_VERSION);
     }
 
     private void initMobileChallengeRequestedToken() {
@@ -86,7 +91,7 @@ public class ConfirmPinByOtpRequestTest {
     }
 
     @Test
-    public void executeShouldReturnSuccessResponse() throws LoginException {
+    public void executeShouldReturnSuccessResponse() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_CORRECT);
         // when
@@ -96,7 +101,7 @@ public class ConfirmPinByOtpRequestTest {
     }
 
     @Test
-    public void executeShouldReturnFailedResponse() throws LoginException {
+    public void executeShouldReturnFailedResponse() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_INCORRECT);
         // when
@@ -106,8 +111,8 @@ public class ConfirmPinByOtpRequestTest {
         Assert.assertEquals("CIPL_0001", result.getCode());
     }
 
-    @Test(expected = LoginException.class)
-    public void executeShouldThrowLoginException() throws LoginException {
+    @Test(expected = RequestException.class)
+    public void executeShouldThrowLoginException() throws RequestException {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_UNEXPECTED);
         // when

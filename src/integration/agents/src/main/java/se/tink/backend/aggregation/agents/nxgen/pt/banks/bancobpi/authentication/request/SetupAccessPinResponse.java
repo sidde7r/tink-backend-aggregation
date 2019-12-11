@@ -2,10 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authenticatio
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.MobileChallengeRequestedToken;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.MobileChallengeRequestedToken;
 
 public class SetupAccessPinResponse extends AuthenticationResponse {
 
@@ -13,7 +11,7 @@ public class SetupAccessPinResponse extends AuthenticationResponse {
 
     private MobileChallengeRequestedToken mobileChallengeRequestedToken;
 
-    SetupAccessPinResponse(String rawJsonResponse) throws LoginException {
+    SetupAccessPinResponse(String rawJsonResponse) throws RequestException {
         super(rawJsonResponse);
         fixSuccessFlag();
         if (isSuccess()) {
@@ -26,7 +24,7 @@ public class SetupAccessPinResponse extends AuthenticationResponse {
         success = SUCCESS_STATUS_CODE.equals(getCode());
     }
 
-    private void parseJsonResponse() throws LoginException {
+    private void parseJsonResponse() throws RequestException {
         try {
             JSONObject jsonObject =
                     getResponse().getJSONObject("data").getJSONObject("MobileChallenge");
@@ -42,9 +40,7 @@ public class SetupAccessPinResponse extends AuthenticationResponse {
             mobileChallengeRequestedToken.setProcessedOn(jsonObject.getString("processedOn"));
             mobileChallengeRequestedToken.setReplyWith(jsonObject.getString("replywith"));
         } catch (JSONException ex) {
-            throw new LoginException(
-                    LoginError.NOT_SUPPORTED,
-                    new LocalizableKey("Response JSON doesn't have expected format"));
+            throw new RequestException("Response JSON doesn't have expected format");
         }
     }
 

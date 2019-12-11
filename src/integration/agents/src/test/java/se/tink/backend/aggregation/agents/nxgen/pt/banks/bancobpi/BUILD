@@ -15,7 +15,9 @@ junit_test(
         "//third_party:com_google_guava_guava",
         "//third_party:net_bytebuddy_byte_buddy",
         "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:org_json_json",
         "//third_party:org_mockito_mockito_core",
         "//third_party:org_objenesis_objenesis",
+        "//third_party:pl_pragmatists_junitparams",
     ],
 )

@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authenticatio
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.MobileChallengeRequestedToken;
 
 public class BancoBpiUserStateTest {
 
-    private BancoBpiUserState objectUnderTest;
+    private BancoBpiAuthContext objectUnderTest;
 
     private static final String PIN = "1234";
     private static final String DEVICE_UUID = "1234567890";
@@ -14,7 +16,7 @@ public class BancoBpiUserStateTest {
 
     @Before
     public void init() {
-        objectUnderTest = new BancoBpiUserState();
+        objectUnderTest = new BancoBpiAuthContext();
     }
 
     @Test
