@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.eidassigner;
 
 import java.security.KeyStore;
+import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
-import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
-import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
@@ -23,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 
 public class QsealcSignerHttpClient {
     private static HttpClient httpClient;
+    private static IdleConnectionMonitorThread staleMonitor;
 
     static synchronized HttpClient getHttpClient(InternalEidasProxyConfiguration conf) {
         if (httpClient == null) {
@@ -48,9 +50,15 @@ public class QsealcSignerHttpClient {
                                                 PlainConnectionSocketFactory.getSocketFactory())
                                         .register("https", sslsf)
                                         .build());
-                connectionManager.setMaxTotal(40);
-                connectionManager.setDefaultMaxPerRoute(5);
-                connectionManager.setMaxPerRoute(new HttpRoute(new HttpHost(conf.getHost())), 32);
+                connectionManager.setMaxTotal(50);
+                connectionManager.setDefaultMaxPerRoute(50);
+
+                RequestConfig config =
+                        RequestConfig.custom()
+                                .setConnectTimeout(10 * 1000)
+                                .setConnectionRequestTimeout(10 * 1000)
+                                .setSocketTimeout(10 * 1000)
+                                .build();
 
                 ConnectionKeepAliveStrategy ttl =
                         (response, context) -> {
@@ -72,11 +80,50 @@ public class QsealcSignerHttpClient {
                         HttpClients.custom()
                                 .setConnectionManager(connectionManager)
                                 .setKeepAliveStrategy(ttl)
+                                .setDefaultRequestConfig(config)
                                 .build();
+
+                if (staleMonitor == null) {
+                    staleMonitor = new IdleConnectionMonitorThread(connectionManager);
+                    staleMonitor.start();
+                }
             } catch (Exception e) {
                 throw new IllegalStateException(e);
             }
         }
         return httpClient;
+    }
+
+    private static class IdleConnectionMonitorThread extends Thread {
+
+        private final HttpClientConnectionManager connMgr;
+        private volatile boolean shutdown;
+
+        IdleConnectionMonitorThread(HttpClientConnectionManager connMgr) {
+            super();
+            this.connMgr = connMgr;
+        }
+
+        @Override
+        public void run() {
+            try {
+                while (!shutdown) {
+                    synchronized (this) {
+                        wait(5000);
+                        connMgr.closeExpiredConnections();
+                        connMgr.closeIdleConnections(60, TimeUnit.SECONDS);
+                    }
+                }
+            } catch (InterruptedException ex) {
+                shutdown();
+            }
+        }
+
+        public void shutdown() {
+            shutdown = true;
+            synchronized (this) {
+                notifyAll();
+            }
+        }
     }
 }
