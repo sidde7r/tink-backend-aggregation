@@ -5,9 +5,11 @@ import static org.apache.commons.lang3.ObjectUtils.max;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.entities.CreditCardEntity;
@@ -18,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.date.DateUtils;
 
 public class VolvoFinansCreditCardFetcher
@@ -31,9 +34,18 @@ public class VolvoFinansCreditCardFetcher
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return apiClient.creditCardAccounts().stream()
-                .map(CreditCardEntity::toTinkAccount)
-                .collect(Collectors.toList());
+        try {
+            return apiClient.creditCardAccounts().stream()
+                    .map(CreditCardEntity::toTinkAccount)
+                    .collect(Collectors.toList());
+        } catch (HttpResponseException hre) {
+            // When user doesn't have any credit cards we get NOT FOUND as response
+            if (hre.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
+                return Collections.emptyList();
+            }
+
+            throw hre;
+        }
     }
 
     @Override
