@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
@@ -113,6 +114,34 @@ public class LogMaskerTest {
                 "Didn't mask sensitive values as expected.",
                 "true222***MASKED***falsealfgoiangoiandg555adlkga222",
                 masked);
+    }
+
+    @Test
+    public void testAgentWhiteListedValue() {
+        LogMasker logMasker =
+                LogMasker.builder()
+                        .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
+                        .build();
+
+        Subject<Collection<String>> testSecretValuesSubject = BehaviorSubject.create();
+        testSecretValuesSubject.onNext(Sets.newHashSet("1111", "0000"));
+        logMasker.addSensitiveValuesSetObservable(testSecretValuesSubject);
+
+        String unmasked = "abcd1111abcd2020abcd1010abcd0000";
+        String maskedString1 = logMasker.mask(unmasked);
+        Assert.assertEquals(
+                "String not masked as expected.",
+                "abcd***MASKED***abcd***MASKED***abcd***MASKED***abcd***MASKED***",
+                maskedString1);
+
+        ImmutableSet<String> whitelistedValues = ImmutableSet.of("0000");
+        logMasker.addAgentWhitelistedValues(whitelistedValues);
+
+        String maskedString2 = logMasker.mask(unmasked);
+        Assert.assertEquals(
+                "String not masked as expected.",
+                "abcd***MASKED***abcd***MASKED***abcd***MASKED***abcd0000",
+                maskedString2);
     }
 
     private Credentials mockCredentials() {

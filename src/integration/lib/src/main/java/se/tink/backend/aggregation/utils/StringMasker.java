@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -80,5 +82,14 @@ public class StringMasker {
                 sensitiveValuesWithoutDuplicates.stream()
                         .sorted(SENSITIVE_VALUES_SORTING_COMPARATOR.reversed())
                         .collect(ImmutableList.toImmutableList());
+    }
+
+    public void removeValuesToMask(Set<String> whitelistedValues) {
+        sensitiveValuesToMask =
+                (new HashSet<>(sensitiveValuesToMask))
+                        .stream()
+                                .filter(pattern -> !whitelistedValues.contains(pattern.toString()))
+                                .sorted(SENSITIVE_VALUES_SORTING_COMPARATOR.reversed())
+                                .collect(ImmutableList.toImmutableList());
     }
 }

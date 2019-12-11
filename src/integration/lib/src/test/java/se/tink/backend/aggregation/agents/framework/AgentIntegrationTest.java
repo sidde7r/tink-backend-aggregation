@@ -53,6 +53,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
+import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -126,7 +127,17 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 context.getAgentTestServerClient()
                         .loadCredential(provider.getName(), credential.getId());
 
-        optionalCredential.ifPresent(c -> this.credential = c);
+        optionalCredential.ifPresent(
+                c -> {
+                    this.credential = c;
+
+                    // Replace the log masker with one that includes the newly loaded credentials
+                    this.context.setLogMasker(
+                            LogMasker.builder()
+                                    .addStringMaskerBuilder(
+                                            new CredentialsStringMaskerBuilder(this.credential))
+                                    .build());
+                });
 
         return optionalCredential.isPresent();
     }

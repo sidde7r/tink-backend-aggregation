@@ -6,7 +6,9 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.utils.Base64Masker;
@@ -40,7 +42,14 @@ public class LogMasker {
                     .build();
     private static final int MINIMUM_LENGTH_TO_BE_CONSIDERED_A_SECRET = 3;
 
+    private Set<String> whitelistedValues = new HashSet<>();
+
     private CompositeDisposable composite = new CompositeDisposable();
+
+    public void addAgentWhitelistedValues(ImmutableSet<String> agentWhitelistedValues) {
+        this.whitelistedValues.addAll(agentWhitelistedValues);
+        masker.removeValuesToMask(whitelistedValues);
+    }
 
     /**
      * This enumeration decides if logging should be done or not. NOTE: Only pass
@@ -61,7 +70,8 @@ public class LogMasker {
 
     private boolean shouldMask(Pattern sensitiveValue) {
         return sensitiveValue.toString().length() > MINIMUM_LENGTH_TO_BE_CONSIDERED_A_SECRET
-                && !WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue.toString());
+                && !WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue.toString())
+                && !this.whitelistedValues.contains(sensitiveValue.toString());
     }
 
     public String mask(String dataToMask) {

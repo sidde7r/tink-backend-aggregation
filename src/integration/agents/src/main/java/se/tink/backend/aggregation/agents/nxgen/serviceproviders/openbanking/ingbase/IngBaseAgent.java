@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
+import com.google.common.collect.ImmutableSet;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -78,6 +79,12 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         apiClient.setConfiguration(
                 ingBaseConfiguration, configuration.getEidasProxy(), eidasIdentity);
         client.setEidasProxy(configuration.getEidasProxy());
+
+        String clientId = persistentStorage.get(StorageKeys.CLIENT_ID);
+        if (clientId != null) {
+            ImmutableSet<String> whitelistedValues = ImmutableSet.of(clientId);
+            context.getLogMasker().addAgentWhitelistedValues(whitelistedValues);
+        }
     }
 
     protected IngBaseConfiguration getClientConfiguration() {
