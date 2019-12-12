@@ -41,7 +41,6 @@ public final class BbvaConstants {
     public static final class Defaults {
         public static final String CURRENCY = "EUR";
         public static final String CHARSET = "UTF-8";
-        public static final String TIMEZONE_CET = "CET";
     }
 
     public static final class AccountType {
@@ -89,7 +88,7 @@ public final class BbvaConstants {
 
         public static final String PARAM_ID = "ID";
 
-        public static final String LOGIN = BASE_URL + "/DFAUTH/slod/DFServletXML";
+        public static final String LOGIN = BASE_URL + "/ASO/TechArchitecture/grantingTickets/V02";
         public static final String SESSION =
                 BASE_URL + "/ENPP/enpp_mult_web_mobility_02/sessions/v1";
         public static final String PRODUCTS =
@@ -110,11 +109,11 @@ public final class BbvaConstants {
     }
 
     public enum Headers implements HeaderEnum {
-        CONSUMER_ID("ConsumerID", "00000013"),
+        CONSUMER_ID("ConsumerID", LoginParameter.CONSUMER_ID),
         BBVA_USER_AGENT(
                 "BBVA-User-Agent",
                 "%s;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi"),
-        REFERER("Referer", "https://beta.movil.bbva.es/versions/woody/6.18.3/index.html");
+        REFERER("Referer", "https://movil.bbva.es/versions/woody/7.3.7/index.html");
 
         private final String key;
         private final String value;
@@ -140,24 +139,25 @@ public final class BbvaConstants {
     }
 
     public static final class PostParameter {
-        public static final String ORIGEN_KEY = "origen";
-        public static final String ORIGEN_VALUE = "enpp";
-        public static final String EAI_TIPOCP_KEY = "eai_tipoCP";
-        public static final String EAI_TIPOCP_VALUE = "up";
-        public static final String EAI_USER_KEY = "eai_user";
-        public static final String EAI_USER_VALUE_PREFIX = "0019-";
-        public static final String EAI_PASSWORD_KEY = "eai_password";
-        public static final String CONSUMER_ID_KEY = "consumerID";
-        public static final String CONSUMER_ID_VALUE = Headers.CONSUMER_ID.value;
+        public static final String CONSUMER_ID_VALUE = LoginParameter.CONSUMER_ID;
         public static final String SEARCH_TYPE = "SEARCH";
 
         public static final int START_DATE_YEAR_AGO = -30;
     }
 
+    public static final class LoginParameter {
+        public static final String AUTH_DATA_ID = "password";
+        public static final String AUTH_TYPE = "02";
+        public static final String USER_VALUE_PREFIX = "0019-";
+        public static final String CONSUMER_ID = "00000013";
+    }
+
     public static final class Messages {
         public static final String OK = "ok";
-        public static final String LOGIN_SUCCESS = "login successful";
-        public static final String LOGIN_WRONG_CREDENTIAL_CODE = "eai0000";
+    }
+
+    public static final class AuthenticationStates {
+        public static final String OK = "OK";
     }
 
     public static final class ErrorMessages {

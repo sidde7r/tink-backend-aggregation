@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Quer
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.rpc.IdentityDataResponse;
@@ -68,13 +69,20 @@ public class BbvaApiClient {
                 .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent());
     }
 
-    public HttpResponse login(LoginRequest loginRequest) {
-        return client.request(BbvaConstants.Url.LOGIN)
-                .type(HeaderKeys.CONTENT_TYPE_URLENCODED_UTF8)
-                .accept(MediaType.WILDCARD)
-                .header(Headers.CONSUMER_ID)
-                .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent())
-                .post(HttpResponse.class, loginRequest);
+    public LoginResponse login(LoginRequest loginRequest) {
+        HttpResponse httpResponse =
+                client.request(Url.LOGIN)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .header(Headers.CONSUMER_ID)
+                        .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent())
+                        .post(HttpResponse.class, loginRequest);
+
+        LoginResponse loginResponse = httpResponse.getBody(LoginResponse.class);
+
+        setTsec(httpResponse.getHeaders().getFirst(HeaderKeys.TSEC_KEY));
+        setUserId(loginResponse.getUser().getId());
+        return loginResponse;
     }
 
     public void logout() {
@@ -184,9 +192,7 @@ public class BbvaApiClient {
                         .parameter(BbvaConstants.Url.PARAM_ID, getUserId())
                         .get();
 
-        return createRequestInSession(url)
-                .queryParam(BbvaConstants.QueryKeys.SHOW_SENSITIVE, BbvaConstants.QueryValues.FALSE)
-                .get(IdentityDataResponse.class);
+        return createRequestInSession(url).get(IdentityDataResponse.class);
     }
 
     private String getUserAgent() {
