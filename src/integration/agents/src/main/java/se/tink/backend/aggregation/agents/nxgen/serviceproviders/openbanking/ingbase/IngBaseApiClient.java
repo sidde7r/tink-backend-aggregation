@@ -299,7 +299,6 @@ public class IngBaseApiClient {
     }
 
     private void setClientIdToSession(final String clientId) {
-        logger.debug("ING client id: " + clientId);
         persistentStorage.put(StorageKeys.CLIENT_ID, clientId, false);
     }
 
