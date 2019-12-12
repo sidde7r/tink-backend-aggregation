@@ -11,11 +11,6 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePass
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.CredentialKeys;
 
 public class SparkassenAgentTest {
-
-    private final String TEST_IBAN = "DE90701500001005031263"; // Comma separated list of ibans
-    private final String TEST_USERNAME = "1005031263";
-    private final String TEST_PASSWORD = "36699";
-
     private final ArgumentManager<IbanArgumentEnum> ibanManager =
             new ArgumentManager<>(IbanArgumentEnum.values());
     private final ArgumentManager<UsernamePasswordArgumentEnum> usernamePasswordManager =
