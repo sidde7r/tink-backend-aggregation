@@ -31,8 +31,9 @@ public class FetchAccountsResponseMapper
     private List<Account> mapAccountList(
             final List<se.tink.sa.services.fetch.account.TransactionalAccount> accountList,
             MappingContext mappingContext) {
-        return Optional.ofNullable(accountList).orElse(Collections.emptyList()).stream()
-                .map(acc -> transactionaAccountMapper.map(acc, mappingContext))
-                .collect(Collectors.toList());
+//        return Optional.ofNullable(accountList).orElse(Collections.emptyList()).stream()
+//                .map(acc -> transactionaAccountMapper.map(acc, mappingContext))
+//                .collect(Collectors.toList());
+        return null;
     }
 }

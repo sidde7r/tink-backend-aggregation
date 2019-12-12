@@ -18,3 +18,8 @@ message RequestCommon {
 message ResponseCommon {
   string correlationId = 1;
 }
+
+message BigDecimal {
+  int64 unscaledValue = 1;
+  int32 scale = 2;
+}

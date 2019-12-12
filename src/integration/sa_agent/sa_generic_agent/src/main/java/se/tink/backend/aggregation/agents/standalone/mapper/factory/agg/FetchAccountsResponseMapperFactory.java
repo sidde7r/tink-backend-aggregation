@@ -18,50 +18,34 @@ public final class FetchAccountsResponseMapperFactory {
 
     public FetchAccountsResponseMapper fetchAccountsResponseMapper() {
         FetchAccountsResponseMapper mapper = new FetchAccountsResponseMapper();
-        mapper.setTransactionaAccountMapper(transactionaAccountMapper());
+        mapper.setTransactionaAccountMapper(transactionalAccountMapper());
         return mapper;
     }
 
-    public TransactionAccountMapper transactionaAccountMapper() {
+    public TransactionAccountMapper transactionalAccountMapper() {
         TransactionAccountMapper mapper = new TransactionAccountMapper();
-        mapper.setAccountExclusionMapper(accountExclusionMapper());
         mapper.setExactCurrencyAmountMapper(exactCurrencyAmountMapper());
-        mapper.setGoogleDateMapper(commonMappersFactory.googleDateMapper());
         mapper.setAccountTypesMapper(accountTypesMapper());
-        mapper.setAccountIdentifierMapper(accountIdentifierMapper());
-        mapper.setTransferDestinationMapper(transferDestinationMapper());
-        mapper.setAccountDetailsMapper(accountDetailsMapper());
-        mapper.setAccountFlagMapper(accountFlagMapper());
+        mapper.setBalanceModuleMapper(balanceModuleMapper());
+        mapper.setIbanIdModuleMapper(ibanIdModuleMapper());
         return mapper;
     }
 
-    private AccountExclusionMapper accountExclusionMapper() {
-        return new AccountExclusionMapper();
-    }
-
-    private AccountFlagMapper accountFlagMapper() {
-        return new AccountFlagMapper();
-    }
-
-    private AccountIdentifierMapper accountIdentifierMapper() {
-        return new AccountIdentifierMapper();
-    }
-
-    private AccountTypesMapper accountTypesMapper() {
-        return new AccountTypesMapper();
-    }
-
-    private ExactCurrencyAmountMapper exactCurrencyAmountMapper() {
+    private ExactCurrencyAmountMapper exactCurrencyAmountMapper(){
         return new ExactCurrencyAmountMapper();
     }
 
-    private TransferDestinationMapper transferDestinationMapper() {
-        return new TransferDestinationMapper();
+    private AccountTypesMapper accountTypesMapper(){
+        return new AccountTypesMapper();
     }
 
-    private AccountDetailsMapper accountDetailsMapper() {
-        AccountDetailsMapper accountDetailsMapper = new AccountDetailsMapper();
-        accountDetailsMapper.setGoogleDateMapper(commonMappersFactory.googleDateMapper());
-        return accountDetailsMapper;
+    private BalanceModuleMapper balanceModuleMapper(){
+        return new BalanceModuleMapper();
     }
+
+    private IbanIdModuleMapper ibanIdModuleMapper(){
+        return new IbanIdModuleMapper();
+    }
+
+
 }
