@@ -1,28 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksBalanceEntity {
 
     @JsonProperty("self")
-    private HrefEntity selfEntity;
+    private Href selfEntity;
 
-    private HrefEntity transactions;
+    private Href transactions;
 
     @JsonProperty("parent-list")
-    private HrefEntity parentListEntity;
+    private Href parentListEntity;
 
-    public HrefEntity getSelfEntity() {
+    public Href getSelfEntity() {
         return selfEntity;
     }
 
-    public HrefEntity getTransactions() {
+    public Href getTransactions() {
         return transactions;
     }
 
-    public HrefEntity getParentListEntity() {
+    public Href getParentListEntity() {
         return parentListEntity;
     }
 }

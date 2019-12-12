@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -22,7 +23,7 @@ public class AccountsItemEntity {
     private String resourceId;
 
     @JsonProperty("_links")
-    private HrefEntity linksEntity;
+    private Href linksEntity;
 
     private String usage;
 
@@ -44,7 +45,7 @@ public class AccountsItemEntity {
         return resourceId;
     }
 
-    public HrefEntity getLinksEntity() {
+    public Href getLinksEntity() {
         return linksEntity;
     }
 
