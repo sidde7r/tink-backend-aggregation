@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca;
 
+import static java.util.Objects.requireNonNull;
+
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -8,6 +10,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.ChebancaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration.ChebancaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaConsentAuthorizationController;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -24,7 +27,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class ChebancaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final ChebancaApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -33,22 +35,22 @@ public final class ChebancaAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-
-        apiClient = new ChebancaApiClient(client, persistentStorage, strongAuthenticationState);
-        clientName = request.getProvider().getPayload();
+        requireNonNull(request);
+        requireNonNull(context);
+        requireNonNull(agentsServiceConfiguration);
+        apiClient =
+                new ChebancaApiClient(
+                        client,
+                        persistentStorage,
+                        strongAuthenticationState,
+                        getClientConfiguration(),
+                        agentsServiceConfiguration,
+                        this.getEidasIdentity());
 
         client.setFollowRedirects(false);
 
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
-        apiClient.setConfiguration(
-                getClientConfiguration(), configuration, this.getEidasIdentity());
     }
 
     protected ChebancaConfiguration getClientConfiguration() {
@@ -62,7 +64,7 @@ public final class ChebancaAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new ChebancaAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()),
+                                apiClient, getClientConfiguration(), strongAuthenticationState),
                         credentials,
                         strongAuthenticationState);
 
@@ -98,7 +100,6 @@ public final class ChebancaAgent extends NextGenerationAgent
         final ChebancaTransactionalAccountFetcher accountFetcher =
                 new ChebancaTransactionalAccountFetcher(
                         apiClient,
-                        persistentStorage,
                         new ThirdPartyAppAuthenticationController<>(
                                 new ChebancaConsentAuthorizationController(
                                         supplementalInformationHelper,
@@ -113,7 +114,8 @@ public final class ChebancaAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController<>(
+                                new ChebancaTransactionFetcher(apiClient))));
     }
 
     @Override

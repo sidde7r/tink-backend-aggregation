@@ -14,6 +14,24 @@ public class ChebancaConfiguration implements ClientConfiguration {
     private String redirectUrl;
     private String certificateId;
     private String applicationId;
+    private String baseUrl;
+
+    public ChebancaConfiguration() {}
+
+    public ChebancaConfiguration(
+            String clientId,
+            String clientSecret,
+            String redirectUrl,
+            String certificateId,
+            String applicationId,
+            String baseUrl) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.redirectUrl = redirectUrl;
+        this.certificateId = certificateId;
+        this.applicationId = applicationId;
+        this.baseUrl = baseUrl;
+    }
 
     public String getApplicationId() {
         Preconditions.checkNotNull(
@@ -53,5 +71,12 @@ public class ChebancaConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
+    }
+
+    public String getBaseUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(baseUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
+        return baseUrl;
     }
 }

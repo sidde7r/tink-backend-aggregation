@@ -1,33 +1,31 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collection;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.ResultEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.TransactionsDataEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class GetTransactionsResponse implements PaginatorResponse {
+public class GetTransactionsResponse {
     @JsonProperty("_links")
     private LinksEntity links;
 
+    @JsonProperty("data")
     private TransactionsDataEntity data;
+
+    @JsonProperty("result")
     private ResultEntity result;
 
-    @JsonIgnore
-    @Override
-    public Collection<? extends Transaction> getTinkTransactions() {
-        return Optional.ofNullable(data).orElse(new TransactionsDataEntity()).toTinkTransactions();
+    public LinksEntity getLinks() {
+        return links;
     }
 
-    @JsonIgnore
-    @Override
-    public Optional<Boolean> canFetchMore() {
-        return Optional.empty();
+    public TransactionsDataEntity getData() {
+        return data;
+    }
+
+    public ResultEntity getResult() {
+        return result;
     }
 }

@@ -27,6 +27,6 @@ public class DataEntity {
 
     @JsonIgnore
     public OAuth2Token toTinkToken() {
-        return OAuth2Token.create("Bearer", accessToken, refreshToken, expiresIn, rtExpiresIn);
+        return OAuth2Token.create(tokenType, accessToken, refreshToken, expiresIn, rtExpiresIn);
     }
 }

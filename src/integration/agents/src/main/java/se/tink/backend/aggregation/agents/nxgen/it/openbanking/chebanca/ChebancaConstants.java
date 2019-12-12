@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca;
 
+import java.time.ZoneId;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
@@ -14,11 +15,7 @@ public final class ChebancaConstants {
                     .put(AccountTypes.CREDIT_CARD, "CARTA DI CREDITO")
                     .build();
 
-    private ChebancaConstants() {
-        throw new AssertionError();
-    }
-
-    enum HeadersToSign {
+    public enum HeadersToSign {
         REQUEST_TARGET("(request-target)"),
         DIGEST("Digest"),
         TPP_REQUEST_ID("TPP-Request-ID"),
@@ -40,11 +37,20 @@ public final class ChebancaConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String AUTHENTICATION_ERROR = "Authentication error.";
+        public static final String TRANSACTIONS_FETCH_FAILED = "Could not fetch transactions.";
+        public static final String CONSENT_CREATION_FAILED = "Could not create consent.";
+        public static final String GET_CUSTOMER_ID_FAILED = "Could not get customer id.";
+        public static final String CONSENT_AUTHORIZATION_FAILED = "Could not authorize consent.";
+        public static final String CONSENT_CONFIRMATION_FAILED = "Could not confirm consent.";
+        public static final String ACCOUNTS_FETCH_FAILED = "Could not fetch accounts.";
+        public static final String BALANCES_FETCH_FAILED = "Could not fetch balances.";
+        public static final String LOGIN_REDIRECT_FAILED =
+                "Could not perform redirect URL call to get the Login URL.";
+        public static final String GET_TOKEN_FAILED = "Could not get OAuth token.";
     }
 
     public static class Urls {
-        public static final String BASE_URL = "https://external-api.chebanca.io";
-
+        public static final String BASE_URL = "https://sandbox-api.chebanca.io";
         public static final URL AUTHORIZE = new URL(BASE_URL + ApiServices.AUTHORIZE);
         public static final URL TOKEN = new URL(BASE_URL + ApiServices.TOKEN);
         public static final URL CUSTOMER_ID = new URL(BASE_URL + ApiServices.CUSTOMER_ID);
@@ -82,7 +88,6 @@ public final class ChebancaConstants {
     }
 
     public static class QueryKeys {
-
         public static final String RESPONSE_TYPE = "response_type";
         public static final String CLIENT_ID = "client_id";
         public static final String REDIRECT_URI = "redirect_uri";
@@ -93,7 +98,6 @@ public final class ChebancaConstants {
     }
 
     public static class QueryValues {
-
         public static final String CODE = "code";
     }
 
@@ -121,13 +125,15 @@ public final class ChebancaConstants {
         public static final String RESOURCE_ID = "resourceId";
     }
 
-    public static class FormKeys {}
-
-    public static class FormValues {
-
-        public static final String AUTHORIZATION_CODE = "authorization_code";
-        public static final String ACCOUNT_INFO = "ACCOUNT_INFO";
+    public static class DateConfig {
+        public static final String TRANSACTION_DATE_TIME_FMT = "yyyyMMdd'T'HH:mm:ss";
+        public static final String REQUEST_DATE_TIME_FMT = "EEE, dd MMM yyyy hh:mm:ss 'GMT'";
+        public static final ZoneId ZONE_ID = ZoneId.of("GMT+01:00");
     }
 
-    public static class LogTags {}
+    public static class FormValues {
+        public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String ACCOUNT_INFO = "ACCOUNT_INFO";
+    }
 }

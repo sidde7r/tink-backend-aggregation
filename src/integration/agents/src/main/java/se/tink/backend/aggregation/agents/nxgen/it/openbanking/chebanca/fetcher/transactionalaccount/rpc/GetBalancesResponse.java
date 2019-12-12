@@ -16,7 +16,10 @@ public class GetBalancesResponse {
     @JsonProperty("_links")
     private LinksEntity links;
 
+    @JsonProperty("data")
     private BalancesDataEntity data;
+
+    @JsonProperty("result")
     private ResultEntity result;
 
     @JsonIgnore
