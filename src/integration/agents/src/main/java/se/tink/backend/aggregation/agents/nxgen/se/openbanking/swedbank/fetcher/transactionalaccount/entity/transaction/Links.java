@@ -1,19 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction;
 
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class Links {
 
-    private HrefEntity startAuthorisation;
+    private Href startAuthorisation;
 
-    private HrefEntity status;
+    private Href status;
 
-    public HrefEntity getHrefEntity() {
+    public Href getHrefEntity() {
         return startAuthorisation;
     }
 
-    public HrefEntity getStatus() {
+    public Href getStatus() {
         return status;
     }
 }
