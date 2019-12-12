@@ -123,10 +123,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
                                     : ": " + tokenExchangeResponse.getTokenType()));
         }
 
-        return tokenExchangeResponse.toTinkToken(
-                sessionStorage
-                        .get(BunqConstants.StorageKeys.PSD2_SESSION_TIMEOUT, Integer.class)
-                        .orElse(0));
+        return tokenExchangeResponse.toTinkToken();
     }
 
     @Override

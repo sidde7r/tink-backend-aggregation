@@ -54,4 +54,8 @@ public final class BunqConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
     }
+
+    public static class Token {
+        public static final long ACCESS_TOKEN_EXPIRES_IN_SECONDS = 90 * 24 * 60 * 60;
+    }
 }
