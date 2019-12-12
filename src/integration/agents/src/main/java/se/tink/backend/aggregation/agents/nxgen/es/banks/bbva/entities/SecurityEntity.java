@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Instrument.Type;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -16,7 +18,7 @@ public class SecurityEntity {
     private AmountEntity availableBalance;
     private String seoOriginated;
     private String evaluateHourTime;
-    private AmountEntity currency;
+    private TypeEntity currency;
     private String evaluateDate;
     private ProductTypeEntity productType;
     private String ricCode;
@@ -75,7 +77,7 @@ public class SecurityEntity {
         return evaluateHourTime;
     }
 
-    public AmountEntity getCurrency() {
+    public TypeEntity getCurrency() {
         return currency;
     }
 
@@ -153,14 +155,21 @@ public class SecurityEntity {
         instrument.setName(name);
         instrument.setQuantity(totalTitles);
         instrument.setType(Type.STOCK);
-        //        instrument.setPrice(getPrice());
-        // instrument.setMarketValue(marketValue);
-        // instrument.setCurrency(currency);
+        instrument.setPrice(getPrice());
+        instrument.setMarketValue(totalAmount.getAmountAsDouble());
+        instrument.setCurrency(currency.getId());
         instrument.setIsin(isin);
-        // instrument.setProfit(totalProfit);
-        // instrument.setAverageAcquisitionPrice(averageAcquisitionPrice);
         instrument.setMarketPlace(marketName);
         instrument.setRawType(typeSecurities.getId());
+        // instrument.setProfit(totalProfit);
+        // instrument.setAverageAcquisitionPrice(aap);
         return instrument;
+    }
+
+    @JsonIgnore
+    private Double getPrice() {
+        return new BigDecimal(totalAmount.getAmountAsDouble() / totalTitles)
+                .setScale(2, BigDecimal.ROUND_HALF_UP)
+                .doubleValue();
     }
 }

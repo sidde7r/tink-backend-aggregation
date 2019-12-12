@@ -24,14 +24,14 @@ public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
         return balance;
     }
 
-    public InvestmentAccount toInvestmentAccount() {
 
+    public InvestmentAccount toInvestmentAccount(Double totalProfit) {
         return InvestmentAccount.builder(getId())
                 .setName(getAccountName())
                 .setAccountNumber(getAccountNumber())
                 .setHolderName(null)
                 .setCashBalance(ExactCurrencyAmount.of(0d, getCurrency().getId()))
-                .setPortfolios(getPortfolio())
+                .setPortfolios(getPortfolio(totalProfit))
                 .build();
     }
 
@@ -41,37 +41,20 @@ public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
         return getFormats().getBocf();
     }
 
-    private java.util.List<Portfolio> getPortfolio() {
+    private java.util.List<Portfolio> getPortfolio(Double totalProfit) {
         Portfolio portfolio = new Portfolio();
         List<Instrument> instruments = getInstruments();
 
         portfolio.setUniqueIdentifier(getId());
         portfolio.setType(Portfolio.Type.DEPOT);
         portfolio.setTotalValue(balance.toTinkAmount().getDoubleValue());
-        portfolio.setTotalProfit(0.00);
+        portfolio.setTotalProfit(totalProfit);
         portfolio.setInstruments(instruments.asJava());
 
         return Collections.singletonList(portfolio);
     }
 
-    //    private Double getTotalProfit(List<Instrument> instruments) {
-    //        return Option.of(instruments)
-    //                .getOrElse(List.empty())
-    //                .map(Instrument::getProfit)
-    //                .sum()
-    //                .doubleValue();
-    //    }
-    //
     private List<Instrument> getInstruments() {
         return Option.of(securities).getOrElse(List.empty()).map(SecurityEntity::toTinkInstrument);
     }
-    //
-    //    private Instrument toTinkInstrument(
-    //            BbvaApiClient apiClient,
-    //            se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities
-    //                            .SecurityEntity
-    //                    securityEntity) {
-    //        return securityEntity.toTinkInstrument(
-    //                apiClient, Instrument.Type.STOCK, id, securityEntity.getRicCode());
-    //    }
 }

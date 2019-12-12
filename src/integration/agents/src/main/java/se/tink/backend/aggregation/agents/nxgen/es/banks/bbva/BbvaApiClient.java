@@ -17,6 +17,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.rpc.IdentityDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.FinancialInvestmentRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.FinancialInvestmentResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.HistoricalDateRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.HistoricalDateResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.rpc.LoanDetailsResponse;
@@ -134,6 +138,17 @@ public class BbvaApiClient {
 
         return createRequestInSession(BbvaConstants.Url.SECURITY_PROFITABILITY)
                 .post(SecurityProfitabilityResponse.class, request);
+    }
+
+    public FinancialInvestmentResponse fetchFinancialInvestment(
+            FinancialInvestmentRequest request) {
+        return createRequestInSession(BbvaConstants.Url.FINANCIAL_INVESTMENTS)
+                .post(FinancialInvestmentResponse.class, request);
+    }
+
+    public HistoricalDateResponse fetchInvestmentHistoricalDate(HistoricalDateRequest request) {
+        return createRequestInSession(BbvaConstants.Url.HISTORICAL_DATE)
+                .post(HistoricalDateResponse.class, request);
     }
 
     public LoanDetailsResponse fetchLoanDetails(String loanId) {

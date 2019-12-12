@@ -107,6 +107,10 @@ public final class BbvaConstants {
                 BASE_URL + "/ASO/securityActions/V01/listProfitability";
         public static final String IDENTITY_DATA =
                 BASE_URL + "/ASO/contextualData/V02/{" + PARAM_ID + "}";
+        public static final String HISTORICAL_DATE =
+                BASE_URL + "/ASO/contracts/v0/financial-investment/historical-date";
+        public static final String FINANCIAL_INVESTMENTS =
+                BASE_URL + "/ASO/contracts/v0/financial-investment/daily-summaries";
     }
 
     public enum Headers implements HeaderEnum {
@@ -142,7 +146,9 @@ public final class BbvaConstants {
     public static final class PostParameter {
         public static final String CONSUMER_ID_VALUE = LoginParameter.CONSUMER_ID;
         public static final String SEARCH_TYPE = "SEARCH";
-
+        public static final String ISIN_ID_TYPE = "ISIN";
+        public static final String ANY_ISIN = "000000000000";
+        public static final String ANY_MARKET = "0000";
         public static final int START_DATE_YEAR_AGO = -30;
     }
 

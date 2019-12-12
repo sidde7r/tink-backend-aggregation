@@ -8,6 +8,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractE
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PensionPlanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.SecuritiesPortfolioEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.FinancialInvestmentRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.HistoricalDateRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.HistoricalDateResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -36,7 +39,27 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
                 .map(ContractEntity::getSecuritiesPortfolio)
                 .filter(Option::isDefined)
                 .map(Option::get)
-                .map(SecuritiesPortfolioEntity::toInvestmentAccount);
+                .map(this::getInvestmentAccountFromSecurity);
+    }
+
+    private InvestmentAccount getInvestmentAccountFromSecurity(
+            SecuritiesPortfolioEntity portfolio) {
+        Double totalProfit = getSecurituTotalProfit(portfolio);
+        return portfolio.toInvestmentAccount(totalProfit);
+    }
+
+    private Double getSecurituTotalProfit(SecuritiesPortfolioEntity portfolio) {
+        String id = portfolio.getId();
+        HistoricalDateRequest historicalDateRequest = new HistoricalDateRequest(id);
+        HistoricalDateResponse historicalDateResponse =
+                apiClient.fetchInvestmentHistoricalDate(historicalDateRequest);
+        FinancialInvestmentRequest financialInvestmentRequest =
+                new FinancialInvestmentRequest(
+                        id,
+                        historicalDateResponse.getMaxHistoricalDate(),
+                        portfolio.getCurrency().getId(),
+                        portfolio.getBalance().getAmount());
+        return apiClient.fetchFinancialInvestment(financialInvestmentRequest).getTotalProfit();
     }
 
     private List<InvestmentAccount> getPensionPlans(List<PositionEntity> positions) {
