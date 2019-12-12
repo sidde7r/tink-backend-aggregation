@@ -50,8 +50,8 @@ public class QsealcSignerHttpClient {
                                                 PlainConnectionSocketFactory.getSocketFactory())
                                         .register("https", sslsf)
                                         .build());
-                connectionManager.setMaxTotal(50);
-                connectionManager.setDefaultMaxPerRoute(50);
+                connectionManager.setMaxTotal(200);
+                connectionManager.setDefaultMaxPerRoute(200);
 
                 RequestConfig config =
                         RequestConfig.custom()
