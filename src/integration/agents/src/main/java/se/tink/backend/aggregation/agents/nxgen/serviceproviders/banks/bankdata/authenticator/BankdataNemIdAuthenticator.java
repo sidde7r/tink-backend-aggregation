@@ -59,7 +59,7 @@ public class BankdataNemIdAuthenticator implements NemIdAuthenticatorV2 {
     @Override
     public void authenticateUsingInstallId(
             @Nonnull String userId, @Nonnull String pinCode, @Nonnull String installId)
-            throws SessionException, LoginException {
+            throws SessionException, LoginException, AuthorizationException {
 
         if (Strings.isNullOrEmpty(installId)) {
             throw SessionError.SESSION_EXPIRED.exception();
