@@ -19,5 +19,5 @@ public interface NemIdAuthenticatorV2 {
             throws AuthenticationException, AuthorizationException;
 
     void authenticateUsingInstallId(String userId, String pinCode, String installId)
-            throws SessionException, LoginException;
+            throws SessionException, LoginException, AuthorizationException;
 }

@@ -1,7 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.i18n.LocalizableKey;
 
 @JsonObject
 public class LoginErrorResponse {
@@ -59,5 +64,27 @@ public class LoginErrorResponse {
 
     public String getDebugMessage() {
         return debugMessage;
+    }
+
+    private LocalizableKey getUserMessage() {
+        return new LocalizableKey(errorMessage);
+    }
+
+    public void throwException() throws LoginException, AuthorizationException {
+
+        if (errorCode == 112) {
+
+            if (numberOfLoginAttemptsLeft == 1) {
+                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception(getUserMessage());
+            }
+
+            if (blocked) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(getUserMessage());
+            }
+
+            throw LoginError.INCORRECT_CREDENTIALS.exception(getUserMessage());
+        }
+
+        throw new IllegalStateException(String.format("Unknown error code %d", errorCode));
     }
 }

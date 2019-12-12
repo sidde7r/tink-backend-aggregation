@@ -18,6 +18,7 @@ java_library(
         "//src/integration/models",
         "//src/libraries/account_identifier",
         "//src/libraries/date",
+        "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",

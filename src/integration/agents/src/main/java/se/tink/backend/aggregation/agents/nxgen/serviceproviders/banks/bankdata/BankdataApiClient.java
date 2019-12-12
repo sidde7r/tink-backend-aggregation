@@ -11,12 +11,16 @@ import org.apache.http.cookie.Cookie;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.CookieName;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.UrlParam;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.CompleteEnrollResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.DataRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.EncryptedResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.LoginErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.LoginInstalledRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.NemIdEnrollmentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.NemIdInitRequest;
@@ -39,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -204,7 +209,8 @@ public class BankdataApiClient {
             final String userId,
             final String pinCode,
             final String installId,
-            final CryptoHelper cryptoHelper) {
+            final CryptoHelper cryptoHelper)
+            throws SessionException, LoginException, AuthorizationException {
 
         LoginInstalledRequest installedEntity =
                 new LoginInstalledRequest(userId, pinCode, installId);
@@ -212,8 +218,20 @@ public class BankdataApiClient {
         byte[] b64Entity = SerializationUtils.serializeToString(installedEntity).getBytes();
         String encrypted = escapeB64Data(cryptoHelper.encrypt(b64Entity));
 
-        createRequest(Url.LOGIN_WITH_INSTALL_ID)
-                .post(EncryptedResponse.class, new DataRequest(encrypted));
+        try {
+
+            createRequest(Url.LOGIN_WITH_INSTALL_ID)
+                    .post(EncryptedResponse.class, new DataRequest(encrypted));
+
+        } catch (HttpResponseException e) {
+
+            int errorCode = e.getResponse().getStatus();
+            if (errorCode == 400) {
+                e.getResponse().getBody(LoginErrorResponse.class).throwException();
+            }
+
+            throw e;
+        }
     }
 
     // TODO: Bankdata has some formatting that we don't get with our lib.
