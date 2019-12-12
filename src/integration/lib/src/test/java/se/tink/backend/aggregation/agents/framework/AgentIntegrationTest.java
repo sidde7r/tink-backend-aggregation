@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.assertj.core.util.Strings;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,8 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
@@ -546,7 +549,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
     }
 
-    public NewAgentTestContext testRefresh() throws Exception {
+    public NewAgentTestContext testRefresh(String credentialName) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         Agent agent = createAgent(credentialsRequest);
@@ -567,7 +570,24 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         context.validateFetchedData(validator);
         context.printCollectedData();
+        if (!Strings.isNullOrEmpty(credentialName)) {
+            CredentialDataDao credentialDataDao = context.dumpCollectedData();
+            try {
+                dumpTestData(credentialDataDao, credentialName);
+            } catch (HttpResponseException | HttpClientException e) {
+                System.out.println("Could not dump test data: " + e.getMessage());
+            }
+        }
         return context;
+    }
+
+    private void dumpTestData(CredentialDataDao credentialDataDao, String credentialName) {
+        context.getAgentTestServerClient()
+                .dumpTestData(provider, credentialName, credentialDataDao);
+    }
+
+    public NewAgentTestContext testRefresh() throws Exception {
+        return testRefresh("");
     }
 
     private void printMaskedDebugLog(Agent agent) {

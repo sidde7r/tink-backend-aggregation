@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -12,6 +13,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class AgentTestServerClient {
     private static final String PROVIDER_NAME_KEY = "providerName";
+    private static final String MARKET_KEY = "market";
+    private static final String CREDENTIAL_NAME_KEY = "credentialName";
     private static final String CREDENTIAL_ID_KEY = "credentialId";
     private static final String SUPPLEMENTAL_KEY_KEY = "key";
     private static final String AUTOSTART_TOKEN_KEY = "autoStartToken";
@@ -38,6 +41,10 @@ public class AgentTestServerClient {
                 String.format(
                         "supplemental/{%s}/{%s}", SUPPLEMENTAL_KEY_KEY, SUPPLEMENTAL_TIMEOUT_KEY)),
         CREDENTIAL(String.format("credential/{%s}/{%s}", PROVIDER_NAME_KEY, CREDENTIAL_ID_KEY)),
+        DUMP_DATA(
+                String.format(
+                        "dumpdata/{%s}/{%s}/{%s}",
+                        MARKET_KEY, PROVIDER_NAME_KEY, CREDENTIAL_NAME_KEY)),
         BANKID_SEND_AUTOSTART(String.format("bankid/send/{%s}", AUTOSTART_TOKEN_KEY));
 
         private URL url;
@@ -93,6 +100,18 @@ public class AgentTestServerClient {
                                 .parameter(CREDENTIAL_ID_KEY, credential.getId()))
                 .type(MediaType.APPLICATION_JSON)
                 .post(credential);
+    }
+
+    public void dumpTestData(
+            Provider provider, String credentialName, CredentialDataDao credentialDataDao) {
+        client.request(
+                        Urls.DUMP_DATA
+                                .getUrl()
+                                .parameter(MARKET_KEY, provider.getMarket().toLowerCase())
+                                .parameter(PROVIDER_NAME_KEY, provider.getName())
+                                .parameter(CREDENTIAL_NAME_KEY, credentialName))
+                .type(MediaType.APPLICATION_JSON)
+                .post(credentialDataDao);
     }
 
     public Optional<Credentials> loadCredential(String providerName, String credentialId) {
