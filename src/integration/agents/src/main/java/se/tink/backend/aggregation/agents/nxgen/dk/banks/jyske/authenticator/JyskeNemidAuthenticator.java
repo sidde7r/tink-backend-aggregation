@@ -78,7 +78,10 @@ public class JyskeNemidAuthenticator extends NemIdCodeAppAuthenticator<NemIdGene
     protected void finalizeAuthentication() {
         String pincode = jyskePersistentStorage.getPincode();
         String userId = jyskePersistentStorage.getUserId();
-        Token token = jyskePersistentStorage.getToken();
+        Token token =
+                jyskePersistentStorage
+                        .getToken()
+                        .orElseThrow(() -> new IllegalStateException("Can not find token!"));
 
         NemIdCodeAppPollResponse response =
                 this.getPollResponse()
@@ -118,7 +121,11 @@ public class JyskeNemidAuthenticator extends NemIdCodeAppAuthenticator<NemIdGene
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
-        Token token = jyskePersistentStorage.getToken();
+        Token token =
+                jyskePersistentStorage
+                        .getToken()
+                        .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
+
         NemIdLoginInstallIdEncryptionEntity installIdResponse =
                 jyskePersistentStorage.getNemidLoginEntity();
         apiClient.nemIdInit(token);
