@@ -6,118 +6,77 @@ option java_outer_classname = "AccountModel";
 option go_package = "proto";
 
 import "google/type/date.proto";
+import "src/integration/sa_agent/sa_grpc_api/proto/common/io_common.proto";
 
 message TransactionalAccount {
-  string accountNumber = 1;
-  AccountExclusion accountExclusion = 2;
-  double availableCredit = 3;
-  ExactCurrencyAmount exactAvailableCredit = 4;
-  double balance = 5;
-  ExactCurrencyAmount exactBalance = 6;
-  string currencyCode = 7;
-  string bankId = 8;
-  google.type.Date certainDate = 9;
-  string credentialsId = 10;
-  bool excluded = 11;
-  bool favored = 12;
-  string id = 13;
-  string name = 14;
-  double ownership = 15;
-  string payload = 16;
-  TransactionalAccountType type = 17;
-  string userId = 18;
-  bool userModifiedExcluded = 19;
-  bool userModifiedName = 20;
-  bool userModifiedType = 21;
-  repeated AccountIdentifier identifiers = 22;
-  repeated TransferDestination transferDestinations = 23;
-  AccountDetails details = 24;
-  bool closed = 25;
-  string holderName = 26;
-  repeated AccountFlag flags = 27;
-  string financialInstitutionId = 28;
-}
-
-enum AccountExclusion {
-    AGGREGATION = 0;
-    PFM_AND_SEARCH = 1;
-    PFM_DATA = 2;
-    NONE = 3;
-}
-
-message ExactCurrencyAmount {
-  int64 unscaledValue = 1;
-  int32 scale = 2;
-  string currencyCode = 3;
-}
-
-message TransferDestination {
-  double balance = 1;
-  URI uri = 2;
-  string name = 3;
-  string type = 4;
-}
-
-message URI {
-  string path = 1;
-}
-
-message AccountDetails {
-  double interest = 1;
-  int32 numMonthsBound = 2;
-  string type = 3;
-  google.type.Date nextDayOfTermsChange = 4;
-}
-
-enum AccountFlag {
-  BUSINESS = 0;
-  MANDATE = 1;
-  PSD2_PAYMENT_ACCOUNT = 2;
+    IdModule id = 1;
+    TransactionalAccountType type = 2;
+    repeated AccountFlag flags = 3;
+    BalanceModule balanceModule = 4;
+    string apiId = 5;
 }
 
 message IdModule {
-  string uniqueId = 1;
-  string accountNumber = 2;
-  string accountName = 3;
-  string productName = 4;
-  repeated AccountIdentifier identifiers = 5;
+    string uniqueId = 1;
+    string accountNumber = 2;
+    string accountName = 3;
+    string productName = 4;
+    repeated AccountIdentifier identifiers = 5;
 }
 
 message AccountIdentifier {
-  string name = 1;
-  string id = 2;
-  AccountIdentifierType type = 3;
+    string name = 1;
+    AccountIdentifierType type = 2;
+    repeated AccountIdentifierTypeBasedField accountIdentifierTypeBasedFields = 3;
+}
+
+message AccountIdentifierTypeBasedField {
+    AccountIdentifierTypeBasedFieldType fieldName = 1;
+    string value = 2;
+}
+
+enum AccountIdentifierTypeBasedFieldType {
+    FIELD_IBAN = 0;
+    FIELD_BIC = 1;
+}
+
+message BalanceModule {
+    ExactCurrencyAmount exactBalance = 1;
+}
+
+message ExactCurrencyAmount {
+    BigDecimal value = 2;
+    string currencyCode = 3;
+}
+
+enum AccountFlag {
+    BUSINESS = 0;
+    MANDATE = 1;
+    PSD2_PAYMENT_ACCOUNT = 2;
 }
 
 enum AccountIdentifierType {
-  BE = 0;
-  DK = 1;
-  SE = 2;
-  SE_SHB_INTERNAL = 3;
-  SE_NDA_SSN = 4;
-  FI = 5;
-  NO = 6;
-  IBAN = 7;
-  TINK = 8;
-  SE_BG = 9;
-  SE_PG = 10;
-  SEPA_EUR = 11;
-  SORT_CODE = 12;
-  PAYMENT_CARD_NUMBER = 13;
-  PAYM_PHONE_NUMBER = 14;
-  BBAN = 15;
-  COUNTRY_SPECIFIC = 16;
+    BE = 0;
+    DK = 1;
+    SE = 2;
+    SE_SHB_INTERNAL = 3;
+    SE_NDA_SSN = 4;
+    FI = 5;
+    NO = 6;
+    IBAN = 7;
+    TINK = 8;
+    SE_BG = 9;
+    SE_PG = 10;
+    SEPA_EUR = 11;
+    SORT_CODE = 12;
+    PAYMENT_CARD_NUMBER = 13;
+    PAYM_PHONE_NUMBER = 14;
+    BBAN = 15;
+    COUNTRY_SPECIFIC = 16;
 }
 
 enum TransactionalAccountType {
-  CHECKING = 0;
-  SAVINGS = 1;
-  INVESTMENT = 2;
-  MORTGAGE = 3;
-  CREDIT_CARD = 4;
-  LOAN = 5;
-  DUMMY = 6;
-  PENSION = 7;
-  OTHER = 8;
-  EXTERNAL = 9;
+    CHECKING = 0;
+    SAVINGS = 1;
+    OTHER = 2;
 }

@@ -4,14 +4,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.sa.common.mapper.Mapper;
 import se.tink.sa.common.mapper.MappingContext;
 
 public class FetchAccountsResponseMapper
         implements Mapper<
-                FetchAccountsResponse, se.tink.sa.services.fetch.account.FetchAccountsResponse> {
+                List<TransactionalAccount>,
+                se.tink.sa.services.fetch.account.FetchAccountsResponse> {
 
     private TransactionAccountMapper transactionaAccountMapper;
 
@@ -20,15 +20,14 @@ public class FetchAccountsResponseMapper
     }
 
     @Override
-    public FetchAccountsResponse map(
+    public List<TransactionalAccount> map(
             se.tink.sa.services.fetch.account.FetchAccountsResponse source,
             MappingContext mappingContext) {
-        FetchAccountsResponse fetchAccountsResponse =
-                new FetchAccountsResponse(mapAccountList(source.getAccountList(), mappingContext));
-        return fetchAccountsResponse;
+
+        return mapAccountList(source.getAccountList(), mappingContext);
     }
 
-    private List<Account> mapAccountList(
+    private List<TransactionalAccount> mapAccountList(
             final List<se.tink.sa.services.fetch.account.TransactionalAccount> accountList,
             MappingContext mappingContext) {
         return Optional.ofNullable(accountList).orElse(Collections.emptyList()).stream()

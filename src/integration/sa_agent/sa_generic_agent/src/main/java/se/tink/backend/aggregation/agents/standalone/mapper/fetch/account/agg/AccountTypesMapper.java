@@ -1,13 +1,17 @@
 package se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg;
 
-import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.sa.common.mapper.Mapper;
 import se.tink.sa.common.mapper.MappingContext;
-import se.tink.sa.services.fetch.account.TransactionalAccountType;
 
-public class AccountTypesMapper implements Mapper<AccountTypes, TransactionalAccountType> {
+public class AccountTypesMapper
+        implements Mapper<
+                TransactionalAccountType,
+                se.tink.sa.services.fetch.account.TransactionalAccountType> {
     @Override
-    public AccountTypes map(TransactionalAccountType source, MappingContext context) {
-        return AccountTypes.values()[source.getNumber()];
+    public TransactionalAccountType map(
+            se.tink.sa.services.fetch.account.TransactionalAccountType source,
+            MappingContext context) {
+        return TransactionalAccountType.valueOf(source.name());
     }
 }

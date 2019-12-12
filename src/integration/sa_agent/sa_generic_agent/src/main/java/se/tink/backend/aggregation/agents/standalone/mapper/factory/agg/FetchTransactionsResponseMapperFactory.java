@@ -26,7 +26,7 @@ public class FetchTransactionsResponseMapperFactory {
     public FetchTransactionsResponseMapper fetchTransactionsResponseMapper() {
         FetchTransactionsResponseMapper mapper = new FetchTransactionsResponseMapper();
         mapper.setTransactionAccountMapper(
-                fetchAccountsResponseMapperFactory.transactionaAccountMapper());
+                fetchAccountsResponseMapperFactory.transactionalAccountMapper());
         mapper.setTransactionMapper(transactionMapper());
         return mapper;
     }
