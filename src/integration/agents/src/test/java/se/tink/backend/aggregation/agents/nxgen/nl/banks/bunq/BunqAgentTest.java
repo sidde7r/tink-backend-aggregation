@@ -24,6 +24,7 @@ public class BunqAgentTest {
     @Before
     public void before() {
         manager.before();
+        passwordManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("nl", "nl-bunq-sandbox-apikey")
