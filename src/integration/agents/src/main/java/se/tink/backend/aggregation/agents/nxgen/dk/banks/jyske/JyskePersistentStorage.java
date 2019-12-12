@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.KeycardChallengeEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdChallengeEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities.NemIdLoginInstallIdEncryptionEntity;
@@ -19,10 +20,8 @@ public class JyskePersistentStorage {
         return token;
     }
 
-    public Token getToken() {
-        return persistentStorage
-                .get(JyskeConstants.Storage.TOKEN, Token.class)
-                .orElseThrow(() -> new IllegalStateException("Can not find token!"));
+    public Optional<Token> getToken() {
+        return persistentStorage.get(JyskeConstants.Storage.TOKEN, Token.class);
     }
 
     public void setUserId(String userId) {

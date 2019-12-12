@@ -97,7 +97,10 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator, AutoAuth
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
         String username = persistentStorage.getUserId();
         String password = persistentStorage.getPincode();
-        Token token = persistentStorage.getToken();
+        Token token =
+                persistentStorage
+                        .getToken()
+                        .orElseThrow(() -> new IllegalStateException("Can not find token!"));
         KeycardChallengeEntity challengeEntity = persistentStorage.getKeycardChallengeEntity();
 
         KeycardEnrollEntity enrollEntity =
@@ -139,7 +142,10 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator, AutoAuth
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
 
-        Token token = persistentStorage.getToken();
+        Token token =
+                persistentStorage
+                        .getToken()
+                        .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
         apiClient.nemIdInit(token);
         String installId = persistentStorage.getInstallId();
 
