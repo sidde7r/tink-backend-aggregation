@@ -167,6 +167,10 @@ public class OpBankConstants {
         public static final String TOUCH_ID_ENABLED = "false";
     }
 
+    public static class Activation {
+        public static final String ACTIVATION_HMAC_DATA = "0100b0000001";
+    }
+
     public static class Authentication {
         public static final String APPLICATION_INSTANCE_ID = "applicationInstanceId";
         public static final int UNAUTHENTICATED_STATUS = 401;
