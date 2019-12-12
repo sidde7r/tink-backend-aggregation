@@ -1,51 +1,51 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.entities.HrefEntity;
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksEntity {
 
     @JsonProperty("scaStatus")
-    private HrefEntity scaStatusEntity;
+    private Href scaStatusEntity;
 
     @JsonProperty("startAuthorisationWithEncryptedPsuAuthentication")
-    private HrefEntity startAuthorisationWithEncryptedPsuAuthenticationEntity;
+    private Href startAuthorisationWithEncryptedPsuAuthenticationEntity;
 
     @JsonProperty("self")
-    private HrefEntity selfEntity;
+    private Href selfEntity;
 
     @JsonProperty("aspspCertificates")
-    private HrefEntity aspspCertificatesEntity;
+    private Href aspspCertificatesEntity;
 
     @JsonProperty("status")
-    private HrefEntity statusEntity;
+    private Href statusEntity;
 
     @JsonProperty("authoriseTransaction")
-    private HrefEntity authoriseTransactionEntity;
+    private Href authoriseTransactionEntity;
 
-    public HrefEntity getScaStatusEntity() {
+    public Href getScaStatusEntity() {
         return scaStatusEntity;
     }
 
-    public HrefEntity getStartAuthorisationWithEncryptedPsuAuthenticationEntity() {
+    public Href getStartAuthorisationWithEncryptedPsuAuthenticationEntity() {
         return startAuthorisationWithEncryptedPsuAuthenticationEntity;
     }
 
-    public HrefEntity getSelfEntity() {
+    public Href getSelfEntity() {
         return selfEntity;
     }
 
-    public HrefEntity getAspspCertificatesEntity() {
+    public Href getAspspCertificatesEntity() {
         return aspspCertificatesEntity;
     }
 
-    public HrefEntity getStatusEntity() {
+    public Href getStatusEntity() {
         return statusEntity;
     }
 
-    public HrefEntity getAuthoriseTransactionEntity() {
+    public Href getAuthoriseTransactionEntity() {
         return authoriseTransactionEntity;
     }
 }
