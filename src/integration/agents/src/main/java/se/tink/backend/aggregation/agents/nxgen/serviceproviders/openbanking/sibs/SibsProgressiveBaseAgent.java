@@ -181,7 +181,7 @@ public abstract class SibsProgressiveBaseAgent
 
     @Override
     public boolean login() {
-        throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
+        throw new AssertionError("ProgressiveAuthAgent::login should always be used");
     }
 
     @Override
