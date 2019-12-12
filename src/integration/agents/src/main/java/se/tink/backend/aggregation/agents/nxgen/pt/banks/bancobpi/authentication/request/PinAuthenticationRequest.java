@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request;
 
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiTransactionalAccountsInfo;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAccountsContext;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -14,12 +14,12 @@ public class PinAuthenticationRequest extends DefaultRequest<PinAuthenticationRe
     private static final String URL =
             "https://apps.bancobpi.pt/BPIAPP/screenservices/CSM_BPIApp/ActionLogin";
     private final String accessPin;
-    private BancoBpiTransactionalAccountsInfo bancoBpiTransactionalAccountsInfo;
+    private BancoBpiAccountsContext bancoBpiAccountsContext;
 
     public PinAuthenticationRequest(BancoBpiEntityManager entityManager) {
         super(entityManager.getAuthContext(), URL);
         accessPin = entityManager.getAuthContext().getAccessPin();
-        bancoBpiTransactionalAccountsInfo = entityManager.getTransactionalAccounts();
+        bancoBpiAccountsContext = entityManager.getAccountsContext();
     }
 
     @Override
@@ -43,6 +43,6 @@ public class PinAuthenticationRequest extends DefaultRequest<PinAuthenticationRe
     public PinAuthenticationResponse execute(
             RequestBuilder requestBuilder, TinkHttpClient httpClient) throws RequestException {
         return new PinAuthenticationResponse(
-                requestBuilder.post(String.class), httpClient, bancoBpiTransactionalAccountsInfo);
+                requestBuilder.post(String.class), httpClient, bancoBpiAccountsContext);
     }
 }

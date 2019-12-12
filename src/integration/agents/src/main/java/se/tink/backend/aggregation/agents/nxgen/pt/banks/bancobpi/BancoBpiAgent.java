@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.BancoBpiAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.transaction.BancoBpiTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.transaction.BancoBpiTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -12,9 +13,12 @@ import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationA
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BancoBpiAgent extends SubsequentProgressiveGenerationAgent
@@ -72,14 +76,25 @@ public class BancoBpiAgent extends SubsequentProgressiveGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+
         if (transactionalAccountRefreshController == null) {
             transactionalAccountRefreshController =
                     new TransactionalAccountRefreshController(
                             metricRefreshController,
                             updateController,
                             new BancoBpiTransactionalAccountFetcher(client, getEntityManager()),
-                            new BancoBpiTransactionFetcher());
+                            createTransactionFetcher());
         }
         return transactionalAccountRefreshController;
+    }
+
+    private TransactionFetcherController<TransactionalAccount> createTransactionFetcher() {
+        BancoBpiTransactionFetcher bancoBpiTransactionFetcher =
+                new BancoBpiTransactionFetcher(entityManager, client);
+        TransactionPagePaginationController<TransactionalAccount>
+                transactionPagePaginationController =
+                        new TransactionPagePaginationController<>(bancoBpiTransactionFetcher, 1);
+        return new TransactionFetcherController<TransactionalAccount>(
+                transactionPaginationHelper, transactionPagePaginationController);
     }
 }

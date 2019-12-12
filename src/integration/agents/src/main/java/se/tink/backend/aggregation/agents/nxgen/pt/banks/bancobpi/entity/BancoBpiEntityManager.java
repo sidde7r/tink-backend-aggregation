@@ -1,9 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity;
 
 import com.google.gson.Gson;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiTransactionalAccountsInfo;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -17,7 +15,7 @@ public class BancoBpiEntityManager {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private BancoBpiAuthContext authContext;
-    private BancoBpiTransactionalAccountsInfo transactionalAccounts;
+    private BancoBpiAccountsContext transactionalAccounts;
 
     public BancoBpiEntityManager(
             PersistentStorage persistentStorage, SessionStorage sessionStorage) {
@@ -38,30 +36,30 @@ public class BancoBpiEntityManager {
                 .orElse(new BancoBpiAuthContext());
     }
 
-    public BancoBpiTransactionalAccountsInfo getTransactionalAccounts() {
+    public BancoBpiAccountsContext getAccountsContext() {
         if (transactionalAccounts == null) {
             transactionalAccounts = loadTransactionalAccounts();
         }
         return transactionalAccounts;
     }
 
-    private BancoBpiTransactionalAccountsInfo loadTransactionalAccounts() {
+    private BancoBpiAccountsContext loadTransactionalAccounts() {
         return Optional.ofNullable(sessionStorage.get(PERSISTENCE_ACCOUNT_TRANSACTIONS_KEY))
-                .map(obj -> gson.fromJson(obj, BancoBpiTransactionalAccountsInfo.class))
-                .orElse(new BancoBpiTransactionalAccountsInfo());
+                .map(obj -> gson.fromJson(obj, BancoBpiAccountsContext.class))
+                .orElse(new BancoBpiAccountsContext());
     }
 
     private void saveAuthContext() {
         persistentStorage.put(PERSISTENCE_STORAGE_KEY, gson.toJson(authContext));
     }
 
-    private void saveTransactionalAccounts() {
+    private void saveSaveAccountsContext() {
         sessionStorage.put(
                 PERSISTENCE_ACCOUNT_TRANSACTIONS_KEY, gson.toJson(transactionalAccounts));
     }
 
-    void saveEntities() {
+    public void saveEntities() {
         saveAuthContext();
-        saveTransactionalAccounts();
+        saveSaveAccountsContext();
     }
 }

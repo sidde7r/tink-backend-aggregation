@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.TransactionalAccountBaseInfo;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -32,7 +32,7 @@ public class BancoBpiTransactionalAccountFetcher implements AccountFetcher<Trans
     public Collection<TransactionalAccount> fetchAccounts() {
         List<TransactionalAccount> transactionalAccounts = new LinkedList<>();
         for (TransactionalAccountBaseInfo accountBaseInfo :
-                entityManager.getTransactionalAccounts().getAccountInfo()) {
+                entityManager.getAccountsContext().getAccountInfo()) {
             try {
                 BigDecimal balance =
                         new TransactionalAccountBalanceRequest(

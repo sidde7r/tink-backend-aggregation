@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.ConfirmPinByOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.LoginRequest;
@@ -21,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
