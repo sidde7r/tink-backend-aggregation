@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc;
 
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions.HrefEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -33,7 +33,7 @@ public class TransactionResponse {
         return Optional.ofNullable(transactions)
                 .map(TransactionsEntity::getLinks)
                 .map(LinksEntity::getNext)
-                .map(HrefEntity::getHref)
+                .map(Href::getHref)
                 .map(href -> href.split("\\?")[1])
                 .orElse(null);
     }
