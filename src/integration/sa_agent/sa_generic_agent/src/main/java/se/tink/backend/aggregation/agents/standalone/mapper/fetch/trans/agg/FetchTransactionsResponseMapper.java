@@ -42,17 +42,18 @@ public class FetchTransactionsResponseMapper
             final List<TransactionsMapEntity> transactionsMapEntityList,
             MappingContext mappingContext) {
 
-//        return Optional.ofNullable(transactionsMapEntityList).orElse(Collections.emptyList())
-//                .stream()
-//                .collect(
-//                        Collectors.toMap(
-//                                transactionsMapEntity ->
-//                                        transactionAccountMapper.map(
-//                                                transactionsMapEntity.getKey()),
-//                                transactionsMapEntity ->
-//                                        mapTransactionList(
-//                                                transactionsMapEntity.getValueList(),
-//                                                mappingContext)));
+        //        return
+        // Optional.ofNullable(transactionsMapEntityList).orElse(Collections.emptyList())
+        //                .stream()
+        //                .collect(
+        //                        Collectors.toMap(
+        //                                transactionsMapEntity ->
+        //                                        transactionAccountMapper.map(
+        //                                                transactionsMapEntity.getKey()),
+        //                                transactionsMapEntity ->
+        //                                        mapTransactionList(
+        //                                                transactionsMapEntity.getValueList(),
+        //                                                mappingContext)));
         return null;
     }
 

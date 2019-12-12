@@ -21,7 +21,8 @@ public class IbanAccountIdentifierMapper implements Mapper<AccountIdentifier, Ac
     }
 
     private AccountIdentifierTypeBasedField buildOnIban(String iban) {
-        AccountIdentifierTypeBasedField.Builder builder = AccountIdentifierTypeBasedField.newBuilder();
+        AccountIdentifierTypeBasedField.Builder builder =
+                AccountIdentifierTypeBasedField.newBuilder();
         builder.setFieldName(AccountIdentifierTypeBasedFieldType.FIELD_IBAN);
         builder.setValue(iban);
         return builder.build();

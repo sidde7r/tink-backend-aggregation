@@ -16,9 +16,10 @@ public class AmountEntityMapper implements Mapper<ExactCurrencyAmount, AmountEnt
         ExactCurrencyAmount dest =
                 ExactCurrencyAmount.newBuilder()
                         .setCurrencyCode(source.getCurrency())
-                        //MARKER
-//                        .setUnscaledValue(amount.unscaledValue().longValue())
-//                        .setScale(amount.scale())
+                        // MARKER
+                        //
+                        // .setUnscaledValue(amount.unscaledValue().longValue())
+                        //                        .setScale(amount.scale())
                         .build();
         return dest;
     }

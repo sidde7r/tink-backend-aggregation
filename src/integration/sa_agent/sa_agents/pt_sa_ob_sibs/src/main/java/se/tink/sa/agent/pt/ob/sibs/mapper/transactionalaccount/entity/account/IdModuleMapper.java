@@ -11,8 +11,7 @@ import se.tink.sa.services.fetch.account.IdModule;
 @Component
 public class IdModuleMapper implements Mapper<IdModule, AccountEntity> {
 
-    @Autowired
-    IbanAccountIdentifierMapper ibanAccountIdentifierMapper;
+    @Autowired IbanAccountIdentifierMapper ibanAccountIdentifierMapper;
 
     @Override
     public IdModule map(AccountEntity source, MappingContext mappingContext) {

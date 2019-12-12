@@ -4,9 +4,14 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.sa.common.mapper.Mapper;
 import se.tink.sa.common.mapper.MappingContext;
 
-public class AccountTypesMapper implements Mapper<TransactionalAccountType, se.tink.sa.services.fetch.account.TransactionalAccountType> {
+public class AccountTypesMapper
+        implements Mapper<
+                TransactionalAccountType,
+                se.tink.sa.services.fetch.account.TransactionalAccountType> {
     @Override
-    public TransactionalAccountType map(se.tink.sa.services.fetch.account.TransactionalAccountType source, MappingContext context) {
+    public TransactionalAccountType map(
+            se.tink.sa.services.fetch.account.TransactionalAccountType source,
+            MappingContext context) {
         return TransactionalAccountType.valueOf(source.name());
     }
 }

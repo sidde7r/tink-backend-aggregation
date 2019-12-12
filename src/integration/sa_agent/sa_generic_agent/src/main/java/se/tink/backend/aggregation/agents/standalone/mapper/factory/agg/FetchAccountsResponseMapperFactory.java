@@ -31,21 +31,19 @@ public final class FetchAccountsResponseMapperFactory {
         return mapper;
     }
 
-    private ExactCurrencyAmountMapper exactCurrencyAmountMapper(){
+    private ExactCurrencyAmountMapper exactCurrencyAmountMapper() {
         return new ExactCurrencyAmountMapper();
     }
 
-    private AccountTypesMapper accountTypesMapper(){
+    private AccountTypesMapper accountTypesMapper() {
         return new AccountTypesMapper();
     }
 
-    private BalanceModuleMapper balanceModuleMapper(){
+    private BalanceModuleMapper balanceModuleMapper() {
         return new BalanceModuleMapper();
     }
 
-    private IbanIdModuleMapper ibanIdModuleMapper(){
+    private IbanIdModuleMapper ibanIdModuleMapper() {
         return new IbanIdModuleMapper();
     }
-
-
 }

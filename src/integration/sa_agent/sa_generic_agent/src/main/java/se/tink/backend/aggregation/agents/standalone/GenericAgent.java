@@ -28,12 +28,19 @@ import se.tink.backend.aggregation.agents.standalone.mapper.factory.MappersContr
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.CommonExternalParametersProvider;
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.impl.MockCommonExternalParametersProvider;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.sa.common.mapper.MappingContext;
@@ -58,11 +65,17 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
     private LinkedList<? extends AuthenticationStep> authenticationSteps;
     private final MappersController mappersController;
     private final Retryer<ConsentStatus> consentStatusRetryer;
+    protected final MetricRefreshController metricRefreshController;
+    protected final TransactionPaginationHelper transactionPaginationHelper;
+
+    private final AgentContext context;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public GenericAgent(
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration) {
+        this.context = context;
         genericAgentConfiguration =
                 context.getAgentConfigurationController()
                         .getAgentConfiguration(GenericAgentConfiguration.class);
@@ -102,6 +115,16 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
                         genericAgentConfiguration,
                         mappersController,
                         persistentStorage);
+
+        this.metricRefreshController =
+                new MetricRefreshController(
+                        context.getMetricRegistry(),
+                        request.getProvider(),
+                        request.getCredentials(),
+                        request.isManual(),
+                        request.getType());
+        this.transactionPaginationHelper = new TransactionPaginationHelper(request);
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -202,11 +225,30 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
-        return checkingService.fetchCheckingAccounts();
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
     }
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return checkingService.fetchCheckingTransactions();
+    }
+
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        final GASibsTransactionalAccountAccountFetcher accountFetcher =
+                new GASibsTransactionalAccountAccountFetcher(checkingService);
+        final GATransactionalAccountTransactionFetcher transactionFetcher =
+                new GATransactionalAccountTransactionFetcher();
+
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                new UpdateController(
+                        // TODO: Remove when provider uses MarketCode
+                        MarketCode.valueOf(credentialsRequest.getProvider().getMarket()),
+                        credentialsRequest.getProvider().getCurrency(),
+                        credentialsRequest.getUser()),
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
     }
 }

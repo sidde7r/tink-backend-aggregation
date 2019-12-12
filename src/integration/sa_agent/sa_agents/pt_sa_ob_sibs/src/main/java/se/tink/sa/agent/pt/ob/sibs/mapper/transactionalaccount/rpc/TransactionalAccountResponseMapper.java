@@ -1,5 +1,6 @@
 package se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc;
 
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.tink.sa.agent.pt.ob.sibs.SibsMappingContextKeys;
@@ -8,12 +9,10 @@ import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.entity.accou
 import se.tink.sa.common.mapper.Mapper;
 import se.tink.sa.common.mapper.MappingContext;
 import se.tink.sa.services.fetch.account.AccountFlag;
+import se.tink.sa.services.fetch.account.BalanceModule;
 import se.tink.sa.services.fetch.account.ExactCurrencyAmount;
 import se.tink.sa.services.fetch.account.TransactionalAccount;
 import se.tink.sa.services.fetch.account.TransactionalAccountType;
-import se.tink.sa.services.fetch.account.BalanceModule;
-
-import java.util.Map;
 
 @Component
 public class TransactionalAccountResponseMapper
@@ -22,8 +21,7 @@ public class TransactionalAccountResponseMapper
     @Autowired
     private TransactionalAccountTypeResponseMapper transactionalAccountTypeResponseMapper;
 
-    @Autowired
-    private IdModuleMapper idModuleMapper;
+    @Autowired private IdModuleMapper idModuleMapper;
 
     @Override
     public TransactionalAccount map(AccountEntity source, MappingContext mappingContext) {
@@ -42,7 +40,7 @@ public class TransactionalAccountResponseMapper
         return destBuilder.build();
     }
 
-    private BalanceModule buildBalanceMofule(ExactCurrencyAmount balance){
+    private BalanceModule buildBalanceMofule(ExactCurrencyAmount balance) {
         BalanceModule.Builder builder = BalanceModule.newBuilder();
         builder.setExactBalance(balance);
         return builder.build();

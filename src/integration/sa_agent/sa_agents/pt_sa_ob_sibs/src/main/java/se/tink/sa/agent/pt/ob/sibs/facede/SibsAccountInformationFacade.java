@@ -1,6 +1,5 @@
 package se.tink.sa.agent.pt.ob.sibs.facede;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;

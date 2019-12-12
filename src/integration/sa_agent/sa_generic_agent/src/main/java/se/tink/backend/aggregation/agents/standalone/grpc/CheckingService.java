@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.standalone.grpc;
 
 import io.grpc.ManagedChannel;
-import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import java.util.List;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.standalone.GenericAgentConfiguration;
 import se.tink.backend.aggregation.agents.standalone.GenericAgentConstants;
@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.Fe
 import se.tink.backend.aggregation.agents.standalone.mapper.fetch.trans.agg.FetchTransactionsResponseMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.fetch.trans.sa.FetchTransactionsRequestMapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.sa.common.mapper.MappingContext;
 import se.tink.sa.services.fetch.account.FetchAccountsRequest;
@@ -44,7 +45,7 @@ public class CheckingService {
         this.persistentStorage = persistentStorage;
     }
 
-    public FetchAccountsResponse fetchCheckingAccounts() {
+    public List<TransactionalAccount> fetchCheckingAccounts() {
         String consentId =
                 persistentStorage.get(GenericAgentConstants.PersistentStorageKey.CONSENT_ID);
         MappingContext mappingContext =
