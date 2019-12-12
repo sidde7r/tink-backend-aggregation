@@ -299,7 +299,6 @@ public class IngBaseApiClient {
     }
 
     private void setClientIdToSession(final String clientId) {
-        logger.debug("ING client id: " + clientId);
         persistentStorage.put(StorageKeys.CLIENT_ID, clientId, false);
     }
 
@@ -310,13 +309,9 @@ public class IngBaseApiClient {
     }
 
     private String getClientIdFromSession() {
-        String clientId =
-                persistentStorage
-                        .get(StorageKeys.CLIENT_ID, String.class)
-                        .orElseThrow(
-                                () -> new IllegalStateException(ErrorMessages.MISSING_CLIENT_ID));
-        logger.debug("ING client id: " + clientId);
-        return clientId;
+        return persistentStorage
+                .get(StorageKeys.CLIENT_ID, String.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CLIENT_ID));
     }
 
     private String getAuthorization(
