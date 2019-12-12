@@ -172,12 +172,6 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum> & Arg
      */
     public ArgumentManager(ArgumentEnum[] argumentList) {
         arguments = ImmutableList.copyOf(argumentList);
-        // Arrays.stream(argumentList).map(Enum::name).collect(Collectors.toList()));
-        //        optionalArguments =
-        //                ImmutableList.copyOf(
-        //                        Arrays.stream(optionalArgumentList)
-        //                                .map(Enum::name)
-        //                                .collect(Collectors.toList()));
 
         if (Objects.nonNull(System.getProperty("tink.urlencoded"))) {
             state.setIsUrlEncoded();
