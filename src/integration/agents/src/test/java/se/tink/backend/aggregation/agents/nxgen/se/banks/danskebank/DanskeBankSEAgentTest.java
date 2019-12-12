@@ -28,6 +28,7 @@ public final class DanskeBankSEAgentTest {
     @Before
     public void setup() {
         manager.before();
+        ssnManager.before();
     }
 
     @AfterClass
