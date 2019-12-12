@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -27,7 +28,7 @@ public class AccountsItemEntity {
     private List<BalancesItemEntity> balances;
 
     @JsonProperty("_links")
-    private HrefEntity links;
+    private Href links;
 
     private String usage;
 
