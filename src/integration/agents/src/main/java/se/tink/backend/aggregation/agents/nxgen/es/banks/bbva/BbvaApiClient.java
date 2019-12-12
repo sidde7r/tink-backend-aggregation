@@ -89,6 +89,7 @@ public class BbvaApiClient {
     public FinancialDashboardResponse fetchFinancialDashboard() {
         return createRequestInSession(BbvaConstants.Url.FINANCIAL_DASHBOARD)
                 .queryParam(QueryKeys.DASHBOARD_CUSTOMER_ID, getUserId())
+                .queryParam(QueryKeys.DASHBOARD_FILTER, QueryValues.DASHBOARD_FILTER)
                 .get(FinancialDashboardResponse.class);
     }
 
@@ -145,8 +146,7 @@ public class BbvaApiClient {
     }
 
     public TransactionsRequest createAccountTransactionsQuery(Account account) {
-        final String accountId =
-                account.getFromTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID);
+        final String accountId = account.getApiIdentifier();
         AccountContractsEntity accountContract = new AccountContractsEntity();
         accountContract.setContract(new ContractEntity().setId(accountId));
 

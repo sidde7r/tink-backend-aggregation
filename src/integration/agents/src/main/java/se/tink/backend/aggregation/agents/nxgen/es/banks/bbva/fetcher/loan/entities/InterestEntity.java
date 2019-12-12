@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.enti
 
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults.TIMEZONE_CET;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -9,12 +10,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class InterestEntity {
-    private Double differentialPercentage;
+    private BigDecimal differentialPercentage;
     private Date reviewDate;
 
-    private Double percentage;
+    private BigDecimal percentage;
 
-    public Double getDifferentialPercentage() {
+    public BigDecimal getDifferentialPercentage() {
         return differentialPercentage;
     }
 
@@ -22,7 +23,7 @@ public class InterestEntity {
         return reviewDate.toInstant().atZone(ZoneId.of(TIMEZONE_CET)).toLocalDate();
     }
 
-    public Double getPercentage() {
+    public BigDecimal getPercentage() {
         return percentage;
     }
 }

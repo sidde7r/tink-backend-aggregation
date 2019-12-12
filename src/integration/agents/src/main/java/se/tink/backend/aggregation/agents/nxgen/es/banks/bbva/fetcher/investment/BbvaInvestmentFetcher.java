@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment;
 
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities.PensionPlansEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities.StockAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.ProductsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PensionPlanEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.SecuritiesPortfolioEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -24,21 +26,25 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        ProductsResponse products = apiClient.fetchProducts();
-
-        return products.getStockAccounts()
-                .map(this::toInvestmentAccount)
-                .appendAll(products.getPensionPlans().map(this::toInvestmentAccount))
-                .asJava();
+        List<PositionEntity> positions = apiClient.fetchFinancialDashboard().getPositions();
+        return getSecurities(positions).appendAll(getPensionPlans(positions)).asJava();
     }
 
-    private InvestmentAccount toInvestmentAccount(StockAccountEntity stock) {
-        String holderName = sessionStorage.get(BbvaConstants.StorageKeys.HOLDER_NAME);
-        return stock.toTinkAccount(apiClient, holderName);
+    private List<InvestmentAccount> getSecurities(List<PositionEntity> positions) {
+        return positions
+                .map(PositionEntity::getContract)
+                .map(ContractEntity::getSecuritiesPortfolio)
+                .filter(Option::isDefined)
+                .map(Option::get)
+                .map(SecuritiesPortfolioEntity::toInvestmentAccount);
     }
 
-    private InvestmentAccount toInvestmentAccount(PensionPlansEntity pension) {
-        String holderName = sessionStorage.get(BbvaConstants.StorageKeys.HOLDER_NAME);
-        return pension.toTinkAccount(holderName);
+    private List<InvestmentAccount> getPensionPlans(List<PositionEntity> positions) {
+        return positions
+                .map(PositionEntity::getContract)
+                .map(ContractEntity::getPensionPlan)
+                .filter(Option::isDefined)
+                .map(Option::get)
+                .map(PensionPlanEntity::toInvestmentAccount);
     }
 }

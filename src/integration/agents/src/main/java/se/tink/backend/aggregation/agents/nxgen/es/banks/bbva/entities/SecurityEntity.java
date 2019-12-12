@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Instrument.Type;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -143,5 +145,22 @@ public class SecurityEntity {
 
     public String getIsin() {
         return isin;
+    }
+
+    public Instrument toTinkInstrument() {
+        Instrument instrument = new Instrument();
+        instrument.setUniqueIdentifier(marketName + isin);
+        instrument.setName(name);
+        instrument.setQuantity(totalTitles);
+        instrument.setType(Type.STOCK);
+        //        instrument.setPrice(getPrice());
+        // instrument.setMarketValue(marketValue);
+        // instrument.setCurrency(currency);
+        instrument.setIsin(isin);
+        // instrument.setProfit(totalProfit);
+        // instrument.setAverageAcquisitionPrice(averageAcquisitionPrice);
+        instrument.setMarketPlace(marketName);
+        instrument.setRawType(typeSecurities.getId());
+        return instrument;
     }
 }

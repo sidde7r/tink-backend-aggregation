@@ -25,7 +25,7 @@ public class BaseLoanEntity extends AbstractContractDetailsEntity {
         return IdModule.builder()
                 .withUniqueIdentifier(uniqueIdentifier)
                 .withAccountNumber(uniqueIdentifier)
-                .withAccountName(getProduct().getName())
+                .withAccountName(getProduct().getDescription())
                 .addIdentifier(
                         AccountIdentifier.create(
                                 AccountIdentifier.Type.BBAN, getFormats().getBocf()))

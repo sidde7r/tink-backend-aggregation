@@ -107,7 +107,7 @@ public class BbvaAgent extends NextGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new BbvaAccountFetcher(apiClient, sessionStorage),
+                new BbvaAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(

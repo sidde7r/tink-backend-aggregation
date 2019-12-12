@@ -55,12 +55,13 @@ public final class BbvaConstants {
         public static final String CONTRACT_ID = "contractId";
         public static final String CARD_TRANSACTION_TYPE = "cardTransactionType";
         public static final String DASHBOARD_CUSTOMER_ID = "$customer.id";
-        public static final String SHOW_SENSITIVE = "isShowSensitive";
+        public static final String DASHBOARD_FILTER = "$filter";
     }
 
     public static final class QueryValues {
         public static final String FALSE = "false";
         public static final String FIRST_PAGE_KEY = "0";
+        public static final String DASHBOARD_FILTER = "(showPending==true);(hasSicav==false)";
     }
 
     public static final class LogTags {
@@ -92,9 +93,8 @@ public final class BbvaConstants {
         public static final String TICKET = BASE_URL + "/ASO/TechArchitecture/grantingTickets/V02";
         public static final String SESSION =
                 BASE_URL + "/ENPP/enpp_mult_web_mobility_02/sessions/v1";
-        public static final String PRODUCTS =
-                BASE_URL + "/ENPP/enpp_mult_web_mobility_02/products/v2";
-        public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03/";
+        public static final String PRODUCTS = BASE_URL + "/ASO/financialDashBoard/V03";
+        public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03";
         public static final String ASO = BASE_URL + "/ASO";
         public static final String ACCOUNT_TRANSACTION =
                 BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
