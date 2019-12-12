@@ -51,7 +51,7 @@ public class SibsTransactionalAccountTransactionFetcher
     LocalDate getTransactionsFetchBeginDate(final Account account) {
         LocalDate updateDate = getCertainDate(account).orElse(BIG_BANG_DATE);
 
-        if (isFetchingFromBeginningAllowed(updateDate)
+        if (isFetchingFromBeginningNotAllowed(updateDate)
                 || certainDateWasOlderThan90DaysBack(updateDate)) {
             updateDate =
                     LocalDate.now().minusDays(DAYS_BACK_TO_FETCH_TRANSACTIONS_WHEN_CONSENT_OLD);
@@ -59,7 +59,7 @@ public class SibsTransactionalAccountTransactionFetcher
         return updateDate;
     }
 
-    private boolean isFetchingFromBeginningAllowed(LocalDate updateDate) {
+    private boolean isFetchingFromBeginningNotAllowed(LocalDate updateDate) {
         return isDateABigBang(updateDate) && userState.getConsent().isConsentOlderThan30Minutes();
     }
 
