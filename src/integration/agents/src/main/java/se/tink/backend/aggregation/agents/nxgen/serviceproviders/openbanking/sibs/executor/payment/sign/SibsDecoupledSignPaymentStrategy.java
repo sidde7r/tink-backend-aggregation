@@ -41,7 +41,7 @@ public class SibsDecoupledSignPaymentStrategy extends AbstractSibsSignPaymentStr
         String psuUpdateUrl =
                 paymentMultiStepRequest.getStorage().get(Storage.PAYMENT_REDIRECT_URI);
 
-        apiClient.updatePaymentforPsuId(psuUpdateUrl, request);
+        apiClient.updatePaymentForPsuId(psuUpdateUrl, request);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class SibsDecoupledSignPaymentStrategy extends AbstractSibsSignPaymentStr
             throws PaymentException {
         Retryer<SibsTransactionStatus> consentStatusRetryer =
                 SibsUtils.getPaymentStatusRetryer(SLEEP_TIME, RETRY_ATTEMPTS);
-        SibsTransactionStatus status = null;
+        SibsTransactionStatus status;
         try {
             status =
                     consentStatusRetryer.call(

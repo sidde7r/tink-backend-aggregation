@@ -120,7 +120,7 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
         return new PaymentListResponse(response);
     }
 
-    protected SibsPaymentType getPaymentType(PaymentRequest paymentRequest) {
+    private SibsPaymentType getPaymentType(PaymentRequest paymentRequest) {
         if (paymentRequest.getPayment().isSepa()) {
             return SibsPaymentType.SEPA_CREDIT_TRANSFERS;
         } else {

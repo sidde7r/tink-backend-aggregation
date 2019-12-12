@@ -206,7 +206,7 @@ public class SibsBaseApiClient {
                 .put(SibsPaymentUpdateResponse.class, sibsPaymentUpdateRequest);
     }
 
-    public SibsPaymentUpdateResponse updatePaymentforPsuId(
+    public SibsPaymentUpdateResponse updatePaymentForPsuId(
             String updatePsuIdUrl, SibsPaymentUpdateRequest sibsPaymentUpdateRequest) {
         URL updatePaymentUrl = createUrl(updatePsuIdUrl);
 

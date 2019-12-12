@@ -73,9 +73,7 @@ public class SibsAuthenticator {
     public void autoAuthenticate() throws SessionException {
         try {
             AuthenticationState authenticationState = getCurrentAuthenticationState();
-            if (authenticationState == AuthenticationState.AUTO) {
-                return;
-            } else {
+            if (authenticationState != AuthenticationState.AUTO) {
                 if (authenticationState == AuthenticationState.MANUAL_SUCCEEDED) {
                     userState.finishManualAuthentication();
                 }
@@ -83,7 +81,6 @@ public class SibsAuthenticator {
             }
         } catch (HttpResponseException e) {
             handleInvalidConsents(e);
-            return;
         }
     }
 

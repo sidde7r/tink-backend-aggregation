@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
@@ -35,7 +36,7 @@ public class TestingSibsMessageSignInterceptor extends MessageSignInterceptor {
     private static final String NEW_LINE = "\n";
     private static final String COLON_SPACE = ": ";
 
-    public static final List<String> SIGNATURE_HEADERS =
+    private static final List<String> SIGNATURE_HEADERS =
             ImmutableList.of(
                     HeaderKeys.DIGEST,
                     HeaderKeys.TPP_TRANSACTION_ID,
@@ -96,9 +97,7 @@ public class TestingSibsMessageSignInterceptor extends MessageSignInterceptor {
         } catch (SignatureException | InvalidKeyException | NoSuchAlgorithmException e) {
             throw new IllegalStateException(e);
         }
-        String signatureBase64Sha =
-                org.apache.commons.codec.binary.Base64.encodeBase64String(signatureSha);
-        return signatureBase64Sha;
+        return Base64.encodeBase64String(signatureSha);
     }
 
     private byte[] toSHA256withRSA(String input)
