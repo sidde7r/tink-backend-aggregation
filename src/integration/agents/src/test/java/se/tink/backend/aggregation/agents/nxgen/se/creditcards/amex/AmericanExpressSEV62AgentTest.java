@@ -38,6 +38,7 @@ public final class AmericanExpressSEV62AgentTest {
     @Before
     public void setup() {
         helper.before();
+        credentialHelper.before();
 
         builder =
                 new AgentIntegrationTest.Builder("se", helper.get(Arg.PROVIDER))
