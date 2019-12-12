@@ -19,10 +19,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.InitAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.SelectAuthenticationMethodResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.utils.RangeRegexUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.utils.RangeRegex;
 import se.tink.libraries.i18n.Catalog;
 
 public class SparkassenAuthenticationController implements MultiFactorAuthenticator {
@@ -126,7 +126,7 @@ public class SparkassenAuthenticationController implements MultiFactorAuthentica
                         .mapToObj(
                                 i -> String.format("(%d) %s", i + 1, scaMethods.get(i).toString()))
                         .collect(Collectors.joining(";\n"));
-        String regexForRangePattern = RangeRegexUtils.regexForRange(1, maxNumber);
+        String regexForRangePattern = RangeRegex.regexForRange(1, maxNumber);
 
         return Field.builder()
                 .description(this.catalog.getString(description))

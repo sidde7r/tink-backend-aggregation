@@ -23,10 +23,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants.PollStatus;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.utils.RangeRegexUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.utils.RangeRegex;
 import se.tink.libraries.i18n.Catalog;
 
 public class PostbankAuthenticationController implements TypedAuthenticator {
@@ -126,7 +126,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                         .mapToObj(
                                 i -> String.format("(%d) %s", i + 1, scaMethods.get(i).toString()))
                         .collect(Collectors.joining(";\n"));
-        String regexForRangePattern = RangeRegexUtils.regexForRange(1, maxNumber);
+        String regexForRangePattern = RangeRegex.regexForRange(1, maxNumber);
 
         return Field.builder()
                 .description(String.format("Select from 1 to %d", maxNumber))

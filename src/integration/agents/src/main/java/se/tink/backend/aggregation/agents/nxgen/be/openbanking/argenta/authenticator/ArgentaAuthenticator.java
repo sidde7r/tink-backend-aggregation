@@ -16,13 +16,13 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaCo
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.entities.IbanEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.entities.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.utils.RangeRegexUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.utils.RangeRegex;
 import se.tink.libraries.i18n.Catalog;
 
 public class ArgentaAuthenticator implements OAuth2Authenticator {
@@ -96,7 +96,7 @@ public class ArgentaAuthenticator implements OAuth2Authenticator {
                         .mapToObj(
                                 i -> String.format("(%d) %s", i + 1, scaMethods.get(i).toString()))
                         .collect(Collectors.joining("\n"));
-        String regexForRangePattern = RangeRegexUtils.regexForRange(1, maxNumber);
+        String regexForRangePattern = RangeRegex.regexForRange(1, maxNumber);
 
         return Field.builder()
                 .description("Enter number of selected SCA method")

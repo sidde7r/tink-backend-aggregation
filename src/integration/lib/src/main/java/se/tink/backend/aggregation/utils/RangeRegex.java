@@ -1,13 +1,14 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.utils;
+package se.tink.backend.aggregation.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
-public class RangeRegexUtils {
+public class RangeRegex {
 
     public static int fillByNines(int integer, int ninesCount) {
         String str = Integer.toString(integer);
@@ -28,7 +29,6 @@ public class RangeRegexUtils {
     public static List<Integer> splitToRanges(int min, int max) {
         List<Integer> stops = new ArrayList<>();
         stops.add(max);
-
         int nines_count = 1;
         int stop = fillByNines(min, nines_count);
         while (min <= stop && stop < max) {
@@ -36,7 +36,6 @@ public class RangeRegexUtils {
             nines_count += 1;
             stop = fillByNines(min, nines_count);
         }
-
         int zerosCount = 1;
         stop = fillByZeros(max + 1, zerosCount) - 1;
         while (min < stop && stop <= max) {
@@ -44,37 +43,34 @@ public class RangeRegexUtils {
             zerosCount += 1;
             stop = fillByZeros(max + 1, zerosCount) - 1;
         }
-
         Collections.sort(stops);
         return stops.stream().distinct().collect(Collectors.toList());
     }
 
     public static String rangeToPattern(int start, int stop) {
-        String pattern = "";
+        StringBuilder pattern = new StringBuilder();
         int anyDigitCount = 0;
         String startStr = Integer.toString(start);
         String stopStr = Integer.toString(stop);
         int length = Math.min(startStr.length(), stopStr.length());
-
         for (int i = 0; i < length; i++) {
             char startDigit = startStr.charAt(i);
             char stopDigit = stopStr.charAt(i);
             if (startDigit == stopDigit) {
-                pattern += startDigit;
+                pattern.append(startDigit);
             } else if (startDigit != '0' || stopDigit != '9') {
-                pattern += String.format("[%c-%c]", startDigit, stopDigit);
+                pattern.append(String.format("[%c-%c]", startDigit, stopDigit));
             } else {
                 anyDigitCount += 1;
             }
         }
-
         if (anyDigitCount != 0) {
-            pattern += "[0-9]";
+            pattern.append("[0-9]");
         }
         if (anyDigitCount > 1) {
-            pattern += String.format("{%d}", anyDigitCount);
+            pattern.append(String.format("{%d}", anyDigitCount));
         }
-        return pattern;
+        return pattern.toString();
     }
 
     public static List<String> splitToPatterns(int min, int max) {
@@ -88,10 +84,8 @@ public class RangeRegexUtils {
     }
 
     public static String regexForRange(int min, int max) {
-
         final List<String> positiveSubpatterns;
         final List<String> negativeSubpatterns;
-
         if (min < 0) {
             int min2 = 1;
             if (max < 0) {
@@ -103,13 +97,11 @@ public class RangeRegexUtils {
         } else {
             negativeSubpatterns = new ArrayList<>();
         }
-
         if (max >= 0) {
             positiveSubpatterns = splitToPatterns(min, max);
         } else {
             positiveSubpatterns = new ArrayList<>();
         }
-
         List<String> negativeOnlySubpatterns =
                 negativeSubpatterns.stream()
                         .filter(subpattern -> !positiveSubpatterns.contains(subpattern))
@@ -121,15 +113,13 @@ public class RangeRegexUtils {
                         .collect(Collectors.toList());
         List<String> intersectedSubpatterns =
                 negativeSubpatterns.stream()
-                        .filter(subpattern -> positiveSubpatterns.contains(subpattern))
+                        .filter(positiveSubpatterns::contains)
                         .map(subpattern -> "-?" + subpattern)
                         .collect(Collectors.toList());
-
         String pattern =
                 Stream.of(negativeOnlySubpatterns, intersectedSubpatterns, positiveOnlySubpatterns)
-                        .flatMap(list -> list.stream())
+                        .flatMap(Collection::stream)
                         .collect(Collectors.joining("|"));
-
         return String.format("^(%s)$", pattern);
     }
 }
