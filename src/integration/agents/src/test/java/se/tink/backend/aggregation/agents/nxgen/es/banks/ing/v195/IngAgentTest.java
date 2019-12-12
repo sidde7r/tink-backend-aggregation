@@ -27,6 +27,7 @@ public class IngAgentTest {
     @Before
     public void before() {
         dateOfBirthManager.before();
+        usernamePasswordManager.before();
     }
 
     @AfterClass
