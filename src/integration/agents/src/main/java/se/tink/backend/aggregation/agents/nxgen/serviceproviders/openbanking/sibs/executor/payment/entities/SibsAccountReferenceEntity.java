@@ -106,7 +106,7 @@ public class SibsAccountReferenceEntity {
     }
 
     public Debtor toTinkDebtor() throws PaymentException {
-        Debtor debtor = null;
+        Debtor debtor;
         if (StringUtils.isNotEmpty(iban)) {
             debtor = new Debtor(AccountIdentifier.create(Type.IBAN, iban));
         } else if (StringUtils.isNotEmpty(msisdn)) {

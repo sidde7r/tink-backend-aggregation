@@ -22,9 +22,6 @@ public abstract class AbstractSibsSignPaymentStrategy implements SignPaymentStra
     }
 
     @Override
-    /*
-    TODO: before prod check if any operation throws exception cancel is called in engine
-     */
     public PaymentMultiStepResponse sign(
             PaymentMultiStepRequest paymentMultiStepRequest, SibsPaymentType paymentType)
             throws PaymentException {
@@ -68,9 +65,7 @@ public abstract class AbstractSibsSignPaymentStrategy implements SignPaymentStra
         SibsGetPaymentStatusResponse paymentStatusResponse =
                 apiClient.getPaymentStatus(
                         paymentMultiStepRequest.getPayment().getUniqueId(), paymentType);
-        SibsTransactionStatus transactionStatus = paymentStatusResponse.getTransactionStatus();
-
-        return transactionStatus;
+        return paymentStatusResponse.getTransactionStatus();
     }
 
     protected void checkStatusAfterSign(SibsTransactionStatus transactionStatus)

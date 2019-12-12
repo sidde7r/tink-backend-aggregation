@@ -18,15 +18,11 @@ public class SignPaymentStrategyFactory {
         SibsRedirectCallbackHandler redirectCallbackHandler =
                 new SibsRedirectCallbackHandler(
                         supplementalInformationHelper, WAIT_FOR_RESPONSE_IN_SECONDS, unit);
-        SibsRedirectSignPaymentStrategy redirectSignPaymentStrategy =
-                new SibsRedirectSignPaymentStrategy(apiClient, redirectCallbackHandler);
-        return redirectSignPaymentStrategy;
+        return new SibsRedirectSignPaymentStrategy(apiClient, redirectCallbackHandler);
     }
 
     public static SignPaymentStrategy buildSignPaymentDecoupledStrategy(
             SibsBaseApiClient apiClient, Credentials credentials) {
-        SibsDecoupledSignPaymentStrategy redirectSignPaymentStrategy =
-                new SibsDecoupledSignPaymentStrategy(apiClient, credentials);
-        return redirectSignPaymentStrategy;
+        return new SibsDecoupledSignPaymentStrategy(apiClient, credentials);
     }
 }
