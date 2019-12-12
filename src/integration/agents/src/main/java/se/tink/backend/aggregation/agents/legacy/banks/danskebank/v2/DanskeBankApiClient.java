@@ -145,7 +145,6 @@ public class DanskeBankApiClient {
 
         ClientResponse verifyClientResponse =
                 postBankIdService(bankIdServiceType, verifyAuthMessage);
-        handleClientResponseError(verifyClientResponse);
 
         return getDecryptedBankIdResponse(bankIdServiceType, verifyClientResponse);
     }
@@ -504,6 +503,9 @@ public class DanskeBankApiClient {
                         verifyResponseMessage.getServiceStatus().getStatusCode())) {
             throw LoginError.NOT_CUSTOMER.exception();
         }
+
+        handleClientResponseError(verifyBankidClientResponse);
+
         Class<? extends BankIdResponse> responseClass = getBankIdResponseClass(bankIdServiceType);
         return verifyResponseMessage.decrypt(bankIdResourceHelper, responseClass);
     }
