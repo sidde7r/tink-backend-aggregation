@@ -10,6 +10,9 @@ import org.junit.AfterClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PasswordArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -19,7 +22,12 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class FiduciaAgentPaymentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<IbanArgumentEnum> ibanManager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
+    private final ArgumentManager<PsuIdArgumentEnum> psuIdManager =
+            new ArgumentManager<>(PsuIdArgumentEnum.values());
+    private final ArgumentManager<PasswordArgumentEnum> passwordManager =
+            new ArgumentManager<>(PasswordArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -29,13 +37,19 @@ public class FiduciaAgentPaymentTest {
 
     @Test
     public void testPayments() throws Exception {
-        manager.before();
+        psuIdManager.before();
+        passwordManager.before();
+        ibanManager.before();
 
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("de", "de-fiducia-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
-                        .addCredentialField(CredentialKeys.PSU_ID, manager.get(Arg.PSU_ID))
-                        .addCredentialField(CredentialKeys.PASSWORD, manager.get(Arg.PASSWORD))
+                        .addCredentialField(
+                                CredentialKeys.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
+                        .addCredentialField(
+                                CredentialKeys.PSU_ID, psuIdManager.get(PsuIdArgumentEnum.PSU_ID))
+                        .addCredentialField(
+                                CredentialKeys.PASSWORD,
+                                passwordManager.get(PasswordArgumentEnum.PASSWORD))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
@@ -67,11 +81,5 @@ public class FiduciaAgentPaymentTest {
         }
 
         return listOfMockedPayments;
-    }
-
-    private enum Arg {
-        IBAN,
-        PSU_ID,
-        PASSWORD
     }
 }

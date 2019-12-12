@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -66,10 +67,15 @@ public class AxaAgentPaymentTest {
         return listOfMockedPayments;
     }
 
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         IBAN,
         CREDITORS_NAME,
         CREDITORS_IBAN,
-        DEBTORS_IBAN
+        DEBTORS_IBAN;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 }

@@ -7,13 +7,19 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 
 @Ignore
 public class DnbAgentTest {
 
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         USERNAME,
-        MOBILENUMBER
+        MOBILENUMBER;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());

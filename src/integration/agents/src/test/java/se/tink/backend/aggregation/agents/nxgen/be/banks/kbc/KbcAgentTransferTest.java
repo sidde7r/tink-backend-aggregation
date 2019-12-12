@@ -12,6 +12,8 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.MessageType;
@@ -22,14 +24,30 @@ public class KbcAgentTransferTest {
     // NB  m4ri needs to be installed
     // See ../tools/libkbc_wbaes_src/README
 
-    private enum Arg {
-        USERNAME,
+    private enum Arg implements ArgumentManagerEnum {
         SOURCE_ACCOUNT,
         DESTINATION_ACCOUNT,
-        DESTINATION_NAME,
+        DESTINATION_NAME;
+
+        private final boolean optional;
+
+        Arg(boolean optional) {
+            this.optional = optional;
+        }
+
+        Arg() {
+            this.optional = false;
+        }
+
+        @Override
+        public boolean isOptional() {
+            return optional;
+        }
     }
 
     private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernameArgumentEnum> usernameHelper =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
 
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("be", "be-kbc-cardreader")
@@ -58,7 +76,9 @@ public class KbcAgentTransferTest {
     }
 
     private AgentIntegrationTest buildWithCredentials() {
-        return builder.addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME)).build();
+        return builder.addCredentialField(
+                        Field.Key.USERNAME, usernameHelper.get(UsernameArgumentEnum.USERNAME))
+                .build();
     }
 
     // Will create a real transfer, handle with care

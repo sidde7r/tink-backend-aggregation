@@ -13,17 +13,14 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class IkanoApiAgentTest {
-
-    private enum Arg {
-        USERNAME
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernameArgumentEnum> manager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +31,8 @@ public class IkanoApiAgentTest {
     public void testLoginAndRefresh() throws Exception {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("se", "preem-bankid")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(
+                                Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(false)

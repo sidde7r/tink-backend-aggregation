@@ -6,15 +6,12 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class SupremeCardAgentTest {
-
-    private enum Arg {
-        USERNAME
-    }
-
-    private ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private ArgumentManager<UsernameArgumentEnum> manager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @Before
@@ -22,7 +19,8 @@ public class SupremeCardAgentTest {
         manager.before();
         builder =
                 new AgentIntegrationTest.Builder("se", "supremecard-bankid")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(
+                                Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(true)

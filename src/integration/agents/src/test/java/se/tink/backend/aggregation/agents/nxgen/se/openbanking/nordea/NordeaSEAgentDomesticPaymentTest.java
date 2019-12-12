@@ -14,6 +14,9 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -24,19 +27,31 @@ import se.tink.libraries.payment.rpc.Payment;
 // DISCLAIMER! Actual money being transferred, run under own responsibility
 public class NordeaSEAgentDomesticPaymentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<Arg> creditorDebtorManager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<SsnArgumentEnum> ssnManager =
+            new ArgumentManager<>(SsnArgumentEnum.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
-        manager.before();
+        loadBeforeSaveAfterManager.before();
+        creditorDebtorManager.before();
+        ssnManager.before();
         builder =
                 new AgentIntegrationTest.Builder("SE", "se-nordea-oauth2")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
+                        .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
+                        .loadCredentialsBefore(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                        .saveCredentialsAfter(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)));
     }
 
     @Test
@@ -46,11 +61,11 @@ public class NordeaSEAgentDomesticPaymentTest {
 
     private List<Payment> createRealDomesticPayment() {
         AccountIdentifier creditorAccountIdentifier =
-                new SwedishIdentifier(manager.get(Arg.CREDITOR_ACCOUNT));
+                new SwedishIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier);
 
         AccountIdentifier debtorAccountIdentifier =
-                new SwedishIdentifier(manager.get(Arg.DEBTOR_ACCOUNT));
+                new SwedishIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         Amount amount = Amount.inSEK(1);
@@ -96,11 +111,13 @@ public class NordeaSEAgentDomesticPaymentTest {
         return listOfMockedPayments;
     }
 
-    private enum Arg {
-        SSN, // 12 digit SSN
-        SAVE_AFTER,
-        LOAD_BEFORE,
+    private enum Arg implements ArgumentManagerEnum {
         DEBTOR_ACCOUNT, // Domestic Swedish account number
-        CREDITOR_ACCOUNT, // Domestic Swedish account number
+        CREDITOR_ACCOUNT; // Domestic Swedish account number
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 }

@@ -6,14 +6,11 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
 public class RaiffeisenAgentTest {
-    private enum Arg {
-        USERNAME,
-        PASSWORD,
-    }
-
-    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> helper =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     private final AgentIntegrationTest.Builder builderRaff2 =
             new AgentIntegrationTest.Builder("at", "at-raiffeisen2-password")
@@ -38,8 +35,10 @@ public class RaiffeisenAgentTest {
     @Test
     public void testLoginAndRefresh2() throws Exception {
         builderRaff2
-                .addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, helper.get(Arg.PASSWORD))
+                .addCredentialField(
+                        Field.Key.USERNAME, helper.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD, helper.get(UsernamePasswordArgumentEnum.PASSWORD))
                 // .doLogout(true)
                 .transactionsToPrint(0) // 0 ~ no limit
                 .build()
@@ -49,8 +48,10 @@ public class RaiffeisenAgentTest {
     @Test
     public void testLoginAndRefresh6() throws Exception {
         builderRaff6
-                .addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, helper.get(Arg.PASSWORD))
+                .addCredentialField(
+                        Field.Key.USERNAME, helper.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD, helper.get(UsernamePasswordArgumentEnum.PASSWORD))
                 // .doLogout(true)
                 .transactionsToPrint(0) // 0 ~ no limit
                 .build()

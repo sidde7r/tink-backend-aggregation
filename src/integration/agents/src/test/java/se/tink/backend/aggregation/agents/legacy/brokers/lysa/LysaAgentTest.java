@@ -6,19 +6,16 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 
 public class LysaAgentTest {
-
-    private enum Arg {
-        USERNAME,
-    }
-
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("se", "lysa")
                     .loadCredentialsBefore(false)
                     .saveCredentialsAfter(true);
 
-    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernameArgumentEnum> helper =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
 
     @Before
     public void before() {
@@ -32,7 +29,7 @@ public class LysaAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
-        builder.addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
+        builder.addCredentialField(Field.Key.USERNAME, helper.get(UsernameArgumentEnum.USERNAME))
                 .build()
                 .testRefresh();
     }

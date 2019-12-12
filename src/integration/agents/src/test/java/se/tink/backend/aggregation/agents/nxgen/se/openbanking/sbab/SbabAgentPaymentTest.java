@@ -16,6 +16,9 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -27,20 +30,31 @@ import se.tink.libraries.payment.rpc.Payment.Builder;
 
 public class SbabAgentPaymentTest {
 
-    private final ArgumentManager<SbabAgentPaymentTest.Arg> manager =
-            new ArgumentManager<>(SbabAgentPaymentTest.Arg.values());
+    private final ArgumentManager<SsnArgumentEnum> ssnManager =
+            new ArgumentManager<>(SsnArgumentEnum.values());
+    private final ArgumentManager<Arg> creditorDebtorManager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() throws Exception {
-        manager.before();
+        ssnManager.before();
+        loadBeforeSaveAfterManager.before();
+        creditorDebtorManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("SE", "se-sbab-oauth2")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
-                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                        .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
+                        .loadCredentialsBefore(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                        .saveCredentialsAfter(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)))
                         .expectLoggedIn(false);
     }
 
@@ -51,11 +65,11 @@ public class SbabAgentPaymentTest {
 
     private List<Payment> createRealDomesticPayment() {
         AccountIdentifier creditorAccountIdentifier =
-                new SwedishIdentifier(manager.get(Arg.CREDITOR_ACCOUNT));
+                new SwedishIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier);
 
         AccountIdentifier debtorAccountIdentifier =
-                new SwedishIdentifier(manager.get(Arg.DEBTOR_ACCOUNT));
+                new SwedishIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         Amount amount = Amount.inSEK(1);
@@ -112,11 +126,13 @@ public class SbabAgentPaymentTest {
         ArgumentManager.afterClass();
     }
 
-    private enum Arg {
-        SSN, // 12 digit SSN
+    private enum Arg implements ArgumentManagerEnum {
         DEBTOR_ACCOUNT, // Domestic Swedish account number
-        CREDITOR_ACCOUNT, // Domestic Swedish account number
-        SAVE_AFTER,
-        LOAD_BEFORE,
+        CREDITOR_ACCOUNT; // Domestic Swedish account number
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 }

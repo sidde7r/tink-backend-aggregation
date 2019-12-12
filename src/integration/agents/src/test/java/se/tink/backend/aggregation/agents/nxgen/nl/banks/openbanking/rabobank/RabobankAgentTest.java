@@ -5,12 +5,18 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 
 public final class RabobankAgentTest {
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         LOAD_BEFORE,
         SAVE_AFTER,
-        IS_MANUAL,
+        IS_MANUAL;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());

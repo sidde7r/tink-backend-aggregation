@@ -5,30 +5,38 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 
 public class KbcAgentTest {
 
     private AgentIntegrationTest.Builder builder;
 
-    private enum Arg {
-        IBAN,
-        LOAD_BEFORE,
-        SAVE_AFTER,
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
+    private final ArgumentManager<IbanArgumentEnum> ibanManager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
 
     @Before
     public void setup() {
-        manager.before();
+        loadBeforeSaveAfterManager.before();
+        ibanManager.before();
         builder =
                 new AgentIntegrationTest.Builder("be", "be-kbc-ob")
-                        .addCredentialField(KbcConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
+                        .addCredentialField(
+                                KbcConstants.CredentialKeys.IBAN,
+                                ibanManager.get(IbanArgumentEnum.IBAN))
                         .setFinancialInstitutionId("kbc")
                         .setAppId("tink")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
+                        .loadCredentialsBefore(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                        .saveCredentialsAfter(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)));
     }
 
     @AfterClass

@@ -5,15 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 
 public class ICSAgentTest {
-
-    private enum Arg {
-        LOAD_BEFORE,
-        SAVE_AFTER,
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> manager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
 
     @Before
     public void before() {
@@ -28,8 +24,12 @@ public class ICSAgentTest {
     @Test
     public void refresh() throws Exception {
         new AgentIntegrationTest.Builder("nl", "nl-ics-oauth2")
-                .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                .loadCredentialsBefore(
+                        Boolean.parseBoolean(
+                                manager.get(LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                .saveCredentialsAfter(
+                        Boolean.parseBoolean(
+                                manager.get(LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)))
                 .expectLoggedIn(false)
                 .setFinancialInstitutionId("icsConfiguration")
                 .setClusterId("oxford-staging")

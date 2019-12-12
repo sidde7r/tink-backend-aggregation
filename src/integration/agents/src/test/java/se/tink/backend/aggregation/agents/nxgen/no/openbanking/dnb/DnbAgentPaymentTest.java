@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -22,8 +23,8 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class DnbAgentPaymentTest {
 
-    private final ArgumentManager<DnbAgentPaymentTest.Arg> manager =
-            new ArgumentManager<>(DnbAgentPaymentTest.Arg.values());
+    private final ArgumentManager<PsuIdArgumentEnum> manager =
+            new ArgumentManager<>(PsuIdArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -41,14 +42,10 @@ public class DnbAgentPaymentTest {
         manager.before();
         builder =
                 new AgentIntegrationTest.Builder("no", "no-dnb-ob")
-                        .addCredentialField("PSU-ID", manager.get(DnbAgentPaymentTest.Arg.PSU_ID))
+                        .addCredentialField("PSU-ID", manager.get(PsuIdArgumentEnum.PSU_ID))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
-    }
-
-    private enum Arg {
-        PSU_ID,
     }
 
     private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {

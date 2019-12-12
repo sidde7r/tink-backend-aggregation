@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.CredentialKeys;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -19,6 +20,17 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
 public class BelfiusAgentPaymentTest {
+    private enum Arg implements ArgumentManagerEnum {
+        IBAN,
+        CREDITORS_NAME,
+        CREDITORS_IBAN,
+        DEBTORS_IBAN;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
@@ -70,12 +82,5 @@ public class BelfiusAgentPaymentTest {
         }
 
         return listOfMockedPayments;
-    }
-
-    private enum Arg {
-        IBAN,
-        CREDITORS_NAME,
-        CREDITORS_IBAN,
-        DEBTORS_IBAN
     }
 }

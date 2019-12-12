@@ -6,16 +6,12 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class DanskeBankV2PasswordAgentTest {
-
-    private enum Arg {
-        USERNAME,
-        PASSWORD
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     @Before
     public void setUp() throws Exception {
@@ -25,8 +21,10 @@ public class DanskeBankV2PasswordAgentTest {
     @Test
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("se", "danskebank")
-                .addCredentialField(Key.USERNAME, manager.get(Arg.USERNAME))
-                .addCredentialField(Key.PASSWORD, manager.get(Arg.PASSWORD))
+                .addCredentialField(
+                        Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Key.PASSWORD, manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())

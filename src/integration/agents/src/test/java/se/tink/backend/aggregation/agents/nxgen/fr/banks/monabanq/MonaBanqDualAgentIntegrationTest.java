@@ -7,17 +7,14 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.DualAgentIntegrationTest;
 
 @Ignore
 public class MonaBanqDualAgentIntegrationTest {
 
-    private enum Arg {
-        CARD_NUMBER,
-        PASSWORD,
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     @Before
     public void setup() {
@@ -40,8 +37,13 @@ public class MonaBanqDualAgentIntegrationTest {
                                 .build(),
                         new AgentIntegrationTest.Builder("fr", "fr-monabanq-password")
                                 .addCredentialField(
-                                        Field.Key.USERNAME, manager.get(Arg.CARD_NUMBER))
-                                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                                        Field.Key.USERNAME,
+                                        manager.get(
+                                                // Card Number
+                                                UsernamePasswordArgumentEnum.USERNAME))
+                                .addCredentialField(
+                                        Field.Key.PASSWORD,
+                                        manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                                 .expectLoggedIn(false)
                                 .loadCredentialsBefore(false)
                                 .saveCredentialsAfter(false)

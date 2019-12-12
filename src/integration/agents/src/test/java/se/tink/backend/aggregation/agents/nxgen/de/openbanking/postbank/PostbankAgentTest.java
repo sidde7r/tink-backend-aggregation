@@ -5,11 +5,16 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 
 public class PostbankAgentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> usernamePasswordManager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
+    private final ArgumentManager<IbanArgumentEnum> ibanManager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -19,12 +24,18 @@ public class PostbankAgentTest {
 
     @Before
     public void setup() {
-        manager.before();
+        ibanManager.before();
+        usernamePasswordManager.before();
         builder =
                 new AgentIntegrationTest.Builder("de", "de-postbank-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
-                        .addCredentialField(CredentialKeys.USERNAME, manager.get(Arg.USERNAME))
-                        .addCredentialField(CredentialKeys.PASSWORD, manager.get(Arg.PASSWORD))
+                        .addCredentialField(
+                                CredentialKeys.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
+                        .addCredentialField(
+                                CredentialKeys.USERNAME,
+                                usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))
+                        .addCredentialField(
+                                CredentialKeys.PASSWORD,
+                                usernamePasswordManager.get(UsernamePasswordArgumentEnum.PASSWORD))
                         .setFinancialInstitutionId("postbank")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
@@ -35,11 +46,5 @@ public class PostbankAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        IBAN,
-        USERNAME,
-        PASSWORD,
     }
 }

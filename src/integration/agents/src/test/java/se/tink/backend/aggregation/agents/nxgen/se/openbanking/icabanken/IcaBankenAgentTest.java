@@ -6,9 +6,11 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 
 public class IcaBankenAgentTest {
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<SsnArgumentEnum> manager =
+            new ArgumentManager<>(SsnArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -21,7 +23,7 @@ public class IcaBankenAgentTest {
         manager.before();
         builder =
                 new AgentIntegrationTest.Builder("se", "se-icabanken-oauth2")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
+                        .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .loadCredentialsBefore(false)
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("icabanken")
@@ -32,9 +34,5 @@ public class IcaBankenAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        SSN,
     }
 }

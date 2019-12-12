@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -18,21 +20,30 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class SwedbankAgentPaymentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<Arg> creditorDebtorManager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
-        manager.before();
+        creditorDebtorManager.before();
+        loadBeforeSaveAfterManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("se", "se-swedbank-oauth2")
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("swedbank")
                         .setAppId("tink")
-                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
+                        .loadCredentialsBefore(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                        .saveCredentialsAfter(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)));
     }
 
     @Test
@@ -47,12 +58,14 @@ public class SwedbankAgentPaymentTest {
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(manager.get(Arg.CREDITOR_ACCOUNT)).when(creditor).getAccountNumber();
-            doReturn(manager.get(Arg.CREDITOR_NAME)).when(creditor).getName();
+            doReturn(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT))
+                    .when(creditor)
+                    .getAccountNumber();
+            doReturn(creditorDebtorManager.get(Arg.CREDITOR_NAME)).when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(manager.get(Arg.DEBTOR_ACCOUNT)).when(debtor).getAccountNumber();
+            doReturn(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT)).when(debtor).getAccountNumber();
 
             Amount amount = Amount.inSEK(3);
             LocalDate executionDate = LocalDate.now();
@@ -71,11 +84,14 @@ public class SwedbankAgentPaymentTest {
         return listOfMockedPayments;
     }
 
-    private enum Arg {
-        SAVE_AFTER,
-        LOAD_BEFORE,
+    private enum Arg implements ArgumentManagerEnum {
         DEBTOR_ACCOUNT, // Domestic Swedish account number
         CREDITOR_ACCOUNT, // Domestic Swedish account number
-        CREDITOR_NAME, // Domestic Swedish account number
+        CREDITOR_NAME; // Domestic Swedish account number
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 }

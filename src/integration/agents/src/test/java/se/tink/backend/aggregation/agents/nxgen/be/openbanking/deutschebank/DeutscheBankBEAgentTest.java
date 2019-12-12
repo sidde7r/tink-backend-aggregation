@@ -5,11 +5,19 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 
 public class DeutscheBankBEAgentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernameArgumentEnum> usernameManager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
+    private final ArgumentManager<IbanArgumentEnum> ibanManager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -19,27 +27,31 @@ public class DeutscheBankBEAgentTest {
 
     @Before
     public void setup() {
-        manager.before();
+        usernameManager.before();
+        ibanManager.before();
+        loadBeforeSaveAfterManager.before();
         builder =
                 new AgentIntegrationTest.Builder("be", "be-deutschebank-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
-                        .addCredentialField(CredentialKeys.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(
+                                CredentialKeys.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
+                        .addCredentialField(
+                                CredentialKeys.USERNAME,
+                                usernameManager.get(UsernameArgumentEnum.USERNAME))
                         .setFinancialInstitutionId("deutschebank-be")
                         .setAppId("tink")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
+                        .loadCredentialsBefore(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                        .saveCredentialsAfter(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)));
     }
 
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        IBAN,
-        USERNAME,
-        LOAD_BEFORE,
-        SAVE_AFTER,
     }
 }

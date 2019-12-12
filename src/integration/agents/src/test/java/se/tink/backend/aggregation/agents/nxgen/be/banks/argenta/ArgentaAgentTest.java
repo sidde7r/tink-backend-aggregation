@@ -6,22 +6,32 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 
 public class ArgentaAgentTest {
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         LOAD_BEFORE,
-        SAVE_AFTER,
+        SAVE_AFTER;
+        private final boolean optional;
 
-        /*
-        The card number contains spaces, so you have to URL-encode it like so:
+        Arg(boolean optional) {
+            this.optional = optional;
+        }
 
-        --jvmopt=-Dtink.CARD_NUMBER=6703%20xxxx%20xxxx%20xxxx%20x
-        --jvmopt=-Dtink.urlencoded
-        */
-        CARD_NUMBER,
+        Arg() {
+            this.optional = false;
+        }
+
+        @Override
+        public boolean isOptional() {
+            return optional;
+        }
     }
 
     private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernameArgumentEnum> usernameHelper =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
 
     @Before
     public void before() {
@@ -40,7 +50,15 @@ public class ArgentaAgentTest {
     public void testRefresh() throws Exception {
         final AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("be", "be-argenta-cardreader")
-                        .addCredentialField(Field.Key.USERNAME, helper.get(Arg.CARD_NUMBER))
+                        /*
+                        The card number contains spaces, so you have to URL-encode it like so:
+
+                        --jvmopt=-Dtink.CARD_NUMBER=6703%20xxxx%20xxxx%20xxxx%20x
+                        --jvmopt=-Dtink.urlencoded
+                        */
+                        .addCredentialField(
+                                Field.Key.USERNAME,
+                                usernameHelper.get(UsernameArgumentEnum.USERNAME))
                         .loadCredentialsBefore(Boolean.parseBoolean(helper.get(Arg.LOAD_BEFORE)))
                         .saveCredentialsAfter(Boolean.parseBoolean(helper.get(Arg.SAVE_AFTER)));
 

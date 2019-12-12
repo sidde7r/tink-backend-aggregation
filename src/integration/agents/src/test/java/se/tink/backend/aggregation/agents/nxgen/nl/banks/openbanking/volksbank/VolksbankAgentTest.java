@@ -5,11 +5,27 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 
 public final class VolksbankAgentTest {
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         LOAD_BEFORE,
-        SAVE_AFTER,
+        SAVE_AFTER;
+
+        private final boolean optional;
+
+        Arg(boolean optional) {
+            this.optional = optional;
+        }
+
+        Arg() {
+            this.optional = false;
+        }
+
+        @Override
+        public boolean isOptional() {
+            return optional;
+        }
     }
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());

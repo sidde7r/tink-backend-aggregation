@@ -6,15 +6,11 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
 public class BnpParibasAgentTest {
-    private enum Arg {
-        USERNAME,
-        PASSWORD
-    }
-
-    private final ArgumentManager<BnpParibasAgentTest.Arg> manager =
-            new ArgumentManager<>(BnpParibasAgentTest.Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     @AfterClass
     public static void afterClass() {
@@ -35,8 +31,10 @@ public class BnpParibasAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder()
-                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                .addCredentialField(
+                        Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD, manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .build()
                 .testRefresh();
     }

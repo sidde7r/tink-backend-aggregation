@@ -5,10 +5,15 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 
 public class CommerzBankAgentTest {
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<IbanArgumentEnum> ibanManager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -18,14 +23,22 @@ public class CommerzBankAgentTest {
 
     @Before
     public void setup() {
-        manager.before();
+        ibanManager.before();
+        loadBeforeSaveAfterManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("de", "de-commerzbank-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
+                        .addCredentialField(
+                                CredentialKeys.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                        .loadCredentialsBefore(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                        .saveCredentialsAfter(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)))
                         .setFinancialInstitutionId("commerzbank")
                         .setAppId("tink");
     }
@@ -33,11 +46,5 @@ public class CommerzBankAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        IBAN,
-        SAVE_AFTER,
-        LOAD_BEFORE
     }
 }

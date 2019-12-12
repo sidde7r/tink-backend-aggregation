@@ -7,6 +7,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
@@ -22,7 +23,7 @@ public class NordeaSEAgentTest {
                     .saveCredentialsAfter(false)
                     .doLogout(true);
 
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         USERNAME, // 12 digit SSN
         FROMACCOUNT,
         TOACCOUNT,
@@ -31,7 +32,22 @@ public class NordeaSEAgentTest {
         OCR,
         EINVOICEBGACCOUNT,
         EINVOICEOCR,
-        EINVOICEID,
+        EINVOICEID;
+
+        private final boolean optional;
+
+        Arg(boolean optional) {
+            this.optional = optional;
+        }
+
+        Arg() {
+            this.optional = false;
+        }
+
+        @Override
+        public boolean isOptional() {
+            return optional;
+        }
     }
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());

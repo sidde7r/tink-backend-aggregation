@@ -10,17 +10,36 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 
 public class KbcAgentTest {
-    private enum Arg {
+
+    private enum Arg implements ArgumentManagerEnum {
         LOAD_BEFORE,
-        SAVE_AFTER,
-        USERNAME, // 17 first digits of card number
+        SAVE_AFTER;
+
+        private final boolean optional;
+
+        Arg(boolean optional) {
+            this.optional = optional;
+        }
+
+        Arg() {
+            this.optional = false;
+        }
+
+        @Override
+        public boolean isOptional() {
+            return optional;
+        }
     }
 
     // NB  m4ri needs to be installed
     // See ../tools/libkbc_wbaes_src/README
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernameArgumentEnum> usernameManager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @Before
@@ -40,7 +59,8 @@ public class KbcAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
-        builder.addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+        builder.addCredentialField(
+                        Field.Key.USERNAME, usernameManager.get(UsernameArgumentEnum.USERNAME))
                 .setUserLocale(getRandomSupportedLanguage())
                 .build()
                 .testRefresh();

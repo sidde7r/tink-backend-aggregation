@@ -6,16 +6,20 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 
 public class BbvaMxAgentTest {
 
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         PHONE_NUMBER,
         CARD_NUMBER,
-        PASSWORD,
-        MARKET,
-        PROVIDER,
+        PASSWORD;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 
     private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());

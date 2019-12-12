@@ -7,12 +7,14 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.FeatureFlags;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.CredentialKeys;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
 public class EnterCardAgentTest {
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<SsnArgumentEnum> manager =
+            new ArgumentManager<>(SsnArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -36,7 +38,7 @@ public class EnterCardAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("se", "se-entercard-oauth2")
-                        .addCredentialField(CredentialKeys.SSN, manager.get(Arg.SSN))
+                        .addCredentialField(CredentialKeys.SSN, manager.get(SsnArgumentEnum.SSN))
                         .setFinancialInstitutionId("entercard")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
@@ -48,9 +50,5 @@ public class EnterCardAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        SSN,
     }
 }

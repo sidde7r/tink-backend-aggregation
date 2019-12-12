@@ -6,11 +6,13 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class SbabAgentTest {
 
-    private ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private ArgumentManager<UsernameArgumentEnum> manager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -23,7 +25,8 @@ public class SbabAgentTest {
         manager.before();
         builder =
                 new AgentIntegrationTest.Builder("se", "se-sbab_sandbox-oauth2")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(
+                                Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(true)
@@ -33,9 +36,5 @@ public class SbabAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        USERNAME
     }
 }

@@ -6,21 +6,20 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public final class TargoBankDeAgentTest {
-    private enum Arg {
-        LOAD_BEFORE,
-        PASSWORD,
-        SAVE_AFTER,
-        USERNAME,
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> usernamePasswordManager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     @Before
     public void before() {
-        manager.before();
+        loadBeforeSaveAfterManager.before();
+        usernamePasswordManager.before();
     }
 
     @AfterClass
@@ -30,8 +29,14 @@ public final class TargoBankDeAgentTest {
 
     private AgentIntegrationTest.Builder builder() {
         return new AgentIntegrationTest.Builder("de", "de-targobank-password")
-                .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                .loadCredentialsBefore(
+                        Boolean.parseBoolean(
+                                loadBeforeSaveAfterManager.get(
+                                        LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                .saveCredentialsAfter(
+                        Boolean.parseBoolean(
+                                loadBeforeSaveAfterManager.get(
+                                        LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)))
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA);
     }
@@ -39,8 +44,12 @@ public final class TargoBankDeAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder()
-                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                .addCredentialField(
+                        Field.Key.USERNAME,
+                        usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD,
+                        usernamePasswordManager.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .build()
                 .testRefresh();
     }

@@ -14,6 +14,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -25,7 +26,8 @@ import se.tink.libraries.payment.rpc.Reference;
 public class UnicreditAgentPaymentTest {
 
     // PSU_ID_TYPE => "ALL"
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<PsuIdArgumentEnum> manager =
+            new ArgumentManager<>(PsuIdArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @Before
@@ -35,7 +37,8 @@ public class UnicreditAgentPaymentTest {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-unicredit-oauth2")
                         .addCredentialField(
-                                Key.ADDITIONAL_INFORMATION, manager.get(Arg.PSU_ID_TYPE))
+                                Key.ADDITIONAL_INFORMATION,
+                                manager.get(PsuIdArgumentEnum.PSU_ID_TYPE))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
@@ -79,9 +82,5 @@ public class UnicreditAgentPaymentTest {
         }
 
         return listOfMockedPayments;
-    }
-
-    private enum Arg {
-        PSU_ID_TYPE,
     }
 }

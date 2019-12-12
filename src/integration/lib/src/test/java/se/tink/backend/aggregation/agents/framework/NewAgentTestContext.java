@@ -626,11 +626,27 @@ public final class NewAgentTestContext extends AgentContext {
                     printAccountInformation(account);
                     printTransactions(bankId);
                     printTransferDestinations(bankId);
-                    System.out.println("");
+                    System.out.println();
                 });
 
         printIdentityData();
         printTransfers();
+    }
+
+    public CredentialDataDao dumpCollectedData() {
+        List<AccountDataDao> accountDataList = new ArrayList<>();
+        accountsByBankId.forEach(
+                (bankId, account) -> {
+                    List<Transaction> transactions =
+                            transactionsByAccountBankId.getOrDefault(
+                                    bankId, Collections.emptyList());
+                    List<TransferDestinationPattern> transferDestinationPatterns =
+                            transferDestinationPatternsByAccountBankId.getOrDefault(
+                                    bankId, Collections.emptyList());
+                    accountDataList.add(
+                            new AccountDataDao(account, transactions, transferDestinationPatterns));
+                });
+        return new CredentialDataDao(accountDataList, transfers, identityData);
     }
 
     public void printStatistics() {

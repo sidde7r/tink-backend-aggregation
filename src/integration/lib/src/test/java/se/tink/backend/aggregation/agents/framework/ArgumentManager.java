@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +14,7 @@ import javax.annotation.Nonnull;
 import org.junit.Assume;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 
 /**
  * Helper class allowing you to pass custom command line arguments to tests. This has a couple of
@@ -41,13 +41,108 @@ import org.slf4j.LoggerFactory;
  * --jvmopt=-Dtink.urlencoded
  * </pre>
  */
-public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum>> {
+public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum> & ArgumentManagerEnum> {
+
+    public enum UsernamePasswordArgumentEnum implements ArgumentManagerEnum {
+        USERNAME,
+        PASSWORD;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
+    public enum LoadBeforeSaveAfterArgumentEnum implements ArgumentManagerEnum {
+        LOAD_BEFORE,
+        SAVE_AFTER;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
+    public enum UsernameArgumentEnum implements ArgumentManagerEnum {
+        USERNAME;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
+    public enum PasswordArgumentEnum implements ArgumentManagerEnum {
+        PASSWORD;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
+    public enum SsnArgumentEnum implements ArgumentManagerEnum {
+        SSN;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
+    public enum ToAccountFromAccountArgumentEnum implements ArgumentManagerEnum {
+        TO_ACCOUNT,
+        FROM_ACCOUNT;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
+    public enum IbanArgumentEnum implements ArgumentManagerEnum {
+        IBAN;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
+    public enum PsuIdArgumentEnum implements ArgumentManagerEnum {
+        PSU_ID(true),
+        PSU_ID_TYPE;
+
+        private final boolean optional;
+
+        PsuIdArgumentEnum(boolean optional) {
+            this.optional = optional;
+        }
+
+        PsuIdArgumentEnum() {
+            optional = false;
+        }
+
+        @Override
+        public boolean isOptional() {
+            return optional;
+        }
+    }
+
+    public interface ArgumentManagerEnum {
+        boolean isOptional();
+    }
+
     private static final Logger logger = LoggerFactory.getLogger(ArgumentManager.class);
 
     private static final String ARG_PREFIX = "tink.";
 
     private static int skippedTestsCount = 0;
     private static final Collection<String> missingArguments = new HashSet<>();
+
+    private final State state = new State();
+
+    private final Collection<ArgumentEnum> arguments;
 
     private static class State {
         private boolean isBeforeExecuted = false;
@@ -70,19 +165,13 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum>> {
         }
     }
 
-    private final State state = new State();
-
-    private final Collection<String> arguments;
-
     /**
      * Declare the names of your command line parameters from an enum, e.g. enum { USERNAME,
      * PASSWORD }. The reason they have to be specified here is so the class knows what arguments to
      * look for when deciding whether the test should be skipped.
      */
     public ArgumentManager(ArgumentEnum[] argumentList) {
-        arguments =
-                ImmutableList.copyOf(
-                        Arrays.stream(argumentList).map(Enum::name).collect(Collectors.toList()));
+        arguments = ImmutableList.copyOf(argumentList);
 
         if (Objects.nonNull(System.getProperty("tink.urlencoded"))) {
             state.setIsUrlEncoded();
@@ -94,10 +183,10 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum>> {
         state.setIsBeforeExecuted();
 
         // Run tests only if the listed parameters have been passed as arguments, otherwise skip
-        for (final String arg : arguments) {
+        for (final ArgumentEnum arg : arguments) {
             final String propertyName = ARG_PREFIX + arg;
-            if (getProperty(propertyName) == null) {
-                missingArguments.add(arg);
+            if (getProperty(propertyName) == null && !arg.isOptional()) {
+                missingArguments.add(arg.name());
             }
         }
         if (!missingArguments.isEmpty()) {
@@ -151,15 +240,14 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum>> {
      * @param property The enum property, e.g PASSWORD
      * @return Property value of the property associated with propertyName, e.g. the actual password
      */
-    public String get(@Nonnull final ArgumentEnum property) {
-        Preconditions.checkNotNull(property);
+    public String get(final ArgumentEnum property) {
         final String className = this.getClass().getName();
         Preconditions.checkState(
                 state.getIsBeforeExecuted(),
                 String.format("%s::before was not called prior to %s::get", className, className));
 
         final String propertyName = "tink." + property.name();
-        if (!arguments.contains(property.name())) {
+        if (!arguments.contains(property)) {
             throw new IllegalArgumentException(
                     String.format(
                             "Argument '%s' was never declared. You declared: %s",

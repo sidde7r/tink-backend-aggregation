@@ -6,14 +6,11 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
 public class IngAtAgentTest {
-    private enum Arg {
-        USERNAME,
-        PASSWORD,
-    }
-
-    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> helper =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     @Before
     public void before() {
@@ -28,8 +25,10 @@ public class IngAtAgentTest {
     @Test
     public void testLoginAndRefresh() throws Exception {
         new AgentIntegrationTest.Builder("at", "at-ingdiba-password")
-                .addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, helper.get(Arg.PASSWORD))
+                .addCredentialField(
+                        Field.Key.USERNAME, helper.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD, helper.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .doLogout(true)

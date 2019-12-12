@@ -10,6 +10,7 @@ import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -17,7 +18,8 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class TargobankAgentPaymentTest {
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> manager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
     private TargobankAgentIntegrationTest.Builder builder;
 
     @Before
@@ -25,9 +27,13 @@ public class TargobankAgentPaymentTest {
         manager.before();
         builder =
                 new TargobankAgentIntegrationTest.Builder("de", "de-targobank-password")
-                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                        .loadCredentialsBefore(
+                                Boolean.parseBoolean(
+                                        manager.get(LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
                         .expectLoggedIn(false)
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
+                        .saveCredentialsAfter(
+                                Boolean.parseBoolean(
+                                        manager.get(LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)));
     }
 
     @Test
@@ -63,10 +69,5 @@ public class TargobankAgentPaymentTest {
         }
 
         return listOfMockedPayments;
-    }
-
-    private enum Arg {
-        SAVE_AFTER,
-        LOAD_BEFORE
     }
 }

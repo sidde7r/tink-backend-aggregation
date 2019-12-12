@@ -6,24 +6,21 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 
 @Ignore
 public class TriodosAgentTest {
 
     private AgentIntegrationTest.Builder builder;
-
-    private enum Arg {
-        IBAN,
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<IbanArgumentEnum> manager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
 
     @Before
     public void setup() {
         manager.before();
         builder =
                 new AgentIntegrationTest.Builder("nl", "nl-triodos-ob")
-                        .addCredentialField("IBAN", manager.get(Arg.IBAN))
+                        .addCredentialField("IBAN", manager.get(IbanArgumentEnum.IBAN))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

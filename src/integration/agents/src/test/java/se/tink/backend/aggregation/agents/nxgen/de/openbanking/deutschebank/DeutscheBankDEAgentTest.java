@@ -5,11 +5,16 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 
 public class DeutscheBankDEAgentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<IbanArgumentEnum> ibanManager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
+    private final ArgumentManager<UsernameArgumentEnum> usernameManager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -19,11 +24,15 @@ public class DeutscheBankDEAgentTest {
 
     @Before
     public void setup() {
-        manager.before();
+        ibanManager.before();
+        usernameManager.before();
         builder =
                 new AgentIntegrationTest.Builder("de", "de-deutschebank-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
-                        .addCredentialField(CredentialKeys.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(
+                                CredentialKeys.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
+                        .addCredentialField(
+                                CredentialKeys.USERNAME,
+                                usernameManager.get(UsernameArgumentEnum.USERNAME))
                         .setFinancialInstitutionId("deutschebank-de")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
@@ -34,10 +43,5 @@ public class DeutscheBankDEAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        IBAN,
-        USERNAME,
     }
 }

@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -19,7 +21,20 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class BunqAgentPaymentTest {
+
+    private enum Arg implements ArgumentManagerEnum {
+        CREDITOR_IBAN,
+        DEDTOR_IBAN;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -30,11 +45,18 @@ public class BunqAgentPaymentTest {
     @Before
     public void before() {
         manager.before();
+        loadBeforeSaveAfterManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("nl", "nl-bunq-oauth2")
-                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                        .loadCredentialsBefore(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                        .saveCredentialsAfter(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)))
                         .setFinancialInstitutionId("bunq")
                         .setAppId("tink");
     }
@@ -74,12 +96,5 @@ public class BunqAgentPaymentTest {
         }
 
         return listOfMockedPayments;
-    }
-
-    private enum Arg {
-        LOAD_BEFORE,
-        SAVE_AFTER,
-        CREDITOR_IBAN,
-        DEDTOR_IBAN,
     }
 }

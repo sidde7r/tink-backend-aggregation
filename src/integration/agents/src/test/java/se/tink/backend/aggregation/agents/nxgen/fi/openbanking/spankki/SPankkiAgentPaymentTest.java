@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -73,9 +74,14 @@ public class SPankkiAgentPaymentTest {
         ArgumentManager.afterClass();
     }
 
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         DEBTOR_ACCOUNT,
         CREDITOR_ACCOUNT,
-        CREDITOR_NAME
+        CREDITOR_NAME;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 }

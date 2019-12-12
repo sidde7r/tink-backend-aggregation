@@ -6,17 +6,12 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class SantanderAgentTest {
-
-    private enum Arg {
-        USERNAME,
-        PASSWORD
-    }
-
-    private final ArgumentManager<SantanderAgentTest.Arg> manager =
-            new ArgumentManager<>(SantanderAgentTest.Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
 
@@ -32,9 +27,11 @@ public class SantanderAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-santander-password")
                         .addCredentialField(
-                                Field.Key.USERNAME, manager.get(SantanderAgentTest.Arg.USERNAME))
+                                Field.Key.USERNAME,
+                                manager.get(UsernamePasswordArgumentEnum.USERNAME))
                         .addCredentialField(
-                                Field.Key.PASSWORD, manager.get(SantanderAgentTest.Arg.PASSWORD))
+                                Field.Key.PASSWORD,
+                                manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                         .expectLoggedIn(true)
                         .saveCredentialsAfter(false)
                         .loadCredentialsBefore(false)

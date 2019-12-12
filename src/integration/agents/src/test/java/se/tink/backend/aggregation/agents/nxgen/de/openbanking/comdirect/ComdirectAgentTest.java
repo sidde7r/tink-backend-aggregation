@@ -5,11 +5,13 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 
 public class ComdirectAgentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<IbanArgumentEnum> manager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -23,7 +25,7 @@ public class ComdirectAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("de", "de-comdirect-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
+                        .addCredentialField(CredentialKeys.IBAN, manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
@@ -34,9 +36,5 @@ public class ComdirectAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        IBAN,
     }
 }

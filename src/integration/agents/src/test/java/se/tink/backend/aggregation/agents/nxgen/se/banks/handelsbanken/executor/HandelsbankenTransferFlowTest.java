@@ -8,6 +8,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -17,10 +18,15 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenTransferFlowTest {
 
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         USERNAME,
         SRC_ACCOUNT,
-        DEST_ACCOUNT
+        DEST_ACCOUNT;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());

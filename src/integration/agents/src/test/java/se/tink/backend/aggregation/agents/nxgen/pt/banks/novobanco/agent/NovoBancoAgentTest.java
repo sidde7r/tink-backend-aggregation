@@ -6,16 +6,11 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
 public class NovoBancoAgentTest {
-
-    private enum Arg {
-        USERNAME,
-        PASSWORD
-    }
-
-    private final ArgumentManager<NovoBancoAgentTest.Arg> helper =
-            new ArgumentManager<>(NovoBancoAgentTest.Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> helper =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("pt", "pt-novobanco-password")
@@ -35,8 +30,10 @@ public class NovoBancoAgentTest {
 
     @Test
     public void shouldLoginAndRefreshSuccessfully() throws Exception {
-        builder.addCredentialField(Field.Key.USERNAME, helper.get(NovoBancoAgentTest.Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, helper.get(NovoBancoAgentTest.Arg.PASSWORD))
+        builder.addCredentialField(
+                        Field.Key.USERNAME, helper.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD, helper.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .build()
                 .testRefresh();
     }

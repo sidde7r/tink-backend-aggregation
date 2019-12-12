@@ -13,6 +13,8 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.MessageType;
@@ -20,15 +22,30 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class BelfiusAgentTransferTest {
-    private enum Arg {
-        USERNAME,
-        PASSWORD,
+    private enum Arg implements ArgumentManagerEnum {
         SOURCE_ACCOUNT,
         DESTINATION_ACCOUNT,
-        DESTINATION_NAME,
+        DESTINATION_NAME;
+
+        private final boolean optional;
+
+        Arg(boolean optional) {
+            this.optional = optional;
+        }
+
+        Arg() {
+            this.optional = false;
+        }
+
+        @Override
+        public boolean isOptional() {
+            return optional;
+        }
     }
 
     private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> usernamPasswordHelper =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     // Transfer tests will make actual transfers verify before running.
     // https://www.belfius.be/retail/nl/mijn-belfius/index.aspx#pan=cardNr
@@ -69,8 +86,12 @@ public class BelfiusAgentTransferTest {
     }
 
     private AgentIntegrationTest buildWithCredentials() {
-        return builder.addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, helper.get(Arg.PASSWORD))
+        return builder.addCredentialField(
+                        Field.Key.USERNAME,
+                        usernamPasswordHelper.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD,
+                        usernamPasswordHelper.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .build();
     }
 

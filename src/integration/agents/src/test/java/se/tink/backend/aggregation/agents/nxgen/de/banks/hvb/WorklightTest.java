@@ -5,12 +5,18 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.AuthenticityChallengeHandler;
 
 public class WorklightTest {
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         CHALLENGE_DATA,
-        AUTHENTICITY_REALM,
+        AUTHENTICITY_REALM;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 
     private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());

@@ -9,6 +9,8 @@ import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -17,16 +19,19 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class CrelanAgentPaymentTest {
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
-    private AgentIntegrationTest.Builder builder;
+    private final ArgumentManager<Arg> creditorDebtorManager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<IbanArgumentEnum> ibanManager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
 
     @Test
     public void testPayments() throws Exception {
-        manager.before();
+        creditorDebtorManager.before();
+        ibanManager.before();
 
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("be", "be-crelan-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
+                        .addCredentialField(
+                                CredentialKeys.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("crelan")
                         .setAppId("tink")
@@ -66,10 +71,14 @@ public class CrelanAgentPaymentTest {
         return listOfMockedPayments;
     }
 
-    private enum Arg {
-        IBAN,
+    private enum Arg implements ArgumentManagerEnum {
         CREDITORS_NAME,
         CREDITORS_ACCOUNT,
-        DEBTORS_ACCOUNT
+        DEBTORS_ACCOUNT;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 }

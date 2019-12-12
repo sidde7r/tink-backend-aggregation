@@ -6,12 +6,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
 
 @Ignore
 public class SydbankAgentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<IbanArgumentEnum> manager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -26,7 +28,8 @@ public class SydbankAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("dk", "dk-sydbank-ob")
                         .addCredentialField(
-                                BankdataConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
+                                BankdataConstants.CredentialKeys.IBAN,
+                                manager.get(IbanArgumentEnum.IBAN))
                         .setFinancialInstitutionId("sydbank")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
@@ -37,9 +40,5 @@ public class SydbankAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        IBAN
     }
 }
