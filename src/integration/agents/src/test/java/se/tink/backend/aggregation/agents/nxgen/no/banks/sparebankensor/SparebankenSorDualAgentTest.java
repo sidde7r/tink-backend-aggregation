@@ -27,6 +27,7 @@ public class SparebankenSorDualAgentTest {
     @Before
     public void setUp() throws Exception {
         manager.before();
+        usernameManager.before();
     }
 
     @Test
