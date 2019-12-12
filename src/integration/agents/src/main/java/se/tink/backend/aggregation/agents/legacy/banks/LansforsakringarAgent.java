@@ -325,6 +325,7 @@ public class LansforsakringarAgent extends AbstractAgent
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
                 case "00012":
                 case "00019":
+                case "000117":
                     throw BankServiceError.BANK_SIDE_FAILURE.exception();
                 default:
                     throw new IllegalStateException(
