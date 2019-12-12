@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -17,8 +18,8 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class BpostAgentPaymentTest {
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
-    private AgentIntegrationTest.Builder builder;
+    private final ArgumentManager<IbanArgumentEnum> manager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
 
     @Test
     public void testPayments() throws Exception {
@@ -26,7 +27,7 @@ public class BpostAgentPaymentTest {
 
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("be", "be-bpost-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
+                        .addCredentialField(CredentialKeys.IBAN, manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("bpost")
                         .setAppId("tink")
@@ -64,9 +65,5 @@ public class BpostAgentPaymentTest {
         }
 
         return listOfMockedPayments;
-    }
-
-    private enum Arg {
-        IBAN,
     }
 }

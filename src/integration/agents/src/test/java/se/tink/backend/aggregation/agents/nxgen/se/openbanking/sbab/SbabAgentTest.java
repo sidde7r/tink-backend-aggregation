@@ -6,15 +6,11 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 
 public class SbabAgentTest {
-
-    private enum Arg {
-        USERNAME // 12 digit SSN
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
-
+    private final ArgumentManager<SsnArgumentEnum> manager =
+            new ArgumentManager<>(SsnArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -27,7 +23,7 @@ public class SbabAgentTest {
         manager.before();
         builder =
                 new AgentIntegrationTest.Builder("se", "se-sbab-oauth2")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setFinancialInstitutionId("sbab")

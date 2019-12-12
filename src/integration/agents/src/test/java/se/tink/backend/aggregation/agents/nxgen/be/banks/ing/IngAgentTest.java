@@ -6,19 +6,28 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 
 public class IngAgentTest {
 
-    private enum Arg {
-        USERNAME,
-        CARD_ID,
+    private enum Arg implements ArgumentManagerEnum {
+        CARD_ID;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 
-    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<Arg> cardIdHelper = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernameArgumentEnum> usernameHelper =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
 
     @Before
     public void before() {
-        helper.before();
+        cardIdHelper.before();
+        usernameHelper.before();
     }
 
     @AfterClass
@@ -29,8 +38,9 @@ public class IngAgentTest {
     @Test
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("be", "be-ing-cardreader")
-                .addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
-                .addCredentialField("cardId", helper.get(Arg.CARD_ID))
+                .addCredentialField(
+                        Field.Key.USERNAME, usernameHelper.get(UsernameArgumentEnum.USERNAME))
+                .addCredentialField("cardId", cardIdHelper.get(Arg.CARD_ID))
                 .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)
                 .build()

@@ -6,15 +6,12 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class CicBankAgentNewTest {
-    private enum Arg {
-        PASSWORD,
-        USERNAME,
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     @Before
     public void before() {
@@ -37,8 +34,10 @@ public class CicBankAgentNewTest {
     @Test
     public void testCicbankFr() throws Exception {
         builder()
-                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                .addCredentialField(
+                        Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD, manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .build()
                 .testRefresh();
     }

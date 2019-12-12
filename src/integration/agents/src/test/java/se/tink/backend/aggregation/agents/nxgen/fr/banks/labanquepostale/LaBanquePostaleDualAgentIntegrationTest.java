@@ -7,17 +7,13 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.DualAgentIntegrationTest;
 
 @Ignore
 public class LaBanquePostaleDualAgentIntegrationTest {
-
-    private enum Arg {
-        USERNAME,
-        PASSWORD,
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     @Before
     public void setup() {
@@ -40,8 +36,12 @@ public class LaBanquePostaleDualAgentIntegrationTest {
                         new AgentIntegrationTest.Builder(
                                         LaBanquePostaleConstants.MARKET,
                                         LaBanquePostaleConstants.PROVIDER_NAME)
-                                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                                .addCredentialField(
+                                        Field.Key.USERNAME,
+                                        manager.get(UsernamePasswordArgumentEnum.USERNAME))
+                                .addCredentialField(
+                                        Field.Key.PASSWORD,
+                                        manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                                 .loadCredentialsBefore(false)
                                 .saveCredentialsAfter(false)
                                 .build())

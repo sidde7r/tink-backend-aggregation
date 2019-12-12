@@ -8,13 +8,19 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class DanskeBankAgentTest {
-    private enum Arg {
-        USERNAME,
-        PASSWORD,
-        MARKET // "fi", "dk" or "no"
+    private enum Arg implements ArgumentManagerEnum {
+        // "fi", "dk" or "no"
+        MARKET;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 
     private final Map<String, String> providerName =
@@ -25,7 +31,9 @@ public class DanskeBankAgentTest {
                     .build();
 
     private AgentIntegrationTest.Builder builder;
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<Arg> marketManager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> usernamePasswordManager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     @AfterClass
     public static void afterClass() {
@@ -34,14 +42,19 @@ public class DanskeBankAgentTest {
 
     @Before
     public void setup() {
-        manager.before();
-        final String market = manager.get(Arg.MARKET);
+        usernamePasswordManager.before();
+        marketManager.before();
+        final String market = marketManager.get(Arg.MARKET);
         assert providerName.containsKey(market);
 
         builder =
                 new AgentIntegrationTest.Builder(market, providerName.get(market))
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                        .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                        .addCredentialField(
+                                Field.Key.USERNAME,
+                                usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))
+                        .addCredentialField(
+                                Field.Key.PASSWORD,
+                                usernamePasswordManager.get(UsernamePasswordArgumentEnum.PASSWORD))
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(false)

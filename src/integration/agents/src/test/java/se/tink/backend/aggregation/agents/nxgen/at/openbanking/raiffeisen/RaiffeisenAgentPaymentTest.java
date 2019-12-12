@@ -10,6 +10,7 @@ import java.util.Random;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -17,12 +18,8 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class RaiffeisenAgentPaymentTest {
-
-    private enum Arg {
-        IBAN,
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<IbanArgumentEnum> manager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
 
     @Test
     public void testPayments() throws Exception {
@@ -30,7 +27,7 @@ public class RaiffeisenAgentPaymentTest {
 
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("at", "at-raiffeisen-ob")
-                        .addCredentialField("IBAN", manager.get(Arg.IBAN))
+                        .addCredentialField("IBAN", manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

@@ -12,6 +12,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -23,13 +24,17 @@ public class KbcAgentPaymentTest {
 
     AgentIntegrationTest.Builder builder;
 
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         CREDITOR_IBAN,
-        DEBTOR_IBAN
+        DEBTOR_IBAN;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 
-    private final ArgumentManager<KbcAgentPaymentTest.Arg> manager =
-            new ArgumentManager<>(KbcAgentPaymentTest.Arg.values());
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
     @Before
     public void setup() {

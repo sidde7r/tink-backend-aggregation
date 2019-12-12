@@ -5,10 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
 
 public class DnbAgentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<PsuIdArgumentEnum> manager =
+            new ArgumentManager<>(PsuIdArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -21,7 +23,7 @@ public class DnbAgentTest {
         manager.before();
         builder =
                 new AgentIntegrationTest.Builder("no", "no-dnb-ob")
-                        .addCredentialField("PSU-ID", manager.get(Arg.PSU_ID))
+                        .addCredentialField("PSU-ID", manager.get(PsuIdArgumentEnum.PSU_ID))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true)
                         .expectLoggedIn(false)
@@ -32,9 +34,5 @@ public class DnbAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        PSU_ID,
     }
 }

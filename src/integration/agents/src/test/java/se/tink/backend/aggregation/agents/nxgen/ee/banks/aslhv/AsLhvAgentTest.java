@@ -6,15 +6,11 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
 public class AsLhvAgentTest {
-
-    private enum Arg {
-        USERNAME,
-        PASSWORD,
-    }
-
-    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> helper =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("ee", "ee-aslhv-password")
@@ -33,8 +29,10 @@ public class AsLhvAgentTest {
 
     @Test
     public void testLoginAndRefresh() throws Exception {
-        builder.addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, helper.get(Arg.PASSWORD))
+        builder.addCredentialField(
+                        Field.Key.USERNAME, helper.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD, helper.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .doLogout(true)
                 .build()
                 .testRefresh();

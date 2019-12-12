@@ -4,6 +4,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 
 public class ClientConfigurationTemplateBuilderForOneProviderTest {
 
@@ -35,10 +36,25 @@ public class ClientConfigurationTemplateBuilderForOneProviderTest {
         ArgumentManager.afterClass();
     }
 
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         MARKET,
         PROVIDER_NAME,
         INCLUDE_DESCRIPTIONS,
-        INCLUDE_EXAMPLES
+        INCLUDE_EXAMPLES;
+
+        private final boolean optional;
+
+        Arg(boolean optional) {
+            this.optional = optional;
+        }
+
+        Arg() {
+            this.optional = false;
+        }
+
+        @Override
+        public boolean isOptional() {
+            return optional;
+        }
     }
 }

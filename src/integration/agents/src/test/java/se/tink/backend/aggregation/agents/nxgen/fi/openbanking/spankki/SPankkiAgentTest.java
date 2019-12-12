@@ -5,16 +5,13 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 
 public class SPankkiAgentTest {
 
     private AgentIntegrationTest.Builder builder;
-
-    private enum Arg {
-        SSN,
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<SsnArgumentEnum> manager =
+            new ArgumentManager<>(SsnArgumentEnum.values());
 
     @Before
     public void setup() {

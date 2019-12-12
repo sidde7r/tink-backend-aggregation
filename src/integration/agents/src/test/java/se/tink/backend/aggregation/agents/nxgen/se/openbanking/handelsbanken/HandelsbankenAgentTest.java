@@ -6,12 +6,14 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
 
 public class HandelsbankenAgentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernameArgumentEnum> manager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -25,7 +27,8 @@ public class HandelsbankenAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("se", "se-handelsbanken-ob")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(
+                                Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
                         .addCredentialField(CredentialKeys.SCOPE, Scope.AIS)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
@@ -37,9 +40,5 @@ public class HandelsbankenAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        USERNAME,
     }
 }

@@ -6,10 +6,11 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
 public class OpBankAgentTest {
-    private final ArgumentManager<OpBankAgentTest.Arg> manager =
-            new ArgumentManager<>(OpBankAgentTest.Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -23,8 +24,12 @@ public class OpBankAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("fi", "fi-opbank-openbanking")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                        .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                        .addCredentialField(
+                                Field.Key.USERNAME,
+                                manager.get(UsernamePasswordArgumentEnum.USERNAME))
+                        .addCredentialField(
+                                Field.Key.PASSWORD,
+                                manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                         .setFinancialInstitutionId("opbank")
                         .setAppId("tink")
                         .expectLoggedIn(false)
@@ -35,10 +40,5 @@ public class OpBankAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        USERNAME,
-        PASSWORD
     }
 }

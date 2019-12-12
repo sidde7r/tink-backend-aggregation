@@ -6,18 +6,11 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
 
 public class VolksbankAgentTest {
-
-    // TEST_PSU_ID => "100002"
-    // TEST_PSU_ID_TYPE => "disposer-nr"
-
-    private enum Arg {
-        PSU_ID,
-        PSU_ID_TYPE
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<PsuIdArgumentEnum> manager =
+            new ArgumentManager<>(PsuIdArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
 
@@ -27,8 +20,11 @@ public class VolksbankAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("at", "at-volksbank-ob")
-                        .addCredentialField(Key.LOGIN_INPUT, manager.get(Arg.PSU_ID))
-                        .addCredentialField(Key.LOGIN_DESCRIPTION, manager.get(Arg.PSU_ID_TYPE))
+                        // TEST_PSU_ID => "100002"
+                        .addCredentialField(Key.LOGIN_INPUT, manager.get(PsuIdArgumentEnum.PSU_ID))
+                        // TEST_PSU_ID_TYPE => "disposer-nr"
+                        .addCredentialField(
+                                Key.LOGIN_DESCRIPTION, manager.get(PsuIdArgumentEnum.PSU_ID_TYPE))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

@@ -5,11 +5,13 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 
 public class RaiffeisenAgentTest {
 
     private AgentIntegrationTest.Builder builder;
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<IbanArgumentEnum> manager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
 
     @AfterClass
     public static void afterClass() {
@@ -23,7 +25,8 @@ public class RaiffeisenAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("at", "at-raiffeisen-ob")
                         .addCredentialField(
-                                RaiffeisenConstants.CredentialKeys.IBAN, manager.get(Arg.IBAN))
+                                RaiffeisenConstants.CredentialKeys.IBAN,
+                                manager.get(IbanArgumentEnum.IBAN))
                         .setFinancialInstitutionId("raiffeisen")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(true)
@@ -33,9 +36,5 @@ public class RaiffeisenAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        IBAN
     }
 }

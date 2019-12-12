@@ -6,9 +6,13 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PasswordArgumentEnum;
 
 public class BunqAgentTest {
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<PasswordArgumentEnum> passwordManager =
+            new ArgumentManager<>(PasswordArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
 
@@ -29,12 +33,28 @@ public class BunqAgentTest {
 
     @Test
     public void testLogin() throws Exception {
-        builder.addCredentialField(Key.PASSWORD, manager.get(Arg.PASSWORD)).build().testRefresh();
+        builder.addCredentialField(Key.PASSWORD, passwordManager.get(PasswordArgumentEnum.PASSWORD))
+                .build()
+                .testRefresh();
     }
 
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         LOAD_BEFORE,
-        SAVE_AFTER,
-        PASSWORD,
+        SAVE_AFTER;
+
+        private final boolean optional;
+
+        Arg(boolean optional) {
+            this.optional = optional;
+        }
+
+        Arg() {
+            this.optional = false;
+        }
+
+        @Override
+        public boolean isOptional() {
+            return optional;
+        }
     }
 }

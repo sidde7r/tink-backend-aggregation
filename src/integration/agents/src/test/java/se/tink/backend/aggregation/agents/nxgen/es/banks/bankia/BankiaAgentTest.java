@@ -6,16 +6,12 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class BankiaAgentTest {
-
-    private enum Arg {
-        USERNAME,
-        PASSWORD
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
 
@@ -30,8 +26,12 @@ public class BankiaAgentTest {
         builder =
                 new AgentIntegrationTest.Builder(
                                 BankiaConstants.MARKET, BankiaConstants.PROVIDER_NAME)
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                        .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                        .addCredentialField(
+                                Field.Key.USERNAME,
+                                manager.get(UsernamePasswordArgumentEnum.USERNAME))
+                        .addCredentialField(
+                                Field.Key.PASSWORD,
+                                manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())

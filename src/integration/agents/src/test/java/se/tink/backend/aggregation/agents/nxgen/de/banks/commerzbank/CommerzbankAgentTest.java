@@ -6,10 +6,14 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
 public class CommerzbankAgentTest {
-    private final ArgumentManager<CommerzbankAgentTest.Arg> manager =
-            new ArgumentManager<>(CommerzbankAgentTest.Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> usernamePasswordManager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
 
@@ -20,32 +24,30 @@ public class CommerzbankAgentTest {
 
     @Before
     public void before() {
-        manager.before();
+        usernamePasswordManager.before();
+        loadBeforeSaveAfterManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("de", "de-commerzbank-password")
                         .loadCredentialsBefore(
                                 Boolean.parseBoolean(
-                                        manager.get(CommerzbankAgentTest.Arg.LOAD_BEFORE)))
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
                         .saveCredentialsAfter(
                                 Boolean.parseBoolean(
-                                        manager.get(CommerzbankAgentTest.Arg.SAVE_AFTER)));
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)));
     }
 
     @Test
     public void testLogin() throws Exception {
         builder.addCredentialField(
-                        Field.Key.USERNAME, manager.get(CommerzbankAgentTest.Arg.USERNAME))
+                        Field.Key.USERNAME,
+                        usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))
                 .addCredentialField(
-                        Field.Key.PASSWORD, manager.get(CommerzbankAgentTest.Arg.PASSWORD))
+                        Field.Key.PASSWORD,
+                        usernamePasswordManager.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .build()
                 .testRefresh();
-    }
-
-    private enum Arg {
-        LOAD_BEFORE,
-        SAVE_AFTER,
-        USERNAME,
-        PASSWORD,
     }
 }

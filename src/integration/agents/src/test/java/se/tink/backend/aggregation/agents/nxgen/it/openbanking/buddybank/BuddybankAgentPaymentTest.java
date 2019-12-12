@@ -14,6 +14,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -26,7 +27,8 @@ public class BuddybankAgentPaymentTest {
     // https://authorization.api-sandbox.unicredit.eu:8403/sandbox/psd2/bg/loginPSD2_BG.html
     // https://authorization.api-sandbox.unicredit.eu/sandbox/psd2/bg/loginPSD2_BG.html
     // PSU_ID_TYPE => "ALL"
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<PsuIdArgumentEnum> manager =
+            new ArgumentManager<>(PsuIdArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @Before
@@ -36,7 +38,8 @@ public class BuddybankAgentPaymentTest {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-buddybank-oauth2")
                         .addCredentialField(
-                                Key.ADDITIONAL_INFORMATION, manager.get(Arg.PSU_ID_TYPE))
+                                Key.ADDITIONAL_INFORMATION,
+                                manager.get(PsuIdArgumentEnum.PSU_ID_TYPE))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
@@ -80,9 +83,5 @@ public class BuddybankAgentPaymentTest {
         }
 
         return listOfMockedPayments;
-    }
-
-    private enum Arg {
-        PSU_ID_TYPE,
     }
 }

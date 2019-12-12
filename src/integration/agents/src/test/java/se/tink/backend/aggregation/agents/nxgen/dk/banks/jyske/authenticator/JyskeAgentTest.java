@@ -6,11 +6,13 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class JyskeAgentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(JyskeAgentTest.Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     @AfterClass
     public static void afterClass() {
@@ -25,8 +27,10 @@ public class JyskeAgentTest {
     @Test
     public void refresh() throws Exception {
         new AgentIntegrationTest.Builder("dk", "dk-jyskebank-codecard")
-                .addCredentialField(Field.Key.USERNAME, manager.get(JyskeAgentTest.Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, manager.get(JyskeAgentTest.Arg.PASSWORD))
+                .addCredentialField(
+                        Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD, manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
@@ -35,10 +39,5 @@ public class JyskeAgentTest {
                 .setAppId("tink")
                 .build()
                 .testRefresh();
-    }
-
-    private enum Arg {
-        USERNAME,
-        PASSWORD
     }
 }

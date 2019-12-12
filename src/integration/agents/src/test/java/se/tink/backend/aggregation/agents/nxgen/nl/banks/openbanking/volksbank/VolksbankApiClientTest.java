@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.QueryParams;
@@ -22,11 +23,26 @@ import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 
 public final class VolksbankApiClientTest {
 
-    private enum Arg {
+    private enum Arg implements ArgumentManagerEnum {
         CLIENT_ID, // lfffffffffffffffffffffffffffffffff
         CLIENT_SECRET, // cccccccccccccccccccccccccccccccccc
         REFRESH_TOKEN, // ffffffff-ffff-ffff-ffff-ffffffffffff
-        CONSENT_ID, // SNS7777777777777
+        CONSENT_ID; // SNS7777777777777
+
+        private final boolean optional;
+
+        Arg(boolean optional) {
+            this.optional = optional;
+        }
+
+        Arg() {
+            this.optional = false;
+        }
+
+        @Override
+        public boolean isOptional() {
+            return optional;
+        }
     }
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());

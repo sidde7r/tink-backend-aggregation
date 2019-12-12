@@ -5,11 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.CredentialKeys;
 
 public class BelfiusAgentTest {
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<IbanArgumentEnum> manager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -23,7 +24,7 @@ public class BelfiusAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("be", "be-belfius-oauth2")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
+                        .addCredentialField(CredentialKeys.IBAN, manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("belfius")
                         .setAppId("tink")
@@ -34,9 +35,5 @@ public class BelfiusAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
-    }
-
-    private enum Arg {
-        IBAN
     }
 }

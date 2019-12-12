@@ -6,30 +6,35 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 
 public class NordeaSeAgentTest {
 
     private AgentIntegrationTest.Builder builder;
-
-    private enum Arg {
-        SSN, // 12 digit SSN
-        LOAD_BEFORE,
-        SAVE_AFTER
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
+    private final ArgumentManager<SsnArgumentEnum> ssnManager =
+            new ArgumentManager<>(SsnArgumentEnum.values());
 
     @Before
     public void setup() {
-        manager.before();
+        ssnManager.before();
+        loadBeforeSaveAfterManager.before();
         builder =
                 new AgentIntegrationTest.Builder("SE", "se-nordea-oauth2")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
+                        .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("nordea")
                         .setAppId("tink")
-                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
+                        .loadCredentialsBefore(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                        .saveCredentialsAfter(
+                                Boolean.parseBoolean(
+                                        loadBeforeSaveAfterManager.get(
+                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)));
     }
 
     @Test

@@ -7,16 +7,13 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 @Ignore
 public class IcaBankenAgentTest {
-
-    private enum Arg {
-        USERNAME // 12 digit SSN
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernameArgumentEnum> manager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
 
     @Before
     public void setUp() throws Exception {
@@ -31,7 +28,7 @@ public class IcaBankenAgentTest {
     @Test
     public void refresh() throws Exception {
         new AgentIntegrationTest.Builder("se", "icabanken-bankid")
-                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())

@@ -10,17 +10,14 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.DateEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.LocalDateToXml;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class SantanderEsAgentTest {
-    private enum Arg {
-        USERNAME,
-        PASSWORD
-    }
-
-    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> helper =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("es", "es-bancosantander-password")
@@ -47,8 +44,8 @@ public class SantanderEsAgentTest {
 
     @Test
     public void testLogin() throws Exception {
-        builder.addCredentialField(Key.USERNAME, helper.get(Arg.USERNAME))
-                .addCredentialField(Key.PASSWORD, helper.get(Arg.PASSWORD))
+        builder.addCredentialField(Key.USERNAME, helper.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(Key.PASSWORD, helper.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .build()

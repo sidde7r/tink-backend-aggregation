@@ -6,16 +6,12 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class RevolutAgentTest {
-
-    private enum Arg {
-        USERNAME, // phone number +{country code}{phone number}, eg. +46701234567
-        PASSWORD // four digits, eg. 1234
-    }
-
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     @Before
     public void setup() {
@@ -30,8 +26,12 @@ public class RevolutAgentTest {
     @Test
     public void testLoginRefresh() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-revolut-password")
-                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                // phone number +{country code}{phone number}, eg. +46701234567
+                .addCredentialField(
+                        Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
+                // four digits, eg. 1234
+                .addCredentialField(
+                        Field.Key.PASSWORD, manager.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())

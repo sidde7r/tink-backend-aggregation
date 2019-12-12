@@ -6,24 +6,20 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 
 public class LansforsakringarAgentTest {
 
     private AgentIntegrationTest.Builder builder;
-
-    private enum Arg {
-        SSN // 12 digit SSN
-    }
-
-    private final ArgumentManager<LansforsakringarAgentTest.Arg> manager =
-            new ArgumentManager<>(LansforsakringarAgentTest.Arg.values());
+    private final ArgumentManager<SsnArgumentEnum> manager =
+            new ArgumentManager<>(SsnArgumentEnum.values());
 
     @Before
     public void setup() {
         manager.before();
         builder =
                 new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-oauth2")
-                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
+                        .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

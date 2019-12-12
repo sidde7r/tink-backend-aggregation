@@ -12,6 +12,8 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -24,18 +26,23 @@ public class UnicreditAgentPaymentTest {
 
     // PSU_ID_TYPE => "ALL"
     // IBAN => "HU47109180010000007941740002"
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<PsuIdArgumentEnum> psuIdManager =
+            new ArgumentManager<>(PsuIdArgumentEnum.values());
+    private final ArgumentManager<IbanArgumentEnum> ibanManager =
+            new ArgumentManager<>(IbanArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
-        manager.before();
+        psuIdManager.before();
+        ibanManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("hu", "hu-unicredit-oauth2")
                         .addCredentialField(
-                                Key.ADDITIONAL_INFORMATION, manager.get(Arg.PSU_ID_TYPE))
-                        .addCredentialField(Key.LOGIN_INPUT, manager.get(Arg.IBAN))
+                                Key.ADDITIONAL_INFORMATION,
+                                psuIdManager.get(PsuIdArgumentEnum.PSU_ID_TYPE))
+                        .addCredentialField(Key.LOGIN_INPUT, ibanManager.get(IbanArgumentEnum.IBAN))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
@@ -79,10 +86,5 @@ public class UnicreditAgentPaymentTest {
         }
 
         return listOfMockedPayments;
-    }
-
-    private enum Arg {
-        PSU_ID_TYPE,
-        IBAN,
     }
 }

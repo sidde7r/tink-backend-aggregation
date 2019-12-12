@@ -5,9 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 
 public class BunqAgentTest {
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> manager =
+            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -21,8 +23,12 @@ public class BunqAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("nl", "nl-bunq-oauth2")
-                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                        .loadCredentialsBefore(
+                                Boolean.parseBoolean(
+                                        manager.get(LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
+                        .saveCredentialsAfter(
+                                Boolean.parseBoolean(
+                                        manager.get(LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)))
                         .setFinancialInstitutionId("bunq")
                         .setAppId("tink");
     }
@@ -30,10 +36,5 @@ public class BunqAgentTest {
     @Test
     public void refresh() throws Exception {
         builder.expectLoggedIn(false).build().testRefresh();
-    }
-
-    private enum Arg {
-        LOAD_BEFORE,
-        SAVE_AFTER,
     }
 }

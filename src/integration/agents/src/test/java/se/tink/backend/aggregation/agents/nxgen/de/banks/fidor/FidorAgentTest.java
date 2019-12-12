@@ -6,17 +6,18 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
 public class FidorAgentTest {
 
-    private final ArgumentManager<FidorAgentTest.Arg> helper;
+    private final ArgumentManager<UsernamePasswordArgumentEnum> helper;
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("de", "de-hypovereinsbank-password")
                     .loadCredentialsBefore(false)
                     .saveCredentialsAfter(false);
 
     public FidorAgentTest() {
-        helper = new ArgumentManager<>(FidorAgentTest.Arg.values());
+        helper = new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
     }
 
     @AfterClass
@@ -31,14 +32,11 @@ public class FidorAgentTest {
 
     @Test
     public void testLoginAndRefresh() throws Exception {
-        builder.addCredentialField(Field.Key.USERNAME, helper.get(FidorAgentTest.Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, helper.get(FidorAgentTest.Arg.PASSWORD))
+        builder.addCredentialField(
+                        Field.Key.USERNAME, helper.get(UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD, helper.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .build()
                 .testRefresh();
-    }
-
-    private enum Arg {
-        USERNAME,
-        PASSWORD,
     }
 }

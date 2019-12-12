@@ -14,6 +14,9 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -29,20 +32,32 @@ public class UnicreditAgentPaymentTest {
     // PASSWORD => "bgpassword"
     // OTP => "123456"
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> usernamePasswordManager =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
+    private final ArgumentManager<PsuIdArgumentEnum> psuIdManager =
+            new ArgumentManager<>(PsuIdArgumentEnum.values());
+    private final ArgumentManager<Arg> otpManager = new ArgumentManager<>(Arg.values());
+
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
-        manager.before();
+        otpManager.before();
+        usernamePasswordManager.before();
+        psuIdManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("de", "de-unicredit-oauth2")
                         .addCredentialField(
-                                Key.ADDITIONAL_INFORMATION, manager.get(Arg.PSU_ID_TYPE))
-                        .addCredentialField(Key.USERNAME, manager.get(Arg.USERNAME))
-                        .addCredentialField(Key.PASSWORD, manager.get(Arg.PASSWORD))
-                        .addCredentialField(Key.OTP_INPUT, manager.get(Arg.OTP))
+                                Key.ADDITIONAL_INFORMATION,
+                                psuIdManager.get(PsuIdArgumentEnum.PSU_ID_TYPE))
+                        .addCredentialField(
+                                Key.USERNAME,
+                                usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))
+                        .addCredentialField(
+                                Key.PASSWORD,
+                                usernamePasswordManager.get(UsernamePasswordArgumentEnum.PASSWORD))
+                        .addCredentialField(Key.OTP_INPUT, otpManager.get(Arg.OTP))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
@@ -88,10 +103,12 @@ public class UnicreditAgentPaymentTest {
         return listOfMockedPayments;
     }
 
-    private enum Arg {
-        PSU_ID_TYPE,
-        USERNAME,
-        PASSWORD,
-        OTP,
+    private enum Arg implements ArgumentManagerEnum {
+        OTP;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 }

@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.framework.AgentTestContext;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -32,9 +34,7 @@ import se.tink.libraries.amount.Amount;
 
 public final class BawagPskTransactionalAccountFetcherTest {
 
-    private enum Arg {
-        USERNAME,
-        PASSWORD,
+    private enum TransferArg implements ArgumentManagerEnum {
         ACCOUNT_HOLDER,
         BIC,
         ACCOUNT1_NUMBER,
@@ -42,20 +42,29 @@ public final class BawagPskTransactionalAccountFetcherTest {
         ACCOUNT1_BALANCE,
         ACCOUNT2_NUMBER,
         ACCOUNT2_IBAN,
-        ACCOUNT2_BALANCE,
+        ACCOUNT2_BALANCE;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 
-    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<TransferArg> transferHelper =
+            new ArgumentManager<>(TransferArg.values());
+    private final ArgumentManager<UsernamePasswordArgumentEnum> usernamePasswordHelper =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     private BawagPskPasswordAuthenticator authenticator;
     private BawagPskTransactionalAccountFetcher accountFetcher;
 
     @Before
     public void setUp() {
-        helper.before();
+        transferHelper.before();
+        usernamePasswordHelper.before();
         final Credentials credentials = new Credentials();
-        credentials.setUsername(helper.get(Arg.USERNAME));
-        credentials.setPassword(helper.get(Arg.PASSWORD));
+        credentials.setUsername(usernamePasswordHelper.get(UsernamePasswordArgumentEnum.USERNAME));
+        credentials.setPassword(usernamePasswordHelper.get(UsernamePasswordArgumentEnum.PASSWORD));
         final AgentContext context = new AgentTestContext(credentials);
 
         Provider provider = new Provider();
@@ -85,7 +94,9 @@ public final class BawagPskTransactionalAccountFetcherTest {
 
     @Test
     public void testFetchAccounts() throws AuthenticationException, AuthorizationException {
-        authenticator.authenticate(helper.get(Arg.USERNAME), helper.get(Arg.PASSWORD));
+        authenticator.authenticate(
+                usernamePasswordHelper.get(UsernamePasswordArgumentEnum.USERNAME),
+                usernamePasswordHelper.get(UsernamePasswordArgumentEnum.PASSWORD));
 
         Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
 
@@ -97,7 +108,9 @@ public final class BawagPskTransactionalAccountFetcherTest {
                 accounts.stream()
                         .map(TransactionalAccount::getAccountNumber)
                         .collect(Collectors.toSet()),
-                ImmutableSet.of(helper.get(Arg.ACCOUNT1_NUMBER), helper.get(Arg.ACCOUNT2_NUMBER)));
+                ImmutableSet.of(
+                        transferHelper.get(TransferArg.ACCOUNT1_NUMBER),
+                        transferHelper.get(TransferArg.ACCOUNT2_NUMBER)));
 
         // Account types
         Assert.assertThat(
@@ -107,7 +120,7 @@ public final class BawagPskTransactionalAccountFetcherTest {
         // Holder name
         Assert.assertThat(
                 accounts.stream().map(Account::getHolderName).collect(Collectors.toSet()),
-                hasItem(new HolderName(helper.get(Arg.ACCOUNT_HOLDER))));
+                hasItem(new HolderName(transferHelper.get(TransferArg.ACCOUNT_HOLDER))));
 
         Set<IbanIdentifier> ibans =
                 accounts.stream()
@@ -130,15 +143,25 @@ public final class BawagPskTransactionalAccountFetcherTest {
                         .flatMap(List::stream)
                         .collect(Collectors.toSet()),
                 hasItems(
-                        new IbanIdentifier(helper.get(Arg.BIC), helper.get(Arg.ACCOUNT1_IBAN)),
-                        new IbanIdentifier(helper.get(Arg.BIC), helper.get(Arg.ACCOUNT2_IBAN))));
+                        new IbanIdentifier(
+                                transferHelper.get(TransferArg.BIC),
+                                transferHelper.get(TransferArg.ACCOUNT1_IBAN)),
+                        new IbanIdentifier(
+                                transferHelper.get(TransferArg.BIC),
+                                transferHelper.get(TransferArg.ACCOUNT2_IBAN))));
 
         // Balance
         Assert.assertThat(
                 accounts.stream().map(Account::getBalance).collect(Collectors.toSet()),
                 hasItems(
-                        new Amount("EUR", Double.parseDouble(helper.get(Arg.ACCOUNT1_BALANCE))),
-                        new Amount("EUR", Double.parseDouble(helper.get(Arg.ACCOUNT2_BALANCE)))));
+                        new Amount(
+                                "EUR",
+                                Double.parseDouble(
+                                        transferHelper.get(TransferArg.ACCOUNT1_BALANCE))),
+                        new Amount(
+                                "EUR",
+                                Double.parseDouble(
+                                        transferHelper.get(TransferArg.ACCOUNT2_BALANCE)))));
 
         // Account types
         Assert.assertThat(
