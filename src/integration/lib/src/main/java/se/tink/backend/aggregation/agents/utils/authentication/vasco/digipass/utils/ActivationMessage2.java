@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.utils;
 
-import com.google.common.primitives.Bytes;
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 
@@ -10,10 +9,14 @@ public class ActivationMessage2 {
     public static byte[] decrypt(byte[] key, byte[] activationMessage2) {
         // 39 bytes of data
         byte[] data = Arrays.copyOfRange(activationMessage2, 15, 15 + 39);
+        // 8 bytes counter nonce.
+        byte[] counterNonce = Arrays.copyOfRange(activationMessage2, 7, 7 + 8);
+        return AES.decryptCtr(key, counterNonce, data);
+    }
 
-        // 8 bytes from activationMessage2 followed by 0 zeroes
-        byte[] ctr = Bytes.concat(Arrays.copyOfRange(activationMessage2, 7, 7 + 8), new byte[8]);
-        return AES.decryptCtr(key, ctr, data);
+    // I'm not sure what this value is really called, I've decided to call it `digipassId`.
+    public static byte[] extractDigipassId(byte[] activationMessage2) {
+        return Arrays.copyOfRange(activationMessage2, 2, 2 + 5);
     }
 
     public static int extractDeviceCount(byte[] decryptedActivationMessage2) {
