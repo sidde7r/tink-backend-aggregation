@@ -114,7 +114,7 @@ public class PaymentRequest {
         return Optional.ofNullable(transfer)
                 .map(Transfer::getDestinationMessage)
                 .filter(not(Strings::isNullOrEmpty))
-                .map(s -> transferMessageFormatter.getDestinationMessage(transfer, true))
+                .map(s -> transferMessageFormatter.getDestinationMessage(transfer, false))
                 .orElse("");
     }
 
