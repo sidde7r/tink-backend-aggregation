@@ -10,6 +10,7 @@ java_library(
         "//src/integration/enums",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_google_guava_guava//jar",
     ],

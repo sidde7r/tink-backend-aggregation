@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 

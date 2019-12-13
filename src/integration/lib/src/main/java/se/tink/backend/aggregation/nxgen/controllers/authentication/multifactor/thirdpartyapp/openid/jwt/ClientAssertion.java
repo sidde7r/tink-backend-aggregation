@@ -3,9 +3,10 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import com.google.common.base.Preconditions;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtUtils;
 
 public class ClientAssertion {
 
@@ -36,7 +37,7 @@ public class ClientAssertion {
             Instant issuedAt = Instant.now();
             Instant expiresAt = issuedAt.plusSeconds(TimeUnit.HOURS.toSeconds(1));
 
-            String jwtId = JwtUtils.generateId();
+            String jwtId = EncodingUtils.encodeAsBase64String(RandomUtils.secureRandom(16));
 
             return TinkJwt.create()
                     .withJWTId(jwtId)

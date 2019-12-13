@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfigu
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtHeader;
 
 public final class JwtUtils {
 
