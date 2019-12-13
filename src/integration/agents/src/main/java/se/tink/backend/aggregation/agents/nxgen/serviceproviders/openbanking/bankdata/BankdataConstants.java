@@ -137,11 +137,6 @@ public final class BankdataConstants {
         public static final String BALANCE_FORWARD_AVAILABLE = "forwardAvailable";
     }
 
-    public static class Format {
-        public static final String TIMEZONE = "UTC";
-        public static final String TIMESTAMP = "yyyy-MM-dd";
-    }
-
     public static class CredentialKeys {
         public static final String IBAN = "iban";
     }

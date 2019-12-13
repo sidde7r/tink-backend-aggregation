@@ -7,9 +7,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.DebtorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.enums.BankdataPaymentStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.DateUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -45,7 +45,7 @@ public class FetchPaymentResponse {
 
         if (type == PaymentType.DOMESTIC) {
             buildingPaymentResponse.withExecutionDate(
-                    DateUtils.convertToLocalDateViaInstant(requestedExecutionDate));
+                    DateFormat.convertToLocalDateViaInstant(requestedExecutionDate));
         }
 
         Payment tinkPayment = buildingPaymentResponse.build();

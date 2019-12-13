@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.IdTags;
@@ -37,7 +36,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.TransactionResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.utils.BankdataUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
@@ -50,6 +48,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public final class BankdataApiClient {
@@ -173,10 +172,12 @@ public final class BankdataApiClient {
                 .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
                 .queryParam(
                         QueryKeys.DATE_TO,
-                        DateUtils.formatDateTime(toDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        DateFormat.formatDateTime(
+                                toDate, DateFormat.YEAR_MONTH_DAY, DateFormat.UTC))
                 .queryParam(
                         QueryKeys.DATE_FROM,
-                        DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        DateFormat.formatDateTime(
+                                fromDate, DateFormat.YEAR_MONTH_DAY, DateFormat.UTC))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(TransactionResponse.class);
     }
