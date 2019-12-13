@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -108,5 +109,25 @@ public class SwedbankApiErrors {
 
         ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
         return errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.RECIPIENT_NUMBER);
+    }
+
+    public static boolean isSessionTerminated(HttpResponseException hre) {
+        // This method expects an response with the following characteristics:
+        // - Http status: 401
+        // - Http body: `ErrorResponse` with error field of "STRONGER_AUTHENTICATION_NEEDED"
+        // - Not for an identification request
+
+        if (hre.getRequest().getURI().toString().startsWith(Url.IDENTIFICATION)) {
+            return false;
+        }
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_UNAUTHORIZED) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorCode(
+                SwedbankBaseConstants.ErrorCode.STRONGER_AUTHENTICATION_NEEDED);
     }
 }

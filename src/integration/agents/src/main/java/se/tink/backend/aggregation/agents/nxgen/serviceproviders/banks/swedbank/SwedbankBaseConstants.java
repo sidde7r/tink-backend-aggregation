@@ -50,6 +50,7 @@ public class SwedbankBaseConstants {
         LOGOUT(createUrlWithHost("/v5/identification/logout")),
         PROFILE("/v5/profile/");
 
+        public static final String IDENTIFICATION = createUrlWithHost("/v5/identification");
         public static final String DSID_KEY = "dsid";
         private URL url;
 
@@ -342,6 +343,8 @@ public class SwedbankBaseConstants {
         public static final String NOT_ALLOWED = "NOT_ALLOWED";
         public static final String AUTHORIZATION_FAILED = "AUTHORIZATION_FAILED";
         public static final String INSUFFICIENT_FUNDS = "INSUFFICIENT_FUNDS";
+        public static final String STRONGER_AUTHENTICATION_NEEDED =
+                "STRONGER_AUTHENTICATION_NEEDED";
     }
 
     public static class ErrorField {
