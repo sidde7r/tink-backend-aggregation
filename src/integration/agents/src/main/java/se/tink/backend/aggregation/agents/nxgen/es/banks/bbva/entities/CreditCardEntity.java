@@ -8,6 +8,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CreditCardEntity extends AbstractContractDetailsEntity {
@@ -79,9 +80,15 @@ public class CreditCardEntity extends AbstractContractDetailsEntity {
                 // app
                 .setAccountNumber(getAccountNumber())
                 .putInTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID, getId())
-                .setExactBalance(availableBalance.toTinkAmount())
+                .setExactAvailableCredit(availableBalance.toTinkAmount())
+                .setExactBalance(getBalance())
                 .setName(getAccountName())
                 .build();
+    }
+
+    private ExactCurrencyAmount getBalance() {
+        // this allows taking into account pending transactions
+        return availableBalance.toTinkAmount().subtract(limit.toTinkAmount());
     }
 
     @JsonIgnore
