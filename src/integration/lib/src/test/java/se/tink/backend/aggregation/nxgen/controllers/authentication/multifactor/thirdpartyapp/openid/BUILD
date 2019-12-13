@@ -1,0 +1,17 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "openid_test",
+    srcs = glob(["**/*.java"]),
+    data = [
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid",
+        "//src/libraries/serialization",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_nimbusds_nimbus_jose_jwt",
+    ],
+)
