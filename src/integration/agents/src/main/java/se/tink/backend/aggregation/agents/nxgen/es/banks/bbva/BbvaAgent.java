@@ -65,7 +65,7 @@ public class BbvaAgent extends NextGenerationAgent
                 new InvestmentRefreshController(
                         metricRefreshController,
                         updateController,
-                        new BbvaInvestmentFetcher(apiClient, sessionStorage));
+                        new BbvaInvestmentFetcher(apiClient));
 
         this.loanRefreshController =
                 new LoanRefreshController(

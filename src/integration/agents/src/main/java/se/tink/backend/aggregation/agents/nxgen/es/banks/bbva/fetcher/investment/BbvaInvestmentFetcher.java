@@ -2,8 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investmen
 
 import io.vavr.collection.List;
 import io.vavr.control.Option;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.PostParameter;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PensionPlanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
@@ -11,20 +16,15 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.Securitie
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.FinancialInvestmentRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.HistoricalDateRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.HistoricalDateResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(BbvaInvestmentFetcher.class);
-    private final SessionStorage sessionStorage;
+
     private BbvaApiClient apiClient;
 
-    public BbvaInvestmentFetcher(BbvaApiClient apiClient, SessionStorage sessionStorage) {
+    public BbvaInvestmentFetcher(BbvaApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -39,27 +39,7 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
                 .map(ContractEntity::getSecuritiesPortfolio)
                 .filter(Option::isDefined)
                 .map(Option::get)
-                .map(this::getInvestmentAccountFromSecurity);
-    }
-
-    private InvestmentAccount getInvestmentAccountFromSecurity(
-            SecuritiesPortfolioEntity portfolio) {
-        Double totalProfit = getSecurituTotalProfit(portfolio);
-        return portfolio.toInvestmentAccount(totalProfit);
-    }
-
-    private Double getSecurituTotalProfit(SecuritiesPortfolioEntity portfolio) {
-        String id = portfolio.getId();
-        HistoricalDateRequest historicalDateRequest = new HistoricalDateRequest(id);
-        HistoricalDateResponse historicalDateResponse =
-                apiClient.fetchInvestmentHistoricalDate(historicalDateRequest);
-        FinancialInvestmentRequest financialInvestmentRequest =
-                new FinancialInvestmentRequest(
-                        id,
-                        historicalDateResponse.getMaxHistoricalDate(),
-                        portfolio.getCurrency().getId(),
-                        portfolio.getBalance().getAmount());
-        return apiClient.fetchFinancialInvestment(financialInvestmentRequest).getTotalProfit();
+                .map(this::mapSecurityTotInvestmentAccount);
     }
 
     private List<InvestmentAccount> getPensionPlans(List<PositionEntity> positions) {
@@ -68,6 +48,36 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
                 .map(ContractEntity::getPensionPlan)
                 .filter(Option::isDefined)
                 .map(Option::get)
-                .map(PensionPlanEntity::toInvestmentAccount);
+                .map(this::mapPensionTotInvestmentAccount);
+    }
+
+    private InvestmentAccount mapSecurityTotInvestmentAccount(SecuritiesPortfolioEntity portfolio) {
+        Double totalProfit = getPortfolioTotalProfit(portfolio.getId(), portfolio.getBalance());
+        return portfolio.toInvestmentAccount(totalProfit);
+    }
+
+    private InvestmentAccount mapPensionTotInvestmentAccount(PensionPlanEntity portfolio) {
+        Double totalProfit = getPortfolioTotalProfit(portfolio.getId(), portfolio.getBalance());
+        return portfolio.toInvestmentAccount(totalProfit);
+    }
+
+    private Double getPortfolioTotalProfit(String portfolio, AmountEntity balance) {
+        HistoricalDateRequest historicalDateRequest = new HistoricalDateRequest(portfolio);
+        HistoricalDateResponse historicalDateResponse =
+                apiClient.fetchInvestmentHistoricalDate(historicalDateRequest);
+        FinancialInvestmentRequest financialInvestmentRequest =
+                new FinancialInvestmentRequest(
+                        portfolio,
+                        Optional.ofNullable(historicalDateResponse.getMaxHistoricalDate())
+                                .orElseGet(this::getFallbackStartDate),
+                        balance.toTinkAmount().getCurrencyCode(),
+                        balance.getAmount());
+        return apiClient.fetchFinancialInvestment(financialInvestmentRequest).getTotalProfit();
+    }
+
+    private Date getFallbackStartDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, PostParameter.START_DATE_YEAR_AGO);
+        return calendar.getTime();
     }
 }
