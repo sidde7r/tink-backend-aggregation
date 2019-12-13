@@ -222,7 +222,7 @@ public class NordeaSEConstants {
 
     public static final class Transfer {
         public static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG =
-                TransferMessageLengthConfig.createWithMaxLength(50, 12, 50);
+                TransferMessageLengthConfig.createWithMaxLength(20, 12, 20);
         public static final String WHITE_LISTED_CHARACTERS = ".,?'-/:()+";
         public static final String SPEED = "normal";
         public static final String OWN_TRANSFER = "owntransfer";
