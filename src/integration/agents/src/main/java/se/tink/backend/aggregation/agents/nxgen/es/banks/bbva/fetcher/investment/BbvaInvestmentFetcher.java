@@ -5,7 +5,9 @@ import io.vavr.control.Option;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.PostParameter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
@@ -13,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractE
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PensionPlanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.SecuritiesPortfolioEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.SecurityEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.FinancialInvestmentRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.HistoricalDateRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.HistoricalDateResponse;
@@ -52,8 +55,21 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
     }
 
     private InvestmentAccount mapSecurityTotInvestmentAccount(SecuritiesPortfolioEntity portfolio) {
-        Double totalProfit = getPortfolioTotalProfit(portfolio.getId(), portfolio.getBalance());
-        return portfolio.toInvestmentAccount(totalProfit);
+        Double portfolioTotalProfit =
+                getPortfolioTotalProfit(portfolio.getId(), portfolio.getBalance());
+        Map<String, Double> instrumentsProfit =
+                portfolio
+                        .getSecurities()
+                        .collect(
+                                Collectors.toMap(
+                                        SecurityEntity::getIsin,
+                                        s ->
+                                                getPortfolioTotalProfit(
+                                                        portfolio.getId(),
+                                                        s.getTotalAmount(),
+                                                        s.getIsin(),
+                                                        s.getInternalMarket())));
+        return portfolio.toInvestmentAccount(portfolioTotalProfit, instrumentsProfit);
     }
 
     private InvestmentAccount mapPensionTotInvestmentAccount(PensionPlanEntity portfolio) {
@@ -61,18 +77,26 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
         return portfolio.toInvestmentAccount(totalProfit);
     }
 
-    private Double getPortfolioTotalProfit(String portfolio, AmountEntity balance) {
+    private Double getPortfolioTotalProfit(
+            String portfolio, AmountEntity balance, String isin, String marketId) {
         HistoricalDateRequest historicalDateRequest = new HistoricalDateRequest(portfolio);
         HistoricalDateResponse historicalDateResponse =
                 apiClient.fetchInvestmentHistoricalDate(historicalDateRequest);
         FinancialInvestmentRequest financialInvestmentRequest =
                 new FinancialInvestmentRequest(
                         portfolio,
+                        isin,
+                        marketId,
                         Optional.ofNullable(historicalDateResponse.getMaxHistoricalDate())
                                 .orElseGet(this::getFallbackStartDate),
                         balance.toTinkAmount().getCurrencyCode(),
                         balance.getAmount());
         return apiClient.fetchFinancialInvestment(financialInvestmentRequest).getTotalProfit();
+    }
+
+    private Double getPortfolioTotalProfit(String portfolio, AmountEntity balance) {
+        return getPortfolioTotalProfit(
+                portfolio, balance, PostParameter.ANY_ISIN, PostParameter.ANY_MARKET);
     }
 
     private Date getFallbackStartDate() {

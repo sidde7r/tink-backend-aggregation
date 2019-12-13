@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
+import java.util.Map;
+import java.util.Objects;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Instrument.Type;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -149,7 +151,7 @@ public class SecurityEntity {
         return isin;
     }
 
-    public Instrument toTinkInstrument() {
+    public Instrument toTinkInstrument(Map<String, Double> instrumentsProfit) {
         Instrument instrument = new Instrument();
         instrument.setUniqueIdentifier(marketName + isin);
         instrument.setName(name);
@@ -161,14 +163,25 @@ public class SecurityEntity {
         instrument.setIsin(isin);
         instrument.setMarketPlace(marketName);
         instrument.setRawType(typeSecurities.getId());
-        // instrument.setProfit(totalProfit);
-        // instrument.setAverageAcquisitionPrice(aap);
+        Double profit = instrumentsProfit.get(isin);
+        if (Objects.nonNull(profit)) {
+            instrument.setProfit(profit);
+            instrument.setAverageAcquisitionPrice(
+                    getAverageAcquisitionPrice(totalAmount.getAmountAsDouble() - profit));
+        }
         return instrument;
     }
 
     @JsonIgnore
     private Double getPrice() {
         return new BigDecimal(totalAmount.getAmountAsDouble() / totalTitles)
+                .setScale(2, BigDecimal.ROUND_HALF_UP)
+                .doubleValue();
+    }
+
+    @JsonIgnore
+    private Double getAverageAcquisitionPrice(double acquisitionAmount) {
+        return new BigDecimal(acquisitionAmount / totalTitles)
                 .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .doubleValue();
     }

@@ -17,11 +17,11 @@ public class FilterInvestmentsEntity {
     private List<BasicEntity> stockMarkets;
     private List<InvestmentValuesEntity> investmentValues;
 
-    public FilterInvestmentsEntity(String id, String currency, BigDecimal amount) {
+    public FilterInvestmentsEntity(
+            String id, String isin, String market, String currency, BigDecimal amount) {
         this.id = id;
-        this.numberFormats =
-                Collections.singletonList(new NumberFormatsEntity("000000000000", "ISIN"));
-        this.stockMarkets = Collections.singletonList(new BasicEntity("0000"));
+        this.numberFormats = Collections.singletonList(new NumberFormatsEntity(isin, "ISIN"));
+        this.stockMarkets = Collections.singletonList(new BasicEntity(market));
         this.investmentValues =
                 Collections.singletonList(new InvestmentValuesEntity(currency, amount));
     }

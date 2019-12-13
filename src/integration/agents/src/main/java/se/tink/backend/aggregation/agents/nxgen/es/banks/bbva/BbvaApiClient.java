@@ -1,11 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import com.google.common.collect.ImmutableList;
-import io.vavr.CheckedFunction1;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Headers;
@@ -21,15 +18,11 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.FinancialInvestmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.HistoricalDateRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.HistoricalDateResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountContractsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.TransactionsRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -38,10 +31,8 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BbvaApiClient {
-    private static final Logger LOG = LoggerFactory.getLogger(BbvaApiClient.class);
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
@@ -97,10 +88,6 @@ public class BbvaApiClient {
                 .get(FinancialDashboardResponse.class);
     }
 
-    public ProductsResponse fetchProducts() {
-        return createRequestInSession(BbvaConstants.Url.PRODUCTS).get(ProductsResponse.class);
-    }
-
     public AccountTransactionsResponse fetchAccountTransactions(Account account, String pageKey) {
         final TransactionsRequest request = createAccountTransactionsQuery(account);
 
@@ -129,15 +116,6 @@ public class BbvaApiClient {
                         BbvaConstants.AccountType.CREDIT_CARD_SHORT_TYPE)
                 .queryParam(QueryKeys.PAGINATION_OFFSET, keyIndex)
                 .get(CreditCardTransactionsResponse.class);
-    }
-
-    public SecurityProfitabilityResponse fetchSecurityProfitability(
-            String portfolioId, String securityCode) {
-        final SecurityProfitabilityRequest request =
-                SecurityProfitabilityRequest.create(portfolioId, securityCode);
-
-        return createRequestInSession(BbvaConstants.Url.SECURITY_PROFITABILITY)
-                .post(SecurityProfitabilityResponse.class, request);
     }
 
     public FinancialInvestmentResponse fetchFinancialInvestment(
@@ -204,16 +182,5 @@ public class BbvaApiClient {
 
     public void setUserId(String userId) {
         sessionStorage.put(BbvaConstants.StorageKeys.USER_ID, userId);
-    }
-
-    private CheckedFunction1<BbvaResponse, Throwable> logAndThrow() {
-        return response -> {
-            LOG.warn(
-                    String.format(
-                            "Bank responded with error: %s",
-                            SerializationUtils.serializeToString(response.getResult())));
-
-            return new IllegalStateException("Failed to initiate session");
-        };
     }
 }

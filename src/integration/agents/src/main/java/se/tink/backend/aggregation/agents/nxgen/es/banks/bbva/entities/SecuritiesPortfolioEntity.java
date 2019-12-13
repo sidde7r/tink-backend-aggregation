@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
 import java.util.Collections;
+import java.util.Map;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -24,14 +25,14 @@ public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
         return balance;
     }
 
-
-    public InvestmentAccount toInvestmentAccount(Double totalProfit) {
+    public InvestmentAccount toInvestmentAccount(
+            Double totalProfit, Map<String, Double> instrumentsProfit) {
         return InvestmentAccount.builder(getId())
                 .setName(getAccountName())
                 .setAccountNumber(getAccountNumber())
                 .setHolderName(null)
                 .setCashBalance(ExactCurrencyAmount.of(0d, getCurrency().getId()))
-                .setPortfolios(getPortfolio(totalProfit))
+                .setPortfolios(getPortfolio(totalProfit, instrumentsProfit))
                 .build();
     }
 
@@ -41,9 +42,10 @@ public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
         return getFormats().getBocf();
     }
 
-    private java.util.List<Portfolio> getPortfolio(Double totalProfit) {
+    private java.util.List<Portfolio> getPortfolio(
+            Double totalProfit, Map<String, Double> instrumentsProfit) {
         Portfolio portfolio = new Portfolio();
-        List<Instrument> instruments = getInstruments();
+        List<Instrument> instruments = getInstruments(instrumentsProfit);
 
         portfolio.setUniqueIdentifier(getId());
         portfolio.setType(Portfolio.Type.DEPOT);
@@ -54,7 +56,9 @@ public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
         return Collections.singletonList(portfolio);
     }
 
-    private List<Instrument> getInstruments() {
-        return Option.of(securities).getOrElse(List.empty()).map(SecurityEntity::toTinkInstrument);
+    private List<Instrument> getInstruments(Map<String, Double> instrumentsProfit) {
+        return Option.of(securities)
+                .getOrElse(List.empty())
+                .map(i -> i.toTinkInstrument(instrumentsProfit));
     }
 }

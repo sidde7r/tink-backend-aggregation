@@ -14,9 +14,15 @@ public class FinancialInvestmentRequest {
     private List<FilterInvestmentsEntity> investments;
 
     public FinancialInvestmentRequest(
-            String portfolio, Date startDate, String currency, BigDecimal amount) {
+            String portfolio,
+            String isin,
+            String market,
+            Date startDate,
+            String currency,
+            BigDecimal amount) {
         this.filterRanges = Collections.singletonList(new FilterRangesEntity(startDate));
         this.investments =
-                Collections.singletonList(new FilterInvestmentsEntity(portfolio, currency, amount));
+                Collections.singletonList(
+                        new FilterInvestmentsEntity(portfolio, isin, market, currency, amount));
     }
 }

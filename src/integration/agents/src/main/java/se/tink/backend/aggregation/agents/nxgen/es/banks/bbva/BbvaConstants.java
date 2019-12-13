@@ -31,8 +31,6 @@ public final class BbvaConstants {
     }
 
     public static final class StorageKeys {
-        public static final String ACCOUNT_ID = "accountId";
-        public static final String HOLDER_NAME = "holderName";
         public static final String USER_ID = "userId";
         public static final String ID_TYPE_CODE = "idTypeCode";
         public static final String TSEC = "tsec";
@@ -93,7 +91,6 @@ public final class BbvaConstants {
         public static final String TICKET = BASE_URL + "/ASO/TechArchitecture/grantingTickets/V02";
         public static final String SESSION =
                 BASE_URL + "/ENPP/enpp_mult_web_mobility_02/sessions/v1";
-        public static final String PRODUCTS = BASE_URL + "/ASO/financialDashBoard/V03";
         public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03";
         public static final String ASO = BASE_URL + "/ASO";
         public static final String ACCOUNT_TRANSACTION =
@@ -138,13 +135,12 @@ public final class BbvaConstants {
     }
 
     public static final class HeaderKeys {
-        public static final String CONTENT_TYPE_URLENCODED_UTF8 =
-                "application/x-www-form-urlencoded; charset=utf-8";
+
         public static final String TSEC_KEY = "tsec";;
     }
 
     public static final class PostParameter {
-        public static final String CONSUMER_ID_VALUE = LoginParameter.CONSUMER_ID;
+
         public static final String SEARCH_TYPE = "SEARCH";
         public static final String ISIN_ID_TYPE = "ISIN";
         public static final String ANY_ISIN = "000000000000";
