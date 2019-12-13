@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.entity;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.entity;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 

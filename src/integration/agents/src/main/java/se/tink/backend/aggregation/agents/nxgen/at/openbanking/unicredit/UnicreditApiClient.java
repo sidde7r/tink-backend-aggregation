@@ -4,7 +4,7 @@ import java.util.Date;
 import org.apache.commons.lang3.time.DateUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.unicredit.authenticator.rpc.UnicreditConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.unicredit.executor.payment.rpc.UnicreditCreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.unicredit.executor.payment.rpc.UnicreditCreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;

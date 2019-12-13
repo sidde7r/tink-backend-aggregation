@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank;
 
+import java.util.UUID;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.rpc.BuddybankConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.rpc.BuddybankCreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.rpc.PaymentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryValues;
@@ -52,7 +52,7 @@ public class BuddybankApiClient extends UnicreditBaseApiClient {
 
     public PaymentStatusResponse getConsentStatus(URL url) {
         return createRequest(url)
-                .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .get(PaymentStatusResponse.class);
     }
 }
