@@ -108,9 +108,7 @@ public class BbvaApiClient {
     public CreditCardTransactionsResponse fetchCreditCardTransactions(
             Account account, String keyIndex) {
         return createRequestInSession(BbvaConstants.Url.CREDIT_CARD_TRANSACTIONS)
-                .queryParam(
-                        QueryKeys.CONTRACT_ID,
-                        account.getFromTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID))
+                .queryParam(QueryKeys.CONTRACT_ID, account.getApiIdentifier())
                 .queryParam(
                         QueryKeys.CARD_TRANSACTION_TYPE,
                         BbvaConstants.AccountType.CREDIT_CARD_SHORT_TYPE)

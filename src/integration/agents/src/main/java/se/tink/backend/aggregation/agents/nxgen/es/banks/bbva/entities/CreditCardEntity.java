@@ -5,9 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -75,14 +78,28 @@ public class CreditCardEntity extends AbstractContractDetailsEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkCreditCard() {
-        return CreditCardAccount.builder(getPanLast4Digits())
-                // Using as number the ID created in previous step as that's how it's shown in the
-                // app
-                .setAccountNumber(getAccountNumber())
-                .putInTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID, getId())
-                .setExactAvailableCredit(availableBalance.toTinkAmount())
-                .setExactBalance(getBalance())
-                .setName(getAccountName())
+        String accountNumber = getAccountNumber();
+        String accountName = getAccountName();
+        String uniqueId = getPanLast4Digits();
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(
+                        CreditCardModule.builder()
+                                .withCardNumber(accountNumber)
+                                .withBalance(getBalance())
+                                .withAvailableCredit(availableBalance.toTinkAmount())
+                                .withCardAlias(accountName)
+                                .build())
+                .withInferredAccountFlags()
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(uniqueId)
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(accountName)
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                Type.PAYMENT_CARD_NUMBER, accountNumber))
+                                .build())
+                .setApiIdentifier(getId())
                 .build();
     }
 
