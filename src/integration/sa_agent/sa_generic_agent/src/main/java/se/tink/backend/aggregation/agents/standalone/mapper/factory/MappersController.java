@@ -3,13 +3,19 @@ package se.tink.backend.aggregation.agents.standalone.mapper.factory;
 import se.tink.backend.aggregation.agents.standalone.mapper.auth.agg.ThirdPartyAppAuthenticationPayloadMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.auth.sa.AuthenticationRequestMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.auth.sa.GetConsentStatusRequestMapper;
+import se.tink.backend.aggregation.agents.standalone.mapper.common.GoogleDateMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.AuthenticationResponseMappersFactory;
+import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.ExactCurrencyAmountMapperFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.FetchAccountsResponseMapperFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.FetchTransactionsResponseMapperFactory;
+import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.TransactionEntityMapperFactory;
+import se.tink.backend.aggregation.agents.standalone.mapper.factory.agg.TransactionLinksEntityMapperFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.sa.AuthenticationRequestMapperFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.sa.CheckingRequestMappersFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.sa.CommonMappersFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.sa.FetchTransactionsRequestMappersFactory;
+import se.tink.backend.aggregation.agents.standalone.mapper.factory.sa.GoogleDateMapperFactory;
+import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.ExactCurrencyAmountMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.FetchAccountsResponseMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.sa.FetchAccountsRequestMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.fetch.trans.agg.FetchTransactionsResponseMapper;
@@ -36,14 +42,25 @@ public class MappersController {
     private FetchTransactionsRequestMapper fetchTransactionsRequestMapper;
     private FetchTransactionsResponseMapper fetchTransactionsResponseMapper;
 
+    private GoogleDateMapper googleDateMapper;
+
     private final AuthenticationRequestMapperFactory authenticationRequestMapperFactory;
     private final AuthenticationResponseMappersFactory authenticationResponseMappersFactory;
+
+    private final GoogleDateMapperFactory googleDateMapperFactory;
 
     private final CheckingRequestMappersFactory checkingRequestMappersFactory;
     private final FetchAccountsResponseMapperFactory fetchAccountsResponseMapperFactory;
 
+    private final TransactionEntityMapperFactory transactionEntityMapperFactory;
+    private final TransactionLinksEntityMapperFactory transactionLinksEntityMapperFactory;
+
     private final FetchTransactionsRequestMappersFactory fetchTransactionsRequestsFactory;
     private final FetchTransactionsResponseMapperFactory fetchTransactionsResponseMapperFactory;
+
+    private final ExactCurrencyAmountMapperFactory exactCurrencyAmountMapperFactory;
+
+    private ExactCurrencyAmountMapper exactCurrencyAmountMapper;
 
     private MappersController(
             CommonExternalParametersProvider commonExternalParametersProvider,
@@ -53,6 +70,8 @@ public class MappersController {
                         commonExternalParametersProvider,
                         request.isManual(),
                         request.getProvider().getName());
+
+        exactCurrencyAmountMapperFactory = ExactCurrencyAmountMapperFactory.newInstance();
 
         authenticationRequestMapperFactory =
                 AuthenticationRequestMapperFactory.newInstance(commonMappersFactory);
@@ -64,10 +83,18 @@ public class MappersController {
         checkingRequestMappersFactory =
                 CheckingRequestMappersFactory.newInstance(commonMappersFactory);
 
-        fetchTransactionsRequestsFactory = FetchTransactionsRequestMappersFactory.newInstance();
+        googleDateMapperFactory = GoogleDateMapperFactory.newInstance();
+
+        transactionEntityMapperFactory =
+                TransactionEntityMapperFactory.newInstance(
+                        googleDateMapperFactory, exactCurrencyAmountMapperFactory);
+        transactionLinksEntityMapperFactory = TransactionLinksEntityMapperFactory.newInstance();
+
+        fetchTransactionsRequestsFactory =
+                FetchTransactionsRequestMappersFactory.newInstance(commonMappersFactory);
         fetchTransactionsResponseMapperFactory =
                 FetchTransactionsResponseMapperFactory.newInstance(
-                        fetchAccountsResponseMapperFactory, commonMappersFactory);
+                        transactionEntityMapperFactory, transactionLinksEntityMapperFactory);
     }
 
     public static MappersController newInstance(
@@ -130,5 +157,20 @@ public class MappersController {
                     fetchTransactionsResponseMapperFactory.fetchTransactionsResponseMapper();
         }
         return fetchTransactionsResponseMapper;
+    }
+
+    public GoogleDateMapper fetchGoogleDateMapper() {
+        if (googleDateMapper == null) {
+            googleDateMapper = googleDateMapperFactory.fetchGoogleDateMapper();
+        }
+        return googleDateMapper;
+    }
+
+    public ExactCurrencyAmountMapper exactCurrencyAmountMapper() {
+        if (exactCurrencyAmountMapper == null) {
+            exactCurrencyAmountMapper =
+                    exactCurrencyAmountMapperFactory.exactCurrencyAmountMapper();
+        }
+        return exactCurrencyAmountMapper;
     }
 }

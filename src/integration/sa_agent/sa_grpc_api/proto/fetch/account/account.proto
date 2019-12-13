@@ -5,7 +5,6 @@ option java_package = "se.tink.sa.services.fetch.account";
 option java_outer_classname = "AccountModel";
 option go_package = "proto";
 
-import "google/type/date.proto";
 import "src/integration/sa_agent/sa_grpc_api/proto/common/io_common.proto";
 
 message TransactionalAccount {

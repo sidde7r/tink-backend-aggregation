@@ -1,39 +1,32 @@
 package se.tink.backend.aggregation.agents.standalone.mapper.factory.agg;
 
-import se.tink.backend.aggregation.agents.standalone.mapper.factory.sa.CommonMappersFactory;
 import se.tink.backend.aggregation.agents.standalone.mapper.fetch.trans.agg.FetchTransactionsResponseMapper;
-import se.tink.backend.aggregation.agents.standalone.mapper.fetch.trans.agg.TransactionMapper;
 
 public class FetchTransactionsResponseMapperFactory {
 
-    private final FetchAccountsResponseMapperFactory fetchAccountsResponseMapperFactory;
-    private final CommonMappersFactory commonMappersFactory;
+    private TransactionEntityMapperFactory transactionEntityMapperFactory;
+    private TransactionLinksEntityMapperFactory transactionLinksEntityMapperFactory;
 
     private FetchTransactionsResponseMapperFactory(
-            FetchAccountsResponseMapperFactory fetchAccountsResponseMapperFactory,
-            CommonMappersFactory commonMappersFactory) {
-        this.fetchAccountsResponseMapperFactory = fetchAccountsResponseMapperFactory;
-        this.commonMappersFactory = commonMappersFactory;
+            TransactionEntityMapperFactory transactionEntityMapperFactory,
+            TransactionLinksEntityMapperFactory transactionLinksEntityMapperFactory) {
+        this.transactionEntityMapperFactory = transactionEntityMapperFactory;
+        this.transactionLinksEntityMapperFactory = transactionLinksEntityMapperFactory;
     }
 
     public static FetchTransactionsResponseMapperFactory newInstance(
-            FetchAccountsResponseMapperFactory fetchAccountsResponseMapperFactory,
-            CommonMappersFactory commonMappersFactory) {
+            TransactionEntityMapperFactory transactionEntityMapperFactory,
+            TransactionLinksEntityMapperFactory transactionLinksEntityMapperFactory) {
         return new FetchTransactionsResponseMapperFactory(
-                fetchAccountsResponseMapperFactory, commonMappersFactory);
+                transactionEntityMapperFactory, transactionLinksEntityMapperFactory);
     }
 
     public FetchTransactionsResponseMapper fetchTransactionsResponseMapper() {
         FetchTransactionsResponseMapper mapper = new FetchTransactionsResponseMapper();
-        mapper.setTransactionAccountMapper(
-                fetchAccountsResponseMapperFactory.transactionalAccountMapper());
-        mapper.setTransactionMapper(transactionMapper());
-        return mapper;
-    }
-
-    private TransactionMapper transactionMapper() {
-        TransactionMapper mapper = new TransactionMapper();
-        mapper.setGoogleDateMapper(commonMappersFactory.googleDateMapper());
+        mapper.setTransactionEntityMapper(
+                transactionEntityMapperFactory.fetchTransactionEntityMapper());
+        mapper.setTransactionLinksEntityMapper(
+                transactionLinksEntityMapperFactory.fetchTransactionLinksEntityMapper());
         return mapper;
     }
 }

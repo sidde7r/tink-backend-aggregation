@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import se.tink.sa.framework.service.AuthenticationService;
 import se.tink.sa.framework.service.FetchAccountsService;
+import se.tink.sa.framework.service.FetchTransactionsService;
 
 @Slf4j
 public class StandaloneAgent {
@@ -16,6 +17,8 @@ public class StandaloneAgent {
     @Autowired private AuthenticationService authenticationService;
 
     @Autowired private FetchAccountsService fetchAccountsService;
+
+    @Autowired private FetchTransactionsService fetchTransactionsService;
 
     @Value("${server.agent.grpc.port}")
     private int grpServerPort;
@@ -26,6 +29,7 @@ public class StandaloneAgent {
                 ServerBuilder.forPort(grpServerPort)
                         .addService(authenticationService)
                         .addService(fetchAccountsService)
+                        .addService(fetchTransactionsService)
                         .build();
         server.start();
         log.info("Server started");

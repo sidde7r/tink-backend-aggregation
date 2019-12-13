@@ -1,67 +1,51 @@
 package se.tink.backend.aggregation.agents.standalone.mapper.fetch.trans.agg;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.TransactionAccountMapper;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.sa.common.mapper.Mapper;
 import se.tink.sa.common.mapper.MappingContext;
-import se.tink.sa.services.fetch.trans.TransactionsMapEntity;
 
 public class FetchTransactionsResponseMapper
         implements Mapper<
-                FetchTransactionsResponse,
+                TransactionKeyPaginatorResponseImpl,
                 se.tink.sa.services.fetch.trans.FetchTransactionsResponse> {
 
-    private TransactionAccountMapper transactionAccountMapper;
+    private TransactionEntityMapper transactionEntityMapper;
 
-    private TransactionMapper transactionMapper;
+    private TransactionLinksEntityMapper transactionLinksEntityMapper;
 
-    public void setTransactionAccountMapper(TransactionAccountMapper transactionAccountMapper) {
-        this.transactionAccountMapper = transactionAccountMapper;
+    public void setTransactionEntityMapper(TransactionEntityMapper transactionEntityMapper) {
+        this.transactionEntityMapper = transactionEntityMapper;
     }
 
-    public void setTransactionMapper(TransactionMapper transactionMapper) {
-        this.transactionMapper = transactionMapper;
+    public void setTransactionLinksEntityMapper(
+            TransactionLinksEntityMapper transactionLinksEntityMapper) {
+        this.transactionLinksEntityMapper = transactionLinksEntityMapper;
     }
 
     @Override
-    public FetchTransactionsResponse map(
+    public TransactionKeyPaginatorResponseImpl map(
             se.tink.sa.services.fetch.trans.FetchTransactionsResponse source,
             MappingContext mappingContext) {
-        return new FetchTransactionsResponse(
-                mapTransactions(source.getTransactionsList(), mappingContext));
-    }
 
-    private Map<Account, List<Transaction>> mapTransactions(
-            final List<TransactionsMapEntity> transactionsMapEntityList,
-            MappingContext mappingContext) {
+        Collection<? extends Transaction> transactions =
+                Optional.ofNullable(source.getTransactionsEntityList())
+                        .orElse(Collections.emptyList()).stream()
+                        .map(
+                                transactionEntity ->
+                                        transactionEntityMapper.map(
+                                                transactionEntity, mappingContext))
+                        .collect(Collectors.toList());
 
-        //        return
-        // Optional.ofNullable(transactionsMapEntityList).orElse(Collections.emptyList())
-        //                .stream()
-        //                .collect(
-        //                        Collectors.toMap(
-        //                                transactionsMapEntity ->
-        //                                        transactionAccountMapper.map(
-        //                                                transactionsMapEntity.getKey()),
-        //                                transactionsMapEntity ->
-        //                                        mapTransactionList(
-        //                                                transactionsMapEntity.getValueList(),
-        //                                                mappingContext)));
-        return null;
-    }
-
-    private List<Transaction> mapTransactionList(
-            final List<se.tink.sa.services.fetch.trans.Transaction> transaction,
-            MappingContext mappingContext) {
-        return Optional.ofNullable(transaction).orElse(Collections.emptyList()).stream()
-                .map(t -> transactionMapper.map(t, mappingContext))
-                .collect(Collectors.toList());
+        TransactionKeyPaginatorResponseImpl resp =
+                new TransactionKeyPaginatorResponseImpl(
+                        transactions,
+                        transactionLinksEntityMapper.map(
+                                source.getTransactionLinksEntity(), mappingContext));
+        return resp;
     }
 }

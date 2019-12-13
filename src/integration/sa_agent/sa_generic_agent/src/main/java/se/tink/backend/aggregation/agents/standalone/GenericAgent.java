@@ -230,14 +230,14 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
-        return checkingService.fetchCheckingTransactions();
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final GASibsTransactionalAccountAccountFetcher accountFetcher =
                 new GASibsTransactionalAccountAccountFetcher(checkingService);
         final GATransactionalAccountTransactionFetcher transactionFetcher =
-                new GATransactionalAccountTransactionFetcher();
+                new GATransactionalAccountTransactionFetcher(checkingService);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
