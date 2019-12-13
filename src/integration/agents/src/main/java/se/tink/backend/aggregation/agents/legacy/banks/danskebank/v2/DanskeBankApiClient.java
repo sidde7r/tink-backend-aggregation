@@ -400,7 +400,6 @@ public class DanskeBankApiClient {
             BankIdServiceType serviceType, MessageContainer messageContainer) {
         ClientResponse response =
                 createRequest(serviceType).post(ClientResponse.class, messageContainer);
-        handleClientResponseError(response);
         interceptNssIdCookie(response);
         return response;
     }
