@@ -5,10 +5,11 @@ import com.google.common.collect.ImmutableList;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.utils.JwtUtils;
 
 public class ClientRegistration {
 
@@ -116,7 +117,7 @@ public class ClientRegistration {
             Instant issuedAt = Instant.now();
             Instant expiresAt = issuedAt.plusSeconds(TimeUnit.HOURS.toSeconds(1));
 
-            String jwtId = JwtUtils.generateId();
+            String jwtId = EncodingUtils.encodeAsBase64String(RandomUtils.secureRandom(16));
             String preferredAlgorithm =
                     wellknownConfiguration
                             .getPreferredIdTokenSigningAlg(
@@ -154,11 +155,10 @@ public class ClientRegistration {
                             OpenIdConstants.Params.REDIRECT_URIS,
                             softwareStatement.getAllRedirectUris())
                     .withArrayClaim(
-                            OpenIdConstants.Params.GRANT_TYPES,
-                            JwtUtils.listToStringArray(grantTypes))
+                            OpenIdConstants.Params.GRANT_TYPES, grantTypes.toArray(new String[0]))
                     .withArrayClaim(
                             OpenIdConstants.Params.RESPONSE_TYPES,
-                            JwtUtils.listToStringArray(responseTypes))
+                            responseTypes.toArray(new String[0]))
                     .signAttached(JwtSigner.Algorithm.valueOf(preferredAlgorithm), signer);
 
             //            switch (OpenIdConstants.SIGNING_ALGORITHM.valueOf(preferredAlgorithm)) {
