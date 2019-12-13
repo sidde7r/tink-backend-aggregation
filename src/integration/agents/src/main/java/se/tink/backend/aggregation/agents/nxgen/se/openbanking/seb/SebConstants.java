@@ -91,11 +91,6 @@ public abstract class SebConstants {
                 "Could not find authentication method id";
     }
 
-    public static class Format {
-        public static final String TIMEZONE = "UTC";
-        public static final String TIMESTAMP = "yyyy-MM-dd";
-    }
-
     public static class HeaderValues {
         // This value is from their docs: https://developer.sebgroup.com/node/2187
         // Include the PSU-Corporate-ID parameter in the API call to trigger corporate data in the

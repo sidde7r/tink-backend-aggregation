@@ -8,7 +8,6 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.IdTags;
@@ -28,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.credi
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.creditcardaccount.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.utils.DateUtils;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -37,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.DateFormat;
 
 public final class SebApiClient {
     private final TinkHttpClient client;
@@ -92,10 +91,12 @@ public final class SebApiClient {
                 .addBearerToken(getTokenFromSession())
                 .queryParam(
                         QueryKeys.DATE_FROM,
-                        DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        DateFormat.formatDateTime(
+                                fromDate, DateFormat.YEAR_MONTH_DAY, DateFormat.UTC))
                 .queryParam(
                         QueryKeys.DATE_TO,
-                        DateUtils.formatDateTime(toDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        DateFormat.formatDateTime(
+                                toDate, DateFormat.YEAR_MONTH_DAY, DateFormat.UTC))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED_TRANSACTIONS)
                 .get(FetchTransactionsResponse.class);
     }
@@ -117,10 +118,12 @@ public final class SebApiClient {
                 .addBearerToken(getTokenFromSession())
                 .queryParam(
                         QueryKeys.DATE_TO,
-                        DateUtils.formatDateTime(toDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        DateFormat.formatDateTime(
+                                toDate, DateFormat.YEAR_MONTH_DAY, DateFormat.UTC))
                 .queryParam(
                         QueryKeys.DATE_FROM,
-                        DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        DateFormat.formatDateTime(
+                                fromDate, DateFormat.YEAR_MONTH_DAY, DateFormat.UTC))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED_TRANSACTIONS)
                 .get(CreditCardTransactionsResponse.class);
     }
