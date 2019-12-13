@@ -37,7 +37,7 @@ public class PaymentInitiationExtended {
                 new Payment.Builder()
                         .withStatus(UkOpenBankingV31Constants.toPaymentStatus(status))
                         .withCreditor(creditorAccount.toCreditor())
-                        .withAmount(instructedAmount.toTinkAmount())
+                        .withExactCurrencyAmount(instructedAmount.toTinkAmount())
                         .withExecutionDate(parseDate(expectedExecutionDateTime))
                         .build();
 

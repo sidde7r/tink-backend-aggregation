@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -75,7 +75,7 @@ public class UkOpenBankingV31Pis implements UkOpenBankingPis {
             String intentId,
             @Nullable AccountIdentifier sourceIdentifier,
             AccountIdentifier destinationIdentifier,
-            Amount amount,
+            ExactCurrencyAmount amount,
             String referenceText)
             throws TransferExecutionException {
         /*
@@ -99,7 +99,7 @@ public class UkOpenBankingV31Pis implements UkOpenBankingPis {
                                         destinationIdentifier,
                                         destinationIdentifier.getName().orElse("Unknown Person")))
                         .withDebtor(new Debtor(sourceIdentifier))
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(amount)
                         .withReference(new Reference("TRANSFER", referenceText))
                         .withUniqueId(internalTransferId)
                         // .withExecutionDate()

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.math.BigDecimal;
 import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
@@ -52,6 +54,10 @@ public class DomesticPaymentInitiation {
         this.creditorAccount = new CreditorAccount(payment.getCreditor());
         this.debtorAccount =
                 Objects.isNull(payment.getDebtor()) ? null : new DebtorAccount(payment.getDebtor());
-        this.instructedAmount = new InstructedAmount(payment.getAmount());
+        this.instructedAmount =
+                new InstructedAmount(
+                        new ExactCurrencyAmount(
+                                new BigDecimal(payment.getAmount().getValue()),
+                                payment.getAmount().getCurrency()));
     }
 }
