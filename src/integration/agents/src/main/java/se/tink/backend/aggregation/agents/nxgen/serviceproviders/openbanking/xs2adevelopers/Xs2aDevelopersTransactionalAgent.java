@@ -1,10 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.*;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
@@ -15,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -27,8 +25,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class Xs2aDevelopersAgent extends Xs2aDevelopersTransactionalAgent
-        implements RefreshCreditCardAccountsExecutor {
+public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAgent
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final String clientName;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -36,7 +34,7 @@ public abstract class Xs2aDevelopersAgent extends Xs2aDevelopersTransactionalAge
 
     protected Xs2aDevelopersApiClient apiClient;
 
-    protected Xs2aDevelopersAgent(
+    protected Xs2aDevelopersTransactionalAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
@@ -156,15 +154,5 @@ public abstract class Xs2aDevelopersAgent extends Xs2aDevelopersTransactionalAge
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCreditCardAccounts() {
-        return creditCardRefreshController.fetchCreditCardAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCreditCardTransactions() {
-        return creditCardRefreshController.fetchCreditCardTransactions();
     }
 }
