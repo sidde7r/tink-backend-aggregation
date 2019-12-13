@@ -11,12 +11,15 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
+import com.sun.jersey.api.client.filter.ClientFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -277,6 +280,10 @@ public class LansforsakringarAgent extends AbstractAgent
     // cache
     private Map<AccountEntity, Account> accounts = null;
 
+    private static final ImmutableList<String> BANK_SIDE_FAILURES =
+            ImmutableList.of(
+                    "connection reset", "connect timed out", "read timed out", "failed to respond");
+
     public LansforsakringarAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
@@ -284,7 +291,7 @@ public class LansforsakringarAgent extends AbstractAgent
         catalog = context.getCatalog();
         credentials = request.getCredentials();
         client = clientFactory.createCustomClient(context.getLogOutputStream());
-        // client.addFilter(new LoggingFilter(new PrintStream(System.out)));
+        addBankSideFailureFilter();
 
         deviceId =
                 new String(
@@ -296,6 +303,35 @@ public class LansforsakringarAgent extends AbstractAgent
                         catalog,
                         TRANSFER_MESSAGE_LENGTH_CONFIG,
                         new StringNormalizerSwedish(",.-_"));
+    }
+
+    private void addBankSideFailureFilter() {
+        client.addFilter(
+                new ClientFilter() {
+                    @Override
+                    public ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
+                        try {
+                            return getNext().handle(cr);
+                        } catch (ClientHandlerException e) {
+                            handleKnownBankSideFailures(e);
+                            throw e;
+                        }
+                    }
+                });
+    }
+
+    private void handleKnownBankSideFailures(ClientHandlerException e) {
+        if (Strings.isNullOrEmpty(e.getMessage())) {
+            throw e;
+        }
+
+        BANK_SIDE_FAILURES.stream()
+                .filter((failure -> e.getMessage().toLowerCase().contains(failure)))
+                .findAny()
+                .ifPresent(
+                        f -> {
+                            throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
+                        });
     }
 
     private LoginResponse authenticateBankId()
@@ -325,6 +361,7 @@ public class LansforsakringarAgent extends AbstractAgent
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
                 case "00012":
                 case "00019":
+                case "000117":
                     throw BankServiceError.BANK_SIDE_FAILURE.exception();
                 default:
                     throw new IllegalStateException(
