@@ -25,6 +25,7 @@ public class BbvaCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
                 .map(ContractEntity::getCreditCard)
                 .filter(Option::isDefined)
                 .map(Option::get)
+                .filter(CreditCardEntity::isNotComplementaryCard)
                 .map(CreditCardEntity::toTinkCreditCard)
                 .asJava();
     }

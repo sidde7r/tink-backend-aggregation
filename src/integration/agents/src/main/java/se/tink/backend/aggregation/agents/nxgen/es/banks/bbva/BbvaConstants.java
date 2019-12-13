@@ -188,4 +188,8 @@ public final class BbvaConstants {
     public static class ErrorCode {
         public static final String CONTRACT_NOT_OPERABLE = "contractNotOperable";
     }
+
+    public static class ProductTypes {
+        public static final String COMPLEMENTARY = "COMPLEMENTARIAS";
+    }
 }

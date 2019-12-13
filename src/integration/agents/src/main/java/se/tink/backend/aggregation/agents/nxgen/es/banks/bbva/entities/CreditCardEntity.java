@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
@@ -120,5 +121,11 @@ public class CreditCardEntity extends AbstractContractDetailsEntity {
                 .filter(pan -> pan.length() >= 4)
                 .map(pan -> pan.substring(pan.length() - 4))
                 .orElseThrow(() -> new NoSuchElementException("can't determine the card number"));
+    }
+
+    public boolean isNotComplementaryCard() {
+        // BBVA has complementary credit cards those are linked to another credit card but have a
+        // credit limit of 1;
+        return !BbvaConstants.ProductTypes.COMPLEMENTARY.equalsIgnoreCase(getProduct().getName());
     }
 }
