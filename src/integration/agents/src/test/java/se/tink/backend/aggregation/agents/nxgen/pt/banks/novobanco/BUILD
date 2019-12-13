@@ -12,6 +12,10 @@ junit_test(
         "external",
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//third_party:net_bytebuddy_byte_buddy",
+        "//third_party:org_objenesis_objenesis",
+    ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/novobanco",
         "//src/integration/amount",
@@ -25,10 +29,7 @@ junit_test(
         "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//src/libraries/serialization",
-        "//third_party:ch_qos_logback_logback_classic",
-        "//third_party:net_bytebuddy_byte_buddy",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
-        "//third_party:org_objenesis_objenesis",
     ],
 )
