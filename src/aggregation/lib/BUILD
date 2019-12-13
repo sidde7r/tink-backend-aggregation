@@ -323,6 +323,7 @@ junit_test(
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
