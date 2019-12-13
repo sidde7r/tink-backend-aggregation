@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
-import net.minidev.json.annotate.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
