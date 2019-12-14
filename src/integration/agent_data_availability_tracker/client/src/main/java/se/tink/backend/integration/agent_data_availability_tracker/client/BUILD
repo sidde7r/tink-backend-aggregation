@@ -6,8 +6,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/aggregationcontroller_api",
-        "//src/integration/account:enums",
-        "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client:serialization",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client/configuration",
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
@@ -15,7 +13,6 @@ java_library(
         "//src/integration/api",
         "//src/integration/lib:annotations",
         "//src/integration/models",
-        "//src/libraries/account_identifier",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
