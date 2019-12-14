@@ -27,6 +27,5 @@ java_library(
         "@selenium//:org_seleniumhq_selenium_selenium_api",
         "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
-        "@tink_httpcore_4_4_9",
     ],
 )
