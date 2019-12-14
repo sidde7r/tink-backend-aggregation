@@ -3,7 +3,6 @@ java_library(
     srcs = glob(["src/main/java/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents",
         "//src/integration/grpc-services/proto:tink-grpc-integration",
         "//src/integration/lib",  # TODO: remove this dependency
         "//src/libraries/metrics:collection",
