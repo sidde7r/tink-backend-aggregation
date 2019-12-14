@@ -35,7 +35,6 @@ java_binary(
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_yaml_snakeyaml",
         "//third_party:prometheus",
-        "@org_apache_logging_log4j_log4j_slf4j//jar",
     ],
 )
 
@@ -48,9 +47,7 @@ junit_test(
     ],
     deps = [
         "//src/libraries/health_check_handler",
-        "//src/libraries/serialization",
         "//src/libraries/simple_http_server",
-        "//src/nasa/metrics",
         "//src/nasa/service:nasa",
         "//third_party:com_google_code_gson_gson",
         "//third_party:com_google_guava_guava",
