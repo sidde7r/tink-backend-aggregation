@@ -4,13 +4,11 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/account:enums",
-        "//src/integration/agents",
         "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/parser",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/password/dk/nemid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
