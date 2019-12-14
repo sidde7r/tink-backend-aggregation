@@ -123,7 +123,6 @@ java_library(
         "//third_party:org_springframework_spring_expression",
         "//third_party:zxing-qrcode",
         "@io_reactivex_rxjava3_rxjava",
-        "@selenium//:com_codeborne_phantomjsdriver",
     ],
 )
 
