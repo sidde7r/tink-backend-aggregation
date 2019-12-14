@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigur
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
+import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 
 public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorkerCommand {
 

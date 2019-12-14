@@ -29,8 +29,8 @@ import se.tink.backend.agents.rpc.Provider.AccessType;
 import se.tink.backend.agents.rpc.ProviderTypes;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
-import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
+import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 
 public final class AgentConfigurationController {
