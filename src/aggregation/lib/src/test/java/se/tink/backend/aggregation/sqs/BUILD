@@ -5,8 +5,5 @@ junit_test(
     srcs = glob(["*.java"]),
     data = [],
     visibility = ["//visibility:public"],
-    deps = [
-        "//src/aggregation/lib",
-        "//third_party:com_amazonaws_aws_java_sdk_sqs",
-    ],
+    deps = ["//third_party:com_amazonaws_aws_java_sdk_sqs"],
 )
