@@ -4,7 +4,6 @@ java_binary(
     main_class = "se.tink.backend.aggregation.UkobRegisterCommand",
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/base",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
