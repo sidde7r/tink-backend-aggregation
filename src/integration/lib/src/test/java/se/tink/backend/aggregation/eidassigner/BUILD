@@ -7,7 +7,6 @@ junit_test(
         "//data:qsealc_crt",
     ],
     deps = [
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/libraries/simple_http_server",
