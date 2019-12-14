@@ -4,9 +4,7 @@ java_binary(
     main_class = "se.tink.backend.aggregation.register.fi.opbank.OPBankRegisterCommand",
     visibility = ["//visibility:public"],
     deps = [
-        "//src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register:psd2-register",
         "//src/integration/lib",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/libraries/serialization",
