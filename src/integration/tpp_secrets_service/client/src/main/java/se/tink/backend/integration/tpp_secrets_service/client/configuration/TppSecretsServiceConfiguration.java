@@ -1,4 +1,4 @@
-package se.tink.backend.integration.tpp_secrets_service.client;
+package se.tink.backend.integration.tpp_secrets_service.client.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
