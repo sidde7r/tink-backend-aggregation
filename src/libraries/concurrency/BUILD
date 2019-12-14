@@ -48,6 +48,7 @@ junit_test(
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
+        "//third_party:org_apache_curator_curator_client",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_assertj_assertj_core",

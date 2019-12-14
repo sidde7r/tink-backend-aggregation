@@ -83,6 +83,7 @@ java_library(
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_code_gson_gson",
+        "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_extensions_guice_multibindings",
         "//third_party:com_google_inject_guice",
