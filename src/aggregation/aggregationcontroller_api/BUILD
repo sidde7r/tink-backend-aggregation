@@ -9,7 +9,6 @@ java_library(
         "//src/integration/account:rpc",
         "//src/integration/api",
         "//src/integration/credentials:rpc",
-        "//src/integration/document_container",
         "//src/integration/enums",
         "//src/integration/models",
         "//src/integration/signableoperation:rpc",
