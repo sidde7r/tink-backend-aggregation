@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BerlinGroupAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -58,15 +58,9 @@ public final class KbcApiClient extends BerlinGroupApiClient<BerlinGroupConfigur
     @Override
     public BerlinGroupAccountResponse fetchAccounts() {
         return getAccountsRequestBuilder(getConfiguration().getBaseUrl() + Urls.ACCOUNTS)
-                .header(
-                        BerlinGroupConstants.HeaderKeys.CONSENT_ID,
-                        persistentStorage.get(StorageKeys.CONSENT_ID))
-                .header(
-                        BerlinGroupConstants.HeaderKeys.X_REQUEST_ID,
-                        BerlinGroupUtils.getRequestId())
-                .header(
-                        BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        getConfiguration().getPsuIpAddress())
+                .header(Psd2Headers.Keys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(Psd2Headers.Keys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .get(AccountResponse.class);
     }
 
