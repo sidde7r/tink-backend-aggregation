@@ -474,10 +474,10 @@ java_library(
     name = "io_dropwizard_dropwizard_core",
     visibility = ["//visibility:public"],
     exports = [
-        ":io_dropwizard_dropwizard_jersey",
         "@io_dropwizard_dropwizard_core//jar",
     ],
     runtime_deps = [
+        ":io_dropwizard_dropwizard_jersey",
         "@ch_qos_logback_logback_classic//jar",
         "@ch_qos_logback_logback_core//jar",
         "@com_codahale_metrics_metrics_annotation//jar",

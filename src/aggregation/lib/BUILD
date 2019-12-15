@@ -303,6 +303,7 @@ java_library(
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_dropwizard_dropwizard_jersey",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:io_vavr",
         "//third_party:javax_inject_javax_inject",
