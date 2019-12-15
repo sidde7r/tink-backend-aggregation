@@ -597,8 +597,10 @@ java_library(
     name = "io_dropwizard_dropwizard_lifecycle",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_guava_guava//jar",
         "@io_dropwizard_dropwizard_lifecycle//jar",
+    ],
+    runtime_deps = [
+        "@com_google_guava_guava//jar",
         "@io_dropwizard_dropwizard_util//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",
