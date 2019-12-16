@@ -45,6 +45,7 @@ public class KbcAgentTest {
     @Before
     public void before() {
         manager.before();
+        usernameManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("be", "be-kbc-cardreader")
