@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Instrument.Type;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 
 @JsonObject
 public class SecurityEntity {
@@ -151,25 +152,24 @@ public class SecurityEntity {
         return isin;
     }
 
-    public Instrument toTinkInstrument(Map<String, Double> instrumentsProfit) {
-        Instrument instrument = new Instrument();
-        instrument.setUniqueIdentifier(marketName + isin);
-        instrument.setName(name);
-        instrument.setQuantity(totalTitles);
-        instrument.setType(Type.STOCK);
-        instrument.setPrice(getPrice());
-        instrument.setMarketValue(totalAmount.getAmountAsDouble());
-        instrument.setCurrency(currency.getId());
-        instrument.setIsin(isin);
-        instrument.setMarketPlace(marketName);
-        instrument.setRawType(typeSecurities.getId());
+    public InstrumentModule toTinkInstrument(Map<String, Double> instrumentsProfit) {
         Double profit = instrumentsProfit.get(isin);
+        Double averageAcquisitionPrice = null;
         if (Objects.nonNull(profit)) {
-            instrument.setProfit(profit);
-            instrument.setAverageAcquisitionPrice(
-                    getAverageAcquisitionPrice(totalAmount.getAmountAsDouble() - profit));
+            averageAcquisitionPrice =
+                    getAverageAcquisitionPrice(totalAmount.getAmountAsDouble() - profit);
         }
-        return instrument;
+        return InstrumentModule.builder()
+                .withType(InstrumentType.STOCK)
+                .withId(InstrumentIdModule.of(isin, marketName, name))
+                .withMarketPrice(getPrice())
+                .withMarketValue(totalAmount.getAmountAsDouble())
+                .withAverageAcquisitionPrice(averageAcquisitionPrice)
+                .withCurrency(currency.getId())
+                .withQuantity(totalTitles)
+                .withProfit(profit)
+                .setRawType(typeSecurities.getId())
+                .build();
     }
 
     @JsonIgnore

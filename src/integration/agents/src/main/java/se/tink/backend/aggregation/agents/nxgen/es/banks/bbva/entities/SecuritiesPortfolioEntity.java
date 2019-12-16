@@ -3,13 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
-import java.util.Collections;
 import java.util.Map;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 
 @JsonObject
 public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
@@ -27,12 +29,16 @@ public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
 
     public InvestmentAccount toInvestmentAccount(
             Double totalProfit, Map<String, Double> instrumentsProfit) {
-        return InvestmentAccount.builder(getId())
-                .setName(getAccountName())
-                .setAccountNumber(getAccountNumber())
-                .setHolderName(null)
-                .setCashBalance(ExactCurrencyAmount.of(0d, getCurrency().getId()))
-                .setPortfolios(getPortfolio(totalProfit, instrumentsProfit))
+        return InvestmentAccount.nxBuilder()
+                .withPortfolios(getPortfolio(totalProfit, instrumentsProfit))
+                .withZeroCashBalance(getCurrency().getId())
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getId())
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(getAccountName())
+                                .addIdentifier(AccountIdentifier.create(Type.TINK, getId()))
+                                .build())
                 .build();
     }
 
@@ -42,21 +48,19 @@ public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
         return getFormats().getBocf();
     }
 
-    private java.util.List<Portfolio> getPortfolio(
+    private PortfolioModule getPortfolio(
             Double totalProfit, Map<String, Double> instrumentsProfit) {
-        Portfolio portfolio = new Portfolio();
-        List<Instrument> instruments = getInstruments(instrumentsProfit);
-
-        portfolio.setUniqueIdentifier(getId());
-        portfolio.setType(Portfolio.Type.DEPOT);
-        portfolio.setTotalValue(balance.toTinkAmount().getDoubleValue());
-        portfolio.setTotalProfit(totalProfit);
-        portfolio.setInstruments(instruments.asJava());
-
-        return Collections.singletonList(portfolio);
+        return PortfolioModule.builder()
+                .withType(PortfolioType.DEPOT)
+                .withUniqueIdentifier(getId())
+                .withCashValue(0)
+                .withTotalProfit(totalProfit)
+                .withTotalValue(balance.toTinkAmount().getDoubleValue())
+                .withInstruments(getInstruments(instrumentsProfit).asJava())
+                .build();
     }
 
-    private List<Instrument> getInstruments(Map<String, Double> instrumentsProfit) {
+    private List<InstrumentModule> getInstruments(Map<String, Double> instrumentsProfit) {
         return Option.of(securities)
                 .getOrElse(List.empty())
                 .map(i -> i.toTinkInstrument(instrumentsProfit));

@@ -2,12 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investmen
 
 import io.vavr.collection.List;
 import io.vavr.control.Option;
+import io.vavr.control.Try;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.PostParameter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
@@ -60,21 +63,29 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
         Map<String, Double> instrumentsProfit =
                 portfolio
                         .getSecurities()
-                        .collect(
-                                Collectors.toMap(
-                                        SecurityEntity::getIsin,
-                                        s ->
-                                                getPortfolioTotalProfit(
-                                                        portfolio.getId(),
-                                                        s.getTotalAmount(),
-                                                        s.getIsin(),
-                                                        s.getInternalMarket())));
+                        .map(s -> getSecurityProfitOrElseNull(portfolio, s))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
         return portfolio.toInvestmentAccount(portfolioTotalProfit, instrumentsProfit);
     }
 
     private InvestmentAccount mapPensionTotInvestmentAccount(PensionPlanEntity portfolio) {
         Double totalProfit = getPortfolioTotalProfit(portfolio.getId(), portfolio.getBalance());
         return portfolio.toInvestmentAccount(totalProfit);
+    }
+
+    private Pair<String, Double> getSecurityProfitOrElseNull(
+            SecuritiesPortfolioEntity portfolio, SecurityEntity s) {
+        return Try.of(
+                        () ->
+                                getPortfolioTotalProfit(
+                                        portfolio.getId(),
+                                        s.getTotalAmount(),
+                                        s.getIsin(),
+                                        s.getInternalMarket()))
+                .filter(Objects::nonNull)
+                .map(profit -> Pair.of(s.getIsin(), profit))
+                .getOrNull();
     }
 
     private Double getPortfolioTotalProfit(
