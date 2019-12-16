@@ -6,6 +6,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import java.time.LocalDate;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.initialtransactions.InitialTransactionsFromCertainDateFetcher;
@@ -17,6 +19,8 @@ public class SibsTransactionalAccountTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String>,
                 InitialTransactionsFromCertainDateFetcher<
                         TransactionalAccount, TransactionKeyPaginatorResponse<String>> {
+    private static final Logger LOG =
+            LoggerFactory.getLogger(SibsTransactionalAccountTransactionFetcher.class);
     private static final int MAX_DAYS_OF_TRANSACTION_HISTORY = 89;
     private static final String ENCODED_SPACE = "%20";
 
@@ -40,6 +44,10 @@ public class SibsTransactionalAccountTransactionFetcher
     public TransactionKeyPaginatorResponse<String> fetchInitialTransactionsFor(
             TransactionalAccount account, LocalDate fromDate) {
         if (!canFetchTransactionsFrom(fromDate)) {
+            LOG.warn(
+                    String.format(
+                            "Unable to fetch transactions until certainDate(%s days ago), fetching transactions 90 days backwards",
+                            DAYS.between(fromDate, LocalDate.now())));
             fromDate = getOldestAllowedFromDate();
         }
 
