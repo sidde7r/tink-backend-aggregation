@@ -427,6 +427,42 @@
             "transactional": true,
             "tutorialUrl": null,
             "type": "BANK"
+        },
+        {
+            "accessType": "OTHER",
+            "className": "nxgen.it.banks.isp.IspAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Intesa Sao Paolo",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "supplementalFields": [
+                {
+                    "description": "Response code, 6-8 digits.",
+                    "helpText": "Input the code you got from the bank in SMS message",
+                    "name": "otpinput",
+                    "numeric": true,
+                    "pattern": "^[0-9]{6,8}$",
+                    "patternError": "Incorrect response code format. The response code should be 6-8 digits.",
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "name": "it-ispprivatebanking-password",
+            "passwordHelpText": "You use the same password as when you log in to the %s website. You can order a new username and password from [%s](%s).",
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
         }
     ]
 }
