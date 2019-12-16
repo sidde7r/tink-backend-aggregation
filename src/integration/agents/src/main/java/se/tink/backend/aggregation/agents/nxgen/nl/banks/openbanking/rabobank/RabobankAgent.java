@@ -88,12 +88,7 @@ public final class RabobankAgent
                         context,
                         new ThirdPartyAppAuthenticationProgressiveController(controller),
                         controller);
-        ;
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
+        
         String refreshToken = persistentStorage.get(REFRESH_TOKEN);
         if (refreshToken != null) {
             ImmutableSet<String> whitelistedValues = ImmutableSet.of(refreshToken);
