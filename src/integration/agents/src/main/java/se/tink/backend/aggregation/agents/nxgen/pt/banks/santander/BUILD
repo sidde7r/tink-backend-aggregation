@@ -4,7 +4,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/amount",
-        "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/identity_data",
         "//src/integration/lib",
@@ -12,12 +11,10 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
         "//src/libraries/i18n",
-        "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_slf4j_slf4j_api",
-        "@tink_httpcore_4_4_9",
     ],
 )

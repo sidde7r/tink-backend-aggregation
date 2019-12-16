@@ -4,7 +4,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bunq",
-        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib",
