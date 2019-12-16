@@ -74,6 +74,13 @@ public class BbvaApiClient {
         return loginResponse;
     }
 
+    public HttpResponse isAlive() {
+        return createRequestInSession(BbvaConstants.Url.REFRESH_TICKET)
+                .accept(MediaType.WILDCARD_TYPE)
+                .queryParam(QueryKeys.ISALIVE_CUSTOMER_ID, getUserId())
+                .post(HttpResponse.class);
+    }
+
     public void logout() {
         createRequest(BbvaConstants.Url.TICKET)
                 .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent())

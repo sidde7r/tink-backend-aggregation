@@ -54,6 +54,7 @@ public final class BbvaConstants {
         public static final String CARD_TRANSACTION_TYPE = "cardTransactionType";
         public static final String DASHBOARD_CUSTOMER_ID = "$customer.id";
         public static final String DASHBOARD_FILTER = "$filter";
+        public static final String ISALIVE_CUSTOMER_ID = "customerId";
     }
 
     public static final class QueryValues {
@@ -89,8 +90,8 @@ public final class BbvaConstants {
         public static final String PARAM_ID = "ID";
 
         public static final String TICKET = BASE_URL + "/ASO/TechArchitecture/grantingTickets/V02";
-        public static final String SESSION =
-                BASE_URL + "/ENPP/enpp_mult_web_mobility_02/sessions/v1";
+        public static final String REFRESH_TICKET =
+                BASE_URL + "/ASO/grantingTicketActions/V01/refreshGrantingTicket";
         public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03";
         public static final String ASO = BASE_URL + "/ASO";
         public static final String ACCOUNT_TRANSACTION =

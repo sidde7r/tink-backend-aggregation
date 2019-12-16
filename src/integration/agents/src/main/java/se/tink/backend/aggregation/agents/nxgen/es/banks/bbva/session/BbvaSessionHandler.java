@@ -21,7 +21,7 @@ public class BbvaSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        Try.of(apiClient::fetchIdentityData)
+        Try.of(apiClient::isAlive)
                 .getOrElseThrow(
                         (Supplier<SessionException>) SessionError.SESSION_EXPIRED::exception);
     }
