@@ -34,7 +34,7 @@ public class TargobankSandboxAuthenticator implements Authenticator {
         CreateAuthorisationResponse createAuthorisationResponse = createAuthorization(consent);
 
         final String authorisationLink =
-                createAuthorisationResponse.getLinks().getUpdatePsuAuthentication().getLink();
+                createAuthorisationResponse.getLinks().getUpdatePsuAuthentication().getHref();
 
         PasswordAuthenticationResponse authenticationResponse =
                 apiClient.authenticateAuthorisationsPassword(authorisationLink);
@@ -53,7 +53,7 @@ public class TargobankSandboxAuthenticator implements Authenticator {
 
     private CreateAuthorisationResponse createAuthorization(ConsentResponse consent) {
         return apiClient.createAuthorisations(
-                consent.getLinks().getStartAuthorisationWithPsuAuthentication().getLink());
+                consent.getLinks().getStartAuthorisationWithPsuAuthentication().getHref());
     }
 
     // Choosing one of 3 possible SCA method; Sandbox flow is same for all 3

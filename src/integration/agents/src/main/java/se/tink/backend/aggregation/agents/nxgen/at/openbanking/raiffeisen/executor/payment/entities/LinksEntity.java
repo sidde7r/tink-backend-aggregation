@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.executor.payment.entities;
 
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksEntity {
-    private HrefEntity scaRedirect;
+    private Href scaRedirect;
     private String scaOAuth;
     private String startAuthorisation;
     private String startAuthorisationWithPsuIdentification;
@@ -12,7 +13,7 @@ public class LinksEntity {
     private String startAuthorisationWithEncryptedPsuAuthentication;
     private String startAuthorisationWithAuthenticationMethodSelection;
     private String startAuthorisationWithTransactionAuthorisation;
-    private HrefEntity self;
-    private HrefEntity status;
+    private Href self;
+    private Href status;
     private String scaStatus;
 }
