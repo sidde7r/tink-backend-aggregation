@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.standalone.grpc;
 
 import io.grpc.ManagedChannel;
 import java.util.List;
-import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.standalone.GenericAgentConfiguration;
 import se.tink.backend.aggregation.agents.standalone.GenericAgentConstants;
 import se.tink.backend.aggregation.agents.standalone.mapper.MappingContextKeys;
@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.standalone.mapper.fetch.account.agg.Fe
 import se.tink.backend.aggregation.agents.standalone.mapper.fetch.trans.agg.FetchTransactionsResponseMapper;
 import se.tink.backend.aggregation.agents.standalone.mapper.fetch.trans.sa.FetchTransactionsRequestMapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.sa.common.mapper.MappingContext;
@@ -58,15 +59,30 @@ public class CheckingService {
         return mapper.map(fetchAccountsResponse);
     }
 
-    public FetchTransactionsResponse fetchCheckingTransactions() {
+    public TransactionKeyPaginatorResponse fetchCheckingTransactions(
+            TransactionalAccount account, String next) {
+        String consentId =
+                persistentStorage.get(GenericAgentConstants.PersistentStorageKey.CONSENT_ID);
+        MappingContext mappingContext =
+                MappingContext.newInstance().put(MappingContextKeys.CONSENT_ID, consentId);
+
+        if (StringUtils.isBlank(next)) {
+            mappingContext.put(MappingContextKeys.NEXT_TR_PAGE_LINK, next);
+        }
+
         FetchTransactionsRequestMapper fetchTransactionsRequestMapper =
                 mappersController.fetchTransactionsRequestMapper();
+
         FetchTransactionsRequest saRequest =
-                fetchTransactionsRequestMapper.map(null, MappingContext.newInstance());
+                fetchTransactionsRequestMapper.map(account, mappingContext);
         se.tink.sa.services.fetch.trans.FetchTransactionsResponse saResponse =
                 fetchTransactionsServiceBlockingStub.fetchCheckingAccountsTransactions(saRequest);
+
         FetchTransactionsResponseMapper fetchTransactionsResponseMapper =
                 mappersController.fetchTransactionsResponseMapper();
-        return fetchTransactionsResponseMapper.map(saResponse, MappingContext.newInstance());
+
+        TransactionKeyPaginatorResponse resp =
+                fetchTransactionsResponseMapper.map(saResponse, mappingContext);
+        return resp;
     }
 }

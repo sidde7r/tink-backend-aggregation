@@ -20,6 +20,7 @@ java_library(
         "//third_party/sa_agent:grpc_client_libs",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_github_rholder_guava_retrying//jar",
+        "@org_apache_commons_commons_lang3//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
 )

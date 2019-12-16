@@ -7,5 +7,7 @@ public interface MappingContextKeys {
     String SECURITY_TOKEN = "SECURITY_TOKEN";
     String CONSENT_ID = "CONSENT_ID";
 
+    String NEXT_TR_PAGE_LINK = "NEXT_TR_PAGE_LINK";
+
     String IS_MANUAL = "IS_MANUAL";
 }

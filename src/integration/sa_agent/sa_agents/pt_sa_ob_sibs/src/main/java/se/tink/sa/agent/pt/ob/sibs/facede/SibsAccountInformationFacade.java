@@ -45,8 +45,6 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts(FetchAccountsRequest request) {
-        FetchAccountsResponse response = null;
-
         CommonSibsRequest commonRequest = getCommonRequest(request);
         AccountsResponse accountsResponse =
                 sibsAccountInformationClient.fetchAccounts(commonRequest);
@@ -90,8 +88,11 @@ public class SibsAccountInformationFacade implements AccountInformationFacade {
             transactionsResponse = sibsAccountInformationClient.getTransactionsForKey(sibsRequest);
         }
 
-        response = transactionsResponseMapper.map(transactionsResponse);
+        MappingContext mappingContext =
+                MappingContext.newInstance()
+                        .put(SibsMappingContextKeys.REQUEST_COMMON, request.getRequestCommon());
 
+        response = transactionsResponseMapper.map(transactionsResponse, mappingContext);
         return response;
     }
 
