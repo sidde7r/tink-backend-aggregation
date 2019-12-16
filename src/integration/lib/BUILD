@@ -121,7 +121,6 @@ java_library(
         "//third_party:org_modelmapper_modelmapper",
         "//third_party:org_mozilla_rhino",
         "//third_party:org_slf4j_slf4j_api",
-        "//third_party:org_springframework_spring_core",
         "//third_party:zxing-qrcode",
         "@io_reactivex_rxjava3_rxjava",
     ],
