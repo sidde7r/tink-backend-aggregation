@@ -109,8 +109,6 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_apache_lucene_lucene_core",
-        "//third_party:org_apache_pdfbox_fontbox",
-        "//third_party:org_apache_pdfbox_pdfbox",
         "//third_party:org_apache_xmlgraphics_batik_css",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
