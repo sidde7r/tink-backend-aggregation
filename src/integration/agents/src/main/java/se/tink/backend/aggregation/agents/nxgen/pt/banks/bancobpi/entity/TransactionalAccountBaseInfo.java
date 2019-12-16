@@ -1,12 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity;
 
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.IBANPortugal;
-
 public class TransactionalAccountBaseInfo {
-
-    private static final String BANK_ID = "0010";
-    private static final String PSP_REFERENCE_NUMBER = "0000";
-    private static final String INTERNAL_ACCOUNT_ID_POSTFIX = "00001";
 
     private String internalAccountId;
     private String type;
@@ -65,11 +59,11 @@ public class TransactionalAccountBaseInfo {
     }
 
     public String getIban() {
+
         if (iban == null) {
-            iban =
-                    IBANPortugal.generateIBAN(
-                            "0010", "0000", getInternalAccountId() + INTERNAL_ACCOUNT_ID_POSTFIX);
+            iban = new BpiIbanCalculator(internalAccountId, type, order).calculateIban();
         }
         return iban;
     }
+
 }

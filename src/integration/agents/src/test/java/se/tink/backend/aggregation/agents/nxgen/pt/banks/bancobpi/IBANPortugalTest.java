@@ -10,8 +10,8 @@ public class IBANPortugalTest {
         // given
         final String rawNIB1 = "0010000054706260001";
         String expectedCheckDigits1 = "48";
-        final String rawNIB2 = "0010000047369170001";
-        final String expectedCheckDigits2 = "75";
+        final String rawNIB2 = "0010999919625110601";
+        final String expectedCheckDigits2 = "31";
         // when
         String checkDigits1 = IBANPortugal.calculateNIBCheckDigits(rawNIB1);
         String checkDigits2 = IBANPortugal.calculateNIBCheckDigits(rawNIB2);
