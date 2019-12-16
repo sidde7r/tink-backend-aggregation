@@ -57,7 +57,6 @@ java_library(
         "//src/libraries/giro_validation",
         "//src/libraries/i18n",
         "//src/libraries/metrics:collection",
-        "//src/libraries/metrics:configuration",
         "//src/libraries/metrics:core",
         "//src/libraries/metrics:counters",
         "//src/libraries/metrics:gauges",
