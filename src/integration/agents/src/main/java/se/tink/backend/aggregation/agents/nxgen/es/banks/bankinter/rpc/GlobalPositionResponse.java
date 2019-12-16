@@ -9,9 +9,9 @@ import org.w3c.dom.NodeList;
 
 public class GlobalPositionResponse extends HtmlResponse {
     private static final Pattern INVESTMENT_LINK_PATTERN =
-            Pattern.compile("'(/fondos/secure/fondo_inversion\\.xhtml?[^']+)'");
+            Pattern.compile("'(/fondos/secure/fondo_inversion\\.xhtml\\?[^']+)'");
     private static final Pattern CREDIT_CARD_LINK_PATTERN =
-            Pattern.compile("'(/tarjetas/secure/tarjetas_ficha\\.xhtml?[^']+)'");
+            Pattern.compile("'(/tarjetas/secure/tarjetas_ficha\\.xhtml\\?[^']+)'");
 
     public GlobalPositionResponse(String body) {
         super(body);
@@ -19,10 +19,6 @@ public class GlobalPositionResponse extends HtmlResponse {
 
     private NodeList getAccountNodes() {
         return evaluateXPath("//li[contains(@class,'goAccounts')]", NodeList.class);
-    }
-
-    public long getNumberOfAccounts() {
-        return getAccountNodes().getLength();
     }
 
     public List<Integer> getAccountIds() {
@@ -43,20 +39,12 @@ public class GlobalPositionResponse extends HtmlResponse {
                 "//li[@data-element='AhorroInversion>BoxFondoInversion']", NodeList.class);
     }
 
-    public long getNumberOfInvestments() {
-        return getInvestmentNodes().getLength();
-    }
-
     public List<String> getInvestmentLinks() {
         return getAccountLinks(getInvestmentNodes(), INVESTMENT_LINK_PATTERN);
     }
 
     private NodeList getCreditCardNodes() {
         return evaluateXPath("//li[@data-element='Tarjetas>BoxTarjeta']", NodeList.class);
-    }
-
-    public long getNumberOfCreditCards() {
-        return getCreditCardNodes().getLength();
     }
 
     public List<String> getCreditCardLinks() {
