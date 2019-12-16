@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
+import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.backend.secretservice.grpc.GetAllSecretsResponse;
 import se.tink.backend.secretservice.grpc.GetSecretsRequest;
 import se.tink.backend.secretservice.grpc.InternalSecretsServiceGrpc;

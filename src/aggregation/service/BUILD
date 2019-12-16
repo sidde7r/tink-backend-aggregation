@@ -14,6 +14,7 @@ java_library(
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client:module",
         "//src/integration/tpp_secrets_service/client",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//src/libraries/draining",
         "//src/libraries/dropwizard_utils",
         "//third_party:com_codahale_metrics_metrics_healthchecks",

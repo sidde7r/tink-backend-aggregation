@@ -1,0 +1,19 @@
+java_library(
+    name = "configuration",
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/api",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/entities",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
+        "//src/libraries/serialization",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_guava_guava",
+        "//third_party:io_grpc_grpc_core",
+        "//third_party:org_apache_commons_commons_collections4",
+        "//third_party:org_slf4j_slf4j_api",
+        "@io_reactivex_rxjava3_rxjava",
+    ],
+)
