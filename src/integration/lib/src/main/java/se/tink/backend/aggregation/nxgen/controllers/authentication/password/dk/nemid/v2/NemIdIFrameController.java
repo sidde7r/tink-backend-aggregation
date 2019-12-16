@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
 import com.google.common.base.Strings;
 import java.util.Optional;
@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstantsV2.ErrorStrings;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.ErrorStrings;
 
 // Temporarily renaming this to V2. V1 will be removed once the Nordea DK update is finished
 public class NemIdIFrameController {

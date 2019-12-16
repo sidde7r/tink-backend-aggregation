@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
 import com.google.common.collect.ImmutableList;
 import java.io.File;

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 
 import com.google.common.base.Strings;
 import java.util.Optional;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstantsV2;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class BankdataStorage {
