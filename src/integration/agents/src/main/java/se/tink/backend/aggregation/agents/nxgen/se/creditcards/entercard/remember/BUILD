@@ -1,0 +1,10 @@
+java_library(
+    name = "remember",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/entercard",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+    ],
+)
