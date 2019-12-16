@@ -19,6 +19,6 @@ public class JsfUpdateResponse extends HtmlResponse {
     }
 
     public String getViewState() {
-        return getUpdate(FormKeys.JSF_VIEWSTATE);
+        return getUpdate(FormKeys.JSF_VIEWSTATE).trim();
     }
 }

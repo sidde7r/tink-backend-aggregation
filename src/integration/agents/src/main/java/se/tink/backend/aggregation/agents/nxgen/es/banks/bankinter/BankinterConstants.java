@@ -17,6 +17,7 @@ public final class BankinterConstants {
         public static final String IDENTITY_DATA = BASE + "/gestion/rest/usuario/datos";
         public static final String GLOBAL_POSITION = BASE + Paths.GLOBAL_POSITION;
         public static final String ACCOUNT = BASE + "/extracto/secure/movimientos_cuenta.xhtml";
+        public static final String CREDIT_CARD = BASE + "/tarjetas/secure/tarjetas_ficha.xhtml";
     }
 
     public static class Paths {
@@ -51,6 +52,8 @@ public final class BankinterConstants {
         public static final String TRANSACTIONS_WAIT = "movimientos_espera";
         public static final String TRANSACTIONS_NAVIGATION = "movimientos-nav";
         public static final String TRANSACTIONS = "listado-movimientos";
+        public static final String CARD_TRANSACTIONS_NAVIGATION = "movimientos-form:nav-sticky";
+        public static final String CARD_TRANSACTIONS = "movimientos-form:listaMovimientos";
     }
 
     public static class QueryKeys {
