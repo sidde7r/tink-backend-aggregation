@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 
@@ -111,6 +112,10 @@ public class InstrumentModuleTest {
         assertNull(instrumentModule.getRawType());
         assertNull(instrumentModule.getAverageAcquisitionPrice());
         assertNull(instrumentModule.getProfit());
+
+        Instrument systemInstrument = instrumentModule.toSystemInstrument();
+        assertNull(systemInstrument.getAverageAcquisitionPrice());
+        assertNull(systemInstrument.getProfit());
     }
 
     @Test

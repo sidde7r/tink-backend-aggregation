@@ -26,8 +26,10 @@ public final class InstrumentModule {
         systemInstrument.setUniqueIdentifier(this.instrumentIdModule.getUniqueIdentifier());
         systemInstrument.setIsin(this.instrumentIdModule.getIsin());
         systemInstrument.setMarketPlace(this.instrumentIdModule.getMarketPlace());
-        systemInstrument.setAverageAcquisitionPriceFromAmount(
-                ExactCurrencyAmount.of(this.averageAcquisitionPrice, this.currency));
+        if (Objects.nonNull(averageAcquisitionPrice)) {
+            systemInstrument.setAverageAcquisitionPriceFromAmount(
+                    ExactCurrencyAmount.of(this.averageAcquisitionPrice, this.currency));
+        }
         systemInstrument.setCurrency(this.currency);
         systemInstrument.setMarketValue(this.marketValue);
         systemInstrument.setName(this.instrumentIdModule.getName());
