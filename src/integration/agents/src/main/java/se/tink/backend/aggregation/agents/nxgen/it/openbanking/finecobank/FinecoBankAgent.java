@@ -77,12 +77,13 @@ public final class FinecoBankAgent extends NextGenerationAgent
                             new FinecoBankAuthenticationHelper(apiClient, persistentStorage),
                             strongAuthenticationState);
 
-            return new AutoAuthenticationController(
-                    request,
-                    systemUpdater,
-                    new ThirdPartyAppAuthenticationController<>(
-                            finecoBankAuthenticator, supplementalInformationHelper),
-                    finecoBankAuthenticator);
+            authenticationController =
+                    new AutoAuthenticationController(
+                            request,
+                            systemUpdater,
+                            new ThirdPartyAppAuthenticationController<>(
+                                    finecoBankAuthenticator, supplementalInformationHelper),
+                            finecoBankAuthenticator);
         }
         return authenticationController;
     }
