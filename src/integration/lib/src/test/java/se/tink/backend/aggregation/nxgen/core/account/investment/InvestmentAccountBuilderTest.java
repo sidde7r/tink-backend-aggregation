@@ -259,7 +259,7 @@ public class InvestmentAccountBuilderTest {
                                                                         "name"))
                                                         .withMarketPrice(10)
                                                         .withMarketValue(20)
-                                                        .withAverageAcquisitionPrice(1)
+                                                        .withAverageAcquisitionPrice(1d)
                                                         .withCurrency("SEK")
                                                         .withQuantity(50)
                                                         .withProfit(20.3)

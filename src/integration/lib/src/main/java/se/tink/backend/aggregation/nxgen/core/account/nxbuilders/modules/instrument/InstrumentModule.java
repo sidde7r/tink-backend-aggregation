@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instru
 
 import com.google.common.base.Preconditions;
 import java.math.BigDecimal;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Instrument.Type;
@@ -15,7 +16,7 @@ public final class InstrumentModule {
     private final double marketValue;
     private final double price;
     private final double quantity;
-    private final double profit;
+    private final Double profit;
     private final String ticker;
     private final InstrumentType type;
     private final String rawType;
@@ -80,7 +81,7 @@ public final class InstrumentModule {
         return quantity;
     }
 
-    public double getProfit() {
+    public Double getProfit() {
         return profit;
     }
 
@@ -112,18 +113,20 @@ public final class InstrumentModule {
         private double marketValue;
         private double price;
         private double quantity;
-        private double profit;
+        private Double profit;
         private String ticker;
         private InstrumentType type;
         private String rawType;
 
         @Override
         public CurrencyStep<InstrumentBuildStep> withAverageAcquisitionPrice(
-                double averageAcquisitionPrice) {
-            Preconditions.checkArgument(
-                    averageAcquisitionPrice >= 0,
-                    "Average Acquisition Price  must not be negative.");
-            this.averageAcquisitionPrice = BigDecimal.valueOf(averageAcquisitionPrice);
+                Double averageAcquisitionPrice) {
+            if (Objects.nonNull(averageAcquisitionPrice)) {
+                Preconditions.checkArgument(
+                        averageAcquisitionPrice >= 0,
+                        "Average Acquisition Price  must not be negative.");
+                this.averageAcquisitionPrice = BigDecimal.valueOf(averageAcquisitionPrice);
+            }
             return this;
         }
 
@@ -151,7 +154,7 @@ public final class InstrumentModule {
         }
 
         @Override
-        public InstrumentBuildStep withProfit(double profit) {
+        public InstrumentBuildStep withProfit(Double profit) {
             this.profit = profit;
             return this;
         }
