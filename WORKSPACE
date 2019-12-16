@@ -2549,6 +2549,8 @@ maven_install(
     name = "standalone_agent_test_deps",
     artifacts = [
         "org.springframework:spring-test:5.2.1.RELEASE",
+        "org.mockito:mockito-core:2.10.0",
+        "junit:junit:4.12",
     ],
     fetch_sources = False,
     repositories = [

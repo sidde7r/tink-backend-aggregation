@@ -30,7 +30,9 @@ public class AccountsResponseMapper implements Mapper<FetchAccountsResponse, Acc
         RequestCommon rc = mappingContext.get(SibsMappingContextKeys.REQUEST_COMMON);
         ResponseCommon responseCommon = requestToResponseCommonMapper.map(rc, mappingContext);
         destBuilder.setResponseCommon(responseCommon);
-        destBuilder.addAllAccount(mapTransactionsList(source.getAccountList(), mappingContext));
+        List<TransactionalAccount> transactionalAccounts =
+                mapTransactionsList(source.getAccountList(), mappingContext);
+        destBuilder.addAllAccount(transactionalAccounts);
 
         return destBuilder.build();
     }

@@ -27,6 +27,24 @@ junit_test(
     data = [
         "//data:aggregation_test",
     ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":standalone-agent-ob-sibs-bin",
+        "//src/integration/sa_agent/sa_agent_framework:sa-agent-framework",
+        "//src/integration/sa_agent/sa_common:sa-common",
+        "//src/integration/sa_agent/sa_grpc_api:sa-grpc-api",
+        "//third_party:standalone_agent_test_libs",
+        "//third_party/sa_agent:grpc_client_libs",
+        "@org_slf4j_slf4j_api//jar",
+    ],
+)
+
+junit_test(
+    name = "standalone-agent-ob-sibs-integration-test",
+    srcs = glob(["src/test_integration/java/**/*.java"]),
+    data = [
+        "//data:aggregation_test",
+    ],
     resources = glob([
         "src/test/resources/**/*",
     ]),
@@ -37,5 +55,6 @@ junit_test(
         "//third_party:standalone_agent_test_libs",
         "//third_party/sa_agent:grpc_client_libs",
         "@junit_junit//jar",
+        "@org_slf4j_slf4j_api//jar",
     ],
 )
