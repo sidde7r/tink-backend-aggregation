@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
+import static se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams.REFRESH_TOKEN;
+
+import com.google.common.collect.ImmutableSet;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -79,14 +82,23 @@ public final class RabobankAgent
                         credentials,
                         strongAuthenticationState);
 
-        final AutoAuthenticationProgressiveController autoAuthenticationController =
+        progressiveAuthenticator =
                 new AutoAuthenticationProgressiveController(
                         request,
                         context,
                         new ThirdPartyAppAuthenticationProgressiveController(controller),
                         controller);
+        ;
+    }
 
-        progressiveAuthenticator = autoAuthenticationController;
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        String refreshToken = persistentStorage.get(REFRESH_TOKEN);
+        if (refreshToken != null) {
+            ImmutableSet<String> whitelistedValues = ImmutableSet.of(refreshToken);
+            context.getLogMasker().addAgentWhitelistedValues(whitelistedValues);
+        }
     }
 
     @Override
