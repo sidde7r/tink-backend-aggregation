@@ -27,6 +27,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
@@ -49,6 +52,8 @@ public final class AvanzaAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
+        configureHttpClient(client);
+
         this.authSessionStorage = new AvanzaAuthSessionStorage();
         this.apiClient = new AvanzaApiClient(client, authSessionStorage);
         this.temporaryStorage = new TemporaryStorage();
@@ -59,6 +64,11 @@ public final class AvanzaAgent extends NextGenerationAgent
                 constructTransactionalAccountRefreshController();
 
         this.loanRefreshController = constructLoanRefreshController();
+    }
+
+    private void configureHttpClient(final TinkHttpClient client) {
+        client.addFilter(new BankServiceInternalErrorFilter());
+        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
     }
 
     private LoanRefreshController constructLoanRefreshController() {
