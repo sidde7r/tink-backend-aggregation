@@ -1889,5 +1889,7 @@ java_library(
     exports = [
         "//third_party:standalone_agent_libs",
         "@standalone_agent_deps//:org_springframework_spring_test",
+        "@standalone_agent_test_deps//:junit_junit",
+        "@standalone_agent_test_deps//:org_mockito_mockito_core",
     ],
 )

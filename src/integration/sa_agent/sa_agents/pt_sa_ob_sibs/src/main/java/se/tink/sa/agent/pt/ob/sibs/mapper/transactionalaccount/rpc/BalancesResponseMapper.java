@@ -28,7 +28,7 @@ public class BalancesResponseMapper implements Mapper<ExactCurrencyAmount, Balan
                                                 SibsConstants.ErrorMessages.NO_BALANCE))
                         .getInterimAvailable()
                         .getAmount();
-        ExactCurrencyAmount exactCurrencyAmount = amountEntityMapper.map(amount);
+        ExactCurrencyAmount exactCurrencyAmount = amountEntityMapper.map(amount, mappingContext);
         return exactCurrencyAmount;
     }
 }
