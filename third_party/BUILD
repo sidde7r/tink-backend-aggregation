@@ -1070,9 +1070,11 @@ java_library(
     name = "org_apache_httpcomponents_httpclient",
     visibility = ["//visibility:public"],
     exports = [
-        "@commons_codec_commons_codec//jar",
         "@org_apache_httpcomponents_httpclient//jar",
         "@org_apache_httpcomponents_httpcore//jar",
+    ],
+    runtime_deps = [
+        "@commons_codec_commons_codec//jar",
     ],
 )
 
