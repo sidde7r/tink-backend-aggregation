@@ -22,7 +22,6 @@ java_binary(
     ],
     deps = [
         "//src/integration/grpc-server",
-        "//src/integration/grpc-services",
         "//src/libraries/health_check_handler",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",
