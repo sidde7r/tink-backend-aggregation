@@ -1376,8 +1376,6 @@ java_library(
     name = "org_springframework_data_spring_data_jpa",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_aspectj_aspectjrt//jar",
-        "@org_slf4j_slf4j_api//jar",
         "@org_springframework_data_spring_data_commons//jar",
         "@org_springframework_data_spring_data_jpa//jar",
         "@org_springframework_spring_aop//jar",
@@ -1387,6 +1385,10 @@ java_library(
         "@org_springframework_spring_jdbc//jar",
         "@org_springframework_spring_orm//jar",
         "@org_springframework_spring_tx//jar",
+    ],
+    runtime_deps = [
+        "@org_aspectj_aspectjrt//jar",
+        "@org_slf4j_slf4j_api//jar",
     ],
 )
 
