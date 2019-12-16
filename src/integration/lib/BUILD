@@ -113,6 +113,7 @@ java_library(
         "//third_party:org_mozilla_rhino",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:zxing-qrcode",
+        "@com_sun_jersey_jersey_client//jar",
         "@io_reactivex_rxjava3_rxjava",
     ],
 )
