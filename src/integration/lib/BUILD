@@ -65,7 +65,6 @@ java_library(
         "//src/libraries/metrics:logbackappender",
         "//src/libraries/metrics:monitor",
         "//src/libraries/metrics:other",
-        "//src/libraries/metrics:prometheus",
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",
         "//src/libraries/net",
