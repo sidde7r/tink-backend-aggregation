@@ -51,7 +51,8 @@ public class Xs2aDevelopersTransactionalAccountFetcher
                     apiClient.getTransactions(account, fromDate, toDate).toTinkTransactions());
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == Transactions.ERROR_CODE_MAX_ACCESS_EXCEEDED
-                    || e.getResponse().getStatus() == Transactions.ERROR_CODE_SERVICE_UNAVAILABLE) {
+                    || e.getResponse().getStatus() == Transactions.ERROR_CODE_SERVICE_UNAVAILABLE
+                    || e.getResponse().getStatus() == Transactions.ERROR_CODE_CONSENT_INVALID) {
                 return PaginatorResponseImpl.createEmpty(false);
             } else {
                 throw e;

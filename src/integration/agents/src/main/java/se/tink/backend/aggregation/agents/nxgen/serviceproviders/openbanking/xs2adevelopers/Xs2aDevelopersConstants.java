@@ -17,6 +17,7 @@ public final class Xs2aDevelopersConstants {
                             AccountTypes.CHECKING,
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "SAC",
+                            "CACC",
                             "start2bank zichtrekening",
                             "0-Euro-Konto Vorteil",
                             "b.compact account",
@@ -151,6 +152,7 @@ public final class Xs2aDevelopersConstants {
         public static final int ERROR_CODE_SERVICE_UNAVAILABLE = 503;
         public static final String HREF = "href";
         public static final int ERROR_CODE_INTERNAL_SERVER = 500;
+        public static final int ERROR_CODE_CONSENT_INVALID = 401;
     }
 
     public static class CredentialKeys {

@@ -42,6 +42,14 @@ public class AccountEntity {
         return links;
     }
 
+    public String getAccountType() {
+        if (accountType == null) {
+            return cashAccountType;
+        } else {
+            return accountType;
+        }
+    }
+
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(BalanceEntity balanceEntity) {
         if (iban == null) {
@@ -49,7 +57,7 @@ public class AccountEntity {
         }
 
         return TransactionalAccount.nxBuilder()
-                .withTypeAndFlagsFrom(Xs2aDevelopersConstants.ACCOUNT_TYPE_MAPPER, accountType)
+                .withTypeAndFlagsFrom(Xs2aDevelopersConstants.ACCOUNT_TYPE_MAPPER, getAccountType())
                 .withBalance(BalanceModule.of(balanceEntity.toAmount()))
                 .withId(
                         IdModule.builder()
