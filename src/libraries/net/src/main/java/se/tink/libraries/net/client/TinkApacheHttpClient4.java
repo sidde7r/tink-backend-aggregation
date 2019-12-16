@@ -1,4 +1,4 @@
-package se.tink.libraries.net;
+package se.tink.libraries.net.client;
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -61,6 +61,7 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpParams;
+import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;
 
 /**
  * A {@link Client} that utilizes the Apache HTTP Client to send and receive HTTP request and

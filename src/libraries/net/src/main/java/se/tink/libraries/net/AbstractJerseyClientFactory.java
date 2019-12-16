@@ -35,6 +35,8 @@ import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.libraries.net.client.TinkApacheHttpClient4;
+import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;
 
 public abstract class AbstractJerseyClientFactory {
 

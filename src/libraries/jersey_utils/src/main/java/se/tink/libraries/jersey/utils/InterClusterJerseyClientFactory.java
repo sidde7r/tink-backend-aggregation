@@ -26,8 +26,8 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import se.tink.libraries.net.TinkApacheHttpClient4;
-import se.tink.libraries.net.TinkApacheHttpClient4Handler;
+import se.tink.libraries.net.client.TinkApacheHttpClient4;
+import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;
 
 // The client built by this factory must be used when communicating from AND to the
 // aggregation cluster.

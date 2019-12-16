@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import se.tink.libraries.net.TinkApacheHttpClient4;
+import se.tink.libraries.net.client.TinkApacheHttpClient4;
 
 /** Stores a list of cookies that can be serialized with Jacksson */
 public class CookieContainer {

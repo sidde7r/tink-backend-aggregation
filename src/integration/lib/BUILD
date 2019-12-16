@@ -67,6 +67,8 @@ java_library(
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",
         "//src/libraries/net/src/main/java/se/tink/libraries/net",
+        "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
+        "//src/libraries/net/src/main/java/se/tink/libraries/net/client/handler",
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//src/libraries/strings",

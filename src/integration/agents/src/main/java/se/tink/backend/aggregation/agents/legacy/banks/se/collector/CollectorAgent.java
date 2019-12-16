@@ -45,7 +45,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.net.TinkApacheHttpClient4;
+import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
