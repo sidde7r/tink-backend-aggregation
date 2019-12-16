@@ -37,6 +37,7 @@ public class BelfiusAgentTest {
     @Before
     public void before() {
         helper.before();
+        usernamePasswordHelper.before();
     }
 
     @AfterClass
