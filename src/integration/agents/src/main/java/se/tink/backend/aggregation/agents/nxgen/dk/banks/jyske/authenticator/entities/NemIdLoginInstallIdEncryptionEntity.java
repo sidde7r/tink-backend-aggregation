@@ -6,9 +6,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class NemIdLoginInstallIdEncryptionEntity implements Encryptable {
 
-    private final String installId;
-    private final String userId;
-    private final String pinCode;
+    private String installId;
+    private String userId;
+    private String pinCode;
+
+    public NemIdLoginInstallIdEncryptionEntity() {}
 
     public NemIdLoginInstallIdEncryptionEntity(String userId, String pinCode, String installId) {
         this.userId = userId;
