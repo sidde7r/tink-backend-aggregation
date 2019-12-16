@@ -1,25 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
-import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers.USER_AGENT;
-
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller.IngCardReaderAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.IngTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.IngTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.creditcard.IngCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.IngInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.IngTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.IngTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transferdestination.IngTransferDestinationFetcher;
@@ -32,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAut
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -50,6 +53,7 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
                 ProgressiveAuthAgent {
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
@@ -57,6 +61,7 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final InvestmentRefreshController investmentRefreshController;
     private final AutoAuthenticationProgressiveController authenticator;
 
     public IngAgent(
@@ -70,6 +75,8 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.investmentRefreshController = constructInvestmentRefreshController();
+
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
 
@@ -85,7 +92,7 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setUserAgent(USER_AGENT);
+        client.setUserAgent(Headers.USER_AGENT);
         client.setFollowRedirects(false);
         client.addFilter(new IngHttpFilter());
         client.addFilter(
@@ -154,6 +161,18 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
                 metricRefreshController, updateController, creditCardFetcher, creditCardFetcher);
     }
 
+    private InvestmentRefreshController constructInvestmentRefreshController() {
+        final IngInvestmentAccountFetcher investmentAccountFetcher =
+                new IngInvestmentAccountFetcher(apiClient, ingHelper);
+        return new InvestmentRefreshController(
+                metricRefreshController,
+                updateController,
+                investmentAccountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(investmentAccountFetcher, 1)));
+    }
+
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
@@ -191,5 +210,15 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
     @Override
     public boolean login() throws Exception {
         throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 }
