@@ -596,6 +596,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void cacheIdentityData(IdentityData identityData) {
         this.identityData = identityData;
+        if (identityData != null) {
+            log.info("Identity data is cached in context");
+        } else {
+            log.info("Identity data is null, so it will not be cached");
+        }
     }
 
     public se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
@@ -619,6 +624,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     public void sendIdentityToIdentityAggregatorService() {
 
         if (identityData == null) {
+            log.info("Identity data is null, skipping identity data update request");
             return;
         }
 
@@ -632,6 +638,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         try {
             controllerWrapper.updateIdentityData(updateIdentityDataRequest);
+            log.info("Identity data is successfully updated");
         } catch (UniformInterfaceException e) {
             log.error(
                     "Identity update request failed, response: "

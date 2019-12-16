@@ -158,6 +158,7 @@ public final class RefreshExecutorUtils {
                     }
                     break;
                 case IDENTITY_DATA:
+                    log.info("Trying to fetch and cache identity data");
                     context.cacheIdentityData(
                             ((RefreshIdentityDataExecutor) agent)
                                     .fetchIdentityData()
