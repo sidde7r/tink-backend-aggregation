@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationServiceConfig
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderConfigurationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.S3StorageConfiguration;
-import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceConfiguration;
+import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.metrics.prometheus.PrometheusConfiguration;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;

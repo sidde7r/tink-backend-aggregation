@@ -7,6 +7,7 @@ java_library(
     deps = [
         "//src/integration/lib:annotations",
         "//src/integration/tpp_secrets_service/client:entities",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/configuration",
         "//src/integration/tpp_secrets_service/proto:lib",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",

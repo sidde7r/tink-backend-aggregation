@@ -188,6 +188,7 @@ java_library(
         "//src/integration/signableoperation:enums",
         "//src/integration/signableoperation:rpc",
         "//src/integration/tpp_secrets_service/client",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/configuration",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
