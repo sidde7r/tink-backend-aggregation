@@ -7,12 +7,9 @@ java_binary(
     main_class = "se.tink.backend.aggregation.register.serviceproviders.danskebank.DanskebankRegisterCommand",
     visibility = ["//visibility:public"],
     deps = [
-        "//src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register:psd2-register",
-        "//src/integration/agents",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_auth0_java_jwt",
