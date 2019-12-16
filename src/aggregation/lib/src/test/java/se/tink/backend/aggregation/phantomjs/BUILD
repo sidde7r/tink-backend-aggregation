@@ -5,6 +5,7 @@ junit_test(
     srcs = glob(["*.java"]),
     data = [
         "//tools:phantomjs_linux",
+        "//tools:phantomjs_mac",
     ],
     visibility = ["//visibility:public"],
     deps = [

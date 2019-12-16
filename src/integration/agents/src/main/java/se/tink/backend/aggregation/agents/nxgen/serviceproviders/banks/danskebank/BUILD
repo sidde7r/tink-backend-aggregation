@@ -1,6 +1,10 @@
 java_library(
     name = "danskebank",
     srcs = glob(["**/*.java"]),
+    data = [
+        "//tools:phantomjs_linux",
+        "//tools:phantomjs_mac",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/account:enums",

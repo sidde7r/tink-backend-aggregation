@@ -16,8 +16,6 @@ java_library(
         "//data:tesseract_training_set",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -126,7 +124,6 @@ java_library(
         "//third_party:org_springframework_spring_expression",
         "//third_party:zxing-qrcode",
         "@io_reactivex_rxjava3_rxjava",
-        "@selenium//:com_codeborne_phantomjsdriver",
     ],
 )
 
@@ -140,8 +137,6 @@ junit_test(
         "//data:cryptography_test",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
