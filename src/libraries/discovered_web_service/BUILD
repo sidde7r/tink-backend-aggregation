@@ -3,7 +3,7 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/discovery",
+        "//src/libraries/discovery/src/main/java/se/tink/libraries/discovery",
         "//src/libraries/http_client",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",

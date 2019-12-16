@@ -257,7 +257,7 @@ java_library(
         "//src/libraries/concurrency",
         "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/date",
-        "//src/libraries/discovery",
+        "//src/libraries/discovery/src/main/java/se/tink/libraries/discovery",
         "//src/libraries/draining",
         "//src/libraries/executor_utils",
         "//src/libraries/http:http_utils",
