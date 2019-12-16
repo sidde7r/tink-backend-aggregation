@@ -87,6 +87,33 @@ public class InstrumentModuleTest {
     }
 
     @Test
+    public void buildWithMissingAapAndProfit() {
+        InstrumentModule instrumentModule =
+                InstrumentModule.builder()
+                        .withType(InstrumentType.FUND)
+                        .withId(INSTRUMENT_ID_MODULE)
+                        .withMarketPrice(5d)
+                        .withMarketValue(20d)
+                        .withAverageAcquisitionPrice(null)
+                        .withCurrency("SEK")
+                        .withQuantity(20d)
+                        .withProfit(null)
+                        .setTicker("ticker")
+                        .build();
+
+        assertEquals(InstrumentType.FUND, instrumentModule.getType());
+        assertSame(INSTRUMENT_ID_MODULE, instrumentModule.getInstrumentIdModule());
+        assertEquals(5, instrumentModule.getPrice(), 0);
+        assertEquals(20, instrumentModule.getMarketValue(), 0);
+        assertEquals("SEK", instrumentModule.getCurrency());
+        assertEquals(20, instrumentModule.getQuantity(), 0);
+        assertEquals("ticker", instrumentModule.getTicker());
+        assertNull(instrumentModule.getRawType());
+        assertNull(instrumentModule.getAverageAcquisitionPrice());
+        assertNull(instrumentModule.getProfit());
+    }
+
+    @Test
     public void buildWithTicker() {
         InstrumentModule instrumentModule =
                 InstrumentModule.builder()
