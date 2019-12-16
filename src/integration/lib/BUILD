@@ -52,7 +52,6 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
         "//src/libraries/account_identifier",
-        "//src/libraries/cache",
         "//src/libraries/cryptography",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
