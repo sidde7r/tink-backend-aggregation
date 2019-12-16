@@ -1402,8 +1402,10 @@ java_library(
     name = "org_springframework_spring_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@commons_logging_commons_logging//jar",
         "@org_springframework_spring_core//jar",
+    ],
+    runtime_deps = [
+        "@commons_logging_commons_logging//jar",
     ],
 )
 
@@ -1411,8 +1413,10 @@ java_library(
     name = "org_springframework_spring_expression",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_springframework_spring_core//jar",
         "@org_springframework_spring_expression//jar",
+    ],
+    runtime_deps = [
+        "@org_springframework_spring_core//jar",
     ],
 )
 
