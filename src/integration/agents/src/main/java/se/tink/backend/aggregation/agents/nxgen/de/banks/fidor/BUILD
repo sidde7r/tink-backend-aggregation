@@ -1,6 +1,10 @@
 java_library(
     name = "fidor",
     srcs = glob(["**/*.java"]),
+    data = [
+        "//tools:phantomjs_linux",
+        "//tools:phantomjs_mac",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/amount",
