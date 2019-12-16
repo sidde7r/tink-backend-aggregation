@@ -286,47 +286,6 @@ public class WebdriverHelper {
                 .click();
     }
 
-    private void initBrowser(NemIdParametersV1 nemIdParameters) {
-        String baseUrl = nemIdParameters.getInitialUrl().get();
-        driver.get(baseUrl);
-
-        waitSomeMillis(WAIT_FOR_INIT_MILLIS);
-
-        String currentUrl = driver.getCurrentUrl();
-        for (int i = 0; i < 10; i++) {
-            Optional<String> filteredDomain =
-                    Optional.ofNullable(currentUrl)
-                            .map(URI::create)
-                            .map(URI::getHost)
-                            .filter(host -> baseUrl.contains(host));
-            if (filteredDomain.isPresent()) {
-                return;
-            }
-            driver.get(baseUrl);
-            waitSomeMillis(WAIT_FOR_INIT_MILLIS);
-            currentUrl = driver.getCurrentUrl();
-        }
-
-        // if we get here we failed to get the initial page
-        LOGGER.debug("PhantomJS current(reported) URL: " + currentUrl);
-        LOGGER.debug("PHANTOMJS LOGS: ");
-        driver.manage()
-                .logs()
-                .getAvailableLogTypes()
-                .forEach(
-                        logName -> {
-                            LOGGER.debug(logName);
-                            driver.manage()
-                                    .logs()
-                                    .get(logName)
-                                    .forEach(l -> LOGGER.debug(l.toString()));
-                        });
-
-        logErrorUsingPhantomJS(
-                "Current URL is not matching requested (did we get redirected?): " + currentUrl);
-        throw new IllegalStateException("Bad URL, check protocol: " + currentUrl);
-    }
-
     private void logErrorUsingPhantomJS(String errorMessage) {
         // if we get here we failed to get the initial page
         LOGGER.debug("PhantomJS current(reported) URL: " + driver.getCurrentUrl());

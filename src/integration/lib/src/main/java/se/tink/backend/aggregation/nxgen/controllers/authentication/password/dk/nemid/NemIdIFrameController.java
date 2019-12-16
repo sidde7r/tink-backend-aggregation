@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid;
 
 import com.google.common.base.Strings;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -148,15 +147,6 @@ public class NemIdIFrameController {
 
         throw new IllegalStateException(
                 String.format("[nemid] Unknown login error '%s'.", errorText));
-    }
-
-    // TODO: implement retry here since the server can return 500
-    private void injectJavascript(NemIdParametersV1 nemIdParameters) {
-
-        String html = String.format(NemIdConstantsV2.BASE_HTML, nemIdParameters.getNemIdElements());
-        String b64Html = Base64.getEncoder().encodeToString(html.getBytes());
-
-        webdriverHelper.executeJavascript("document.write(atob(\"" + b64Html + "\"));");
     }
 
     private void setUserName(String username) {
