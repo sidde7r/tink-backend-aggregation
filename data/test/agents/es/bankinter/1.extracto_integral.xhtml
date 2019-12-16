@@ -1915,6 +1915,187 @@
       </div>
     </footer>
   </div>
+  	<!-- chatbot -->
+  	<div id="chatbot" class="chatbot">
+  		<script><!--
+
+  			var extId;
+  			var token;	
+  			var gestor;
+  			var env;
+  			var urls = ["https://bankinter-test.moxtra.com", "https://bankinter-v6dev.moxtra.com", "https://bankinter-v6.moxtra.com"];
+  			var client_id = ["aaaaaaaaaaa", "aaaaaaaaaab", "aaaaaaaaaac"];
+              var client_secret = ["aaaaaaaaaad", "aaaaaaaaaaae", "aaaaaaaaaaf"];
+              var org_id = ["ooooooooooooooooooooooo", "ooooooooooooooooooooooo", "ooooooooooooooooooooooo"];
+
+			
+  			//console.log('start loading Moxtra Chat');
+  			if (getUserExternalId()){
+  				if (getMoxtraGestor(extId)){
+  					getMoxtraAccessToken(extId);
+  				}else{
+  					var elem = document.getElementById('chatbot');
+  				    elem.parentNode.removeChild(elem);
+  					//chatbot.classList.add('chatbot--hidden');
+  				}
+  			}else{
+  				//document.getElementById('chatbot')
+  				var elem = document.getElementById('chatbot');
+  			    elem.parentNode.removeChild(elem);
+  				//chatbot.classList.add('chatbot--hidden');
+  			}
+  			//console.log('end loading Moxtra Chat')
+
+  			function getUserExternalId(){
+  				//console.log('start getUserExternalId');
+  				var result = false;
+  				try{
+  					var xmlhttp = new XMLHttpRequest();
+  					var url = "/gestion/rest/externalid/getExternalsIds";
+  					xmlhttp.onreadystatechange = function() {
+  						if (this.readyState == 4
+  								&& this.status == 200
+  								&& this.responseText) {
+  							var obj = JSON.parse(this.responseText);
+  							extId = obj[0].keyExterna;
+  							//console.log('ExtID:'+extId);
+  							result = true;
+  						}
+  					};
+  					xmlhttp.open("GET", url, false);
+  					xmlhttp.setRequestHeader("Content-type",
+  							"application/json");
+  					xmlhttp.setRequestHeader("Accept",
+  							"application/json");
+  					xmlhttp.send();
+  					//console.log('end getUserExternalId');
+  				}catch (e){
+  					//El usuario no tiene ExternalID
+  				}
+  				return result;
+  			}
+
+  			function getMoxtraAccessToken(userId){
+  				try{
+  					//console.log('start getMoxtraAccessToken');
+  					var data = {
+  							client_id: client_id[env],
+  						    client_secret: client_secret[env],
+  						    unique_id: userId,
+  						    org_id: org_id[env]
+  					    };
+		
+  					    var json = JSON.stringify(data);
+  					var xmlhttp = new XMLHttpRequest();
+  					var url = urls[env] + "/v1/core/oauth/token";
+  					var accessToken;
+  					xmlhttp.onreadystatechange = function() {
+  						if (this.readyState == 4
+  								&& this.status == 200
+  								&& this.responseText) {
+  								var obj = JSON.parse(this.responseText);
+  								accessToken = obj.access_token;
+  								//console.log('accessToken:'+accessToken);
+  								token = accessToken;
+  						}
+  					};
+  					xmlhttp.open("POST", url, false);
+  					xmlhttp.setRequestHeader("Content-type",
+  							"application/json");
+  					xmlhttp.setRequestHeader("Accept",
+  							"application/json");
+  					xmlhttp.send(json);
+  					//console.log('end getMoxtraAccessToken');
+  				}catch (e) {
+  					//console.log('ERROR: No se ha establecido comunicacion con MOXTRA')
+  				}
+  			}
+
+  			function getMoxtraGestor(userId){
+  				//console.log('start getMoxtraGestor');
+  				var result = false;
+  				try{
+  					var xmlhttp = new XMLHttpRequest();
+  					var url = "/file_source/nbol/moxtra/usuarios-moxtra.json";
+  					xmlhttp.open("GET", url, false);
+  					xmlhttp.send(null);
+  					var json = JSON.parse(xmlhttp.responseText);
+  					//console.log(json);
+  					for (x in json) {
+  						//console.log(x);
+  						//console.log(json[x].uId);
+  						if (userId == json[x].uId){
+  							gestor = json[x].gId;
+  							env = json[0].env;
+  							//console.log('gestor:'+gestor);
+  							result = true;
+  							break;
+  						}
+  					} 
+  					//console.log('end getMoxtraGestor');
+  				}catch (e){
+  					// No se ha recuperaro el JSON de los usuarios de MOXTRA
+  				}
+  				return result;
+  			}
+		
+  //--></script>
+  		<!-- Label -->
+  		<div class="chatbot__label">¿Necesitas ayuda?</div>
+
+  		<div class="chatbot__container">
+
+  			<!-- header -->
+  			<div class="chatbot__header">
+  				<div class="chatbot__header-info">
+  					<div class="chatbot__header-icon pictoDSL pictoDSL-comments-16 pictoDSL-24" aria-hidden="true"></div>
+  					<div class="chatbot__header-title">
+  						<span class="chatbot__header-title-text">Chat</span> <span class="chatbot__header-mesages">Envía tu mensaje</span>
+  					</div>
+  				</div>
+
+  				<div class="chatbot__header-actions">
+  					<a href="/conversaciones/secure/moxtra.xhtml" class="chatbot__options pictoDSL pictoDSL-more-16 pictoDSL-32">
+                          <span class="sr-only">Opciones chatbot</span>
+                      </a>
+  					<button id="chatbot__close-button" class="chatbot__close-button pictoDSL pictoDSL-close-16 pictoDSL-24">
+  						<span class="sr-only">Cerrar chatbot</span>
+  					</button>
+  				</div>
+  			</div>
+
+  			<!-- content -->
+  			<div id="box" class="chatbot__content">
+  				<script id="libMoxtra" type="text/javascript" src="https://bankinter-v6.moxtra.com/web/websdk/dist/mepsdk.js"><!--
+
+  //--></script>
+  				<script type="text/javascript"><!--
+
+  							try{
+  								mepsdk.setup({
+  											baseDomain : urls[env], //replace with YOUR_MOXTRA_DOMAIN
+  											deployDirectory : 'web',
+  											accessToken : token // replace with the access token of the user
+  										});
+  								//mepsdk.openRelationChatWithUniqueID(gestor,'#box');
+  	                            mepsdk.openRelationChatWithEmail(gestor,'#box');
+  							}catch (e){
+  								// ERROR comunicando con MOXTRA								
+  							}
+						
+  //--></script>
+  			</div>
+
+  			<!-- expand button -->
+  			<button class="chatbot__expand-button pictoDSL pictoDSL-plus-16 pictoDSL-24" id="chatbot__expand-button">
+  				<span class="sr-only">Expandir chatbot</span>
+  			</button>
+
+  		</div>
+  		<script type="text/javascript" src="/res/js/chatbot.js"><!--
+
+  //--></script>
+  	</div>
   <!--BK_MODAL-->
   <!--BK_MODAL-->
 </main>

@@ -8,6 +8,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -19,6 +21,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.apache.commons.io.IOUtils;
+import org.assertj.core.util.VisibleForTesting;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,6 +36,28 @@ public class HtmlResponse {
     protected final Document document;
     private static final XPathFactory xpathFactory = XPathFactory.newInstance();
     private final DecimalFormat amountFormat;
+
+    /**
+     * Removes occurrences of "--" from HTML comments, since it cannot be parsed. All occurrences of
+     * "--" in comments are replaced with "__".
+     *
+     * @param body HTML which may have "--" in comments.
+     * @return body with occurrences of "--" in comments replaced with "__"
+     */
+    @VisibleForTesting
+    protected static String removeDoubleDashesFromComments(String body) {
+        final Pattern commentPattern = Pattern.compile("<!--(.*?)-->", Pattern.DOTALL);
+        final Matcher matcher = commentPattern.matcher(body);
+        final StringBuffer buffer = new StringBuffer();
+        while (matcher.find()) {
+            final String comment = body.substring(matcher.start() + 4, matcher.end() - 3);
+            final String replacedComment =
+                    "<!--" + Matcher.quoteReplacement(comment.replace("--", "__")) + "-->";
+            matcher.appendReplacement(buffer, replacedComment);
+        }
+        matcher.appendTail(buffer);
+        return buffer.toString();
+    }
 
     protected static Document parseHTML(String body) {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -50,7 +75,9 @@ public class HtmlResponse {
             factory.setFeature(
                     "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 
-            final InputStream inputStream = IOUtils.toInputStream(body, StandardCharsets.UTF_8);
+            final InputStream inputStream =
+                    IOUtils.toInputStream(
+                            removeDoubleDashesFromComments(body), StandardCharsets.UTF_8);
             return factory.newDocumentBuilder().parse(inputStream);
         } catch (SAXException | IOException | ParserConfigurationException e) {
             throw new IllegalStateException("Could not parse HTML response", e);
