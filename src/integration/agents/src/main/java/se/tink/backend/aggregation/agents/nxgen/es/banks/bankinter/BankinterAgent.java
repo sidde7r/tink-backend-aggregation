@@ -4,16 +4,19 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator.BankinterAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.BankinterCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.identitydata.BankinterIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.investment.BankinterInvestmentFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.loan.BankinterLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.BankinterTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.session.BankinterSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -23,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -34,12 +38,14 @@ public final class BankinterAgent extends NextGenerationAgent
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshLoanAccountsExecutor {
 
     private final BankinterApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final LoanRefreshController loanRefreshController;
 
     public BankinterAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -49,6 +55,7 @@ public final class BankinterAgent extends NextGenerationAgent
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         investmentRefreshController = constructInvestmentRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
+        loanRefreshController = constructLoanRefreshController();
     }
 
     @Override
@@ -115,6 +122,18 @@ public final class BankinterAgent extends NextGenerationAgent
                         new TransactionKeyPaginationController<>(creditCardFetcher)));
     }
 
+    private LoanRefreshController constructLoanRefreshController() {
+        final BankinterLoanFetcher loanFetcher = new BankinterLoanFetcher(apiClient);
+
+        return new LoanRefreshController(
+                metricRefreshController,
+                updateController,
+                loanFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(loanFetcher)));
+    }
+
     @Override
     protected SessionHandler constructSessionHandler() {
         return new BankinterSessionHandler(apiClient);
@@ -144,5 +163,15 @@ public final class BankinterAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 }

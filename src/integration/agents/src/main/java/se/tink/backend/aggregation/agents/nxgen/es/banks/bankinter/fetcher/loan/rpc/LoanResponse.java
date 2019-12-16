@@ -1,0 +1,185 @@
+package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.loan.rpc;
+
+import com.google.common.collect.Maps;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
+import se.tink.libraries.amount.ExactCurrencyAmount;
+
+public class LoanResponse extends HtmlResponse {
+    final Map<String, List<String>> dataValues;
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public LoanResponse(String body) {
+        super(body);
+        this.dataValues = parseDataValues();
+    }
+
+    private List<String> listOfNodeValues(NodeList nodes) {
+        final List<String> list = new ArrayList<>();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            list.add(nodes.item(i).getTextContent());
+        }
+        return list;
+    }
+
+    private Map<String, List<String>> parseDataValues() {
+        final HashMap<String, List<String>> dataValues = new HashMap<>();
+
+        // Parse values from "Datos del préstamo"
+        final NodeList dataNodes =
+                evaluateXPath("//div[contains(@class,'pensionPlanSUBData')]/div", NodeList.class);
+        for (int i = 0; i < dataNodes.getLength(); i++) {
+            parseLoanDataItem(dataNodes.item(i))
+                    .map(entry -> dataValues.put(entry.getKey(), entry.getValue()));
+        }
+
+        // Parse values from "Condiciones del préstamo"
+        final NodeList nodes = evaluateXPath("//div[contains(@class,'rowSaving')]", NodeList.class);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            parseLoanConditionsItem(nodes.item(i))
+                    .map(entry -> dataValues.put(entry.getKey(), entry.getValue()));
+        }
+
+        return dataValues;
+    }
+
+    private Optional<Entry<String, List<String>>> parseLoanDataItem(Node node) {
+        final Node keyNode = evaluateXPath(node, "h3", Node.class);
+        final NodeList valueNodes = evaluateXPath(node, "span", NodeList.class);
+        if (!Objects.isNull(keyNode) && !Objects.isNull(valueNodes) && valueNodes.getLength() > 0) {
+            return Optional.of(
+                    Maps.immutableEntry(
+                            keyNode.getTextContent().trim().toLowerCase(),
+                            listOfNodeValues(valueNodes)));
+        }
+
+        return Optional.empty();
+    }
+
+    private Optional<Entry<String, List<String>>> parseLoanConditionsItem(Node node) {
+        final Node keyNode = evaluateXPath(node, "span[1]", Node.class);
+        final Node valueNode = evaluateXPath(node, "span[2]", Node.class);
+        if (!Objects.isNull(keyNode) && !Objects.isNull(valueNode)) {
+            return Optional.of(
+                    Maps.immutableEntry(
+                            keyNode.getTextContent().trim().toLowerCase(),
+                            Collections.singletonList(
+                                    valueNode.getTextContent().replaceAll("[\\s\\u00a0]+", ""))));
+        }
+
+        return Optional.empty();
+    }
+
+    public LoanAccount toLoanAccount() {
+        final String accountNumber = getIban();
+        final AccountIdentifier iban =
+                AccountIdentifier.create(AccountIdentifier.Type.IBAN, accountNumber);
+        final String formattedIban = iban.getIdentifier(new DisplayAccountIdentifierFormatter());
+        return LoanAccount.nxBuilder()
+                .withLoanDetails(
+                        LoanModule.builder()
+                                .withType(Type.MORTGAGE)
+                                .withBalance(getBalance())
+                                .withInterestRate(getInterestRate().doubleValue())
+                                .setApplicants(getApplicants())
+                                .setInitialBalance(getInitialBalance())
+                                .setLoanNumber(accountNumber)
+                                .setInitialDate(getInitialDate())
+                                .setMonthlyAmortization(getMonthlyAmortization())
+                                .setNextDayOfTermsChange(getNextDayOfTermsChange())
+                                .setNumMonthsBound(getNumMonthsBound())
+                                .build())
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountNumber)
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(formattedIban)
+                                .addIdentifier(iban)
+                                .build())
+                .build();
+    }
+
+    private List<String> getApplicants() {
+        return dataValues.get("titulares");
+    }
+
+    private BigDecimal getInterestRate() {
+        final String value = dataValues.get("actual").get(0);
+        return parseValue(value).divide(BigDecimal.valueOf(100));
+    }
+
+    private String getDataValue(String key) {
+        return dataValues.get(key).get(0);
+    }
+
+    private String getIban() {
+        return getDataValue("prestamo");
+    }
+
+    private String getAssociatedAccount() {
+        return getDataValue("cuenta");
+    }
+
+    private ExactCurrencyAmount getBalance() {
+        return parseAmount(getDataValue("deuda pendiente")).negate();
+    }
+
+    private ExactCurrencyAmount getInitialBalance() {
+        return parseAmount(getDataValue("importe inicial")).negate();
+    }
+
+    private ExactCurrencyAmount getMonthlyAmortization() {
+        return parseAmount(getDataValue("importe de la cuota"));
+    }
+
+    private LocalDate getInitialDate() {
+        return LocalDate.parse(getDataValue("fecha inicio"), DATE_FORMATTER);
+    }
+
+    private LocalDate getNextDayOfTermsChange() {
+        return LocalDate.parse(getDataValue("fecha revisión"), DATE_FORMATTER);
+    }
+
+    private int getNumMonthsBound() {
+        final String stringValue = getDataValue("plazo de revisión");
+        final Matcher matcher =
+                Pattern.compile("^(?<value>\\d+)(?<unit>[^\\d]+)$").matcher(stringValue);
+        if (!matcher.find()) {
+            throw new IllegalStateException("Cannot parse months bound value: " + stringValue);
+        }
+
+        final int value = Integer.parseInt(matcher.group("value"));
+        final String unit = matcher.group("unit");
+        if (unit.equals("mes(es)")) {
+            return value;
+        } else {
+            throw new IllegalStateException("Cannot parse months bound value: " + stringValue);
+        }
+    }
+
+    @Override
+    protected ExactCurrencyAmount parseAmount(String amountString) {
+        return super.parseAmount(amountString.replace("EUROS", "€"));
+    }
+}
