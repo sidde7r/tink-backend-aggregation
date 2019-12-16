@@ -1,6 +1,6 @@
 java_library(
     name = "net",
-    srcs = glob(["src/main/**/*.java"]),
+    srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//third_party:com_fasterxml_jackson_core_jackson_databind",

@@ -55,7 +55,7 @@ java_library(
         "//src/libraries/metrics:prometheus",
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",
-        "//src/libraries/net",
+        "//src/libraries/net/src/main/java/se/tink/libraries/net",
         "//src/libraries/pair",
         "//src/libraries/phone_number_utils",
         "//src/libraries/serialization",

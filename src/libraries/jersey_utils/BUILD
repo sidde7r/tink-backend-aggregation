@@ -6,7 +6,7 @@ java_library(
     data = ["//data:tink_ca"],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/net",
+        "//src/libraries/net/src/main/java/se/tink/libraries/net",
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         "//third_party:com_sun_jersey_jersey_client",
