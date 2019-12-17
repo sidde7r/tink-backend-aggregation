@@ -6,7 +6,14 @@ set -e
 TEMPFILE=$(mktemp)
 
 set +e
-bazel $@ 2>&1 | tee "$TEMPFILE"
+
+# If bazelisk is installed, use it.
+if [ -x "$(command -v bazelisk)" ]; then
+    bazelisk $@ 2>&1 | tee "$TEMPFILE"
+else
+    bazel $@ 2>&1 | tee "$TEMPFILE"
+fi
+
 STATUS=$?
 if [ $STATUS -ne 0 ]; then
     rm "$TEMPFILE"
