@@ -82,7 +82,12 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
         this.expectLoggedIn = builder.isExpectLoggedIn();
         this.context =
                 new NewAgentTestContext(
-                        this.user, this.credential, builder.getTransactionsToPrint(), "", "");
+                        this.user,
+                        this.credential,
+                        builder.getTransactionsToPrint(),
+                        "",
+                        "",
+                        provider);
         this.supplementalInformationController =
                 new SupplementalInformationController(this.context, this.credential);
         agentTestServerClient = AgentTestServerClient.getInstance();

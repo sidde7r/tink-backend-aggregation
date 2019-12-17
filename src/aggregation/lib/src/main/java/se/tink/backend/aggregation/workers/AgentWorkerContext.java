@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -59,6 +60,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected List<Transfer> transfers = Lists.newArrayList();
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;
+    private ProviderSessionCacheController providerSessionCacheController;
     // Cached accounts have not been sent to system side yet.
     protected Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
     // Updated accounts have been sent to System side and has been updated with their stored Tink Id
@@ -82,6 +84,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             CuratorFramework coordinationClient,
             AggregatorInfo aggregatorInfo,
             SupplementalInformationController supplementalInformationController,
+            ProviderSessionCacheController providerSessionCacheController,
             ControllerWrapper controllerWrapper,
             String clusterId,
             String appId) {
@@ -107,6 +110,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.setMetricRegistry(metricRegistry);
 
         this.supplementalInformationController = supplementalInformationController;
+        this.providerSessionCacheController = providerSessionCacheController;
         this.controllerWrapper = controllerWrapper;
     }
 
@@ -660,5 +664,37 @@ public class AgentWorkerContext extends AgentContext implements Managed {
      */
     static String cleanMetricName(String proposal) {
         return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
+    }
+
+    @Override
+    public String getProviderSessionCache() {
+        String financialInstitutionId = request.getProvider().getFinancialInstitutionId();
+        DistributedBarrier lock =
+                new DistributedBarrier(
+                        coordinationClient,
+                        BarrierName.build(
+                                BarrierName.Prefix.PROVIDER_SESSION_INFORMATION,
+                                financialInstitutionId));
+        try {
+            // Reset barrier.
+            lock.removeBarrier();
+            lock.setBarrier();
+
+            String providerSessionCacheInformation =
+                    providerSessionCacheController.getProviderSessionCache(financialInstitutionId);
+
+            return providerSessionCacheInformation;
+
+        } catch (Exception e) {
+            log.error("Caught exception while getting provider session cache information", e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public void setProviderSessionCache(String value) {
+        String financialInstitutionId = request.getProvider().getFinancialInstitutionId();
+        providerSessionCacheController.setProviderSessionCache(financialInstitutionId, value);
     }
 }

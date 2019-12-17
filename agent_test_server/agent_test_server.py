@@ -112,6 +112,26 @@ def get_supplemental(key, timeout_seconds):
     return jsonify(answers)
 
 
+@app.route("/api/v1/provider-session-cache/<key>", methods=("POST",))
+def request_provider_session_cache(key):
+    if not request.json:
+        return None
+
+    value = request.get_json()
+
+    # Put the answers on the queue so that it can be picked up
+    # when the agent asks for the provider session cache.
+    queue.put(key, value)
+
+    return "", 204
+
+
+@app.route("/api/v1/provider-session-cache/<key>", methods=("GET",))
+def get_provider_session_cache(key):
+    answers = queue.get(key, 0)
+    return jsonify(answers)
+
+
 # only support web browser as app.
 @app.route("/api/v1/thirdparty/open", methods=("POST",))
 def thirdparty_open():

@@ -53,7 +53,10 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         final String marketInUppercase = request.getProvider().getMarket().toUpperCase();
         apiClient =
                 new IngBaseApiClient(
-                        client, persistentStorage, marketInUppercase, request.getProvider());
+                        client,
+                        persistentStorage,
+                        marketInUppercase,
+                        providerSessionCacheController);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 

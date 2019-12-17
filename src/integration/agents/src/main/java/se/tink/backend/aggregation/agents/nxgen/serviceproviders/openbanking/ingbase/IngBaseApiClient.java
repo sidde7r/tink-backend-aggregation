@@ -5,7 +5,8 @@ import com.google.gson.Gson;
 import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
@@ -13,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.QueryKeys;
@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -45,16 +46,16 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class IngBaseApiClient {
+public final class IngBaseApiClient {
 
-    protected final TinkHttpClient client;
-    protected final PersistentStorage persistentStorage;
+    private final TinkHttpClient client;
+    private final PersistentStorage persistentStorage;
     private final String market;
     private EidasIdentity eidasIdentity;
     private IngBaseConfiguration configuration;
     private EidasProxyConfiguration eidasProxyConfiguration;
-    private final Provider provider;
     private String certificateSerial;
+    private final ProviderSessionCacheController providerSessionCacheController;
 
     private static final Logger logger = LoggerFactory.getLogger(IngBaseApiClient.class);
 
@@ -62,11 +63,11 @@ public class IngBaseApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             String market,
-            Provider provider) {
+            ProviderSessionCacheController providerSessionCacheController) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.market = market;
-        this.provider = provider;
+        this.providerSessionCacheController = providerSessionCacheController;
     }
 
     public IngBaseConfiguration getConfiguration() {
@@ -178,18 +179,24 @@ public class IngBaseApiClient {
 
     private TokenResponse getApplicationAccessToken() {
         /*
-           Reuse the application access token which saved in the provider if it is still valid
+           Reuse the application access token which saved in the cache if it is still valid
         */
-        final String providerPayload = provider.getPayload();
-        if (!Objects.isNull(providerPayload)) {
-            try {
-                final TokenResponse response =
-                        new Gson().fromJson(providerPayload, TokenResponse.class);
-                if (!response.hasAccessExpired()) {
-                    return response;
+        Optional<Map<String, String>> cacheInfoOpt =
+                providerSessionCacheController.getProviderSessionCacheInformation();
+        if (cacheInfoOpt.isPresent()) {
+            Map<String, String> cacheInfo = cacheInfoOpt.get();
+            String applicationToken = cacheInfo.get(StorageKeys.APPLICATION_TOKEN);
+            if (applicationToken != null) {
+                try {
+                    logger.debug("Get application token from cache");
+                    final TokenResponse response =
+                            new Gson().fromJson(applicationToken, TokenResponse.class);
+                    if (!response.hasAccessExpired()) {
+                        return response;
+                    }
+                } catch (Exception e) {
+                    logger.warn("Unable to parse payload : " + applicationToken);
                 }
-            } catch (Exception e) {
-                logger.warn("Unable to parse payload : " + providerPayload);
             }
         }
 
@@ -228,10 +235,12 @@ public class IngBaseApiClient {
                         .post(TokenResponse.class, payload);
 
         /*
-           Save the valid application access token to playload
+           Save the valid application access token to cache
         */
         String payloadStr = new Gson().toJson(response);
-        provider.setPayload(payloadStr);
+        Map<String, String> applicationTokenMap = new HashMap<>();
+        applicationTokenMap.put(StorageKeys.APPLICATION_TOKEN, payloadStr);
+        providerSessionCacheController.setProviderSessionCacheInformation(applicationTokenMap);
         return response;
     }
 

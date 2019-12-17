@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -13,6 +14,7 @@ public abstract class NextGenerationAgent extends SubsequentGenerationAgent<Auth
 
     protected final SupplementalInformationHelper supplementalInformationHelper;
     protected final SupplementalInformationController supplementalInformationController;
+    protected final ProviderSessionCacheController providerSessionCacheController;
     private Authenticator authenticator;
 
     protected NextGenerationAgent(
@@ -32,6 +34,8 @@ public abstract class NextGenerationAgent extends SubsequentGenerationAgent<Auth
                 supplementalInformationProvider.getSupplementalInformationController();
         this.supplementalInformationHelper =
                 supplementalInformationProvider.getSupplementalInformationHelper();
+        this.providerSessionCacheController =
+                new ProviderSessionCacheController(providerSessionCacheContext);
     }
 
     protected abstract Authenticator constructAuthenticator();

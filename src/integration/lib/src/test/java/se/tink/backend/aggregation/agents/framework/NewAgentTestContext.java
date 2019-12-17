@@ -27,6 +27,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
@@ -68,6 +69,7 @@ public final class NewAgentTestContext extends AgentContext {
     private final User user;
     private final Credentials credential;
     private final AgentTestServerClient agentTestServerClient;
+    private final Provider provider;
 
     // configuration
     private final int transactionsToPrint;
@@ -77,10 +79,12 @@ public final class NewAgentTestContext extends AgentContext {
             Credentials credential,
             int transactionsToPrint,
             String appId,
-            String clusterId) {
+            String clusterId,
+            Provider provider) {
         this.user = user;
         this.credential = credential;
         this.transactionsToPrint = transactionsToPrint;
+        this.provider = provider;
         this.setClusterId(MoreObjects.firstNonNull(clusterId, TEST_CLUSTERID));
         this.setAppId(MoreObjects.firstNonNull(appId, TEST_APPID));
         agentTestServerClient = AgentTestServerClient.getInstance();
@@ -651,5 +655,18 @@ public final class NewAgentTestContext extends AgentContext {
 
     public void printStatistics() {
         //
+    }
+
+    @Override
+    public String getProviderSessionCache() {
+        log.info(
+                "Requesting provider session cache info for Financial institution id: {} from client.",
+                provider.getFinancialInstitutionId());
+        return agentTestServerClient.getProviderSessionCache(provider.getFinancialInstitutionId());
+    }
+
+    @Override
+    public void setProviderSessionCache(String value) {
+        agentTestServerClient.setProviderSessionCache(provider.getFinancialInstitutionId(), value);
     }
 }

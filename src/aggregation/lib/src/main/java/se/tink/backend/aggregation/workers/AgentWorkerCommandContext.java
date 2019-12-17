@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -73,6 +74,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
             AgentsServiceConfiguration agentsServiceConfiguration,
             AggregatorInfo aggregatorInfo,
             SupplementalInformationController supplementalInformationController,
+            ProviderSessionCacheController providerSessionCacheController,
             ControllerWrapper controllerWrapper,
             String clusterId,
             String appId) {
@@ -82,6 +84,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                 coordinationClient,
                 aggregatorInfo,
                 supplementalInformationController,
+                providerSessionCacheController,
                 controllerWrapper,
                 clusterId,
                 appId);

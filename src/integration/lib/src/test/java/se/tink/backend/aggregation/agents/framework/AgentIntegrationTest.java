@@ -115,7 +115,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         credential,
                         builder.getTransactionsToPrint(),
                         builder.getAppId(),
-                        builder.getClusterId());
+                        builder.getClusterId(),
+                        provider);
 
         this.supplementalInformationController =
                 new SupplementalInformationController(context, credential);

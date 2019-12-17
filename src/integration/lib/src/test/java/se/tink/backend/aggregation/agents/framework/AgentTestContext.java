@@ -53,6 +53,7 @@ public class AgentTestContext extends AgentContext {
     private List<FraudDetailsContent> detailsContents;
     private List<Transfer> transfers = Lists.newArrayList();
     private Credentials credentials;
+    private String providerSessionCacheInformation;
 
     public AgentTestContext(Credentials credentials) {
         LogMasker logMasker =
@@ -373,5 +374,17 @@ public class AgentTestContext extends AgentContext {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getProviderSessionCache() {
+        log.info("Getting provider session cache information");
+        return this.providerSessionCacheInformation;
+    }
+
+    @Override
+    public void setProviderSessionCache(String value) {
+        log.info("Setting provider session cache information");
+        this.providerSessionCacheInformation = value;
     }
 }

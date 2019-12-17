@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents;
 
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
+import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.api.AggregatorInfo;
@@ -18,6 +19,7 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
     protected final AgentContext context;
     private final AgentAggregatorIdentifier agentAggregatorIdentifier;
     protected final SupplementalRequester supplementalRequester;
+    protected final ProviderSessionCacheContext providerSessionCacheContext;
     protected final SystemUpdater systemUpdater;
     protected final MetricContext metricContext;
     protected final CredentialsRequest request;
@@ -27,6 +29,7 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
         this.context = context;
         this.agentAggregatorIdentifier = context;
         this.supplementalRequester = context;
+        this.providerSessionCacheContext = context;
         this.systemUpdater = context;
         this.metricContext = context;
     }

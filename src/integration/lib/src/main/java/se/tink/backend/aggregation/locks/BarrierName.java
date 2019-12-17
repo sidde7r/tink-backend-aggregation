@@ -7,7 +7,8 @@ import com.google.common.base.Objects;
 public class BarrierName {
 
     public enum Prefix {
-        SUPPLEMENTAL_INFORMATION("/locks/supplementCredentials/credentials/");
+        SUPPLEMENTAL_INFORMATION("/locks/supplementCredentials/credentials/"),
+        PROVIDER_SESSION_INFORMATION("/locks/providerSession/financialInstitutionId/");
 
         private final String prefix;
 

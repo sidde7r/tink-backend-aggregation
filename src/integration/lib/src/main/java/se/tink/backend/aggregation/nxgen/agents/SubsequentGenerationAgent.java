@@ -4,6 +4,7 @@ import java.security.Security;
 import java.util.Optional;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.SuperAbstractAgent;
@@ -49,6 +50,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     protected final PersistentStorage persistentStorage;
     protected final SessionStorage sessionStorage;
     protected final Credentials credentials;
+    protected final Provider provider;
     protected final TransactionPaginationHelper transactionPaginationHelper;
     protected final UpdateController updateController;
     protected final MetricRefreshController metricRefreshController;
@@ -80,6 +82,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         context.getLogMasker()
                 .addSensitiveValuesSetObservable(sessionStorage.getSensitiveValuesObservable());
         this.credentials = request.getCredentials();
+        this.provider = request.getProvider();
         this.updateController =
                 new UpdateController(
                         // TODO: Remove when provider uses MarketCode
