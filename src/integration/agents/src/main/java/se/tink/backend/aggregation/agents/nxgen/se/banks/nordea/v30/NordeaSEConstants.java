@@ -311,6 +311,12 @@ public class NordeaSEConstants {
         public static final String HYSTRIX_CIRCUIT_SHORT_CIRCUITED =
                 "Hystrix circuit short".toLowerCase();
         public static final String TIMEOUT_AFTER_MESSAGE = "Timeout after".toLowerCase();
+        public static final String ERROR_CORE_UNKNOWN = "error_core_unknown";
+        public static final String INVALID_PARAMETERS_FOR_PAYMENT =
+                "Invalid parameter(s) for payment";
+        public static final String BESE1076 = "BESE1076".toLowerCase();
+        public static final String OWN_MESSAGE_CONSTRAINTS =
+                "Own message must be between".toLowerCase();
     }
 
     public static class LogTags {
