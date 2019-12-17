@@ -84,7 +84,11 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
         PaymentRecipient paymentRecipient = verifyRecipient(transfer.getDestination(), context);
         validateDestinationMessage(paymentRecipient, transfer.getDestinationMessage());
 
-        signTransfer(context.toCreate(), PaymentSignRequest.create(transfer, paymentRecipient));
+        String firstPayDate = context.retrieveFirstPayDate();
+
+        signTransfer(
+                context.toCreate(),
+                PaymentSignRequest.create(transfer, paymentRecipient, firstPayDate));
     }
 
     @Override

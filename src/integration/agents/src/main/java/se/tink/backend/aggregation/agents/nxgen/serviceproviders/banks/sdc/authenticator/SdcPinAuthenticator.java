@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MultivaluedMap;
-import org.eclipse.jetty.http.HttpStatus;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -95,7 +95,7 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
         if (e instanceof HttpResponseException) {
             HttpResponse response = ((HttpResponseException) e).getResponse();
             int statusCode = response.getStatus();
-            return statusCode == HttpStatus.INTERNAL_SERVER_ERROR_500;
+            return statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR;
         }
 
         return false;

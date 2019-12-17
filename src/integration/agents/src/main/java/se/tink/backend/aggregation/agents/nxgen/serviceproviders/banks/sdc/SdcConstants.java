@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Optional;
-import org.eclipse.jetty.http.HttpStatus;
+import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -284,7 +284,7 @@ public class SdcConstants {
         public static boolean isInternalError(HttpResponseException e) {
             HttpResponse response = e.getResponse();
             int statusCode = response.getStatus();
-            return statusCode == HttpStatus.INTERNAL_SERVER_ERROR_500;
+            return statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR;
         }
     }
 

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc;
 
 import java.util.Optional;
-import org.eclipse.jetty.http.HttpStatus;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
@@ -17,7 +17,7 @@ public class InvalidPinResponse {
 
     public static Optional<InvalidPinResponse> from(HttpResponseException e) {
         HttpResponse response = e.getResponse();
-        if (response.getStatus() != HttpStatus.BAD_REQUEST_400) {
+        if (response.getStatus() != HttpStatus.SC_BAD_REQUEST) {
             return Optional.empty();
         }
         return Optional.of(response.getBody(InvalidPinResponse.class))
