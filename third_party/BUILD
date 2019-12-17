@@ -347,6 +347,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_sun_jersey_contribs_jersey_apache_client4//jar",
+    ],
+    runtime_deps = [
         "@com_sun_jersey_jersey_client//jar",
     ],
 )
@@ -1068,8 +1070,10 @@ java_library(
     name = "org_apache_httpcomponents_httpclient",
     visibility = ["//visibility:public"],
     exports = [
-        "@commons_codec_commons_codec//jar",
         "@org_apache_httpcomponents_httpclient//jar",
+    ],
+    runtime_deps = [
+        "@commons_codec_commons_codec//jar",
         "@org_apache_httpcomponents_httpcore//jar",
     ],
 )

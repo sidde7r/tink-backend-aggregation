@@ -15,5 +15,6 @@ java_library(
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:org_apache_httpcomponents_httpcore",
     ],
 )

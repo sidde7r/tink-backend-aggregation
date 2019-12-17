@@ -113,6 +113,7 @@ java_library(
         "//third_party:org_mozilla_rhino",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:zxing-qrcode",
+        "@com_sun_jersey_jersey_client//jar",
         "@io_reactivex_rxjava3_rxjava",
     ],
 )
@@ -190,6 +191,7 @@ junit_test(
         "//third_party:com_nimbusds_srp6a",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:commons_codec_commons_codec",
         "//third_party:commons_io_commons_io",
         "//third_party:io_dropwizard_dropwizard_client",
         "//third_party:io_dropwizard_dropwizard_configuration",
