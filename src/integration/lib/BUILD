@@ -94,7 +94,6 @@ java_library(
         "//third_party:commons_codec_commons_codec",
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:commons_io_commons_io",
-        "//third_party:io_grpc_grpc_core",
         "//third_party:io_vavr",
         "//third_party:joda_time_joda_time",
         "//third_party:net_minidev_json_smart",
