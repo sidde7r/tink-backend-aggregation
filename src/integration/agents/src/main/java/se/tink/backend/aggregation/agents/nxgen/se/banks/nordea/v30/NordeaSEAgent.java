@@ -52,6 +52,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NordeaSEAgent extends NextGenerationAgent
@@ -97,6 +98,7 @@ public class NordeaSEAgent extends NextGenerationAgent
     private void configureHttpClient(final TinkHttpClient client) {
         client.addFilter(new NordeaSEServiceUnavailableFilter());
         client.addFilter(new NordeaInternalServerErrorFilter());
+        client.addFilter(new TimeoutFilter());
     }
 
     @Override
