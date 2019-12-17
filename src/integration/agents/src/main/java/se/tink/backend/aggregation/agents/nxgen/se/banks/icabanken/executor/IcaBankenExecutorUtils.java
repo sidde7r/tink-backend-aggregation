@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.TransferBankEntity;
@@ -18,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBankenFormatUtils;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
@@ -109,12 +110,19 @@ public class IcaBankenExecutorUtils {
     }
 
     public static String findOrCreateDueDateFor(Transfer transfer) {
+        CountryDateHelper dateHelper =
+                new CountryDateHelper(
+                        IcaBankenConstants.Date.DEFAULT_LOCALE,
+                        TimeZone.getTimeZone(IcaBankenConstants.Date.DEFAULT_ZONE_ID));
+
         if (transfer.getType().equals(TransferType.PAYMENT)) {
             return (transfer.getDueDate() != null)
                     ? ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                            DateUtils.getCurrentOrNextBusinessDay(transfer.getDueDate()))
-                    : ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                            DateUtils.getNextBusinessDay(new Date()));
+                            dateHelper
+                                    .getCurrentOrNextBusinessDay(
+                                            dateHelper.getCalendar(transfer.getDueDate()))
+                                    .getTime())
+                    : ThreadSafeDateFormat.FORMATTER_DAILY.format(dateHelper.getNextBusinessDay());
         } else {
             return (transfer.getDueDate() != null)
                     ? ThreadSafeDateFormat.FORMATTER_DAILY.format(transfer.getDueDate())

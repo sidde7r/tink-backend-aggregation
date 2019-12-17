@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.assertj.core.api.Assertions;
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
@@ -267,30 +266,6 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
                         .createUpdateTransferFromOriginal(originalTransfer)
                         .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
                         .withAmount(originalAmountPlus1SEK)
-                        .withDueDate(originalTransfer.getDueDate())
-                        .build();
-
-        testUpdateTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transferToSign);
-    }
-
-    @Test
-    public void testSignEInvoiceWhenUserHasModifiedDueDate() throws Exception {
-        this.featureFlags = ImmutableList.of(FeatureFlags.TRANSFERS);
-        List<Transfer> transfers = fetchEInvoices(TestSSN.FH);
-        Assertions.assertThat(transfers.size()).isGreaterThan(0);
-
-        Transfer originalTransfer = transfers.get(0);
-
-        // Update with minimal change
-        Date originalDateMinus1Day =
-                DateUtils.getCurrentOrPreviousBusinessDay(
-                        new DateTime(originalTransfer.getDueDate()).minusDays(1).toDate());
-
-        Transfer transferToSign =
-                TransferMock.eInvoice()
-                        .createUpdateTransferFromOriginal(originalTransfer)
-                        .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
-                        .withAmount(originalTransfer.getAmount())
                         .withDueDate(originalTransfer.getDueDate())
                         .build();
 

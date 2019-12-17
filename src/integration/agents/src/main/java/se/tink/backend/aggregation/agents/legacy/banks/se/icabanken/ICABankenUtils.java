@@ -3,17 +3,20 @@ package se.tink.backend.aggregation.agents.banks.se.icabanken;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.BankEntity;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
@@ -22,6 +25,11 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class ICABankenUtils {
+    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
+    private static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
+    private static final CountryDateHelper dateHelper =
+            new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
+
     static Optional<BankEntity> findBankForAccountNumber(
             String destinationAccount, List<BankEntity> banks) {
         ImmutableMap<Integer, BankEntity> banksByClearingNumber =
@@ -49,11 +57,14 @@ public class ICABankenUtils {
 
     static String findOrCreateDueDateFor(Transfer transfer) {
         if (transfer.getType().equals(TransferType.PAYMENT)) {
+
             return (transfer.getDueDate() != null)
                     ? ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                            DateUtils.getCurrentOrNextBusinessDay(transfer.getDueDate()))
-                    : ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                            DateUtils.getNextBusinessDay(new Date()));
+                            dateHelper
+                                    .getCurrentOrNextBusinessDay(
+                                            dateHelper.getCalendar(transfer.getDueDate()))
+                                    .getTime())
+                    : ThreadSafeDateFormat.FORMATTER_DAILY.format(dateHelper.getNextBusinessDay());
         } else {
             return (transfer.getDueDate() != null)
                     ? ThreadSafeDateFormat.FORMATTER_DAILY.format(transfer.getDueDate())
