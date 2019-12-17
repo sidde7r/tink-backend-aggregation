@@ -13,7 +13,6 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -24,6 +23,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
@@ -110,7 +110,7 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.enums.SwedishGiroType;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
@@ -159,7 +159,6 @@ public class DanskeBankV2Agent extends AbstractAgent
     private final BankIdResourceHelper bankIdResourceHelper;
     private final TransferMessageFormatter transferMessageFormatter;
     private static final int MAX_ATTEMPTS = 90;
-    private static final String DEFAULT_ZONE_ID = "CET";
 
     private Map<AccountEntity, Account> accountMap = null;
     private CreateSessionResponse sessionResponse;
@@ -486,10 +485,14 @@ public class DanskeBankV2Agent extends AbstractAgent
         String bankId = DanskeUtils.getBankId(transfer.getDestination());
 
         // TODO: Adapt this to multiple markets.
-        Calendar transferDate = DateUtils.getCalendar();
+        CountryDateHelper dateHelper =
+                new CountryDateHelper(
+                        DanskebankV2Constants.Date.DEFAULT_LOCALE,
+                        TimeZone.getTimeZone(DanskebankV2Constants.Date.DEFAULT_ZONE_ID));
+        Calendar transferDate = dateHelper.getCalendar();
         if (!Objects.equals(bankId, DanskeUtils.getBankId(ClearingNumber.Bank.DANSKE_BANK))) {
             transferDate.add(Calendar.DAY_OF_YEAR, 1);
-            transferDate = DateUtils.getCurrentOrNextBusinessDay(transferDate);
+            transferDate = dateHelper.getCurrentOrNextBusinessDay(transferDate);
         }
 
         // Check if the transfer is between two accounts belonging to the same credentials.
@@ -501,7 +504,10 @@ public class DanskeBankV2Agent extends AbstractAgent
                 createTransferRequest(
                         transfer,
                         fromAccount.get(),
-                        transferDate.toInstant().atZone(ZoneId.of(DEFAULT_ZONE_ID)).toLocalDate(),
+                        transferDate
+                                .toInstant()
+                                .atZone(DanskebankV2Constants.Date.DEFAULT_ZONE_ID)
+                                .toLocalDate(),
                         isBetweenUserAccounts);
         TransferResponse transferResponse = apiClient.createTransfer(transferRequest);
 
