@@ -188,7 +188,7 @@ public final class IngBaseApiClient {
             String applicationToken = cacheInfo.get(StorageKeys.APPLICATION_TOKEN);
             if (applicationToken != null) {
                 try {
-                    logger.debug("Get application token from cache");
+                    logger.info("Get application token from cache");
                     final TokenResponse response =
                             new Gson().fromJson(applicationToken, TokenResponse.class);
                     if (!response.hasAccessExpired()) {
