@@ -8,7 +8,9 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
@@ -35,7 +37,7 @@ public abstract class CbiGlobeAuthenticationController
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        authenticator.autoAutenthicate();
+        authenticator.autoAuthenticate();
     }
 
     @Override
@@ -48,31 +50,32 @@ public abstract class CbiGlobeAuthenticationController
             throws AuthenticationException, AuthorizationException {
         this.authenticator.tokenAutoAuthentication();
         // CBI Globe flow needs two authentcation for AIS: 1. accounts 2. balances and transactions
-
         accountConsentAuthentication();
 
         // Fetching accounts authentication phase due to double consent authentication
         GetAccountsResponse getAccountsResponse = authenticator.fetchAccounts();
-
         transactionsConsentAuthentication(getAccountsResponse);
     }
 
-    protected abstract void accountConsentAuthentication();
+    protected abstract void accountConsentAuthentication() throws AuthenticationException;
 
     protected abstract void transactionsConsentAuthentication(
-            GetAccountsResponse getAccountsResponse);
+            GetAccountsResponse getAccountsResponse) throws AuthenticationException;
 
-    protected void waitForSuplementalInformation(ConsentType consentType) {
+    protected void waitForSupplementalInformation(ConsentType consentType) throws LoginException {
         Optional<Map<String, String>> queryMap =
                 this.supplementalInformationHelper.waitForSupplementalInformation(
                         this.consentState.getSupplementalKey(),
                         ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                         TimeUnit.MINUTES);
 
-        String codeValue = queryMap.get().getOrDefault(QueryKeys.CODE, consentType.getCode());
+        String codeValue =
+                queryMap.orElseThrow(
+                                () -> new LoginException(LoginError.CREDENTIALS_VERIFICATION_ERROR))
+                        .getOrDefault(QueryKeys.CODE, consentType.getCode());
 
         if (!codeValue.equalsIgnoreCase(consentType.getCode())) {
-            waitForSuplementalInformation(consentType);
+            waitForSupplementalInformation(consentType);
         }
     }
 }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
 
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -16,7 +17,7 @@ public class CbiGlobeAuthenticationRedirectController extends CbiGlobeAuthentica
         super(supplementalInformationHelper, authenticator, consentState);
     }
 
-    public void accountConsentAuthentication() {
+    public void accountConsentAuthentication() throws LoginException {
         String redirectUrl =
                 authenticator.createRedirectUrl(consentState.getState(), ConsentType.ACCOUNT);
         URL authorizeUrl =
@@ -25,10 +26,11 @@ public class CbiGlobeAuthenticationRedirectController extends CbiGlobeAuthentica
 
         this.supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(authorizeUrl));
-        waitForSuplementalInformation(ConsentType.ACCOUNT);
+        waitForSupplementalInformation(ConsentType.ACCOUNT);
     }
 
-    public void transactionsConsentAuthentication(GetAccountsResponse getAccountsResponse) {
+    public void transactionsConsentAuthentication(GetAccountsResponse getAccountsResponse)
+            throws LoginException {
         String redirectUrl =
                 authenticator.createRedirectUrl(
                         consentState.getState(), ConsentType.BALANCE_TRANSACTION);
@@ -40,6 +42,6 @@ public class CbiGlobeAuthenticationRedirectController extends CbiGlobeAuthentica
 
         this.supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(authorizeUrl));
-        waitForSuplementalInformation(ConsentType.BALANCE_TRANSACTION);
+        waitForSupplementalInformation(ConsentType.BALANCE_TRANSACTION);
     }
 }
