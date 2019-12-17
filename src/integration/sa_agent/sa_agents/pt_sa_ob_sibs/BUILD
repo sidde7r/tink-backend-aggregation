@@ -46,7 +46,7 @@ junit_test(
         "//data:aggregation_test",
     ],
     resources = glob([
-        "src/test/resources/**/*",
+        "src/test_integration/resources/**/*",
     ]),
     visibility = ["//visibility:public"],
     deps = [
