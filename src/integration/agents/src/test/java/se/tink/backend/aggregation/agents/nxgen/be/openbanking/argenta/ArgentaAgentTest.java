@@ -6,7 +6,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.CredentialKeys;
 
 public class ArgentaAgentTest {
 

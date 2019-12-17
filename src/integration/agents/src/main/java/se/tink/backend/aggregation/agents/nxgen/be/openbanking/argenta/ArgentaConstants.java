@@ -131,4 +131,8 @@ public final class ArgentaConstants {
     public static class BalanceTypes {
         public static final String INTERIM_AVAILABLE = "interimAvailable";
     }
+
+    public static class CredentialKeys {
+        public static final String IBAN = "iban";
+    }
 }
