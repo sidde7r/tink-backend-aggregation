@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.date.DateFormat;
 
 public final class IngBaseApiClient {
 
@@ -360,6 +361,6 @@ public final class IngBaseApiClient {
     }
 
     private String getFormattedDate() {
-        return IngBaseUtils.getFormattedCurrentDate(Signature.DATE_FORMAT, Signature.TIMEZONE);
+        return DateFormat.getFormattedCurrentDate(Signature.DATE_FORMAT, Signature.TIMEZONE);
     }
 }
