@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 public class TokenResponse {
 
     private static final Logger logger = LoggerFactory.getLogger(TokenResponse.class);
+
     @JsonProperty("access_token")
     private String accessToken;
 
