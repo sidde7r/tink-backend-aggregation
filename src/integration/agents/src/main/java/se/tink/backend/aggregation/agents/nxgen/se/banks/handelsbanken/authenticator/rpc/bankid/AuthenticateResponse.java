@@ -38,6 +38,8 @@ public class AuthenticateResponse extends BaseResponse {
                     return BankIdStatus.CANCELLED;
                 case HandelsbankenSEConstants.BankIdAuthentication.TIMEOUT:
                     return BankIdStatus.TIMEOUT;
+                case HandelsbankenSEConstants.BankIdAuthentication.FAILED_UNKNOWN:
+                    return BankIdStatus.FAILED_UNKNOWN;
             }
         }
 
