@@ -14,9 +14,9 @@ junit_test(
     ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//third_party:org_mockito_mockito_core",
     ],
 )
