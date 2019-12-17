@@ -1,0 +1,18 @@
+java_library(
+    name = "danskebank",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/danskebank",
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib:annotations",
+        "//src/integration/models",
+        "//src/libraries/strings",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "@selenium//:org_seleniumhq_selenium_selenium_api",
+    ],
+)

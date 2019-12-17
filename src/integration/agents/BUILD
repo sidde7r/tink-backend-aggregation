@@ -384,6 +384,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/santander",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/unicre",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/alandsbanken",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/icabanken",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/nordea/v30",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/sbab",
