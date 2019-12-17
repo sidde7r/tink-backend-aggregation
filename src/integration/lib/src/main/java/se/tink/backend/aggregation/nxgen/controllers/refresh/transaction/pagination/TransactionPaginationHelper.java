@@ -74,7 +74,7 @@ public class TransactionPaginationHelper {
     }
 
     /** Returns the certain date for this account (that is from when we know we have all data) */
-    public Optional<Date> getContentWithRefreshDate(final Account account) {
+    private Optional<Date> getContentWithRefreshDate(final Account account) {
         if (request.getAccounts() == null || request.getCredentials().getUpdated() == null) {
             return Optional.empty();
         }
