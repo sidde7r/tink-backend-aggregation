@@ -1048,6 +1048,9 @@ java_library(
     name = "org_apache_curator_curator_x_discovery",
     visibility = ["//visibility:public"],
     exports = [
+        "@org_apache_curator_curator_x_discovery//jar",
+    ],
+    runtime_deps = [
         ":io_netty_netty_all",
         "@com_google_guava_guava//jar",
         "@jline_jline//jar",
@@ -1055,7 +1058,6 @@ java_library(
         "@org_apache_curator_curator_client//jar",
         "@org_apache_curator_curator_framework//jar",
         "@org_apache_curator_curator_recipes//jar",
-        "@org_apache_curator_curator_x_discovery//jar",
         "@org_apache_zookeeper_zookeeper//jar",
         "@org_codehaus_jackson_jackson_mapper_asl//jar",
         "@org_slf4j_slf4j_api//jar",
