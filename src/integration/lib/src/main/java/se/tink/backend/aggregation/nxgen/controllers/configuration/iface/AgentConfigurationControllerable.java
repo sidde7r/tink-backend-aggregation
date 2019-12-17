@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.configuration;
+package se.tink.backend.aggregation.nxgen.controllers.configuration.iface;
 
 import io.reactivex.rxjava3.core.Observable;
 import java.util.Collection;

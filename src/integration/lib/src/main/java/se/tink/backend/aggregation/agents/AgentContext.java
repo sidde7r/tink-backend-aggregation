@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.log.LogMasker;
-import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationControllerable;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public abstract class AgentContext implements CompositeAgentContext {
