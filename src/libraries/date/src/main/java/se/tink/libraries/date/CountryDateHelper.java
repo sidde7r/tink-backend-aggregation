@@ -79,7 +79,7 @@ public class CountryDateHelper {
         return calendar;
     }
 
-    private Calendar getCurrentOrNextBusinessDay(Calendar calendar) {
+    public Calendar getCurrentOrNextBusinessDay(Calendar calendar) {
         Calendar businessDay = getCalendar(calendar.getTime());
 
         while (!isBusinessDay(businessDay)) {
