@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationControllerable;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -167,7 +168,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
                     new TppSecretsServiceClientImpl(
                             configuration.getTppSecretsServiceConfiguration());
             tppSecretsServiceClient.start();
-            AgentConfigurationController agentConfigurationController =
+            AgentConfigurationControllerable agentConfigurationController =
                     new AgentConfigurationController(
                             tppSecretsServiceClient,
                             configuration.getIntegrations(),

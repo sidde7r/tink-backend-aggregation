@@ -21,7 +21,7 @@ public class AgentConfigurationControllerTest {
     private static String serializedConfiguration;
     private static Map<String, Object> serializedConfigurationAsMap;
 
-    private AgentConfigurationController agentConfigurationController;
+    private AgentConfigurationControllerable agentConfigurationController;
 
     @Before
     public void setup() {

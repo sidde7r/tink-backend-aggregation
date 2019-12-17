@@ -22,7 +22,7 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static String serializedConfiguration;
     private static Map<String, Object> serializedConfigurationAsMap;
-    private AgentConfigurationController agentConfigurationController;
+    private AgentConfigurationControllerable agentConfigurationController;
 
     @Before
     public void setup() {
