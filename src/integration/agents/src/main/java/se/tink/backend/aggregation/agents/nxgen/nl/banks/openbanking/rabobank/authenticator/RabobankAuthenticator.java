@@ -83,7 +83,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(final String refreshToken)
             throws SessionException, BankServiceException {
-        logger.info("Got new refresh token " + refreshToken);
+        logger.info("Got persist refresh token " + refreshToken);
 
         final String redirectUri = getConfiguration().getRedirectUrl();
 
