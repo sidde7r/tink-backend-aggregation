@@ -115,9 +115,24 @@ public class CbiGlobeAuthenticator {
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, getTokenResponse.toTinkToken());
     }
 
-    public void autoAutenthicate() throws SessionException {
+    public void autoAuthenticate() throws SessionException {
         tokenAutoAuthentication();
         consentAutoAuthentication();
+    }
+
+    public void tokenAutoAuthentication() {
+        try {
+            if (!apiClient.isTokenValid()) {
+                getToken();
+            }
+        } catch (IllegalStateException e) {
+            String message = e.getMessage();
+            if (message.contains(MessageCodes.NO_ACCESS_TOKEN_IN_STORAGE.name())) {
+                getToken();
+            } else {
+                throw e;
+            }
+        }
     }
 
     private void consentAutoAuthentication() throws SessionException {
@@ -133,21 +148,6 @@ public class CbiGlobeAuthenticator {
             logger.info("CONSENT STATUS: " + consentStatus);
             apiClient.removeAccountsFromStorage();
             throw SessionError.SESSION_EXPIRED.exception();
-        }
-    }
-
-    public void tokenAutoAuthentication() {
-        try {
-            if (!apiClient.isTokenValid()) {
-                getToken();
-            }
-        } catch (IllegalStateException e) {
-            String message = e.getMessage();
-            if (message.contains(MessageCodes.NO_ACCESS_TOKEN_IN_STORAGE.name())) {
-                getToken();
-            } else {
-                throw e;
-            }
         }
     }
 

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.BancoPostaConstants.ErrorValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.BancoPostaConstants.UserMessages;
@@ -35,7 +36,7 @@ public class BancoPostaAuthenticationController extends CbiGlobeAuthenticationCo
     }
 
     @Override
-    public void accountConsentAuthentication() {
+    public void accountConsentAuthentication() throws AuthenticationException {
         ConsentRequest consentRequest = authenticator.createConsentRequestAccount();
 
         ConsentScaResponse consentResponse =
@@ -50,11 +51,12 @@ public class BancoPostaAuthenticationController extends CbiGlobeAuthenticationCo
                         .buildAuthorizeUrl(consentResponse, chosenScaMethod);
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(authorizeUrl));
-        waitForSuplementalInformation(ConsentType.ACCOUNT);
+        waitForSupplementalInformation(ConsentType.ACCOUNT);
     }
 
     @Override
-    public void transactionsConsentAuthentication(GetAccountsResponse getAccountsResponse) {
+    public void transactionsConsentAuthentication(GetAccountsResponse getAccountsResponse)
+            throws AuthenticationException {
         ConsentRequest consentRequest =
                 authenticator.createConsentRequestBalancesTransactions(getAccountsResponse);
 
@@ -73,7 +75,7 @@ public class BancoPostaAuthenticationController extends CbiGlobeAuthenticationCo
 
         this.supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(authorizeUrl));
-        waitForSuplementalInformation(ConsentType.BALANCE_TRANSACTION);
+        waitForSupplementalInformation(ConsentType.BALANCE_TRANSACTION);
     }
 
     private ScaMethodEntity selectScaMethod(List<ScaMethodEntity> methods) {
