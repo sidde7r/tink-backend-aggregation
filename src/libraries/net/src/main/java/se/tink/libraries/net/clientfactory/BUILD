@@ -1,11 +1,10 @@
 java_library(
-    name = "net",
+    name = "clientfactory",
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client/handler",
-        "//src/libraries/net/src/main/java/se/tink/libraries/net/clientfactory",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:org_slf4j_slf4j_api",
