@@ -2,14 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbanken.bankid;
 
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
-@Ignore
 public class AlandsBankenBankidSeAgentTest {
     private final ArgumentManager<UsernamePasswordArgumentEnum> helper =
             new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
