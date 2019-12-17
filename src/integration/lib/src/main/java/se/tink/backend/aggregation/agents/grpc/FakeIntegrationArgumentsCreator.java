@@ -66,6 +66,14 @@ public class FakeIntegrationArgumentsCreator {
         AgentContext context =
                 new AgentContext() {
                     @Override
+                    public String getProviderSessionCache() {
+                        return null;
+                    }
+
+                    @Override
+                    public void setProviderSessionCache(String value) {}
+
+                    @Override
                     public Account updateTransactions(
                             Account account, List<Transaction> transactions) {
                         return null;

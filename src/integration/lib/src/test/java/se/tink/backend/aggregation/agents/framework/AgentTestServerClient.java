@@ -17,6 +17,7 @@ public class AgentTestServerClient {
     private static final String CREDENTIAL_NAME_KEY = "credentialName";
     private static final String CREDENTIAL_ID_KEY = "credentialId";
     private static final String SUPPLEMENTAL_KEY_KEY = "key";
+    private static final String FINANCIAL_INSTITUTION_ID_KEY = "financialInstitutionId";
     private static final String AUTOSTART_TOKEN_KEY = "autoStartToken";
     private static final String SUPPLEMENTAL_TIMEOUT_KEY = "timeout";
     private static final int TIMEOUT_MS = Math.toIntExact(TimeUnit.MINUTES.toMillis(20));
@@ -40,6 +41,8 @@ public class AgentTestServerClient {
         WAIT_FOR_SUPPLEMENTAL(
                 String.format(
                         "supplemental/{%s}/{%s}", SUPPLEMENTAL_KEY_KEY, SUPPLEMENTAL_TIMEOUT_KEY)),
+        PROVIDER_SESSION_CACHE(
+                String.format("provider-session-cache/{%s}", FINANCIAL_INSTITUTION_ID_KEY)),
         CREDENTIAL(String.format("credential/{%s}/{%s}", PROVIDER_NAME_KEY, CREDENTIAL_ID_KEY)),
         DUMP_DATA(
                 String.format(
@@ -89,6 +92,23 @@ public class AgentTestServerClient {
                                 .parameter(
                                         SUPPLEMENTAL_TIMEOUT_KEY,
                                         Long.toString(unit.toSeconds(waitFor))))
+                .get(String.class);
+    }
+
+    public void setProviderSessionCache(String key, String value) {
+        client.request(
+                        Urls.PROVIDER_SESSION_CACHE
+                                .getUrl()
+                                .parameter(FINANCIAL_INSTITUTION_ID_KEY, key))
+                .type(MediaType.APPLICATION_JSON)
+                .post(value);
+    }
+
+    public String getProviderSessionCache(String key) {
+        return client.request(
+                        Urls.PROVIDER_SESSION_CACHE
+                                .getUrl()
+                                .parameter(FINANCIAL_INSTITUTION_ID_KEY, key))
                 .get(String.class);
     }
 

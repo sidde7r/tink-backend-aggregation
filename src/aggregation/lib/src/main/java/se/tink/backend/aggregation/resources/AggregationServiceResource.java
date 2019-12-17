@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigu
 import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration.AccessType;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
+import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
@@ -60,6 +61,7 @@ public class AggregationServiceResource implements AggregationService {
     private AgentWorker agentWorker;
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
     private SupplementalInformationController supplementalInformationController;
+    private ProviderSessionCacheController providerSessionCacheController;
     private ApplicationDrainMode applicationDrainMode;
     private ProviderConfigurationService providerConfigurationService;
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
@@ -70,11 +72,13 @@ public class AggregationServiceResource implements AggregationService {
             QueueProducer producer,
             AgentWorkerOperationFactory agentWorkerOperationFactory,
             SupplementalInformationController supplementalInformationController,
+            ProviderSessionCacheController providerSessionCacheController,
             ApplicationDrainMode applicationDrainMode,
             ProviderConfigurationService providerConfigurationService) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;
+        this.providerSessionCacheController = providerSessionCacheController;
         this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
         this.providerConfigurationService = providerConfigurationService;

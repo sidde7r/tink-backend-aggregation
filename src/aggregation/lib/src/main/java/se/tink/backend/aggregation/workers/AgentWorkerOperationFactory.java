@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
@@ -97,6 +98,7 @@ public class AgentWorkerOperationFactory {
     private ReportProviderMetricsAgentWorkerCommandState reportMetricsAgentWorkerCommandState;
     private MetricRegistry metricRegistry;
     private SupplementalInformationController supplementalInformationController;
+    private ProviderSessionCacheController providerSessionCacheController;
     private AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private TppSecretsServiceClient tppSecretsServiceClient;
 
@@ -113,6 +115,7 @@ public class AgentWorkerOperationFactory {
             ReportProviderMetricsAgentWorkerCommandState
                     reportProviderMetricsAgentWorkerCommandState,
             SupplementalInformationController supplementalInformationController,
+            ProviderSessionCacheController providerSessionCacheController,
             CryptoConfigurationDao cryptoConfigurationDao,
             ControllerWrapperProvider controllerWrapperProvider,
             AggregatorInfoProvider aggregatorInfoProvider,
@@ -139,6 +142,7 @@ public class AgentWorkerOperationFactory {
         this.metricRegistry = metricRegistry;
         this.agentDebugStorageHandler = agentDebugStorageHandler;
         this.supplementalInformationController = supplementalInformationController;
+        this.providerSessionCacheController = providerSessionCacheController;
         this.coordinationClient = coordinationClient;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
         this.credentialsEventProducer = credentialsEventProducer;
@@ -275,6 +279,7 @@ public class AgentWorkerOperationFactory {
                         aggregatorInfoProvider.createAggregatorInfoFor(
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
+                        providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
@@ -378,6 +383,7 @@ public class AgentWorkerOperationFactory {
                         aggregatorInfoProvider.createAggregatorInfoFor(
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
+                        providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
@@ -447,6 +453,7 @@ public class AgentWorkerOperationFactory {
                         aggregatorInfoProvider.createAggregatorInfoFor(
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
+                        providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
@@ -509,6 +516,7 @@ public class AgentWorkerOperationFactory {
                         aggregatorInfoProvider.createAggregatorInfoFor(
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
+                        providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
@@ -653,6 +661,7 @@ public class AgentWorkerOperationFactory {
                         aggregatorInfoProvider.createAggregatorInfoFor(
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
+                        providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
@@ -687,6 +696,7 @@ public class AgentWorkerOperationFactory {
                         aggregatorInfoProvider.createAggregatorInfoFor(
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
+                        providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
@@ -720,6 +730,7 @@ public class AgentWorkerOperationFactory {
                         aggregatorInfoProvider.createAggregatorInfoFor(
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
+                        providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
@@ -767,6 +778,7 @@ public class AgentWorkerOperationFactory {
                         aggregatorInfoProvider.createAggregatorInfoFor(
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
+                        providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
@@ -836,6 +848,7 @@ public class AgentWorkerOperationFactory {
                         aggregatorInfoProvider.createAggregatorInfoFor(
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
+                        providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
@@ -935,6 +948,7 @@ public class AgentWorkerOperationFactory {
                         aggregatorInfoProvider.createAggregatorInfoFor(
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
+                        providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
@@ -1078,6 +1092,7 @@ public class AgentWorkerOperationFactory {
                         aggregatorInfoProvider.createAggregatorInfoFor(
                                 clientInfo.getAggregatorId()),
                         supplementalInformationController,
+                        providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
                         clientInfo.getAppId());
