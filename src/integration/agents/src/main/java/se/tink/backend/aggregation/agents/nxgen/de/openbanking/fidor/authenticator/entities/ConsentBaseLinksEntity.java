@@ -2,32 +2,33 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authentica
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ConsentBaseLinksEntity {
-    @JsonProperty private HrefEntity scaRedirect;
-    @JsonProperty private HrefEntity status;
-    @JsonProperty private HrefEntity scaStatus;
-    @JsonProperty private HrefEntity self;
+    @JsonProperty private Href scaRedirect;
+    @JsonProperty private Href status;
+    @JsonProperty private Href scaStatus;
+    @JsonProperty private Href self;
 
     @JsonIgnore
-    public HrefEntity getScaRedirect() {
+    public Href getScaRedirect() {
         return scaRedirect;
     }
 
     @JsonIgnore
-    public HrefEntity getStatus() {
+    public Href getStatus() {
         return status;
     }
 
     @JsonIgnore
-    public HrefEntity getScaStatus() {
+    public Href getScaStatus() {
         return scaStatus;
     }
 
     @JsonIgnore
-    public HrefEntity getSelf() {
+    public Href getSelf() {
         return self;
     }
 }

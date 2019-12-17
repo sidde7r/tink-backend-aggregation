@@ -1,17 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.entities;
 
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksEntity {
-    private HrefLinkEntity next;
-    private HrefLinkEntity self;
+    private Href next;
+    private Href self;
 
-    public HrefLinkEntity getNext() {
+    public Href getNext() {
         return next;
     }
 
-    public HrefLinkEntity getSelf() {
+    public Href getSelf() {
         return self;
     }
 }

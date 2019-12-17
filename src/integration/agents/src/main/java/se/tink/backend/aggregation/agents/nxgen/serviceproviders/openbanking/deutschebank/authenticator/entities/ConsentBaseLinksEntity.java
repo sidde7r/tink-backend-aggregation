@@ -1,27 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.entities;
 
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ConsentBaseLinksEntity {
-    private HrefEntity scaRedirect;
-    private HrefEntity status;
-    private HrefEntity scaStatus;
-    private HrefEntity self;
+    private Href scaRedirect;
+    private Href status;
+    private Href scaStatus;
+    private Href self;
 
-    public HrefEntity getScaRedirect() {
+    public Href getScaRedirect() {
         return scaRedirect;
     }
 
-    public HrefEntity getStatus() {
+    public Href getStatus() {
         return status;
     }
 
-    public HrefEntity getScaStatus() {
+    public Href getScaStatus() {
         return scaStatus;
     }
 
-    public HrefEntity getSelf() {
+    public Href getSelf() {
         return self;
     }
 }
