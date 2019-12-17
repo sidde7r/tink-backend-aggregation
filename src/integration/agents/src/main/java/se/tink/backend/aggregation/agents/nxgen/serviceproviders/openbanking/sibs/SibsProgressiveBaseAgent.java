@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.initialtransactions.InitialTransactionsFromCertainDateFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -133,7 +134,7 @@ public abstract class SibsProgressiveBaseAgent
         final SibsTransactionalAccountAccountFetcher accountFetcher =
                 new SibsTransactionalAccountAccountFetcher(apiClient);
         final SibsTransactionalAccountTransactionFetcher transactionFetcher =
-                new SibsTransactionalAccountTransactionFetcher(apiClient, request, userState);
+                new SibsTransactionalAccountTransactionFetcher(apiClient, userState);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -141,7 +142,10 @@ public abstract class SibsProgressiveBaseAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(transactionFetcher)));
+                        new TransactionKeyPaginationController<>(
+                                transactionFetcher,
+                                new InitialTransactionsFromCertainDateFetcherController<>(
+                                        transactionFetcher, transactionPaginationHelper))));
     }
 
     @Override
