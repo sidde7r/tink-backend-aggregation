@@ -1,26 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions;
 
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksEntity {
 
-    private HrefEntity next;
-    private HrefEntity previous;
+    private Href next;
+    private Href previous;
 
-    public HrefEntity getNext() {
+    public Href getNext() {
         return next;
     }
 
-    public void setNext(HrefEntity next) {
+    public void setNext(Href next) {
         this.next = next;
     }
 
-    public HrefEntity getPrevious() {
+    public Href getPrevious() {
         return previous;
     }
 
-    public void setPrevious(HrefEntity previous) {
+    public void setPrevious(Href previous) {
         this.previous = previous;
     }
 }

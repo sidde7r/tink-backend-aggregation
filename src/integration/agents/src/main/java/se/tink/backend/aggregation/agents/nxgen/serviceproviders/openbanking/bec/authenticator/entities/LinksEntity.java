@@ -1,31 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.authenticator.entities;
 
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksEntity {
 
-    private HrefEntity scaStatus;
+    private Href scaStatus;
 
-    private HrefEntity scaRedirect;
+    private Href scaRedirect;
 
-    private HrefEntity self;
+    private Href self;
 
-    private HrefEntity status;
+    private Href status;
 
-    public HrefEntity getScaStatus() {
+    public Href getScaStatus() {
         return scaStatus;
     }
 
-    public HrefEntity getScaRedirect() {
+    public Href getScaRedirect() {
         return scaRedirect;
     }
 
-    public HrefEntity getSelf() {
+    public Href getSelf() {
         return self;
     }
 
-    public HrefEntity getStatus() {
+    public Href getStatus() {
         return status;
     }
 }

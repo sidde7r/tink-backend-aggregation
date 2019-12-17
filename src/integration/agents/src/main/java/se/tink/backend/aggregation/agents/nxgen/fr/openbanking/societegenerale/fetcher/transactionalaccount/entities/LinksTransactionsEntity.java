@@ -1,28 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksTransactionsEntity {
 
     @JsonProperty("next")
-    private HrefEntity nextTransactionEntity;
+    private Href nextTransactionEntity;
 
-    private HrefEntity balances;
+    private Href balances;
 
-    private HrefEntity lastEntity;
+    private Href lastEntity;
 
-    private HrefEntity prevEntity;
+    private Href prevEntity;
 
-    private HrefEntity selfTransactionsEntity;
+    private Href selfTransactionsEntity;
 
-    private HrefEntity firstEntity;
+    private Href firstEntity;
 
     @JsonProperty("parent-list")
-    private HrefEntity hrefEntity;
+    private Href hrefEntity;
 
-    public HrefEntity getNextTransactionEntity() {
+    public Href getNextTransactionEntity() {
         return nextTransactionEntity;
     }
 }
