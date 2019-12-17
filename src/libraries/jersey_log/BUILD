@@ -43,6 +43,7 @@ java_library(
 
         # Dropwizard
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_dropwizard_dropwizard_jersey",
 
         # Codehaus Stringutils
         "//third_party:org_codehaus_plexus_plexus_utils",

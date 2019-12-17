@@ -7,5 +7,6 @@ java_library(
         "//src/libraries/api_annotations",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_dropwizard_dropwizard_jersey",
     ],
 )

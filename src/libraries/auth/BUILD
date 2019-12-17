@@ -10,6 +10,7 @@ java_library(
         "//third_party:com_lambdaworks_scrypt",
         "//third_party:com_yubico_yubico_validation_client2",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_dropwizard_dropwizard_jersey",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:org_springframework_security",
     ],

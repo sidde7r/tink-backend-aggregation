@@ -474,10 +474,10 @@ java_library(
     name = "io_dropwizard_dropwizard_core",
     visibility = ["//visibility:public"],
     exports = [
-        ":io_dropwizard_dropwizard_jersey",
         "@io_dropwizard_dropwizard_core//jar",
     ],
     runtime_deps = [
+        ":io_dropwizard_dropwizard_jersey",
         "@ch_qos_logback_logback_classic//jar",
         "@ch_qos_logback_logback_core//jar",
         "@com_codahale_metrics_metrics_annotation//jar",
@@ -597,8 +597,10 @@ java_library(
     name = "io_dropwizard_dropwizard_lifecycle",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_guava_guava//jar",
         "@io_dropwizard_dropwizard_lifecycle//jar",
+    ],
+    runtime_deps = [
+        "@com_google_guava_guava//jar",
         "@io_dropwizard_dropwizard_util//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",

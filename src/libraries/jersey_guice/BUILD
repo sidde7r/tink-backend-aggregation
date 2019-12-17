@@ -16,6 +16,7 @@ java_library(
         "//third_party:com_google_inject_extensions_guice_multibindings",
 
         # Dropwizard
+        "//third_party:io_dropwizard_dropwizard_jersey",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:org_apache_httpcomponents_httpclient",
 
