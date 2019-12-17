@@ -23,9 +23,9 @@ public class ProviderSessionCacheController {
 
     public void setProviderSessionCache(String financialInstitutionId, String value) {
         logger.info(
-                "Received provider session information for financialInstitutionId: {}",
-                financialInstitutionId);
-
+                "Received provider session information for financialInstitutionId: {}, cache client: {}",
+                financialInstitutionId,
+                cacheClient.getClass());
         cacheClient.set(
                 CacheScope.PROVIDER_SESSION_BY_FINANCIALINSTITUTIONID,
                 financialInstitutionId,
@@ -47,14 +47,9 @@ public class ProviderSessionCacheController {
     }
 
     public String getProviderSessionCache(String financialInstitutionId) {
-        try {
-            return (String)
-                    cacheClient.get(
-                            CacheScope.PROVIDER_SESSION_BY_FINANCIALINSTITUTIONID,
-                            financialInstitutionId);
-        } finally {
-            cacheClient.delete(
-                    CacheScope.PROVIDER_SESSION_BY_FINANCIALINSTITUTIONID, financialInstitutionId);
-        }
+        return (String)
+                cacheClient.get(
+                        CacheScope.PROVIDER_SESSION_BY_FINANCIALINSTITUTIONID,
+                        financialInstitutionId);
     }
 }
