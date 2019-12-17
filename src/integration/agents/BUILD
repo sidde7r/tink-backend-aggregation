@@ -396,6 +396,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/sdcse",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/seb",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/skandiabanken",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/volvofinans",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/brokers/avanza",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/norwegian",

@@ -1,0 +1,35 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "volvofinans",
+    srcs = glob(["**/*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/volvofinans",
+        "//src/integration/amount",
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/identity_data",
+        "//src/integration/lib",
+        "//src/integration/lib:lib_test",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
+        "//src/integration/user:rpc",
+        "//src/libraries/account_identifier",
+        "//src/libraries/serialization",
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:org_apache_httpcomponents_httpcore",
+        "//third_party:org_mockito_mockito_core",
+    ],
+)
