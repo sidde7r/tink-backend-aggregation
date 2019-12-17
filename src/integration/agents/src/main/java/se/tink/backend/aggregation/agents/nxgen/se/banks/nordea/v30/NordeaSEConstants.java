@@ -317,6 +317,9 @@ public class NordeaSEConstants {
         public static final String BESE1076 = "BESE1076".toLowerCase();
         public static final String OWN_MESSAGE_CONSTRAINTS =
                 "Own message must be between".toLowerCase();
+        public static final String UNEXPECTED_EXECUTION_ERROR_CODE = "unexpected_execution_error";
+        public static final String UNEXPECTED_EXECUTION_ERROR =
+                "An unexpected execution error has occurred".toLowerCase();
     }
 
     public static class LogTags {

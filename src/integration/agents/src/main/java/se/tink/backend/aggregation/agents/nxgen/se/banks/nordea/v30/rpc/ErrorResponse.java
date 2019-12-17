@@ -108,8 +108,17 @@ public class ErrorResponse {
 
     @JsonIgnore
     public boolean isBankServiceError() {
+        return HttpStatus.SC_INTERNAL_SERVER_ERROR == httpStatus
+                && (isHysterixShortCircuited() || isUnexpectedError());
+    }
+
+    private boolean isUnexpectedError() {
+        return errorDescription.toLowerCase().contains(ErrorCodes.UNEXPECTED_EXECUTION_ERROR)
+                && ErrorCodes.UNEXPECTED_EXECUTION_ERROR_CODE.equalsIgnoreCase(error);
+    }
+
+    private boolean isHysterixShortCircuited() {
         return errorDescription.toLowerCase().contains(ErrorCodes.HYSTRIX_CIRCUIT_SHORT_CIRCUITED)
-                && HttpStatus.SC_INTERNAL_SERVER_ERROR == httpStatus
                 && ErrorCodes.ERROR_CORE_UNKNOWN.equalsIgnoreCase(error);
     }
 
