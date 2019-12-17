@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
+import com.google.common.collect.ImmutableSet;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -8,6 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.RabobankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.SandboxTransactionFetcher;
@@ -79,14 +81,18 @@ public final class RabobankAgent
                         credentials,
                         strongAuthenticationState);
 
-        final AutoAuthenticationProgressiveController autoAuthenticationController =
+        progressiveAuthenticator =
                 new AutoAuthenticationProgressiveController(
                         request,
                         context,
                         new ThirdPartyAppAuthenticationProgressiveController(controller),
                         controller);
 
-        progressiveAuthenticator = autoAuthenticationController;
+        String refreshToken = persistentStorage.get(QueryParams.REFRESH_TOKEN);
+        if (refreshToken != null) {
+            ImmutableSet<String> whitelistedValues = ImmutableSet.of(refreshToken);
+            context.getLogMasker().addAgentWhitelistedValues(whitelistedValues);
+        }
     }
 
     @Override

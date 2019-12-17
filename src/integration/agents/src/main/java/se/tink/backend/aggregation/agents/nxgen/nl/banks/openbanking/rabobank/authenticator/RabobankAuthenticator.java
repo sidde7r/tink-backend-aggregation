@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator;
 
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
@@ -21,6 +23,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RabobankAuthenticator implements OAuth2Authenticator {
+
+    private static final Logger logger = LoggerFactory.getLogger(RabobankAuthenticator.class);
 
     private final RabobankApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -79,6 +83,8 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(final String refreshToken)
             throws SessionException, BankServiceException {
+        logger.info("Got persist refresh token " + refreshToken);
+
         final String redirectUri = getConfiguration().getRedirectUrl();
 
         final Form request =
