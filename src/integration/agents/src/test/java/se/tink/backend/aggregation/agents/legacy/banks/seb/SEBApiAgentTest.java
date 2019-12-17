@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.seb;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.text.ParseException;
@@ -23,7 +21,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.social.security.TestSSN;
@@ -190,31 +187,6 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
         transfer.setDueDate(createUpComingValidDueDate());
 
         testTransfer(TestSSN.DL, null, CredentialsTypes.MOBILE_BANKID, transfer);
-    }
-
-    /** Requires unsigned incoming eInvoices at SEB */
-    @Test
-    public void testSignEInvoice() throws Exception {
-        this.featureFlags = ImmutableList.of(FeatureFlags.TRANSFERS);
-        List<Transfer> transfers = fetchEInvoices(TestSSN.DL);
-        assertThat(transfers.size()).isGreaterThan(0);
-
-        Transfer originalTransfer = transfers.get(0);
-
-        // Update with minimal change
-        Amount originalAmountPlus1SEK = Amount.inSEK(originalTransfer.getAmount().getValue() + 1);
-        Date originalDateMinus1Day =
-                DateUtils.getCurrentOrPreviousBusinessDay(
-                        new DateTime(originalTransfer.getDueDate()).minusDays(1).toDate());
-
-        Transfer transferToSign =
-                TransferMock.eInvoice()
-                        .createUpdateTransferFromOriginal(originalTransfer)
-                        .withAmount(originalAmountPlus1SEK)
-                        .withDueDate(originalDateMinus1Day)
-                        .build();
-
-        testUpdateTransfer(TestSSN.DL, null, CredentialsTypes.MOBILE_BANKID, transferToSign);
     }
 
     @Test
