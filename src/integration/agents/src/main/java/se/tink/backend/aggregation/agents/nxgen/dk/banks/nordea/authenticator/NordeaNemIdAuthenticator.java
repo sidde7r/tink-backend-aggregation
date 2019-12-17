@@ -21,8 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.InitialParametersResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemIdAuthenticateUserRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdAuthenticatorV1;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdParametersV1;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v1.NemIdAuthenticatorV1;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v1.NemIdParametersV1;
 
 public class NordeaNemIdAuthenticator implements NemIdAuthenticatorV1 {
 

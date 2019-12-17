@@ -64,7 +64,6 @@ public class BankdataAgent extends NextGenerationAgent
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugOutput(false);
         client.addFilter(
                 new TimeoutRetryFilter(
                         TimeoutFilter.NUM_TIMEOUT_RETRIES,

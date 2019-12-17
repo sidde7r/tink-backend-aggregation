@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v1;
 
 import java.util.List;
 import org.apache.http.cookie.Cookie;
