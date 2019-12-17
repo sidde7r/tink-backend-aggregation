@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einv
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
@@ -67,7 +68,7 @@ public class NordeaExecutorHelper {
                                     isAccountIdentifierEquals(
                                             transfer.getSource(), account.getAccountIdentifier()))
                     .findFirst()
-                    .orElseThrow(this::invalidSourceAccountError);
+                    .orElseThrow(ErrorResponse::invalidSourceAccountError);
         } else {
             return accounts.stream()
                     .filter(this::isCanTransferFromAccount)
@@ -76,7 +77,7 @@ public class NordeaExecutorHelper {
                                     isAccountIdentifierEquals(
                                             transfer.getSource(), account.getAccountIdentifier()))
                     .findFirst()
-                    .orElseThrow(this::invalidSourceAccountError);
+                    .orElseThrow(ErrorResponse::invalidSourceAccountError);
         }
     }
 
@@ -102,7 +103,7 @@ public class NordeaExecutorHelper {
             Transfer transfer, FetchAccountResponse accountResponse) {
 
         if (!identifierCanBeFormatted(transfer.getDestination())) {
-            throw invalidDestError();
+            throw ErrorResponse.invalidDestError();
         }
 
         // Transfer source and destination must not be the same
@@ -154,7 +155,7 @@ public class NordeaExecutorHelper {
     public String getPaymentType(final AccountIdentifier destination) {
         if (!destination.is(AccountIdentifier.Type.SE_PG)
                 && !destination.is(AccountIdentifier.Type.SE_BG)) {
-            throw invalidPaymentType();
+            throw ErrorResponse.invalidPaymentType();
         }
         return destination.is(AccountIdentifier.Type.SE_PG)
                 ? NordeaSEConstants.PaymentTypes.PLUSGIRO
@@ -186,7 +187,7 @@ public class NordeaExecutorHelper {
             context.openBankId(null, false);
             pollSignTransfer(transferId, signatureResponse.getOrderReference());
         } else {
-            throw paymentFailedError(null);
+            throw ErrorResponse.paymentFailedError(null);
         }
     }
 
@@ -196,7 +197,7 @@ public class NordeaExecutorHelper {
             assertSuccessfulSignOrThrow(completeTransferResponse, transferId);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                throw bankIdAlreadyInProgressError(e);
+                throw ErrorResponse.bankIdAlreadyInProgressError(e);
             }
             throw e;
         }
@@ -217,21 +218,21 @@ public class NordeaExecutorHelper {
                     case WAITING:
                         break;
                     case CANCELLED:
-                        throw bankIdCancelledError();
+                        throw ErrorResponse.bankIdCancelledError();
                     default:
-                        throw signTransferFailedError();
+                        throw ErrorResponse.signTransferFailedError();
                 }
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                    throw bankIdAlreadyInProgressError(e);
+                    throw ErrorResponse.bankIdAlreadyInProgressError(e);
                 }
                 log.error(e.getMessage(), e);
-                throw signTransferFailedError();
+                throw ErrorResponse.signTransferFailedError();
             }
         }
         // Time out - cancel the signing request
         cancelSign(orderRef);
-        throw bankIdTimedOut();
+        throw ErrorResponse.bankIdTimedOut();
     }
 
     private CompleteTransferResponse completeTransfer(String orderRef) {
@@ -252,7 +253,7 @@ public class NordeaExecutorHelper {
     private void assertSuccessfulSignOrThrow(
             CompleteTransferResponse completeTransferResponse, String transferId) {
         if (completeTransferResponse.hasErrors()) {
-            throw transferRejectedError(
+            throw ErrorResponse.transferRejectedError(
                     ErrorCodes.TRANSFER_REJECTED, EndUserMessage.TRANSFER_REJECTED);
         }
         Optional<ResultsEntity> first =
@@ -285,171 +286,6 @@ public class NordeaExecutorHelper {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(endUserMessage.getKey().get())
                 .setEndUserMessage(catalog.getString(endUserMessage))
-                .build();
-    }
-
-    protected TransferExecutionException invalidDestError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setEndUserMessage(
-                        catalog.getString(
-                                TransferExecutionException.EndUserMessage.INVALID_DESTINATION))
-                .build();
-    }
-
-    protected TransferExecutionException failedFetchAccountsError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.ErrorCodes.UNABLE_TO_FETCH_ACCOUNTS)
-                .build();
-    }
-
-    public TransferExecutionException paymentFailedError(Exception e) {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
-                .setEndUserMessage(catalog.getString(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR))
-                .setException(e)
-                .build();
-    }
-
-    private TransferExecutionException invalidSourceAccountError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setEndUserMessage(
-                        catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE))
-                .build();
-    }
-
-    private TransferExecutionException invalidPaymentType() {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setEndUserMessage(
-                        catalog.getString("You can only make payments to Swedish destinations"))
-                .build();
-    }
-
-    protected TransferExecutionException bankIdAlreadyInProgressError(Exception e) {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage(
-                        TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS
-                                .getKey()
-                                .get())
-                .setEndUserMessage(
-                        catalog.getString(
-                                TransferExecutionException.EndUserMessage
-                                        .BANKID_ANOTHER_IN_PROGRESS))
-                .setException(e)
-                .build();
-    }
-
-    private TransferExecutionException bankIdCancelledError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage(
-                        TransferExecutionException.EndUserMessage.BANKID_CANCELLED.getKey().get())
-                .setEndUserMessage(
-                        catalog.getString(
-                                TransferExecutionException.EndUserMessage.BANKID_CANCELLED))
-                .build();
-    }
-
-    private TransferExecutionException bankIdTimedOut() {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage(catalog.getString(EndUserMessage.BANKID_NO_RESPONSE))
-                .setEndUserMessage(catalog.getString(EndUserMessage.BANKID_NO_RESPONSE))
-                .build();
-    }
-
-    protected TransferExecutionException notEnoughFundsError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage(
-                        catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
-                .setEndUserMessage(
-                        catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
-                .build();
-    }
-
-    private TransferExecutionException signTransferFailedError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(
-                        TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED
-                                .getKey()
-                                .get())
-                .setEndUserMessage(
-                        catalog.getString(
-                                TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED))
-                .build();
-    }
-
-    protected TransferExecutionException duplicatePaymentError(HttpResponseException e) {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setEndUserMessage(
-                        catalog.getString(NordeaSEConstants.LogMessages.DUPLICATE_PAYMENT))
-                .setException(e)
-                .build();
-    }
-
-    protected TransferExecutionException transferRejectedError(
-            String errorMessage, TransferExecutionException.EndUserMessage endUserMessage) {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage(errorMessage)
-                .setEndUserMessage(catalog.getString(endUserMessage))
-                .build();
-    }
-
-    protected TransferExecutionException transferFailedError(Exception e) {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setEndUserMessage(
-                        this.catalog.getString(
-                                TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED))
-                .setException(e)
-                .build();
-    }
-
-    public TransferExecutionException eInvoiceNotFoundError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_NOT_FOUND)
-                .setEndUserMessage(
-                        catalog.getString(
-                                TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
-                .build();
-    }
-
-    public TransferExecutionException eInvoiceUpdateAmountNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_AMOUNT)
-                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_AMOUNT))
-                .build();
-    }
-
-    public TransferExecutionException eInvoiceUpdateMessageNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION_MESSAGE)
-                .setEndUserMessage(
-                        catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE))
-                .build();
-    }
-
-    public TransferExecutionException eInvoiceUpdateDueNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DUEDATE)
-                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DUEDATE))
-                .build();
-    }
-
-    public TransferExecutionException eInvoiceUpdateFromNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_SOURCE)
-                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_SOURCE))
-                .build();
-    }
-
-    public TransferExecutionException eInvoiceUpdateToNotAllowed() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION)
-                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION))
-                .build();
-    }
-
-    public TransferExecutionException wrongToAccountLengthError() {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage(NordeaSEConstants.LogMessages.WRONG_TO_ACCOUNT_LENGTH)
-                .setEndUserMessage(catalog.getString(EndUserMessage.INVALID_DESTINATION))
                 .build();
     }
 }

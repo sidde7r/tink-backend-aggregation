@@ -56,15 +56,9 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
             }
         } catch (HttpResponseException e) {
             final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-
-            if (errorResponse.isDuplicatePayment()) {
-                throw executorHelper.duplicatePaymentError(e);
-            }
-            if (errorResponse.isNotEnoughFunds()) {
-                throw executorHelper.notEnoughFundsError();
-            }
+            errorResponse.throwAppropriateErrorIfAny();
             log.warn("Payment execution failed", e);
-            throw executorHelper.paymentFailedError(e);
+            throw e;
         }
     }
 
@@ -101,7 +95,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
         FetchAccountResponse accountResponse = apiClient.fetchAccount();
 
         if (accountResponse == null) {
-            throw executorHelper.failedFetchAccountsError();
+            throw ErrorResponse.failedFetchAccountsError();
         }
 
         return accountResponse;
@@ -132,14 +126,9 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-                if (errorResponse.isDuplicatePayment()) {
-                    throw executorHelper.duplicatePaymentError(e);
-                }
-                if (errorResponse.isWrongToAccountLengthError()) {
-                    throw executorHelper.wrongToAccountLengthError();
-                }
+                errorResponse.throwAppropriateErrorIfAny();
                 log.warn("Payment execution failed", e);
-                throw executorHelper.paymentFailedError(e);
+                throw e;
             }
             throw e;
         }

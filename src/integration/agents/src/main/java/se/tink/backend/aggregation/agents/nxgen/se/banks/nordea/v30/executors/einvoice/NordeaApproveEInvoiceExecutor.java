@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.NordeaEInvoiceFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.ApproveEInvoiceExecutor;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.date.DateUtils;
@@ -37,7 +38,7 @@ public class NordeaApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
     @Override
     public void approveEInvoice(Transfer transfer) throws TransferExecutionException {
         // disable e-invoice functionality
-        throw executorHelper.eInvoiceNotFoundError();
+        throw ErrorResponse.eInvoiceNotFoundError();
     }
 
     private boolean isModifyingEInvoice(PaymentEntity eInvoice, Transfer transfer) {
@@ -73,28 +74,28 @@ public class NordeaApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
     private void validateCanBeUpdated(PaymentEntity eInvoice, Transfer transfer) {
         if (!eInvoice.getPermissions().canModifyAmount()
                 && !transfer.getAmount().equals(eInvoice.getAmount())) {
-            throw executorHelper.eInvoiceUpdateAmountNotAllowed();
+            throw ErrorResponse.eInvoiceUpdateAmountNotAllowed();
         }
         if (!eInvoice.getPermissions().canModifyDue()
                 && !DateUtils.isSameDay(transfer.getDueDate(), eInvoice.getDue())) {
-            throw executorHelper.eInvoiceUpdateDueNotAllowed();
+            throw ErrorResponse.eInvoiceUpdateDueNotAllowed();
         }
         if (!eInvoice.getPermissions().canModifyMessage()
                 && !Strings.nullToEmpty(transfer.getDestinationMessage())
                         .equals(Strings.nullToEmpty(eInvoice.getMessage()))) {
-            throw executorHelper.eInvoiceUpdateMessageNotAllowed();
+            throw ErrorResponse.eInvoiceUpdateMessageNotAllowed();
         }
         if (!eInvoice.getPermissions().canModifyTo()
                 && !eInvoice.getRecipientAccountNumber()
                         .equals(transfer.getDestination().getIdentifier())) {
-            throw executorHelper.eInvoiceUpdateToNotAllowed();
+            throw ErrorResponse.eInvoiceUpdateToNotAllowed();
         }
         AccountIdentifierFormatter nordeaFormatter = new NordeaAccountIdentifierFormatter();
         if (!eInvoice.getPermissions().canModifyFrom()
                 && !transfer.getSource()
                         .getIdentifier(nordeaFormatter)
                         .equals(eInvoice.getFrom())) {
-            throw executorHelper.eInvoiceUpdateFromNotAllowed();
+            throw ErrorResponse.eInvoiceUpdateFromNotAllowed();
         }
     }
 
@@ -109,7 +110,7 @@ public class NordeaApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
                 .fetchAsPaymentStream()
                 .filter(eInvoiceEntity -> isEInvoiceEqualsTransfer(transferId, eInvoiceEntity))
                 .findFirst()
-                .orElseThrow(() -> executorHelper.eInvoiceNotFoundError());
+                .orElseThrow(() -> ErrorResponse.eInvoiceNotFoundError());
     }
 
     private boolean isEInvoiceEqualsTransfer(String transferId, PaymentEntity paymentEntity) {

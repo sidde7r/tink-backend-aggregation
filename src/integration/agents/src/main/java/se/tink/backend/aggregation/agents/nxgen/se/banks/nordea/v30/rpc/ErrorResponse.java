@@ -153,6 +153,32 @@ public class ErrorResponse {
                     .setEndUserMessage(EndUserMessage.TRANSFER_EXECUTE_FAILED)
                     .build();
         }
+        if (isDuplicatePayment()) {
+            // TODO fix
+            throw duplicatePaymentError(null);
+        }
+        if (isWrongToAccountLengthError()) {
+            throw wrongToAccountLengthError();
+        }
+        if (isUnregisteredRecipient()) {
+            throw transferRejectedError(
+                    ErrorCodes.UNREGISTERED_RECIPIENT, EndUserMessage.UNREGISTERED_RECIPIENT);
+        }
+        if (isDuplicatePayment()) {
+            throw duplicatePaymentError(null);
+        }
+        if (isNotEnoughFunds()) {
+            throw notEnoughFundsError();
+        }
+        if (isSigningCollision()) {
+            throw bankIdAlreadyInProgressError(null);
+        }
+        if (isDuplicatePayment()) {
+            throw duplicatePaymentError(null);
+        }
+        if (isWrongToAccountLengthError()) {
+            throw wrongToAccountLengthError();
+        }
     }
 
     @JsonIgnore
@@ -166,5 +192,153 @@ public class ErrorResponse {
             }
         }
         return sb.toString().trim();
+    }
+
+    public static TransferExecutionException invalidDestError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
+                .build();
+    }
+
+    public static TransferExecutionException failedFetchAccountsError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.ErrorCodes.UNABLE_TO_FETCH_ACCOUNTS)
+                .build();
+    }
+
+    public static TransferExecutionException paymentFailedError(Exception e) {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
+                .setEndUserMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
+                .setException(e)
+                .build();
+    }
+
+    public static TransferExecutionException invalidSourceAccountError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
+                .build();
+    }
+
+    public static TransferExecutionException invalidPaymentType() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setEndUserMessage("You can only make payments to Swedish destinations")
+                .build();
+    }
+
+    public static TransferExecutionException bankIdAlreadyInProgressError(Exception e) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(
+                        TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS
+                                .getKey()
+                                .get())
+                .setEndUserMessage(
+                        TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS)
+                .setException(e)
+                .build();
+    }
+
+    public static TransferExecutionException bankIdCancelledError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(
+                        TransferExecutionException.EndUserMessage.BANKID_CANCELLED.getKey().get())
+                .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_CANCELLED)
+                .build();
+    }
+
+    public static TransferExecutionException bankIdTimedOut() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
+                .setEndUserMessage(EndUserMessage.BANKID_NO_RESPONSE)
+                .build();
+    }
+
+    protected TransferExecutionException notEnoughFundsError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get())
+                .setEndUserMessage(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT)
+                .build();
+    }
+
+    public static TransferExecutionException signTransferFailedError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(
+                        TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED
+                                .getKey()
+                                .get())
+                .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED)
+                .build();
+    }
+
+    protected TransferExecutionException duplicatePaymentError(HttpResponseException e) {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setEndUserMessage(NordeaSEConstants.LogMessages.DUPLICATE_PAYMENT)
+                .setException(e)
+                .build();
+    }
+
+    public static TransferExecutionException transferRejectedError(
+            String errorMessage, TransferExecutionException.EndUserMessage endUserMessage) {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(errorMessage)
+                .setEndUserMessage(endUserMessage)
+                .build();
+    }
+
+    public static TransferExecutionException transferFailedError(Exception e) {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setEndUserMessage(
+                        TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED)
+                .setException(e)
+                .build();
+    }
+
+    public static TransferExecutionException eInvoiceNotFoundError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_NOT_FOUND)
+                .setEndUserMessage(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES)
+                .build();
+    }
+
+    public static TransferExecutionException eInvoiceUpdateAmountNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_AMOUNT)
+                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_AMOUNT)
+                .build();
+    }
+
+    public static TransferExecutionException eInvoiceUpdateMessageNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION_MESSAGE)
+                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE)
+                .build();
+    }
+
+    public static TransferExecutionException eInvoiceUpdateDueNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DUEDATE)
+                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_DUEDATE)
+                .build();
+    }
+
+    public static TransferExecutionException eInvoiceUpdateFromNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_SOURCE)
+                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_SOURCE)
+                .build();
+    }
+
+    public static TransferExecutionException eInvoiceUpdateToNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION)
+                .setEndUserMessage(EndUserMessage.EINVOICE_MODIFY_DESTINATION)
+                .build();
+    }
+
+    public TransferExecutionException wrongToAccountLengthError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(NordeaSEConstants.LogMessages.WRONG_TO_ACCOUNT_LENGTH)
+                .setEndUserMessage(EndUserMessage.INVALID_DESTINATION)
+                .build();
     }
 }
