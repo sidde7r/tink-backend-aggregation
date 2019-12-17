@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.date.DateFormat;
 
 public final class VolvoFinansApiClient {
 
@@ -99,10 +100,10 @@ public final class VolvoFinansApiClient {
                                 account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID)))
                 .queryParam(
                         QueryKeys.DATE_TO,
-                        Utils.formatDateTime(endDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        DateFormat.formatDateTime(endDate, Format.TIMESTAMP, Format.TIMEZONE))
                 .queryParam(
                         QueryKeys.DATE_FROM,
-                        Utils.formatDateTime(startDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        DateFormat.formatDateTime(startDate, Format.TIMESTAMP, Format.TIMEZONE))
                 .header(HeaderKeys.X_API_KEY, apiKey)
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .accept(MediaType.APPLICATION_JSON)
