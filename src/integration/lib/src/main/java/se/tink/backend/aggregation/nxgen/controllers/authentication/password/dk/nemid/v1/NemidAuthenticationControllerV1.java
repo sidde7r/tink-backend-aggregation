@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v1;
 
 import com.google.common.base.Strings;
 import java.io.File;
@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstantsV1.ErrorStrings;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v1.NemIdConstantsV1.ErrorStrings;
 
 public abstract class NemidAuthenticationControllerV1 {
 

@@ -164,7 +164,6 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib:lib_test",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/password/dk/nemid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/framework/validation",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",

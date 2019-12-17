@@ -1,7 +1,6 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
 import com.google.common.base.Strings;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstantsV2.ErrorStrings;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.ErrorStrings;
 
 // Temporarily renaming this to V2. V1 will be removed once the Nordea DK update is finished
 public class NemIdIFrameController {
@@ -148,15 +147,6 @@ public class NemIdIFrameController {
 
         throw new IllegalStateException(
                 String.format("[nemid] Unknown login error '%s'.", errorText));
-    }
-
-    // TODO: implement retry here since the server can return 500
-    private void injectJavascript(NemIdParametersV1 nemIdParameters) {
-
-        String html = String.format(NemIdConstantsV2.BASE_HTML, nemIdParameters.getNemIdElements());
-        String b64Html = Base64.getEncoder().encodeToString(html.getBytes());
-
-        webdriverHelper.executeJavascript("document.write(atob(\"" + b64Html + "\"));");
     }
 
     private void setUserName(String username) {
