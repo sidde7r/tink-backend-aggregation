@@ -319,6 +319,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/locks",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/integration/payment:rpc",

@@ -14,6 +14,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.configuration.NestedConfigurationLevel1;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.configuration.NestedConfigurationLevel2;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.configuration.OuterConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 
 public class AgentConfigurationControllerTest {
     private static final ObjectMapper OBJECT_MAPPER =
