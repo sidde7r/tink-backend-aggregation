@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc;
 
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
@@ -7,7 +8,9 @@ public class GetTokenForm extends AbstractForm {
     private GetTokenForm(String grantType, String code, String redirectUri) {
         put(NordeaBaseConstants.FormKeys.GRANT_TYPE, grantType);
         put(NordeaBaseConstants.FormKeys.CODE, code);
-        put(NordeaBaseConstants.FormKeys.REDIRECT_URI, redirectUri);
+        if (!Strings.isNullOrEmpty(redirectUri)) {
+            put(NordeaBaseConstants.FormKeys.REDIRECT_URI, redirectUri);
+        }
     }
 
     public static Builder builder() {

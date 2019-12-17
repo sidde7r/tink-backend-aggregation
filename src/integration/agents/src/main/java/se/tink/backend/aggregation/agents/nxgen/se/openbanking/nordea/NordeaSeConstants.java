@@ -17,9 +17,9 @@ public final class NordeaSeConstants {
     }
 
     public static class ApiService {
-        public static final String AUTHORIZE = "/v3/authorize-decoupled";
-        public static final String GET_CODE = "/v3/authorize-decoupled/";
-        public static final String GET_TOKEN = "/v3/authorize-decoupled/token";
+        public static final String AUTHORIZE = "/v4/authorize-decoupled";
+        public static final String GET_CODE = "/v4/authorize-decoupled/";
+        public static final String GET_TOKEN = "/v4/authorize-decoupled/token";
     }
 
     public static class StorageKeys {
