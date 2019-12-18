@@ -140,4 +140,9 @@ public final class NordeaBaseConstants {
         public static final String BBAN_SE = "BBAN_SE";
         public static final String IBAN = "iban";
     }
+
+    public class Scopes {
+        public static final String AIS = "AIS";
+        public static final String PIS = "PIS";
+    }
 }

@@ -10,7 +10,6 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
@@ -283,14 +282,15 @@ public class NordeaBaseApiClient implements TokenInterface {
     private String getScopes() {
         List<String> scopes = configuration.getScopes();
         if (scopes.stream()
-                .allMatch(scope -> NordeaSeConstants.Scopes.AIS.equalsIgnoreCase(scope))) {
+                .allMatch(scope -> NordeaBaseConstants.Scopes.AIS.equalsIgnoreCase(scope))) {
             // Return only AIS scopes
             return SCOPE_WITHOUT_PAYMENT;
         } else if (scopes.stream()
                 .allMatch(
                         scope ->
-                                NordeaSeConstants.Scopes.AIS.equalsIgnoreCase(scope)
-                                        || NordeaSeConstants.Scopes.PIS.equalsIgnoreCase(scope))) {
+                                NordeaBaseConstants.Scopes.AIS.equalsIgnoreCase(scope)
+                                        || NordeaBaseConstants.Scopes.PIS.equalsIgnoreCase(
+                                                scope))) {
             // Return AIS + PIS scopes
             return SCOPE;
         } else {
