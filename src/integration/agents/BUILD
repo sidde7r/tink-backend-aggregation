@@ -409,6 +409,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/norwegian",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/nordea",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/sebopenbanking",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bankdata",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/euroinformation",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/n26",
