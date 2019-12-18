@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "bancoposta",
+    name = "dnb",
     srcs = glob(["*.java"]),
     data = [
         "//data:aggregation_test",
@@ -10,7 +10,7 @@ junit_test(
     ],
     tags = [
         "external",
-        #        "manual",
+        "manual",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
@@ -18,17 +18,14 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/bancoposta",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/dnb",
         "//src/integration/amount",
         "//src/integration/api",
-        "//src/integration/lib",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
-        "//src/integration/models",
+        "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
-        "//src/libraries/serialization",
+        "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
     ],
 )
