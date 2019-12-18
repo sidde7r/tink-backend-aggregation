@@ -12,6 +12,7 @@ This service then prompts the developer for said information and hands it back t
 ## Install
 ### Using pipenv
 The preferred way is using [pipenv]: 
+How to install Python 3 and pipenv can be found [here][python3]:
 
 ```bash
 $ pipenv install
@@ -21,10 +22,12 @@ $ pipenv install
 How to install virtualenv and how to use it can be found [here][virtualenv].
 
 ```
-$ virtualenv .venv
+$ python3 -m pip install --upgrade pip
+$ pip3 install virtualenv
+$ virtualenv -p python3 .venv
 $ source .venv/bin/activate
 (.venv) $ python --version
-Python 2.7.9
+Python 3.7.5
 (.venv) $ pip install -r requirements.txt
 ```
 
@@ -51,10 +54,11 @@ $ source .venv/bin/activate
 Agent test server listening on 127.0.0.1:7357
 ```
 
+[python3]: https://github.com/LambdaSchool/CS-Wiki/wiki/Installing-Python-3-and-pipenv
 [python_eol]: https://pythonclock.org/
 [python_future]: https://python-future.org/
 [pipenv]: https://github.com/pypa/pipenv
-[virtualenv]: http://docs.python-guide.org/en/latest/dev/virtualenvs/#lower-level-virtualenv
+[virtualenv]: https://help.dreamhost.com/hc/en-us/articles/115000695551-Installing-and-using-virtualenv-with-Python-3
 
 
 ## SSL certificate

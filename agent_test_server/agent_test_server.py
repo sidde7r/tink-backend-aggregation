@@ -7,9 +7,11 @@ import os
 from flask import Flask, jsonify, request, abort, Response, redirect
 import webbrowser
 from bankid import generate_bankid_qrcode
+from cacheout import Cache
 
 from memqueue import MemoryMessageQueue
 
+cache = Cache()
 queue = MemoryMessageQueue()
 
 app = Flask(__name__, static_url_path='/static')
@@ -112,23 +114,23 @@ def get_supplemental(key, timeout_seconds):
     return jsonify(answers)
 
 
-@app.route("/api/v1/provider-session-cache/<key>", methods=("POST",))
-def request_provider_session_cache(key):
+@app.route("/api/v1/provider-session-cache/<key>/<timeout_seconds>", methods=("POST",))
+def request_provider_session_cache(key, timeout_seconds):
     if not request.json:
         return None
 
     value = request.get_json()
 
-    # Put the answers on the queue so that it can be picked up
+    # Put the answers on the cache so that it can be picked up
     # when the agent asks for the provider session cache.
-    queue.put(key, value)
+    cache.set(key, value, int(timeout_seconds))
 
     return "", 204
 
 
 @app.route("/api/v1/provider-session-cache/<key>", methods=("GET",))
 def get_provider_session_cache(key):
-    answers = queue.get(key, 0)
+    answers = cache.get(key)
     return jsonify(answers)
 
 
