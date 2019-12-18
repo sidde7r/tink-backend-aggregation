@@ -68,10 +68,10 @@ public abstract class AbstractSibsSignPaymentStrategy implements SignPaymentStra
         return paymentStatusResponse.getTransactionStatus();
     }
 
-    protected void checkStatusAfterSign(SibsTransactionStatus transactionStatus)
+    protected static void checkStatusAfterSign(SibsTransactionStatus transactionStatus)
             throws PaymentException {
         PaymentStatus tinkStatus = transactionStatus.getTinkStatus();
-        if (!(PaymentStatus.PAID == tinkStatus || PaymentStatus.SIGNED == tinkStatus)) {
+        if (PaymentStatus.PAID != tinkStatus) {
             throw new PaymentException(
                     "Unexpected payment status tink -> '"
                             + tinkStatus
