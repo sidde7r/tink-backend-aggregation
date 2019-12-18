@@ -6,6 +6,7 @@ import java.security.cert.X509Certificate;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -15,6 +16,7 @@ import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ConfigurationValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormKeys;
@@ -138,6 +140,26 @@ public final class RedsysApiClient {
                 getConfiguration().getBaseAPIUrl(), aspspConfiguration.getAspspCode(), path);
     }
 
+    private String getScopes() {
+        List<String> scopes = configuration.getScopes();
+        if (scopes.stream().allMatch(scope -> ConfigurationValues.AIS.equalsIgnoreCase(scope))) {
+            // Return only AIS scope
+            return QueryValues.AIS_SCOPE;
+        } else if (scopes.stream()
+                .allMatch(
+                        scope ->
+                                ConfigurationValues.AIS.equalsIgnoreCase(scope)
+                                        || ConfigurationValues.PIS.equalsIgnoreCase(scope))) {
+            // Return AIS + PIS scopes
+            return QueryValues.SCOPE;
+        } else {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "%s contain invalid scope(s), only support scopes AIS and PIS",
+                            scopes.toString()));
+        }
+    }
+
     public URL getAuthorizeUrl(String state, String codeChallenge) {
         final String clientId = getAuthClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
@@ -145,7 +167,7 @@ public final class RedsysApiClient {
         return client.request(makeAuthUrl(RedsysConstants.Urls.OAUTH))
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
-                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
+                .queryParam(QueryKeys.SCOPE, getScopes())
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)

@@ -77,6 +77,7 @@ public final class RedsysConstants {
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
         public static final String SCOPE = "AIS PIS";
+        public static final String AIS_SCOPE = "AIS";
         public static final String CODE_CHALLENGE_METHOD = "S256";
         public static final String TRUE = "true";
         public static final String FALSE = "false";
@@ -86,6 +87,11 @@ public final class RedsysConstants {
             public static final String PENDING = "pending";
             public static final String BOTH = "both";
         }
+    }
+
+    public static class ConfigurationValues {
+        public static final String AIS = "AIS";
+        public static final String PIS = "PIS";
     }
 
     public static class HeaderKeys {

@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
+import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.AgentConfigParam;
@@ -16,6 +18,7 @@ public class RedsysConfiguration implements ClientConfiguration {
     @Secret private String baseAPIUrl;
     @Secret private String clientId;
     @AgentConfigParam private String redirectUrl;
+    @AgentConfigParam private List<String> scopes;
     private String clientSigningKeyPath;
     private String clientSigningKeyPassword;
     private String clientSigningCertificate;
@@ -65,5 +68,14 @@ public class RedsysConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(clientSigningCertificate),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Signing Certificate"));
         return clientSigningCertificate;
+    }
+
+    public List<String> getScopes() {
+        Preconditions.checkNotNull(
+                scopes, String.format(ErrorMessages.INVALID_CONFIGURATION, "scopes"));
+        Preconditions.checkArgument(
+                !Iterables.isEmpty(scopes),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "scopes"));
+        return scopes;
     }
 }
