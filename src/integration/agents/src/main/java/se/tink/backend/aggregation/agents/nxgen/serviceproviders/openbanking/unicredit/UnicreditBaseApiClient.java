@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.util.UnicreditBaseUtils;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -113,19 +113,19 @@ public abstract class UnicreditBaseApiClient {
 
         RequestBuilder requestBuilder =
                 createRequest(url)
-                        .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
+                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.CONSENT_ID, consentId);
 
         // This header must be present if the request was initiated by the PSU
         if (manualRequest) {
             logger.info(
                     "Request is attended -- adding PSU header for requestId = {}",
-                    UnicreditBaseUtils.getRequestId());
+                    Psd2Headers.getRequestId());
             requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
         } else {
             logger.info(
                     "Request is unattended -- omitting PSU header for requestId = {}",
-                    UnicreditBaseUtils.getRequestId());
+                    Psd2Headers.getRequestId());
         }
 
         return requestBuilder;
@@ -142,7 +142,7 @@ public abstract class UnicreditBaseApiClient {
 
         ConsentResponse consentResponse =
                 createRequest(new URL(getConfiguration().getBaseUrl() + Endpoints.CONSENTS))
-                        .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
+                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.PSU_ID_TYPE, getConfiguration().getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
@@ -162,7 +162,7 @@ public abstract class UnicreditBaseApiClient {
         return createRequest(
                         new URL(getConfiguration().getBaseUrl() + Endpoints.CONSENT_STATUS)
                                 .parameter(PathParameters.CONSENT_ID, getConsentIdFromStorage()))
-                .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .get(ConsentStatusResponse.class);
     }
 
@@ -213,7 +213,7 @@ public abstract class UnicreditBaseApiClient {
                                                 UnicreditPaymentProduct
                                                         .INSTANT_SEPA_CREDIT_TRANSFERS
                                                         .toString()))
-                        .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
+                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                         .header(
                                 HeaderKeys.PSU_ID_TYPE,
@@ -243,7 +243,7 @@ public abstract class UnicreditBaseApiClient {
                                         UnicreditPaymentProduct.INSTANT_SEPA_CREDIT_TRANSFERS
                                                 .toString())
                                 .parameter(PathParameters.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .get(FetchPaymentResponse.class);
     }
