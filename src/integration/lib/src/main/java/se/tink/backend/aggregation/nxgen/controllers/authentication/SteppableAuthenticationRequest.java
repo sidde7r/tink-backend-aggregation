@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
+import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.assertj.core.util.Preconditions;
@@ -40,5 +41,23 @@ public final class SteppableAuthenticationRequest implements AuthenticationStepp
 
     public AuthenticationRequest getPayload() {
         return payload;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        SteppableAuthenticationRequest request = (SteppableAuthenticationRequest) o;
+        return Objects.equals(stepIdentifier, request.stepIdentifier)
+                && Objects.equals(payload, request.payload);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stepIdentifier, payload);
     }
 }

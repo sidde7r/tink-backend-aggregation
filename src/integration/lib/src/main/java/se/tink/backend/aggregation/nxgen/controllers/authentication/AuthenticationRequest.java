@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
 
 /** Includes all data the authentication step needs in order to make an authentication response. */
@@ -48,5 +49,24 @@ public final class AuthenticationRequest implements Credentialsable {
     public AuthenticationRequest withCredentials(final Credentials credentials) {
         this.credentials = credentials;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AuthenticationRequest that = (AuthenticationRequest) o;
+        return Objects.equals(credentials, that.credentials)
+                && Objects.equals(userInputs, that.userInputs)
+                && Objects.equals(callbackData, that.callbackData);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(credentials, userInputs, callbackData);
     }
 }
