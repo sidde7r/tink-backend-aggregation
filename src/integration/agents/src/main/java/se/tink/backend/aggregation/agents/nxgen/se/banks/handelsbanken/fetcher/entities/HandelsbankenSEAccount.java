@@ -83,7 +83,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
 
         return Optional.of(
                 CreditCardAccount.builder(number)
-                        .setAvailableCredit(cardInvoiceInfo.getCredit().asAmount())
+                        .setAvailableCredit(getAvailableCredit(cardInvoiceInfo))
                         .setHolderName(new HolderName(holderName))
                         .setBalance(
                                 new Amount(
@@ -95,6 +95,26 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                         .addIdentifier(new SwedishIdentifier(accountNumber))
                         .addIdentifier(new SwedishSHBInternalIdentifier(number))
                         .build());
+    }
+
+    /**
+     * Spendable and amountAvailable should always be the same value. Trying to use any of those as
+     * available credit. Doesn't seem likely that they are ever null, but you never know with
+     * Handelsbanken, so defaulting to credit limit (which is what we used before).
+     */
+    private Amount getAvailableCredit(CardInvoiceInfo cardInvoiceInfo) {
+        if (cardInvoiceInfo.getSpendable() != null) {
+            return cardInvoiceInfo.getSpendable().asAmount();
+        }
+
+        if (amountAvailable != null) {
+            return amountAvailable.asAmount();
+        }
+
+        LOG.warn(
+                "No spendable or amountAvailable value found for Handelsbanken credit card: {}",
+                name);
+        return cardInvoiceInfo.getCredit().asAmount();
     }
 
     private String getAccountNumber(TransactionsSEResponse transactionsResponse) {

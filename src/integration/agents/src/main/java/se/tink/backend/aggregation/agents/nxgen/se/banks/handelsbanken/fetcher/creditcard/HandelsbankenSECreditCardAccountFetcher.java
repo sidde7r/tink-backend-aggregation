@@ -28,6 +28,7 @@ public class HandelsbankenSECreditCardAccountFetcher implements AccountFetcher<C
         // Credit cards that are sent through the account listing.
         List<CreditCardAccount> creditCardAccounts = new ArrayList<>();
 
+        // Allkortskonto, which is a credit card is retrieved from the accounts endpoint.
         creditCardAccounts.addAll(
                 sessionStorage
                         .applicationEntryPoint()
