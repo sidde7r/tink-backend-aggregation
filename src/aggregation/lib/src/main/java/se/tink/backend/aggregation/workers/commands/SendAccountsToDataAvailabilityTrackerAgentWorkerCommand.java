@@ -77,11 +77,6 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                                                     pair.first,
                                                     pair.second));
 
-                    if (context.getCachedIdentityData() != null) {
-                        agentDataAvailabilityTrackerClient.sendIdentityData(
-                                agentName, provider, market, context.getAggregationIdentityData());
-                    }
-
                     action.completed();
                 } else {
 
@@ -101,7 +96,35 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
 
     @Override
     public void postProcess() throws Exception {
-        // Deliberately left empty.
+        metrics.start(AgentWorkerOperationMetricType.POST_PROCESS_COMMAND);
+        try {
+            MetricAction action =
+                    metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
+            try {
+
+                if (!Strings.isNullOrEmpty(market)
+                        && ENABLED_MARKETS.contains(market.toUpperCase())) {
+
+                    // To min the impact, only move sendIdentityData here as cacheIdentityData
+                    // should be executed first
+                    if (context.getCachedIdentityData() != null) {
+                        agentDataAvailabilityTrackerClient.sendIdentityData(
+                                agentName, provider, market, context.getAggregationIdentityData());
+                    }
+
+                    action.completed();
+                } else {
+
+                    action.cancelled();
+                }
+
+            } catch (Exception e) {
+                action.failed();
+                log.error("Failed sending refresh data to tracking service.", e);
+            }
+        } finally {
+            metrics.stop();
+        }
     }
 
     @Override
