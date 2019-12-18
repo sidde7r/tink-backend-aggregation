@@ -35,16 +35,11 @@ public abstract class BerlinGroupConstants {
         public static final String DIGEST = "digest: ";
         public static final String DIGEST_PREFIX = "SHA-256=";
         public static final String KEY_ID_NAME = "keyId=";
-        public static final String SIGNING_ALGORITHM = "RSA";
         public static final String SIGNATURE_NAME = "signature=";
     }
 
     public static class StorageKeys {
-        public static final String BASE_URL = "BASE_URL";
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
-        public static final String CLIENT_ID = "CLIENT_ID";
-        public static final String CLIENT_SECRET = "CLIENT_SECRET";
-        public static final String IBAN = "IBAN";
         public static final String CODE_VERIFIER = "CODE_VERIFIER";
         public static final String CONSENT_ID = "consentId";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
@@ -82,17 +77,10 @@ public abstract class BerlinGroupConstants {
         public static final String WEB_API_KEY = "web-api-key";
         public static final String DIGEST = "Digest";
         public static final String DATE = "Date";
-        public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
         public static final String SIGNATURE = "Signature";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-Uri";
-        public static final String SSL_CERTIFICATE = "SSL-Certificate";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String AUTHORIZATION = "AUTHORIZATION";
-        public static final String TPP_ID = "TPP-ID";
-        public static final String TPP_SESSION_ID = "TPP-SESSION-ID";
-        public static final String PSU_ID = "PSU-ID";
-        public static final String PSU_ID_TYPE = "PSU-ID-Type";
-        public static final String PSY_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class FormKeys {
@@ -117,16 +105,10 @@ public abstract class BerlinGroupConstants {
         public static final String CLBD = "CLBD";
     }
 
-    public static class Certificate {
-        public static final String UTF_8 = "UTF-8";
-    }
-
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
-        public static final String ENCODE_CERTIFICATE_ERROR = "Cannot encode certificate.";
     }
 
     public static class IdTags {
