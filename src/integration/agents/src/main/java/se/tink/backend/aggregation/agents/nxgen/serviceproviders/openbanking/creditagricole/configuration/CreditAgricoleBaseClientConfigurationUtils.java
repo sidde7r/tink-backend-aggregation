@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
-import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 public class CreditAgricoleBaseClientConfigurationUtils {
@@ -16,7 +16,7 @@ public class CreditAgricoleBaseClientConfigurationUtils {
             final TinkHttpClient client,
             final AgentContext context,
             final Class agentClass,
-            final AgentConfigurationController agentConfigurationController,
+            final AgentConfigurationControllerable agentConfigurationController,
             final Class<CreditAgricoleBaseConfiguration> clientConfigurationClass) {
         final CreditAgricoleBaseConfiguration creditAgricoleConfiguration =
                 agentConfigurationController.getAgentConfiguration(clientConfigurationClass);
