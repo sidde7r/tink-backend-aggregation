@@ -29,7 +29,7 @@ import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import se.tink.libraries.net.TinkApacheHttpClient4Handler;
+import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;
 
 public class InterContainerJerseyClientFactory {
     // These should rarely change and the passphrase isn't sensitive. Therefore, not configurable

@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
-import se.tink.libraries.net.TinkApacheHttpClient4;
+import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class AbstractAgent extends SuperAbstractAgent {

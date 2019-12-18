@@ -22,9 +22,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.TextUtils;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
-import se.tink.libraries.net.AbstractJerseyClientFactory;
-import se.tink.libraries.net.TinkApacheHttpClient4;
-import se.tink.libraries.net.TinkApacheHttpClient4Handler;
+import se.tink.libraries.net.client.TinkApacheHttpClient4;
+import se.tink.libraries.net.client.factory.AbstractJerseyClientFactory;
+import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;
 
 public class JerseyClientFactory extends AbstractJerseyClientFactory {
 

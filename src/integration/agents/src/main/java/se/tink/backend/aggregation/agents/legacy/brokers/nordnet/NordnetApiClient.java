@@ -31,7 +31,7 @@ import se.tink.backend.aggregation.agents.brokers.nordnet.model.PositionsRespons
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.AccountInfoResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.AccountResponse;
 import se.tink.libraries.identitydata.IdentityData;
-import se.tink.libraries.net.TinkApacheHttpClient4;
+import se.tink.libraries.net.client.TinkApacheHttpClient4;
 
 public class NordnetApiClient {
     private static final Logger log = LoggerFactory.getLogger(NordnetApiClient.class);

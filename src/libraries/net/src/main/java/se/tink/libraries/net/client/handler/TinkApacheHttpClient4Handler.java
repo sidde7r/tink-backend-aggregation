@@ -1,4 +1,4 @@
-package se.tink.libraries.net;
+package se.tink.libraries.net.client.handler;
 
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
