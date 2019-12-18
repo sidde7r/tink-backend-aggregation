@@ -19,8 +19,6 @@ public class RedsysConfiguration implements ClientConfiguration {
     private String clientSigningKeyPath;
     private String clientSigningKeyPassword;
     private String clientSigningCertificate;
-    @Secret private String clientSigningCertificateId;
-    @Secret private String tppIpAddress;
 
     public String getBaseAuthUrl() {
         Preconditions.checkNotNull(
@@ -67,12 +65,5 @@ public class RedsysConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(clientSigningCertificate),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Signing Certificate"));
         return clientSigningCertificate;
-    }
-
-    public String getTppIpAddress() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(tppIpAddress),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "TPP IP Address"));
-        return tppIpAddress;
     }
 }
