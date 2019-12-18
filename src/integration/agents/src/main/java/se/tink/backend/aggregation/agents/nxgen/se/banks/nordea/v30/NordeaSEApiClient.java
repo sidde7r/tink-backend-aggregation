@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 import io.vavr.control.Option;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.IdTags;
@@ -47,10 +45,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorRes
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class NordeaSEApiClient {
     private final TinkHttpClient httpClient;
@@ -197,15 +195,7 @@ public class NordeaSEApiClient {
             return requestRefreshableGet(request, PaymentEntity.class);
         } catch (HttpResponseException hre) {
             ErrorResponse error = ErrorResponse.of(hre);
-
-            if (error.isExternalServiceCallFailed()) {
-                throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setMessage(
-                                NordeaSEConstants.LogMessages.BANKSIDE_ERROR_WHEN_SEARCHING_OUTBOX)
-                        .setEndUserMessage(
-                                catalog.getString(EndUserMessage.TRANSFER_EXECUTE_FAILED))
-                        .build();
-            }
+            error.throwAppropriateErrorIfAny();
 
             throw hre;
         }
@@ -324,14 +314,8 @@ public class NordeaSEApiClient {
                     .get(responseType);
 
         } catch (HttpResponseException hre) {
-            tryRefreshAccessToken(hre);
-            // use the new access token
-            request.overrideHeader(
-                    HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
+            return handleRefreshableRequestAndErrors(hre, request, responseType, HttpMethod.GET);
         }
-
-        // retry request with new access token
-        return request.get(responseType);
     }
 
     private <T> T requestRefreshablePost(RequestBuilder request, Class<T> responseType) {
@@ -342,14 +326,8 @@ public class NordeaSEApiClient {
                     .post(responseType);
 
         } catch (HttpResponseException hre) {
-            tryRefreshAccessToken(hre);
-            // use the new access token
-            request.overrideHeader(
-                    HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
+            return handleRefreshableRequestAndErrors(hre, request, responseType, HttpMethod.POST);
         }
-
-        // retry request with new access token
-        return request.post(responseType);
     }
 
     private <T> T requestRefreshablePut(RequestBuilder request, Class<T> responseType) {
@@ -360,14 +338,8 @@ public class NordeaSEApiClient {
                     .put(responseType);
 
         } catch (HttpResponseException hre) {
-            tryRefreshAccessToken(hre);
-            // use the new access token
-            request.overrideHeader(
-                    HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
+            return handleRefreshableRequestAndErrors(hre, request, responseType, HttpMethod.PUT);
         }
-
-        // retry request with new access token
-        return request.put(responseType);
     }
 
     private <T> T requestRefreshablePatch(RequestBuilder request, Class<T> responseType) {
@@ -378,14 +350,8 @@ public class NordeaSEApiClient {
                     .patch(responseType);
 
         } catch (HttpResponseException hre) {
-            tryRefreshAccessToken(hre);
-            // use the new access token
-            request.overrideHeader(
-                    HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
+            return handleRefreshableRequestAndErrors(hre, request, responseType, HttpMethod.PATCH);
         }
-
-        // retry request with new access token
-        return request.patch(responseType);
     }
 
     private <T> T requestRefreshableDelete(RequestBuilder request, Class<T> responseType) {
@@ -396,22 +362,42 @@ public class NordeaSEApiClient {
                     .delete(responseType);
 
         } catch (HttpResponseException hre) {
-            tryRefreshAccessToken(hre);
-            // use the new access token
-            request.overrideHeader(
-                    HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
-            // retry request with new access token
-            return request.delete(responseType);
+            return handleRefreshableRequestAndErrors(hre, request, responseType, HttpMethod.DELETE);
         }
     }
 
-    private void tryRefreshAccessToken(HttpResponseException hre) {
+    private <T> T handleRefreshableRequestAndErrors(
+            HttpResponseException hre,
+            RequestBuilder request,
+            Class<T> responseType,
+            HttpMethod method) {
         ErrorResponse error = ErrorResponse.of(hre);
-        if (error.tokenRequired() || error.isInvalidAccessToken()) {
-            refreshAccessToken(getRefreshToken());
-        } else {
+        if (!error.needsToRefreshToken()) {
+            error.throwAppropriateErrorIfAny();
             throw hre;
         }
+
+        tryRefreshAccessToken();
+        // use the new access token
+        request.overrideHeader(HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
+        switch (method) {
+            case GET:
+                return request.get(responseType);
+            case POST:
+                return request.post(responseType);
+            case DELETE:
+                return request.delete(responseType);
+            case PUT:
+                return request.put(responseType);
+            case PATCH:
+                return request.patch(responseType);
+            default:
+                throw new IllegalStateException("Unexpected HTTP method: " + method.name());
+        }
+    }
+
+    private void tryRefreshAccessToken() {
+        refreshAccessToken(getRefreshToken());
     }
 
     private void refreshAccessToken(String refreshToken) {

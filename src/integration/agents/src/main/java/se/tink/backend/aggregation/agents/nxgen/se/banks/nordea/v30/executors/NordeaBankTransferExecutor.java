@@ -6,10 +6,8 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.BankPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferResponse;
@@ -66,7 +64,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
     private void createNewTransfer(Transfer transfer) {
         final FetchAccountResponse accountResponse =
                 Optional.ofNullable(apiClient.fetchAccount())
-                        .orElseThrow(executorHelper::failedFetchAccountsError);
+                        .orElseThrow(ErrorResponse::failedFetchAccountsError);
 
         final TransferMessageFormatter transferMessageFormatter =
                 new TransferMessageFormatter(
@@ -118,7 +116,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                 apiClient.executeInternalBankTransfer(transferRequest);
 
         if (!transferResponse.isTransferAccepted()) {
-            throw executorHelper.transferFailedError(null);
+            throw ErrorResponse.transferFailedError(null);
         }
     }
 
@@ -134,7 +132,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                 destinationAccount.setBankName(Bank.NORDEA_PERSONKONTO.getDisplayName());
                 break;
             default:
-                throw executorHelper.invalidDestError();
+                throw ErrorResponse.invalidDestError();
         }
         destinationAccount.setAccountNumber(
                 accountIdentifier.getIdentifier(NORDEA_ACCOUNT_FORMATTER));
@@ -163,19 +161,9 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-                if (errorResponse.isDuplicatePayment()) {
-                    throw executorHelper.duplicatePaymentError(e);
-                }
-                if (errorResponse.isWrongToAccountLengthError()) {
-                    throw executorHelper.wrongToAccountLengthError();
-                }
-                if (errorResponse.isUnregisteredRecipient()) {
-                    throw executorHelper.transferRejectedError(
-                            ErrorCodes.UNREGISTERED_RECIPIENT,
-                            EndUserMessage.UNREGISTERED_RECIPIENT);
-                }
+                errorResponse.throwAppropriateErrorIfAny();
                 log.warn("Payment execution failed", e);
-                throw executorHelper.paymentFailedError(e);
+                throw e;
             }
             throw e;
         }
@@ -219,16 +207,8 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
 
     private void handleTransferErrors(HttpResponseException e) {
         final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-        if (errorResponse.isDuplicatePayment()) {
-            throw executorHelper.duplicatePaymentError(e);
-        }
-        if (errorResponse.isNotEnoughFunds()) {
-            throw executorHelper.notEnoughFundsError();
-        }
-        if (errorResponse.isSigningCollision()) {
-            throw executorHelper.bankIdAlreadyInProgressError(e);
-        }
+        errorResponse.throwAppropriateErrorIfAny();
         log.warn("Transfer execution failed", e);
-        throw executorHelper.transferFailedError(e);
+        throw e;
     }
 }

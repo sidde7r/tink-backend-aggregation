@@ -17,6 +17,7 @@ public final class NordeaBaseConstants {
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "Savings")
                     .build();
+    public static final int REFRESH_TOKEN_RETRY_LIMIT = 2;
 
     private NordeaBaseConstants() {
         throw new AssertionError();
