@@ -15,7 +15,6 @@ import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.configuration.NestedConfigurationLevel1;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.configuration.NestedConfigurationLevel2;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.configuration.OuterConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 
 public class AgentConfigurationControllerExtractSensitiveValuesTest {
 
@@ -23,7 +22,7 @@ public class AgentConfigurationControllerExtractSensitiveValuesTest {
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static String serializedConfiguration;
     private static Map<String, Object> serializedConfigurationAsMap;
-    private AgentConfigurationControllerable agentConfigurationController;
+    private AgentConfigurationController agentConfigurationController;
 
     @Before
     public void setup() {

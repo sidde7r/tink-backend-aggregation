@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.workers.commands;
 import java.util.Optional;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
-import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -14,7 +13,7 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final AgentWorkerCommandContext agentWorkerCommandContext;
     private final TppSecretsServiceClient tppSecretsServiceClient;
-    private AgentConfigurationControllerable agentConfigurationController;
+    private AgentConfigurationController agentConfigurationController;
 
     public CreateAgentConfigurationControllerWorkerCommand(
             AgentWorkerCommandContext agentWorkerCommandContext,
@@ -43,6 +42,6 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
     @Override
     public void postProcess() throws Exception {
         Optional.ofNullable(agentConfigurationController)
-                .ifPresent(AgentConfigurationControllerable::completeSecretValuesSubject);
+                .ifPresent(AgentConfigurationController::completeSecretValuesSubject);
     }
 }
