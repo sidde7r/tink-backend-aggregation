@@ -110,6 +110,9 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                     if (context.getCachedIdentityData() != null) {
                         agentDataAvailabilityTrackerClient.sendIdentityData(
                                 agentName, provider, market, context.getAggregationIdentityData());
+                    } else {
+                        log.info(
+                                "Identity data is null, skipping identity data send request to data tracker");
                     }
 
                     action.completed();
