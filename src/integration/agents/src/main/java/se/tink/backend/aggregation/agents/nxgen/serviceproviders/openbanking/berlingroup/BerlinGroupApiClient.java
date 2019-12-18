@@ -88,7 +88,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
             final String url, final String state, final String clientId, final String redirectUrl) {
         return client.request(url)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
-                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(QueryKeys.STATE, state);
     }

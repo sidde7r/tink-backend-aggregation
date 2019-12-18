@@ -60,7 +60,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
                         getConfiguration().getClientId(),
                         getConfiguration().getRedirectUrl(),
                         code,
-                        QueryValues.GRANT_TYPE);
+                        QueryValues.AUTHORIZATION_CODE);
 
         return client.request(Urls.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
@@ -80,7 +80,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
                 new RefreshTokenRequest(
                         getConfiguration().getClientId(),
                         getConfiguration().getClientSecret(),
-                        QueryValues.GRANT_TYPE_REFRESH,
+                        QueryValues.REFRESH_TOKEN,
                         refreshToken);
 
         return client.request(Urls.TOKEN)
