@@ -693,8 +693,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void setProviderSessionCache(String value) {
+    public void setProviderSessionCache(String value, int expiredTimeInSeconds) {
         String financialInstitutionId = request.getProvider().getFinancialInstitutionId();
-        providerSessionCacheController.setProviderSessionCache(financialInstitutionId, value);
+        providerSessionCacheController.setProviderSessionCache(
+                financialInstitutionId, value, expiredTimeInSeconds);
     }
 }

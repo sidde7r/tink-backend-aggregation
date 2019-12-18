@@ -192,9 +192,7 @@ public final class IngBaseApiClient {
                     logger.info("Get application token from cache");
                     final TokenResponse response =
                             new Gson().fromJson(applicationToken, TokenResponse.class);
-                    if (!response.hasAccessExpired()) {
-                        return response;
-                    }
+                    return response;
                 } catch (Exception e) {
                     logger.warn("Unable to parse payload : " + applicationToken);
                 }
@@ -237,11 +235,13 @@ public final class IngBaseApiClient {
 
         /*
            Save the valid application access token to cache
+           The cache should be expired earlier than the token (5 seconds)
         */
         String payloadStr = new Gson().toJson(response);
         Map<String, String> applicationTokenMap = new HashMap<>();
         applicationTokenMap.put(StorageKeys.APPLICATION_TOKEN, payloadStr);
-        providerSessionCacheController.setProviderSessionCacheInformation(applicationTokenMap);
+        providerSessionCacheController.setProviderSessionCacheInfoWithExpiredTime(
+                applicationTokenMap, (int) (response.getExpiresIn() - 5));
         return response;
     }
 
