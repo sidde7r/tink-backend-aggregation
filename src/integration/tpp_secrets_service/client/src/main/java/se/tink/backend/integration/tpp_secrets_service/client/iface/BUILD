@@ -6,5 +6,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/entities",
+        "//third_party:io_dropwizard_dropwizard_lifecycle",
     ],
 )
