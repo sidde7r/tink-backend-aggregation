@@ -256,6 +256,7 @@ public class SwedbankBaseConstants {
         UPCOMING_TRANSACTIONS("UpcomingTransactions"),
         LOANS("LendingLoanOverview"),
         PORTFOLIOS("PortfolioHoldings"),
+        PENSION_PORTFOLIOS("PortfolioPensions"),
         FUND_MARKET_INFO("FundMarketinfo"),
         EINVOICES("EinvoiceIncoming"),
         PAYMENT_BASEINFO("PaymentBaseinfo"),

@@ -51,6 +51,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.IncomingEinvoicesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.DetailedPortfolioResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.FundMarketInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.PensionPortfoliosResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.rpc.PortfolioHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
@@ -305,6 +306,12 @@ public class SwedbankDefaultApiClient {
     public PortfolioHoldingsResponse portfolioHoldings() {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.PORTFOLIOS, PortfolioHoldingsResponse.class);
+    }
+
+    public PensionPortfoliosResponse getPensionPortfolios() {
+        return makeMenuItemRequest(
+                SwedbankBaseConstants.MenuItemKey.PENSION_PORTFOLIOS,
+                PensionPortfoliosResponse.class);
     }
 
     public DetailedPortfolioResponse detailedPortfolioInfo(LinkEntity linkEntity) {
