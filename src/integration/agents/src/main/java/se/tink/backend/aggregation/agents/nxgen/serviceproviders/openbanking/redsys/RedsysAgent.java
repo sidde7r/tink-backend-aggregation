@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.AspspConfiguration;
@@ -72,9 +73,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
         final RedsysConfiguration redsysConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(RedsysConfiguration.class);
         apiClient.setConfiguration(redsysConfiguration, configuration.getEidasProxy());
-        if (request.isManual()) {
-            apiClient.setPsuIpAddress(redsysConfiguration.getTppIpAddress());
-        }
+        apiClient.setPsuIpAddress(HeaderValues.PSU_IP_ADDRESS);
     }
 
     protected String getIntegrationName() {
