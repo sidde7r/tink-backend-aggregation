@@ -111,7 +111,7 @@ public final class LaBanquePostaleApiClient
                 new TokenRequest(
                         LaBanquePostaleConstants.QueryValues.SCORE,
                         code,
-                        QueryValues.GRANT_TYPE,
+                        QueryValues.AUTHORIZATION_CODE,
                         redirectUri);
 
         return client.request(getConfiguration().getOauthBaseUrl() + Urls.GET_TOKEN)
@@ -143,7 +143,7 @@ public final class LaBanquePostaleApiClient
                 .queryParam(
                         BerlinGroupConstants.QueryKeys.SCOPE,
                         LaBanquePostaleConstants.QueryValues.SCORE)
-                .queryParam(BerlinGroupConstants.QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
+                .queryParam(BerlinGroupConstants.QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(BerlinGroupConstants.QueryKeys.STATE, state)
                 .getUrl();
     }
