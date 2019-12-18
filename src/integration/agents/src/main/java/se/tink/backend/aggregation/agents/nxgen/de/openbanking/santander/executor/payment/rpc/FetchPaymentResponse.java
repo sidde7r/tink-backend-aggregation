@@ -8,9 +8,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.entities.DebtorEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.enums.SantanderPaymentStatus;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.util.DateUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -47,9 +47,9 @@ public class FetchPaymentResponse {
                         .withDebtor(debtorAccount.toTinkDebtor())
                         .withAmount(instructedAmount.toAmount())
                         .withExecutionDate(
-                                DateUtils.convertToLocalDateViaInstant(requestedExecutionDate))
+                                DateFormat.convertToLocalDateViaInstant(requestedExecutionDate))
                         .withExecutionDate(
-                                DateUtils.convertToLocalDateViaInstant(requestedExecutionDate))
+                                DateFormat.convertToLocalDateViaInstant(requestedExecutionDate))
                         .withCurrency(instructedAmount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(

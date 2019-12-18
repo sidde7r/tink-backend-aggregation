@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.DateFormat;
 
 public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConfiguration> {
     public ErstebankApiClient(final TinkHttpClient client, final SessionStorage sessionStorage) {
@@ -140,7 +141,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     }
 
     private String getFormattedDate() {
-        return BerlinGroupUtils.getFormattedCurrentDate(Signature.DATE_FORMAT, Signature.TIMEZONE);
+        return DateFormat.getFormattedCurrentDate(Signature.DATE_FORMAT, Signature.TIMEZONE);
     }
 
     private RequestBuilder buildRequest(
@@ -173,7 +174,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     private RequestBuilder buildRequestForIbans(final String reqPath, final List<String> ibans) {
         final Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, 2);
-        final String date = BerlinGroupUtils.formatDate(calendar.getTime(), "yyyy-MM-dd", null);
+        final String date = DateFormat.formatDate(calendar.getTime(), DateFormat.YEAR_MONTH_DAY);
 
         final AccessEntity access = new AccessEntity.Builder().addIbans(ibans).build();
 

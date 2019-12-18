@@ -30,6 +30,9 @@ public class MetricFilter extends Filter {
     private MetricId populateMetric(MetricId metric, HttpResponse response) {
         return metric.label("provider", cleanMetricName(provider.getName()))
                 .label("agent", provider.getClassName())
+                .label("provider_type", provider.getMetricTypeName())
+                .label("market", provider.getMarket())
+                .label("className", provider.getClassName())
                 .label("status", Integer.toString(response.getStatus()));
     }
 
