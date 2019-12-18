@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.*;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseClientConfigurationUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -20,7 +21,9 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CreditAgricoleBaseAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshIdentityDataExecutor {
 
     private final CreditAgricoleBaseApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -103,5 +106,12 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(accountFetcher)));
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final CreditAgricoleBaseIdentityDataFetcher creditAgricoleBaseIdentityDataFetcher =
+                new CreditAgricoleBaseIdentityDataFetcher(apiClient);
+        return creditAgricoleBaseIdentityDataFetcher.response();
     }
 }
