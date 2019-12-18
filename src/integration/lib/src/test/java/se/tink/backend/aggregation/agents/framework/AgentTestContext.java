@@ -383,7 +383,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public void setProviderSessionCache(String value) {
+    public void setProviderSessionCache(String value, int expiredTimeInSeconds) {
         log.info("Setting provider session cache information");
         this.providerSessionCacheInformation = value;
     }
