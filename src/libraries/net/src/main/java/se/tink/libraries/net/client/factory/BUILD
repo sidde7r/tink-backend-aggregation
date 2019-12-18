@@ -1,5 +1,5 @@
 java_library(
-    name = "clientfactory",
+    name = "factory",
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [

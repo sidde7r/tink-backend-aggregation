@@ -1,4 +1,4 @@
-package se.tink.libraries.net.clientfactory;
+package se.tink.libraries.net.client.factory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;

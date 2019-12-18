@@ -5,7 +5,7 @@ java_library(
     deps = [
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client/handler",
-        "//src/libraries/net/src/main/java/se/tink/libraries/net/clientfactory",
+        "//src/libraries/net/src/main/java/se/tink/libraries/net/client/factory",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:org_slf4j_slf4j_api",
