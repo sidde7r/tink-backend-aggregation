@@ -1,8 +1,24 @@
-java_library(
-    name = "sebopenbaking",
-    srcs = glob(["**/*.java"]),
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "sebopenbanking",
+    srcs = glob(["*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//data:cryptography_test",
+        "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbase",
+        "//src/integration/amount",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/payment:rpc",
+        "//src/libraries/account_identifier",
+        "//third_party:org_mockito_mockito_core",
     ],
 )
