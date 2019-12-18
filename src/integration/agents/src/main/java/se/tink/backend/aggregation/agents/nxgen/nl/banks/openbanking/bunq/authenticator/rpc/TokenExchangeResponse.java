@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc;
 
-import static se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqConstants.Token.ACCESS_TOKEN_EXPIRES_IN_SECONDS;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqConstants.Token;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
@@ -21,6 +20,7 @@ public class TokenExchangeResponse {
     }
 
     public OAuth2Token toTinkToken() {
-        return OAuth2Token.create(tokenType, accessToken, null, ACCESS_TOKEN_EXPIRES_IN_SECONDS);
+        return OAuth2Token.create(
+                tokenType, accessToken, null, Token.ACCESS_TOKEN_EXPIRES_IN_SECONDS);
     }
 }
