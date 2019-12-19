@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.constants;
 import com.google.common.collect.ImmutableSet;
 
 public final class EnabledMarkets {
-    private EnabledMarkets()  {
+    private EnabledMarkets() {
         throw new AssertionError();
     }
 
