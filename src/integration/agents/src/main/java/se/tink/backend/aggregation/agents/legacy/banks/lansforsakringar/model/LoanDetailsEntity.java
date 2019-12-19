@@ -8,6 +8,8 @@ import com.google.common.collect.Lists;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
@@ -17,7 +19,9 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoanDetailsEntity {
+    private static final Logger log = LoggerFactory.getLogger(LoanDetailsEntity.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
+
     private String loanName;
     private String loanNumber;
     private String originalDebt;
@@ -151,6 +155,7 @@ public class LoanDetailsEntity {
         loan.setInitialBalance(getOriginalDebt());
         loan.setBalance(getCurrentDebt());
         loan.setNumMonthsBound(getRateBindingPeriodLength());
+        loan.setType(getLoanType());
         loanDetails.setApplicants(getBorrowers());
 
         if (loan.getBalance() != null && loan.getInitialBalance() != null) {
@@ -170,5 +175,24 @@ public class LoanDetailsEntity {
         loan.setSerializedLoanResponse(detailsString);
 
         return loan;
+    }
+
+    private Loan.Type getLoanType() {
+        // Really doubting that loan name will ever be null, but handling it so we don't get NPEs
+        if (Strings.isNullOrEmpty(loanName)) {
+            log.warn("No loan name present, can't determine loan type.");
+            return Loan.Type.OTHER;
+        }
+
+        if (loanName.toLowerCase().contains("bolån")) {
+            return Loan.Type.MORTGAGE;
+        }
+
+        if (loanName.toLowerCase().contains("lantbruk")) {
+            return Loan.Type.LAND;
+        }
+
+        log.warn("Unknown loan type: {}", loanName);
+        return Loan.Type.OTHER;
     }
 }
