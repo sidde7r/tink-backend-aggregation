@@ -79,6 +79,7 @@ public final class BnpParibasBaseConstants {
         public static final String PENDING_TRANSACTION = "pdng";
         public static final String BALANCE_TYPE_OTHER = "OTHR";
         public static final String BALANCE_TYPE_CLOSING = "CLBD";
+        public static final String AVAILABLE_BALANCE = "interimAvailable";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
