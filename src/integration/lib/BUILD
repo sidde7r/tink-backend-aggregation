@@ -113,7 +113,6 @@ java_library(
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_modelmapper_modelmapper",
-        "//third_party:org_mozilla_rhino",
         "//third_party:org_slf4j_slf4j_api",
         "@com_sun_jersey_jersey_client//jar",
         "@io_reactivex_rxjava3_rxjava",
