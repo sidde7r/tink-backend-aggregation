@@ -146,15 +146,7 @@ public final class IngBaseApiClient {
 
     public URL getAuthorizeUrl(final String state) {
         final TokenResponse tokenResponse = getApplicationAccessToken();
-        OAuth2Token token = tokenResponse.toTinkToken();
-        logger.info(
-                "Get Authorize Url: Application access token: "
-                        + token.getAccessToken()
-                        + ", issue at : "
-                        + token.getIssuedAt()
-                        + ", expire epoch : "
-                        + token.getAccessExpireEpoch());
-        setApplicationTokenToSession(token);
+        setApplicationTokenToSession(tokenResponse.toTinkToken());
         setClientIdToSession(tokenResponse.getClientId());
 
         return new URL(getAuthorizationUrl(tokenResponse).getLocation())
@@ -176,15 +168,7 @@ public final class IngBaseApiClient {
 
     public OAuth2Token refreshToken(final String refreshToken) {
         final TokenResponse tokenResponse = getApplicationAccessToken();
-        OAuth2Token token = tokenResponse.toTinkToken();
-        logger.info(
-                "Refresh Token: Application access token: "
-                        + token.getAccessToken()
-                        + ", issue at : "
-                        + token.getIssuedAt()
-                        + ", expire epoch : "
-                        + token.getAccessExpireEpoch());
-        setApplicationTokenToSession(token);
+        setApplicationTokenToSession(tokenResponse.toTinkToken());
 
         final String payload = new RefreshTokenRequest(refreshToken).toData();
         return fetchToken(payload).toTinkToken(getTokenFromSession());
