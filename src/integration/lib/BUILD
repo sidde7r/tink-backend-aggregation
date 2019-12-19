@@ -107,7 +107,6 @@ java_library(
         "//third_party:org_apache_commons_commons_math3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
-        "//third_party:org_apache_lucene_lucene_core",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
