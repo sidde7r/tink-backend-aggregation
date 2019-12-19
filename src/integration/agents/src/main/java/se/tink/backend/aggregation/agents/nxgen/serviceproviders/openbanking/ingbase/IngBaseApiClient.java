@@ -235,13 +235,13 @@ public final class IngBaseApiClient {
 
         /*
            Save the valid application access token to cache
-           The cache should be expired earlier than the token (5 seconds)
+           The cache should be expired earlier than the token (1 min)
         */
         String payloadStr = new Gson().toJson(response);
         Map<String, String> applicationTokenMap = new HashMap<>();
         applicationTokenMap.put(StorageKeys.APPLICATION_TOKEN, payloadStr);
         providerSessionCacheController.setProviderSessionCacheInfoWithExpiredTime(
-                applicationTokenMap, (int) (response.getExpiresIn() - 5));
+                applicationTokenMap, (int) (response.getExpiresIn() - 60));
         return response;
     }
 
