@@ -1560,10 +1560,10 @@ public class SEBApiAgent extends AbstractAgent
         } else {
             // PCBW2581 is null if there are no mortgages
             if (response.d.VODB.PCBW2581 != null) {
-                for (PCBW2581 pcbw2591 : response.d.VODB.PCBW2581) {
-                    if (pcbw2591 != null) {
-                        Account account = pcbw2591.toAccount();
-                        Loan loan = pcbw2591.toLoan();
+                for (PCBW2581 mortgageEntity : response.d.VODB.PCBW2581) {
+                    if (mortgageEntity != null) {
+                        Account account = mortgageEntity.toAccount();
+                        Loan loan = mortgageEntity.toLoan();
 
                         loans.put(account, AccountFeatures.createForLoan(loan));
                     }
