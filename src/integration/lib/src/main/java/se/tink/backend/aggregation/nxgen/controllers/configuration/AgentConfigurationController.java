@@ -29,11 +29,12 @@ import se.tink.backend.agents.rpc.Provider.AccessType;
 import se.tink.backend.agents.rpc.ProviderTypes;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 
-public final class AgentConfigurationController {
+public final class AgentConfigurationController implements AgentConfigurationControllerable {
     private static final Logger log = LoggerFactory.getLogger(AgentConfigurationController.class);
     private static final ObjectMapper OBJECT_MAPPER =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -120,14 +121,17 @@ public final class AgentConfigurationController {
         initSecrets();
     }
 
+    @Override
     public Observable<Collection<String>> getSecretValuesObservable() {
         return secretValuesSubject.subscribeOn(Schedulers.trampoline());
     }
 
+    @Override
     public void completeSecretValuesSubject() {
         secretValuesSubject.onComplete();
     }
 
+    @Override
     public boolean isOpenBankingAgent() {
         return isOpenBankingAgent;
     }
@@ -219,6 +223,7 @@ public final class AgentConfigurationController {
         allSecretsMapObj.put(SCOPES_KEY, scopes);
     }
 
+    @Override
     public <T extends ClientConfiguration> T getAgentConfiguration(
             final Class<T> clientConfigClass) {
 
@@ -267,6 +272,7 @@ public final class AgentConfigurationController {
                 + " ";
     }
 
+    @Override
     public <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
             String integrationName, String clientName, Class<T> clientConfigClass) {
 
@@ -293,6 +299,7 @@ public final class AgentConfigurationController {
         return OBJECT_MAPPER.convertValue(clientConfigurationAsObject, clientConfigClass);
     }
 
+    @Override
     public <T extends ClientConfiguration> T getAgentConfigurationFromK8s(
             String integrationName, Class<T> clientConfigClass) {
         if (isOpenBankingAgent) {
@@ -318,6 +325,7 @@ public final class AgentConfigurationController {
         return OBJECT_MAPPER.convertValue(clientConfigurationAsObject, clientConfigClass);
     }
 
+    @Override
     public <T extends ClientConfiguration> Optional<T> getAgentConfigurationFromK8sAsOptional(
             String integrationName, Class<T> clientConfigClass) {
         if (isOpenBankingAgent) {
@@ -338,7 +346,8 @@ public final class AgentConfigurationController {
                         OBJECT_MAPPER.convertValue(clientConfiguration, clientConfigClass));
     }
 
-    Set<String> extractSensitiveValues(Object clientConfigurationAsObject) {
+    @Override
+    public Set<String> extractSensitiveValues(Object clientConfigurationAsObject) {
 
         final Map<String, String> sensitiveValuesMap;
         try {

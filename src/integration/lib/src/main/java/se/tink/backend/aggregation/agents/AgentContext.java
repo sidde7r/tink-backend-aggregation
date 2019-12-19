@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.log.LogMasker;
-import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public abstract class AgentContext implements CompositeAgentContext {
@@ -17,7 +17,7 @@ public abstract class AgentContext implements CompositeAgentContext {
     private String clusterId;
     private MetricRegistry metricRegistry;
     private String appId;
-    private AgentConfigurationController agentConfigurationController;
+    private AgentConfigurationControllerable agentConfigurationController;
     private LogMasker logMasker;
 
     public String getAppId() {
@@ -85,12 +85,12 @@ public abstract class AgentContext implements CompositeAgentContext {
         this.metricRegistry = metricRegistry;
     }
 
-    public AgentConfigurationController getAgentConfigurationController() {
+    public AgentConfigurationControllerable getAgentConfigurationController() {
         return agentConfigurationController;
     }
 
     public void setAgentConfigurationController(
-            AgentConfigurationController agentConfigurationController) {
+            AgentConfigurationControllerable agentConfigurationController) {
         this.agentConfigurationController = agentConfigurationController;
     }
 
