@@ -2,7 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "finecobank",
-    srcs = glob(["*.java"]),
+    srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
         "//data:cryptography_test",
@@ -10,7 +10,6 @@ junit_test(
     ],
     tags = [
         "external",
-        "manual",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
@@ -27,6 +26,8 @@ junit_test(
         "//src/integration/user:rpc",
         "//src/libraries/account_identifier",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
     ],
