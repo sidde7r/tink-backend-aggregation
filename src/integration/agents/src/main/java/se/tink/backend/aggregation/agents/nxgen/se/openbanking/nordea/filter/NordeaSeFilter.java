@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class NordeaSeFilter extends Filter {
 
+    private static final int TOO_MANY_REQUEST_HTTP_STATUS = 429;
+
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
@@ -24,7 +26,9 @@ public class NordeaSeFilter extends Filter {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
         }
-
+        if (response.getStatus() == TOO_MANY_REQUEST_HTTP_STATUS) {
+            throw BankServiceError.NO_BANK_SERVICE.exception();
+        }
         return response;
     }
 }
