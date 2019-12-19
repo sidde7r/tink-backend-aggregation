@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 import java.security.interfaces.RSAPublicKey;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -51,6 +53,8 @@ public class BankdataApiClient {
 
     private final TinkHttpClient client;
     private final String bankdataBankNumber;
+
+    private URL exchangeNemIdUrl;
 
     public BankdataApiClient(TinkHttpClient client, Provider provider) {
         this.client = client;
@@ -145,7 +149,8 @@ public class BankdataApiClient {
                         .build()
                         .serialize();
 
-        final URL url = Url.NEMID_EXCHANGE.parameter(UrlParam.BRANCH_NAME, getBranchFromCookie());
+        final URL url = exchangeNemIdUrl; // Url.NEMID_EXCHANGE.parameter(UrlParam.BRANCH_NAME,
+        // getBranchFromCookie());
 
         return createRequest(url, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(HttpResponse.class, form);
@@ -168,7 +173,23 @@ public class BankdataApiClient {
 
     public HttpResponse portal() {
         final URL url = Url.PORTAL.parameter(UrlParam.BRANCH_NAME, getBranchFromCookie());
-        return createRequest(url).get(HttpResponse.class);
+        HttpResponse response = createRequest(url).get(HttpResponse.class);
+
+        final String body = response.getBody(String.class);
+
+        Pattern pattern =
+                Pattern.compile(
+                        "(action=\")(?<value>[/a-zA-Z0-9_=!\\-]*Ejavax\\.portlet\\.action!login==/)");
+        Matcher matcher = pattern.matcher(body);
+
+        if (!matcher.find()) {
+            throw new IllegalStateException("Could not find nemid post url");
+        }
+
+        final String value = matcher.group("value");
+        exchangeNemIdUrl = new URL("https://mobil.bankdata.dk" + value);
+
+        return response;
     }
 
     public NemIdParametersV2 fetchNemIdParameters(HttpResponse httpResponse) {

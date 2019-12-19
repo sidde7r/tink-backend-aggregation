@@ -127,6 +127,8 @@ public class PCBW2581 {
         loan.setInterest(getInterestRate());
         loan.setMonthlyAmortization(getMonthlyAmortization());
         loan.setNextDayOfTermsChange(getNextDayOfTermsChange());
+        // PCBW2581 only contains mortgages
+        loan.setType(Loan.Type.MORTGAGE);
 
         loanDetails.setCoApplicant(hasCoApplicant());
         loanDetails.setApplicants(getApplicants());
