@@ -150,6 +150,8 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             return;
         }
 
+        log.info("Sending Identity to AgentDataAvailabilityTracker");
+
         if (context.getCachedIdentityData() == null) {
             log.info(
                     "Identity data is null, skipping identity data request to AgentDataAvailabilityTracker");
@@ -163,8 +165,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     public void postProcess() throws Exception {
         if (getRefreshableItem() == RefreshableItem.IDENTITY_DATA) {
             try {
-                log.info("Sending Identity to AgentDataAvailabilityTracker");
-
                 sendIdentityToAgentDataAvailabilityTracker();
 
                 // TODO : context.sendIdentityToIdentityAggregatorService();
