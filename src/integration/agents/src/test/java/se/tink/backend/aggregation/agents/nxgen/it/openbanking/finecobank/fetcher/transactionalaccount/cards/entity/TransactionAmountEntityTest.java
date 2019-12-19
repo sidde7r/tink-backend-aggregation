@@ -14,43 +14,43 @@ public class TransactionAmountEntityTest {
     @Test
     public void toTinkAmountWithNegativeAmount() throws IOException {
         // given
-        String amount = "-92.54";
-        BigDecimal negatedAmount = new BigDecimal("92.54");
-        TransactionAmountEntity transactionAmountEntity = amountToTransactionAmountEntity(amount);
+        String givenAmount = "-92.54";
+        BigDecimal expectedAmount = new BigDecimal("92.54");
+        TransactionAmountEntity transactionAmountEntity = amountToTransactionAmountEntity(givenAmount);
 
         // when
         BigDecimal result = transactionAmountEntity.toTinkAmount().getExactValue();
 
         // then
-        assertThat(result).isEqualTo(negatedAmount);
+        assertThat(result).isEqualTo(expectedAmount);
     }
 
     @Test
     public void toTinkAmountWithZeroAmount() throws IOException {
         // given
-        String amount = "0.0";
-        BigDecimal negatedAmount = new BigDecimal("0.0");
-        TransactionAmountEntity transactionAmountEntity = amountToTransactionAmountEntity(amount);
+        String givenAmount = "0.0";
+        BigDecimal expectedAmount = new BigDecimal("0.0");
+        TransactionAmountEntity transactionAmountEntity = amountToTransactionAmountEntity(givenAmount);
 
         // when
         BigDecimal result = transactionAmountEntity.toTinkAmount().getExactValue();
 
         // then
-        assertThat(result).isEqualTo(negatedAmount);
+        assertThat(result).isEqualTo(expectedAmount);
     }
 
     @Test
     public void toTinkAmountWithPositiveAmount() throws IOException {
         // given
-        String amount = "234.15";
-        BigDecimal negatedAmount = new BigDecimal("-234.15");
-        TransactionAmountEntity transactionAmountEntity = amountToTransactionAmountEntity(amount);
+        String givenAmount = "234.15";
+        BigDecimal expectedAmount = new BigDecimal("-234.15");
+        TransactionAmountEntity transactionAmountEntity = amountToTransactionAmountEntity(givenAmount);
 
         // when
         BigDecimal result = transactionAmountEntity.toTinkAmount().getExactValue();
 
         // then
-        assertThat(result).isEqualTo(negatedAmount);
+        assertThat(result).isEqualTo(expectedAmount);
     }
 
     private static TransactionAmountEntity amountToTransactionAmountEntity(final String amount)
