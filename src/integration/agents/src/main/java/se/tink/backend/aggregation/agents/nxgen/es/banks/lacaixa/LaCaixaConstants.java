@@ -91,8 +91,7 @@ public class LaCaixaConstants {
     }
 
     public static class DefaultRequestParams {
-        public static final String LANGUAGE_EN =
-                "en"; // English TODO: Language constants already exists somewhere?
+        public static final String LANGUAGE_ES = "es";
         public static final String ORIGIN =
                 "51402"; // Can seemingly be anything as long as it exists, purpose unknown.
         public static final String CHANNEL =
