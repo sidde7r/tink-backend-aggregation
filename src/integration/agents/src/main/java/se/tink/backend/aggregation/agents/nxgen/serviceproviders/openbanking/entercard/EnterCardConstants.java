@@ -112,6 +112,6 @@ public final class EnterCardConstants {
     }
 
     public static class CredentialKeys {
-        public static final String SSN = "ssn";
+        public static final String SSN = "username";
     }
 }
