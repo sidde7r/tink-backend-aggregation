@@ -1,6 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
+import java.util.Map;
+import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 
 @JsonObject
 public class SecurityEntity {
@@ -14,7 +21,7 @@ public class SecurityEntity {
     private AmountEntity availableBalance;
     private String seoOriginated;
     private String evaluateHourTime;
-    private AmountEntity currency;
+    private TypeEntity currency;
     private String evaluateDate;
     private ProductTypeEntity productType;
     private String ricCode;
@@ -73,7 +80,7 @@ public class SecurityEntity {
         return evaluateHourTime;
     }
 
-    public AmountEntity getCurrency() {
+    public TypeEntity getCurrency() {
         return currency;
     }
 
@@ -143,5 +150,39 @@ public class SecurityEntity {
 
     public String getIsin() {
         return isin;
+    }
+
+    public InstrumentModule toTinkInstrument(Map<String, Double> instrumentsProfit) {
+        Double profit = instrumentsProfit.get(isin);
+        Double averageAcquisitionPrice = null;
+        if (Objects.nonNull(profit)) {
+            averageAcquisitionPrice =
+                    getAverageAcquisitionPrice(totalAmount.getAmountAsDouble() - profit);
+        }
+        return InstrumentModule.builder()
+                .withType(InstrumentType.STOCK)
+                .withId(InstrumentIdModule.of(isin, marketName, name))
+                .withMarketPrice(getPrice())
+                .withMarketValue(totalAmount.getAmountAsDouble())
+                .withAverageAcquisitionPrice(averageAcquisitionPrice)
+                .withCurrency(currency.getId())
+                .withQuantity(totalTitles)
+                .withProfit(profit)
+                .setRawType(typeSecurities.getId())
+                .build();
+    }
+
+    @JsonIgnore
+    private Double getPrice() {
+        return new BigDecimal(totalAmount.getAmountAsDouble() / totalTitles)
+                .setScale(2, BigDecimal.ROUND_HALF_UP)
+                .doubleValue();
+    }
+
+    @JsonIgnore
+    private Double getAverageAcquisitionPrice(double acquisitionAmount) {
+        return new BigDecimal(acquisitionAmount / totalTitles)
+                .setScale(2, BigDecimal.ROUND_HALF_UP)
+                .doubleValue();
     }
 }

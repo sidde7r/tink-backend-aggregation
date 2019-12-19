@@ -32,4 +32,8 @@ public class AmountEntity {
     public double getAmountAsDouble() {
         return amount.doubleValue();
     }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
 }

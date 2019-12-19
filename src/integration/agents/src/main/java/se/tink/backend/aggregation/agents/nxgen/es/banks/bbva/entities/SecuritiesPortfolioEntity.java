@@ -1,88 +1,68 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.vavr.collection.List;
+import io.vavr.control.Option;
+import java.util.Map;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 
 @JsonObject
-public class SecuritiesPortfolioEntity {
-    private String country;
-    private ProductEntity product;
-    private FormatsEntity formats;
-    private String counterPart;
-    private MarketerBankEntity marketerBank;
-    private String dueDate;
-    private BranchEntity branch;
+public class SecuritiesPortfolioEntity extends AbstractContractDetailsEntity {
+
     private List<SecurityEntity> securities;
-    private BankEntity bank;
     private AmountEntity balance;
-    private JoinTypeEntity joinType;
-    private String sublevel;
-    private CurrencyEntity currency;
-    private String id;
-    private UserCustomizationEntity userCustomization;
-    private List<ParticipantEntity> participants;
-
-    public String getCountry() {
-        return country;
-    }
-
-    public ProductEntity getProduct() {
-        return product;
-    }
-
-    public FormatsEntity getFormats() {
-        return formats;
-    }
-
-    public String getCounterPart() {
-        return counterPart;
-    }
-
-    public MarketerBankEntity getMarketerBank() {
-        return marketerBank;
-    }
-
-    public String getDueDate() {
-        return dueDate;
-    }
-
-    public BranchEntity getBranch() {
-        return branch;
-    }
 
     public List<SecurityEntity> getSecurities() {
         return securities;
-    }
-
-    public BankEntity getBank() {
-        return bank;
     }
 
     public AmountEntity getBalance() {
         return balance;
     }
 
-    public JoinTypeEntity getJoinType() {
-        return joinType;
+    public InvestmentAccount toInvestmentAccount(
+            Double totalProfit, Map<String, Double> instrumentsProfit) {
+        return InvestmentAccount.nxBuilder()
+                .withPortfolios(getPortfolio(totalProfit, instrumentsProfit))
+                .withZeroCashBalance(getCurrency().getId())
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getId())
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(getAccountName())
+                                .addIdentifier(AccountIdentifier.create(Type.TINK, getId()))
+                                .build())
+                .build();
     }
 
-    public String getSublevel() {
-        return sublevel;
+    @JsonIgnore
+    @Override
+    protected String getAccountNumber() {
+        return getFormats().getBocf();
     }
 
-    public CurrencyEntity getCurrency() {
-        return currency;
+    private PortfolioModule getPortfolio(
+            Double totalProfit, Map<String, Double> instrumentsProfit) {
+        return PortfolioModule.builder()
+                .withType(PortfolioType.DEPOT)
+                .withUniqueIdentifier(getId())
+                .withCashValue(0)
+                .withTotalProfit(totalProfit)
+                .withTotalValue(balance.toTinkAmount().getDoubleValue())
+                .withInstruments(getInstruments(instrumentsProfit).asJava())
+                .build();
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public UserCustomizationEntity getUserCustomization() {
-        return userCustomization;
-    }
-
-    public List<ParticipantEntity> getParticipants() {
-        return participants;
+    private List<InstrumentModule> getInstruments(Map<String, Double> instrumentsProfit) {
+        return Option.of(securities)
+                .getOrElse(List.empty())
+                .map(i -> i.toTinkInstrument(instrumentsProfit));
     }
 }

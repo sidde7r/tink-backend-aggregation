@@ -1,33 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.rpc;
 
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.TypeEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.entity.AddressEntity;
+import java.util.Objects;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.entity.CustomerEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.entity.ExternalPlatformUsersEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.entity.IdentityDocumentEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.entity.NationalityEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.entity.ManagerEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class IdentityDataResponse {
-    private List<IdentityDocumentEntity> identityDocument;
-    private TypeEntity type;
-    private String name;
-    private String lastName;
-    private String mothersLastName;
-    private String birthDate;
-    private boolean hasMoreAddresses;
-    private List<AddressEntity> addresses;
-    private List<NationalityEntity> nationalities;
-    private boolean hasContactPersons;
-    private boolean hasMoreContactTypes;
-    private String scanDNIId;
-    private boolean hasIdentityDocuments;
-    private boolean hasRelations;
-    private boolean hasScanDocuments;
-    private boolean isRequiredQuestionnaireGDPR;
-    private boolean isRequiredQuestionnaireFatca;
-    private String membershipDate;
-    private String modificationDate;
+    private CustomerEntity customer;
+    private ManagerEntity manager;
+    private List<ExternalPlatformUsersEntity> externalPlatformUsers;
+    private String encryptedAlias;
 
     /**
      * Don't know in what cases this list will contain more than one document. Hard fail if list
@@ -35,29 +21,29 @@ public class IdentityDataResponse {
      */
     public IdentityDocumentEntity getIdentityDocument() {
 
-        if (identityDocument.size() != 1) {
+        if (Objects.isNull(customer) || customer.getIdentityDocument().size() != 1) {
             throw new IllegalStateException(
                     String.format(
                             "ES BBVA: Expected one identity document, found: %s",
-                            identityDocument.size()));
+                            Objects.isNull(customer) ? 0 : customer.getIdentityDocument().size()));
         }
 
-        return identityDocument.get(0);
+        return customer.getIdentityDocument().get(0);
     }
 
     public String getName() {
-        return name;
+        return Objects.isNull(customer) ? null : customer.getName();
     }
 
     public String getLastName() {
-        return lastName;
+        return Objects.isNull(customer) ? null : customer.getLastName();
     }
 
     public String getMothersLastName() {
-        return mothersLastName;
+        return Objects.isNull(customer) ? null : customer.getMothersLastName();
     }
 
     public String getBirthDate() {
-        return birthDate;
+        return Objects.isNull(customer) ? null : customer.getBirthDate();
     }
 }

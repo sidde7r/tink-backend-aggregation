@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBuilder;
@@ -19,32 +18,27 @@ public class BbvaIdentityDataFetcher implements IdentityDataFetcher {
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
     private final BbvaApiClient apiClient;
-    private final SessionStorage sessionStorage;
 
-    public BbvaIdentityDataFetcher(BbvaApiClient apiClient, SessionStorage sessionStorage) {
-
+    public BbvaIdentityDataFetcher(BbvaApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public IdentityData fetchIdentityData() {
-        String idTypeCode = sessionStorage.get(BbvaConstants.StorageKeys.ID_TYPE_CODE);
         IdentityDataResponse identityDataResponse = apiClient.fetchIdentityData();
         final String documentNumber = identityDataResponse.getIdentityDocument().getNumber();
-
+        final String documentType = identityDataResponse.getIdentityDocument().getType().getId();
         EsIdentityDataBuilder builder = EsIdentityData.builder();
 
-        switch (idTypeCode.toLowerCase()) {
+        switch (documentType) {
             case BbvaConstants.IdTypeCodes.NIF:
                 builder.setNifNumber(documentNumber);
                 break;
             case BbvaConstants.IdTypeCodes.NIE:
-                LOGGER.info("ES BBVA: encountered NIE document type");
                 builder.setNieNumber(documentNumber);
                 break;
             default:
-                LOGGER.warn("ES BBVA: Unhandled document type: {}", idTypeCode);
+                LOGGER.warn("ES BBVA: Unhandled document type: {}", documentType);
         }
 
         return builder.addFirstNameElement(identityDataResponse.getName())

@@ -31,8 +31,6 @@ public final class BbvaConstants {
     }
 
     public static final class StorageKeys {
-        public static final String ACCOUNT_ID = "accountId";
-        public static final String HOLDER_NAME = "holderName";
         public static final String USER_ID = "userId";
         public static final String ID_TYPE_CODE = "idTypeCode";
         public static final String TSEC = "tsec";
@@ -55,12 +53,14 @@ public final class BbvaConstants {
         public static final String CONTRACT_ID = "contractId";
         public static final String CARD_TRANSACTION_TYPE = "cardTransactionType";
         public static final String DASHBOARD_CUSTOMER_ID = "$customer.id";
-        public static final String SHOW_SENSITIVE = "isShowSensitive";
+        public static final String DASHBOARD_FILTER = "$filter";
+        public static final String ISALIVE_CUSTOMER_ID = "customerId";
     }
 
     public static final class QueryValues {
         public static final String FALSE = "false";
         public static final String FIRST_PAGE_KEY = "0";
+        public static final String DASHBOARD_FILTER = "(showPending==true);(hasSicav==false)";
     }
 
     public static final class LogTags {
@@ -89,12 +89,10 @@ public final class BbvaConstants {
 
         public static final String PARAM_ID = "ID";
 
-        public static final String LOGIN = BASE_URL + "/DFAUTH/slod/DFServletXML";
-        public static final String SESSION =
-                BASE_URL + "/ENPP/enpp_mult_web_mobility_02/sessions/v1";
-        public static final String PRODUCTS =
-                BASE_URL + "/ENPP/enpp_mult_web_mobility_02/products/v2";
-        public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03/";
+        public static final String TICKET = BASE_URL + "/ASO/TechArchitecture/grantingTickets/V02";
+        public static final String REFRESH_TICKET =
+                BASE_URL + "/ASO/grantingTicketActions/V01/refreshGrantingTicket";
+        public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03";
         public static final String ASO = BASE_URL + "/ASO";
         public static final String ACCOUNT_TRANSACTION =
                 BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
@@ -106,15 +104,19 @@ public final class BbvaConstants {
         public static final String SECURITY_PROFITABILITY =
                 BASE_URL + "/ASO/securityActions/V01/listProfitability";
         public static final String IDENTITY_DATA =
-                BASE_URL + "/ASO/customers/V02/{" + PARAM_ID + "}";
+                BASE_URL + "/ASO/contextualData/V02/{" + PARAM_ID + "}";
+        public static final String HISTORICAL_DATE =
+                BASE_URL + "/ASO/contracts/v0/financial-investment/historical-date";
+        public static final String FINANCIAL_INVESTMENTS =
+                BASE_URL + "/ASO/contracts/v0/financial-investment/daily-summaries";
     }
 
     public enum Headers implements HeaderEnum {
-        CONSUMER_ID("ConsumerID", "00000013"),
+        CONSUMER_ID("ConsumerID", LoginParameter.CONSUMER_ID),
         BBVA_USER_AGENT(
                 "BBVA-User-Agent",
                 "%s;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi"),
-        REFERER("Referer", "https://beta.movil.bbva.es/versions/woody/6.18.3/index.html");
+        REFERER("Referer", "https://movil.bbva.es/versions/woody/7.3.7/index.html");
 
         private final String key;
         private final String value;
@@ -134,30 +136,32 @@ public final class BbvaConstants {
     }
 
     public static final class HeaderKeys {
-        public static final String CONTENT_TYPE_URLENCODED_UTF8 =
-                "application/x-www-form-urlencoded; charset=utf-8";
+
         public static final String TSEC_KEY = "tsec";;
     }
 
     public static final class PostParameter {
-        public static final String ORIGEN_KEY = "origen";
-        public static final String ORIGEN_VALUE = "enpp";
-        public static final String EAI_TIPOCP_KEY = "eai_tipoCP";
-        public static final String EAI_TIPOCP_VALUE = "up";
-        public static final String EAI_USER_KEY = "eai_user";
-        public static final String EAI_USER_VALUE_PREFIX = "0019-";
-        public static final String EAI_PASSWORD_KEY = "eai_password";
-        public static final String CONSUMER_ID_KEY = "consumerID";
-        public static final String CONSUMER_ID_VALUE = Headers.CONSUMER_ID.value;
-        public static final String SEARCH_TYPE = "SEARCH";
 
+        public static final String SEARCH_TYPE = "SEARCH";
+        public static final String ISIN_ID_TYPE = "ISIN";
+        public static final String ANY_ISIN = "000000000000";
+        public static final String ANY_MARKET = "0000";
         public static final int START_DATE_YEAR_AGO = -30;
+    }
+
+    public static final class LoginParameter {
+        public static final String AUTH_DATA_ID = "password";
+        public static final String AUTH_TYPE = "02";
+        public static final String USER_VALUE_PREFIX = "0019-";
+        public static final String CONSUMER_ID = "00000013";
     }
 
     public static final class Messages {
         public static final String OK = "ok";
-        public static final String LOGIN_SUCCESS = "login successful";
-        public static final String LOGIN_WRONG_CREDENTIAL_CODE = "eai0000";
+    }
+
+    public static final class AuthenticationStates {
+        public static final String OK = "OK";
     }
 
     public static final class ErrorMessages {
@@ -168,8 +172,8 @@ public final class BbvaConstants {
     }
 
     public static final class IdTypeCodes {
-        public static final String NIF = "nif";
-        public static final String NIE = "nie";
+        public static final String NIF = "1";
+        public static final String NIE = "6";
     }
 
     public static class TimeoutFilter {
@@ -184,5 +188,9 @@ public final class BbvaConstants {
 
     public static class ErrorCode {
         public static final String CONTRACT_NOT_OPERABLE = "contractNotOperable";
+    }
+
+    public static class ProductTypes {
+        public static final String COMPLEMENTARY = "COMPLEMENTARIAS";
     }
 }
