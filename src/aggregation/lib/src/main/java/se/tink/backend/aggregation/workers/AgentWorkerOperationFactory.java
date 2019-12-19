@@ -233,7 +233,10 @@ public class AgentWorkerOperationFactory {
         for (RefreshableItem item : nonAccountItems) {
             commands.add(
                     new RefreshItemAgentWorkerCommand(
-                            context, item, createCommandMetricState(request)));
+                            context,
+                            item,
+                            createCommandMetricState(request),
+                            agentDataAvailabilityTrackerClient));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -816,7 +819,10 @@ public class AgentWorkerOperationFactory {
             if (RefreshableItem.isAccount(item)) {
                 commands.add(
                         new RefreshItemAgentWorkerCommand(
-                                context, item, createCommandMetricState(request)));
+                                context,
+                                item,
+                                createCommandMetricState(request),
+                                agentDataAvailabilityTrackerClient));
             }
         }
 
@@ -1070,7 +1076,10 @@ public class AgentWorkerOperationFactory {
                         item ->
                                 commands.add(
                                         new RefreshItemAgentWorkerCommand(
-                                                context, item, createCommandMetricState(request))));
+                                                context,
+                                                item,
+                                                createCommandMetricState(request),
+                                                agentDataAvailabilityTrackerClient)));
         // === END REFRESHING ===
         return commands.build();
     }

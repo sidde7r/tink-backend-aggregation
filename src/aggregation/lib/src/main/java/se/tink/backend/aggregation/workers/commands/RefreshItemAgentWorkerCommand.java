@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.slf4j.Logger;
@@ -24,6 +26,8 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.RefreshMetricNameFactory;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
 
@@ -36,14 +40,27 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private final AgentWorkerCommandContext context;
     private final RefreshableItem item;
     private final AgentWorkerCommandMetricState metrics;
+    private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
+    private final String agentName;
+    private final String provider;
+    private final String market;
+    private final ImmutableSet<String> ENABLED_MARKETS =
+            ImmutableSet.<String>builder().add("SE", "GB", "ES", "DK", "NO", "BE", "NL").build();
 
     public RefreshItemAgentWorkerCommand(
             AgentWorkerCommandContext context,
             RefreshableItem item,
-            AgentWorkerCommandMetricState metrics) {
+            AgentWorkerCommandMetricState metrics,
+            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient) {
         this.context = context;
         this.item = item;
         this.metrics = metrics.init(this);
+        this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
+        CredentialsRequest request = context.getRequest();
+
+        this.agentName = request.getProvider().getClassName();
+        this.provider = request.getProvider().getName();
+        this.market = request.getProvider().getMarket();
     }
 
     public RefreshableItem getRefreshableItem() {
@@ -128,9 +145,37 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         }
     }
 
+    private void sendIdentityToAgentDataAvailabilityTracker() {
+        if (Strings.isNullOrEmpty(market) || !ENABLED_MARKETS.contains(market.toUpperCase())) {
+            return;
+        }
+
+        if (context.getCachedIdentityData() == null) {
+            log.info(
+                    "Identity data is null, skipping identity data request to AgentDataAvailabilityTracker");
+            return;
+        }
+
+        log.info("Sending Identity to AgentDataAvailabilityTracker");
+
+        agentDataAvailabilityTrackerClient.sendIdentityData(
+                agentName, provider, market, context.getAggregationIdentityData());
+    }
+
     @Override
     public void postProcess() throws Exception {
-        // Deliberately left empty.
+        if (getRefreshableItem() == RefreshableItem.IDENTITY_DATA) {
+            try {
+                sendIdentityToAgentDataAvailabilityTracker();
+
+                // TODO : context.sendIdentityToIdentityAggregatorService();
+
+            } catch (Exception e) {
+                log.warn("Couldn't send Identity");
+
+                throw e;
+            }
+        }
     }
 
     @Override
