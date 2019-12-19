@@ -39,7 +39,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations/abnamro",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/locks",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/truststrategy",
