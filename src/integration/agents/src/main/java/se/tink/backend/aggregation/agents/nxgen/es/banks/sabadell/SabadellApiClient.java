@@ -38,6 +38,7 @@ public class SabadellApiClient {
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
+                .acceptLanguage(SabadellConstants.Headers.ACCEPT_LANGUAGE)
                 .accept(SabadellConstants.Headers.SABADELL_ACCEPT);
     }
 
