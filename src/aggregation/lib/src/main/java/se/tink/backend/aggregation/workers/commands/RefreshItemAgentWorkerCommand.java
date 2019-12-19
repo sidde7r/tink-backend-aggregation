@@ -168,7 +168,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             try {
                 sendIdentityToAgentDataAvailabilityTracker();
 
-                // TODO : context.sendIdentityToIdentityAggregatorService();
+                context.sendIdentityToIdentityAggregatorService();
 
             } catch (Exception e) {
                 log.warn("Couldn't send Identity");
