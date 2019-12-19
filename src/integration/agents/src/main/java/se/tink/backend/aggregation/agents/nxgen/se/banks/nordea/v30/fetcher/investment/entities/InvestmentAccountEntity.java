@@ -81,7 +81,7 @@ public class InvestmentAccountEntity {
                         .translate(getRawType())
                         .orElse(Portfolio.Type.OTHER));
         portfolio.setCashValue(balance);
-        portfolio.setTotalValue(balance + value);
+        portfolio.setTotalValue(value);
         portfolio.setTotalProfit(profitLoss);
         portfolio.setInstruments(getInstruments());
 

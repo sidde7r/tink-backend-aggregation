@@ -34,14 +34,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
-import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.backend.secretservice.grpc.GetAllSecretsResponse;
 import se.tink.backend.secretservice.grpc.GetSecretsRequest;
 import se.tink.backend.secretservice.grpc.InternalSecretsServiceGrpc;
 import se.tink.backend.secretservice.grpc.PingMessage;
 import se.tink.backend.secretservice.grpc.TppSecret;
 
-public final class TppSecretsServiceClientImpl implements TppSecretsServiceClient {
+public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServiceClient {
 
     private static final Logger log = LoggerFactory.getLogger(TppSecretsServiceClientImpl.class);
     private final AtomicBoolean isShutDown = new AtomicBoolean(false);
