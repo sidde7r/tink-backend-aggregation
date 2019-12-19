@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils;
+package se.tink.backend.aggregation.utils.qrcode;
 
 import com.google.api.client.util.Base64;
 import com.google.common.base.Strings;

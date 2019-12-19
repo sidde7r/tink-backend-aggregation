@@ -13,6 +13,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/qrcode",
         "//src/integration/models",
         "//src/integration/signableoperation:enums",
         "//src/integration/transfer:enums",

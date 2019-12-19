@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils;
+package se.tink.backend.aggregation.utils.qrcode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
