@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.AccountType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -44,10 +46,12 @@ public class AccountEntity {
     @JsonProperty("_links")
     private LinksEntity links;
 
+    @JsonIgnore
     public boolean isCreditCardAccount() {
         return accountType.equalsIgnoreCase(AccountType.CREDIT_CARD);
     }
 
+    @JsonIgnore
     public CreditCardAccount toCreditCardAccount() {
         return CreditCardAccount.builder(accountNumber)
                 .setAccountNumber(accountNumber)
@@ -57,18 +61,26 @@ public class AccountEntity {
                 .build();
     }
 
+    @JsonIgnore
     private Number getBalance() {
         return Optional.ofNullable(balance).orElse(Optional.ofNullable(otb).orElse(0));
     }
 
+    @JsonIgnore
     private String getCurrency() {
         return Optional.ofNullable(currency).orElse("SEK");
     }
 
+    @JsonIgnore
     public String getName() {
         return cardDetails.stream()
                 .findFirst()
                 .map(CardDetailsEntity::getCardHolderName)
                 .orElse("");
+    }
+
+    @JsonIgnore
+    public boolean isBrandId(String brandId) {
+        return StringUtils.containsIgnoreCase(productName, brandId);
     }
 }

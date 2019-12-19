@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class EnterCardAgent extends NextGenerationAgent
+public abstract class EnterCardAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor {
 
     private final String clientName;
@@ -33,7 +33,10 @@ public final class EnterCardAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
 
     public EnterCardAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
+            String brandId) {
         super(request, context, signatureKeyPair);
 
         apiClient = new EnterCardApiClient(client, persistentStorage);
@@ -44,7 +47,7 @@ public final class EnterCardAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new CreditCardAccountFetcher(
-                                apiClient, credentials.getField(CredentialKeys.SSN)),
+                                apiClient, credentials.getField(CredentialKeys.SSN), brandId),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionDatePaginationController<>(

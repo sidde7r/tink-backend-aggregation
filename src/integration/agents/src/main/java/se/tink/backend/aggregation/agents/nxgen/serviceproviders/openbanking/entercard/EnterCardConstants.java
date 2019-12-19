@@ -73,6 +73,8 @@ public final class EnterCardConstants {
         public static final String ACCOUNT_NUMBER = "accountNumber";
         public static final String SSN = "ssn";
         public static final String INCLUDE_CARD_MOVEMENTS = "includeCardMovements";
+        public static final String START_AT_ROW_NUMBER = "startAtRowNum";
+        public static final String STOP_AFTER_ROW_NUMBER = "stopAfterRowNum";
     }
 
     public static class QueryValues {
@@ -113,5 +115,11 @@ public final class EnterCardConstants {
 
     public static class CredentialKeys {
         public static final String SSN = "username";
+    }
+
+    public static class BrandedCards {
+        public static final String COOP = "COOP";
+        public static final String REMEMBER = "RE:MEMBER";
+        public static final String MORE_GOLF = "GOLF";
     }
 }

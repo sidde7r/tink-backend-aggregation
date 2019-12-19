@@ -3462,6 +3462,117 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.se.openbanking.entercard.coop.CoopMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Coop Mastercard Mer",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "financialInstitutionId": "13a17fe6c0495b6e97de3199930d663b",
+            "financialInstitutionName": "Coop Mastercard Mer",
+            "market": "SE",
+            "multiFactor": true,
+            "name": "se-coop-ob",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": null,
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD",
+            "backgroundRefreshMaxFrequency": 4,
+            "backgroundRefreshEnabled": true
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.se.openbanking.entercard.moregolf.MoreGolfMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "More Golf MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "financialInstitutionId": "8377de7fc6505ad489ba97416f86fd2c",
+            "financialInstitutionName": "More Golf Mastercard",
+            "market": "SE",
+            "multiFactor": true,
+            "name": "se-moregolfmastercard-ob",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": null,
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD",
+            "backgroundRefreshMaxFrequency": 4,
+            "backgroundRefreshEnabled": true
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.se.openbanking.entercard.remember.RememberMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "re:member",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "financialInstitutionId": "88e1cdcf576153f2b5b661b1e1cb3ceb",
+            "financialInstitutionName": "re:member",
+            "market": "SE",
+            "multiFactor": true,
+            "name": "se-remembermastercard-ob",
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": null,
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD",
+            "backgroundRefreshMaxFrequency": 4,
+            "backgroundRefreshEnabled": true
         }
     ]
 }

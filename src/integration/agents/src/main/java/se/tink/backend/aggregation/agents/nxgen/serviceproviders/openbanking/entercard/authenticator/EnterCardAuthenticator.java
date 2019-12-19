@@ -40,7 +40,7 @@ public class EnterCardAuthenticator implements OAuth2Authenticator {
         return Urls.AUTHORIZATION
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.STATE, state)
-                .queryParam(QueryKeys.SCOPE, QueryKeys.SCOPE)
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl());
     }

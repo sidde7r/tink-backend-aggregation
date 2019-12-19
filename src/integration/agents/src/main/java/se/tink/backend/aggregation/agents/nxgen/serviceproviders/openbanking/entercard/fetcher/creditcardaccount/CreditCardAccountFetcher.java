@@ -10,16 +10,19 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
     private final EnterCardApiClient apiClient;
     private final String ssn;
+    private final String brandId;
 
-    public CreditCardAccountFetcher(EnterCardApiClient apiClient, String ssn) {
+    public CreditCardAccountFetcher(EnterCardApiClient apiClient, String ssn, String brandId) {
         this.apiClient = apiClient;
         this.ssn = ssn;
+        this.brandId = brandId;
     }
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return apiClient.fetchCreditCardAccounts(ssn).getAccount().stream()
                 .filter(AccountEntity::isCreditCardAccount)
+                .filter(accountEntity -> accountEntity.isBrandId(brandId))
                 .map(AccountEntity::toCreditCardAccount)
                 .collect(Collectors.toList());
     }

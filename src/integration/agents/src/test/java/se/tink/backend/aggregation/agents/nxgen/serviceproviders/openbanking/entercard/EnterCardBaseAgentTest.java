@@ -8,10 +8,16 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.CredentialKeys;
 
-public class EnterCardAgentBaseTest {
+public abstract class EnterCardBaseAgentTest {
     private final ArgumentManager<UsernameArgumentEnum> manager =
             new ArgumentManager<>(UsernameArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
+
+    private String providerName;
+
+    public EnterCardBaseAgentTest(String providerName) {
+        this.providerName = providerName;
+    }
 
     @AfterClass
     public static void afterClass() {
@@ -23,7 +29,7 @@ public class EnterCardAgentBaseTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("se", "se-entercard-ob")
+                new AgentIntegrationTest.Builder("se", providerName)
                         .addCredentialField(
                                 CredentialKeys.SSN, manager.get(UsernameArgumentEnum.USERNAME))
                         .setFinancialInstitutionId("entercard")
