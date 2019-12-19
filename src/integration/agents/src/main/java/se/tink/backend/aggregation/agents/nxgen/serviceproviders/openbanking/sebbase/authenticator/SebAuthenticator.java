@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.ErrorResponse;
@@ -19,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SebAuthenticator implements OAuth2Authenticator {
-    private static final Logger log = LoggerFactory.getLogger(NordeaSeBankIdAuthenticator.class);
+    private static final Logger log = LoggerFactory.getLogger(SebAuthenticator.class);
 
     private final SebBaseApiClient client;
     private final SebConfiguration configuration;

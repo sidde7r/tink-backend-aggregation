@@ -77,11 +77,6 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                                                     pair.first,
                                                     pair.second));
 
-                    if (context.getCachedIdentityData() != null) {
-                        agentDataAvailabilityTrackerClient.sendIdentityData(
-                                agentName, provider, market, context.getAggregationIdentityData());
-                    }
-
                     action.completed();
                 } else {
 

@@ -91,6 +91,7 @@ public abstract class BankiaConstants {
         public static final String O3 = "o3";
         public static final String _1 = "1";
         public static final String EMPTY_RESUME_POINT = "";
+        public static final String ACCEPT_LANGUAGE = "es";
     }
 
     public static class StorageKey {

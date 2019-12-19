@@ -71,7 +71,7 @@ public class FakeIntegrationArgumentsCreator {
                     }
 
                     @Override
-                    public void setProviderSessionCache(String value) {}
+                    public void setProviderSessionCache(String value, int expiredTimeInSeconds) {}
 
                     @Override
                     public Account updateTransactions(

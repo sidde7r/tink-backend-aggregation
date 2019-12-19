@@ -6,12 +6,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.collection.List;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.FormatsEntity;
@@ -66,15 +68,15 @@ public class LoanDetailsResponse {
     }
 
     @JsonIgnore
-    private Double getFirstInterestRate() {
-        Double interestPercentage =
+    private BigDecimal getFirstInterestRate() {
+        BigDecimal interestPercentage =
                 interestRates.headOption().map(InterestEntity::getPercentage).getOrNull();
 
         if (interestPercentage == null) {
             return null;
         }
 
-        return interestPercentage / 100d;
+        return AgentParsingUtils.parsePercentageFormInterest(interestPercentage);
     }
 
     @JsonIgnore
@@ -86,7 +88,7 @@ public class LoanDetailsResponse {
     public Optional<LoanModule> getLoanModuleWithTypeAndLoanNumber(
             LoanDetails.Type loanType, String loanNumber) {
 
-        final Double interestRate = getFirstInterestRate();
+        final BigDecimal interestRate = getFirstInterestRate();
 
         if (interestRate == null) {
             log.warn("Unable to parse interest for loan with id {}. Ignoring loan.", loanNumber);
@@ -97,7 +99,7 @@ public class LoanDetailsResponse {
                 LoanModule.builder()
                         .withType(loanType)
                         .withBalance(pendingAmount.toTinkAmount().negate())
-                        .withInterestRate(interestRate)
+                        .withInterestRate(interestRate.doubleValue())
                         .setInitialBalance(initialAmount.toTinkAmount().negate())
                         .setMonthlyAmortization(installments.getInstallmentAmount().toTinkAmount())
                         .setAmortized(redeemedAmount.toTinkAmount())

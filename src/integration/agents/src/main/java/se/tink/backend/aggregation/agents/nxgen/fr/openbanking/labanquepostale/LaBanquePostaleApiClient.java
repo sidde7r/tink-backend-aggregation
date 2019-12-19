@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountEntityBaseEntityWithHref;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -82,7 +82,7 @@ public final class LaBanquePostaleApiClient
     }
 
     private String generateDigest(final String data) {
-        return Signature.DIGEST_PREFIX + BerlinGroupUtils.calculateDigest(data);
+        return Signature.DIGEST_PREFIX + Psd2Headers.calculateDigest(data);
     }
 
     private String getSignature(final String digest, String requestId) {

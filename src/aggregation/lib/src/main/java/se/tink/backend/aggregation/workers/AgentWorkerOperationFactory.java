@@ -68,6 +68,7 @@ import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -123,7 +124,7 @@ public class AgentWorkerOperationFactory {
             AgentsServiceConfiguration agentsServiceConfiguration,
             CredentialsEventProducer credentialsEventProducer,
             AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
-            TppSecretsServiceClient tppSecretsServiceClient) {
+            ManagedTppSecretsServiceClient tppSecretsServiceClient) {
         this.cacheClient = cacheClient;
 
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
@@ -233,7 +234,10 @@ public class AgentWorkerOperationFactory {
         for (RefreshableItem item : nonAccountItems) {
             commands.add(
                     new RefreshItemAgentWorkerCommand(
-                            context, item, createCommandMetricState(request)));
+                            context,
+                            item,
+                            createCommandMetricState(request),
+                            agentDataAvailabilityTrackerClient));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -816,7 +820,10 @@ public class AgentWorkerOperationFactory {
             if (RefreshableItem.isAccount(item)) {
                 commands.add(
                         new RefreshItemAgentWorkerCommand(
-                                context, item, createCommandMetricState(request)));
+                                context,
+                                item,
+                                createCommandMetricState(request),
+                                agentDataAvailabilityTrackerClient));
             }
         }
 
@@ -1070,7 +1077,10 @@ public class AgentWorkerOperationFactory {
                         item ->
                                 commands.add(
                                         new RefreshItemAgentWorkerCommand(
-                                                context, item, createCommandMetricState(request))));
+                                                context,
+                                                item,
+                                                createCommandMetricState(request),
+                                                agentDataAvailabilityTrackerClient)));
         // === END REFRESHING ===
         return commands.build();
     }

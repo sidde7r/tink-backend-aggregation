@@ -36,8 +36,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configura
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.TimeUtils;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
@@ -111,7 +111,7 @@ public final class ArgentaApiClient {
 
     public URL buildAuthorizeUrl(String state, String consentId) {
 
-        final String codeVerifier = BerlinGroupUtils.generateCodeVerifier();
+        final String codeVerifier = Psd2Headers.generateCodeVerifier();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
 
         return createRequest(Urls.AUTHORIZATION)
@@ -122,8 +122,7 @@ public final class ArgentaApiClient {
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.S256)
                 .queryParam(QueryKeys.SCOPE, String.format(QueryValues.SCOPE, consentId))
                 .queryParam(
-                        QueryKeys.CODE_CHALLENGE,
-                        BerlinGroupUtils.generateCodeChallenge(codeVerifier))
+                        QueryKeys.CODE_CHALLENGE, Psd2Headers.generateCodeChallenge(codeVerifier))
                 .getUrl();
     }
 

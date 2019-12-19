@@ -71,11 +71,12 @@ public final class SabadellConstants {
 
     public static final class Headers {
         public static final String SABADELL_ACCEPT = "application/vnd.idk.bsmobil-v1933+json";
+        public static final String ACCEPT_LANGUAGE = "es";
     }
 
     public static final class InitiateSessionRequest {
         public static final String DEVICE_INFO =
-                "en-US GEO() IOS 10.2 iPhone8,1 NATIVE_APP 18.3.0 STANDARD";
+                "es-ES GEO() IOS 10.2 iPhone8,1 NATIVE_APP 18.3.0 STANDARD";
         public static final String LAST_REQUEST_DATE = "";
         public static final String BRAND = "SAB";
         public static final String GEO_LOCATION_DATA = "";

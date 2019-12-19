@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenRequestGet;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -137,7 +137,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     }
 
     private String generateDigest(final String data) {
-        return Signature.DIGEST_PREFIX + BerlinGroupUtils.calculateDigest(data);
+        return Signature.DIGEST_PREFIX + Psd2Headers.calculateDigest(data);
     }
 
     private String getFormattedDate() {
@@ -155,7 +155,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
 
     // Can't test it, since erste's api is not checking for signature
     private RequestBuilder buildRequestWithSignature(final String reqPath, final String payload) {
-        final String reqId = BerlinGroupUtils.getRequestId();
+        final String reqId = Psd2Headers.getRequestId();
         final String date = getFormattedDate();
         final String digest = generateDigest(payload);
 

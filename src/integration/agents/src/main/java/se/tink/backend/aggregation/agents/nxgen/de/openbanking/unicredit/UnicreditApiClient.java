@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.util.UnicreditBaseUtils;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -40,7 +40,7 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
 
         ConsentResponse consentResponse =
                 createRequest(new URL(getConfiguration().getBaseUrl() + Endpoints.CONSENTS))
-                        .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
+                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .header(
                                 HeaderKeys.PSU_ID_TYPE,
                                 getCredentials().getField(Key.ADDITIONAL_INFORMATION))
@@ -80,7 +80,7 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
     private RequestBuilder getConsentUpdateRequest(URL url) {
 
         return createRequest(url)
-                .header(HeaderKeys.X_REQUEST_ID, UnicreditBaseUtils.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(
                         HeaderKeys.PSU_ID_TYPE,
                         getCredentials().getField(Key.ADDITIONAL_INFORMATION))

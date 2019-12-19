@@ -199,6 +199,7 @@ public class PositionEntity {
         switch (instrumentType.toLowerCase()) {
             case InstrumentTypes.STOCK:
                 return Instrument.Type.STOCK;
+            case InstrumentTypes.AUTO_PORTFOLIO:
             case InstrumentTypes.FUND:
                 return Instrument.Type.FUND;
             case InstrumentTypes.BOND:

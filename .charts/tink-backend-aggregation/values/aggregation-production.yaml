@@ -195,6 +195,10 @@ clients:
     aggregatorIdentifier: "Lunarway"
   lunarway-test:
     aggregatorIdentifier: "Lunarway"
+  marginalen-bank-production:
+    aggregatorIdentifier: "Marginalen Bank"
+  marginalen-bank-testing:
+    aggregatorIdentifier: "Marginalen Bank"
   middelfart-production:
     aggregatorIdentifier: "Middelfart Sparekasse"
   middelfart-testing:
@@ -399,6 +403,8 @@ clients:
     aggregatorIdentifier: "Sparbanken Syd"
   se-sparbanken-syd-development-3:
     aggregatorIdentifier: "Sparbanken Syd"
+  uk-oaknorth-testing:
+    aggregatorIdentifier: "Oaknorth"
   zimpler-production:
     aggregatorIdentifier: "Zimpler"
   zimpler-test:

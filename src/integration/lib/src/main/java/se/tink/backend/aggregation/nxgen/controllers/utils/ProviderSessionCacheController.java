@@ -19,10 +19,15 @@ public class ProviderSessionCacheController {
         this.providerSessionCacheContext = providerSessionCacheContext;
     }
 
-    public void setProviderSessionCacheInformation(Map<String, String> fields) {
+    public void setProviderSessionCacheInfoWithExpiredTime(
+            Map<String, String> fields, int expiredTimeInSeconds) {
         providerSessionCacheContext.setProviderSessionCache(
-                SerializationUtils.serializeToString(fields));
+                SerializationUtils.serializeToString(fields), expiredTimeInSeconds);
         logger.info("Finished setting provider session cache information");
+    }
+
+    public void setProviderSessionCacheInfo(Map<String, String> fields) {
+        setProviderSessionCacheInfoWithExpiredTime(fields, 10 * 60);
     }
 
     public Optional<Map<String, String>> getProviderSessionCacheInformation() {

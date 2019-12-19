@@ -666,7 +666,8 @@ public final class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public void setProviderSessionCache(String value) {
-        agentTestServerClient.setProviderSessionCache(provider.getFinancialInstitutionId(), value);
+    public void setProviderSessionCache(String value, int expiredTimeInSeconds) {
+        agentTestServerClient.setProviderSessionCache(
+                provider.getFinancialInstitutionId(), value, expiredTimeInSeconds);
     }
 }

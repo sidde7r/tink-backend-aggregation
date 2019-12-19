@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import io.vavr.CheckedPredicate;
+import java.util.Objects;
 import java.util.function.Predicate;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.AuthenticationStates;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Messages;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
@@ -24,12 +26,11 @@ public final class BbvaPredicates {
 
     public static final CheckedPredicate<BbvaResponse> RESPONSE_HAS_ERROR = BbvaResponse::hasError;
 
-    public static final CheckedPredicate<String> IS_LOGIN_SUCCESS =
-            response -> response.contains(Messages.LOGIN_SUCCESS);
-
-    public static final CheckedPredicate<String> IS_LOGIN_WRONG_CREDENTIALS =
+    public static final CheckedPredicate<LoginResponse> IS_LOGIN_SUCCESS =
             response ->
-                    StringUtils.containsIgnoreCase(response, Messages.LOGIN_WRONG_CREDENTIAL_CODE);
+                    Objects.nonNull(response)
+                            && AuthenticationStates.OK.equalsIgnoreCase(
+                                    response.getAuthenticationState());
 
     public static final Predicate<AccountTypes> IS_TRANSACTIONAL_ACCOUNT =
             accountType ->

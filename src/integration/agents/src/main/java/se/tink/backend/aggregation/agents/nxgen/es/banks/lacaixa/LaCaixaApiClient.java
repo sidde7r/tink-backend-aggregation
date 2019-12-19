@@ -52,7 +52,7 @@ public class LaCaixaApiClient {
 
         SessionRequest request =
                 new SessionRequest(
-                        LaCaixaConstants.DefaultRequestParams.LANGUAGE_EN,
+                        LaCaixaConstants.DefaultRequestParams.LANGUAGE_ES,
                         LaCaixaConstants.DefaultRequestParams.ORIGIN,
                         LaCaixaConstants.DefaultRequestParams.CHANNEL,
                         LaCaixaConstants.DefaultRequestParams.INSTALLATION_ID);

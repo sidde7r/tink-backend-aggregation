@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.Default;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.RsaKeyResponse;
@@ -69,7 +70,8 @@ public class BankiaApiClient {
                 .queryParam(
                         BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.UPPER_CASE_OIP)
                 .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
-                .accept(MediaType.APPLICATION_JSON);
+                .accept(MediaType.APPLICATION_JSON)
+                .acceptLanguage(Default.ACCEPT_LANGUAGE);
     }
 
     private RequestBuilder createInSessionRequest(String url) {
@@ -82,7 +84,8 @@ public class BankiaApiClient {
                         BankiaConstants.Default.LOWER_CASE_AM)
                 .queryParam(
                         BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
-                .accept(MediaType.APPLICATION_JSON);
+                .accept(MediaType.APPLICATION_JSON)
+                .acceptLanguage(Default.ACCEPT_LANGUAGE);
     }
 
     public List<LoanAccountEntity> getLoans() {

@@ -21,15 +21,24 @@ public class ProviderSessionCacheController {
         this.coordinationClient = coordinationClient;
     }
 
-    public void setProviderSessionCache(String financialInstitutionId, String value) {
+    public void setProviderSessionCache(
+            String financialInstitutionId, String value, int expiredTimeInSeconds) {
         logger.info(
-                "Received provider session information for financialInstitutionId: {}, cache client: {}",
+                "Received provider session information for financialInstitutionId: {}."
+                        + " This cache client: {} will be expired in {} seconds",
                 financialInstitutionId,
-                cacheClient.getClass());
+                cacheClient.getClass(),
+                expiredTimeInSeconds);
+
+        if (expiredTimeInSeconds < 1) {
+            // If expired time is 0, the cache is never expired
+            expiredTimeInSeconds = 1;
+        }
+
         cacheClient.set(
                 CacheScope.PROVIDER_SESSION_BY_FINANCIALINSTITUTIONID,
                 financialInstitutionId,
-                60 * 15,
+                expiredTimeInSeconds,
                 value);
 
         DistributedBarrier lock =
