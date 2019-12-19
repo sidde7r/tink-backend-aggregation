@@ -16,7 +16,8 @@ public class TransactionAmountEntityTest {
         // given
         String givenAmount = "-92.54";
         BigDecimal expectedAmount = new BigDecimal("92.54");
-        TransactionAmountEntity transactionAmountEntity = amountToTransactionAmountEntity(givenAmount);
+        TransactionAmountEntity transactionAmountEntity =
+                amountToTransactionAmountEntity(givenAmount);
 
         // when
         BigDecimal result = transactionAmountEntity.toTinkAmount().getExactValue();
@@ -30,7 +31,8 @@ public class TransactionAmountEntityTest {
         // given
         String givenAmount = "0.0";
         BigDecimal expectedAmount = new BigDecimal("0.0");
-        TransactionAmountEntity transactionAmountEntity = amountToTransactionAmountEntity(givenAmount);
+        TransactionAmountEntity transactionAmountEntity =
+                amountToTransactionAmountEntity(givenAmount);
 
         // when
         BigDecimal result = transactionAmountEntity.toTinkAmount().getExactValue();
@@ -44,7 +46,8 @@ public class TransactionAmountEntityTest {
         // given
         String givenAmount = "234.15";
         BigDecimal expectedAmount = new BigDecimal("-234.15");
-        TransactionAmountEntity transactionAmountEntity = amountToTransactionAmountEntity(givenAmount);
+        TransactionAmountEntity transactionAmountEntity =
+                amountToTransactionAmountEntity(givenAmount);
 
         // when
         BigDecimal result = transactionAmountEntity.toTinkAmount().getExactValue();
