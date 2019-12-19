@@ -150,13 +150,14 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             return;
         }
 
-        log.info("Sending Identity to AgentDataAvailabilityTracker");
-
         if (context.getCachedIdentityData() == null) {
             log.info(
                     "Identity data is null, skipping identity data request to AgentDataAvailabilityTracker");
             return;
         }
+
+        log.info("Sending Identity to AgentDataAvailabilityTracker");
+
         agentDataAvailabilityTrackerClient.sendIdentityData(
                 agentName, provider, market, context.getAggregationIdentityData());
     }
