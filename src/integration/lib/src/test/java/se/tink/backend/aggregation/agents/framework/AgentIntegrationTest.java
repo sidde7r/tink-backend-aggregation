@@ -57,8 +57,8 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
-import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
+import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -179,7 +179,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
                     CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
             configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
-            ManagedTppSecretsServiceClient tppSecretsServiceClient =
+            TppSecretsServiceClient tppSecretsServiceClient =
                     new TppSecretsServiceClientImpl(
                             configuration.getTppSecretsServiceConfiguration());
             tppSecretsServiceClient.start();
