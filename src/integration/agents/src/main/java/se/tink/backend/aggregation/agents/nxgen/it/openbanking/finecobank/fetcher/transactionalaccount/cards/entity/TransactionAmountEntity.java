@@ -21,6 +21,6 @@ public class TransactionAmountEntity {
 
     @JsonIgnore
     public ExactCurrencyAmount toTinkAmount() {
-        return new ExactCurrencyAmount(amount, currency);
+        return new ExactCurrencyAmount(amount.negate(), currency);
     }
 }
