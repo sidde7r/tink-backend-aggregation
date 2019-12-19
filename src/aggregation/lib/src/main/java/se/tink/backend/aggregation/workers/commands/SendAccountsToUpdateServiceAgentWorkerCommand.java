@@ -44,7 +44,6 @@ public class SendAccountsToUpdateServiceAgentWorkerCommand extends AgentWorkerCo
                 log.info("Sending accounts to UpdateService");
 
                 context.sendAllCachedAccountsToUpdateService();
-                context.sendIdentityToIdentityAggregatorService();
 
                 action.completed();
             } catch (Exception e) {

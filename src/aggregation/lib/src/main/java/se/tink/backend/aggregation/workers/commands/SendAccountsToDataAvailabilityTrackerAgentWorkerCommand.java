@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.constants.EnabledMarkets;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -32,9 +32,6 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private final String agentName;
     private final String provider;
     private final String market;
-
-    private final ImmutableSet<String> ENABLED_MARKETS =
-            ImmutableSet.<String>builder().add("SE", "GB", "ES", "DK", "NO", "BE", "NL").build();
 
     public SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
             AgentWorkerCommandContext context,
@@ -65,7 +62,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
             try {
 
                 if (!Strings.isNullOrEmpty(market)
-                        && ENABLED_MARKETS.contains(market.toUpperCase())) {
+                        && EnabledMarkets.ENABLED_MARKETS.contains(market.toUpperCase())) {
 
                     context.getCachedAccountsWithFeatures()
                             .forEach(
