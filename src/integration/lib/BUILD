@@ -98,7 +98,6 @@ java_library(
         "//third_party:io_vavr",
         "//third_party:joda_time_joda_time",
         "//third_party:net_minidev_json_smart",
-        "//third_party:net_sourceforge_cssparser_cssparser",
         "//third_party:net_sourceforge_tess4j",
         "//third_party:org_apache_commons_commons_collections4",
         "//third_party:org_apache_commons_commons_csv",
