@@ -36,7 +36,7 @@ public class AccountEntity {
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
-                                .withAccountNumber(resourceId)
+                                .withAccountNumber(iban)
                                 .withAccountName(name)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
