@@ -36,8 +36,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.TransactionResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.utils.BankdataUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -75,8 +75,8 @@ public final class BankdataApiClient {
         authorizeConsent(consentId);
         final String clientId = getConfiguration().getClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
-        final String codeVerifier = BankdataUtils.generateCodeVerifier();
-        final String codeChallenge = BankdataUtils.generateCodeChallenge(codeVerifier);
+        final String codeVerifier = Psd2Headers.generateCodeVerifier();
+        final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         sessionStorage.put(StorageKeys.CONSENT_ID, consentId);
         URL url = new URL(baseAuthUrl + Endpoints.AUTHORIZE);
