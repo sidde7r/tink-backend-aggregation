@@ -17,10 +17,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.intermediate.LoanEntityFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.LoanOverviewResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.loan.SwedbankDefaultLoanFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.EngagementOverviewResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.loan.SwedbankDefaultLoanFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {

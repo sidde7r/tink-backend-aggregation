@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.CollateralsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

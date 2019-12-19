@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank;
 
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankStorage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.interfaces.SwedbankApiClientProvider;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankStorage;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.interfaces.SwedbankApiClientProvider;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 public class SwedbankSEApiClientProvider implements SwedbankApiClientProvider {
