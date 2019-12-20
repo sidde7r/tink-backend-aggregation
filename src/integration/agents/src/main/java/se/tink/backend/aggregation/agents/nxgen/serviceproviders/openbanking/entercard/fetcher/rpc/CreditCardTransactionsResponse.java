@@ -24,6 +24,7 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
     public Collection<? extends Transaction> getTinkTransactions() {
         return Optional.ofNullable(account).map(TransactionAccountEntity::getMovements)
                 .orElse(Collections.emptyList()).stream()
+                .filter(TransactionEntity::isValidTransaction)
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
