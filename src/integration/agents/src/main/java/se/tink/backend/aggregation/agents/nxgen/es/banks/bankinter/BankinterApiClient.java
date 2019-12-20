@@ -96,6 +96,21 @@ public final class BankinterApiClient {
         return new LoanResponse(client.request(Urls.BASE + url).get(String.class));
     }
 
+    public LoanResponse fetchLoanPage(String source, String viewState, int offset) {
+        final Form.Builder formBuilder = Form.builder();
+        formBuilder.put(source, String.format("%d", offset));
+        formBuilder.put(FormKeys.LOAN_TRANSACTIONS_SUBMIT, "1");
+        formBuilder.put(FormKeys.JSF_VIEWSTATE, viewState);
+        formBuilder.put(FormKeys.LOAN_TRANSACTIONS_ID, FormValues.LOAN_TRANSACTIONS_ID);
+
+        return new LoanResponse(
+                client.request(Urls.LOAN)
+                        .body(
+                                formBuilder.build().serialize(),
+                                MediaType.APPLICATION_FORM_URLENCODED)
+                        .post(String.class));
+    }
+
     public <T extends JsfUpdateResponse> T fetchJsfUpdate(
             String url, String source, String viewState, Class<T> responseClass, String... render) {
         final Form.Builder formBuilder = Form.builder();

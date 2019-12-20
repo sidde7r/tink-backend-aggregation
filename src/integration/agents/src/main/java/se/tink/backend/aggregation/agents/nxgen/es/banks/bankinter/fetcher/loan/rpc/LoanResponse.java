@@ -16,11 +16,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.InstallmentStatus;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.loan.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -117,6 +121,7 @@ public class LoanResponse extends HtmlResponse {
                                 .withAccountName(formattedIban)
                                 .addIdentifier(iban)
                                 .build())
+                .putInTemporaryStorage(StorageKeys.FIRST_PAGINATION_KEY, getPaginationKey(0))
                 .build();
     }
 
@@ -178,8 +183,68 @@ public class LoanResponse extends HtmlResponse {
         }
     }
 
+    public PaginationKey getNextPaginationKey() {
+        if (Objects.isNull(getElementById("prestaForm:linkMasPagos"))) {
+            return null;
+        }
+        return getPaginationKey(getTransactionNodes().getLength());
+    }
+
+    private PaginationKey getPaginationKey(int skip) {
+        final Node paginationKey =
+                evaluateXPath(
+                        "//div[@id='prestaForm:tablaPagos']/input[@type='hidden' and contains(@name,'prestaForm:')]",
+                        Node.class);
+        final String source = paginationKey.getAttributes().getNamedItem("id").getTextContent();
+        final int offset =
+                Integer.parseInt(
+                        paginationKey.getAttributes().getNamedItem("value").getTextContent());
+        final String viewState =
+                evaluateXPath(
+                        "//form[@id='prestaForm']/input[@type='hidden' and @name='javax.faces.ViewState']/@value",
+                        String.class);
+
+        return new PaginationKey(source, viewState, offset, skip);
+    }
+
+    private Transaction toTinkTransaction(Node node) {
+        final String dateValue = evaluateXPath(node, "div[1]/span", String.class);
+        final String status = evaluateXPath(node, "div[2]/span", String.class);
+        final ExactCurrencyAmount amount =
+                parseAmount(
+                        evaluateXPath(node, "div[3]/span", String.class).replaceAll("\\s+", ""));
+
+        final boolean paid = status.equalsIgnoreCase(InstallmentStatus.PAID);
+        final LocalDate date = LocalDate.parse(dateValue, DATE_FORMATTER);
+
+        return Transaction.builder().setDate(date).setAmount(amount).setPending(!paid).build();
+    }
+
+    private NodeList getTransactionNodes() {
+        return evaluateXPath(
+                "//div[@id='prestaForm:tablaPagos']/div[contains(@class,'rowSummary')]",
+                NodeList.class);
+    }
+
+    public List<? extends Transaction> toTinkTransactions(int skip) {
+        // each new page contains all the previous transactions too, for our pagination we want
+        // to skip some, so we only get the new ones
+
+        final NodeList transactionNodes = getTransactionNodes();
+        final List<Transaction> transactions = new ArrayList<>();
+        for (int i = skip; i < transactionNodes.getLength(); i++) {
+            transactions.add(toTinkTransaction(transactionNodes.item(i)));
+        }
+        return transactions;
+    }
+
     @Override
     protected ExactCurrencyAmount parseAmount(String amountString) {
-        return super.parseAmount(amountString.replace("EUROS", "€"));
+        if (amountString.matches(".*\\d$")) {
+            // no currency included
+            return super.parseAmount(amountString + "€");
+        } else {
+            return super.parseAmount(amountString.replace("EUROS", "€"));
+        }
     }
 }
