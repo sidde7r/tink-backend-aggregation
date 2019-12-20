@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.transaction;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.account;
 
 import java.text.ParseException;
 import java.time.LocalDate;

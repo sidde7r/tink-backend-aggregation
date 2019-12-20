@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.transaction;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.account;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -23,7 +23,7 @@ public class TransactionalAccountBalanceRequest extends DefaultRequest<BigDecima
     private TransactionalAccountBaseInfo accountBaseInfo;
     private static final Gson gson = new Gson();
 
-    protected TransactionalAccountBalanceRequest(
+    public TransactionalAccountBalanceRequest(
             BancoBpiAuthContext authContext, TransactionalAccountBaseInfo accountBaseInfo) {
         super(authContext, URL);
         this.accountBaseInfo = accountBaseInfo;

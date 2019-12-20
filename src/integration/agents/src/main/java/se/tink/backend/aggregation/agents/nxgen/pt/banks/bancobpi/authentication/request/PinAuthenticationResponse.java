@@ -25,6 +25,7 @@ public class PinAuthenticationResponse extends LoginResponse {
     private void extractTransactionalAccountBaseInfo() throws RequestException {
         try {
             JSONObject responseData = getResponse().getJSONObject("data");
+            bancoBpiAccountsContext.setNip(responseData.getString("NIP"));
             JSONArray responseAccountList =
                     responseData.getJSONObject("rlContas").getJSONArray("List");
             for (int i = 0; i < responseAccountList.length(); i++) {

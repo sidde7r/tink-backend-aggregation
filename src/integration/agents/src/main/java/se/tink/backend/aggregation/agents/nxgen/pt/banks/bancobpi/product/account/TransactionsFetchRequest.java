@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.transaction;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.account;
 
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
@@ -18,7 +18,7 @@ public class TransactionsFetchRequest extends DefaultRequest<TransactionsFetchRe
     private String bankFetchingUUID;
     private TransactionalAccountBaseInfo transactionalAccountBaseInfo;
 
-    protected TransactionsFetchRequest(
+    public TransactionsFetchRequest(
             BancoBpiEntityManager entityManager,
             String bankFetchingUUID,
             int pageNo,
@@ -27,7 +27,16 @@ public class TransactionsFetchRequest extends DefaultRequest<TransactionsFetchRe
         super(entityManager.getAuthContext(), URL);
         this.pageNo = pageNo;
         this.bankFetchingUUID = bankFetchingUUID;
-        transactionalAccountBaseInfo = findTransactionalAccountBaseInfo(entityManager, account);
+        transactionalAccountBaseInfo =
+                entityManager
+                        .getAccountsContext()
+                        .findAccountInfoByNumber(account.getAccountNumber())
+                        .orElseThrow(
+                                () ->
+                                        new RequestException(
+                                                "Cant' find account with number "
+                                                        + account.getAccountNumber()));
+        ;
     }
 
     @Override
@@ -53,18 +62,5 @@ public class TransactionsFetchRequest extends DefaultRequest<TransactionsFetchRe
     public TransactionsFetchResponse execute(
             RequestBuilder requestBuilder, TinkHttpClient httpClient) throws RequestException {
         return new TransactionsFetchResponse(requestBuilder.post(String.class));
-    }
-
-    private TransactionalAccountBaseInfo findTransactionalAccountBaseInfo(
-            BancoBpiEntityManager entityManager, TransactionalAccount account)
-            throws RequestException {
-        return entityManager.getAccountsContext().getAccountInfo().stream()
-                .filter(o -> o.getInternalAccountId().equals(account.getAccountNumber()))
-                .findAny()
-                .orElseThrow(
-                        () ->
-                                new RequestException(
-                                        "Cant' find account with number "
-                                                + account.getAccountNumber()));
     }
 }

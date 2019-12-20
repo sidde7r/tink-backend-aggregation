@@ -1,7 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.transaction;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.account;
 
-import static org.junit.Assert.*;
-
+import java.util.Optional;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -31,12 +30,13 @@ public class TransactionsFetchRequestTest {
     private BancoBpiAccountsContext accountsContext;
     private TinkHttpClient httpClient;
     private RequestBuilder requestBuilder;
+    private TransactionalAccountBaseInfo accountBaseInfo;
 
     @Before
     public void init() {
         httpClient = Mockito.mock(TinkHttpClient.class);
         requestBuilder = Mockito.mock(RequestBuilder.class);
-        accountsContext = new BancoBpiAccountsContext();
+        accountsContext = Mockito.mock(BancoBpiAccountsContext.class);
         authContext = Mockito.mock(BancoBpiAuthContext.class);
         entityManager = Mockito.mock(BancoBpiEntityManager.class);
         Mockito.when(entityManager.getAuthContext()).thenReturn(authContext);
@@ -48,11 +48,10 @@ public class TransactionsFetchRequestTest {
     private void initAccount() {
         transactionalAccount = Mockito.mock(TransactionalAccount.class);
         Mockito.when(transactionalAccount.getAccountNumber()).thenReturn(ACCOUNT_INTERNAL_ID);
-        TransactionalAccountBaseInfo accountBaseInfo = new TransactionalAccountBaseInfo();
+        accountBaseInfo = new TransactionalAccountBaseInfo();
         accountBaseInfo.setInternalAccountId(ACCOUNT_INTERNAL_ID);
         accountBaseInfo.setOrder(ACCOUNT_ORDER);
         accountBaseInfo.setType(ACCOUNT_TYPE);
-        accountsContext.getAccountInfo().add(accountBaseInfo);
     }
 
     @Test
@@ -60,6 +59,8 @@ public class TransactionsFetchRequestTest {
         // given
         final int pageNo = 2;
         final String fetchingUUID = "fetchingUUID";
+        Mockito.when(accountsContext.findAccountInfoByNumber(ACCOUNT_INTERNAL_ID))
+                .thenReturn(Optional.of(accountBaseInfo));
         TransactionsFetchRequest objectUnderTest =
                 new TransactionsFetchRequest(
                         entityManager, fetchingUUID, pageNo, transactionalAccount);
@@ -78,5 +79,17 @@ public class TransactionsFetchRequestTest {
         Assert.assertEquals(ACCOUNT_INTERNAL_ID, conta.getString("nuc"));
         Assert.assertEquals(ACCOUNT_TYPE, conta.getString("tipo"));
         Assert.assertEquals(ACCOUNT_ORDER, conta.getString("ordem"));
+    }
+
+    @Test(expected = RequestException.class)
+    public void shouldThrowExceptionWhenAccountDoesNotExist() throws RequestException {
+        // given
+        final int pageNo = 2;
+        final String fetchingUUID = "fetchingUUID";
+        Mockito.when(accountsContext.findAccountInfoByNumber(ACCOUNT_INTERNAL_ID))
+                .thenReturn(Optional.empty());
+        // when
+        new TransactionsFetchRequest(entityManager, fetchingUUID, pageNo, transactionalAccount);
+        // then
     }
 }
