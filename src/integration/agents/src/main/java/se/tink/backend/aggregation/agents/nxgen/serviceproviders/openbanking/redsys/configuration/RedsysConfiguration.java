@@ -21,7 +21,7 @@ public class RedsysConfiguration implements ClientConfiguration {
     @AgentConfigParam private List<String> scopes;
     private String clientSigningKeyPath;
     private String clientSigningKeyPassword;
-    private String clientSigningCertificate;
+    @Secret private String clientSigningCertificate;
 
     public String getBaseAuthUrl() {
         Preconditions.checkNotNull(
