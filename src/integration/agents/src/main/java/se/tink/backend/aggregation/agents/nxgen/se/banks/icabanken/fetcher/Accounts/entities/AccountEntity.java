@@ -132,7 +132,13 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     private boolean isCheckingAccount() {
-        return IcaBankenConstants.AccountTypes.ICA_ACCOUNT.equalsIgnoreCase(type);
+        return IcaBankenConstants.AccountTypes.ICA_ACCOUNT.equalsIgnoreCase(type)
+                && !hasCreditLimit();
+    }
+
+    @JsonIgnore
+    private boolean hasCreditLimit() {
+        return creditLimit > 0;
     }
 
     @JsonIgnore
@@ -142,7 +148,9 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     public boolean isCreditCardAccount() {
-        return IcaBankenConstants.AccountTypes.CREDIT_CARD_ACCOUNT.equalsIgnoreCase(type);
+        return IcaBankenConstants.AccountTypes.CREDIT_CARD_ACCOUNT.equalsIgnoreCase(type)
+                || (IcaBankenConstants.AccountTypes.ICA_ACCOUNT.equalsIgnoreCase(type)
+                        && hasCreditLimit());
     }
 
     @JsonIgnore
