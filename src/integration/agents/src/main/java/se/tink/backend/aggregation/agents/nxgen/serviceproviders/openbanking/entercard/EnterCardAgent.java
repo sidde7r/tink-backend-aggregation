@@ -28,7 +28,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class EnterCardAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor {
 
-    private final String clientName;
+    private EnterCardConfiguration enterCardConfiguration;
     private final EnterCardApiClient apiClient;
     private final CreditCardRefreshController creditCardRefreshController;
 
@@ -39,8 +39,10 @@ public abstract class EnterCardAgent extends NextGenerationAgent
             String brandId) {
         super(request, context, signatureKeyPair);
 
+        enterCardConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(EnterCardConfiguration.class);
         apiClient = new EnterCardApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
 
         creditCardRefreshController =
                 new CreditCardRefreshController(
@@ -57,18 +59,8 @@ public abstract class EnterCardAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
-        EnterCardConfiguration enterCardConfiguration = getClientConfiguration();
         apiClient.setConfiguration(enterCardConfiguration);
         this.client.setEidasProxy(configuration.getEidasProxy());
-    }
-
-    protected EnterCardConfiguration getClientConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        EnterCardConstants.INTEGRATION_NAME,
-                        clientName,
-                        EnterCardConfiguration.class);
     }
 
     @Override
@@ -77,8 +69,7 @@ public abstract class EnterCardAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new EnterCardAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()),
+                        new EnterCardAuthenticator(apiClient, enterCardConfiguration),
                         credentials,
                         strongAuthenticationState);
 
@@ -109,7 +100,7 @@ public abstract class EnterCardAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         EnterCardBasePaymentExecutor enterCardBasePaymentExecutor =
                 new EnterCardBasePaymentExecutor(
-                        apiClient, supplementalInformationHelper, getClientConfiguration());
+                        apiClient, supplementalInformationHelper, enterCardConfiguration);
 
         return Optional.of(
                 new PaymentController(enterCardBasePaymentExecutor, enterCardBasePaymentExecutor));
