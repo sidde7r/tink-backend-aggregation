@@ -25,21 +25,14 @@ public class ProviderSessionCacheController {
             String financialInstitutionId, String value, int expiredTimeInSeconds) {
         logger.info(
                 "Received provider session information for financialInstitutionId: {}."
-                        + " This cache client: {} will be expired in {} seconds",
+                        + " This cache will be expired in {} seconds",
                 financialInstitutionId,
-                cacheClient.getClass(),
                 expiredTimeInSeconds);
 
         if (expiredTimeInSeconds < 1) {
             // If expired time is 0, the cache is never expired
             expiredTimeInSeconds = 1;
         }
-
-        cacheClient.set(
-                CacheScope.PROVIDER_SESSION_BY_FINANCIALINSTITUTIONID,
-                financialInstitutionId,
-                expiredTimeInSeconds,
-                value);
 
         DistributedBarrier lock =
                 new DistributedBarrier(
@@ -49,6 +42,12 @@ public class ProviderSessionCacheController {
                                 financialInstitutionId));
 
         try {
+            lock.setBarrier();
+            cacheClient.set(
+                    CacheScope.PROVIDER_SESSION_BY_FINANCIALINSTITUTIONID,
+                    financialInstitutionId,
+                    expiredTimeInSeconds,
+                    value);
             lock.removeBarrier();
         } catch (Exception e) {
             logger.error("Could not remove barrier while setting provider session information", e);

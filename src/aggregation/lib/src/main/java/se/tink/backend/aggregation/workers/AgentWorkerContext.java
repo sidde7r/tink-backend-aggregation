@@ -676,13 +676,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                                 BarrierName.Prefix.PROVIDER_SESSION_INFORMATION,
                                 financialInstitutionId));
         try {
-            // Reset barrier.
-            lock.removeBarrier();
             lock.setBarrier();
-
             String providerSessionCacheInformation =
                     providerSessionCacheController.getProviderSessionCache(financialInstitutionId);
-
+            lock.removeBarrier();
             return providerSessionCacheInformation;
 
         } catch (Exception e) {

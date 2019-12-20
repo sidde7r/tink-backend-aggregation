@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import com.google.common.collect.ImmutableSet;
 import java.time.LocalDate;
+import java.util.Objects;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -33,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.ServiceUnavailableBankServi
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public abstract class IngBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
@@ -41,11 +45,13 @@ public abstract class IngBaseAgent extends NextGenerationAgent
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AutoAuthenticationController authenticator;
+    private final boolean isManualAuthentication;
 
     public IngBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, true);
         configureHttpClient(client);
+        isManualAuthentication = shouldDoManualAuthentication(request.getCredentials());
         /*
             ING in their documentation use country code in lowercase, however their API treat
             lowercase as wrong country code and returns error that it's malformed
@@ -56,7 +62,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         client,
                         persistentStorage,
                         marketInUppercase,
-                        providerSessionCacheController);
+                        providerSessionCacheController,
+                        isManualAuthentication);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
@@ -178,4 +185,20 @@ public abstract class IngBaseAgent extends NextGenerationAgent
      * see https://developer.ing.com/api-marketplace/marketplace/b6d5093d-626e-41e9-b9e8-ff287bbe2c07/versions/b063703e-1437-4995-90e2-06dac67fef92/documentation#country-specific-information
      */
     protected abstract LocalDate earliestTransactionHistoryDate();
+
+    private boolean shouldDoManualAuthentication(final Credentials credentials) {
+        return !forceAutoAuthentication()
+                        && (Objects.equals(CredentialsTypes.THIRD_PARTY_APP, credentials.getType())
+                                || (request.isUpdate()
+                                        && !Objects.equals(
+                                                request.getType(),
+                                                CredentialsRequestType.TRANSFER)))
+                || credentials.forceManualAuthentication();
+    }
+
+    private boolean forceAutoAuthentication() {
+        return Objects.equals(CredentialsTypes.THIRD_PARTY_APP, CredentialsTypes.PASSWORD)
+                && !request.isUpdate()
+                && !request.isCreate();
+    }
 }
