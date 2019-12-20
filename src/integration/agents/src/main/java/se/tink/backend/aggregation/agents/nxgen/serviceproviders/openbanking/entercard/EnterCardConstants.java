@@ -68,8 +68,6 @@ public final class EnterCardConstants {
         public static final String STATE = "state";
         public static final String CLIENT_SECRET = "client_secret";
         public static final String CODE_VERIFIER = "codeVerifier";
-        public static final String FROM_BOOKING_DATE_TIME = "fromDateTime";
-        public static final String TO_BOOKING_DATE_TIME = "toDateTime";
         public static final String ACCOUNT_NUMBER = "accountNumber";
         public static final String SSN = "ssn";
         public static final String INCLUDE_CARD_MOVEMENTS = "includeCardMovements";

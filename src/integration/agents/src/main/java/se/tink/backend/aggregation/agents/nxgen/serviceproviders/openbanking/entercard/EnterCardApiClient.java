@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard;
 
-import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -18,12 +17,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.configuration.EnterCardConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.entities.TransactionKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.rpc.EnterCardPaymentInitiationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.rpc.PaymentInitiationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.utils.EnterCardUtils;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -31,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class EnterCardApiClient {
 
@@ -79,18 +78,14 @@ public final class EnterCardApiClient {
                 .get(CreditCardAccountResponse.class);
     }
 
-    public PaginatorResponse fetchCreditCardTransactions(
-            CreditCardAccount account, Date fromDate, Date toDate) {
-
-        return createRequestInSession(Urls.TRANSACTIONS)
-                .queryParam(
-                        QueryKeys.FROM_BOOKING_DATE_TIME,
-                        ThreadSafeDateFormat.FORMATTER_SECONDS.format(fromDate))
-                .queryParam(
-                        QueryKeys.TO_BOOKING_DATE_TIME,
-                        ThreadSafeDateFormat.FORMATTER_SECONDS.format(toDate))
+    public TransactionKeyPaginatorResponse fetchCreditCardTransactions(
+            CreditCardAccount account, TransactionKey key) {
+        return createRequestInSession(EnterCardConstants.Urls.TRANSACTIONS)
                 .queryParam(QueryKeys.INCLUDE_CARD_MOVEMENTS, QueryValues.TRUE)
                 .queryParam(QueryKeys.ACCOUNT_NUMBER, account.getAccountNumber())
+                .queryParam(QueryKeys.START_AT_ROW_NUMBER, String.valueOf(key.getStartAtRowNum()))
+                .queryParam(
+                        QueryKeys.STOP_AFTER_ROW_NUMBER, String.valueOf(key.getStopAfterRowNum()))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .get(CreditCardTransactionsResponse.class);
     }

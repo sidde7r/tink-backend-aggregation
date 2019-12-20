@@ -55,7 +55,7 @@ public class AccountEntity {
     public CreditCardAccount toCreditCardAccount() {
         return CreditCardAccount.builder(accountNumber)
                 .setAccountNumber(accountNumber)
-                .setName(getName())
+                .setName(productName)
                 .setBalance(new Amount(getCurrency(), getBalance()))
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_NUMBER, accountNumber)
                 .build();

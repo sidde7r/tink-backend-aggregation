@@ -1,26 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class MetadataEntity {
-    public int totalCount;
-    public int resultCount;
-    public int offset;
+    private long offset;
 
-    @JsonIgnore
-    public int getTotalCount() {
+    @JsonProperty("result_count")
+    private long resultCount;
+
+    @JsonProperty("total_count")
+    private long totalCount;
+
+    public long getTotalCount() {
         return totalCount;
     }
 
-    @JsonIgnore
-    public int getResultCount() {
+    public long getResultCount() {
         return resultCount;
     }
 
-    @JsonIgnore
-    public int getOffset() {
+    public long getOffset() {
         return offset;
     }
 }

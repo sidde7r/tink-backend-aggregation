@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.api.client.util.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.Transactions;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -17,7 +19,9 @@ public class TransactionEntity {
 
     private String maskedCardNo;
     private String movementType;
-    private String timeOfPurchase;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date timeOfPurchase;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date transactionPostedDate;
@@ -39,12 +43,20 @@ public class TransactionEntity {
     private String reasonCode;
     private String terminalId;
 
-    public Transaction constructCreditCardTransaction() {
+    @JsonIgnore
+    public Transaction toTinkTransaction() {
         return CreditCardTransaction.builder()
                 .setPending(Transactions.OPEN.equalsIgnoreCase(movementStatus))
-                .setDate(transactionPostedDate)
-                .setDescription(accountLevelTransactionDescription)
+                .setDate(timeOfPurchase)
+                .setDescription(getDescription())
                 .setAmount(new Amount(billingCurrency, billingAmount))
                 .build();
+    }
+
+    @JsonIgnore
+    private String getDescription() {
+        return Strings.isNullOrEmpty(merchantName)
+                ? accountLevelTransactionDescription
+                : merchantName;
     }
 }
