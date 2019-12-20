@@ -32,9 +32,10 @@ public class LaCaixaErrorResponse {
 
     @JsonIgnore
     public boolean isUserHasNoLoans() {
-        return Strings.nullToEmpty(message)
+        return Strings.nullToEmpty(code)
                 .trim()
-                .equalsIgnoreCase(LaCaixaConstants.ErrorMessage.NO_ASSOCIATED_ACCOUNT);
+                .toUpperCase()
+                .equalsIgnoreCase(LaCaixaConstants.ErrorCode.NO_ASSOCIATED_ACCOUNTS);
     }
 
     @JsonIgnore
