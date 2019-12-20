@@ -57,8 +57,6 @@ public class BankinterTransactionalAccountFetcher
             TransactionalAccount account, PaginationKey nextKey) {
         if (Objects.isNull(nextKey)) {
             // first page, get view state from account
-            final AccountResponse accountResponse =
-                    apiClient.fetchAccount(Integer.parseInt(account.getApiIdentifier()));
             nextKey =
                     account.getFromTemporaryStorage(
                                     StorageKeys.FIRST_PAGINATION_KEY, PaginationKey.class)

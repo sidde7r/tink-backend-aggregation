@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -19,12 +18,8 @@ public class TransactionsResponse extends JsfUpdateResponse {
     private final Document navigation;
     private final Document transactions;
     private NodeList transactionRows;
-    private static final DateTimeFormatter TRANSACTION_DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Pattern JSF_SOURCE_PATTERN = Pattern.compile(".*source:'([^']+)'.*");
     private static final Logger LOG = LoggerFactory.getLogger(TransactionsResponse.class);
-    private static final Pattern TRANSACTION_DATE_PATTERN =
-            Pattern.compile("(?:\\w+) (\\d{2}/\\d{2}/\\d{4})");
 
     public TransactionsResponse(String body) {
         super(body);
@@ -75,15 +70,10 @@ public class TransactionsResponse extends JsfUpdateResponse {
                         row,
                         "../../preceding::td[text() != '' and ./following-sibling::td[@colspan='4']][1]",
                         String.class);
-        final Matcher dateMatcher = TRANSACTION_DATE_PATTERN.matcher(date);
-        if (!dateMatcher.find()) {
-            throw new IllegalStateException("Could not parse transaction date: " + date);
-        }
-
         final String description = evaluateXPath(row, "td[2]", String.class).trim();
         final String amount = evaluateXPath(row, "td[3]", String.class).replaceAll("\\s", "");
 
-        return builder.setDate(dateMatcher.group(1), TRANSACTION_DATE_FORMATTER)
+        return builder.setDate(parseTransactionDate(date))
                 .setDescription(description)
                 .setAmount(parseAmount(amount))
                 .build();

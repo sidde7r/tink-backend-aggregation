@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterCons
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.rpc.CreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.identitydata.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.investment.rpc.InvestmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc.AccountResponse;
@@ -84,6 +85,10 @@ public final class BankinterApiClient {
     public InvestmentResponse fetchInvestmentAccount(String url) {
         return new InvestmentResponse(
                 client.request(Urls.BASE + url).get(HttpResponse.class).getBody(String.class));
+    }
+
+    public CreditCardResponse fetchCreditCard(String url) {
+        return new CreditCardResponse(client.request(Urls.BASE + url).get(String.class));
     }
 
     public <T extends JsfUpdateResponse> T fetchJsfUpdate(

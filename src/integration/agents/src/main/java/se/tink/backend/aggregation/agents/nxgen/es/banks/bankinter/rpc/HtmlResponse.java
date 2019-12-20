@@ -7,6 +7,8 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,6 +38,10 @@ public class HtmlResponse {
     protected final Document document;
     private static final XPathFactory xpathFactory = XPathFactory.newInstance();
     private final DecimalFormat amountFormat;
+    private static final DateTimeFormatter TRANSACTION_DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final Pattern TRANSACTION_DATE_PATTERN =
+            Pattern.compile("(?:\\w+) (\\d{2}/\\d{2}/\\d{4})");
 
     /**
      * Removes occurrences of "--" from HTML comments, since it cannot be parsed. All occurrences of
@@ -113,6 +119,14 @@ public class HtmlResponse {
         } catch (ParseException e) {
             throw new IllegalStateException("Could not parse amount " + amountString, e);
         }
+    }
+
+    protected LocalDate parseTransactionDate(String date) {
+        final Matcher dateMatcher = TRANSACTION_DATE_PATTERN.matcher(date);
+        if (!dateMatcher.find()) {
+            throw new IllegalStateException("Could not parse transaction date: " + date);
+        }
+        return LocalDate.parse(dateMatcher.group(1), TRANSACTION_DATE_FORMATTER);
     }
 
     private static QName returnTypeForClass(Class cls) {

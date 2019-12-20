@@ -9,7 +9,9 @@ import org.w3c.dom.NodeList;
 
 public class GlobalPositionResponse extends HtmlResponse {
     private static final Pattern INVESTMENT_LINK_PATTERN =
-            Pattern.compile("'(/fondos/secure/fondo_inversion\\.xhtml?[^']+)'");
+            Pattern.compile("'(/fondos/secure/fondo_inversion\\.xhtml\\?[^']+)'");
+    private static final Pattern CREDIT_CARD_LINK_PATTERN =
+            Pattern.compile("'(/tarjetas/secure/tarjetas_ficha\\.xhtml\\?[^']+)'");
 
     public GlobalPositionResponse(String body) {
         super(body);
@@ -17,10 +19,6 @@ public class GlobalPositionResponse extends HtmlResponse {
 
     private NodeList getAccountNodes() {
         return evaluateXPath("//li[contains(@class,'goAccounts')]", NodeList.class);
-    }
-
-    public long getNumberOfAccounts() {
-        return getAccountNodes().getLength();
     }
 
     public List<Integer> getAccountIds() {
@@ -41,19 +39,26 @@ public class GlobalPositionResponse extends HtmlResponse {
                 "//li[@data-element='AhorroInversion>BoxFondoInversion']", NodeList.class);
     }
 
-    public long getNumberOfInvestments() {
-        return getInvestmentNodes().getLength();
+    public List<String> getInvestmentLinks() {
+        return getAccountLinks(getInvestmentNodes(), INVESTMENT_LINK_PATTERN);
     }
 
-    public List<String> getInvestmentLinks() {
+    private NodeList getCreditCardNodes() {
+        return evaluateXPath("//li[@data-element='Tarjetas>BoxTarjeta']", NodeList.class);
+    }
+
+    public List<String> getCreditCardLinks() {
+        return getAccountLinks(getCreditCardNodes(), CREDIT_CARD_LINK_PATTERN);
+    }
+
+    private List<String> getAccountLinks(NodeList nodes, Pattern pattern) {
         ArrayList<String> links = new ArrayList<>();
-        final NodeList nodes = getInvestmentNodes();
         for (int i = 0; i < nodes.getLength(); i += 1) {
             // extract link from attached javascript
             final Node node = nodes.item(i);
             final String script =
                     evaluateXPath(node, "script/comment()", Node.class).getTextContent();
-            final Matcher matcher = INVESTMENT_LINK_PATTERN.matcher(script);
+            final Matcher matcher = pattern.matcher(script);
             if (matcher.find()) {
                 links.add(matcher.group(1));
             }
