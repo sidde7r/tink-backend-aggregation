@@ -68,10 +68,10 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
 
     private static String createDescription(final TransactionItem transaction) {
         return Stream.of(
-                        transaction.getDebtorName(),
-                        transaction.getCreditorName(),
                         transaction.getRemittanceInformationUnstructured(),
                         transaction.getRemittanceInformationStructured(),
+                        transaction.getDebtorName(),
+                        transaction.getCreditorName(),
                         transaction.getInitiatingPartyName())
                 .filter(Objects::nonNull)
                 .findFirst()
