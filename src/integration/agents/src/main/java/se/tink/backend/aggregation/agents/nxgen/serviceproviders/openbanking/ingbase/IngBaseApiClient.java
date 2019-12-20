@@ -57,6 +57,7 @@ public final class IngBaseApiClient {
     private EidasProxyConfiguration eidasProxyConfiguration;
     private String certificateSerial;
     private final ProviderSessionCacheController providerSessionCacheController;
+    private final boolean isManualAuthentication;
 
     private static final Logger logger = LoggerFactory.getLogger(IngBaseApiClient.class);
 
@@ -64,11 +65,13 @@ public final class IngBaseApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             String market,
-            ProviderSessionCacheController providerSessionCacheController) {
+            ProviderSessionCacheController providerSessionCacheController,
+            boolean isManualAuthentication) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.market = market;
         this.providerSessionCacheController = providerSessionCacheController;
+        this.isManualAuthentication = isManualAuthentication;
     }
 
     public IngBaseConfiguration getConfiguration() {
@@ -179,22 +182,25 @@ public final class IngBaseApiClient {
     }
 
     private TokenResponse getApplicationAccessToken() {
-        /*
-           Reuse the application access token which saved in the cache if it is still valid
-        */
-        Optional<Map<String, String>> cacheInfoOpt =
-                providerSessionCacheController.getProviderSessionCacheInformation();
-        if (cacheInfoOpt.isPresent()) {
-            Map<String, String> cacheInfo = cacheInfoOpt.get();
-            String applicationToken = cacheInfo.get(StorageKeys.APPLICATION_TOKEN);
-            if (applicationToken != null) {
-                try {
-                    logger.info("Get application token from cache");
-                    final TokenResponse response =
-                            new Gson().fromJson(applicationToken, TokenResponse.class);
-                    return response;
-                } catch (Exception e) {
-                    logger.warn("Unable to parse payload : " + applicationToken);
+        if (!isManualAuthentication) {
+            /*
+                Reuse the application access token which saved in the cache if it is still valid
+                during auto authentication
+            */
+            Optional<Map<String, String>> cacheInfoOpt =
+                    providerSessionCacheController.getProviderSessionCacheInformation();
+            if (cacheInfoOpt.isPresent()) {
+                Map<String, String> cacheInfo = cacheInfoOpt.get();
+                String applicationToken = cacheInfo.get(StorageKeys.APPLICATION_TOKEN);
+                if (applicationToken != null) {
+                    try {
+                        logger.info("Get application token from cache");
+                        final TokenResponse response =
+                                new Gson().fromJson(applicationToken, TokenResponse.class);
+                        return response;
+                    } catch (Exception e) {
+                        logger.warn("Unable to parse payload : " + applicationToken);
+                    }
                 }
             }
         }
