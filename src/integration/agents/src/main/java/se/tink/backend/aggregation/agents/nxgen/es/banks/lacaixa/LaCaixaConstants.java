@@ -50,10 +50,7 @@ public class LaCaixaConstants {
         public static String NO_SECURITIES = "131";
         public static final String NO_OWN_CARDS = "LIT_NO_PERMITE_CONSULTA_TARJETAS";
         public static final String UNAVAILABLE = "0001";
-    }
-
-    public static class ErrorMessage {
-        public static final String NO_ASSOCIATED_ACCOUNT = "WITHOUT ASSOCIATED CONTRACTS/ACCOUNTS";
+        public static final String NO_ASSOCIATED_ACCOUNTS = "0007";
     }
 
     public static class Urls {
