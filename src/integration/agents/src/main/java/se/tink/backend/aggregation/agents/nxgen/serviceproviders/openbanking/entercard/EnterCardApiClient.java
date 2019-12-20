@@ -82,7 +82,7 @@ public final class EnterCardApiClient {
             CreditCardAccount account, TransactionKey key) {
         return createRequestInSession(EnterCardConstants.Urls.TRANSACTIONS)
                 .queryParam(QueryKeys.INCLUDE_CARD_MOVEMENTS, QueryValues.TRUE)
-                .queryParam(QueryKeys.ACCOUNT_NUMBER, account.getAccountNumber())
+                .queryParam(QueryKeys.ACCOUNT_NUMBER, account.getApiIdentifier())
                 .queryParam(QueryKeys.START_AT_ROW_NUMBER, String.valueOf(key.getStartAtRowNum()))
                 .queryParam(
                         QueryKeys.STOP_AFTER_ROW_NUMBER, String.valueOf(key.getStopAfterRowNum()))

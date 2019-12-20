@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.entities;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -14,6 +13,10 @@ public class CardDetailsEntity {
     private String cardStatus;
 
     public String getCardHolderName() {
-        return Optional.ofNullable(cardHolderName).orElse("");
+        return cardHolderName;
+    }
+
+    public String getMaskedCardNo() {
+        return maskedCardNo;
     }
 }

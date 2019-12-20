@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public final class EnterCardConstants {
 
     public static final String INTEGRATION_NAME = "entercard";
+    public static final String DEFAULT_CURRENCY = "SEK";
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.LOAN, "loan")
