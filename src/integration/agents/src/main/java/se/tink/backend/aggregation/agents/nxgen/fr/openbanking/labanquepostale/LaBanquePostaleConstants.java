@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
+
 public final class LaBanquePostaleConstants {
 
     public static class Urls {
@@ -15,6 +17,7 @@ public final class LaBanquePostaleConstants {
 
     public static class StorageKeys {
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
+        public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
     }
 
     public static class HeaderKeys {
