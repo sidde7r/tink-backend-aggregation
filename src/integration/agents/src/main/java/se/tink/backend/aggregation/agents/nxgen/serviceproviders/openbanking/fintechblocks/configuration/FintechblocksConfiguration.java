@@ -2,8 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fi
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintechblocks.FintechblocksConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
@@ -20,9 +19,7 @@ public class FintechblocksConfiguration implements ClientConfiguration {
     public String getClientId() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientId),
-                String.format(
-                        BnpParibasFortisConstants.ErrorMessages.INVALID_CONFIGURATION,
-                        "Client ID"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
     }
@@ -30,9 +27,7 @@ public class FintechblocksConfiguration implements ClientConfiguration {
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUrl),
-                String.format(
-                        BnpParibasFortisConstants.ErrorMessages.INVALID_CONFIGURATION,
-                        "Redirect URL"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
     }

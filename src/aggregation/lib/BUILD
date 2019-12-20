@@ -39,6 +39,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/axa",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/belfius",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/beobank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/bnpparibasfortis",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/bpost",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/crelan",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/ing",
