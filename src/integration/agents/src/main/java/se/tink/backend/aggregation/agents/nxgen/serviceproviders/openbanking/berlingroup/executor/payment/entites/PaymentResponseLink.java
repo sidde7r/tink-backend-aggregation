@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.executor.payment.entity;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.entites;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.ConsentBaseLinks;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
