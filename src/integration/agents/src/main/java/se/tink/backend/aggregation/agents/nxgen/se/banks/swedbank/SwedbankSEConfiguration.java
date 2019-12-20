@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank;
 
 import com.google.common.base.Preconditions;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ProfileParameters;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileParameters;
 
 public class SwedbankSEConfiguration implements SwedbankConfiguration {
     private final ProfileParameters profileParameters;
