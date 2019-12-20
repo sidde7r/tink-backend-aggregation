@@ -1,17 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities;
 
 import com.google.api.client.util.Strings;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @XmlRootElement
 public class AccountEntity {
@@ -221,6 +227,10 @@ public class AccountEntity {
                 || IngConstants.AccountTypes.SAVINGS_ACCOUNT.equalsIgnoreCase(category);
     }
 
+    public boolean isInvestmentType() {
+        return IngConstants.AccountTypes.INVESTMENT_ACCOUNT.equalsIgnoreCase(category);
+    }
+
     public TransactionalAccount toTinkAccount(LoginResponseEntity loginResponse) {
         AccountTypes accountType = getTinkAccountType();
 
@@ -242,6 +252,17 @@ public class AccountEntity {
         return builder.build();
     }
 
+    public InvestmentAccount toTinkInvestmentAccount() {
+        return InvestmentAccount.builder(ibanNumber)
+                .setCashBalance(Amount.inEUR(IngHelper.parseAmountStringToDouble(balance)))
+                .setExactBalance(ExactCurrencyAmount.of(balance, currency))
+                .setBankIdentifier(bbanNumber)
+                .setAccountNumber(ibanNumber)
+                .setPortfolios(getPortfolio())
+                .setName(type)
+                .build();
+    }
+
     private HolderName getHolderName(final LoginResponseEntity loginResponse) {
         // If the name of the account holder is empty, fall back on customer holder name.
         if (Strings.isNullOrEmpty(name)) {
@@ -260,11 +281,27 @@ public class AccountEntity {
                 return AccountTypes.CHECKING;
             case IngConstants.AccountTypes.SAVINGS_ACCOUNT:
                 return AccountTypes.SAVINGS;
+            case IngConstants.AccountTypes.INVESTMENT_ACCOUNT:
+                return AccountTypes.INVESTMENT;
             default:
                 logger.warn(
                         String.format(
                                 "Could not map account type [%s] to a Tink account type", type));
                 return AccountTypes.OTHER;
         }
+    }
+
+    private List<Portfolio> getPortfolio() {
+        Portfolio portfolio = new Portfolio();
+
+        portfolio.setUniqueIdentifier(bbanNumber);
+        portfolio.setType(Portfolio.Type.DEPOT);
+        portfolio.setTotalValue(IngHelper.parseAmountStringToDouble(balance));
+        /* Already asked ambassador to buy some funds and stocks to get overall view of
+        transactions for investment account including instruments.  */
+        // TODO : Fix this instrument list once transactions available from the bank
+        portfolio.setInstruments(new ArrayList<>());
+
+        return Collections.singletonList(portfolio);
     }
 }

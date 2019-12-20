@@ -153,6 +153,7 @@ public class IngConstants {
     public static final class AccountTypes {
         public static final String CURRENT_ACCOUNT = "1";
         public static final String SAVINGS_ACCOUNT = "2";
+        public static final String INVESTMENT_ACCOUNT = "4";
         public static final String TRANSFER_TO_OWN_RULE = "OWN";
         public static final String TRANSFER_TO_ALL_RULE = "";
     }
