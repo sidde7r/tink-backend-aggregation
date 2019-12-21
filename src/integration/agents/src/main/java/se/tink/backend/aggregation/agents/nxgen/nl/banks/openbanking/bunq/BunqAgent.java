@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BunqAgent extends BunqBaseAgent {
+public final class BunqAgent extends BunqBaseAgent {
     private final BunqApiClient apiClient;
     private final String clientName;
     private String backendHost;
