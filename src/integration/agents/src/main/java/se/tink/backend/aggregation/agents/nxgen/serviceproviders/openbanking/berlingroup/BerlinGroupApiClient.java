@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BerlinGroupAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -99,10 +99,10 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
             final String consentId,
             final String clientId,
             final String redirectUrl) {
-        final String codeVerifier = BerlinGroupUtils.generateCodeVerifier();
+        final String codeVerifier = Psd2Headers.generateCodeVerifier();
 
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
-        final String codeChallenge = BerlinGroupUtils.generateCodeChallenge(codeVerifier);
+        final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
 
         return getAuthorizeUrl(url, state, clientId, redirectUrl)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE + consentId)
