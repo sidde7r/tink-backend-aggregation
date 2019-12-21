@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.authent
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.configuration.VolksbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionalAccountTransactionFetcher;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -37,11 +36,6 @@ public final class VolksbankAgent extends NextGenerationAgent
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         apiClient.setConfiguration(getClientConfiguration());
     }
