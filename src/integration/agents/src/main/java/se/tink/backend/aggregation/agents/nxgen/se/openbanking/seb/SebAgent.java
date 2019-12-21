@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.executor.paym
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.creditcardaccount.SebCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.SebTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.session.SebSessionHandler;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -60,11 +59,6 @@ public final class SebAgent extends NextGenerationAgent
                                         accountFetcher, Fetcher.START_PAGE)));
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         apiClient.setConfiguration(getClientConfiguration());
     }
