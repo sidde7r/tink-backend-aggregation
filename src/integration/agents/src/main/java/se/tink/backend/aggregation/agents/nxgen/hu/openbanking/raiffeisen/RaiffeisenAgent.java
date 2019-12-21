@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.authen
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.configuration.RaiffeisenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.fetcher.transactionalaccount.RaiffeiesenTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.fetcher.transactionalaccount.RaiffeisenAccountFetcher;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -36,11 +35,6 @@ public final class RaiffeisenAgent extends NextGenerationAgent
         apiClient = new RaiffeisenApiClient(client, sessionStorage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         final RaiffeisenConfiguration raiffeisenConfiguration =
                 getAgentConfigurationController()
