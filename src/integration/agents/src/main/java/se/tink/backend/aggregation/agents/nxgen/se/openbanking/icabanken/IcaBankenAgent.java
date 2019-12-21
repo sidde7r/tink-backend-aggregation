@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.IcaBankenTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.Environment;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -38,13 +37,25 @@ public final class IcaBankenAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public IcaBankenAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         apiClient = new IcaBankenApiClient(client, sessionStorage);
         clientName = request.getProvider().getPayload();
         credentialsRequest = request.getCredentials();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
+        icaBankenConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(IcaBankenConfiguration.class);
+
+        apiClient.setConfiguration(icaBankenConfiguration);
+
+        if (icaBankenConfiguration.getEnvironment() == Environment.PRODUCTION) {
+            client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+        }
     }
 
     @Override
@@ -70,21 +81,6 @@ public final class IcaBankenAgent extends NextGenerationAgent
                     controller);
         } else {
             return new IcaBankenSandboxAuthenticator(apiClient, sessionStorage);
-        }
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
-        icaBankenConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(IcaBankenConfiguration.class);
-
-        apiClient.setConfiguration(icaBankenConfiguration);
-
-        if (icaBankenConfiguration.getEnvironment() == Environment.PRODUCTION) {
-            client.setEidasProxy(configuration.getEidasProxy());
         }
     }
 
