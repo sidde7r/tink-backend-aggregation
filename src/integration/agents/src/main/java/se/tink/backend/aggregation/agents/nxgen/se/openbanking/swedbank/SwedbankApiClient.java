@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
@@ -92,7 +93,7 @@ public final class SwedbankApiClient {
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
-                .header(SwedbankConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(SwedbankConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HttpHeaders.DATE, getFormattedDate(new Date()))
                 .accept(MediaType.APPLICATION_JSON)
                 .queryParam(
@@ -357,10 +358,6 @@ public final class SwedbankApiClient {
                         Urls.INITIATE_PAYMENT_AUTH.parameter(UrlParameters.PAYMENT_ID, paymentId),
                         state)
                 .post(PaymentAuthorisationResponse.class);
-    }
-
-    private String getRequestId() {
-        return java.util.UUID.randomUUID().toString();
     }
 
     private String getHeaderTimeStamp() {
