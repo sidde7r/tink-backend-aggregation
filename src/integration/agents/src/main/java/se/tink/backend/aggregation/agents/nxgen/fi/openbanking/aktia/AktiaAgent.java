@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configurati
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.executor.payment.AktiaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.AktiaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -31,21 +30,19 @@ public final class AktiaAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public AktiaAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         apiClient = new AktiaApiClient(client, persistentStorage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
 
-    @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
         final AktiaConfiguration aktiaConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(AktiaConfiguration.class);
         apiClient.setConfiguration(aktiaConfiguration);
-        this.client.setEidasProxy(configuration.getEidasProxy());
+        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 
     @Override
