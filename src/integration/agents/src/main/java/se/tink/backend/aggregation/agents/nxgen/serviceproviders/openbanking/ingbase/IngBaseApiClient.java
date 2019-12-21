@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.utils.IngBaseUtils;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
@@ -205,7 +206,7 @@ public final class IngBaseApiClient {
             }
         }
 
-        final String reqId = IngBaseUtils.getRequestId();
+        final String reqId = Psd2Headers.getRequestId();
         final String date = getFormattedDate();
 
         /*
@@ -277,7 +278,7 @@ public final class IngBaseApiClient {
 
     private RequestBuilder buildRequestWithSignature(
             final String reqPath, final String httpMethod, final String payload) {
-        final String reqId = IngBaseUtils.getRequestId();
+        final String reqId = Psd2Headers.getRequestId();
         final String date = getFormattedDate();
         final String digest = generateDigest(payload);
 
@@ -363,7 +364,7 @@ public final class IngBaseApiClient {
     }
 
     private String generateDigest(final String data) {
-        return Signature.DIGEST_PREFIX + IngBaseUtils.calculateDigest(data);
+        return Signature.DIGEST_PREFIX + Psd2Headers.calculateDigest(data);
     }
 
     private String getFormattedDate() {
