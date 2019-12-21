@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.configuratio
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.BbvaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.BbvaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.session.BbvaSessionHandler;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -39,11 +38,6 @@ public final class BbvaAgent extends NextGenerationAgent
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         apiClient.setConfiguration(getClientConfiguration());
     }
