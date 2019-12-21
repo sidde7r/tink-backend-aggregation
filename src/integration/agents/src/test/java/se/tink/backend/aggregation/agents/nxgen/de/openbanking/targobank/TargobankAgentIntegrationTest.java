@@ -23,6 +23,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
+import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
@@ -30,7 +31,6 @@ import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -200,10 +200,10 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
     private void doGenericPaymentBankTransfer(Agent agent, List<Payment> paymentList)
             throws Exception {
 
-        if (agent instanceof SubsequentGenerationAgent) {
+        if (agent instanceof PaymentControllerable) {
             PaymentController paymentController =
-                    ((SubsequentGenerationAgent<?>) agent)
-                            .constructPaymentController()
+                    ((PaymentControllerable) agent)
+                            .getPaymentController()
                             .orElseThrow(Exception::new);
             ArrayList<PaymentRequest> paymentRequests = new ArrayList<>();
 
@@ -319,7 +319,7 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
 
         try {
             this.login(agent);
-            if (!(agent instanceof SubsequentGenerationAgent)) {
+            if (!(agent instanceof PaymentControllerable)) {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
             }

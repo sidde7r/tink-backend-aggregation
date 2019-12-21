@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
@@ -36,7 +37,6 @@ import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
@@ -316,11 +316,11 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
 
     protected void doGenericPaymentBankTransferUKOB(Agent agent, List<Payment> paymentList)
             throws Exception {
-        if (agent instanceof SubsequentGenerationAgent) {
+        if (agent instanceof PaymentControllerable) {
             log.info("Executing transfer for UkOpenbanking Agent");
             PaymentController paymentController =
-                    ((SubsequentGenerationAgent<?>) agent)
-                            .constructPaymentController()
+                    ((PaymentControllerable) agent)
+                            .getPaymentController()
                             .orElseThrow(Exception::new);
 
             for (Payment payment : paymentList) {
@@ -379,10 +379,10 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
     protected void doGenericPaymentBankTransfer(Agent agent, List<Payment> paymentList)
             throws Exception {
 
-        if (agent instanceof SubsequentGenerationAgent) {
+        if (agent instanceof PaymentControllerable) {
             PaymentController paymentController =
-                    ((SubsequentGenerationAgent<?>) agent)
-                            .constructPaymentController()
+                    ((PaymentControllerable) agent)
+                            .getPaymentController()
                             .orElseThrow(
                                     () ->
                                             new IllegalStateException(
@@ -590,7 +590,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             login(agent);
-            if (agent instanceof SubsequentGenerationAgent) {
+            if (agent instanceof PaymentControllerable) {
                 doGenericPaymentBankTransfer(agent, paymentList);
             } else {
                 throw new NotImplementedException(
@@ -613,7 +613,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             // login(agent);
-            if (agent instanceof SubsequentGenerationAgent) {
+            if (agent instanceof PaymentControllerable) {
                 doGenericPaymentBankTransferUKOB(agent, paymentList);
             } else {
                 throw new NotImplementedException(
