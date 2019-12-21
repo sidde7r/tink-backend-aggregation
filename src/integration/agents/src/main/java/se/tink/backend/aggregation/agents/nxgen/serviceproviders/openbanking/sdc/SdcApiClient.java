@@ -6,11 +6,10 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.PathParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryValues;
@@ -23,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -77,8 +77,8 @@ public final class SdcApiClient {
     }
 
     public URL buildAuthorizeUrl(String state) {
-        return createRequest(SdcConstants.Urls.AUTHORIZATION)
-                .queryParam(QueryKeys.SCOPE, SdcConstants.HeaderValues.SCOPE_AIS)
+        return createRequest(Urls.AUTHORIZATION)
+                .queryParam(QueryKeys.SCOPE, HeaderValues.SCOPE_AIS)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryKeys.REDIRECT_URI, getConfiguration().getRedirectUrl())
                 .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
@@ -90,17 +90,17 @@ public final class SdcApiClient {
 
         TokenRequest tokenRequest =
                 new TokenRequest(
-                        SdcConstants.FormValues.AUTHORIZATION_CODE,
+                        FormValues.AUTHORIZATION_CODE,
                         code,
                         getConfiguration().getRedirectUrl(),
                         getConfiguration().getClientId(),
                         getConfiguration().getClientSecret(),
-                        SdcConstants.FormValues.SCOPE_AIS,
+                        FormValues.SCOPE_AIS,
                         credentials.getField(Key.LOGIN_INPUT),
                         "");
 
         return createRequest(Urls.TOKEN)
-                .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .post(TokenResponse.class, tokenRequest)
                 .toTinkToken();
     }
@@ -114,35 +114,31 @@ public final class SdcApiClient {
                         getConfiguration().getRedirectUrl(),
                         getConfiguration().getClientId(),
                         getConfiguration().getClientSecret(),
-                        SdcConstants.FormValues.SCOPE_AIS);
+                        FormValues.SCOPE_AIS);
 
         return createRequest(Urls.TOKEN)
-                .header(HeaderKeys.X_REQUEST_ID, BerlinGroupUtils.getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .post(TokenResponse.class, tokenRequest)
                 .toTinkToken();
     }
 
     public AccountsResponse fetchAccounts() {
         return createRequestInSession(Urls.ACCOUNTS)
+                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(Psd2Headers.Keys.CONSENT_ID, Psd2Headers.getRequestId())
                 .header(
-                        BerlinGroupConstants.HeaderKeys.X_REQUEST_ID,
-                        BerlinGroupUtils.getRequestId())
-                .header(BerlinGroupConstants.HeaderKeys.CONSENT_ID, BerlinGroupUtils.getRequestId())
-                .header(
-                        SdcConstants.HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
+                        HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
                         getConfiguration().getOcpApimSubscriptionKey())
-                .queryParam(BerlinGroupConstants.QueryKeys.WITH_BALANCE, String.valueOf(true))
+                .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(AccountsResponse.class);
     }
 
     public BalancesResponse fetchAccountBalances(String accountId) {
         return createRequestInSession(Urls.BALANCES.parameter(PathParameters.ACCOUNT_ID, accountId))
+                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(Psd2Headers.Keys.CONSENT_ID, Psd2Headers.getRequestId())
                 .header(
-                        BerlinGroupConstants.HeaderKeys.X_REQUEST_ID,
-                        BerlinGroupUtils.getRequestId())
-                .header(BerlinGroupConstants.HeaderKeys.CONSENT_ID, BerlinGroupUtils.getRequestId())
-                .header(
-                        SdcConstants.HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
+                        HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
                         getConfiguration().getOcpApimSubscriptionKey())
                 .get(BalancesResponse.class);
     }
@@ -177,20 +173,16 @@ public final class SdcApiClient {
                 createRequestInSession(
                                 Urls.TRANSACTIONS.parameter(
                                         PathParameters.ACCOUNT_ID, account.getApiIdentifier()))
+                        .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                        .header(Psd2Headers.Keys.CONSENT_ID, Psd2Headers.getRequestId())
+                        .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                        .header(Psd2Headers.Keys.CONSENT_ID, Psd2Headers.getRequestId())
                         .header(
-                                BerlinGroupConstants.HeaderKeys.X_REQUEST_ID,
-                                BerlinGroupUtils.getRequestId())
-                        .header(
-                                BerlinGroupConstants.HeaderKeys.CONSENT_ID,
-                                BerlinGroupUtils.getRequestId())
-                        .header(
-                                SdcConstants.HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
+                                HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
                                 getConfiguration().getOcpApimSubscriptionKey())
+                        .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                         .queryParam(
-                                BerlinGroupConstants.QueryKeys.BOOKING_STATUS,
-                                SdcConstants.QueryValues.BOOKED)
-                        .queryParam(
-                                SdcConstants.QueryKeys.DATE_FROM,
+                                QueryKeys.DATE_FROM,
                                 ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                         .queryParam(
                                 QueryKeys.DATE_TO,
