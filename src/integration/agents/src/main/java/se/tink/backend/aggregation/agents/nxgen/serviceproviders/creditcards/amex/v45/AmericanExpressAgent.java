@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.strings.StringUtils;
 
-public class AmericanExpressAgent extends NextGenerationAgent
+public abstract class AmericanExpressAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor {
 
     private final AmericanExpressApiClient apiClient;
