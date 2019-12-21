@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFil
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class NordeaPartnerAgent extends NextGenerationAgent
+public final class NordeaPartnerAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final NordeaPartnerApiClient apiClient;
