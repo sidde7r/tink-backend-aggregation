@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.f
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc.TransactionResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -82,7 +83,7 @@ public class VolksbankApiClient {
             RequestBuilder request, final String consentId, final OAuth2Token oauth2Token) {
 
         request.header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.REQUEST_ID, getRequestId())
+                .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .addBearerToken(oauth2Token);
 
@@ -100,7 +101,7 @@ public class VolksbankApiClient {
         String response =
                 client.request(url)
                         .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.REQUEST_ID, getRequestId())
+                        .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.CONSENT_ID, consentId)
                         .addBearerToken(oAuth2Token)
                         .get(String.class);
@@ -117,7 +118,7 @@ public class VolksbankApiClient {
             response =
                     client.request(url)
                             .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                            .header(HeaderKeys.REQUEST_ID, getRequestId())
+                            .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
                             .header(HeaderKeys.CONSENT_ID, consentId)
                             .addBearerToken(oAuth2Token)
                             .get(String.class);
@@ -148,7 +149,7 @@ public class VolksbankApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.REQUEST_ID, getRequestId())
+                .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
                 .header(HeaderKeys.AUTHORIZATION, clientId)
                 .body(body)
@@ -160,7 +161,7 @@ public class VolksbankApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .header(HeaderKeys.REQUEST_ID, getRequestId())
+                .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
                 .addBasicAuth(clientId, clientSecret)
                 .post(TokenResponse.class)
                 .toOauthToken();
@@ -172,13 +173,9 @@ public class VolksbankApiClient {
         return client.request(url)
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON_TYPE)
-                .header(HeaderKeys.REQUEST_ID, getRequestId())
+                .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.AUTHORIZATION, clientId)
                 .get(String.class);
-    }
-
-    private static String getRequestId() {
-        return java.util.UUID.randomUUID().toString();
     }
 
     private <E> E getResponse(String response, Class<E> contentClass) {
