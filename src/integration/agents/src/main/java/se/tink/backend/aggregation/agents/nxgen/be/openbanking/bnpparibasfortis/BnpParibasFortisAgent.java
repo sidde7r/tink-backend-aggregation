@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.BnpParibasFortisPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.BnpParibasFortisTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.session.BnpParibasFortisSessionHandler;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -41,11 +40,6 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         apiClient.setConfiguration(getClientConfiguration());
     }
