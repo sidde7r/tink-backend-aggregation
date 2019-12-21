@@ -36,7 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /** Starling documentation is available at https://api-sandbox.starlingbank.com/api/swagger.yaml */
-public class StarlingAgent extends NextGenerationAgent
+public final class StarlingAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
