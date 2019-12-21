@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.configu
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.TargobankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetcher.TargobankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetcher.TargobankTransactionFetcher;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.Environment;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -38,6 +37,8 @@ public final class TargobankAgent extends NextGenerationAgent
         apiClient = new TargobankApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
+        apiClient.setConfiguration(getClientConfiguration());
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
@@ -53,12 +54,6 @@ public final class TargobankAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(transactionFetcher)));
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-        apiClient.setConfiguration(getClientConfiguration());
     }
 
     protected TargobankConfiguration getClientConfiguration() {
