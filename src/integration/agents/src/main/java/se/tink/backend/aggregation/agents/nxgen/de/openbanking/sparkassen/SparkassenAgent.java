@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.config
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenTransactionsFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -32,8 +31,10 @@ public final class SparkassenAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public SparkassenAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         List<String> payLoadValues = splitPayload(request.getProvider().getPayload());
         apiClient =
@@ -42,14 +43,10 @@ public final class SparkassenAgent extends NextGenerationAgent
         clientName = payLoadValues.get(0);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
 
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
         final SparkassenConfiguration sparkassenConfiguration = getClientConfiguration();
 
-        client.setEidasProxy(configuration.getEidasProxy());
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
 
         apiClient.setConfiguration(sparkassenConfiguration);
     }
