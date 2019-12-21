@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetCo
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authenticator.NordnetAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.configuration.NordnetConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.fetcher.transactionalaccount.NordnetTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -32,11 +31,6 @@ public final class NordnetAgent extends NextGenerationAgent
         apiClient = new NordnetApiClient(client, sessionStorage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         final NordnetConfiguration nordnetConfiguration =
                 getAgentConfigurationController()
