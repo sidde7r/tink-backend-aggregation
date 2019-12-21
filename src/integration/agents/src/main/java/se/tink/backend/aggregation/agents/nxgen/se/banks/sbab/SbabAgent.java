@@ -31,7 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SbabAgent extends NextGenerationAgent
+public final class SbabAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
