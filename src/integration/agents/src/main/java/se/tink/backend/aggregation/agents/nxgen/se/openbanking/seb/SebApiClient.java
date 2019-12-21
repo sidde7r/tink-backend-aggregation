@@ -93,11 +93,11 @@ public final class SebApiClient {
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         DateFormat.formatDateTime(
-                                fromDate, DateFormat.YEAR_MONTH_DAY, DateFormat.UTC))
+                                fromDate, DateFormat.YEAR_MONTH_DAY, DateFormat.Zone.UTC))
                 .queryParam(
                         QueryKeys.DATE_TO,
                         DateFormat.formatDateTime(
-                                toDate, DateFormat.YEAR_MONTH_DAY, DateFormat.UTC))
+                                toDate, DateFormat.YEAR_MONTH_DAY, DateFormat.Zone.UTC))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED_TRANSACTIONS)
                 .get(FetchTransactionsResponse.class);
     }
@@ -120,11 +120,11 @@ public final class SebApiClient {
                 .queryParam(
                         QueryKeys.DATE_TO,
                         DateFormat.formatDateTime(
-                                toDate, DateFormat.YEAR_MONTH_DAY, DateFormat.UTC))
+                                toDate, DateFormat.YEAR_MONTH_DAY, DateFormat.Zone.UTC))
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         DateFormat.formatDateTime(
-                                fromDate, DateFormat.YEAR_MONTH_DAY, DateFormat.UTC))
+                                fromDate, DateFormat.YEAR_MONTH_DAY, DateFormat.Zone.UTC))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED_TRANSACTIONS)
                 .get(CreditCardTransactionsResponse.class);
     }

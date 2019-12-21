@@ -94,9 +94,4 @@ public final class VolvoFinansConstants {
         public static final String STATUS_EXPECTED = "expected";
         public static final String SEK = "SEK";
     }
-
-    public static class Format {
-        public static final String TIMEZONE = "UTC";
-        public static final String TIMESTAMP = "yyyy-MM-dd";
-    }
 }

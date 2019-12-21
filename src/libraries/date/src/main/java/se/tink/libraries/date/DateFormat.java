@@ -10,11 +10,15 @@ import java.util.TimeZone;
 
 public final class DateFormat {
 
-    public static final String UTC = "UTC";
     public static final String YEAR_MONTH_DAY = "yyyy-MM-dd";
 
     private DateFormat() {
         throw new AssertionError();
+    }
+
+    public static class Zone {
+        public static final String UTC = "UTC";
+        public static final String GMT = "GMT";
     }
 
     public static String formatDate(
