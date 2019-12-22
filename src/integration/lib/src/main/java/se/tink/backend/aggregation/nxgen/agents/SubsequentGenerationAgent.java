@@ -73,7 +73,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
             boolean useNextGenClient) {
-        super(request, context);
+        super(new DefaultSuperAbstractAgentStrategy(request, context));
         this.catalog = context.getCatalog();
         this.persistentStorage = new PersistentStorage();
         this.sessionStorage = new SessionStorage();

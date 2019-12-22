@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.SuperAbstractAgentStrategy;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -24,14 +25,14 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
     protected final MetricContext metricContext;
     protected final CredentialsRequest request;
 
-    protected SuperAbstractAgent(CredentialsRequest request, AgentContext context) {
-        this.request = request;
-        this.context = context;
-        this.agentAggregatorIdentifier = context;
-        this.supplementalRequester = context;
-        this.providerSessionCacheContext = context;
-        this.systemUpdater = context;
-        this.metricContext = context;
+    protected SuperAbstractAgent(final SuperAbstractAgentStrategy strategy) {
+        this.request = strategy.getCredentialsRequest();
+        this.context = strategy.getContext();
+        this.agentAggregatorIdentifier = strategy.getAgentAggregatorIdentifier();
+        this.supplementalRequester = strategy.getSupplementalRequester();
+        this.providerSessionCacheContext = strategy.getProviderSessionCacheContext();
+        this.systemUpdater = strategy.getSystemUpdater();
+        this.metricContext = strategy.getMetricContext();
     }
 
     public final AggregatorInfo getAggregatorInfo() {
