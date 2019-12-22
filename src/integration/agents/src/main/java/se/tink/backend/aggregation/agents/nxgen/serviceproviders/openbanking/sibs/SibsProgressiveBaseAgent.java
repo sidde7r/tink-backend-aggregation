@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.SupplementalInformationProvider;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
@@ -63,7 +64,9 @@ public abstract class SibsProgressiveBaseAgent
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration) {
-        super(request, context, configuration.getSignatureKeyPair(), true);
+        super(
+                SubsequentGenerationAgentStrategyFactory.nxgen(
+                        request, context, configuration.getSignatureKeyPair()));
         userState = new SibsUserState(persistentStorage);
         setConfiguration(configuration);
         apiClient = new SibsBaseApiClient(client, userState, request.isManual());

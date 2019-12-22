@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.filter.IngHttpFilte
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.session.IngSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
@@ -66,7 +67,7 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
 
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, true);
+        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
         configureHttpClient(client);
         this.apiClient =
                 new IngApiClient(client, context.getAggregatorInfo().getAggregatorIdentifier());

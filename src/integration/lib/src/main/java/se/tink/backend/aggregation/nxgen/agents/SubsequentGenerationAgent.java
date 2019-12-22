@@ -14,8 +14,9 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
-import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.strategy.DefaultSuperAbstractAgentStrategy;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategy;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -25,8 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
-import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -66,15 +65,13 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
 
     protected SubsequentGenerationAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        this(request, context, signatureKeyPair, false);
+        this(SubsequentGenerationAgentStrategyFactory.legacy(request, context, signatureKeyPair));
     }
 
-    protected SubsequentGenerationAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            boolean useNextGenClient) {
-        super(new DefaultSuperAbstractAgentStrategy(request, context));
+    protected SubsequentGenerationAgent(final SubsequentGenerationAgentStrategy strategy) {
+        super(
+                new DefaultSuperAbstractAgentStrategy(
+                        strategy.getCredentialsRequest(), strategy.getContext()));
         this.catalog = context.getCatalog();
         this.persistentStorage = new PersistentStorage();
         this.sessionStorage = new SessionStorage();
@@ -90,28 +87,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         MarketCode.valueOf(request.getProvider().getMarket()),
                         request.getProvider().getCurrency(),
                         request.getUser());
-        LogMasker logMasker = context.getLogMasker();
-        if (useNextGenClient) {
-            this.client =
-                    NextGenTinkHttpClient.builder(
-                                    logMasker, LogMasker.shouldLog(request.getProvider()))
-                            .setAggregatorInfo(context.getAggregatorInfo())
-                            .setMetricRegistry(metricContext.getMetricRegistry())
-                            .setLogOutputStream(context.getLogOutputStream())
-                            .setSignatureKeyPair(signatureKeyPair)
-                            .setProvider(request.getProvider())
-                            .build();
-        } else {
-            this.client =
-                    new LegacyTinkHttpClient(
-                            context.getAggregatorInfo(),
-                            metricContext.getMetricRegistry(),
-                            context.getLogOutputStream(),
-                            signatureKeyPair,
-                            request.getProvider(),
-                            logMasker,
-                            LogMasker.shouldLog(request.getProvider()));
-        }
+        this.client = strategy.getTinkHttpClient();
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();
         }
