@@ -14,6 +14,7 @@ public final class NextGenSubsequentGenerationAgentStrategy
     private final CredentialsRequest credentialsRequest;
     private final AgentContext context;
     private final TinkHttpClient tinkHttpClient;
+    private final SuperAbstractAgentStrategy superAbstractAgentStrategy;
 
     NextGenSubsequentGenerationAgentStrategy(
             final CredentialsRequest credentialsRequest,
@@ -31,6 +32,8 @@ public final class NextGenSubsequentGenerationAgentStrategy
                         .setSignatureKeyPair(signatureKeyPair)
                         .setProvider(credentialsRequest.getProvider())
                         .build();
+        superAbstractAgentStrategy =
+                new DefaultSuperAbstractAgentStrategy(credentialsRequest, context);
     }
 
     @Override
@@ -46,5 +49,10 @@ public final class NextGenSubsequentGenerationAgentStrategy
     @Override
     public AgentContext getContext() {
         return context;
+    }
+
+    @Override
+    public SuperAbstractAgentStrategy getSuperAbstractAgentStrategy() {
+        return superAbstractAgentStrategy;
     }
 }

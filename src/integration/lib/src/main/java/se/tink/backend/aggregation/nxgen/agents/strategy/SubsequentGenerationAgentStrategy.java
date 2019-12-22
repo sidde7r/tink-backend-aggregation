@@ -19,4 +19,6 @@ public interface SubsequentGenerationAgentStrategy {
     CredentialsRequest getCredentialsRequest();
 
     AgentContext getContext();
+
+    SuperAbstractAgentStrategy getSuperAbstractAgentStrategy();
 }

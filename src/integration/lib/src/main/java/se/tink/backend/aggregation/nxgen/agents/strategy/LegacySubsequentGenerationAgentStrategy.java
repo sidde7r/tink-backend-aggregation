@@ -19,6 +19,7 @@ public final class LegacySubsequentGenerationAgentStrategy
     private final CredentialsRequest credentialsRequest;
     private final AgentContext context;
     private final TinkHttpClient tinkHttpClient;
+    private final SuperAbstractAgentStrategy superAbstractAgentStrategy;
 
     LegacySubsequentGenerationAgentStrategy(
             final CredentialsRequest credentialsRequest,
@@ -35,6 +36,8 @@ public final class LegacySubsequentGenerationAgentStrategy
                         credentialsRequest.getProvider(),
                         context.getLogMasker(),
                         LogMasker.shouldLog(credentialsRequest.getProvider()));
+        superAbstractAgentStrategy =
+                new DefaultSuperAbstractAgentStrategy(credentialsRequest, context);
     }
 
     @Override
@@ -50,5 +53,10 @@ public final class LegacySubsequentGenerationAgentStrategy
     @Override
     public AgentContext getContext() {
         return context;
+    }
+
+    @Override
+    public SuperAbstractAgentStrategy getSuperAbstractAgentStrategy() {
+        return superAbstractAgentStrategy;
     }
 }

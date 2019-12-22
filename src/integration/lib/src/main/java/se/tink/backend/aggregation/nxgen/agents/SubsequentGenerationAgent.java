@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
-import se.tink.backend.aggregation.nxgen.agents.strategy.DefaultSuperAbstractAgentStrategy;
 import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategy;
 import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -69,9 +68,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     }
 
     protected SubsequentGenerationAgent(final SubsequentGenerationAgentStrategy strategy) {
-        super(
-                new DefaultSuperAbstractAgentStrategy(
-                        strategy.getCredentialsRequest(), strategy.getContext()));
+        super(strategy.getSuperAbstractAgentStrategy());
         this.catalog = context.getCatalog();
         this.persistentStorage = new PersistentStorage();
         this.sessionStorage = new SessionStorage();
