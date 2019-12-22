@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.nxgen.agents.SuperAbstractAgentStrategy;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SuperAbstractAgentStrategy;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 

@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
-import se.tink.backend.aggregation.nxgen.agents.DefaultSuperAbstractAgentStrategy;
+import se.tink.backend.aggregation.nxgen.agents.strategy.DefaultSuperAbstractAgentStrategy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.libraries.credentials.service.CredentialsRequest;

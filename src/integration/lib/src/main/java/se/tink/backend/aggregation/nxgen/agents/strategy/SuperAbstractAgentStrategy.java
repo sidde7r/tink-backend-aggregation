@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.agents;
+package se.tink.backend.aggregation.nxgen.agents.strategy;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
