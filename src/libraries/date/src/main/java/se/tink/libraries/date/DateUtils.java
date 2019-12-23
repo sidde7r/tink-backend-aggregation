@@ -151,20 +151,6 @@ public final class DateUtils {
     }
 
     /**
-     * Returns the current period progress (how far into a period we currently are at).
-     *
-     * @param resolution
-     * @param periodBreakDate
-     * @return
-     */
-    static double getCurrentMonthPeriodProgress(ResolutionTypes resolution, int periodBreakDate) {
-        String currentMonthPeriod = getCurrentMonthPeriod(resolution, periodBreakDate);
-        Date date = new Date();
-
-        return getMonthPeriodProgress(currentMonthPeriod, date, resolution, periodBreakDate);
-    }
-
-    /**
      * Return the current or previous business day for a date (ie. a sunday returns the previous
      * friday's date, and an actual business day returns the same date).
      *

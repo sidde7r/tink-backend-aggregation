@@ -122,22 +122,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testGetCurrentMonthPeriodProgress() {
-        double progress = DateUtils.getCurrentMonthPeriodProgress(ResolutionTypes.MONTHLY, -1);
-
-        System.out.println("MONTHLY: " + progress);
-
-        assertNotEquals(progress, 0);
-
-        double progressAdjusted =
-                DateUtils.getCurrentMonthPeriodProgress(ResolutionTypes.MONTHLY_ADJUSTED, 25);
-
-        System.out.println("MONTHLY_ADJUSTED: " + progressAdjusted);
-
-        assertNotEquals(progressAdjusted, 0);
-    }
-
-    @Test
     public void testGetLastDateFromPeriods() {
         Date isDate =
                 DateUtils.getLastDateFromPeriods(
