@@ -645,16 +645,6 @@ public final class DateUtils {
         return period;
     }
 
-    static Period buildYearlyPeriod(int year, ResolutionTypes periodMode, int periodBreakDay) {
-        Period period = new Period();
-        period.setStartDate(getFirstDateFromPeriod(year + "-01", periodMode, periodBreakDay));
-        period.setEndDate(getLastDateFromPeriod(year + "-12", periodMode, periodBreakDay));
-        period.setName(Integer.toString(year));
-        period.setResolution(ResolutionTypes.YEARLY);
-
-        return period;
-    }
-
     static String getYearlyPeriod(String period, ResolutionTypes periodMode, int periodBreakDay) {
         if (ThreadSafeDateFormat.FORMATTER_YEARLY.fitsFormat(period)) {
             return period;

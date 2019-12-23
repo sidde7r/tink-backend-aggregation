@@ -612,29 +612,6 @@ public class DateUtilsTest {
 
     @Test
     @Parameters({
-        "2017, MONTHLY, 25, 2017-01-01, 2017-12-31",
-        "2017, MONTHLY_ADJUSTED, 25, 2016-12-23, 2017-12-21",
-        "2018, MONTHLY_ADJUSTED, 25, 2017-12-22, 2018-12-20",
-    })
-    public void buildYearlyPeriod(
-            int year,
-            ResolutionTypes periodMode,
-            int periodBreakDay,
-            String expStartDate,
-            String expEndDate) {
-        Period period = DateUtils.buildYearlyPeriod(year, periodMode, periodBreakDay);
-        assertEquals(Integer.toString(year), period.getName());
-        assertEquals(ResolutionTypes.YEARLY, period.getResolution());
-        assertEquals(
-                DateUtils.setInclusiveStartTime(DateUtils.parseDate(expStartDate)),
-                period.getStartDate());
-        assertEquals(
-                DateUtils.setInclusiveEndTime(DateUtils.parseDate(expEndDate)),
-                period.getEndDate());
-    }
-
-    @Test
-    @Parameters({
         "2016, MONTHLY_ADJUSTED, 25, 2016",
         "2016-09, MONTHLY_ADJUSTED, 25, 2016",
         "2016:09, MONTHLY_ADJUSTED, 25, 2016",
