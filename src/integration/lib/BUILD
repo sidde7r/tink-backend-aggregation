@@ -88,8 +88,6 @@ java_library(
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_extensions_guice_multibindings",
         "//third_party:com_google_inject_guice",
-        "//third_party:com_nimbusds_nimbus_jose_jwt",
-        "//third_party:com_nimbusds_srp6a",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_codec_commons_codec",
