@@ -122,63 +122,6 @@ public final class DateUtils {
         return year + "-" + Strings.padStart(Integer.toString(month), 2, '0');
     }
 
-    /** @return a list of periods based on a start date and end date (inclusive). */
-    private static List<String> createPeriodList(
-            Date startDate, Date endDate, ResolutionTypes resolution, int periodBreakDate) {
-
-        if (startDate == null || endDate == null) {
-            return Lists.newArrayList(getCurrentMonthPeriod(resolution, periodBreakDate));
-        }
-
-        try {
-            List<String> periods = Lists.newArrayList();
-
-            Date startPeriodDate =
-                    ThreadSafeDateFormat.FORMATTER_MONTHLY.parse(
-                            getMonthPeriod(startDate, resolution, periodBreakDate));
-            Date endPeriodDate =
-                    ThreadSafeDateFormat.FORMATTER_MONTHLY.parse(
-                            getMonthPeriod(endDate, resolution, periodBreakDate));
-
-            int startYear =
-                    Integer.parseInt(ThreadSafeDateFormat.FORMATTER_YEARLY.format(startPeriodDate));
-            int endYear =
-                    Integer.parseInt(ThreadSafeDateFormat.FORMATTER_YEARLY.format(endPeriodDate));
-
-            Integer startMonth =
-                    Integer.valueOf(
-                            ThreadSafeDateFormat.FORMATTER_MONTHLY_ONLY.format(startPeriodDate));
-            Integer endMonth =
-                    Integer.valueOf(
-                            ThreadSafeDateFormat.FORMATTER_MONTHLY_ONLY.format(endPeriodDate));
-
-            for (int y = startYear; y < endYear + 1; y++) {
-                if (y == startYear && y == endYear) {
-                    for (int m = startMonth; m < endMonth + 1; m++) {
-                        periods.add(createPeriod(y, m));
-                    }
-                } else if (y == startYear) {
-                    for (int m = startMonth; m < 13; m++) {
-                        periods.add(createPeriod(y, m));
-                    }
-                } else if (y == endYear) {
-                    for (int m = 1; m < endMonth + 1; m++) {
-                        periods.add(createPeriod(y, m));
-                    }
-                } else {
-                    for (int m = 1; m < 13; m++) {
-                        periods.add(createPeriod(y, m));
-                    }
-                }
-            }
-
-            return periods;
-        } catch (Exception e) {
-            log.error("Could not create period list (" + startDate + ", " + endDate + ")", e);
-            return Lists.newArrayList(getCurrentMonthPeriod(resolution, periodBreakDate));
-        }
-    }
-
     static List<Date> createDailyDateList(Date first, Date last) {
         return createDailyDateList(first, last, false);
     }
