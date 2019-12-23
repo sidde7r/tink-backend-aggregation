@@ -15,8 +15,6 @@ java_library(
 
         # Annotations
         "//third_party:com_google_code_findbugs_jsr305",
-        "//third_party:io_protostuff_protostuff_api",
-        "//third_party:io_swagger_swagger_annotations",
 
         # Guava
         "//third_party:com_google_guava_guava",
