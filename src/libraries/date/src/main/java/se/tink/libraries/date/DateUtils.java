@@ -645,18 +645,6 @@ public final class DateUtils {
         return period;
     }
 
-    static Period buildMonthlyPeriod(
-            String period, ResolutionTypes resolutionType, int periodBreakDay) {
-        period = period.substring(0, 7); // yyyy-mm
-        Period newPeriod = new Period();
-        newPeriod.setStartDate(getFirstDateFromPeriod(period, resolutionType, periodBreakDay));
-        newPeriod.setEndDate(getLastDateFromPeriod(period, resolutionType, periodBreakDay));
-        newPeriod.setName(period);
-        newPeriod.setResolution(resolutionType);
-
-        return newPeriod;
-    }
-
     static Period buildYearlyPeriod(int year, ResolutionTypes periodMode, int periodBreakDay) {
         Period period = new Period();
         period.setStartDate(getFirstDateFromPeriod(year + "-01", periodMode, periodBreakDay));

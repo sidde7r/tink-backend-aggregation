@@ -577,44 +577,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testBuildSinglePeriodMonthlyAdjusted_periodEqualsPeriodsName() {
-        String period = "2016-03";
-        Period generatedPeriod =
-                DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
-        assertEquals(period, generatedPeriod.getName());
-    }
-
-    @Test
-    public void testBuildSinglePeriodMonthly_periodEqualsPeriodsName() {
-        String period = "2016-03";
-        Period generatedPeriod = DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY, 25);
-        assertEquals(period, generatedPeriod.getName());
-    }
-
-    @Test
-    public void testBuildSinglePeriodMonthlyAdjusted_startDate() {
-        String period = "2016-08";
-        Period generatedPeriod =
-                DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
-
-        String expectedStartDate = "2016-07-25";
-        String startDate =
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(generatedPeriod.getStartDate());
-        assertEquals(expectedStartDate, startDate);
-    }
-
-    @Test
-    public void testBuildSinglePeriodMonthlyAdjusted_endDate() {
-        String period = "2016-08";
-        Period generatedPeriod =
-                DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
-
-        String expectedEndDate = "2016-08-24";
-        String endDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(generatedPeriod.getEndDate());
-        assertEquals(expectedEndDate, endDate);
-    }
-
-    @Test
     @Parameters({
         "2017-01-01",
         "2017-01-08",
