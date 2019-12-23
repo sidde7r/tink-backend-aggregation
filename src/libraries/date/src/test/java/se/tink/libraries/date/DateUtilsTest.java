@@ -547,36 +547,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testDateListReversed() {
-        Date last = new Date();
-        Date first = org.apache.commons.lang3.time.DateUtils.addDays(last, -5);
-
-        List<Date> dates = DateUtils.createDailyDateList(first, last, true);
-
-        assertEquals(6, dates.size());
-        assertEquals(
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(last),
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(dates.get(0)));
-    }
-
-    @Test
-    public void testModifiedBuilder() {
-        Date last = new Date();
-        Date first = org.apache.commons.lang3.time.DateUtils.addDays(last, -5);
-
-        List<Date> dates = DateUtils.createDailyDateList(first, last, true);
-
-        assertEquals(6, dates.size());
-        assertEquals(
-                ThreadSafeDateFormat.FORMATTER_DAILY
-                        .toBuilder()
-                        .setLocale(new Locale("fr_FR"))
-                        .build()
-                        .format(last),
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(dates.get(0)));
-    }
-
-    @Test
     public void testNonBankingDays() throws ParseException {
         List<String> nonBankDays =
                 Lists.newArrayList(

@@ -1,6 +1,5 @@
 package se.tink.libraries.date;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Lists;
@@ -109,20 +108,6 @@ public final class DateUtils {
     /** @return a Central European Time time zone instance (mutable) */
     static TimeZone createCetTimeZone() {
         return TimeZone.getTimeZone("CET");
-    }
-
-    static List<Date> createDailyDateList(Date first, Date last, boolean reverse) {
-        List<Date> dates = Lists.newArrayList();
-
-        int numDays = daysBetween(first, last);
-        if (numDays > 0) {
-            for (int i = 0; i <= numDays; i++) {
-                Date tmp = org.apache.commons.lang3.time.DateUtils.addDays(first, i);
-                dates.add(tmp);
-            }
-        }
-
-        return reverse ? Lists.reverse(dates) : dates;
     }
 
     static List<String> createMonthlyPeriodList(String lastPeriod, int months) {
