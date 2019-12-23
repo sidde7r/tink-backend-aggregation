@@ -26,8 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Santa
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -40,7 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 
-public class SantanderAgent extends NextGenerationAgent
+public class SantanderAgent extends SubsequentGenerationAgent<PasswordAuthenticationController>
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
@@ -53,14 +52,16 @@ public class SantanderAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final SantanderApiClient apiClient;
-    private final SantanderPasswordAuthenticator authenticator;
+    private final PasswordAuthenticationController authenticator;
 
     public SantanderAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         apiClient = new SantanderApiClient(client, sessionStorage);
-        authenticator = new SantanderPasswordAuthenticator(apiClient, sessionStorage);
+        authenticator =
+                new PasswordAuthenticationController(
+                        new SantanderPasswordAuthenticator(apiClient, sessionStorage));
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
@@ -92,11 +93,6 @@ public class SantanderAgent extends NextGenerationAgent
                         new SantanderLoanAccountFetcher(apiClient));
     }
 
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(authenticator);
-    }
-
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -111,6 +107,11 @@ public class SantanderAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new SantanderSessionHandler(apiClient, sessionStorage);
+    }
+
+    @Override
+    public PasswordAuthenticationController getAuthenticator() {
+        return authenticator;
     }
 
     @Override
@@ -172,5 +173,11 @@ public class SantanderAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return loanRefreshController.fetchLoanTransactions();
+    }
+
+    @Override
+    public boolean login() throws Exception {
+        getAuthenticator().authenticate(credentials);
+        return true;
     }
 }
