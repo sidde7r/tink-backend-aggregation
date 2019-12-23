@@ -269,16 +269,6 @@ public final class DateUtils {
     }
 
     /**
-     * Returns the last period from a list of periods.
-     *
-     * @param periods
-     * @return
-     */
-    private static String getLastPeriod(List<String> periods) {
-        return periods.stream().max(Comparator.naturalOrder()).get();
-    }
-
-    /**
      * Returns the MONTHLY period for a date.
      *
      * @param time
