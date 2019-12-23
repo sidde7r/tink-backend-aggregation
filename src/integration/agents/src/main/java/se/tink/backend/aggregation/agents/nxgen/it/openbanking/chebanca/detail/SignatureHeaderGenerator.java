@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 public class SignatureHeaderGenerator {
 
     private final String applicationId;
-    private QsealcSigner qsealcSigner;
+    private final QsealcSigner qsealcSigner;
 
     public SignatureHeaderGenerator(String applicationId, QsealcSigner qsealcSigner) {
         this.applicationId = requireNonNull(applicationId);

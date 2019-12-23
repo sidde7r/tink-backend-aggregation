@@ -8,19 +8,18 @@ import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public class SignatureHeaderGeneratorTest {
-    private QsealcSigner signer;
-    private String applicationId = "1234";
-    private SignatureHeaderGenerator signatureGenerator;
+    private static final String applicationId = "1234";
+    private static SignatureHeaderGenerator signatureGenerator;
 
-    @Before
-    public void init() {
-        signer = mock(QsealcSigner.class);
+    @BeforeClass
+    public static void init() {
+        QsealcSigner signer = mock(QsealcSigner.class);
         when(signer.getSignatureBase64(any())).thenReturn("abcdefghijklmnoprstuw");
         signatureGenerator = new SignatureHeaderGenerator(applicationId, signer);
     }

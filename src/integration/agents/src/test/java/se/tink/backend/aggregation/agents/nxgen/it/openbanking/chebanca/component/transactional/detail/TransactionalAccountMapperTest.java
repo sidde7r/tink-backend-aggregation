@@ -74,44 +74,44 @@ public class TransactionalAccountMapperTest {
     private AmountEntity getCheckingAmountEntity() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
-                        + "      \"amount\": \""
+                        + "  \"amount\": \""
                         + CHECKING_AMOUNT
                         + "\",\n"
-                        + "      \"currency\": \""
+                        + "  \"currency\": \""
                         + CHECKING_CURRENCY
                         + "\"\n"
-                        + "    }",
+                        + "}",
                 AmountEntity.class);
     }
 
     private AccountEntity getCheckingAccountEntity() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
-                        + "                \"accountId\": \""
+                        + "  \"accountId\": \""
                         + CHECKING_ACC_ID
                         + "\",\n"
-                        + "                \"product\": {\n"
-                        + "                    \"code\": \"0633\",\n"
-                        + "                    \"description\": \"CONTO YELLOW\"\n"
-                        + "                },\n"
-                        + "                \"currency\": \"EUR\",\n"
-                        + "                \"iban\": \""
+                        + "  \"product\": {\n"
+                        + "    \"code\": \"0633\",\n"
+                        + "    \"description\": \"CONTO YELLOW\"\n"
+                        + "  },\n"
+                        + "  \"currency\": \"EUR\",\n"
+                        + "  \"iban\": \""
                         + CHECKING_ACC_NUMBER
                         + "\",\n"
-                        + "                \"name\": \""
+                        + "  \"name\": \""
                         + CHECKING_NAME
                         + "\"\n"
-                        + "            }",
+                        + "}",
                 AccountEntity.class);
     }
 
     private AmountEntity getSavingsAmountEntity() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
-                        + "      \"amount\": \""
+                        + "  \"amount\": \""
                         + SAVINGS_AMOUNT
                         + "\",\n"
-                        + "      \"currency\": \""
+                        + "  \"currency\": \""
                         + SAVINGS_CURRENCY
                         + "\"\n"
                         + "    }",
@@ -121,21 +121,21 @@ public class TransactionalAccountMapperTest {
     private AccountEntity getSavingsAccountEntity() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
-                        + "                \"accountId\": \""
+                        + "  \"accountId\": \""
                         + SAVINGS_ACC_ID
                         + "\",\n"
-                        + "                \"product\": {\n"
-                        + "                    \"code\": \"CDEP\",\n"
-                        + "                    \"description\": \"CONTO DEP\"\n"
-                        + "                },\n"
-                        + "                \"currency\": \"EUR\",\n"
-                        + "                \"iban\": \""
+                        + "  \"product\": {\n"
+                        + "    \"code\": \"CDEP\",\n"
+                        + "    \"description\": \"CONTO DEP\"\n"
+                        + "  },\n"
+                        + "  \"currency\": \"EUR\",\n"
+                        + "  \"iban\": \""
                         + SAVINGS_ACC_NUMBER
                         + "\",\n"
-                        + "                \"name\": \""
+                        + "  \"name\": \""
                         + SAVINGS_NAME
                         + "\"\n"
-                        + "            }",
+                        + "}",
                 AccountEntity.class);
     }
 }
