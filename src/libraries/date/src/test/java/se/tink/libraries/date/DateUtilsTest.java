@@ -575,22 +575,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    @Parameters({
-        "2017-01-01",
-        "2017-01-08",
-    })
-    public void buildDailyPeriod(String strPeriod) {
-        Period period = DateUtils.buildDailyPeriod(strPeriod);
-
-        Date date = DateUtils.parseDate(strPeriod);
-
-        assertEquals(strPeriod, period.getName());
-        assertEquals(ResolutionTypes.DAILY, period.getResolution());
-        assertEquals(DateUtils.setInclusiveStartTime(date), period.getStartDate());
-        assertEquals(DateUtils.setInclusiveEndTime(date), period.getEndDate());
-    }
-
-    @Test
     public void testRecreatingInfiniteLoopBug() {
         Date date = new Date(-839602800000L);
 

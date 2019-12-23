@@ -615,18 +615,6 @@ public final class DateUtils {
                         .print(new Interval(now, now.plusMillis(Math.abs(millis))).toPeriod());
     }
 
-    static Period buildDailyPeriod(String stringPeriod) {
-        Date date = parseDate(stringPeriod);
-
-        Period period = new Period();
-        period.setStartDate(setInclusiveStartTime(date));
-        period.setEndDate(setInclusiveEndTime(date));
-        period.setName(stringPeriod);
-        period.setResolution(ResolutionTypes.DAILY);
-
-        return period;
-    }
-
     /**
      * Will return true if the value is within the interval with midnight overlap. Examples: 02:00
      * will be within interval 01:00 - 05:00 00:00 will be within interval 21:00 - 03:00
