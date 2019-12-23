@@ -14,9 +14,7 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
@@ -139,15 +137,6 @@ public final class DateUtils {
         Calendar calendar = getCalendar();
         calendar.setTime(date);
         return calendar;
-    }
-
-    /**
-     * Returns the current MONTHLY_ADJUSTED period based on the user's specified period break date.
-     *
-     * @return
-     */
-    private static String getCurrentMonthPeriod(ResolutionTypes resolution, int periodBreakDate) {
-        return getMonthPeriod(getToday(), resolution, periodBreakDate);
     }
 
     /**
