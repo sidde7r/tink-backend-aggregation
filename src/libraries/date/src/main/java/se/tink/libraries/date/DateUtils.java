@@ -270,15 +270,6 @@ public final class DateUtils {
         return getMonthPeriod(getToday(), resolution, periodBreakDate);
     }
 
-    private static Period getPeriodForDate(List<Period> periods, final Date date) {
-
-        if (date == null || periods == null || periods.isEmpty()) {
-            return null;
-        }
-
-        return Iterables.find(periods, period -> period.isDateWithin(date), null);
-    }
-
     /**
      * Returns the current period progress (how far into a period we currently are at).
      *
