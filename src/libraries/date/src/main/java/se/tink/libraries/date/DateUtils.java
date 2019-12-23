@@ -269,25 +269,6 @@ public final class DateUtils {
     }
 
     /**
-     * Returns the first date of a list of period based on the users MONTHLY_ADJUSTED settings.
-     *
-     * @param periods
-     * @param resolution
-     * @param breakDate
-     * @return
-     */
-    static Date getLastDateFromPeriods(
-            List<String> periods, ResolutionTypes resolution, int breakDate) {
-
-        if (periods.size() != 0) {
-            return getLastDateFromPeriod(getLastPeriod(periods), resolution, breakDate);
-        }
-
-        return getLastDateFromPeriod(
-                getCurrentMonthPeriod(resolution, breakDate), resolution, breakDate);
-    }
-
-    /**
      * Returns the last period from a list of periods.
      *
      * @param periods

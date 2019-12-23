@@ -92,26 +92,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testGetLastDateFromPeriods() {
-        Date isDate =
-                DateUtils.getLastDateFromPeriods(
-                        Lists.newArrayList("2012-12", "2013-01", "2012-11"),
-                        ResolutionTypes.MONTHLY,
-                        25);
-
-        Calendar shouldCalendar = DateUtils.getCalendar();
-        shouldCalendar.setTime(DateUtils.parseDate("2013-01-31"));
-        DateUtils.setInclusiveEndTime(shouldCalendar);
-
-        Date shouldDate = shouldCalendar.getTime();
-
-        System.out.println(isDate.toString());
-        System.out.println(shouldDate.toString());
-
-        assertTrue(isDate.getTime() == shouldDate.getTime());
-    }
-
-    @Test
     public void testHolidays() {
         // Nyårsdagen 2013
         assertFalse(DateUtils.isBusinessDay(DateUtils.parseDate("2013-01-01")));
