@@ -529,20 +529,6 @@ public class DateUtilsTest {
 
     @Test
     @Parameters({
-        "2017-03-26 10:10:10, 2017-03-20 00:00:00", // Sunday -> Monday
-        "2017-03-27 10:10:10, 2017-03-27 00:00:00", // Monday -> same day
-        "2017-03-28 10:10:10, 2017-03-27 00:00:00", // Tuesday -> Monday
-    })
-    public void getFirstDateOfWeekDefaultLocale(String date, String expectedDate) {
-        Calendar calendar = DateUtils.getCalendar(DateUtils.parseDate(date));
-
-        assertEquals(
-                DateUtils.parseDate(expectedDate),
-                DateUtils.getFirstDateOfWeek(calendar).getTime());
-    }
-
-    @Test
-    @Parameters({
         "2017-08-21, 2017-11-21, 3",
         "2017-08-21, 2017-08-25, 0",
         "2017-12-31, 2018-01-01, 1",

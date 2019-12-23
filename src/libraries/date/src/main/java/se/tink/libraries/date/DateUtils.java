@@ -512,18 +512,6 @@ public final class DateUtils {
         return (int) (days2 - days1);
     }
 
-    static Calendar getFirstDateOfWeek(Calendar calendar) {
-        Calendar weekStartCalendar = (Calendar) calendar.clone();
-        weekStartCalendar.add(
-                Calendar.DAY_OF_WEEK,
-                (weekStartCalendar.getFirstDayOfWeek()
-                                - weekStartCalendar.get(Calendar.DAY_OF_WEEK)
-                                - 7)
-                        % 7);
-        setInclusiveStartTime(weekStartCalendar);
-        return weekStartCalendar;
-    }
-
     public static Date addDays(Date date, int days) {
         Calendar calendar = getCalendar(date);
         calendar.add(Calendar.DAY_OF_YEAR, days);
