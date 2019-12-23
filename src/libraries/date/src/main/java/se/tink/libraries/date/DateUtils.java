@@ -111,17 +111,6 @@ public final class DateUtils {
         return TimeZone.getTimeZone("CET");
     }
 
-    /**
-     * Helper function to create a MONTHLY period from year and month (as integers).
-     *
-     * @param year
-     * @param month
-     * @return
-     */
-    private static String createPeriod(int year, int month) {
-        return year + "-" + Strings.padStart(Integer.toString(month), 2, '0');
-    }
-
     static List<Date> createDailyDateList(Date first, Date last) {
         return createDailyDateList(first, last, false);
     }
