@@ -534,47 +534,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testIsBusinessDayMoreThanDaysFromNow_dateOutOfRange() {
-        Date date = DateUtils.daysFromNow(366);
-
-        assertFalse(DateUtils.isBusinessDayWithinDaysFromNow(date, 365));
-    }
-
-    @Test
-    public void testIsBusinessDayMoreThanDaysFromNow_dateWithinRange() {
-        // Subtract 10 days from a year to ensure holidays can't fail the test
-        Date date = DateUtils.daysFromNow(355);
-
-        assertTrue(DateUtils.isBusinessDayWithinDaysFromNow(date, 365));
-    }
-
-    @Test
-    public void testIsBusinessDayMoreThanDaysFromNow_dateOutOfRangeForBusinessDay() {
-        // Add 10 days to ensure holidays can't fail the test
-        Date oneYearFromNow = DateUtils.daysFromNow(365 + 10);
-        Date businessDay = DateUtils.getCurrentOrPreviousBusinessDay(oneYearFromNow);
-
-        assertFalse(DateUtils.isBusinessDayWithinDaysFromNow(businessDay, 365));
-    }
-
-    @Test
-    public void testIsBusinessDayMoreThanDaysFromNow_dateWithinRangeForBusinessDay() {
-        Date oneYearFromNow = DateUtils.daysFromNow(365);
-        Date businessDay =
-                DateUtils.addDays(DateUtils.getCurrentOrPreviousBusinessDay(oneYearFromNow), -1);
-
-        assertTrue(DateUtils.isBusinessDayWithinDaysFromNow(businessDay, 365));
-    }
-
-    @Test
-    public void testIsBusinessDayMoreThanDaysFromNow_dateAtLimit() {
-        Date oneYearFromNow = DateUtils.daysFromNow(365);
-        Date date = DateUtils.getCurrentOrPreviousBusinessDay(oneYearFromNow);
-
-        assertFalse(DateUtils.isBusinessDayWithinDaysFromNow(date, 365));
-    }
-
-    @Test
     public void testRecreatingInfiniteLoopBug() {
         Date date = new Date(-839602800000L);
 

@@ -524,12 +524,6 @@ public final class DateUtils {
         return weekStartCalendar;
     }
 
-    static boolean isBusinessDayWithinDaysFromNow(Date date, int days) {
-        Date businessDay = DateUtils.getCurrentOrPreviousBusinessDay(DateUtils.daysFromNow(days));
-
-        return inclusiveEndTime(date).before(businessDay);
-    }
-
     public static Date max(Date date1, Date date2) {
         if (compare(date1, date2) < 0) {
             return date2;
