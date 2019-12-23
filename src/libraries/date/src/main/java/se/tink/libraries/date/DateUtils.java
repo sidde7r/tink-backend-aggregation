@@ -524,31 +524,6 @@ public final class DateUtils {
         return weekStartCalendar;
     }
 
-    public static int compare(Date date1, Date date2) {
-
-        if (date1 == null && date2 == null) {
-            return 0;
-        }
-
-        if (date1 == null) {
-            return -1;
-        }
-
-        if (date2 == null) {
-            return 1;
-        }
-
-        if (date1.before(date2)) {
-            return -1;
-        }
-
-        if (date1.after(date2)) {
-            return 1;
-        }
-
-        return 0;
-    }
-
     public static Date addDays(Date date, int days) {
         Calendar calendar = getCalendar(date);
         calendar.add(Calendar.DAY_OF_YEAR, days);
