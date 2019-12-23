@@ -318,22 +318,6 @@ public final class DateUtils {
     }
 
     /**
-     * Returns the period progress (how far into a period we currently are at).
-     *
-     * @param resolution
-     * @param periodBreakDate
-     * @return
-     */
-    private static double getMonthPeriodProgress(
-            String period, Date date, ResolutionTypes resolution, int periodBreakDate) {
-        Date startDate = getFirstDateFromPeriod(period, resolution, periodBreakDate);
-        Date endDate = getLastDateFromPeriod(period, resolution, periodBreakDate);
-
-        return ((double) (date.getTime() - startDate.getTime())
-                / (double) (endDate.getTime() - startDate.getTime()));
-    }
-
-    /**
      * Returns the number of days between two dates.
      *
      * @param d1
