@@ -322,12 +322,6 @@ public final class DateUtils {
         return businessDay;
     }
 
-    public static Date getCurrentOrNextBusinessDay() {
-        Date date = DateUtils.setInclusiveStartTime(new Date());
-
-        return getCurrentOrNextBusinessDay(date);
-    }
-
     public static Date getNextBusinessDay() {
         Date date = DateUtils.inclusiveEndTime(new Date());
 
