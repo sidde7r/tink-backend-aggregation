@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -81,7 +82,7 @@ public final class SantanderApiClient {
         return client.request(Urls.CONSENT)
                 .addBearerToken(getTokenFromStorage())
                 .header(HeaderKeys.X_IBM_CLIENT_ID, getConfiguration().getClientId())
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .body(consentsRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                 .post(ConsentResponse.class)
                 .getConsentId();
@@ -96,7 +97,7 @@ public final class SantanderApiClient {
                 .addBearerToken(getTokenFromStorage())
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .header(HeaderKeys.X_IBM_CLIENT_ID, clientId)
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .type(MediaType.APPLICATION_JSON)
                 .get(AccountsResponse.class);
     }
@@ -110,7 +111,7 @@ public final class SantanderApiClient {
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .header(HeaderKeys.X_IBM_CLIENT_ID, clientId)
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .get(TransactionsKeyPaginatorResponse.class);
     }
 
@@ -125,15 +126,11 @@ public final class SantanderApiClient {
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
-    private String getRequestId() {
-        return java.util.UUID.randomUUID().toString();
-    }
-
     public CreatePaymentResponse createSepaPayment(CreatePaymentRequest request) {
         return client.request(Urls.SEPA_PAYMENT)
                 .addBearerToken(getTokenFromStorage())
                 .header(HeaderKeys.X_IBM_CLIENT_ID, getConfiguration().getClientId())
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .body(request.toData(), MediaType.APPLICATION_JSON_TYPE)
@@ -147,7 +144,7 @@ public final class SantanderApiClient {
                                 .parameter(IdTag.PAYMENT_ID, paymentId))
                 .addBearerToken(getTokenFromStorage())
                 .header(HeaderKeys.X_IBM_CLIENT_ID, getConfiguration().getClientId())
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

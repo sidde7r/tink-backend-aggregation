@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.httpclient.HttpStatus;
@@ -14,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountsTransactions;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -51,10 +51,6 @@ public abstract class SebBaseApiClient {
                 .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
     }
 
-    protected String getRequestId() {
-        return UUID.randomUUID().toString();
-    }
-
     public abstract FetchCardAccountsTransactions fetchCardTransactions(
             String accountId, LocalDate fromDate, LocalDate toDate);
 
@@ -75,7 +71,7 @@ public abstract class SebBaseApiClient {
 
     protected RequestBuilder createRequestInSession(URL url) {
         return createRequest(url)
-                .header(SebCommonConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(SebCommonConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(
                         SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
                         SebCommonConstants.getPsuIpAddress())

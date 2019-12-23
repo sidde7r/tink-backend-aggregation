@@ -29,9 +29,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.CrosskeyUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtHeader;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtUtils;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
@@ -260,7 +260,7 @@ public class CrosskeyBaseApiClient {
         return createPaymentConsent(url)
                 .header(
                         CrosskeyBaseConstants.HeaderKeys.X_IDEMPOTENCY_KEY,
-                        CrosskeyUtils.getRequestId())
+                        Psd2Headers.getRequestId())
                 .header(HeaderKeys.X_JWS_SIGNATURE, jwsHeaderValue);
     }
 
@@ -280,7 +280,7 @@ public class CrosskeyBaseApiClient {
         return createPaymentConsent(url)
                 .body(paymentDetail)
                 .header(HeaderKeys.X_JWS_SIGNATURE, jws)
-                .header(HeaderKeys.X_IDEMPOTENCY_KEY, CrosskeyUtils.getRequestId())
+                .header(HeaderKeys.X_IDEMPOTENCY_KEY, Psd2Headers.getRequestId())
                 .body(paymentDetail)
                 .post(CrosskeyPaymentDetails.class);
     }
@@ -289,7 +289,7 @@ public class CrosskeyBaseApiClient {
         return createRequestInSession(url)
                 .header(
                         CrosskeyBaseConstants.HeaderKeys.X_FAPI_INTERACTION_ID,
-                        CrosskeyUtils.getRequestId());
+                        Psd2Headers.getRequestId());
     }
 
     public URL getPisAuthorizeUrl(String state) {
@@ -378,7 +378,7 @@ public class CrosskeyBaseApiClient {
         return createRequestInSession(url)
                 .header(
                         CrosskeyBaseConstants.HeaderKeys.X_IDEMPOTENCY_KEY,
-                        CrosskeyUtils.getRequestId())
+                        Psd2Headers.getRequestId())
                 .get(CrosskeyPaymentDetails.class);
     }
 }

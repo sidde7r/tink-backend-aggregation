@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.credi
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.creditcardaccount.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -60,7 +61,7 @@ public final class SebApiClient {
         return client.request(Urls.ACCOUNTS)
                 .accept(MediaType.APPLICATION_JSON)
                 .addBearerToken(getTokenFromSession())
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_CORPORATE_ID, HeaderValues.PSU_CORPORATE_ID)
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
                 .get(FetchAccountResponse.class);
@@ -69,7 +70,7 @@ public final class SebApiClient {
     public CreditCardAccountsResponse fetchCreditCardAccounts() {
         return client.request(Urls.BASE_URL + Urls.BRANDED_ACCOUNTS)
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_CORPORATE_ID, HeaderValues.PSU_CORPORATE_ID)
                 .addBearerToken(getTokenFromSession())
                 .get(CreditCardAccountsResponse.class);
@@ -86,7 +87,7 @@ public final class SebApiClient {
 
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_CORPORATE_ID, HeaderValues.PSU_CORPORATE_ID)
                 .addBearerToken(getTokenFromSession())
                 .queryParam(
@@ -113,7 +114,7 @@ public final class SebApiClient {
 
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_CORPORATE_ID, HeaderValues.PSU_CORPORATE_ID)
                 .addBearerToken(getTokenFromSession())
                 .queryParam(
@@ -253,9 +254,5 @@ public final class SebApiClient {
         return sessionStorage
                 .get(SebConstants.StorageKeys.TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
-    }
-
-    private String getRequestId() {
-        return java.util.UUID.randomUUID().toString();
     }
 }

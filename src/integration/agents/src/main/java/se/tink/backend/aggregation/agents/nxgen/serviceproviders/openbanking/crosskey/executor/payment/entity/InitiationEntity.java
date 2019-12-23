@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy.UpperCamelCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.RequestConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.CrosskeyUtils;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 
@@ -43,7 +43,7 @@ public class InitiationEntity {
         PersonAccountEntity debtorAccount = PersonAccountEntity.debtorOf(paymentRequest);
 
         return new InitiationEntity.Builder()
-                .withInstructionIdentification(CrosskeyUtils.randomStringNumber())
+                .withInstructionIdentification(randomStringNumber())
                 .withEndToEndIdentification(endToEndIdentification)
                 .withCurrencyOfTransfer(paymentRequest.getPayment().getCurrency())
                 .withInstructedAmount(instructedAmount)
@@ -82,6 +82,10 @@ public class InitiationEntity {
 
     public PersonAccountEntity getDebtorAccount() {
         return debtorAccount;
+    }
+
+    private static String randomStringNumber() {
+        return Integer.toString(RandomUtils.randomInt(Integer.MAX_VALUE - 1));
     }
 
     public static class Builder {

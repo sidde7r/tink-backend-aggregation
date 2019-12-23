@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.FetchPaymentResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -115,7 +116,7 @@ public final class DkbApiClient {
             throws HttpResponseException {
         return createRequestInSession(
                         Urls.CREATE_PAYMENT.parameter(IdTags.PAYMENT_PRODUCT, paymentProduct))
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
@@ -126,7 +127,7 @@ public final class DkbApiClient {
                         Urls.FETCH_PAYMENT
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
                 .get(FetchPaymentResponse.class);
     }
@@ -135,9 +136,5 @@ public final class DkbApiClient {
         // This is supposed to be the IP address of the PSU, but we can't supply it on sandbox so we
         // use dummy value
         return "82.117.210.2"; //
-    }
-
-    private String getRequestId() {
-        return UUID.randomUUID().toString();
     }
 }

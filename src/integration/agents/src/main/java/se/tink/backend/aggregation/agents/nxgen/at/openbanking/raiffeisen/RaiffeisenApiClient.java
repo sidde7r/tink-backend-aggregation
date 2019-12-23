@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.execut
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -76,7 +77,7 @@ public final class RaiffeisenApiClient {
                         RaiffeisenConstants.HeaderKeys.AUTHORIZATION,
                         RaiffeisenConstants.HeaderValues.TOKEN_PREFIX.concat(
                                 getTokenFromStorage().getAccessToken()))
-                .header(HeaderKeys.X_REQUEST_ID, getRequestId());
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId());
     }
 
     private OAuth2Token getTokenFromStorage() {
@@ -163,10 +164,6 @@ public final class RaiffeisenApiClient {
             }
             throw e;
         }
-    }
-
-    private String getRequestId() {
-        return java.util.UUID.randomUUID().toString();
     }
 
     public PaginatorResponse fetchTransactions(

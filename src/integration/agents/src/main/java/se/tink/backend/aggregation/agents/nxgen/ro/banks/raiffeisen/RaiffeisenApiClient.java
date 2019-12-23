@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticato
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.fetcher.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -108,10 +109,6 @@ public class RaiffeisenApiClient {
                 .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
     }
 
-    private String getRequestId() {
-        return java.util.UUID.randomUUID().toString();
-    }
-
     public AccountsResponse fetchAccounts() {
         return getAPIRequest(RaiffeisenConstants.URL.ACCOUNTS)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
@@ -119,7 +116,7 @@ public class RaiffeisenApiClient {
                 .header(
                         RaiffeisenConstants.HEADER.X_IBM_CLIENT_ID,
                         RaiffeisenConstants.CLIENT_ID_VALUE)
-                .header(RaiffeisenConstants.HEADER.X_REQUEST_ID, getRequestId())
+                .header(RaiffeisenConstants.HEADER.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .queryParam(
                         RaiffeisenConstants.QUERY.WITH_BALANCE,
                         RaiffeisenConstants.QUERY.WITH_BALANCE_TRUE)
@@ -138,7 +135,7 @@ public class RaiffeisenApiClient {
                 .header(
                         RaiffeisenConstants.HEADER.X_IBM_CLIENT_ID,
                         RaiffeisenConstants.CLIENT_ID_VALUE)
-                .header(RaiffeisenConstants.HEADER.X_REQUEST_ID, getRequestId())
+                .header(RaiffeisenConstants.HEADER.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .queryParam(RaiffeisenConstants.QUERY.DATE_FROM, formatDate(fromDate))
                 .queryParam(RaiffeisenConstants.QUERY.DATE_TO, formatDate(toDate))
                 .queryParam(
