@@ -524,22 +524,6 @@ public final class DateUtils {
         return weekStartCalendar;
     }
 
-    public static Date max(Date date1, Date date2) {
-        if (compare(date1, date2) < 0) {
-            return date2;
-        } else {
-            return date1;
-        }
-    }
-
-    public static Date min(Date date1, Date date2) {
-        if (compare(date1, date2) > 0) {
-            return date2;
-        } else {
-            return date1;
-        }
-    }
-
     public static int compare(Date date1, Date date2) {
 
         if (date1 == null && date2 == null) {

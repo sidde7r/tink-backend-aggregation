@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Lists;
@@ -276,49 +275,6 @@ public class DateUtilsTest {
         assertEquals(
                 isSameDay,
                 DateUtils.isSameDay(DateUtils.parseDate(date1), DateUtils.parseDate(date2)));
-    }
-
-    @Test
-    public void testMinMax() {
-        assertEquals(
-                DateUtils.parseDate("2011-11-12"),
-                DateUtils.min(
-                        DateUtils.parseDate("2011-11-12"), DateUtils.parseDate("2011-11-12")));
-
-        assertEquals(
-                DateUtils.parseDate("2013-11-12"),
-                DateUtils.min(
-                        DateUtils.parseDate("2013-11-12"), DateUtils.parseDate("2014-11-12")));
-
-        assertEquals(
-                DateUtils.parseDate("2013-11-12"),
-                DateUtils.min(
-                        DateUtils.parseDate("2014-11-12"), DateUtils.parseDate("2013-11-12")));
-
-        assertNull(DateUtils.min(null, DateUtils.parseDate("2013-11-12")));
-
-        assertNull(DateUtils.min(null, null));
-
-        assertEquals(
-                DateUtils.parseDate("2011-11-12"),
-                DateUtils.max(
-                        DateUtils.parseDate("2011-11-12"), DateUtils.parseDate("2011-11-12")));
-
-        assertEquals(
-                DateUtils.parseDate("2014-11-12"),
-                DateUtils.max(
-                        DateUtils.parseDate("2013-11-12"), DateUtils.parseDate("2014-11-12")));
-
-        assertEquals(
-                DateUtils.parseDate("2014-11-12"),
-                DateUtils.max(
-                        DateUtils.parseDate("2014-11-12"), DateUtils.parseDate("2013-11-12")));
-
-        assertEquals(
-                DateUtils.parseDate("2013-11-12"),
-                DateUtils.max(null, DateUtils.parseDate("2013-11-12")));
-
-        assertNull(DateUtils.max(null, null));
     }
 
     /** Verifies that we can calculate the month period for all dates */
