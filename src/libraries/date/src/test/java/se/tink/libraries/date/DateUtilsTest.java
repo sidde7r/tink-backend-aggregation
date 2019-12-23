@@ -3,21 +3,16 @@ package se.tink.libraries.date;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -85,78 +80,12 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testGetFirstDateFromPeriods() throws ParseException {
-        Date isDate =
-                DateUtils.getFirstDateFromPeriods(
-                        Lists.newArrayList("2012-12", "2013-01", "2012-11"),
-                        ResolutionTypes.MONTHLY,
-                        25);
-        Date shouldDate = DateUtils.parseDate("2012-11-01");
-
-        System.out.println(isDate.toString());
-        System.out.println(shouldDate.toString());
-
-        assertTrue(isDate.getTime() == shouldDate.getTime());
-    }
-
-    @Test
     public void testGetMonthPeriod() throws ParseException {
         Date date = ThreadSafeDateFormat.FORMATTER_DAILY.parse("2016-05-27");
         assertEquals("2016-05", DateUtils.getMonthPeriod(date));
         assertEquals("2016-05", DateUtils.getMonthPeriod(date, ResolutionTypes.MONTHLY, 25));
         assertEquals(
                 "2016-06", DateUtils.getMonthPeriod(date, ResolutionTypes.MONTHLY_ADJUSTED, 25));
-    }
-
-    @Test
-    public void testGetFirstDateFromPeriodsAdjusted() {
-        Date isDate =
-                DateUtils.getFirstDateFromPeriods(
-                        Lists.newArrayList("2012-12", "2013-01", "2012-11"),
-                        ResolutionTypes.MONTHLY_ADJUSTED,
-                        25);
-        Date shouldDate = DateUtils.parseDate("2012-10-25");
-
-        System.out.println(isDate.toString());
-        System.out.println(shouldDate.toString());
-
-        assertTrue(isDate.getTime() == shouldDate.getTime());
-    }
-
-    @Test
-    public void testGetCurrentMonthPeriodProgress() {
-        double progress = DateUtils.getCurrentMonthPeriodProgress(ResolutionTypes.MONTHLY, -1);
-
-        System.out.println("MONTHLY: " + progress);
-
-        assertNotEquals(progress, 0);
-
-        double progressAdjusted =
-                DateUtils.getCurrentMonthPeriodProgress(ResolutionTypes.MONTHLY_ADJUSTED, 25);
-
-        System.out.println("MONTHLY_ADJUSTED: " + progressAdjusted);
-
-        assertNotEquals(progressAdjusted, 0);
-    }
-
-    @Test
-    public void testGetLastDateFromPeriods() {
-        Date isDate =
-                DateUtils.getLastDateFromPeriods(
-                        Lists.newArrayList("2012-12", "2013-01", "2012-11"),
-                        ResolutionTypes.MONTHLY,
-                        25);
-
-        Calendar shouldCalendar = DateUtils.getCalendar();
-        shouldCalendar.setTime(DateUtils.parseDate("2013-01-31"));
-        DateUtils.setInclusiveEndTime(shouldCalendar);
-
-        Date shouldDate = shouldCalendar.getTime();
-
-        System.out.println(isDate.toString());
-        System.out.println(shouldDate.toString());
-
-        assertTrue(isDate.getTime() == shouldDate.getTime());
     }
 
     @Test
@@ -348,49 +277,6 @@ public class DateUtilsTest {
                 DateUtils.isSameDay(DateUtils.parseDate(date1), DateUtils.parseDate(date2)));
     }
 
-    @Test
-    public void testMinMax() {
-        assertEquals(
-                DateUtils.parseDate("2011-11-12"),
-                DateUtils.min(
-                        DateUtils.parseDate("2011-11-12"), DateUtils.parseDate("2011-11-12")));
-
-        assertEquals(
-                DateUtils.parseDate("2013-11-12"),
-                DateUtils.min(
-                        DateUtils.parseDate("2013-11-12"), DateUtils.parseDate("2014-11-12")));
-
-        assertEquals(
-                DateUtils.parseDate("2013-11-12"),
-                DateUtils.min(
-                        DateUtils.parseDate("2014-11-12"), DateUtils.parseDate("2013-11-12")));
-
-        assertNull(DateUtils.min(null, DateUtils.parseDate("2013-11-12")));
-
-        assertNull(DateUtils.min(null, null));
-
-        assertEquals(
-                DateUtils.parseDate("2011-11-12"),
-                DateUtils.max(
-                        DateUtils.parseDate("2011-11-12"), DateUtils.parseDate("2011-11-12")));
-
-        assertEquals(
-                DateUtils.parseDate("2014-11-12"),
-                DateUtils.max(
-                        DateUtils.parseDate("2013-11-12"), DateUtils.parseDate("2014-11-12")));
-
-        assertEquals(
-                DateUtils.parseDate("2014-11-12"),
-                DateUtils.max(
-                        DateUtils.parseDate("2014-11-12"), DateUtils.parseDate("2013-11-12")));
-
-        assertEquals(
-                DateUtils.parseDate("2013-11-12"),
-                DateUtils.max(null, DateUtils.parseDate("2013-11-12")));
-
-        assertNull(DateUtils.max(null, null));
-    }
-
     /** Verifies that we can calculate the month period for all dates */
     @Test
     public void monthPeriodsShouldBePossibleToCalculate() {
@@ -549,49 +435,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testDateList() {
-        Date last = new Date();
-        Date first = org.apache.commons.lang3.time.DateUtils.addDays(last, -5);
-
-        List<Date> dates = DateUtils.createDailyDateList(first, last);
-
-        assertEquals(6, dates.size());
-        assertEquals(
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(last),
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(dates.get(5)));
-    }
-
-    @Test
-    public void testDateListReversed() {
-        Date last = new Date();
-        Date first = org.apache.commons.lang3.time.DateUtils.addDays(last, -5);
-
-        List<Date> dates = DateUtils.createDailyDateList(first, last, true);
-
-        assertEquals(6, dates.size());
-        assertEquals(
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(last),
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(dates.get(0)));
-    }
-
-    @Test
-    public void testModifiedBuilder() {
-        Date last = new Date();
-        Date first = org.apache.commons.lang3.time.DateUtils.addDays(last, -5);
-
-        List<Date> dates = DateUtils.createDailyDateList(first, last, true);
-
-        assertEquals(6, dates.size());
-        assertEquals(
-                ThreadSafeDateFormat.FORMATTER_DAILY
-                        .toBuilder()
-                        .setLocale(new Locale("fr_FR"))
-                        .build()
-                        .format(last),
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(dates.get(0)));
-    }
-
-    @Test
     public void testNonBankingDays() throws ParseException {
         List<String> nonBankDays =
                 Lists.newArrayList(
@@ -639,243 +482,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testGetPreviousPeriod() {
-
-        Period first = new Period();
-        first.setName("first");
-        first.setResolution(ResolutionTypes.MONTHLY);
-        first.setStartDate(new DateTime(2016, 1, 1, 0, 0, 0).toDate());
-        first.setEndDate(new DateTime(2016, 1, 31, 23, 59, 59).toDate());
-
-        Period second = new Period();
-        second.setName("second");
-        second.setResolution(ResolutionTypes.MONTHLY);
-        second.setStartDate(new DateTime(2016, 2, 1, 0, 0, 0).toDate());
-        second.setEndDate(new DateTime(2016, 2, 29, 23, 59, 59).toDate());
-
-        Period third = new Period();
-        third.setName("third");
-        third.setResolution(ResolutionTypes.MONTHLY);
-        third.setStartDate(new DateTime(2016, 3, 1, 0, 0, 0).toDate());
-        third.setEndDate(new DateTime(2016, 3, 31, 23, 59, 59).toDate());
-
-        ImmutableList<Period> periods = ImmutableList.of(first, second, third);
-
-        // Null if no input
-        assertNull(DateUtils.getPreviousPeriod(periods, null));
-
-        // No period before the first period
-        assertNull(DateUtils.getPreviousPeriod(periods, first));
-
-        // First period before the second
-        assertEquals(first, DateUtils.getPreviousPeriod(periods, second));
-
-        // Second period before the third
-        assertEquals(second, DateUtils.getPreviousPeriod(periods, third));
-    }
-
-    @Test
-    public void testDaysFromNow() {
-        Date tomorrow1 = DateUtils.daysFromNow(1);
-        Date tomorrow2 = DateUtils.inclusiveEndTime(DateUtils.addDays(new Date(), 1));
-
-        assertEquals(tomorrow1, tomorrow2);
-    }
-
-    @Test
-    public void testIsBusinessDayMoreThanDaysFromNow_dateOutOfRange() {
-        Date date = DateUtils.daysFromNow(366);
-
-        assertFalse(DateUtils.isBusinessDayWithinDaysFromNow(date, 365));
-    }
-
-    @Test
-    public void testIsBusinessDayMoreThanDaysFromNow_dateWithinRange() {
-        // Subtract 10 days from a year to ensure holidays can't fail the test
-        Date date = DateUtils.daysFromNow(355);
-
-        assertTrue(DateUtils.isBusinessDayWithinDaysFromNow(date, 365));
-    }
-
-    @Test
-    public void testIsBusinessDayMoreThanDaysFromNow_dateOutOfRangeForBusinessDay() {
-        // Add 10 days to ensure holidays can't fail the test
-        Date oneYearFromNow = DateUtils.daysFromNow(365 + 10);
-        Date businessDay = DateUtils.getCurrentOrPreviousBusinessDay(oneYearFromNow);
-
-        assertFalse(DateUtils.isBusinessDayWithinDaysFromNow(businessDay, 365));
-    }
-
-    @Test
-    public void testIsBusinessDayMoreThanDaysFromNow_dateWithinRangeForBusinessDay() {
-        Date oneYearFromNow = DateUtils.daysFromNow(365);
-        Date businessDay =
-                DateUtils.addDays(DateUtils.getCurrentOrPreviousBusinessDay(oneYearFromNow), -1);
-
-        assertTrue(DateUtils.isBusinessDayWithinDaysFromNow(businessDay, 365));
-    }
-
-    @Test
-    public void testIsBusinessDayMoreThanDaysFromNow_dateAtLimit() {
-        Date oneYearFromNow = DateUtils.daysFromNow(365);
-        Date date = DateUtils.getCurrentOrPreviousBusinessDay(oneYearFromNow);
-
-        assertFalse(DateUtils.isBusinessDayWithinDaysFromNow(date, 365));
-    }
-
-    @Test
-    public void testBuildSinglePeriodMonthlyAdjusted_periodEqualsPeriodsName() {
-        String period = "2016-03";
-        Period generatedPeriod =
-                DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
-        assertEquals(period, generatedPeriod.getName());
-    }
-
-    @Test
-    public void testBuildSinglePeriodMonthly_periodEqualsPeriodsName() {
-        String period = "2016-03";
-        Period generatedPeriod = DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY, 25);
-        assertEquals(period, generatedPeriod.getName());
-    }
-
-    @Test
-    public void testBuildSinglePeriodMonthlyAdjusted_startDate() {
-        String period = "2016-08";
-        Period generatedPeriod =
-                DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
-
-        String expectedStartDate = "2016-07-25";
-        String startDate =
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(generatedPeriod.getStartDate());
-        assertEquals(expectedStartDate, startDate);
-    }
-
-    @Test
-    public void testBuildSinglePeriodMonthlyAdjusted_endDate() {
-        String period = "2016-08";
-        Period generatedPeriod =
-                DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
-
-        String expectedEndDate = "2016-08-24";
-        String endDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(generatedPeriod.getEndDate());
-        assertEquals(expectedEndDate, endDate);
-    }
-
-    @Test
-    @Parameters({
-        "2017-01-01",
-        "2017-01-08",
-    })
-    public void buildDailyPeriod(String strPeriod) {
-        Period period = DateUtils.buildDailyPeriod(strPeriod);
-
-        Date date = DateUtils.parseDate(strPeriod);
-
-        assertEquals(strPeriod, period.getName());
-        assertEquals(ResolutionTypes.DAILY, period.getResolution());
-        assertEquals(DateUtils.setInclusiveStartTime(date), period.getStartDate());
-        assertEquals(DateUtils.setInclusiveEndTime(date), period.getEndDate());
-    }
-
-    @Test
-    @Parameters({
-        "2017:1, en, 2017-01-01, 2017-01-07",
-        "2017:1, sv, 2017-01-02, 2017-01-08",
-    })
-    public void buildWeeklyPeriod(
-            String strPeriod, String lang, String expStartDate, String expEndDate) {
-        Period period = DateUtils.buildWeeklyPeriod(strPeriod, Locale.forLanguageTag(lang));
-        assertEquals(strPeriod, period.getName());
-        assertEquals(ResolutionTypes.WEEKLY, period.getResolution());
-        assertEquals(
-                DateUtils.setInclusiveStartTime(DateUtils.parseDate(expStartDate)),
-                period.getStartDate());
-        assertEquals(
-                DateUtils.setInclusiveEndTime(DateUtils.parseDate(expEndDate)),
-                period.getEndDate());
-    }
-
-    @Test
-    @Parameters({
-        "2017, MONTHLY, 25, 2017-01-01, 2017-12-31",
-        "2017, MONTHLY_ADJUSTED, 25, 2016-12-23, 2017-12-21",
-        "2018, MONTHLY_ADJUSTED, 25, 2017-12-22, 2018-12-20",
-    })
-    public void buildYearlyPeriod(
-            int year,
-            ResolutionTypes periodMode,
-            int periodBreakDay,
-            String expStartDate,
-            String expEndDate) {
-        Period period = DateUtils.buildYearlyPeriod(year, periodMode, periodBreakDay);
-        assertEquals(Integer.toString(year), period.getName());
-        assertEquals(ResolutionTypes.YEARLY, period.getResolution());
-        assertEquals(
-                DateUtils.setInclusiveStartTime(DateUtils.parseDate(expStartDate)),
-                period.getStartDate());
-        assertEquals(
-                DateUtils.setInclusiveEndTime(DateUtils.parseDate(expEndDate)),
-                period.getEndDate());
-    }
-
-    @Test
-    @Parameters({
-        "2016, MONTHLY_ADJUSTED, 25, 2016",
-        "2016-09, MONTHLY_ADJUSTED, 25, 2016",
-        "2016:09, MONTHLY_ADJUSTED, 25, 2016",
-        "2016-09-09, MONTHLY_ADJUSTED, 25, 2016",
-        "2016-12-30, MONTHLY_ADJUSTED, 25, 2017",
-        "2016-12-30, MONTHLY, 25, 2016",
-    })
-    public void getYearlyPeriod(
-            String period, ResolutionTypes resolution, int periodBreakDay, String expPeriod) {
-        assertEquals(expPeriod, DateUtils.getYearlyPeriod(period, resolution, periodBreakDay));
-    }
-
-    @Test
-    public void testCreatePeriodListForYear_monthlyAdjusted() {
-        List<String> expectedPeriods = Lists.newArrayList();
-        expectedPeriods.add("2016-01");
-        expectedPeriods.add("2016-02");
-        expectedPeriods.add("2016-03");
-        expectedPeriods.add("2016-04");
-        expectedPeriods.add("2016-05");
-        expectedPeriods.add("2016-06");
-        expectedPeriods.add("2016-07");
-        expectedPeriods.add("2016-08");
-        expectedPeriods.add("2016-09");
-        expectedPeriods.add("2016-10");
-        expectedPeriods.add("2016-11");
-        expectedPeriods.add("2016-12");
-
-        List<String> periods =
-                DateUtils.createPeriodListForYear(2016, ResolutionTypes.MONTHLY_ADJUSTED, 25);
-
-        assertEquals(expectedPeriods, periods);
-    }
-
-    @Test
-    public void testCreatePeriodListForYear_monthly() {
-        List<String> expectedPeriods = Lists.newArrayList();
-        expectedPeriods.add("2016-01");
-        expectedPeriods.add("2016-02");
-        expectedPeriods.add("2016-03");
-        expectedPeriods.add("2016-04");
-        expectedPeriods.add("2016-05");
-        expectedPeriods.add("2016-06");
-        expectedPeriods.add("2016-07");
-        expectedPeriods.add("2016-08");
-        expectedPeriods.add("2016-09");
-        expectedPeriods.add("2016-10");
-        expectedPeriods.add("2016-11");
-        expectedPeriods.add("2016-12");
-
-        List<String> periods = DateUtils.createPeriodListForYear(2016, ResolutionTypes.MONTHLY, 25);
-
-        assertEquals(expectedPeriods, periods);
-    }
-
-    @Test
     public void testRecreatingInfiniteLoopBug() {
         Date date = new Date(-839602800000L);
 
@@ -883,12 +489,6 @@ public class DateUtilsTest {
         assertEquals("1943-05", period);
 
         DateUtils.getMonthPeriod(date, ResolutionTypes.MONTHLY_ADJUSTED, 25);
-    }
-
-    @Test
-    public void prettyFormatTests() {
-        assertEquals("10 milliseconds", DateUtils.prettyFormatMillis(10));
-        assertEquals("-10 milliseconds", DateUtils.prettyFormatMillis(-10));
     }
 
     @Test
@@ -925,54 +525,6 @@ public class DateUtilsTest {
                 .isFalse();
         assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("05:01:00")))
                 .isFalse();
-    }
-
-    @Test
-    @Parameters({
-        "2017-03-26 10:10:10, 2017-03-20 00:00:00", // Sunday -> Monday
-        "2017-03-27 10:10:10, 2017-03-27 00:00:00", // Monday -> same day
-        "2017-03-28 10:10:10, 2017-03-27 00:00:00", // Tuesday -> Monday
-    })
-    public void getFirstDateOfWeekDefaultLocale(String date, String expectedDate) {
-        Calendar calendar = DateUtils.getCalendar(DateUtils.parseDate(date));
-
-        assertEquals(
-                DateUtils.parseDate(expectedDate),
-                DateUtils.getFirstDateOfWeek(calendar).getTime());
-    }
-
-    @Test
-    @Parameters({
-        "2017-03-27 10:10:10, 2017-03-26 00:00:00", // Monday -> Sunday
-        "2017-03-26 10:10:10, 2017-03-26 00:00:00", // Sunday -> same day
-        "2017-03-25 10:10:10, 2017-03-19 00:00:00", // Saturday -> Sunday
-    })
-    public void getFirstDateOfWeekEnLocale(String date, String expectedDate) {
-        Calendar calendar = DateUtils.getCalendar(Locale.ENGLISH);
-        calendar.setTime(DateUtils.parseDate(date));
-
-        assertEquals(
-                DateUtils.parseDate(expectedDate),
-                DateUtils.getFirstDateOfWeek(calendar).getTime());
-    }
-
-    private Object[] parametersForCreateMonthlyPeriodList() {
-        return new Object[] {
-            new Object[] {"2017-06", 0, Collections.emptyList()},
-            new Object[] {"2017-02", 1, Lists.newArrayList("2017-02")},
-            new Object[] {
-                "2017-01",
-                5,
-                Lists.newArrayList("2016-09", "2016-10", "2016-11", "2016-12", "2017-01")
-            },
-        };
-    }
-
-    @Test
-    @Parameters(method = "parametersForCreateMonthlyPeriodList")
-    public void createMonthlyPeriodList(String lastPeriod, int size, List<String> result) {
-        assertThat(DateUtils.createMonthlyPeriodList(lastPeriod, size))
-                .containsOnlyElementsOf(result);
     }
 
     @Test
