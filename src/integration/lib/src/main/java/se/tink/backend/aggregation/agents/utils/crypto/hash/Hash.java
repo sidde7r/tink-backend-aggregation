@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.crypto;
+package se.tink.backend.aggregation.agents.utils.crypto.hash;
 
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;

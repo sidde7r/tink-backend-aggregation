@@ -35,7 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.rpc.SpankkiHeader;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.rpc.SpankkiResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.RequestBody;
-import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;

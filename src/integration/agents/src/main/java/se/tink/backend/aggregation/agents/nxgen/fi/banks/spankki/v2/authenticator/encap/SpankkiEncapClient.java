@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.Identi
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapCryptoUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapMessageUtils;
-import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;

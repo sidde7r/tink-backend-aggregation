@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.api;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.UUID;
-import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 
 public final class Psd2Headers {
 

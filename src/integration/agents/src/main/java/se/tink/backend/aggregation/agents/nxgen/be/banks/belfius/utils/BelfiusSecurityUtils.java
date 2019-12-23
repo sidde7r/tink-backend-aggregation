@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 
 public class BelfiusSecurityUtils {
 
