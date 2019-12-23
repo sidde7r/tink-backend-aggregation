@@ -3,7 +3,6 @@ package se.tink.libraries.date;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import de.jollyday.Holiday;
 import de.jollyday.HolidayCalendar;
@@ -340,16 +339,6 @@ public final class DateUtils {
         calendar.add(Calendar.DAY_OF_MONTH, 1);
 
         return getCurrentOrNextBusinessDay(calendar).getTime();
-    }
-
-    /**
-     * Returns the first date of a period (MONTHLY).
-     *
-     * @param period
-     * @return
-     */
-    public static Date getFirstDateFromPeriod(String period) {
-        return getFirstDateFromPeriod(period, ResolutionTypes.MONTHLY, -1);
     }
 
     /**
