@@ -547,19 +547,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testDateList() {
-        Date last = new Date();
-        Date first = org.apache.commons.lang3.time.DateUtils.addDays(last, -5);
-
-        List<Date> dates = DateUtils.createDailyDateList(first, last);
-
-        assertEquals(6, dates.size());
-        assertEquals(
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(last),
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(dates.get(5)));
-    }
-
-    @Test
     public void testDateListReversed() {
         Date last = new Date();
         Date first = org.apache.commons.lang3.time.DateUtils.addDays(last, -5);

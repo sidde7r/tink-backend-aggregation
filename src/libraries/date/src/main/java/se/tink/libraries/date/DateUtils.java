@@ -111,10 +111,6 @@ public final class DateUtils {
         return TimeZone.getTimeZone("CET");
     }
 
-    static List<Date> createDailyDateList(Date first, Date last) {
-        return createDailyDateList(first, last, false);
-    }
-
     static List<Date> createDailyDateList(Date first, Date last, boolean reverse) {
         List<Date> dates = Lists.newArrayList();
 
