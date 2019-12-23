@@ -585,12 +585,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void prettyFormatTests() {
-        assertEquals("10 milliseconds", DateUtils.prettyFormatMillis(10));
-        assertEquals("-10 milliseconds", DateUtils.prettyFormatMillis(-10));
-    }
-
-    @Test
     public void isWithinClosedIntervalWithMidnightOverlapTest() {
 
         LocalTime from = LocalTime.parse("23:00");

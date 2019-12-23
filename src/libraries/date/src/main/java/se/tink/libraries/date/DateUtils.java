@@ -605,16 +605,6 @@ public final class DateUtils {
         return calendar.getTime();
     }
 
-    static String prettyFormatMillis(int millis) {
-
-        String sign = millis < 0 ? "-" : "";
-
-        DateTime now = new DateTime();
-        return sign
-                + PeriodFormat.getDefault()
-                        .print(new Interval(now, now.plusMillis(Math.abs(millis))).toPeriod());
-    }
-
     /**
      * Will return true if the value is within the interval with midnight overlap. Examples: 02:00
      * will be within interval 01:00 - 05:00 00:00 will be within interval 21:00 - 03:00
