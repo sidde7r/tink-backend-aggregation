@@ -46,7 +46,6 @@ public final class DateUtils {
             DateTimeFormat.forPattern("yyyy-MM");
     private static final java.time.format.DateTimeFormatter JAVA_LOCAL_DATE_MONTHLY_FORMATTER =
             java.time.format.DateTimeFormatter.ofPattern("yyyy-MM");
-    private static final String WEEK_OF_YEAR_DATE_FORMAT = "yyyy:ww";
 
     static {
         // Create two sets with holidays, one with string representation and one with Joda time
