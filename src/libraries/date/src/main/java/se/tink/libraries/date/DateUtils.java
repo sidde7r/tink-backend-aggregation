@@ -270,16 +270,6 @@ public final class DateUtils {
         return getMonthPeriod(getToday(), resolution, periodBreakDate);
     }
 
-    static Period getPreviousPeriod(List<Period> periods, Period current) {
-        if (current == null) {
-            return null;
-        }
-
-        DateTime date = new DateTime(current.getStartDate()).minusDays(1);
-
-        return getPeriodForDate(periods, date.toDate());
-    }
-
     private static Period getPeriodForDate(List<Period> periods, final Date date) {
 
         if (date == null || periods == null || periods.isEmpty()) {

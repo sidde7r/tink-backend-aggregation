@@ -3,12 +3,10 @@ package se.tink.libraries.date;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -636,42 +634,6 @@ public class DateUtilsTest {
         assertTrue(
                 org.apache.commons.lang3.time.DateUtils.isSameDay(
                         nextBusinessDate, DateUtils.addDays(calendar.getTime(), 2)));
-    }
-
-    @Test
-    public void testGetPreviousPeriod() {
-
-        Period first = new Period();
-        first.setName("first");
-        first.setResolution(ResolutionTypes.MONTHLY);
-        first.setStartDate(new DateTime(2016, 1, 1, 0, 0, 0).toDate());
-        first.setEndDate(new DateTime(2016, 1, 31, 23, 59, 59).toDate());
-
-        Period second = new Period();
-        second.setName("second");
-        second.setResolution(ResolutionTypes.MONTHLY);
-        second.setStartDate(new DateTime(2016, 2, 1, 0, 0, 0).toDate());
-        second.setEndDate(new DateTime(2016, 2, 29, 23, 59, 59).toDate());
-
-        Period third = new Period();
-        third.setName("third");
-        third.setResolution(ResolutionTypes.MONTHLY);
-        third.setStartDate(new DateTime(2016, 3, 1, 0, 0, 0).toDate());
-        third.setEndDate(new DateTime(2016, 3, 31, 23, 59, 59).toDate());
-
-        ImmutableList<Period> periods = ImmutableList.of(first, second, third);
-
-        // Null if no input
-        assertNull(DateUtils.getPreviousPeriod(periods, null));
-
-        // No period before the first period
-        assertNull(DateUtils.getPreviousPeriod(periods, first));
-
-        // First period before the second
-        assertEquals(first, DateUtils.getPreviousPeriod(periods, second));
-
-        // Second period before the third
-        assertEquals(second, DateUtils.getPreviousPeriod(periods, third));
     }
 
     @Test
