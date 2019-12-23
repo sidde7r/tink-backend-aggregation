@@ -26,8 +26,6 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** * @deprecated Use CountryDateHelper instead. */
 @Deprecated
@@ -38,7 +36,6 @@ public final class DateUtils {
     private static final ImmutableSet<String> HOLIDAYS;
     private static final ImmutableSet<LocalDate> HOLIDAYS_LOCAL_DATE;
     private static final ImmutableSet<java.time.LocalDate> HOLIDAYS_JAVA_LOCAL_DATE;
-    private static final Logger log = LoggerFactory.getLogger(DateUtils.class);
     private static final Pattern PATTERN_SIX_OR_EIGHT_DIGITS =
             Pattern.compile("[0-9]{6}([0-9]{2})?"); // Either 6 or 8
     // digits
