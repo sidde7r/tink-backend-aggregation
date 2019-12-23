@@ -676,18 +676,6 @@ public class DateUtilsTest {
                 DateUtils.getFirstDateOfWeek(calendar).getTime());
     }
 
-    private Object[] parametersForCreateMonthlyPeriodList() {
-        return new Object[] {
-            new Object[] {"2017-06", 0, Collections.emptyList()},
-            new Object[] {"2017-02", 1, Lists.newArrayList("2017-02")},
-            new Object[] {
-                "2017-01",
-                5,
-                Lists.newArrayList("2016-09", "2016-10", "2016-11", "2016-12", "2017-01")
-            },
-        };
-    }
-
     @Test
     @Parameters({
         "2017-08-21, 2017-11-21, 3",
