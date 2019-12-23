@@ -7,7 +7,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
         "//src/libraries/serialization",
         "//third_party:com_google_guava_guava",
-        "//third_party:com_nimbusds_nimbus_jose_jwt",
         "//third_party:commons_codec_commons_codec",
         "//third_party:net_minidev_json_smart",
         "//third_party:org_apache_commons_commons_lang3",

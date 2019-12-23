@@ -1,11 +1,12 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Map;
 import net.minidev.json.JSONObject;
-import se.tink.backend.aggregation.agents.utils.crypto.PS256;
+import se.tink.backend.aggregation.agents.utils.crypto.ps256.PS256;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 
 public class LocalKeySigner implements JwtSigner {
 
