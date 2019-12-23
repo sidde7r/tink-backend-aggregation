@@ -21,8 +21,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Interval;
@@ -135,10 +133,6 @@ public final class DateUtils {
      */
     public static Calendar getCalendar() {
         return Calendar.getInstance(createCetTimeZone(), DEFAULT_LOCALE);
-    }
-
-    static Calendar getCalendar(Locale locale) {
-        return Calendar.getInstance(createCetTimeZone(), locale);
     }
 
     static Calendar getCalendar(Date date) {

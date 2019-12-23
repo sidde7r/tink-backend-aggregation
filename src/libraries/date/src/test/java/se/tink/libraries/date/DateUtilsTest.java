@@ -817,21 +817,6 @@ public class DateUtilsTest {
                 DateUtils.getFirstDateOfWeek(calendar).getTime());
     }
 
-    @Test
-    @Parameters({
-        "2017-03-27 10:10:10, 2017-03-26 00:00:00", // Monday -> Sunday
-        "2017-03-26 10:10:10, 2017-03-26 00:00:00", // Sunday -> same day
-        "2017-03-25 10:10:10, 2017-03-19 00:00:00", // Saturday -> Sunday
-    })
-    public void getFirstDateOfWeekEnLocale(String date, String expectedDate) {
-        Calendar calendar = DateUtils.getCalendar(Locale.ENGLISH);
-        calendar.setTime(DateUtils.parseDate(date));
-
-        assertEquals(
-                DateUtils.parseDate(expectedDate),
-                DateUtils.getFirstDateOfWeek(calendar).getTime());
-    }
-
     private Object[] parametersForCreateMonthlyPeriodList() {
         return new Object[] {
             new Object[] {"2017-06", 0, Collections.emptyList()},
