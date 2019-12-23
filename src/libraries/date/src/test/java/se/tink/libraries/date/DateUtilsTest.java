@@ -12,10 +12,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -590,24 +588,6 @@ public class DateUtilsTest {
         assertEquals(ResolutionTypes.DAILY, period.getResolution());
         assertEquals(DateUtils.setInclusiveStartTime(date), period.getStartDate());
         assertEquals(DateUtils.setInclusiveEndTime(date), period.getEndDate());
-    }
-
-    @Test
-    @Parameters({
-        "2017:1, en, 2017-01-01, 2017-01-07",
-        "2017:1, sv, 2017-01-02, 2017-01-08",
-    })
-    public void buildWeeklyPeriod(
-            String strPeriod, String lang, String expStartDate, String expEndDate) {
-        Period period = DateUtils.buildWeeklyPeriod(strPeriod, Locale.forLanguageTag(lang));
-        assertEquals(strPeriod, period.getName());
-        assertEquals(ResolutionTypes.WEEKLY, period.getResolution());
-        assertEquals(
-                DateUtils.setInclusiveStartTime(DateUtils.parseDate(expStartDate)),
-                period.getStartDate());
-        assertEquals(
-                DateUtils.setInclusiveEndTime(DateUtils.parseDate(expEndDate)),
-                period.getEndDate());
     }
 
     @Test

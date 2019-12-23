@@ -627,24 +627,6 @@ public final class DateUtils {
         return period;
     }
 
-    static Period buildWeeklyPeriod(String stringPeriod, Locale locale) {
-        Date date;
-        try {
-            date = new SimpleDateFormat(WEEK_OF_YEAR_DATE_FORMAT, locale).parse(stringPeriod);
-        } catch (ParseException e) {
-            log.error("Cannot parse week: " + stringPeriod, e);
-            return null;
-        }
-
-        Period period = new Period();
-        period.setStartDate(setInclusiveStartTime(date));
-        period.setEndDate(setInclusiveEndTime(addDays(date, 6)));
-        period.setName(stringPeriod);
-        period.setResolution(ResolutionTypes.WEEKLY);
-
-        return period;
-    }
-
     /**
      * Will return true if the value is within the interval with midnight overlap. Examples: 02:00
      * will be within interval 01:00 - 05:00 00:00 will be within interval 21:00 - 03:00
