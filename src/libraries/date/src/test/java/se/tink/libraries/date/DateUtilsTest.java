@@ -795,49 +795,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testCreatePeriodListForYear_monthlyAdjusted() {
-        List<String> expectedPeriods = Lists.newArrayList();
-        expectedPeriods.add("2016-01");
-        expectedPeriods.add("2016-02");
-        expectedPeriods.add("2016-03");
-        expectedPeriods.add("2016-04");
-        expectedPeriods.add("2016-05");
-        expectedPeriods.add("2016-06");
-        expectedPeriods.add("2016-07");
-        expectedPeriods.add("2016-08");
-        expectedPeriods.add("2016-09");
-        expectedPeriods.add("2016-10");
-        expectedPeriods.add("2016-11");
-        expectedPeriods.add("2016-12");
-
-        List<String> periods =
-                DateUtils.createPeriodListForYear(2016, ResolutionTypes.MONTHLY_ADJUSTED, 25);
-
-        assertEquals(expectedPeriods, periods);
-    }
-
-    @Test
-    public void testCreatePeriodListForYear_monthly() {
-        List<String> expectedPeriods = Lists.newArrayList();
-        expectedPeriods.add("2016-01");
-        expectedPeriods.add("2016-02");
-        expectedPeriods.add("2016-03");
-        expectedPeriods.add("2016-04");
-        expectedPeriods.add("2016-05");
-        expectedPeriods.add("2016-06");
-        expectedPeriods.add("2016-07");
-        expectedPeriods.add("2016-08");
-        expectedPeriods.add("2016-09");
-        expectedPeriods.add("2016-10");
-        expectedPeriods.add("2016-11");
-        expectedPeriods.add("2016-12");
-
-        List<String> periods = DateUtils.createPeriodListForYear(2016, ResolutionTypes.MONTHLY, 25);
-
-        assertEquals(expectedPeriods, periods);
-    }
-
-    @Test
     public void testRecreatingInfiniteLoopBug() {
         Date date = new Date(-839602800000L);
 

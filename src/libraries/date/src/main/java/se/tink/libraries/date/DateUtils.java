@@ -122,20 +122,6 @@ public final class DateUtils {
         return year + "-" + Strings.padStart(Integer.toString(month), 2, '0');
     }
 
-    static List<String> createPeriodListForYear(
-            int year, ResolutionTypes resolution, int periodBreakDate) {
-
-        try {
-            Date startDate = ThreadSafeDateFormat.FORMATTER_DAILY.parse(year + "-01-01");
-            Date endDate = ThreadSafeDateFormat.FORMATTER_DAILY.parse(year + "-12-01");
-            return DateUtils.createPeriodList(startDate, endDate, resolution, periodBreakDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return Lists.newArrayList();
-    }
-
     /** @return a list of periods based on a start date and end date (inclusive). */
     private static List<String> createPeriodList(
             Date startDate, Date endDate, ResolutionTypes resolution, int periodBreakDate) {
