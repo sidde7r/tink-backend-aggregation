@@ -83,42 +83,12 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testGetFirstDateFromPeriods() throws ParseException {
-        Date isDate =
-                DateUtils.getFirstDateFromPeriods(
-                        Lists.newArrayList("2012-12", "2013-01", "2012-11"),
-                        ResolutionTypes.MONTHLY,
-                        25);
-        Date shouldDate = DateUtils.parseDate("2012-11-01");
-
-        System.out.println(isDate.toString());
-        System.out.println(shouldDate.toString());
-
-        assertTrue(isDate.getTime() == shouldDate.getTime());
-    }
-
-    @Test
     public void testGetMonthPeriod() throws ParseException {
         Date date = ThreadSafeDateFormat.FORMATTER_DAILY.parse("2016-05-27");
         assertEquals("2016-05", DateUtils.getMonthPeriod(date));
         assertEquals("2016-05", DateUtils.getMonthPeriod(date, ResolutionTypes.MONTHLY, 25));
         assertEquals(
                 "2016-06", DateUtils.getMonthPeriod(date, ResolutionTypes.MONTHLY_ADJUSTED, 25));
-    }
-
-    @Test
-    public void testGetFirstDateFromPeriodsAdjusted() {
-        Date isDate =
-                DateUtils.getFirstDateFromPeriods(
-                        Lists.newArrayList("2012-12", "2013-01", "2012-11"),
-                        ResolutionTypes.MONTHLY_ADJUSTED,
-                        25);
-        Date shouldDate = DateUtils.parseDate("2012-10-25");
-
-        System.out.println(isDate.toString());
-        System.out.println(shouldDate.toString());
-
-        assertTrue(isDate.getTime() == shouldDate.getTime());
     }
 
     @Test
