@@ -21,13 +21,11 @@ import java.util.TimeZone;
 import java.util.regex.Pattern;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.PeriodFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -445,15 +443,6 @@ public final class DateUtils {
     public static Date setInclusiveStartTime(Date date) {
         Calendar calendar = getCalendar(date);
         setInclusiveStartTime(calendar);
-        return calendar.getTime();
-    }
-
-    static Date setInclusiveEndTime(Date date) {
-        Calendar calendar = getCalendar();
-        calendar.setTime(date);
-
-        setInclusiveEndTime(calendar);
-
         return calendar.getTime();
     }
 
