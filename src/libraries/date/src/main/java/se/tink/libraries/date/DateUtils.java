@@ -2,7 +2,6 @@ package se.tink.libraries.date;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
-import com.google.common.collect.Lists;
 import de.jollyday.Holiday;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
@@ -108,17 +107,6 @@ public final class DateUtils {
     /** @return a Central European Time time zone instance (mutable) */
     static TimeZone createCetTimeZone() {
         return TimeZone.getTimeZone("CET");
-    }
-
-    static List<String> createMonthlyPeriodList(String lastPeriod, int months) {
-        LocalDateTime date = LocalDateTime.parse(lastPeriod, DATE_TIME_FORMATTER_MONTHLY);
-
-        return IntStream.range(0, months)
-                .mapToObj(
-                        order ->
-                                ThreadSafeDateFormat.FORMATTER_MONTHLY.format(
-                                        date.minusMonths(order)))
-                .collect(Collectors.toList());
     }
 
     /**

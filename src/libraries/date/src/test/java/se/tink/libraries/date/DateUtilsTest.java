@@ -845,13 +845,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    @Parameters(method = "parametersForCreateMonthlyPeriodList")
-    public void createMonthlyPeriodList(String lastPeriod, int size, List<String> result) {
-        assertThat(DateUtils.createMonthlyPeriodList(lastPeriod, size))
-                .containsOnlyElementsOf(result);
-    }
-
-    @Test
     @Parameters({
         "2017-08-21, 2017-11-21, 3",
         "2017-08-21, 2017-08-25, 0",
