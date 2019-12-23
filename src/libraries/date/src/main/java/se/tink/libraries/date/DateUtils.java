@@ -236,16 +236,6 @@ public final class DateUtils {
     }
 
     /**
-     * Returns the first period from a list of periods.
-     *
-     * @param periods
-     * @return
-     */
-    private static String getFirstPeriod(List<String> periods) {
-        return periods.stream().min(Comparator.naturalOrder()).get();
-    }
-
-    /**
      * Returns the last date of a period based on the users MONTHLY_ADJUSTED settings.
      *
      * @param period
