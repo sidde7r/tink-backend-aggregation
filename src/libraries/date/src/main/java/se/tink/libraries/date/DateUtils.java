@@ -645,27 +645,6 @@ public final class DateUtils {
         return period;
     }
 
-    static String getYearlyPeriod(String period, ResolutionTypes periodMode, int periodBreakDay) {
-        if (ThreadSafeDateFormat.FORMATTER_YEARLY.fitsFormat(period)) {
-            return period;
-        }
-
-        if (ThreadSafeDateFormat.FORMATTER_MONTHLY.fitsFormat(period)) {
-            return period.substring(0, 4);
-        }
-
-        if (ThreadSafeDateFormat.FORMATTER_WEEKLY.fitsFormat(period)) {
-            return period.substring(0, 4);
-        }
-
-        if (ThreadSafeDateFormat.FORMATTER_DAILY.fitsFormat(period)) {
-            return getMonthPeriod(parseDate(period), periodMode, periodBreakDay).substring(0, 4);
-        }
-        // others
-        throw new RuntimeException(
-                new ParseException("Could not parse year from period: " + period, 0));
-    }
-
     /**
      * Will return true if the value is within the interval with midnight overlap. Examples: 02:00
      * will be within interval 01:00 - 05:00 00:00 will be within interval 21:00 - 03:00

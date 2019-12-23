@@ -611,20 +611,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    @Parameters({
-        "2016, MONTHLY_ADJUSTED, 25, 2016",
-        "2016-09, MONTHLY_ADJUSTED, 25, 2016",
-        "2016:09, MONTHLY_ADJUSTED, 25, 2016",
-        "2016-09-09, MONTHLY_ADJUSTED, 25, 2016",
-        "2016-12-30, MONTHLY_ADJUSTED, 25, 2017",
-        "2016-12-30, MONTHLY, 25, 2016",
-    })
-    public void getYearlyPeriod(
-            String period, ResolutionTypes resolution, int periodBreakDay, String expPeriod) {
-        assertEquals(expPeriod, DateUtils.getYearlyPeriod(period, resolution, periodBreakDay));
-    }
-
-    @Test
     public void testRecreatingInfiniteLoopBug() {
         Date date = new Date(-839602800000L);
 
