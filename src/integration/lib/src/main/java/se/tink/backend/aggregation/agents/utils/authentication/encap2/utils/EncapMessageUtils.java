@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.I
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.RegistrationResultEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.enums.AuthenticationMethod;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.RequestBody;
-import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;

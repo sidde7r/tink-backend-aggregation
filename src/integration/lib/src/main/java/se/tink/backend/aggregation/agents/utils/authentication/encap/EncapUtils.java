@@ -13,7 +13,7 @@ import org.w3c.dom.Node;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.ActivationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.SamlResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.agents.utils.soap.SoapParser;

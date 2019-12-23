@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.Activa
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.EncryptedSoapRequestBody;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.EncryptedSoapResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.RequestBody;
-import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;

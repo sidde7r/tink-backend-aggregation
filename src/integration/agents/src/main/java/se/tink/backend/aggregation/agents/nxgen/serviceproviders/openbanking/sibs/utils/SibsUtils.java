@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsTransactionStatus;
-import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class SibsUtils {

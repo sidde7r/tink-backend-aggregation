@@ -37,8 +37,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.PasswordTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.VerifyPersonalCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.VerifyPersonalCodeResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;

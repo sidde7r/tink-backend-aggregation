@@ -11,7 +11,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 
 public class EncapCryptoTest {
     // Test data represented in hex

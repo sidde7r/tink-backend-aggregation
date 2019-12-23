@@ -6,8 +6,8 @@ import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.SignatureKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.SignatureValues;
-import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class SignatureUtils {
