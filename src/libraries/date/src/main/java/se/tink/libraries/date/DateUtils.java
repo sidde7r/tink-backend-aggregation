@@ -415,16 +415,6 @@ public final class DateUtils {
     }
 
     /**
-     * Returns the last date of a period (MONTHLY).
-     *
-     * @param period
-     * @return
-     */
-    public static Date getLastDateFromPeriod(String period) {
-        return getLastDateFromPeriod(period, ResolutionTypes.MONTHLY, -1);
-    }
-
-    /**
      * Returns the last date of a period based on the users MONTHLY_ADJUSTED settings.
      *
      * @param period
