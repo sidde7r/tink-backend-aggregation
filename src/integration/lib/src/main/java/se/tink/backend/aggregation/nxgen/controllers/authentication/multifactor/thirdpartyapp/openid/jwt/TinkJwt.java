@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 
 /** Utility for building and signing jwt. */
 public final class TinkJwt {

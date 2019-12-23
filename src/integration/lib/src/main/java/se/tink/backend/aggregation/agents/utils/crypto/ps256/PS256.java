@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.crypto;
+package se.tink.backend.aggregation.agents.utils.crypto.ps256;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSHeader;
