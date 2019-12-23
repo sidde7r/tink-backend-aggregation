@@ -482,14 +482,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testDaysFromNow() {
-        Date tomorrow1 = DateUtils.daysFromNow(1);
-        Date tomorrow2 = DateUtils.inclusiveEndTime(DateUtils.addDays(new Date(), 1));
-
-        assertEquals(tomorrow1, tomorrow2);
-    }
-
-    @Test
     public void testRecreatingInfiniteLoopBug() {
         Date date = new Date(-839602800000L);
 

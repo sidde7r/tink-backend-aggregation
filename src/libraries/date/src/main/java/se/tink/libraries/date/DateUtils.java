@@ -530,11 +530,6 @@ public final class DateUtils {
         return calendar.getTime();
     }
 
-    static Date daysFromNow(int days) {
-        Date today = inclusiveEndTime(new Date());
-        return addDays(today, days);
-    }
-
     public static Date addMonths(Date date, int months) {
         Calendar calendar = getCalendar(date);
         calendar.add(Calendar.MONTH, months);
