@@ -1,0 +1,35 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "handelsbanken",
+    srcs = glob(["*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/framework/validation",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/payment:enums",
+        "//src/integration/payment:rpc",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
+        "//src/integration/transfer:rpc",
+        "//src/integration/user:rpc",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_guava_guava",
+        "//third_party:org_iban4j_iban4j",
+        "//third_party:org_mockito_mockito_core",
+    ],
+)
