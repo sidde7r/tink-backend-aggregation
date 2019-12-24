@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail;
 
-import static java.util.Objects.requireNonNull;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.NonNull;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -16,12 +15,13 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class ChebancaRequestBuilder {
 
     private final TinkHttpClient client;
-    private SignatureHeaderGenerator signatureHeaderGenerator;
+    private final SignatureHeaderGenerator signatureHeaderGenerator;
 
     public ChebancaRequestBuilder(
-            TinkHttpClient client, SignatureHeaderGenerator signatureHeaderGenerator) {
-        this.client = requireNonNull(client);
-        this.signatureHeaderGenerator = requireNonNull(signatureHeaderGenerator);
+            @NonNull final TinkHttpClient client,
+            @NonNull final SignatureHeaderGenerator signatureHeaderGenerator) {
+        this.client = client;
+        this.signatureHeaderGenerator = signatureHeaderGenerator;
     }
 
     public RequestBuilder buildRequest(URL url, String requestBody, String httpMethod) {
