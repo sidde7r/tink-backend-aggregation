@@ -1,0 +1,10 @@
+java_library(
+    name = "sberbank",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/fintechblocks",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+    ],
+)
