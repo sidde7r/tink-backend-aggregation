@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken;
 
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public final class HandelsbankenBaseConstants {
     public static final String INTEGRATION_NAME = "handelsbanken";
@@ -160,5 +161,14 @@ public final class HandelsbankenBaseConstants {
         public static final String PIS = "PIS";
         public static final String AIS = "AIS";
         public static final String BOTH = AIS + " " + PIS;
+    }
+
+    public static class OAuth2Type {
+        public static final String BEARER = "Bearer";
+    }
+
+    public static class BankIdUserMessage {
+        public static final LocalizableKey ACTIVATION_NEEDED =
+                new LocalizableKey("You need to activate your BankID in the Handelsbanken app.");
     }
 }
