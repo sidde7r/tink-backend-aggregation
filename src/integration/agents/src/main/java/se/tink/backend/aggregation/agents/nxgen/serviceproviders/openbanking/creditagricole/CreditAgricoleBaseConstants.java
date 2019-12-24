@@ -78,6 +78,7 @@ public final class CreditAgricoleBaseConstants {
 
     public class DateFormat {
         public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+        public static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
     }
 
     public class FormValues {
@@ -94,6 +95,7 @@ public final class CreditAgricoleBaseConstants {
         public static final String GRANT_TYPE = "grant_type";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CODE = "code";
+        public static final String DATE_FROM = "dateFrom";
     }
 
     public class QueryValues {
