@@ -9,7 +9,6 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/hash",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
@@ -18,7 +17,6 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/i18n",
-        "//src/libraries/pair",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
@@ -29,6 +27,5 @@ java_library(
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:jetty_server9",
-        "@tink_httpcore_4_4_9",
     ],
 )
