@@ -12,7 +12,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/integration/models",
         "//src/integration/sa_agent/sa_common:sa-common",
         "//src/integration/sa_agent/sa_grpc_api:sa-grpc-api",
         "//src/libraries/account_identifier",
