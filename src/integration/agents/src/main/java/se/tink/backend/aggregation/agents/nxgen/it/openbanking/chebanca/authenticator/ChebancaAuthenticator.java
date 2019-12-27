@@ -1,41 +1,49 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator;
 
-import java.util.Optional;
+import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.ErrorMessages.GET_TOKEN_FAILED;
+import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.ErrorMessages.LOGIN_REDIRECT_FAILED;
+
+import javax.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.detail.AuthorizationURLBuilder;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.rpc.TokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration.ChebancaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.HttpResponseChecker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class ChebancaAuthenticator implements OAuth2Authenticator {
 
     private final ChebancaApiClient apiClient;
-    private final PersistentStorage persistentStorage;
     private final ChebancaConfiguration configuration;
+    private final AuthorizationURLBuilder authorizationUrlBuilder;
 
     public ChebancaAuthenticator(
-            ChebancaApiClient apiClient,
-            PersistentStorage persistentStorage,
-            ChebancaConfiguration configuration) {
+            @NonNull final ChebancaApiClient apiClient,
+            @NonNull final ChebancaConfiguration configuration,
+            @NonNull final StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
         this.configuration = configuration;
-    }
-
-    private ChebancaConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        this.authorizationUrlBuilder =
+                createAuthorizationUrlBuilder(strongAuthenticationState, configuration);
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        return apiClient.getAuthorisation();
+        final URL authorizationUrl = authorizationUrlBuilder.buildAuthorizationURL();
+        HttpResponse loginUrlResponse = apiClient.getLoginUrl(authorizationUrl);
+        HttpResponseChecker.checkIfSuccessfulResponse(
+                loginUrlResponse, HttpServletResponse.SC_FOUND, LOGIN_REDIRECT_FAILED);
+        String loginUrlAsString = loginUrlResponse.getLocation().toString();
+        return new URL(loginUrlAsString);
     }
 
     @Override
@@ -48,16 +56,40 @@ public class ChebancaAuthenticator implements OAuth2Authenticator {
                         FormValues.AUTHORIZATION_CODE,
                         configuration.getRedirectUrl());
 
-        return apiClient.createToken(tokenRequest);
+        HttpResponse response = apiClient.createToken(tokenRequest);
+
+        HttpResponseChecker.checkIfSuccessfulResponse(
+                response, HttpServletResponse.SC_OK, GET_TOKEN_FAILED);
+
+        return response.getBody(TokenResponse.class).toTinkToken();
     }
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException {
-        return null;
+        TokenRequest tokenRequest =
+                new TokenRequest(
+                        configuration.getClientId(),
+                        configuration.getClientSecret(),
+                        refreshToken,
+                        FormValues.REFRESH_TOKEN);
+        HttpResponse response = apiClient.createToken(tokenRequest);
+        HttpResponseChecker.checkIfSuccessfulResponse(
+                response, HttpServletResponse.SC_OK, GET_TOKEN_FAILED);
+
+        return response.getBody(TokenResponse.class).toTinkToken();
     }
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
+        apiClient.save(StorageKeys.OAUTH_TOKEN, accessToken);
+    }
+
+    private AuthorizationURLBuilder createAuthorizationUrlBuilder(
+            StrongAuthenticationState strongAuthenticationState,
+            ChebancaConfiguration chebancaConfig) {
+        return new AuthorizationURLBuilder(
+                chebancaConfig.getClientId(),
+                chebancaConfig.getRedirectUrl(),
+                strongAuthenticationState.getState());
     }
 }

@@ -10,14 +10,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class GetAccountsResponse {
-
     @JsonProperty("_embeded")
     private EmbededEntity embedded;
 
     @JsonProperty("_links")
     private LinksEntity links;
 
+    @JsonProperty("data")
     private AccountsDataEntity data;
+
+    @JsonProperty("result")
     private ResultEntity result;
 
     @JsonIgnore

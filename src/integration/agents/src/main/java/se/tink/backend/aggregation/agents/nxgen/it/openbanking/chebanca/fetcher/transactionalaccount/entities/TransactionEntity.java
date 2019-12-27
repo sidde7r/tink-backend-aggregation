@@ -1,44 +1,49 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Date;
-import java.util.Optional;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionEntity {
+    @JsonProperty("amountTransaction")
     private AmountEntity amountTransaction;
+
+    @JsonProperty("extendedDescription")
     private String extendedDescription;
 
-    @JsonFormat(pattern = "yyyyMMdd'T'hh:mm:ss")
-    private Date dateAccountingCurrency;
+    @JsonProperty("dateAccountingCurrency")
+    private String dateAccountingCurrency;
 
+    @JsonProperty("shortDescription")
     private String shortDescription;
 
-    @JsonFormat(pattern = "yyyyMMdd'T'hh:mm:ss")
-    private Date dateLiquidationValue;
+    @JsonProperty("dateLiquidationValue")
+    private String dateLiquidationValue;
 
+    @JsonProperty("codeDescription")
     private String codeDescription;
 
-    @JsonIgnore
-    public Transaction toBookedTransaction() {
-        return toTinkTransaction(false);
+    public AmountEntity getAmountTransaction() {
+        return amountTransaction;
     }
 
-    @JsonIgnore
-    public Transaction toPendingTransactions() {
-        return toTinkTransaction(true);
+    public String getExtendedDescription() {
+        return extendedDescription;
     }
 
-    @JsonIgnore
-    private Transaction toTinkTransaction(boolean pending) {
-        return Transaction.builder()
-                .setPending(pending)
-                .setAmount(amountTransaction.toAmount())
-                .setDate(Optional.ofNullable(dateAccountingCurrency).orElse(dateLiquidationValue))
-                .setDescription(shortDescription)
-                .build();
+    public String getDateAccountingCurrency() {
+        return dateAccountingCurrency;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public String getDateLiquidationValue() {
+        return dateLiquidationValue;
+    }
+
+    public String getCodeDescription() {
+        return codeDescription;
     }
 }

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.agent;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -13,6 +13,8 @@ public class ChebancaAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-chebanca-oauth2")
+                        .setAppId("test_tink")
+                        .setFinancialInstitutionId("chebanca")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);

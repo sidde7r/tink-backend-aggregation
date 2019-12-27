@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.NonNull;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -26,14 +27,15 @@ public class ChebancaConsentAuthorizationController
     private final PersistentStorage persistentStorage;
 
     public ChebancaConsentAuthorizationController(
-            SupplementalInformationHelper supplementalInformationHelper,
-            StrongAuthenticationState strongAuthenticationState,
-            PersistentStorage persistentStorage) {
+            @NonNull final SupplementalInformationHelper supplementalInformationHelper,
+            @NonNull final StrongAuthenticationState strongAuthenticationState,
+            @NonNull final PersistentStorage persistentStorage) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.strongAuthenticationState = strongAuthenticationState;
         this.persistentStorage = persistentStorage;
     }
 
+    @Override
     public ThirdPartyAppResponse<String> init() {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
@@ -53,6 +55,7 @@ public class ChebancaConsentAuthorizationController
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
+    @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         URL authorizeUrl = new URL(persistentStorage.get(StorageKeys.AUTHORIZATION_URL));
 
