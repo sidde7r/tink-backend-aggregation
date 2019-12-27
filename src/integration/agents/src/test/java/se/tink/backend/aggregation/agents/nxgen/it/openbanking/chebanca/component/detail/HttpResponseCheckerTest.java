@@ -1,46 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.detail;
 
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.HttpResponseChecker;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.UnsuccessfulApiCallException;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
 public class HttpResponseCheckerTest {
-    private final int ERROR_RESPONSE_CODE = 300;
-    private final int SUCCESSFUL_RESPONSE_CODE = 200;
 
-    @Test
+    @Test(expected = Test.None.class)
     public void shouldNotThrowIfSuccessfulResponse() {
-        Throwable thrown =
-                catchThrowable(
-                        () ->
-                                HttpResponseChecker.checkIfSuccessfulResponse(
-                                        getResponse(SUCCESSFUL_RESPONSE_CODE),
-                                        SUCCESSFUL_RESPONSE_CODE,
-                                        ""));
-
-        assertNull(thrown);
+        HttpResponseChecker.checkIfSuccessfulResponse(getResponse(200), 200, "");
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void shouldThrowIfUnsuccessfulResponse() {
-        Throwable thrown =
-                catchThrowable(
-                        () ->
-                                HttpResponseChecker.checkIfSuccessfulResponse(
-                                        getResponse(ERROR_RESPONSE_CODE),
-                                        SUCCESSFUL_RESPONSE_CODE,
-                                        "Some message."));
-
-        Assertions.assertThat(thrown)
-                .isInstanceOf(UnsuccessfulApiCallException.class)
-                .hasMessage("Some message. Error response code: " + ERROR_RESPONSE_CODE);
+        HttpResponseChecker.checkIfSuccessfulResponse(getResponse(300), 200, "");
     }
 
     private HttpResponse getResponse(int code) {

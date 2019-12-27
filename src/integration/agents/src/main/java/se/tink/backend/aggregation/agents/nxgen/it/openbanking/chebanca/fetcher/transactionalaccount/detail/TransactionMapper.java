@@ -6,7 +6,6 @@ import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.C
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.RequiredDataMissingException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -32,7 +31,7 @@ public class TransactionMapper {
                 .map(dateAsString -> ZonedDateTime.parse(dateAsString, formatter))
                 .orElseThrow(
                         () ->
-                                new RequiredDataMissingException(
+                                new IllegalStateException(
                                         "Could not parse the given transaction date"));
     }
 
@@ -41,8 +40,6 @@ public class TransactionMapper {
                 .map(TransactionEntity::getAmountTransaction)
                 .map(AmountEntity::toAmount)
                 .orElseThrow(
-                        () ->
-                                new RequiredDataMissingException(
-                                        "No transaction's amount data present"));
+                        () -> new IllegalStateException("No transaction's amount data present"));
     }
 }

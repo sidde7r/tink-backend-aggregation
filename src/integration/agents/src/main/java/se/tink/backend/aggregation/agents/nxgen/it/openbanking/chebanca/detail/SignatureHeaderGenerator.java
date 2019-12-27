@@ -1,21 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
-import lombok.NonNull;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public class SignatureHeaderGenerator {
 
     private final String applicationId;
-    private final QsealcSigner qsealcSigner;
+    private QsealcSigner qsealcSigner;
 
-    public SignatureHeaderGenerator(
-            @NonNull String applicationId, @NonNull final QsealcSigner qsealcSigner) {
-        this.applicationId = applicationId;
-        this.qsealcSigner = qsealcSigner;
+    public SignatureHeaderGenerator(String applicationId, QsealcSigner qsealcSigner) {
+        this.applicationId = requireNonNull(applicationId);
+        this.qsealcSigner = requireNonNull(qsealcSigner);
     }
 
     public String generateSignatureHeader(Map<String, Object> headers) {

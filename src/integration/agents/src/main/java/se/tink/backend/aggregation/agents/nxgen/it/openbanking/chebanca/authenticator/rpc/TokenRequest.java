@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.rpc;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.*;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
