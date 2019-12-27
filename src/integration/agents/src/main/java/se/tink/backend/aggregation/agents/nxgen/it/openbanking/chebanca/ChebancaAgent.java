@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca;
 
-import lombok.NonNull;
+import static java.util.Objects.requireNonNull;
+
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -30,10 +31,13 @@ public final class ChebancaAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public ChebancaAgent(
-            @NonNull CredentialsRequest request,
-            @NonNull AgentContext context,
-            @NonNull AgentsServiceConfiguration agentsServiceConfiguration) {
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+        requireNonNull(request);
+        requireNonNull(context);
+        requireNonNull(agentsServiceConfiguration);
         apiClient =
                 new ChebancaApiClient(
                         client,
