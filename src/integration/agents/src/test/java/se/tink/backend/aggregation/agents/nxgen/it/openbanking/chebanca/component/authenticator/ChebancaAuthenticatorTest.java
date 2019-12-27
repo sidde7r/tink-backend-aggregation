@@ -1,18 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.authenticator;
 
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.ChebancaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration.ChebancaConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.UnsuccessfulApiCallException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -25,7 +22,6 @@ public class ChebancaAuthenticatorTest {
     private final String APP_ID = "appId";
     private final String BASE_URL = "https://sandbox-api.chebanca.io";
     private final String CLIENT_STATE = "clientState";
-    private final int ERROR_RESPONSE_CODE = 404;
 
     private ChebancaAuthenticator authenticator;
 
@@ -41,19 +37,13 @@ public class ChebancaAuthenticatorTest {
         assertEquals(new URL(getExpectedLoginEndpoint()), loginURl);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void shouldThrowIfUnSuccessfulResponse() {
         // given
         init(getMockedFailedResponse());
 
         // when
-        Throwable thrown = catchThrowable(() -> authenticator.buildAuthorizeUrl(CLIENT_STATE));
-
-        Assertions.assertThat(thrown)
-                .isInstanceOf(UnsuccessfulApiCallException.class)
-                .hasMessage(
-                        "Could not perform redirect URL call to get the Login URL. Error response code: "
-                                + ERROR_RESPONSE_CODE);
+        authenticator.buildAuthorizeUrl(CLIENT_STATE);
     }
 
     private void init(HttpResponse response) {
@@ -76,7 +66,7 @@ public class ChebancaAuthenticatorTest {
 
     private HttpResponse getMockedFailedResponse() {
         HttpResponse response = mock(HttpResponse.class);
-        when(response.getStatus()).thenReturn(ERROR_RESPONSE_CODE);
+        when(response.getStatus()).thenReturn(404);
         return response;
     }
 

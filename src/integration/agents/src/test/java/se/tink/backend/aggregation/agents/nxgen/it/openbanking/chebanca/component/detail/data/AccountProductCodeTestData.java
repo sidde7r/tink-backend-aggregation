@@ -26,16 +26,16 @@ public class AccountProductCodeTestData {
     public static AccountEntity getCheckingAccountEntity(String accountProductCode) {
         return SerializationUtils.deserializeFromString(
                 "{\n"
-                        + "  \"accountId\": \"12345\",\n"
-                        + "  \"product\": {\n"
-                        + "      \"code\": \""
+                        + "                \"accountId\": \"12345\",\n"
+                        + "                \"product\": {\n"
+                        + "                    \"code\": \""
                         + accountProductCode
                         + "\",\n"
-                        + "      \"description\": \"CONTO YELLOW\"\n"
-                        + "  },\n"
-                        + "  \"currency\": \"EUR\",\n"
-                        + "  \"iban\": \"IT04G0305801604100571657883\",\n"
-                        + "  \"name\": \"CHECKING ACC\"\n"
+                        + "                    \"description\": \"CONTO YELLOW\"\n"
+                        + "                },\n"
+                        + "                \"currency\": \"EUR\",\n"
+                        + "                \"iban\": \"IT04G0305801604100571657883\",\n"
+                        + "                \"name\": \"CHECKING ACC\"\n"
                         + "            }",
                 AccountEntity.class);
     }
@@ -43,16 +43,16 @@ public class AccountProductCodeTestData {
     public static AccountEntity getSavingsAccountEntity(String accountProductCode) {
         return SerializationUtils.deserializeFromString(
                 "{\n"
-                        + "  \"accountId\": \"12345\",\n"
-                        + "  \"product\": {\n"
-                        + "      \"code\": \""
+                        + "                \"accountId\": \"12345\",\n"
+                        + "                \"product\": {\n"
+                        + "                    \"code\": \""
                         + accountProductCode
                         + "\",\n"
-                        + "      \"description\": \"CONTO DEP\"\n"
-                        + "  },\n"
-                        + "  \"currency\": \"EUR\",\n"
-                        + "  \"iban\": \"IT04G0305801604100571657883\",\n"
-                        + "  \"name\": \"SAVINGS ACC\"\n"
+                        + "                    \"description\": \"CONTO DEP\"\n"
+                        + "                },\n"
+                        + "                \"currency\": \"EUR\",\n"
+                        + "                \"iban\": \"IT04G0305801604100571657883\",\n"
+                        + "                \"name\": \"SAVINGS ACC\"\n"
                         + "            }",
                 AccountEntity.class);
     }
@@ -60,16 +60,16 @@ public class AccountProductCodeTestData {
     public static AccountEntity getCreditCardAccountEntity(String accountProductCode) {
         return SerializationUtils.deserializeFromString(
                 "{\n"
-                        + "  \"accountId\": \"12345\",\n"
-                        + "  \"product\": {\n"
-                        + "      \"code\": \""
+                        + "                \"accountId\": \"12345\",\n"
+                        + "                \"product\": {\n"
+                        + "                    \"code\": \""
                         + accountProductCode
                         + "\",\n"
-                        + "      \"description\": \"CONTO DEP\"\n"
-                        + "  },\n"
-                        + "  \"currency\": \"EUR\",\n"
-                        + "  \"iban\": \"IT04G0305801604100571657883\",\n"
-                        + "  \"name\": \"SAVINGS ACC\"\n"
+                        + "                    \"description\": \"CONTO DEP\"\n"
+                        + "                },\n"
+                        + "                \"currency\": \"EUR\",\n"
+                        + "                \"iban\": \"IT04G0305801604100571657883\",\n"
+                        + "                \"name\": \"SAVINGS ACC\"\n"
                         + "            }",
                 AccountEntity.class);
     }

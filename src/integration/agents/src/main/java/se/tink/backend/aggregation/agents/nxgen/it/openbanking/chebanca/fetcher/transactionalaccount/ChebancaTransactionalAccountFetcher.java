@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.Chebanca
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.HttpResponseChecker;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.RequiredDataMissingException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.detail.TransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AmountEntity;
@@ -148,7 +147,7 @@ public class ChebancaTransactionalAccountFetcher implements AccountFetcher<Trans
                 .map(BalancesDataEntity::getAvailableBalance)
                 .orElseThrow(
                         () ->
-                                new RequiredDataMissingException(
+                                new IllegalStateException(
                                         "No information about balance is available"));
     }
 }

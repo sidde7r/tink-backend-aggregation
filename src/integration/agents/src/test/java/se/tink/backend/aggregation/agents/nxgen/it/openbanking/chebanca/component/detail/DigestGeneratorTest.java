@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.D
 
 @RunWith(Parameterized.class)
 public class DigestGeneratorTest {
+
     private String payload;
     private String expectedDigest;
 
