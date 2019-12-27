@@ -41,8 +41,7 @@ public class ChebancaTransactionFetcher implements TransactionDatePaginator<Tran
                 response, HttpServletResponse.SC_OK, TRANSACTIONS_FETCH_FAILED);
 
         GetTransactionsResponse dataResp = response.getBody(GetTransactionsResponse.class);
-        Collection<? extends Transaction> transactions = getTinkTransactions(dataResp);
-        return PaginatorResponseImpl.create(transactions, !transactions.isEmpty());
+        return PaginatorResponseImpl.create(getTinkTransactions(dataResp));
     }
 
     private Collection<? extends Transaction> getTinkTransactions(
