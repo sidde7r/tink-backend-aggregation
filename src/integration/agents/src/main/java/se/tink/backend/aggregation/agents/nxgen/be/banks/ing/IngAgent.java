@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -27,9 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transferdestination.IngTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.filter.IngHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.session.IngSessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategy;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
@@ -47,7 +45,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
         implements RefreshTransferDestinationExecutor,
@@ -65,9 +62,8 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
     private final InvestmentRefreshController investmentRefreshController;
     private final AutoAuthenticationProgressiveController authenticator;
 
-    public IngAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
+    public IngAgent(final SubsequentGenerationAgentStrategy strategy) {
+        super(strategy);
         configureHttpClient(client);
         this.apiClient =
                 new IngApiClient(client, context.getAggregatorInfo().getAggregatorIdentifier());
