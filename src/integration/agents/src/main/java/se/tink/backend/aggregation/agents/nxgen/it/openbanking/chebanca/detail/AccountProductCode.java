@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.RequiredDataMissingException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.libraries.account.enums.AccountTypes;
 
@@ -84,7 +85,7 @@ public enum AccountProductCode {
                 .findFirst()
                 .orElseThrow(
                         () ->
-                                new IllegalArgumentException(
+                                new RequiredDataMissingException(
                                         String.format(
                                                 "No AccountProductCode that matches code: %s",
                                                 productCode)));
@@ -109,7 +110,7 @@ public enum AccountProductCode {
             AccountProductCode productCode =
                     AccountProductCode.ofCode(accountEntity.getProduct().getCode());
             return codesOfInterest.stream().anyMatch(code -> code == productCode);
-        } catch (IllegalArgumentException e) {
+        } catch (RequiredDataMissingException e) {
             return false;
         }
     }

@@ -38,8 +38,8 @@ public final class ChebancaConstants {
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String AUTHENTICATION_ERROR = "Authentication error.";
         public static final String TRANSACTIONS_FETCH_FAILED = "Could not fetch transactions.";
-        public static final String CONSENT_CREATION_FAILED = "Could not create consent.";
         public static final String GET_CUSTOMER_ID_FAILED = "Could not get customer id.";
+        public static final String CONSENT_CREATION_FAILED = "Could not create consent.";
         public static final String CONSENT_AUTHORIZATION_FAILED = "Could not authorize consent.";
         public static final String CONSENT_CONFIRMATION_FAILED = "Could not confirm consent.";
         public static final String ACCOUNTS_FETCH_FAILED = "Could not fetch accounts.";
