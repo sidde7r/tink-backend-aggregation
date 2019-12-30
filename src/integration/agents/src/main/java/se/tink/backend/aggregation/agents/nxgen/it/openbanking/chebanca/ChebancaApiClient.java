@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import com.google.common.base.Strings;
 import java.util.Date;
+import lombok.NonNull;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.IdTags;
@@ -39,19 +40,18 @@ public class ChebancaApiClient {
     private ChebancaRequestBuilder chebancaRequestBuilder;
 
     public ChebancaApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            StrongAuthenticationState strongAuthenticationState,
-            ChebancaConfiguration chebancaConfig,
-            final AgentsServiceConfiguration configuration,
-            EidasIdentity eidasIdentity) {
+            @NonNull final TinkHttpClient client,
+            @NonNull final PersistentStorage persistentStorage,
+            @NonNull final StrongAuthenticationState strongAuthenticationState,
+            @NonNull final ChebancaConfiguration chebancaConfig,
+            @NonNull final AgentsServiceConfiguration configuration,
+            @NonNull final EidasIdentity eidasIdentity) {
 
-        this.client = requireNonNull(client);
-        this.persistentStorage = requireNonNull(persistentStorage);
-        this.strongAuthenticationState = requireNonNull(strongAuthenticationState);
+        this.client = client;
+        this.persistentStorage = persistentStorage;
+        this.strongAuthenticationState = strongAuthenticationState;
         this.chebancaConfig = requireProperConfig(chebancaConfig);
-        this.config = requireNonNull(configuration);
-        requireNonNull(eidasIdentity);
+        this.config = configuration;
         this.chebancaRequestBuilder =
                 createChebancaRequestBuilder(client, chebancaConfig, eidasIdentity);
     }

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.detail;
 
-import static java.util.Objects.requireNonNull;
-
+import lombok.NonNull;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -10,10 +9,11 @@ public class AuthorizationURLBuilder {
     private final String redirectUrl;
     private final String state;
 
-    public AuthorizationURLBuilder(String clientId, String redirectUrl, String state) {
-        this.clientId = requireNonNull(clientId);
-        this.redirectUrl = requireNonNull(redirectUrl);
-        this.state = requireNonNull(state);
+    public AuthorizationURLBuilder(
+            @NonNull String clientId, @NonNull String redirectUrl, @NonNull String state) {
+        this.clientId = clientId;
+        this.redirectUrl = redirectUrl;
+        this.state = state;
     }
 
     public URL buildAuthorizationURL() {

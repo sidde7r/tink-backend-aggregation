@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator;
 
-import static java.util.Objects.requireNonNull;
 import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.ErrorMessages.GET_TOKEN_FAILED;
 import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.ErrorMessages.LOGIN_REDIRECT_FAILED;
 
 import javax.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.FormValues;
@@ -24,15 +24,14 @@ public class ChebancaAuthenticator implements OAuth2Authenticator {
 
     private final ChebancaApiClient apiClient;
     private final ChebancaConfiguration configuration;
-    private AuthorizationURLBuilder authorizationUrlBuilder;
+    private final AuthorizationURLBuilder authorizationUrlBuilder;
 
     public ChebancaAuthenticator(
-            ChebancaApiClient apiClient,
-            ChebancaConfiguration configuration,
-            StrongAuthenticationState strongAuthenticationState) {
-        this.apiClient = requireNonNull(apiClient);
-        this.configuration = requireNonNull(configuration);
-        requireNonNull(strongAuthenticationState);
+            @NonNull final ChebancaApiClient apiClient,
+            @NonNull final ChebancaConfiguration configuration,
+            @NonNull final StrongAuthenticationState strongAuthenticationState) {
+        this.apiClient = apiClient;
+        this.configuration = configuration;
         this.authorizationUrlBuilder =
                 createAuthorizationUrlBuilder(strongAuthenticationState, configuration);
     }
