@@ -94,10 +94,12 @@ public abstract class AgentContext implements CompositeAgentContext {
         this.agentConfigurationController = agentConfigurationController;
     }
 
+    @Override
     public LogMasker getLogMasker() {
         return logMasker;
     }
 
+    @Override
     public void setLogMasker(LogMasker logMasker) {
         this.logMasker = logMasker;
     }

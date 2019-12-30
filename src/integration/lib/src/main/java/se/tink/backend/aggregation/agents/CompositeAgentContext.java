@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents;
 
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
+import se.tink.backend.aggregation.agents.contexts.LogMaskable;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
@@ -16,7 +17,8 @@ public interface CompositeAgentContext
                 ProviderSessionCacheContext,
                 SystemUpdater,
                 AgentAggregatorIdentifier,
-                MetricContext {
+                MetricContext,
+                LogMaskable {
 
     void clear();
 }
