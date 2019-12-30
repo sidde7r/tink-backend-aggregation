@@ -11,10 +11,10 @@ import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.ErrorCodes;
@@ -44,13 +44,15 @@ public class NordeaExecutorHelper {
     // TODO extend BankIdSignHelper
     private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
             new NordeaAccountIdentifierFormatter();
-    private final AgentContext context;
+    private final SupplementalRequester supplementalRequester;
     private final Catalog catalog;
     private final NordeaSEApiClient apiClient;
 
     public NordeaExecutorHelper(
-            AgentContext context, Catalog catalog, NordeaSEApiClient apiClient) {
-        this.context = context;
+            SupplementalRequester supplementalRequester,
+            Catalog catalog,
+            NordeaSEApiClient apiClient) {
+        this.supplementalRequester = supplementalRequester;
         this.catalog = catalog;
         this.apiClient = apiClient;
     }
@@ -184,7 +186,7 @@ public class NordeaExecutorHelper {
     public void sign(SignatureRequest signatureRequest, String transferId) {
         SignatureResponse signatureResponse = apiClient.signTransfer(signatureRequest);
         if (signatureResponse.getSignatureState().equals(BankIdStatus.WAITING)) {
-            context.openBankId(null, false);
+            supplementalRequester.openBankId(null, false);
             pollSignTransfer(transferId, signatureResponse.getOrderReference());
         } else {
             throw ErrorResponse.paymentFailedError(null);
