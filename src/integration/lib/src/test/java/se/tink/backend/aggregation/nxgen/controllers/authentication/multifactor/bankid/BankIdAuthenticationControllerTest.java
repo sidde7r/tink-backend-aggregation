@@ -9,8 +9,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -26,12 +26,12 @@ public class BankIdAuthenticationControllerTest {
     private final Credentials credentials = new Credentials();
     private BankIdAuthenticationController authenticationController;
     private BankIdAuthenticator authenticator;
-    private AgentContext context;
+    private SupplementalRequester supplementalRequester;
     private PersistentStorage persistentStorage;
 
     @Before
     public void setup() throws AuthenticationException, AuthorizationException {
-        context = Mockito.mock(AgentContext.class);
+        supplementalRequester = Mockito.mock(SupplementalRequester.class);
         authenticator = Mockito.mock(BankIdAuthenticator.class);
         Mockito.when(authenticator.init(Mockito.anyString())).thenReturn(REFERENCE);
         Mockito.when(authenticator.collect(REFERENCE)).thenReturn(BankIdStatus.DONE);
@@ -39,14 +39,15 @@ public class BankIdAuthenticationControllerTest {
         persistentStorage = new PersistentStorage();
         authenticationController =
                 new BankIdAuthenticationController(
-                        context, authenticator, persistentStorage, credentials);
+                        supplementalRequester, authenticator, persistentStorage, credentials);
 
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationController(context, null, persistentStorage, credentials);
+        new BankIdAuthenticationController(
+                supplementalRequester, null, persistentStorage, credentials);
     }
 
     @Test(expected = NullPointerException.class)
@@ -97,9 +98,9 @@ public class BankIdAuthenticationControllerTest {
         credentials.setField(Field.Key.USERNAME, USERNAME);
         authenticationController.authenticate(credentials);
 
-        InOrder order = Mockito.inOrder(authenticator, context);
+        InOrder order = Mockito.inOrder(authenticator, supplementalRequester);
         order.verify(authenticator).init(USERNAME);
-        order.verify(context).openBankId(null, false);
+        order.verify(supplementalRequester).openBankId(null, false);
         order.verify(authenticator).collect(REFERENCE);
     }
 
