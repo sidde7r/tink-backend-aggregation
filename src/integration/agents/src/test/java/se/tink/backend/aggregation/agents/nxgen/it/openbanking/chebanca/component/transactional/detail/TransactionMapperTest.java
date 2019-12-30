@@ -1,81 +1,121 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.transactional.detail;
 
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.transactional.data.TransactionTestData;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.RequiredDataMissingException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.detail.TransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@RunWith(Parameterized.class)
 public class TransactionMapperTest {
     private final String AMOUNT = "50.000";
+    private final String AMOUNT_NONE = null;
     private final String CURRENCY = "EUR";
     private final String DESCRIPTION = "ADDEBITO BONIFICO";
-    private final String DATE = "20181016";
-    private final String TIME = "T00:00:00";
+    private final String ACCOUNTING_DATE = "20181016";
+    private final String LIQUIDATION_DATE = "20181015";
+    private final String DATE_NONE = null;
 
-    private boolean isPendingTransaction;
-    private boolean expectedIsPendingTransaction;
+    @Test
+    public void shouldMapPendingTransactionCorrectly() {
+        // given
+        String expectedAccountingDate = DATE_NONE;
+        String expectedLiquidationDate = LIQUIDATION_DATE;
+        TransactionEntity transactionEntity =
+                TransactionTestData.getTransactionEntity(
+                        expectedAccountingDate, expectedLiquidationDate);
 
-    public TransactionMapperTest(
-            boolean isPendingTransaction, boolean expectedIsPendingTransaction) {
-        this.isPendingTransaction = isPendingTransaction;
-        this.expectedIsPendingTransaction = expectedIsPendingTransaction;
+        // when
+        Transaction transaction = TransactionMapper.toTinkTransaction(transactionEntity, true);
+
+        // then
+        assertEquals(DESCRIPTION, transaction.getDescription());
+        assertEquals(ExactCurrencyAmount.of(AMOUNT, CURRENCY), transaction.getExactAmount());
+        assertEquals(expectedLiquidationDate, dateToString(transaction.getDate()));
+        assertTrue(transaction.isPending());
     }
 
     @Test
-    public void testTransactionMappedCorrectly() {
-        Transaction transaction =
-                TransactionMapper.toTinkTransaction(getTransactionEntity(), isPendingTransaction);
+    public void shouldMapAccountingTransactionCorrectly() {
+        // given
+        String expectedAccountingDate = ACCOUNTING_DATE;
+        String expectedLiquidationDate = LIQUIDATION_DATE;
+        TransactionEntity transactionEntity =
+                TransactionTestData.getTransactionEntity(
+                        expectedAccountingDate, expectedLiquidationDate);
+
+        // when
+        Transaction transaction = TransactionMapper.toTinkTransaction(transactionEntity, false);
+
+        // then
         assertEquals(DESCRIPTION, transaction.getDescription());
         assertEquals(ExactCurrencyAmount.of(AMOUNT, CURRENCY), transaction.getExactAmount());
-        assertEquals(DATE, dateToString(transaction.getDate()));
-        assertEquals(expectedIsPendingTransaction, transaction.isPending());
+        assertEquals(expectedAccountingDate, dateToString(transaction.getDate()));
+        assertFalse(transaction.isPending());
+    }
+
+    @Test
+    public void shouldThrowIfPendingTransactionIsMissingLiquidationDate() {
+        // given
+        String accountingDate = ACCOUNTING_DATE;
+        String liquidationDate = DATE_NONE;
+        TransactionEntity transactionEntity =
+                TransactionTestData.getTransactionEntity(accountingDate, liquidationDate);
+
+        // when
+        Throwable thrown =
+                catchThrowable(() -> TransactionMapper.toTinkTransaction(transactionEntity, true));
+
+        // then
+        Assertions.assertThat(thrown)
+                .isInstanceOf(RequiredDataMissingException.class)
+                .hasMessage("Could not parse the given transaction date");
+    }
+
+    @Test
+    public void shouldThrowIfAccountingTransactionIsMissingLiquidationDate() {
+        // given
+        String accountingDate = ACCOUNTING_DATE;
+        String liquidationDate = DATE_NONE;
+        TransactionEntity transactionEntity =
+                TransactionTestData.getTransactionEntity(accountingDate, liquidationDate);
+
+        // when
+        Throwable thrown =
+                catchThrowable(() -> TransactionMapper.toTinkTransaction(transactionEntity, false));
+
+        // then
+        assertNull(thrown);
+    }
+
+    @Test
+    public void shouldThrowIfAmountIsMissing() {
+        // given
+        TransactionEntity transactionEntity =
+                TransactionTestData.getTransactionEntity(
+                        ACCOUNTING_DATE, LIQUIDATION_DATE, AMOUNT_NONE);
+
+        // when
+        Throwable thrown =
+                catchThrowable(() -> TransactionMapper.toTinkTransaction(transactionEntity, false));
+
+        // then
+        Assertions.assertThat(thrown)
+                .isInstanceOf(RequiredDataMissingException.class)
+                .hasMessage("No transaction's amount data present");
     }
 
     private String dateToString(Date date) {
         return new SimpleDateFormat("yyyyMMdd").format(date);
-    }
-
-    private TransactionEntity getTransactionEntity() {
-        return SerializationUtils.deserializeFromString(
-                "{\n"
-                        + "\"shortDescription\": \""
-                        + DESCRIPTION
-                        + "\",\n"
-                        + "\"extendedDescription\": \"ADDEBITO BONIFICO BLA BLA\",\n"
-                        + "\"amountTransaction\": {\n"
-                        + "\"amount\": \""
-                        + AMOUNT
-                        + "\",\n"
-                        + "\"currency\": \""
-                        + CURRENCY
-                        + "\"\n"
-                        + "},\n"
-                        + "\"dateAccountingCurrency\": \""
-                        + DATE
-                        + TIME
-                        + "\",\n"
-                        + "\"dateLiquidationValue\": \"\",\n"
-                        + "\"codeDescription\": \"GRAC01\"\n"
-                        + "}",
-                TransactionEntity.class);
-    }
-
-    @Parameterized.Parameters(name = "{index}: Test with isPendingTransaction={0}, result: {1}")
-    public static Iterable<Object[]> data() {
-        return Arrays.asList(
-                new Object[][] {
-                    {true, true},
-                    {false, false}
-                });
     }
 }

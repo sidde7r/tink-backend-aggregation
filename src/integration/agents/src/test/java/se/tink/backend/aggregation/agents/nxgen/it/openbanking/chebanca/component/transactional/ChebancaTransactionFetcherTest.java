@@ -37,7 +37,7 @@ public class ChebancaTransactionFetcherTest {
         PaginatorResponse transactions = fetcher.getTransactionsFor(account, SOME_DATE, SOME_DATE);
 
         // then
-        assertEquals(10, transactions.getTinkTransactions().size());
+        assertEquals(4, transactions.getTinkTransactions().size());
     }
 
     @Test

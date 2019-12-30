@@ -28,7 +28,7 @@ public class TransactionalAccountMapperTest {
     private final String SAVINGS_CURRENCY = "EUR";
 
     @Test
-    public void testCheckingAccountMappedCorrectly() {
+    public void shouldMapCheckingAccountCorrectly() {
         // given
         AccountEntity accEntity = getCheckingAccountEntity();
         AmountEntity amountEntity = getCheckingAmountEntity();
@@ -50,7 +50,7 @@ public class TransactionalAccountMapperTest {
     }
 
     @Test
-    public void testSavingsAccountMappedCorrectly() {
+    public void shouldMapSavingsAccountCorrectly() {
         // given
         AccountEntity accEntity = getSavingsAccountEntity();
         AmountEntity amountEntity = getSavingsAmountEntity();

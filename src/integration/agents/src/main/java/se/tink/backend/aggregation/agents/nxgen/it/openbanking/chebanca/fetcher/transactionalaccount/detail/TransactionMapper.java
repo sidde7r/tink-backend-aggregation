@@ -21,14 +21,21 @@ public class TransactionMapper {
         return Transaction.builder()
                 .setPending(isPending)
                 .setAmount(getAmount(transactionEntity))
-                .setDateTime(getTransactionDateASString(transactionEntity))
+                .setDateTime(getTransactionDateAsString(transactionEntity, isPending))
                 .setDescription(transactionEntity.getShortDescription())
                 .build();
     }
 
-    private static ZonedDateTime getTransactionDateASString(TransactionEntity transactionEntity) {
-        return Optional.of(transactionEntity)
-                .map(TransactionEntity::getDateAccountingCurrency)
+    private static ZonedDateTime getTransactionDateAsString(
+            TransactionEntity transactionEntity, boolean isPending) {
+        final String dateToParse;
+        if (isPending) {
+            dateToParse = transactionEntity.getDateLiquidationValue();
+        } else {
+            dateToParse = transactionEntity.getDateAccountingCurrency();
+        }
+
+        return Optional.ofNullable(dateToParse)
                 .map(dateAsString -> ZonedDateTime.parse(dateAsString, formatter))
                 .orElseThrow(
                         () ->
