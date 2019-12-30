@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents;
 
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.AgentConfigurationControllerContext;
+import se.tink.backend.aggregation.agents.contexts.EidasContext;
 import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
 import se.tink.backend.aggregation.agents.contexts.LogMaskable;
 import se.tink.backend.aggregation.agents.contexts.LogOutputStreamable;
@@ -22,7 +23,8 @@ public interface CompositeAgentContext
                 MetricContext,
                 LogMaskable,
                 AgentConfigurationControllerContext,
-                LogOutputStreamable {
+                LogOutputStreamable,
+                EidasContext {
 
     void clear();
 }

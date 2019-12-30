@@ -20,18 +20,22 @@ public abstract class AgentContext implements CompositeAgentContext {
     private AgentConfigurationControllerable agentConfigurationController;
     private LogMasker logMasker;
 
+    @Override
     public String getAppId() {
         return appId;
     }
 
+    @Override
     public void setAppId(String appId) {
         this.appId = appId;
     }
 
+    @Override
     public String getClusterId() {
         return clusterId;
     }
 
+    @Override
     public void setClusterId(String clusterId) {
         this.clusterId = clusterId;
     }
