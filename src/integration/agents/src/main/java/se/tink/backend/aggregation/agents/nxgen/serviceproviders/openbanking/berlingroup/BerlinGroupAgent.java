@@ -28,7 +28,15 @@ public abstract class BerlinGroupAgent<
             final CredentialsRequest request,
             final AgentContext context,
             final AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+        this(request, context, agentsServiceConfiguration, false);
+    }
+
+    public BerlinGroupAgent(
+            final CredentialsRequest request,
+            final AgentContext context,
+            final AgentsServiceConfiguration agentsServiceConfiguration,
+            boolean useNextGenClient) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), useNextGenClient);
         clientName = request.getProvider().getPayload();
     }
 
