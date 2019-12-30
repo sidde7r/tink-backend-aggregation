@@ -19,14 +19,14 @@ public class SibsUtilsTest {
             "qBQR5yVgrJPoj3VyEXRx95BshI3gCDrmClp+DxvLvHU=";
 
     private static final String EXPECTED_REAL_SCENARIO_PAYMENT_DIGEST =
-            "eWyqmwv30yxXMtSvfbbJhDkvaSLd+m37lh0Jz12tcDs=";
+            "qSTl94DOSgayGHphcOpdcSpteU/ZRyEckNvsm9k7LgY=";
 
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern(SibsConstants.Formats.CONSENT_BODY_DATE_FORMAT);
 
     /*
     Log from real example:
-        Digest: SHA-256=eWyqmwv30yxXMtSvfbbJhDkvaSLd+m37lh0Jz12tcDs=
+        Digest: SHA-256=qSTl94DOSgayGHphcOpdcSpteU/ZRyEckNvsm9k7LgY=
     { "debtorAccount":{ "iban":"PT50001800033415092002025" }, "instructedAmount":{ "currency":"EUR", "content":"1.00" }, "creditorAccount":{ "iban":"PT50001800034257091102046" }, "creditorName":"José Neves" }
      */
     @Test
