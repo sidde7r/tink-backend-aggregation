@@ -14,6 +14,7 @@ public final class BnpParibasBaseConstants {
         public static final String ACCOUNTS_PATH = "/accounts";
         public static final String BALANCES_PATH = "/accounts/{accountResourceId}/balances";
         public static final String TRANSACTIONS_PATH = "/accounts/{accountResourceId}/transactions";
+        public static final String FETCH_USER_IDENTITY_DATA = "/end-user-identity";
     }
 
     public class QueryKeys {

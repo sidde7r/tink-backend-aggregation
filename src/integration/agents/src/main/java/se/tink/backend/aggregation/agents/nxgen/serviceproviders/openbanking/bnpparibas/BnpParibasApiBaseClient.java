@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.BalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -158,5 +159,15 @@ public class BnpParibasApiBaseClient {
                 .queryParam(BnpParibasBaseConstants.QueryKeys.DATE_FROM, sdf.format(dateFrom))
                 .queryParam(BnpParibasBaseConstants.QueryKeys.DATE_TO, sdf.format(dateTo))
                 .get(TransactionsResponse.class);
+    }
+
+    public EndUserIdentityResponse getEndUserIdentity(String signature, String reqId) {
+        return createRequestInSession(
+                        new URL(
+                                bnpParibasConfiguration.getBaseUrl()
+                                        + BnpParibasBaseConstants.Urls.FETCH_USER_IDENTITY_DATA),
+                        signature,
+                        reqId)
+                .get(EndUserIdentityResponse.class);
     }
 }

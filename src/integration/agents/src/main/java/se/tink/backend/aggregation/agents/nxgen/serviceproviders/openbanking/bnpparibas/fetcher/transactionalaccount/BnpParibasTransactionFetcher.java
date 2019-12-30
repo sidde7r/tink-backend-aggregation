@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasApiBaseClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -17,13 +17,17 @@ public class BnpParibasTransactionFetcher
 
     private final BnpParibasApiBaseClient apiClient;
     private final SessionStorage sessionStorage;
+    private final BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider;
     private EidasProxyConfiguration eidasProxyConfiguration;
     private EidasIdentity eidasIdentity;
 
     public BnpParibasTransactionFetcher(
-            BnpParibasApiBaseClient apiClient, SessionStorage sessionStorage) {
+            BnpParibasApiBaseClient apiClient,
+            SessionStorage sessionStorage,
+            BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.bnpParibasSignatureHeaderProvider = bnpParibasSignatureHeaderProvider;
     }
 
     public void setEidasProxyConfiguration(
@@ -37,7 +41,7 @@ public class BnpParibasTransactionFetcher
             TransactionalAccount account, Date fromDate, Date toDate) {
         String reqId = UUID.randomUUID().toString();
         String signature =
-                BnpParibasUtils.buildSignatureHeader(
+                bnpParibasSignatureHeaderProvider.buildSignatureHeader(
                         eidasProxyConfiguration,
                         eidasIdentity,
                         sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN),
