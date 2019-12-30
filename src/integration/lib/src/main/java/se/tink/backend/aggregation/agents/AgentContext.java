@@ -36,6 +36,7 @@ public abstract class AgentContext implements CompositeAgentContext {
         this.clusterId = clusterId;
     }
 
+    @Override
     public ByteArrayOutputStream getLogOutputStream() {
         return logOutputStream;
     }
