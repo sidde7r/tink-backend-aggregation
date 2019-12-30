@@ -31,6 +31,7 @@ public final class CreditAgricoleBaseConstants {
                 "/dsp2/v1/payment-requests/{paymentRequestResourceId}";
         public static final String CREATE_PAYMENT_REQUEST = "/dsp2/v1/payment-requests/";
         public static final String TOKEN = "/authentication/v1/openid/token";
+        public static final String FETCH_USER_IDENTITY_DATA = "/dsp2/v1/end-user-identity";
     }
 
     public static class StorageKeys {
