@@ -13,13 +13,11 @@ public class CredentialsSignicatBankIdAuthenticationHandler implements SignicatB
             new AggregationLogger(CredentialsSignicatBankIdAuthenticationHandler.class);
 
     private final Credentials credentials;
-    private final AgentContext context;
     private final SupplementalRequester supplementalRequester;
 
     public CredentialsSignicatBankIdAuthenticationHandler(
             Credentials credentials, AgentContext context) {
         this.credentials = credentials;
-        this.context = context;
         this.supplementalRequester = context;
     }
 
