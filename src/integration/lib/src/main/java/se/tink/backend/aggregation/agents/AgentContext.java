@@ -73,14 +73,17 @@ public abstract class AgentContext implements CompositeAgentContext {
         isWaitingOnConnectorTransactions = waitingOnConnectorTransactions;
     }
 
+    @Override
     public Map<String, Integer> getTransactionCountByEnabledAccount() {
         return transactionCountByEnabledAccount;
     }
 
+    @Override
     public MetricRegistry getMetricRegistry() {
         return metricRegistry;
     }
 
+    @Override
     public void setMetricRegistry(MetricRegistry metricRegistry) {
         this.metricRegistry = metricRegistry;
     }
