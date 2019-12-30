@@ -8,7 +8,6 @@ import java.util.function.Function;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -37,7 +36,6 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SwedbankTransferHelper {
 
-    private final AgentContext context;
     private final SupplementalRequester supplementalRequester;
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -46,13 +44,12 @@ public class SwedbankTransferHelper {
     private final boolean isBankId;
 
     public SwedbankTransferHelper(
-            AgentContext context,
+            SupplementalRequester supplementalRequester,
             Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper,
             SwedbankDefaultApiClient apiClient,
             boolean isBankId) {
-        this.context = context;
-        this.supplementalRequester = context;
+        this.supplementalRequester = supplementalRequester;
         this.catalog = catalog;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
