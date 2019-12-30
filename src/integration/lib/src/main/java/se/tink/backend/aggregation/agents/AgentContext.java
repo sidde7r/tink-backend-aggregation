@@ -88,10 +88,12 @@ public abstract class AgentContext implements CompositeAgentContext {
         this.metricRegistry = metricRegistry;
     }
 
+    @Override
     public AgentConfigurationControllerable getAgentConfigurationController() {
         return agentConfigurationController;
     }
 
+    @Override
     public void setAgentConfigurationController(
             AgentConfigurationControllerable agentConfigurationController) {
         this.agentConfigurationController = agentConfigurationController;
