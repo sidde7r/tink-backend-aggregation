@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount;
 
-import static java.util.Objects.requireNonNull;
 import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.ErrorMessages.ACCOUNTS_FETCH_FAILED;
 import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.ErrorMessages.BALANCES_FETCH_FAILED;
 import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.ErrorMessages.CONSENT_AUTHORIZATION_FAILED;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -41,19 +41,19 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
 public class ChebancaTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
-
     private final ChebancaApiClient apiClient;
     private final ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController;
     private final Credentials credentials;
 
     public ChebancaTransactionalAccountFetcher(
-            ChebancaApiClient apiClient,
-            ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController,
-            Credentials credentials) {
-        this.apiClient = requireNonNull(apiClient);
-        this.thirdPartyAppAuthenticationController =
-                requireNonNull(thirdPartyAppAuthenticationController);
-        this.credentials = requireNonNull(credentials);
+            @NonNull final ChebancaApiClient apiClient,
+            @NonNull
+                    final ThirdPartyAppAuthenticationController
+                            thirdPartyAppAuthenticationController,
+            @NonNull final Credentials credentials) {
+        this.apiClient = apiClient;
+        this.thirdPartyAppAuthenticationController = thirdPartyAppAuthenticationController;
+        this.credentials = credentials;
     }
 
     @Override
