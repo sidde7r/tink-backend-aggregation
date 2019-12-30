@@ -1,0 +1,76 @@
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.RefreshTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.TokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.BalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.IdentityEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+
+public class BoursoramaApiClient {
+
+    private final TinkHttpClient client;
+    private BoursoramaConfiguration configuration;
+
+    public BoursoramaApiClient(TinkHttpClient client) {
+        this.client = client;
+    }
+
+    public void setConfiguration(BoursoramaConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
+    public TokenResponse exchangeAuthorizationCode(TokenRequest tokenRequest)
+            throws JsonProcessingException {
+        String requestBody = serializeRequestBody(tokenRequest);
+
+        return client.request(configuration.getBaseUrl() + Urls.CONSUME_AUTH_CODE)
+                .body(requestBody, MediaType.APPLICATION_JSON)
+                .post(TokenResponse.class);
+    }
+
+    public TokenResponse refreshToken(RefreshTokenRequest tokenRequest) {
+        return client.request(configuration.getBaseUrl() + Urls.REFRESH_TOKEN)
+                .body(tokenRequest, MediaType.APPLICATION_JSON)
+                .post(TokenResponse.class);
+    }
+
+    public IdentityEntity fetchIdentityData(String userHash) {
+        return baseAISRequest(Urls.IDENTITY_TEMPLATE, userHash).get(IdentityEntity.class);
+    }
+
+    public AccountsResponse fetchAccounts(String userHash) {
+        return baseAISRequest(Urls.ACCOUNTS_TEMPLATE, userHash).get(AccountsResponse.class);
+    }
+
+    public BalanceResponse fetchBalances(String userHash, String resourceId) {
+        return baseAISRequest(Urls.BALANCES_TEMPLATE + resourceId, userHash)
+                .get(BalanceResponse.class);
+    }
+
+    public TransactionsResponse fetchTransactions(String userHash, String resourceId) {
+        return baseAISRequest(Urls.TRANSACTIONS_TEMPLATE + resourceId, userHash)
+                .get(TransactionsResponse.class);
+    }
+
+    private RequestBuilder baseAISRequest(String urlTemplate, String userHash) {
+        String url = String.format(urlTemplate, userHash);
+        return client.request(configuration.getBaseUrl() + url).type(MediaType.APPLICATION_JSON);
+    }
+
+    private String serializeRequestBody(Object body) {
+        try {
+            return new ObjectMapper().writeValueAsString(body);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+}
