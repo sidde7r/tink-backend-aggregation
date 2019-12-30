@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 import static org.mockito.Mockito.spy;
 
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.framework.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaNemIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.rpc.filter.NordeaDkFilter;
@@ -19,7 +19,7 @@ public class NordeaTestBase {
     protected NemidPasswordAuthenticationControllerV1 authenticator;
     protected NordeaDkApiClient bankClient;
     protected Credentials credentials;
-    protected AgentContext context;
+    protected CompositeAgentContext context;
     protected TinkHttpClient tinkHttpClient;
 
     protected void setUpTest() throws Exception {
