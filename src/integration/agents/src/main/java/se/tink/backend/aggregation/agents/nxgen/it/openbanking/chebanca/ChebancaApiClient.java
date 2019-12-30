@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca;
 
 import static java.util.Objects.requireNonNull;
 
+import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.HeaderKeys;
@@ -48,7 +49,7 @@ public class ChebancaApiClient {
         this.client = requireNonNull(client);
         this.persistentStorage = requireNonNull(persistentStorage);
         this.strongAuthenticationState = requireNonNull(strongAuthenticationState);
-        this.chebancaConfig = requireNonNull(chebancaConfig);
+        this.chebancaConfig = requireProperConfig(chebancaConfig);
         this.config = requireNonNull(configuration);
         requireNonNull(eidasIdentity);
         this.chebancaRequestBuilder =
@@ -140,6 +141,17 @@ public class ChebancaApiClient {
 
     public void save(String key, Object value) {
         persistentStorage.put(key, value);
+    }
+
+    private ChebancaConfiguration requireProperConfig(ChebancaConfiguration config) {
+        requireNonNull(config);
+        requireNonNull(Strings.emptyToNull(config.getClientId()));
+        requireNonNull(Strings.emptyToNull(config.getClientSecret()));
+        requireNonNull(Strings.emptyToNull(config.getRedirectUrl()));
+        requireNonNull(Strings.emptyToNull(config.getCertificateId()));
+        requireNonNull(Strings.emptyToNull(config.getApplicationId()));
+        requireNonNull(Strings.emptyToNull(config.getBaseUrl()));
+        return config;
     }
 
     private ChebancaRequestBuilder createChebancaRequestBuilder(
