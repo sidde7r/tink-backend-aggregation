@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configur
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.ChebancaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.QsealcSignerProvider;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.SignatureHeaderGenerator;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.TransactionRequestURLBuilder;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.ConfirmConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.ConsentRequest;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -26,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ChebancaApiClient {
@@ -183,11 +183,7 @@ public class ChebancaApiClient {
     }
 
     private URL buildTransactionRequestUrl(String accountId, Date fromDate, Date toDate) {
-        return Urls.TRANSACTIONS
-                .parameter(IdTags.CUSTOMER_ID, persistentStorage.get(StorageKeys.CUSTOMER_ID))
-                .parameter(IdTags.PRODUCT_ID, accountId)
-                .queryParam(
-                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate));
+        return TransactionRequestURLBuilder.buildTransactionRequestUrl(
+                persistentStorage.get(StorageKeys.CUSTOMER_ID), accountId, fromDate, toDate);
     }
 }

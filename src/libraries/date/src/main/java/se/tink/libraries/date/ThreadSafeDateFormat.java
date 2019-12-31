@@ -38,6 +38,8 @@ public class ThreadSafeDateFormat {
             new ThreadSafeDateFormat("xxxx:ww"); // weekyear
     public static final ThreadSafeDateFormat FORMATTER_DAILY =
             new ThreadSafeDateFormat("yyyy-MM-dd");
+    public static final ThreadSafeDateFormat FORMATTER_DD_MM_YYYY =
+            new ThreadSafeDateFormat("dd/MM/yyyy");
     public static final ThreadSafeDateFormat FORMATTER_DOTTED_DAILY =
             new ThreadSafeDateFormat("dd.MM.yyyy");
     public static final ThreadSafeDateFormat FORMATTER_DAILY_COMPACT =
