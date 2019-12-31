@@ -17,7 +17,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
  */
 public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
     protected AgentsServiceConfiguration configuration;
-    protected final AgentContext context;
+    protected final CompositeAgentContext context;
     private final AgentAggregatorIdentifier agentAggregatorIdentifier;
     protected final SupplementalRequester supplementalRequester;
     protected final ProviderSessionCacheContext providerSessionCacheContext;

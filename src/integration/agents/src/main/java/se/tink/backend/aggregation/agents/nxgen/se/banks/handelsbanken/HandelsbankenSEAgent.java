@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -145,7 +146,7 @@ public class HandelsbankenSEAgent
     protected Optional<TransferController> constructTransferController(
             HandelsbankenSEApiClient client,
             HandelsbankenSessionStorage sessionStorage,
-            AgentContext context) {
+            CompositeAgentContext context) {
 
         Catalog catalog = context.getCatalog();
         ExecutorExceptionResolver exceptionResolver = new ExecutorExceptionResolver(catalog);
