@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.TransactionsItem;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -36,9 +36,8 @@ public class FinecoBankTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-
-        if (apiClient.isEmptyBalanceConsent()) {
-            throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_BALANCES);
+        if (apiClient.isEmptyTransactionalAccountBalanceConsent()) {
+            return Collections.emptyList();
         }
 
         return this.apiClient.fetchAccounts().getAccounts().stream()
@@ -69,23 +68,20 @@ public class FinecoBankTransactionalAccountFetcher
     }
 
     private boolean isEmptyTransactionAccountConsent(TransactionalAccount transactionalAccount) {
-        List<TransactionsItem> transactionsItems =
+        List<AccountConsent> transactionsConsents =
                 persistentStorage
                         .get(
                                 StorageKeys.TRANSACTION_ACCOUNTS,
-                                new TypeReference<List<TransactionsItem>>() {})
+                                new TypeReference<List<AccountConsent>>() {})
                         .orElse(Collections.emptyList());
-        if (!transactionsItems.isEmpty()) {
-            for (TransactionsItem transactionsItem : transactionsItems) {
-                if (!Strings.isNullOrEmpty(transactionsItem.getIban())) {
-                    if (transactionsItem
-                            .getIban()
-                            .equals(transactionalAccount.getIdModule().getAccountNumber())) {
-                        return false;
-                    }
-                }
+        for (AccountConsent transactionsConsent : transactionsConsents) {
+            String iban = transactionsConsent.getIban();
+            if (!Strings.isNullOrEmpty(iban)
+                    && iban.equals(transactionalAccount.getIdModule().getAccountNumber())) {
+                return false;
             }
         }
+
         return true;
     }
 }

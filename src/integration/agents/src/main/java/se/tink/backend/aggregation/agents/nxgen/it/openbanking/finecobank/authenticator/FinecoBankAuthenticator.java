@@ -83,7 +83,7 @@ public final class FinecoBankAuthenticator
             Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
         }
 
-        finecoAuthenticator.storeAccounts();
+        finecoAuthenticator.storeConsents();
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 

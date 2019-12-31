@@ -36,4 +36,8 @@ public class ConsentAuthorizationsResponse {
     public String getFrequencyPerDay() {
         return frequencyPerDay;
     }
+
+    public void setAccess(AccessItem access) {
+        this.access = access;
+    }
 }
