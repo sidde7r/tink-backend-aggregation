@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authe
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StatusValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
@@ -47,9 +49,19 @@ public final class FinecoBankAuthenticationHelper {
         return StatusValues.VALID.equalsIgnoreCase(consentStatusResponse.getConsentStatus());
     }
 
-    public void storeAccounts() {
+    public void storeConsents() {
         AccessItem accessItem = finecoBankApiClient.getConsentAuthorizations().getAccess();
-        persistentStorage.put(StorageKeys.TRANSACTION_ACCOUNTS, accessItem.getTransactions());
-        persistentStorage.put(StorageKeys.BALANCE_ACCOUNTS, accessItem.getBalances());
+
+        if (CollectionUtils.isEmpty(accessItem.getBalancesConsents())) {
+            throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_BALANCES);
+        }
+
+        if (CollectionUtils.isEmpty(accessItem.getTransactionsConsents())) {
+            throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_TRANSACTIONS);
+        }
+
+        persistentStorage.put(StorageKeys.BALANCE_ACCOUNTS, accessItem.getBalancesConsents());
+        persistentStorage.put(
+                StorageKeys.TRANSACTION_ACCOUNTS, accessItem.getTransactionsConsents());
     }
 }

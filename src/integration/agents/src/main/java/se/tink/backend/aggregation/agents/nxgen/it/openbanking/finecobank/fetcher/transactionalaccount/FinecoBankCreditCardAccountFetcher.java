@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.TransactionsItem;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.cards.entity.CardAccountsItem;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -35,9 +35,8 @@ public class FinecoBankCreditCardAccountFetcher
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-
-        if (finecoBankApiClient.isEmptyBalanceConsent()) {
-            throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_BALANCES);
+        if (finecoBankApiClient.isEmptyCreditCardAccountBalanceConsent()) {
+            return Collections.emptyList();
         }
 
         return this.finecoBankApiClient.fetchCreditCardAccounts().getCardAccounts().stream()
@@ -71,22 +70,20 @@ public class FinecoBankCreditCardAccountFetcher
     }
 
     private boolean isEmptyCreditAccountConsent(CreditCardAccount creditCardAccount) {
-        List<TransactionsItem> transactionsItems =
+        List<AccountConsent> transactionsConsents =
                 persistentStorage
                         .get(
                                 StorageKeys.TRANSACTION_ACCOUNTS,
-                                new TypeReference<List<TransactionsItem>>() {})
+                                new TypeReference<List<AccountConsent>>() {})
                         .orElse(Collections.emptyList());
-        if (!transactionsItems.isEmpty()) {
-            for (TransactionsItem transactionsItem : transactionsItems) {
-                if (!Strings.isNullOrEmpty(transactionsItem.getMaskedPan()))
-                    if (transactionsItem
-                            .getMaskedPan()
-                            .equals(creditCardAccount.getIdModule().getAccountNumber())) {
-                        return false;
-                    }
+        for (AccountConsent transactionsConsent : transactionsConsents) {
+            String maskedPan = transactionsConsent.getMaskedPan();
+            if (!Strings.isNullOrEmpty(maskedPan)
+                    && maskedPan.equals(creditCardAccount.getIdModule().getAccountNumber())) {
+                return false;
             }
         }
+
         return true;
     }
 }

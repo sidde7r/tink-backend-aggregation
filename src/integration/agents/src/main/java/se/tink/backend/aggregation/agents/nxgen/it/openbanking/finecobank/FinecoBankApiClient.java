@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.base.Strings;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -17,7 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.Fineco
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.BalancesItem;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentAuthorizationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentStatusResponse;
@@ -40,7 +41,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public final class FinecoBankApiClient {
+public class FinecoBankApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
@@ -193,14 +194,24 @@ public final class FinecoBankApiClient {
                 .get(ConsentAuthorizationsResponse.class);
     }
 
-    public boolean isEmptyBalanceConsent() {
-        List<BalancesItem> balancesItems =
-                persistentStorage
-                        .get(
-                                StorageKeys.BALANCE_ACCOUNTS,
-                                new TypeReference<List<BalancesItem>>() {})
-                        .orElse(Collections.emptyList());
-        return balancesItems.isEmpty();
+    public boolean isEmptyTransactionalAccountBalanceConsent() {
+        List<AccountConsent> balancesItems = getBalancesConsentsFromStorage();
+
+        return balancesItems.stream()
+                .allMatch(balancesItem -> Strings.isNullOrEmpty(balancesItem.getIban()));
+    }
+
+    public boolean isEmptyCreditCardAccountBalanceConsent() {
+        List<AccountConsent> balancesItems = getBalancesConsentsFromStorage();
+
+        return balancesItems.stream()
+                .allMatch(balancesItem -> Strings.isNullOrEmpty(balancesItem.getMaskedPan()));
+    }
+
+    private List<AccountConsent> getBalancesConsentsFromStorage() {
+        return persistentStorage
+                .get(StorageKeys.BALANCE_ACCOUNTS, new TypeReference<List<AccountConsent>>() {})
+                .orElse(Collections.emptyList());
     }
 
     public CreatePaymentResponse createPayment(

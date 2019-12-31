@@ -1,24 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccessItem {
 
-    private List<BalancesItem> balances;
-    private List<TransactionsItem> transactions;
-    private List<AccountsEntity> accounts;
+    @JsonProperty("balances")
+    private List<AccountConsent> balancesConsents;
 
-    public List<BalancesItem> getBalances() {
-        return balances;
+    @JsonProperty("transactions")
+    private List<AccountConsent> transactionsConsents;
+
+    // Used in serialization
+    private AccessItem() {}
+
+    public AccessItem(
+            List<AccountConsent> balancesConsents, List<AccountConsent> transactionsConsents) {
+        this.balancesConsents = balancesConsents;
+        this.transactionsConsents = transactionsConsents;
     }
 
-    public List<TransactionsItem> getTransactions() {
-        return transactions;
+    public List<AccountConsent> getBalancesConsents() {
+        return balancesConsents;
     }
 
-    public List<AccountsEntity> getAccounts() {
-        return accounts;
+    public List<AccountConsent> getTransactionsConsents() {
+        return transactionsConsents;
     }
 }
