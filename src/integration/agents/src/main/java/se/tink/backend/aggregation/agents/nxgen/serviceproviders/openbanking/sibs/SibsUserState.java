@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SibsSignSteps;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.Consent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class SibsUserState {
@@ -30,13 +29,13 @@ public class SibsUserState {
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
-    public void removeConsent() {
+    public void resetAuthenticationState() {
         persistentStorage.remove(CONSENT_ID);
+        finishManualAuthentication();
     }
 
-    public void startManualAuthentication(final ConsentResponse consentResponse) {
-        Consent consent =
-                new Consent(consentResponse.getConsentId(), LocalDateTime.now().toString());
+    public void startManualAuthentication(String consentId) {
+        Consent consent = new Consent(consentId, LocalDateTime.now().toString());
         persistentStorage.put(SIBS_MANUAL_AUTHENTICATION_IN_PROGRESS, true);
         persistentStorage.put(CONSENT_ID, consent);
     }

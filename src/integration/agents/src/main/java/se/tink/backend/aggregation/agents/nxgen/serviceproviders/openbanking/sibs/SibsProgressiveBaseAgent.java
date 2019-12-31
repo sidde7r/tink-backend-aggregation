@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsRedirectAuthenticationProgressiveController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.SibsPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategy;
@@ -24,15 +23,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationProgressiveController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -46,8 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableB
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class SibsProgressiveBaseAgent
-        extends SubsequentGenerationAgent<ProgressiveAuthenticator>
+public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -57,7 +50,7 @@ public abstract class SibsProgressiveBaseAgent
     protected final SibsBaseApiClient apiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final ProgressiveAuthenticator authenticator;
+    private StatelessProgressiveAuthenticator authenticator;
     private final SibsUserState userState;
 
     public SibsProgressiveBaseAgent(
@@ -82,7 +75,8 @@ public abstract class SibsProgressiveBaseAgent
 
         client.setEidasProxy(configuration.getEidasProxy());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-        authenticator = constructProgressiveAuthenticator();
+        authenticator =
+                new SibsAuthenticator(apiClient, userState, credentials, strongAuthenticationState);
     }
 
     private void applyFilters(TinkHttpClient client) {
@@ -97,19 +91,6 @@ public abstract class SibsProgressiveBaseAgent
 
     private SibsConfiguration getClientConfiguration() {
         return getAgentConfigurationController().getAgentConfiguration(SibsConfiguration.class);
-    }
-
-    private ProgressiveAuthenticator constructProgressiveAuthenticator() {
-
-        final SibsRedirectAuthenticationProgressiveController controller =
-                new SibsRedirectAuthenticationProgressiveController(
-                        new SibsAuthenticator(apiClient, userState, credentials),
-                        strongAuthenticationState);
-        return new AutoAuthenticationProgressiveController(
-                request,
-                systemUpdater,
-                new ThirdPartyAppAuthenticationProgressiveController(controller),
-                controller);
     }
 
     @Override
@@ -177,18 +158,7 @@ public abstract class SibsProgressiveBaseAgent
     }
 
     @Override
-    public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
-            throws Exception {
-        return ProgressiveAuthController.of(authenticator, credentials).login(request);
-    }
-
-    @Override
-    public boolean login() {
-        throw new AssertionError("ProgressiveAuthAgent::login should always be used");
-    }
-
-    @Override
-    public ProgressiveAuthenticator getAuthenticator() {
+    public StatelessProgressiveAuthenticator getAuthenticator() {
         return authenticator;
     }
 }
