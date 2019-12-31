@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.transactional.detail;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.detail;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Optional;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.detail.TransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AmountEntity;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -28,7 +27,7 @@ public class TransactionalAccountMapperTest {
     private final String SAVINGS_CURRENCY = "EUR";
 
     @Test
-    public void testCheckingAccountMappedCorrectly() {
+    public void shouldMapCheckingAccountCorrectly() {
         // given
         AccountEntity accEntity = getCheckingAccountEntity();
         AmountEntity amountEntity = getCheckingAmountEntity();
@@ -50,7 +49,7 @@ public class TransactionalAccountMapperTest {
     }
 
     @Test
-    public void testSavingsAccountMappedCorrectly() {
+    public void shouldMapSavingsAccountCorrectly() {
         // given
         AccountEntity accEntity = getSavingsAccountEntity();
         AmountEntity amountEntity = getSavingsAmountEntity();

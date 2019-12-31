@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.detail;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public class SignatureHeaderGeneratorTest {

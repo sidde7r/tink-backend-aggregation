@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.detail.data;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.data;
 
 import java.util.Arrays;
 import java.util.List;

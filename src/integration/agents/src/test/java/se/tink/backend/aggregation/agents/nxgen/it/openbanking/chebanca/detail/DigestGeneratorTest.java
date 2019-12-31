@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.detail;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,7 +6,6 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.DigestGenerator;
 
 @RunWith(Parameterized.class)
 public class DigestGeneratorTest {

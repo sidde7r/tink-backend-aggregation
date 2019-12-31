@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
@@ -10,7 +10,6 @@ import java.net.URISyntaxException;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.ChebancaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration.ChebancaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.UnsuccessfulApiCallException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -18,14 +17,14 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class ChebancaAuthenticatorTest {
-    private final String CLIENT_ID = "client123";
-    private final String CLIENT_SECRET = "clientSecret";
-    private final String REDIRECT_URL = "http://foo.bar";
-    private final String CERTIFICATE_ID = "certificateId";
-    private final String APP_ID = "appId";
-    private final String BASE_URL = "https://sandbox-api.chebanca.io";
-    private final String CLIENT_STATE = "clientState";
-    private final int ERROR_RESPONSE_CODE = 404;
+    private static final String CLIENT_ID = "client123";
+    private static final String CLIENT_SECRET = "clientSecret";
+    private static final String REDIRECT_URL = "http://foo.bar";
+    private static final String CERTIFICATE_ID = "certificateId";
+    private static final String APP_ID = "appId";
+    private static final String BASE_URL = "https://sandbox-api.chebanca.io";
+    private static final String CLIENT_STATE = "clientState";
+    private static final int ERROR_RESPONSE_CODE = 404;
 
     private ChebancaAuthenticator authenticator;
 

@@ -1,11 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.detail;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.detail.data.AccountProductCodeTestData;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.AccountProductCode;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.data.AccountProductCodeTestData;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AccountEntity;
 
 public class AccountProductCodeTest {

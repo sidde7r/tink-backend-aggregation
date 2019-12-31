@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.transactional;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount;
 
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.junit.Assert.assertEquals;
@@ -12,9 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.transactional.data.TransactionalAccountTestData;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.UnsuccessfulApiCallException;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.data.TransactionalAccountTestData;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.ConsentAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.CustomerIdResponse;
@@ -26,8 +25,8 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
 public class ChebancaTransactionalAccountFetcherTest {
 
-    private final int ERROR_RESPONSE_CODE = 500;
-    private final int SUCCESSFUL_RESPONSE_CODE = 200;
+    private static final int ERROR_RESPONSE_CODE = 500;
+    private static final int SUCCESSFUL_RESPONSE_CODE = 200;
 
     private ChebancaApiClient apiClient;
     private ThirdPartyAppAuthenticationController authenticationController =
