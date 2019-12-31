@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -56,7 +56,7 @@ public class IkanoApiAgentTest {
 
     private IkanoApiAgent createAgent() throws Exception {
         CredentialsRequest request = mock(CredentialsRequest.class);
-        AgentContext context = mock(AgentContext.class);
+        CompositeAgentContext context = mock(CompositeAgentContext.class);
         IkanoApiClient apiClient = mock(IkanoApiClient.class);
 
         when(request.getCredentials()).thenReturn(new Credentials());

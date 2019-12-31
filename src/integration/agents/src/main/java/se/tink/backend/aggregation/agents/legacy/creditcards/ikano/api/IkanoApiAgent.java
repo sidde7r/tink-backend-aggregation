@@ -9,6 +9,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -55,7 +56,7 @@ public class IkanoApiAgent extends AbstractAgent
     /** This constructor is used for unit tests */
     public IkanoApiAgent(
             CredentialsRequest request,
-            AgentContext context,
+            CompositeAgentContext context,
             SignatureKeyPair signatureKeyPair,
             IkanoApiClient apiClient,
             int pollIntervalMS) {

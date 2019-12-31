@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.strategy;
 
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
@@ -11,10 +11,10 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class DefaultSuperAbstractAgentStrategy implements SuperAbstractAgentStrategy {
 
     private final CredentialsRequest credentialsRequest;
-    private final AgentContext context;
+    private final CompositeAgentContext context;
 
     public DefaultSuperAbstractAgentStrategy(
-            final CredentialsRequest credentialsRequest, final AgentContext context) {
+            final CredentialsRequest credentialsRequest, final CompositeAgentContext context) {
         this.credentialsRequest = credentialsRequest;
         this.context = context;
     }
@@ -25,7 +25,7 @@ public final class DefaultSuperAbstractAgentStrategy implements SuperAbstractAge
     }
 
     @Override
-    public AgentContext getContext() {
+    public CompositeAgentContext getContext() {
         return context;
     }
 

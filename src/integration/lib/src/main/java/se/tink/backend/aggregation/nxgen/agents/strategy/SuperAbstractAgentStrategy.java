@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.strategy;
 
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
@@ -20,7 +20,7 @@ public interface SuperAbstractAgentStrategy {
 
     CredentialsRequest getCredentialsRequest();
 
-    AgentContext getContext();
+    CompositeAgentContext getContext();
 
     AgentAggregatorIdentifier getAgentAggregatorIdentifier();
 
