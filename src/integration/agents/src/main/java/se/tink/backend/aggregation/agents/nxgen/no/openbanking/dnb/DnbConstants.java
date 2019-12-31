@@ -60,7 +60,8 @@ public final class DnbConstants {
     }
 
     public static class AccountTypes {
-        public static final String SAVINGS = "SPAREKONTO";
+        public static final String SAVINGS_NO = "SPAREKONTO";
+        public static final String SAVINGS_EN = "SAVING";
     }
 
     public static class QueryKeys {
