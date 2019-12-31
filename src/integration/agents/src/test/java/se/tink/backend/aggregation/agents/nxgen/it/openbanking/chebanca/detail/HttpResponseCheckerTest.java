@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.component.detail;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertNull;
@@ -7,13 +7,12 @@ import static org.mockito.Mockito.when;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.HttpResponseChecker;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.UnsuccessfulApiCallException;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
 public class HttpResponseCheckerTest {
-    private final int ERROR_RESPONSE_CODE = 300;
-    private final int SUCCESSFUL_RESPONSE_CODE = 200;
+    private static final int ERROR_RESPONSE_CODE = 300;
+    private static final int SUCCESSFUL_RESPONSE_CODE = 200;
 
     @Test
     public void shouldNotThrowIfSuccessfulResponse() {
