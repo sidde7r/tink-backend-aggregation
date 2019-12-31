@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
+import se.tink.backend.aggregation.agents.contexts.TestContext;
 
 // Temporary interface until we decompose completely
 public interface CompositeAgentContext
@@ -24,7 +25,8 @@ public interface CompositeAgentContext
                 LogMaskable,
                 AgentConfigurationControllerContext,
                 LogOutputStreamable,
-                EidasContext {
+                EidasContext,
+                TestContext {
 
     void clear();
 }

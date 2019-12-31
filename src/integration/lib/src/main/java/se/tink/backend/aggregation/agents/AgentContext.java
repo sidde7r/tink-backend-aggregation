@@ -60,10 +60,12 @@ public abstract class AgentContext implements CompositeAgentContext {
         transactionCountByEnabledAccount.clear();
     }
 
+    @Override
     public boolean isTestContext() {
         return isTestContext;
     }
 
+    @Override
     public void setTestContext(boolean isTestContext) {
         this.isTestContext = isTestContext;
     }
