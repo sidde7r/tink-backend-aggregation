@@ -38,6 +38,7 @@ public abstract class AccountIdentifier {
         SORT_CODE("sort-code"),
         PAYMENT_CARD_NUMBER("payment-card-number"),
         PAYM_PHONE_NUMBER("paym-phone-number"),
+        PT_BPI("pt-bpi"),
         BBAN("bban"),
         COUNTRY_SPECIFIC("country_specific");
 
@@ -265,6 +266,8 @@ public abstract class AccountIdentifier {
                 return new PaymentCardNumberIdentifier(id);
             case BBAN:
                 return new BbanIdentifier(id);
+            case PT_BPI:
+                return new PortugalBancoBpiIdentifier(id);
         }
         return null;
     }

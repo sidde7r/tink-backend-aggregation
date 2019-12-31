@@ -6,10 +6,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAccountsContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiTransactionalAccountsInfo;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -30,19 +30,18 @@ public class PinAuthenticationRequestTest {
     private TinkHttpClient httpClient;
     private RequestBuilder requestBuilder;
     private BancoBpiAuthContext authContext;
-    private BancoBpiTransactionalAccountsInfo transactionalAccountsInfo;
+    private BancoBpiAccountsContext transactionalAccountsInfo;
     private PinAuthenticationRequest objectUnderTest;
 
     @Before
     public void init() {
         httpClient = Mockito.mock(TinkHttpClient.class);
         requestBuilder = Mockito.mock(RequestBuilder.class);
-        transactionalAccountsInfo = Mockito.mock(BancoBpiTransactionalAccountsInfo.class);
+        transactionalAccountsInfo = Mockito.mock(BancoBpiAccountsContext.class);
         initUserState();
         BancoBpiEntityManager entityManager = Mockito.mock(BancoBpiEntityManager.class);
         Mockito.when(entityManager.getAuthContext()).thenReturn(authContext);
-        Mockito.when(entityManager.getTransactionalAccounts())
-                .thenReturn(transactionalAccountsInfo);
+        Mockito.when(entityManager.getAccountsContext()).thenReturn(transactionalAccountsInfo);
         objectUnderTest = new PinAuthenticationRequest(entityManager);
     }
 

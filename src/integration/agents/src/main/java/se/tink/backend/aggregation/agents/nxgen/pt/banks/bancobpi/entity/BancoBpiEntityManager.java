@@ -1,9 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi;
+package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity;
 
 import com.google.gson.Gson;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiTransactionalAccountsInfo;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -12,12 +10,14 @@ public class BancoBpiEntityManager {
     private static final String PERSISTENCE_STORAGE_KEY = "BancoBpiUserState";
     private static final String PERSISTENCE_ACCOUNT_TRANSACTIONS_KEY =
             "BancoBpiTransactionalAccounts";
+    private static final String PERSISTENCE_PRODUCTS_DATA_KEY = "BancoBpiProductsData";
 
     private static final Gson gson = new Gson();
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private BancoBpiAuthContext authContext;
-    private BancoBpiTransactionalAccountsInfo transactionalAccounts;
+    private BancoBpiAccountsContext transactionalAccounts;
+    private BancoBpiProductsData productsData;
 
     public BancoBpiEntityManager(
             PersistentStorage persistentStorage, SessionStorage sessionStorage) {
@@ -38,30 +38,56 @@ public class BancoBpiEntityManager {
                 .orElse(new BancoBpiAuthContext());
     }
 
-    public BancoBpiTransactionalAccountsInfo getTransactionalAccounts() {
+    public BancoBpiAccountsContext getAccountsContext() {
         if (transactionalAccounts == null) {
             transactionalAccounts = loadTransactionalAccounts();
         }
         return transactionalAccounts;
     }
 
-    private BancoBpiTransactionalAccountsInfo loadTransactionalAccounts() {
+    public Optional<BancoBpiProductsData> getProductsData() {
+        if (productsData == null) {
+            productsData = loadProductsData();
+        }
+        return Optional.ofNullable(productsData);
+    }
+
+    public void setProductsData(BancoBpiProductsData productsData) {
+        this.productsData = productsData;
+    }
+
+    private BancoBpiAccountsContext loadTransactionalAccounts() {
         return Optional.ofNullable(sessionStorage.get(PERSISTENCE_ACCOUNT_TRANSACTIONS_KEY))
-                .map(obj -> gson.fromJson(obj, BancoBpiTransactionalAccountsInfo.class))
-                .orElse(new BancoBpiTransactionalAccountsInfo());
+                .map(obj -> gson.fromJson(obj, BancoBpiAccountsContext.class))
+                .orElseGet(() -> new BancoBpiAccountsContext());
+    }
+
+    private BancoBpiProductsData loadProductsData() {
+        return Optional.ofNullable(sessionStorage.get(PERSISTENCE_PRODUCTS_DATA_KEY))
+                .map(obj -> gson.fromJson(obj, BancoBpiProductsData.class))
+                .orElse(null);
     }
 
     private void saveAuthContext() {
         persistentStorage.put(PERSISTENCE_STORAGE_KEY, gson.toJson(authContext));
     }
 
-    private void saveTransactionalAccounts() {
-        sessionStorage.put(
-                PERSISTENCE_ACCOUNT_TRANSACTIONS_KEY, gson.toJson(transactionalAccounts));
+    private void saveSaveAccountsContext() {
+        if (transactionalAccounts != null) {
+            sessionStorage.put(
+                    PERSISTENCE_ACCOUNT_TRANSACTIONS_KEY, gson.toJson(transactionalAccounts));
+        }
     }
 
-    void saveEntities() {
+    private void saveProductsData() {
+        if (productsData != null) {
+            sessionStorage.put(PERSISTENCE_PRODUCTS_DATA_KEY, gson.toJson(productsData));
+        }
+    }
+
+    public void saveEntities() {
         saveAuthContext();
-        saveTransactionalAccounts();
+        saveSaveAccountsContext();
+        saveProductsData();
     }
 }
