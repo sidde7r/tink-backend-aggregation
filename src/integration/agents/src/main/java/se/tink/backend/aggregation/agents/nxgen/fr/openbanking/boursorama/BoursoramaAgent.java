@@ -55,8 +55,9 @@ public class BoursoramaAgent extends NextGenerationAgent
     }
 
     private BoursoramaConfiguration getAgentConfiguration() {
-        BoursoramaConfiguration configuration = getAgentConfigurationController()
-            .getAgentConfiguration(BoursoramaConfiguration.class);
+        BoursoramaConfiguration configuration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(BoursoramaConfiguration.class);
 
         Objects.requireNonNull(configuration.getBaseUrl());
         Objects.requireNonNull(configuration.getClientId());
@@ -86,7 +87,8 @@ public class BoursoramaAgent extends NextGenerationAgent
     }
 
     private BoursoramaMessageSignFilter constructMessageSignFilter(
-            AgentsServiceConfiguration agentsServiceConfiguration, BoursoramaConfiguration agentConfiguration) {
+            AgentsServiceConfiguration agentsServiceConfiguration,
+            BoursoramaConfiguration agentConfiguration) {
         return new BoursoramaMessageSignFilter(
                 new BoursoramaSignatureHeaderGenerator(
                         agentsServiceConfiguration.getEidasProxy(),
