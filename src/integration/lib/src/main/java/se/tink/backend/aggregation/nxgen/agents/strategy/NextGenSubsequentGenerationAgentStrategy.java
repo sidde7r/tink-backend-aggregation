@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.strategy;
 
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
@@ -12,13 +12,13 @@ public final class NextGenSubsequentGenerationAgentStrategy
         implements SubsequentGenerationAgentStrategy {
 
     private final CredentialsRequest credentialsRequest;
-    private final AgentContext context;
+    private final CompositeAgentContext context;
     private final TinkHttpClient tinkHttpClient;
     private final SuperAbstractAgentStrategy superAbstractAgentStrategy;
 
     NextGenSubsequentGenerationAgentStrategy(
             final CredentialsRequest credentialsRequest,
-            final AgentContext context,
+            final CompositeAgentContext context,
             final SignatureKeyPair signatureKeyPair) {
         this.credentialsRequest = credentialsRequest;
         this.context = context;
@@ -47,7 +47,7 @@ public final class NextGenSubsequentGenerationAgentStrategy
     }
 
     @Override
-    public AgentContext getContext() {
+    public CompositeAgentContext getContext() {
         return context;
     }
 

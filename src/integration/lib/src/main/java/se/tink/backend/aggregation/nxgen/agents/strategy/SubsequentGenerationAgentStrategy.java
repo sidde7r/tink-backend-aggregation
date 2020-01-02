@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.strategy;
 
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -18,7 +18,7 @@ public interface SubsequentGenerationAgentStrategy {
 
     CredentialsRequest getCredentialsRequest();
 
-    AgentContext getContext();
+    CompositeAgentContext getContext();
 
     SuperAbstractAgentStrategy getSuperAbstractAgentStrategy();
 }
