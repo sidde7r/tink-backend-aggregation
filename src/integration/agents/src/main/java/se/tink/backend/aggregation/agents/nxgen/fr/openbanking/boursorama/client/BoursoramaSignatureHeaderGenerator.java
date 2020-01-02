@@ -10,11 +10,11 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public class BoursoramaSignatureHeaderGenerator {
 
-    private EidasProxyConfiguration eidasProxyConf;
-    private EidasIdentity eidasIdentity;
-    private String qwacKeyUrl;
+    private final EidasProxyConfiguration eidasProxyConf;
+    private final EidasIdentity eidasIdentity;
+    private final String qwacKeyUrl;
 
-    public void setConfiguration(
+    public BoursoramaSignatureHeaderGenerator(
             EidasProxyConfiguration eidasProxyConf,
             EidasIdentity eidasIdentity,
             String qwacKeyUrl) {

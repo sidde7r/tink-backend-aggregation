@@ -18,18 +18,16 @@ public class BoursoramaAuthenticator implements OAuth2Authenticator {
     private final BoursoramaApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final BoursoramaAuthenticationFilter authenticationFilter;
-    private BoursoramaConfiguration configuration;
+    private final BoursoramaConfiguration configuration;
 
     public BoursoramaAuthenticator(
             BoursoramaApiClient apiClient,
             SessionStorage sessionStorage,
-            BoursoramaAuthenticationFilter authenticationFilter) {
+            BoursoramaAuthenticationFilter authenticationFilter,
+            BoursoramaConfiguration configuration) {
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;
         this.authenticationFilter = authenticationFilter;
-    }
-
-    public void setConfiguration(BoursoramaConfiguration configuration) {
         this.configuration = configuration;
     }
 

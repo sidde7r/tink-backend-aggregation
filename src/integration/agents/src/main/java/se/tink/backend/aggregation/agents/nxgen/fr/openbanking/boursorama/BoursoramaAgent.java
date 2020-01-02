@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.config
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.IdentityEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -34,26 +33,54 @@ public class BoursoramaAgent extends NextGenerationAgent
 
     private final BoursoramaApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final BoursoramaSignatureHeaderGenerator boursoramaSignatureHeaderGenerator;
-    private BoursoramaAuthenticator authenticator;
+    private final BoursoramaAuthenticator authenticator;
 
     public BoursoramaAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, true);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), true);
 
-        this.boursoramaSignatureHeaderGenerator = new BoursoramaSignatureHeaderGenerator();
-        this.apiClient = new BoursoramaApiClient(client);
-        client.addFilter(new BoursoramaMessageSignFilter(boursoramaSignatureHeaderGenerator));
+        BoursoramaConfiguration agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(BoursoramaConfiguration.class);
+
         BoursoramaAuthenticationFilter authenticationFilter = new BoursoramaAuthenticationFilter();
-        client.addFilter(authenticationFilter);
+        this.apiClient =
+                constructApiClient(
+                        agentConfiguration, agentsServiceConfiguration, authenticationFilter);
+        this.authenticator =
+                new BoursoramaAuthenticator(
+                        apiClient, sessionStorage, authenticationFilter, agentConfiguration);
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
 
-        authenticator =
-                new BoursoramaAuthenticator(apiClient, sessionStorage, authenticationFilter);
+    private BoursoramaApiClient constructApiClient(
+            BoursoramaConfiguration agentConfiguration,
+            AgentsServiceConfiguration agentsServiceConfiguration,
+            BoursoramaAuthenticationFilter authenticationFilter) {
+
+        BoursoramaMessageSignFilter messageSignFilter =
+                constructMessageSignFilter(agentsServiceConfiguration, agentConfiguration);
+        client.addFilter(authenticationFilter);
+        client.addFilter(messageSignFilter);
+        return new BoursoramaApiClient(client, agentConfiguration);
+    }
+
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         BoursoramaTransactionalAccountFetcher accountFetcher =
                 new BoursoramaTransactionalAccountFetcher(apiClient, sessionStorage);
-        this.transactionalAccountRefreshController =
-                new TransactionalAccountRefreshController(
-                        metricRefreshController, updateController, accountFetcher, accountFetcher);
+        return new TransactionalAccountRefreshController(
+                metricRefreshController, updateController, accountFetcher, accountFetcher);
+    }
+
+    private BoursoramaMessageSignFilter constructMessageSignFilter(
+            AgentsServiceConfiguration configuration, BoursoramaConfiguration agentConfiguration) {
+        return new BoursoramaMessageSignFilter(
+                new BoursoramaSignatureHeaderGenerator(
+                        configuration.getEidasProxy(),
+                        getEidasIdentity(),
+                        agentConfiguration.getQsealKeyUrl()));
     }
 
     @Override
@@ -73,23 +100,6 @@ public class BoursoramaAgent extends NextGenerationAgent
                 new ThirdPartyAppAuthenticationController<>(
                         controller, supplementalInformationHelper),
                 controller);
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
-        BoursoramaConfiguration agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(BoursoramaConfiguration.class);
-
-        authenticator.setConfiguration(agentConfiguration);
-        apiClient.setConfiguration(agentConfiguration);
-
-        boursoramaSignatureHeaderGenerator.setConfiguration(
-                configuration.getEidasProxy(),
-                getEidasIdentity(),
-                agentConfiguration.getQsealKeyUrl());
     }
 
     @Override

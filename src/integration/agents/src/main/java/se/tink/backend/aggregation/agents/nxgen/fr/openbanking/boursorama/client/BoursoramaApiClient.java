@@ -18,13 +18,10 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 public class BoursoramaApiClient {
 
     private final TinkHttpClient client;
-    private BoursoramaConfiguration configuration;
+    private final BoursoramaConfiguration configuration;
 
-    public BoursoramaApiClient(TinkHttpClient client) {
+    public BoursoramaApiClient(TinkHttpClient client, BoursoramaConfiguration configuration) {
         this.client = client;
-    }
-
-    public void setConfiguration(BoursoramaConfiguration configuration) {
         this.configuration = configuration;
     }
 
