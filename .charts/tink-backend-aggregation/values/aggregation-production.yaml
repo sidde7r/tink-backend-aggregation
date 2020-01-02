@@ -409,6 +409,8 @@ clients:
     aggregatorIdentifier: "Zimpler"
   zimpler-test:
     aggregatorIdentifier: "Zimpler"
+  uk-paypal-inc-production:
+    aggregatorIdentifier: "PayPal Inc"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
