@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.alandsbank;
+package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.alandsbanken;
 
 import org.junit.Before;
 import org.junit.Ignore;
