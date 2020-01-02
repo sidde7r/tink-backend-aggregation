@@ -8,7 +8,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class CreditMutuelAgent extends CmcicAgent {
     public CreditMutuelAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
     }
 
     @Override

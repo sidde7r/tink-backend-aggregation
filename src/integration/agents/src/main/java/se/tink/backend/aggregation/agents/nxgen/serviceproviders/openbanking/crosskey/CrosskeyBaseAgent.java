@@ -40,7 +40,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
 
     public CrosskeyBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
 
         apiClient = new CrosskeyBaseApiClient(client, sessionStorage);
 

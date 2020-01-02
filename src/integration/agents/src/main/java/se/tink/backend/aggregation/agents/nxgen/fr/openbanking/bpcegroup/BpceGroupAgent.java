@@ -28,7 +28,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
 
     public BpceGroupAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
 
         apiClient = new BpceGroupApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();

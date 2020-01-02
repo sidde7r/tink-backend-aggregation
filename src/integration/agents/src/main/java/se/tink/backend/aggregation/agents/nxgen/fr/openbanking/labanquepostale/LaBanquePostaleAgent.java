@@ -25,7 +25,7 @@ public final class LaBanquePostaleAgent
             final CredentialsRequest request,
             final AgentContext context,
             final AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration);
+        super(request, context, agentsServiceConfiguration, true);
         apiClient = new LaBanquePostaleApiClient(client, sessionStorage);
     }
 
