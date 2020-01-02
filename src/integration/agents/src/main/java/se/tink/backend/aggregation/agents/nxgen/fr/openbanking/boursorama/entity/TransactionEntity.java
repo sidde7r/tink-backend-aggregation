@@ -1,23 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TransactionEntity {
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date bookingDate;
 
+    private String bookingDate;
+    private String transactionDate;
     private String creditDebitIndicator;
     private String entryReference;
     private List<String> remittanceInformation;
     private String status;
     private TransactionAmount transactionAmount;
 
-    public Date getBookingDate() {
-        return bookingDate;
+    public LocalDate getBookingDate() {
+        return LocalDate.parse(bookingDate);
+    }
+
+    public LocalDate getTransactionDate() {
+        return LocalDate.parse(transactionDate);
     }
 
     public String getCreditDebitIndicator() {
