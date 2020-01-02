@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.LansforsakringarTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.session.LansforsakringarSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -33,19 +32,16 @@ public final class LansforsakringarAgent extends NextGenerationAgent
     private LansforsakringarConfiguration lansforsakringarConfiguration;
 
     public LansforsakringarAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         apiClient =
                 new LansforsakringarApiClient(
                         client, sessionStorage, credentials, persistentStorage);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         lansforsakringarConfiguration =
                 getAgentConfigurationController()
@@ -54,7 +50,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
                                 request.getProvider().getPayload(),
                                 LansforsakringarConfiguration.class);
 
-        client.setEidasProxy(configuration.getEidasProxy());
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         apiClient.setConfiguration(lansforsakringarConfiguration);
     }
 

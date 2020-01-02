@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.confi
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.VolvoFinansTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.VolvoFinansTransactionalAccountTransactionsFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -30,22 +29,19 @@ public final class VolvoFinansAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public VolvoFinansAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         apiClient = new VolvoFinansApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         VolvoFinansConfiguration volvoFinansConfiguration = getClientConfiguration();
         apiClient.setConfiguration(volvoFinansConfiguration);
-        this.client.setEidasProxy(configuration.getEidasProxy());
+        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 
     protected VolvoFinansConfiguration getClientConfiguration() {

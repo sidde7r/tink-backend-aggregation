@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.identity.S
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.SbabLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.SbabSavingsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.session.SbabSessionHandler;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -31,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SbabAgent extends NextGenerationAgent
+public final class SbabAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
@@ -54,11 +53,6 @@ public class SbabAgent extends NextGenerationAgent
                         metricRefreshController, updateController, new SbabLoanFetcher(apiClient));
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         final SbabConfiguration config = getClientConfiguration();
 

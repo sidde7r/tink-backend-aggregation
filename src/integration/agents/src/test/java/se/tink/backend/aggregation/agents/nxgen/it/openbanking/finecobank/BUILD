@@ -22,7 +22,6 @@ junit_test(
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/integration/user:rpc",
         "//src/libraries/account_identifier",

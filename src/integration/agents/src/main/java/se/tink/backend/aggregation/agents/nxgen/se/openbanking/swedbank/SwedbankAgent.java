@@ -49,15 +49,10 @@ public final class SwedbankAgent extends NextGenerationAgent
                         this.getEidasIdentity());
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         apiClient.setConfiguration(getClientConfiguration());
         client.setFollowRedirects(false);
-        client.setEidasProxy(configuration.getEidasProxy());
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 
     private SwedbankConfiguration getClientConfiguration() {

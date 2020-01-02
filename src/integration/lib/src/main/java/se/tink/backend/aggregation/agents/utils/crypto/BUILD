@@ -5,7 +5,6 @@ java_library(
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/hash",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
-        "//src/libraries/serialization",
         "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",
         "//third_party:net_minidev_json_smart",

@@ -3,9 +3,7 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client/factory",
-        "//src/libraries/net/src/main/java/se/tink/libraries/net/client/handler",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
