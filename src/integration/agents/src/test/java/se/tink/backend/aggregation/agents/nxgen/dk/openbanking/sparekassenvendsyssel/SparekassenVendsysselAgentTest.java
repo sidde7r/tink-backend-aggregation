@@ -7,7 +7,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants;
 
 @Ignore
 public class SparekassenVendsysselAgentTest {
@@ -28,7 +28,7 @@ public class SparekassenVendsysselAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("dk", "dk-sparekassenvendsyssel-ob")
                         .addCredentialField(
-                                BankdataConstants.CredentialKeys.IBAN,
+                                SdcConstants.CredentialKeys.IBAN,
                                 manager.get(IbanArgumentEnum.IBAN))
                         .setFinancialInstitutionId("sparekassenvendsyssel")
                         .setAppId("tink")

@@ -95,4 +95,8 @@ public final class SdcConstants {
     public static class Transactions {
         public static final int MAX_TRANSACTIONS_PER_RESPONSE = 200;
     }
+
+    public static class CredentialKeys {
+        public static final String IBAN = "iban";
+    }
 }
