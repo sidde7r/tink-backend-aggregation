@@ -24,7 +24,7 @@ public class SignatureHeaderGeneratorTest {
     }
 
     @Test
-    public void shouldCalculateSignatureProperly() {
+    public void shouldCalculateSignatureHeaderProperly() {
         // when
         String signature = signatureGenerator.generateSignatureHeader(getRegularHeaders());
 
@@ -35,7 +35,7 @@ public class SignatureHeaderGeneratorTest {
     }
 
     @Test
-    public void shouldGetEqualSignaturesIfTheyDifferJustInNonSignificantHeaders() {
+    public void shouldGetEqualSignatureHeadersIfTheyDifferJustInNonSignificantHeaders() {
         // when
         String signature1 = signatureGenerator.generateSignatureHeader(getRegularHeaders());
         String signature2 =
@@ -47,7 +47,7 @@ public class SignatureHeaderGeneratorTest {
     }
 
     @Test
-    public void shouldGetDifferentSignaturesIfTheyDifferInSignificantHeaders() {
+    public void shouldGetDifferentSignatureHeadersIfTheyDifferInSignificantHeaders() {
         // when
         String signature1 = signatureGenerator.generateSignatureHeader(getRegularHeaders());
         String signature2 =
