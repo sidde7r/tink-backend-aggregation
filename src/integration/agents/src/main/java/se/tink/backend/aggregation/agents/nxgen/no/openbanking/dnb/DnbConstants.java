@@ -79,6 +79,10 @@ public final class DnbConstants {
         public static final String BOTH = "both";
     }
 
+    public static class ConsentRequestValues {
+        public static final int FREQUENCY_PER_DAY = 4;
+    }
+
     public static class IdTags {
         public static final String PAYMENT_TYPE = "paymentType";
         public static final String PAYMENT_ID = "paymentId";

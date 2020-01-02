@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
 public class DnbAccountFetcherTest {
 
-    private DnbApiClient apiClient;
+    private static DnbApiClient apiClient;
 
     @Test
     public void shouldReturnProperNumberOfAccounts() {
@@ -31,7 +31,7 @@ public class DnbAccountFetcherTest {
     }
 
     @Test
-    public void shouldReturnThreeSavingAccount() {
+    public void shouldReturnThreeSavingsAccounts() {
         DnbAccountFetcher fetcher = new DnbAccountFetcher(apiClient);
 
         Collection<TransactionalAccount> accounts = fetcher.fetchAccounts();
@@ -45,8 +45,8 @@ public class DnbAccountFetcherTest {
         assertEquals(3, savingsAccountCount);
     }
 
-    @Before
-    public void initApiClient() {
+    @BeforeClass
+    public static void initApiClient() {
         apiClient = mock(DnbApiClient.class);
         HttpResponse accountsResponse = getMockedAccountsResponse();
         when(apiClient.fetchAccounts()).thenReturn(accountsResponse);
@@ -55,14 +55,14 @@ public class DnbAccountFetcherTest {
         when(apiClient.fetchBalances(anyString())).thenReturn(balancesResponse);
     }
 
-    private HttpResponse getMockedAccountsResponse() {
+    private static HttpResponse getMockedAccountsResponse() {
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponse.getBody(AccountsResponse.class))
                 .thenReturn(AccountTestData.getAccountsResponse());
         return httpResponse;
     }
 
-    private HttpResponse getMockedBalancesResponse() {
+    private static HttpResponse getMockedBalancesResponse() {
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponse.getBody(BalancesResponse.class))
                 .thenReturn(AccountTestData.getBalancesResponse());
