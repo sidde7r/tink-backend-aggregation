@@ -1,10 +1,11 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "ErsteBank",
-    srcs = glob(["**/*.java"]),
+    name = "swedbank",
+    srcs = glob(["*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:cryptography_test",
         "//etc:development",
     ],
     tags = [
@@ -13,10 +14,11 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/erstebank",
-        "//src/integration/api",
-        "//src/integration/lib:lib_test",
+        "//src/integration/amount",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/payment:rpc",
+        "//src/libraries/account_identifier",
+        "//third_party:org_iban4j_iban4j",
+        "//third_party:org_mockito_mockito_core",
     ],
 )
