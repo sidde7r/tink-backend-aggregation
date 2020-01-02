@@ -29,7 +29,7 @@ public class TransactionEntity {
     private static String DESCRIPTION_DATE_FORMAT = "yy-MM-dd";
     private static Pattern FOREIGN_TRANSACTION_PATTERN =
             Pattern.compile(
-                    "^(?<description>.+?) *[A-Z0-9]?(?<localCurrency>[A-Z]{3})[A-Z0-9]? *(?<localAmount>[\\.0-9]+,\\d+)(?<localAmountSign>([-+]| )).* KURS (?<exchangeRate>\\d+,\\d+)$");
+                    "^(?<description>.+?) *[A-Z0-9]?(?<localCurrency>[A-Z]{3})[A-Z0-9]? *(?<localAmount>[\\.0-9]+(,\\d+)?)(?<localAmountSign>([-+]| )).* KURS (?<exchangeRate>\\d+,\\d+)$");
 
     @JsonProperty("ROW_ID")
     private Integer rowId;
