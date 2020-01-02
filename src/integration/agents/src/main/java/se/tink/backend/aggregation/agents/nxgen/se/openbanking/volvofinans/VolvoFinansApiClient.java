@@ -8,7 +8,6 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansConstants.QueryValues;
@@ -26,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
+import se.tink.libraries.date.DateFormat.Zone;
 
 public final class VolvoFinansApiClient {
 
@@ -99,10 +99,10 @@ public final class VolvoFinansApiClient {
                                 account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID)))
                 .queryParam(
                         QueryKeys.DATE_TO,
-                        DateFormat.formatDateTime(endDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        DateFormat.formatDateTime(endDate, DateFormat.YEAR_MONTH_DAY, Zone.UTC))
                 .queryParam(
                         QueryKeys.DATE_FROM,
-                        DateFormat.formatDateTime(startDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        DateFormat.formatDateTime(startDate, DateFormat.YEAR_MONTH_DAY, Zone.UTC))
                 .header(HeaderKeys.X_API_KEY, apiKey)
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .accept(MediaType.APPLICATION_JSON)

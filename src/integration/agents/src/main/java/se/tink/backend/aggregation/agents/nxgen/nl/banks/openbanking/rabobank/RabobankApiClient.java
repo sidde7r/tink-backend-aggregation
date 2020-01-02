@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Certificate;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
@@ -42,6 +43,8 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.date.DateFormat;
+import se.tink.libraries.date.DateFormat.Zone;
 
 public final class RabobankApiClient {
 
@@ -172,8 +175,9 @@ public final class RabobankApiClient {
         }
 
         final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
-        final String uuid = RabobankUtils.getRequestId();
-        final String date = RabobankUtils.getDate();
+        final String uuid = Psd2Headers.getRequestId();
+        final String date =
+                DateFormat.getFormattedCurrentDate(RabobankConstants.DATE_FORMAT, Zone.GMT);
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
         final URL url = rabobankConfiguration.getUrls().buildConsentUrl(consentId);
 
@@ -212,8 +216,9 @@ public final class RabobankApiClient {
 
     public TransactionalAccountsResponse fetchAccounts() {
         final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
-        final String uuid = RabobankUtils.getRequestId();
-        final String date = RabobankUtils.getDate();
+        final String uuid = Psd2Headers.getRequestId();
+        final String date =
+                DateFormat.getFormattedCurrentDate(RabobankConstants.DATE_FORMAT, Zone.GMT);
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
 
         return buildRequest(
@@ -227,8 +232,9 @@ public final class RabobankApiClient {
 
     public BalanceResponse getBalance(final String accountId) {
         final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
-        final String uuid = RabobankUtils.getRequestId();
-        final String date = RabobankUtils.getDate();
+        final String uuid = Psd2Headers.getRequestId();
+        final String date =
+                DateFormat.getFormattedCurrentDate(RabobankConstants.DATE_FORMAT, Zone.GMT);
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
         final URL url = rabobankConfiguration.getUrls().buildBalanceUrl(accountId);
 
@@ -276,8 +282,9 @@ public final class RabobankApiClient {
         final SimpleDateFormat sdf =
                 new SimpleDateFormat(RabobankConstants.TRANSACTION_DATE_FORMAT);
         final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
-        final String uuid = RabobankUtils.getRequestId();
-        final String date = RabobankUtils.getDate();
+        final String uuid = Psd2Headers.getRequestId();
+        final String date =
+                DateFormat.getFormattedCurrentDate(RabobankConstants.DATE_FORMAT, Zone.GMT);
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
 
         final Collection<PaginatorResponse> pages = new ArrayList<>();
