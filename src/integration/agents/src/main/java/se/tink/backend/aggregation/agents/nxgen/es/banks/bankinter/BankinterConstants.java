@@ -18,6 +18,7 @@ public final class BankinterConstants {
         public static final String GLOBAL_POSITION = BASE + Paths.GLOBAL_POSITION;
         public static final String ACCOUNT = BASE + "/extracto/secure/movimientos_cuenta.xhtml";
         public static final String CREDIT_CARD = BASE + "/tarjetas/secure/tarjetas_ficha.xhtml";
+        public static final String LOAN = BASE + "/prestamos/secure/prestamos.xhtml";
     }
 
     public static class Paths {
@@ -39,12 +40,19 @@ public final class BankinterConstants {
         public static final String JSF_PARTIAL_EXECUTE = "javax.faces.partial.execute";
         public static final String JSF_PARTIAL_RENDER = "javax.faces.partial.render";
         public static final String JSF_SOURCE = "javax.faces.source";
+        public static final String LOAN_TRANSACTIONS_ID = "prestaForm:_idcl";
+        public static final String LOAN_TRANSACTIONS_SUBMIT = "prestaForm_SUBMIT";
     }
 
     public static class FormValues {
         public static final String ACCOUNT_HEADER = "movimientos-cabecera";
         public static final String TRUE = "true";
         public static final String JSF_EXECUTE_ALL = "@all";
+        public static final String LOAN_TRANSACTIONS_ID = "prestaForm:linkMasPagos";
+    }
+
+    public static class InstallmentStatus {
+        public static final String PAID = "PAGADA";
     }
 
     public static class JsfPart {

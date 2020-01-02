@@ -12,6 +12,8 @@ public class GlobalPositionResponse extends HtmlResponse {
             Pattern.compile("'(/fondos/secure/fondo_inversion\\.xhtml\\?[^']+)'");
     private static final Pattern CREDIT_CARD_LINK_PATTERN =
             Pattern.compile("'(/tarjetas/secure/tarjetas_ficha\\.xhtml\\?[^']+)'");
+    private static final Pattern LOAN_LINK_PATTERN =
+            Pattern.compile("'(/prestamos/secure/prestamos\\.xhtml\\?[^']+)'");
 
     public GlobalPositionResponse(String body) {
         super(body);
@@ -49,6 +51,15 @@ public class GlobalPositionResponse extends HtmlResponse {
 
     public List<String> getCreditCardLinks() {
         return getAccountLinks(getCreditCardNodes(), CREDIT_CARD_LINK_PATTERN);
+    }
+
+    private NodeList getLoanNodes() {
+        return evaluateXPath(
+                "//li[@data-element='PrestamosCreditos>BoxPrestamosCreditos']", NodeList.class);
+    }
+
+    public List<String> getLoanLinks() {
+        return getAccountLinks(getLoanNodes(), LOAN_LINK_PATTERN);
     }
 
     private List<String> getAccountLinks(NodeList nodes, Pattern pattern) {

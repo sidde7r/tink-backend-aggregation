@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher;
 
+import com.google.common.base.Strings;
 import java.text.SimpleDateFormat;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -16,13 +17,13 @@ public class TransactionMatcher extends TypeSafeMatcher<Transaction> {
 
     public TransactionMatcher(String date, String description, double eur) {
         this.dateString = date;
-        this.description = description;
+        this.description = Strings.nullToEmpty(description);
         this.amountInEur = eur;
     }
 
     @Override
     protected boolean matchesSafely(Transaction transaction) {
-        return transaction.getDescription().equals(description)
+        return Strings.nullToEmpty(transaction.getDescription()).equals(description)
                 && transaction.getAmount().equals(Amount.inEUR(amountInEur))
                 && TRANSACTION_DATE_FORMATTER.format(transaction.getDate()).equals(dateString);
     }
