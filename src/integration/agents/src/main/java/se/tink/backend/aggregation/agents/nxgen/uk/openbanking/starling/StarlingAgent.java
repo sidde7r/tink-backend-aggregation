@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.StarlingTransferDestinationFetcher;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -36,7 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /** Starling documentation is available at https://api-sandbox.starlingbank.com/api/swagger.yaml */
-public class StarlingAgent extends NextGenerationAgent
+public final class StarlingAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
@@ -60,11 +59,6 @@ public class StarlingAgent extends NextGenerationAgent
 
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
 
         StarlingConfiguration starlingConfiguration =
                 getAgentConfigurationController()

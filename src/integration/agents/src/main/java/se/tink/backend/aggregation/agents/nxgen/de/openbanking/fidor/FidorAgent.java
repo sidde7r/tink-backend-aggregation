@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.FidorTransactionFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -31,21 +30,20 @@ public final class FidorAgent extends NextGenerationAgent
     private FidorConfiguration fidorConfiguration;
 
     public FidorAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         apiClient = new FidorApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
 
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration); // x
         fidorConfiguration = getClientConfiguration();
         apiClient.setConfiguration(fidorConfiguration);
         final String certificateId = fidorConfiguration.getCertificateId();
-        final EidasProxyConfiguration eidasProxyConfiguration = configuration.getEidasProxy();
+        final EidasProxyConfiguration eidasProxyConfiguration =
+                agentsServiceConfiguration.getEidasProxy();
         client.setEidasProxy(eidasProxyConfiguration);
     }
 

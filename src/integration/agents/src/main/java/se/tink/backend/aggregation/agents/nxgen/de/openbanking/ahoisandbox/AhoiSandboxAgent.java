@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.authe
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.configuration.AhoiSandboxConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.fetcher.transactionalaccount.AhoiSandboxTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.fetcher.transactionalaccount.AhoiSandboxTransactionalAccountTransactionFetcher;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -36,17 +35,12 @@ public final class AhoiSandboxAgent extends NextGenerationAgent
         clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
+        apiClient.setConfiguration(getClientConfiguration());
     }
 
     private void configureHttpClient(TinkHttpClient client) {
         client.setTimeout((int) Duration.ofSeconds(60).toMillis());
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
-        apiClient.setConfiguration(getClientConfiguration());
     }
 
     protected AhoiSandboxConfiguration getClientConfiguration() {

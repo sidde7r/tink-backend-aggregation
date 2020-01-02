@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.authenticator.FinTsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.session.FinTsSessionHandler;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -26,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class FinTsAgent extends NextGenerationAgent
+public final class FinTsAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshInvestmentAccountsExecutor {
@@ -55,11 +54,7 @@ public class FinTsAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new FinTsInvestmentFetcher(apiClient));
-    }
 
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
         FinTsIntegrationConfiguration finTsIntegrationConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfigurationFromK8s(
