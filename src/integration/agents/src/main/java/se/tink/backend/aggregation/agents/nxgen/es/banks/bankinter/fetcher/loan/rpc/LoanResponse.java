@@ -103,7 +103,7 @@ public class LoanResponse extends HtmlResponse {
         return LoanAccount.nxBuilder()
                 .withLoanDetails(
                         LoanModule.builder()
-                                .withType(Type.MORTGAGE)
+                                .withType(Type.OTHER)
                                 .withBalance(getBalance())
                                 .withInterestRate(getInterestRate().doubleValue())
                                 .setApplicants(getApplicants())
