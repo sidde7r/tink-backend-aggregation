@@ -26,13 +26,15 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class BoursoramaTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>, TransactionFetcher<TransactionalAccount> {
 
-    private static final String CASH_ACCOUNT = "CACC";
-    private static final String INSTANT_BALANCE = "XPCD";
-    private static final String DEBIT_TRANSACTION_CODE = "DBIT";
     //        CLBD Accounting Balance
     //        XPCD Instant Balance
     //        VALU Value-date balance
     //        OTHR Other Balance
+    private static final String INSTANT_BALANCE = "XPCD";
+    private static final String ACCOUNTING_BALANCE = "XPCD";
+
+    private static final String DEBIT_TRANSACTION_CODE = "DBIT";
+    private static final String CASH_ACCOUNT = "CACC";
 
     private final BoursoramaApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -46,7 +48,6 @@ public class BoursoramaTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         String accessToken = sessionStorage.get(BoursoramaConstants.USER_HASH);
-
         return apiClient.fetchAccounts(accessToken).getAccounts().stream()
                 .filter(a -> a.getCashAccountType().equals(CASH_ACCOUNT))
                 .map(account -> map(account, accessToken))
@@ -68,12 +69,14 @@ public class BoursoramaTransactionalAccountFetcher
     private Optional<TransactionalAccount> map(AccountEntity a, String accessToken) {
         BalanceAmountEntity balance =
                 apiClient.fetchBalances(accessToken, a.getResourceId()).getBalances().stream()
-                        .filter(
-                                (balanceEntity ->
-                                        balanceEntity.getBalanceType().equals(INSTANT_BALANCE)))
+                        .filter((this::isAvailableBalance))
                         .findAny()
                         .map(BalanceEntity::getBalanceAmount)
-                        .orElseThrow(IllegalStateException::new);
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Could not find right type balance for account with id: "
+                                                        + a.getAccountId()));
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
@@ -95,11 +98,16 @@ public class BoursoramaTransactionalAccountFetcher
                 .build();
     }
 
+    private boolean isAvailableBalance(BalanceEntity balanceEntity) {
+        return INSTANT_BALANCE.equals(balanceEntity.getBalanceType())
+                || ACCOUNTING_BALANCE.equals(balanceEntity.getBalanceType());
+    }
+
     private AggregationTransaction mapTransaction(TransactionEntity a) {
         return Transaction.builder()
                 .setAmount(mapTransactionAmount(a))
                 .setDescription(StringUtils.join(a.getRemittanceInformation(), ';'))
-                .setDate(a.getBookingDate())
+                .setDate(a.getTransactionDate())
                 .setRawDetails(a.getEntryReference())
                 .build();
     }
@@ -110,7 +118,7 @@ public class BoursoramaTransactionalAccountFetcher
                         a.getTransactionAmount().getAmount(),
                         a.getTransactionAmount().getCurrency());
 
-        return a.getCreditDebitIndicator().equals(DEBIT_TRANSACTION_CODE)
+        return DEBIT_TRANSACTION_CODE.equals(a.getCreditDebitIndicator())
                 ? amount.negate()
                 : amount;
     }
