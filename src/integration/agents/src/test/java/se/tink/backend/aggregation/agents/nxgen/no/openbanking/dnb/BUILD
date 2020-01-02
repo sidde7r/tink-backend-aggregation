@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "dnb",
+    name = "dnb_unit_tests",
     srcs = glob(["component/**/*.java"]),
     tags = [
         "external",
@@ -21,7 +21,7 @@ junit_test(
 )
 
 junit_test(
-    name = "dnb_agent",
+    name = "dnb",
     srcs = glob(["agent/*.java"]),
     data = [
         "//data:aggregation_test",
