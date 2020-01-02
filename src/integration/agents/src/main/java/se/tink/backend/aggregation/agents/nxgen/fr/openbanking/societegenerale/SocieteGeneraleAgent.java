@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.c
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -31,9 +30,19 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
     private AutoAuthenticationController authenticator;
 
     public SocieteGeneraleAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, true);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), true);
         apiClient = new SocieteGeneraleApiClient(client, persistentStorage);
+
+        societeGeneraleConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(SocieteGeneraleConfiguration.class);
+
+        apiClient.setConfiguration(societeGeneraleConfiguration);
+        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
@@ -56,19 +65,6 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                         controller);
 
         return authenticator;
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
-        societeGeneraleConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(SocieteGeneraleConfiguration.class);
-
-        apiClient.setConfiguration(societeGeneraleConfiguration);
-        this.client.setEidasProxy(configuration.getEidasProxy());
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
