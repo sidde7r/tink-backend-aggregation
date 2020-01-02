@@ -54,7 +54,6 @@ public final class EnterCardConstants {
         public static final String TOKEN = "TOKEN";
         public static final String ACCOUNT_NUMBER = "ACCOUNT_NUMBER";
         public static final String E_SIGN_URL = "eSignUrl";
-        public static final String STATE = "state";
     }
 
     public static class QueryKeys {

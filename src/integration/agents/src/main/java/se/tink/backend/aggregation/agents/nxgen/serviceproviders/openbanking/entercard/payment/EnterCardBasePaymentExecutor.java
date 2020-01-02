@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardApiClient;
@@ -17,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.rpc.PaymentInitiationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.util.EnterCardPaymentUtil;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -39,20 +39,23 @@ public class EnterCardBasePaymentExecutor implements PaymentExecutor, FetchableP
     private EnterCardApiClient apiClient;
     private ScaRedirectCallbackHandler redirectCallbackHandler;
     private EnterCardConfiguration configuration;
+    private StrongAuthenticationState strongAuthenticationState;
 
     public EnterCardBasePaymentExecutor(
             EnterCardApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
-            EnterCardConfiguration configuration) {
+            EnterCardConfiguration configuration,
+            StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
         this.configuration = configuration;
         this.redirectCallbackHandler =
                 new ScaRedirectCallbackHandler(supplementalInformationHelper, 30, TimeUnit.SECONDS);
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        String state = UUID.randomUUID().toString();
+        String state = strongAuthenticationState.getState();
         String creditorAccountNumber = paymentRequest.getPayment().getCreditor().getAccountNumber();
         String debtorAccountNumber = paymentRequest.getPayment().getDebtor().getAccountNumber();
 
@@ -81,7 +84,7 @@ public class EnterCardBasePaymentExecutor implements PaymentExecutor, FetchableP
                                         .toString())
                         .build();
 
-        return apiClient.createPayment(request).toTinkPaymentResponse(paymentRequest, state);
+        return apiClient.createPayment(request).toTinkPaymentResponse(paymentRequest);
     }
 
     @Override
@@ -118,7 +121,7 @@ public class EnterCardBasePaymentExecutor implements PaymentExecutor, FetchableP
                                         paymentMultiStepRequest
                                                 .getStorage()
                                                 .get(StorageKeys.E_SIGN_URL)),
-                                paymentMultiStepRequest.getStorage().get(StorageKeys.STATE));
+                                strongAuthenticationState.getSupplementalKey());
 
                 if (!response.isPresent()) {
                     throw new PaymentException("SCA time-out.");

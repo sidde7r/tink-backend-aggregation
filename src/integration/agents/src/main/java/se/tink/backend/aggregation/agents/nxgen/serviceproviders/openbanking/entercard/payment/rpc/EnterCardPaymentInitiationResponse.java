@@ -24,7 +24,7 @@ public class EnterCardPaymentInitiationResponse {
         this.paymentInitiationResponse = paymentInitiationResponse;
     }
 
-    public PaymentResponse toTinkPaymentResponse(PaymentRequest paymentRequest, String state) {
+    public PaymentResponse toTinkPaymentResponse(PaymentRequest paymentRequest) {
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(paymentRequest.getPayment().getCreditor())
@@ -44,7 +44,6 @@ public class EnterCardPaymentInitiationResponse {
 
         Storage storage = paymentRequest.getStorage();
         storage.put(StorageKeys.E_SIGN_URL, paymentInitiationResponse.geteSignUrl());
-        storage.put(StorageKeys.STATE, state);
 
         return new PaymentResponse(buildingPaymentResponse.build(), storage);
     }
