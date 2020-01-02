@@ -1,0 +1,20 @@
+java_library(
+    name = "triodos",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/berlingroup",
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:org_apache_commons_commons_lang",
+        "//third_party:org_apache_commons_commons_lang3",
+    ],
+)
