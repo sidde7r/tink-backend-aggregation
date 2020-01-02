@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama;
 
+import java.util.Objects;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -41,9 +42,7 @@ public class BoursoramaAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), true);
 
-        BoursoramaConfiguration agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(BoursoramaConfiguration.class);
+        BoursoramaConfiguration agentConfiguration = getAgentConfiguration();
 
         BoursoramaAuthenticationFilter authenticationFilter = new BoursoramaAuthenticationFilter();
         this.apiClient =
@@ -53,6 +52,18 @@ public class BoursoramaAgent extends NextGenerationAgent
                 new BoursoramaAuthenticator(
                         apiClient, sessionStorage, authenticationFilter, agentConfiguration);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    private BoursoramaConfiguration getAgentConfiguration() {
+        BoursoramaConfiguration configuration = getAgentConfigurationController()
+            .getAgentConfiguration(BoursoramaConfiguration.class);
+
+        Objects.requireNonNull(configuration.getBaseUrl());
+        Objects.requireNonNull(configuration.getClientId());
+        Objects.requireNonNull(configuration.getQsealKeyUrl());
+        Objects.requireNonNull(configuration.getRedirectUrl());
+
+        return configuration;
     }
 
     private BoursoramaApiClient constructApiClient(
@@ -75,10 +86,10 @@ public class BoursoramaAgent extends NextGenerationAgent
     }
 
     private BoursoramaMessageSignFilter constructMessageSignFilter(
-            AgentsServiceConfiguration configuration, BoursoramaConfiguration agentConfiguration) {
+            AgentsServiceConfiguration agentsServiceConfiguration, BoursoramaConfiguration agentConfiguration) {
         return new BoursoramaMessageSignFilter(
                 new BoursoramaSignatureHeaderGenerator(
-                        configuration.getEidasProxy(),
+                        agentsServiceConfiguration.getEidasProxy(),
                         getEidasIdentity(),
                         agentConfiguration.getQsealKeyUrl()));
     }
