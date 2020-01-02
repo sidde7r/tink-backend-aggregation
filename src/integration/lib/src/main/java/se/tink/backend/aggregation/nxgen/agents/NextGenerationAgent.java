@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -27,7 +28,9 @@ public abstract class NextGenerationAgent extends SubsequentGenerationAgent<Auth
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
             boolean useNextGenClient) {
-        super(request, context, signatureKeyPair, useNextGenClient);
+        super(
+                SubsequentGenerationAgentStrategyFactory.create(
+                        request, context, signatureKeyPair, useNextGenClient));
         SupplementalInformationProvider supplementalInformationProvider =
                 new SupplementalInformationProvider(request, supplementalRequester, credentials);
         this.supplementalInformationController =

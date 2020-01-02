@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
@@ -47,7 +48,9 @@ public final class RabobankAgent
             final CredentialsRequest request,
             final AgentContext context,
             final AgentsServiceConfiguration agentsConfiguration) {
-        super(request, context, agentsConfiguration.getSignatureKeyPair(), true);
+        super(
+                SubsequentGenerationAgentStrategyFactory.nxgen(
+                        request, context, agentsConfiguration.getSignatureKeyPair()));
 
         clientName = request.getProvider().getPayload();
 

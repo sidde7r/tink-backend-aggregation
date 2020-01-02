@@ -9,6 +9,8 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategy;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AgentFactory {
@@ -45,24 +47,45 @@ public class AgentFactory {
     }
 
     /**
-     * @return An agent constructed using its {@link AgentsServiceConfiguration } constructor or, if
-     *     it doesn't exist, its {@link SignatureKeyPair } constructor.
+     * @return An agent constructed using its {@link SubsequentGenerationAgentStrategy } constructor
+     *     or, if it doesn't exist, its {@link AgentsServiceConfiguration } constructor or, if it
+     *     doesn't exist, its {@link SignatureKeyPair } constructor.
      */
     public Agent create(
             Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context)
             throws Exception {
 
-        final Class<?>[] altParameterList = {
+        final Class<?>[] strategyParameterList = {SubsequentGenerationAgentStrategy.class};
+
+        final Class<?>[] agentsServiceConfigurationParameterList = {
             CredentialsRequest.class, AgentContext.class, AgentsServiceConfiguration.class
         };
 
-        final boolean hasAlternativeConstructor =
+        final boolean hasStrategyConstructor =
                 Arrays.stream(agentClass.getConstructors())
-                        .anyMatch(c -> Arrays.equals(c.getParameterTypes(), altParameterList));
+                        .anyMatch(c -> Arrays.equals(c.getParameterTypes(), strategyParameterList));
+
+        final boolean hasAgentsServiceConfigurationConstructor =
+                Arrays.stream(agentClass.getConstructors())
+                        .anyMatch(
+                                c ->
+                                        Arrays.equals(
+                                                c.getParameterTypes(),
+                                                agentsServiceConfigurationParameterList));
 
         final Agent agent;
 
-        if (hasAlternativeConstructor) {
+        if (hasStrategyConstructor) {
+            Constructor<?> agentConstructor =
+                    agentClass.getConstructor(SubsequentGenerationAgentStrategy.class);
+
+            agent =
+                    (Agent)
+                            agentConstructor.newInstance(
+                                    SubsequentGenerationAgentStrategyFactory.nxgen(
+                                            request, context, configuration.getSignatureKeyPair()));
+
+        } else if (hasAgentsServiceConfigurationConstructor) {
             Constructor<?> agentConstructor =
                     agentClass.getConstructor(
                             CredentialsRequest.class,
