@@ -83,6 +83,14 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         }
     }
 
+    private String getErrorMessage(WebDriver driver) {
+        try {
+            return driver.findElement(By.id(LoginForm.ERROR_PANEL)).getText();
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            return null;
+        }
+    }
+
     private Function<WebDriver, Boolean> didRedirectOrShowError(String initialUrl) {
         return driver -> {
             if (!driver.getCurrentUrl().equals(initialUrl)) {
@@ -92,7 +100,8 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         };
     }
 
-    private boolean submitLoginForm(WebDriver driver, String username, String password) {
+    private void submitLoginForm(WebDriver driver, String username, String password)
+            throws AuthenticationException, AuthorizationException {
         // go to login page
         driver.navigate().to(Urls.LOGIN_PAGE);
 
@@ -119,7 +128,22 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
             throw BankServiceError.BANK_SIDE_FAILURE.exception("SCA not implemented");
         }
 
-        return getCurrentUrl(driver).toUri().getPath().equalsIgnoreCase(Paths.GLOBAL_POSITION);
+        if (isShowingError(driver)) {
+            // error message
+            final String errorMessage = getErrorMessage(driver);
+            LOG.info("Login error: " + errorMessage);
+            throw AuthorizationError.UNAUTHORIZED.exception();
+        } else if (getCurrentUrl(driver)
+                .toUri()
+                .getPath()
+                .equalsIgnoreCase(Paths.GLOBAL_POSITION)) {
+            // login successful
+            return;
+        }
+
+        // Unhandled error
+        LOG.error("Did not reach logged in state or error message: " + driver.getCurrentUrl());
+        throw AuthorizationError.UNAUTHORIZED.exception();
     }
 
     private URL getCurrentUrl(WebDriver driver) {
@@ -130,14 +154,8 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
         final WebDriver driver = createWebDriver();
-        final boolean success = submitLoginForm(driver, username, password);
-
-        if (success) {
-            apiClient.storeLoginCookies(driver.manage().getCookies());
-        } else {
-            throw AuthorizationError.UNAUTHORIZED.exception();
-        }
-
+        submitLoginForm(driver, username, password);
+        apiClient.storeLoginCookies(driver.manage().getCookies());
         driver.quit();
     }
 }
