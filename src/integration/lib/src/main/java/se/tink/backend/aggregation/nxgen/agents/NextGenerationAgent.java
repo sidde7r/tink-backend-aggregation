@@ -20,17 +20,7 @@ public abstract class NextGenerationAgent extends SubsequentGenerationAgent<Auth
 
     protected NextGenerationAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        this(request, context, signatureKeyPair, true);
-    }
-
-    protected NextGenerationAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            boolean useNextGenClient) {
-        super(
-                SubsequentGenerationAgentStrategyFactory.create(
-                        request, context, signatureKeyPair, useNextGenClient));
+        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
         SupplementalInformationProvider supplementalInformationProvider =
                 new SupplementalInformationProvider(request, supplementalRequester, credentials);
         this.supplementalInformationController =
