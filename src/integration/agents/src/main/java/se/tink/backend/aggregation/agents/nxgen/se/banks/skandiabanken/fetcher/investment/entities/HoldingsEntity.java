@@ -72,7 +72,10 @@ public class HoldingsEntity {
                 acquisitionValue.divide(shares, BigDecimal.ROUND_HALF_UP).doubleValue());
         tinkInstrument.setQuantity(shares.doubleValue());
         tinkInstrument.setProfit(currentValue.doubleValue() - acquisitionValue.doubleValue());
-        tinkInstrument.setMarketValue(todaysRate.doubleValue());
+        tinkInstrument.setMarketValue(
+                currentValue != null
+                        ? currentValue.doubleValue()
+                        : todaysRate.multiply(shares).doubleValue());
 
         return tinkInstrument;
     }
