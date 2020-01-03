@@ -39,7 +39,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
 
     public CbiGlobeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, true);
+        super(request, context, signatureKeyPair);
 
         temporaryStorage = new TemporaryStorage();
         apiClient = getApiClient(request.isManual());

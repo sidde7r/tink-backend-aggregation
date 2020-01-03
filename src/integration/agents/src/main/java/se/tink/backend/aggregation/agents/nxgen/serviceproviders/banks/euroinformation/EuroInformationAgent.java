@@ -81,7 +81,7 @@ public abstract class EuroInformationAgent extends NextGenerationAgent
             SignatureKeyPair signatureKeyPair,
             EuroInformationConfiguration config,
             EuroInformationApiClientFactory apiClientFactory) {
-        super(request, context, signatureKeyPair, true);
+        super(request, context, signatureKeyPair);
         this.config = config;
         this.apiClient = apiClientFactory.getApiClient(client, sessionStorage, config);
 
