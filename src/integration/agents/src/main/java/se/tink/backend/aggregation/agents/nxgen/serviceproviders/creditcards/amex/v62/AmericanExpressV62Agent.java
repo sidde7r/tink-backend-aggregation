@@ -73,6 +73,10 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         this.client.addFilter(new NoHttpResponseErrorFilter());
         this.client.addFilter(new TimeoutFilter());
+        this.client.addFilter(
+            new AmericanExpressV62HttpRetryFilter(
+                AmericanExpressV62Constants.HttpFilters.MAX_NUM_RETRIES,
+                AmericanExpressV62Constants.HttpFilters.RETRY_SLEEP_MILLISECONDS));
 
         this.apiClient =
                 new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
