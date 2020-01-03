@@ -244,6 +244,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/openbanking/ing",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/openbanking/raiffeisen",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/openbanking/unicredit",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/openbanking/volksbank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/amex",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/argenta",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/axa",
