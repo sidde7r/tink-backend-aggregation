@@ -29,7 +29,7 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
     protected final FinancialDataCacher financialDataCacher;
     protected final AggregationLogger log;
 
-    protected AbstractAgent(CredentialsRequest request, AgentContext context) {
+    protected AbstractAgent(CredentialsRequest request, CompositeAgentContext context) {
         super(new DefaultSuperAbstractAgentStrategy(request, context));
         this.statusUpdater = context;
         this.financialDataCacher = context;

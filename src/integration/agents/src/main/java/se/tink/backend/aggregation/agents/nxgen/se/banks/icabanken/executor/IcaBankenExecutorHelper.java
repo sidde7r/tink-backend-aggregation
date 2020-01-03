@@ -12,9 +12,10 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
@@ -42,18 +43,18 @@ public class IcaBankenExecutorHelper {
     private static final Logger log = LoggerFactory.getLogger(IcaBankenExecutorHelper.class);
 
     private IcaBankenApiClient apiClient;
-    private final AgentContext context;
+    private final StatusUpdater statusUpdater;
     private final SupplementalRequester supplementalRequester;
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
     public IcaBankenExecutorHelper(
             IcaBankenApiClient apiClient,
-            AgentContext context,
+            CompositeAgentContext context,
             Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
-        this.context = context;
+        this.statusUpdater = context;
         this.supplementalRequester = context;
         this.catalog = catalog;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -68,7 +69,8 @@ public class IcaBankenExecutorHelper {
                 () ->
                         TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                                 .setEndUserMessage(
-                                        context.getCatalog()
+                                        statusUpdater
+                                                .getCatalog()
                                                 .getString(
                                                         TransferExecutionException.EndUserMessage
                                                                 .INVALID_SOURCE))
@@ -92,7 +94,8 @@ public class IcaBankenExecutorHelper {
                                                                         SignableOperationStatuses
                                                                                 .FAILED)
                                                                 .setEndUserMessage(
-                                                                        context.getCatalog()
+                                                                        statusUpdater
+                                                                                .getCatalog()
                                                                                 .getString(
                                                                                         TransferExecutionException
                                                                                                 .EndUserMessage
@@ -107,7 +110,7 @@ public class IcaBankenExecutorHelper {
     private Optional<RecipientEntity> addNewRecipient(final AccountIdentifier destination) {
         String recipientType =
                 IcaBankenExecutorUtils.getRecipientType(
-                        destination.getType(), context.getCatalog());
+                        destination.getType(), statusUpdater.getCatalog());
 
         // Create the new recipient.
         RecipientEntity recipientEntity = new RecipientEntity();
@@ -177,13 +180,15 @@ public class IcaBankenExecutorHelper {
 
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage(
-                            context.getCatalog()
+                            statusUpdater
+                                    .getCatalog()
                                     .getString(IcaBankenConstants.LogMessage.NO_RECIPIENT_NAME))
                     .build();
         } catch (SupplementalInfoException e) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage(
-                            context.getCatalog()
+                            statusUpdater
+                                    .getCatalog()
                                     .getString(IcaBankenConstants.LogMessage.NO_RECIPIENT_NAME))
                     .setException(e)
                     .build();
@@ -219,7 +224,8 @@ public class IcaBankenExecutorHelper {
 
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(
-                        context.getCatalog()
+                        statusUpdater
+                                .getCatalog()
                                 .getString(
                                         "Could not find a bank for the given destination account. Check the account number and try again."))
                 .build();
@@ -474,7 +480,7 @@ public class IcaBankenExecutorHelper {
         String message = errorResponse.getResponseStatus().getClientMessage();
 
         if (Strings.isNullOrEmpty(message)) {
-            message = context.getCatalog().getString(generalErrorMessage);
+            message = statusUpdater.getCatalog().getString(generalErrorMessage);
         }
 
         return message;

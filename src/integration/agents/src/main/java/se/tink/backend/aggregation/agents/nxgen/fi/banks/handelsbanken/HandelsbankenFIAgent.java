@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -80,7 +81,7 @@ public class HandelsbankenFIAgent
     protected Optional<TransferController> constructTransferController(
             HandelsbankenFIApiClient client,
             HandelsbankenSessionStorage sessionStorage,
-            AgentContext context) {
+            CompositeAgentContext context) {
         return Optional.empty();
     }
 

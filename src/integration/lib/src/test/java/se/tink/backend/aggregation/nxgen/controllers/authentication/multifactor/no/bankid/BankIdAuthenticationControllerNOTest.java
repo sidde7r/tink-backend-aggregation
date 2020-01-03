@@ -7,8 +7,8 @@ import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -24,22 +24,23 @@ public class BankIdAuthenticationControllerNOTest {
     private final Credentials credentials = new Credentials();
     private BankIdAuthenticationControllerNO authenticationController;
     private BankIdAuthenticatorNO authenticator;
-    private AgentContext context;
+    private SupplementalRequester supplementalRequester;
 
     @Before
     public void setup() throws AuthenticationException, AuthorizationException {
         authenticator = Mockito.mock(BankIdAuthenticatorNO.class);
-        context = Mockito.mock(AgentContext.class);
+        supplementalRequester = Mockito.mock(SupplementalRequester.class);
         Mockito.when(authenticator.collect()).thenReturn(BankIdStatus.DONE);
 
-        authenticationController = new BankIdAuthenticationControllerNO(context, authenticator);
+        authenticationController =
+                new BankIdAuthenticationControllerNO(supplementalRequester, authenticator);
 
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationControllerNO(context, null);
+        new BankIdAuthenticationControllerNO(supplementalRequester, null);
     }
 
     @Test(expected = NullPointerException.class)

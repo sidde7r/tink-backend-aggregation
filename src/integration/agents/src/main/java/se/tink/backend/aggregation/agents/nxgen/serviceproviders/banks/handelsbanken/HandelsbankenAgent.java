@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -94,7 +95,7 @@ public abstract class HandelsbankenAgent<
     }
 
     protected abstract Optional<TransferController> constructTransferController(
-            API client, HandelsbankenSessionStorage sessionStorage, AgentContext context);
+            API client, HandelsbankenSessionStorage sessionStorage, CompositeAgentContext context);
 
     @Override
     protected SessionHandler constructSessionHandler() {

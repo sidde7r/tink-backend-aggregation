@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration;
 
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.EidasContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseMessageSignInterceptor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -14,7 +14,7 @@ public class CreditAgricoleBaseClientConfigurationUtils {
             final AgentsServiceConfiguration configuration,
             final CreditAgricoleBaseApiClient apiClient,
             final TinkHttpClient client,
-            final AgentContext context,
+            final EidasContext context,
             final Class agentClass,
             final AgentConfigurationControllerable agentConfigurationController,
             final Class<CreditAgricoleBaseConfiguration> clientConfigurationClass) {

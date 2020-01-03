@@ -20,22 +20,27 @@ public abstract class AgentContext implements CompositeAgentContext {
     private AgentConfigurationControllerable agentConfigurationController;
     private LogMasker logMasker;
 
+    @Override
     public String getAppId() {
         return appId;
     }
 
+    @Override
     public void setAppId(String appId) {
         this.appId = appId;
     }
 
+    @Override
     public String getClusterId() {
         return clusterId;
     }
 
+    @Override
     public void setClusterId(String clusterId) {
         this.clusterId = clusterId;
     }
 
+    @Override
     public ByteArrayOutputStream getLogOutputStream() {
         return logOutputStream;
     }
@@ -55,10 +60,12 @@ public abstract class AgentContext implements CompositeAgentContext {
         transactionCountByEnabledAccount.clear();
     }
 
+    @Override
     public boolean isTestContext() {
         return isTestContext;
     }
 
+    @Override
     public void setTestContext(boolean isTestContext) {
         this.isTestContext = isTestContext;
     }
@@ -73,31 +80,38 @@ public abstract class AgentContext implements CompositeAgentContext {
         isWaitingOnConnectorTransactions = waitingOnConnectorTransactions;
     }
 
+    @Override
     public Map<String, Integer> getTransactionCountByEnabledAccount() {
         return transactionCountByEnabledAccount;
     }
 
+    @Override
     public MetricRegistry getMetricRegistry() {
         return metricRegistry;
     }
 
+    @Override
     public void setMetricRegistry(MetricRegistry metricRegistry) {
         this.metricRegistry = metricRegistry;
     }
 
+    @Override
     public AgentConfigurationControllerable getAgentConfigurationController() {
         return agentConfigurationController;
     }
 
+    @Override
     public void setAgentConfigurationController(
             AgentConfigurationControllerable agentConfigurationController) {
         this.agentConfigurationController = agentConfigurationController;
     }
 
+    @Override
     public LogMasker getLogMasker() {
         return logMasker;
     }
 
+    @Override
     public void setLogMasker(LogMasker logMasker) {
         this.logMasker = logMasker;
     }

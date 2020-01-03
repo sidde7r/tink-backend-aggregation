@@ -7,7 +7,7 @@ import org.mockito.InOrder;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -20,7 +20,7 @@ import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public class AutoAuthenticationControllerTest {
     private CredentialsRequest request = Mockito.mock(CredentialsRequest.class);
-    private AgentContext context = Mockito.mock(AgentContext.class);
+    private SystemUpdater systemUpdater = Mockito.mock(SystemUpdater.class);
     private TypedAuthenticator multiFactorAuthenticator = Mockito.mock(TypedAuthenticator.class);
     private AutoAuthenticator autoAuthenticator = Mockito.mock(AutoAuthenticator.class);
     private AutoAuthenticationController autoAuthenticationController;
@@ -31,7 +31,7 @@ public class AutoAuthenticationControllerTest {
     public void setup() {
         autoAuthenticationController =
                 new AutoAuthenticationController(
-                        request, context, multiFactorAuthenticator, autoAuthenticator);
+                        request, systemUpdater, multiFactorAuthenticator, autoAuthenticator);
 
         Mockito.when(request.getCredentials()).thenReturn(credentials);
         Mockito.doCallRealMethod().when(credentials).setType(Mockito.any(CredentialsTypes.class));
@@ -44,7 +44,7 @@ public class AutoAuthenticationControllerTest {
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenCredentialsRequest_isNull() {
         new AutoAuthenticationController(
-                null, context, multiFactorAuthenticator, autoAuthenticator);
+                null, systemUpdater, multiFactorAuthenticator, autoAuthenticator);
     }
 
     @Test(expected = NullPointerException.class)
@@ -55,12 +55,12 @@ public class AutoAuthenticationControllerTest {
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenMultiFactorAuthenticator_isNull() {
-        new AutoAuthenticationController(request, context, null, autoAuthenticator);
+        new AutoAuthenticationController(request, systemUpdater, null, autoAuthenticator);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenAutoAuthenticator_isNull() {
-        new AutoAuthenticationController(request, context, multiFactorAuthenticator, null);
+        new AutoAuthenticationController(request, systemUpdater, multiFactorAuthenticator, null);
     }
 
     /** Manual authentication */
@@ -72,7 +72,7 @@ public class AutoAuthenticationControllerTest {
         credentials.setType(CredentialsTypes.PASSWORD);
         Assert.assertNotEquals(multiFactorAuthenticator.getType(), credentials.getType());
 
-        InOrder order = Mockito.inOrder(credentials, multiFactorAuthenticator, context);
+        InOrder order = Mockito.inOrder(credentials, multiFactorAuthenticator, systemUpdater);
         order.verify(credentials).setType(CredentialsTypes.PASSWORD);
 
         autoAuthenticationController.authenticate(credentials);
@@ -80,7 +80,8 @@ public class AutoAuthenticationControllerTest {
         order.verify(credentials).setType(CredentialsTypes.MOBILE_BANKID);
         order.verify(multiFactorAuthenticator).authenticate(credentials);
         order.verify(credentials).setType(CredentialsTypes.PASSWORD);
-        order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials, false);
+        order.verify(systemUpdater)
+                .updateCredentialsExcludingSensitiveInformation(credentials, false);
         Assert.assertEquals(CredentialsTypes.PASSWORD, credentials.getType());
     }
 
@@ -138,10 +139,10 @@ public class AutoAuthenticationControllerTest {
         } catch (LoginException e) {
             Assert.assertEquals(multiFactorAuthenticator.getType(), credentials.getType());
 
-            InOrder order = Mockito.inOrder(multiFactorAuthenticator, context, credentials);
+            InOrder order = Mockito.inOrder(multiFactorAuthenticator, systemUpdater, credentials);
             order.verify(multiFactorAuthenticator).authenticate(credentials);
             order.verify(credentials, Mockito.never()).setType(CredentialsTypes.PASSWORD);
-            order.verify(context)
+            order.verify(systemUpdater)
                     .updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
@@ -176,10 +177,10 @@ public class AutoAuthenticationControllerTest {
         } catch (SessionException e) {
             Assert.assertEquals(multiFactorAuthenticator.getType(), credentials.getType());
 
-            InOrder order = Mockito.inOrder(autoAuthenticator, context, credentials);
+            InOrder order = Mockito.inOrder(autoAuthenticator, systemUpdater, credentials);
             order.verify(autoAuthenticator).autoAuthenticate();
             order.verify(credentials).setType(multiFactorAuthenticator.getType());
-            order.verify(context)
+            order.verify(systemUpdater)
                     .updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
@@ -207,11 +208,14 @@ public class AutoAuthenticationControllerTest {
 
             InOrder order =
                     Mockito.inOrder(
-                            autoAuthenticator, multiFactorAuthenticator, context, credentials);
+                            autoAuthenticator,
+                            multiFactorAuthenticator,
+                            systemUpdater,
+                            credentials);
             order.verify(autoAuthenticator).autoAuthenticate();
             order.verify(multiFactorAuthenticator).authenticate(credentials);
             order.verify(credentials).setType(multiFactorAuthenticator.getType());
-            order.verify(context)
+            order.verify(systemUpdater)
                     .updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }

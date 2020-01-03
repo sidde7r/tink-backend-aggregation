@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.bankid;
 
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdHandler;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdStatus;
@@ -13,13 +12,11 @@ public class CredentialsSignicatBankIdAuthenticationHandler implements SignicatB
             new AggregationLogger(CredentialsSignicatBankIdAuthenticationHandler.class);
 
     private final Credentials credentials;
-    private final AgentContext context;
     private final SupplementalRequester supplementalRequester;
 
     public CredentialsSignicatBankIdAuthenticationHandler(
-            Credentials credentials, AgentContext context) {
+            Credentials credentials, SupplementalRequester context) {
         this.credentials = credentials;
-        this.context = context;
         this.supplementalRequester = context;
     }
 
