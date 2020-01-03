@@ -1,0 +1,10 @@
+java_library(
+    name = "coop",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/entercard",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+    ],
+)

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.coop;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.coop;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardBaseAgentTest;
 
