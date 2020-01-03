@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import se.tink.backend.aggregation.agents.utils.jersey.MessageSignInterceptor;
@@ -44,10 +45,27 @@ public class BoursoramaMessageSignFilter extends MessageSignInterceptor {
 
     @Override
     protected void prepareDigestAndAddAsHeader(HttpRequest request) {
-        String requestBody = (String) Optional.ofNullable(request.getBody()).orElse("");
+        serializeBodyIfNecessary(request);
         request.getHeaders()
                 .add(
                         Psd2Headers.Keys.DIGEST,
-                        boursoramaSignatureHeaderGenerator.getDigestHeaderValue(requestBody));
+                        boursoramaSignatureHeaderGenerator.getDigestHeaderValue(
+                                (String) request.getBody()));
+    }
+
+    private void serializeBodyIfNecessary(HttpRequest request) {
+        Object requestBody = request.getBody();
+        String serializedBody =
+                requestBody instanceof String ? (String) requestBody : serialize(requestBody);
+
+        request.setBody(serializedBody);
+    }
+
+    private String serialize(Object object) {
+        try {
+            return new ObjectMapper().writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

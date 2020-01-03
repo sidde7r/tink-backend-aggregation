@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama;
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.agent;
 
 import org.junit.Before;
 import org.junit.Test;

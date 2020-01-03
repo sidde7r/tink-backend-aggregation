@@ -1,17 +1,16 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "boursorama",
-    srcs = glob(
-        ["**/*.java"],
-        exclude = ["agent/**/*.java"],
-    ),
+    name = "agent",
+    srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:cryptography_test",
         "//etc:development",
     ],
     tags = [
         "external",
+        "manual",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
@@ -20,15 +19,12 @@ junit_test(
     ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/boursorama",
-        "//src/integration/credentials:service",
+        "//src/integration/amount",
+        "//src/integration/api",
         "//src/integration/lib",
-        "//src/integration/lib:lib_test",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:org_assertj_assertj_core",
+        "//src/libraries/serialization",
     ],
 )
