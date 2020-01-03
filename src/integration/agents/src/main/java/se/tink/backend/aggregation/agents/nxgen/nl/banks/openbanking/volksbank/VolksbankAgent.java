@@ -47,7 +47,7 @@ public class VolksbankAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(
-                SubsequentGenerationAgentStrategyFactory.legacy(
+                SubsequentGenerationAgentStrategyFactory.nxgen(
                         request, context, agentsServiceConfiguration.getSignatureKeyPair()));
 
         final String[] payload = request.getProvider().getPayload().split(" ");
