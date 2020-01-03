@@ -26,12 +26,11 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.paym
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.TransactionResponse;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -39,7 +38,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-public final class DnbApiClient {
+public class DnbApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
@@ -66,14 +65,28 @@ public final class DnbApiClient {
         this.client.setEidasProxy(eidasProxyConfiguration);
     }
 
-    public AccountsResponse fetchAccounts() {
+    public URL getAuthorizeUrl(final String state) {
+        sessionStorage.put(StorageKeys.STATE, state);
+        final ConsentResponse consentResponse = getConsent();
+        return new URL(consentResponse.getScaRedirectLink()).queryParam(QueryKeys.STATE, state);
+    }
+
+    public HttpResponse fetchAccounts() {
         return createRequest(new URL(DnbConstants.BASE_URL.concat(Urls.ACCOUNTS)))
                 .header(DnbConstants.HeaderKeys.CONSENT_ID, getConsentId())
-                .get(AccountsResponse.class);
+                .get(HttpResponse.class);
+    }
+
+    public HttpResponse fetchBalances(final String accountId) {
+        return createRequest(
+                        new URL(
+                                DnbConstants.BASE_URL.concat(
+                                        String.format(Urls.BALANCES, accountId))))
+                .header(HeaderKeys.CONSENT_ID, getConsentId())
+                .get(HttpResponse.class);
     }
 
     public PaginatorResponse fetchTransactions(final String accountId, Date fromDate, Date toDate) {
-
         try {
             return createRequest(
                             new URL(
@@ -92,34 +105,22 @@ public final class DnbApiClient {
         }
     }
 
-    public URL getAuthorizeUrl(final String state) {
-        sessionStorage.put(StorageKeys.STATE, state);
-        final ConsentResponse consentResponse = getConsent();
-        return new URL(consentResponse.getScaRedirectLink()).queryParam(QueryKeys.STATE, state);
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, DnbPaymentType dnbPaymentType) {
+        return createRequestWithoutRedirectHeader(
+                        new URL(DnbConstants.BASE_URL.concat(Urls.PAYMENTS))
+                                .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString()))
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
-    public BalancesResponse fetchBalance(final String accountId) {
-        return createRequest(
-                        new URL(
-                                DnbConstants.BASE_URL.concat(
-                                        String.format(Urls.BALANCES, accountId))))
-                .header(HeaderKeys.CONSENT_ID, getConsentId())
-                .get(BalancesResponse.class);
-    }
-
-    private ConsentResponse fetchConsent() {
-        final ConsentRequest consentsRequest =
-                ConsentRequest.builder()
-                        .frequencyPerDay(4)
-                        .recurringIndicator(true)
-                        .combinedServiceIndicator(false)
-                        .validUntil(getValidUntilForConsent())
-                        .build();
-        final URL url = new URL(DnbConstants.BASE_URL.concat(Urls.CONSENTS));
-
-        return createRequestWithRedirectStateAndCode(url)
-                .body(consentsRequest.toData())
-                .post(ConsentResponse.class);
+    public GetPaymentResponse getPayment(DnbPaymentType dnbPaymentType, String paymentId) {
+        return createRequestWithoutRedirectHeader(
+                        new URL(DnbConstants.BASE_URL.concat(Urls.GET_PAYMENT))
+                                .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString())
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .get(GetPaymentResponse.class);
     }
 
     private RequestBuilder createRequestWithoutRedirectHeader(final URL url) {
@@ -148,6 +149,14 @@ public final class DnbApiClient {
                 .header(HeaderKeys.TPP_REDIRECT_URI, decodeUrl(redirectUrl));
     }
 
+    private String decodeUrl(final URL url) {
+        try {
+            return URLDecoder.decode(url.toString(), UTF_8);
+        } catch (final UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(ErrorMessages.URL_ENCODING_ERROR);
+        }
+    }
+
     private ConsentResponse getConsent() {
         return sessionStorage
                 .get(StorageKeys.CONSENT_OBJECT, ConsentResponse.class)
@@ -159,16 +168,19 @@ public final class DnbApiClient {
                         });
     }
 
-    private String getConsentId() {
-        return getConsent().getConsentId();
-    }
+    private ConsentResponse fetchConsent() {
+        final ConsentRequest consentsRequest =
+                ConsentRequest.builder()
+                        .frequencyPerDay(DnbConstants.ConsentRequestValues.FREQUENCY_PER_DAY)
+                        .recurringIndicator(true)
+                        .combinedServiceIndicator(false)
+                        .validUntil(getValidUntilForConsent())
+                        .build();
+        final URL url = new URL(DnbConstants.BASE_URL.concat(Urls.CONSENTS));
 
-    private String decodeUrl(final URL url) {
-        try {
-            return URLDecoder.decode(url.toString(), UTF_8);
-        } catch (final UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(ErrorMessages.URL_ENCODING_ERROR);
-        }
+        return createRequestWithRedirectStateAndCode(url)
+                .body(consentsRequest.toData())
+                .post(ConsentResponse.class);
     }
 
     private Date getValidUntilForConsent() {
@@ -177,21 +189,7 @@ public final class DnbApiClient {
         return now.getTime();
     }
 
-    public CreatePaymentResponse createPayment(
-            CreatePaymentRequest createPaymentRequest, DnbPaymentType dnbPaymentType) {
-        return createRequestWithoutRedirectHeader(
-                        new URL(DnbConstants.BASE_URL.concat(Urls.PAYMENTS))
-                                .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString()))
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .post(CreatePaymentResponse.class, createPaymentRequest);
-    }
-
-    public GetPaymentResponse getPayment(DnbPaymentType dnbPaymentType, String paymentId) {
-        return createRequestWithoutRedirectHeader(
-                        new URL(DnbConstants.BASE_URL.concat(Urls.GET_PAYMENT))
-                                .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString())
-                                .parameter(IdTags.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .get(GetPaymentResponse.class);
+    private String getConsentId() {
+        return getConsent().getConsentId();
     }
 }

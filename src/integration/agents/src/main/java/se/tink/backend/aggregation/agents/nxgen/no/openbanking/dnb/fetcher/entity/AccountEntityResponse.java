@@ -54,7 +54,8 @@ public class AccountEntityResponse {
     }
 
     private TransactionalAccountType getAccountType() {
-        return name.trim().equalsIgnoreCase(AccountTypes.SAVINGS)
+        return name.toLowerCase().contains(AccountTypes.SAVINGS_NO.toLowerCase())
+                        || name.toLowerCase().contains(AccountTypes.SAVINGS_EN.toLowerCase())
                 ? TransactionalAccountType.SAVINGS
                 : TransactionalAccountType.CHECKING;
     }

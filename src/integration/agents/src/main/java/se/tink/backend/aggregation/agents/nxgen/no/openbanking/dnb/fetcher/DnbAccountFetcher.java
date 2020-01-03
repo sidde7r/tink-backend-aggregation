@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.entity.AccountEntityResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -19,7 +20,9 @@ public class DnbAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.fetchAccounts().getAccountEntities().stream()
+        AccountsResponse accountsResponse =
+                apiClient.fetchAccounts().getBody(AccountsResponse.class);
+        return accountsResponse.getAccountEntities().stream()
                 .map(this::addBalanceAndToTinkAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -28,8 +31,10 @@ public class DnbAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private Optional<TransactionalAccount> addBalanceAndToTinkAccount(
             final AccountEntityResponse accountEntityResponse) {
-        final BalancesResponse balancesResponse =
-                apiClient.fetchBalance(accountEntityResponse.getBban());
+        BalancesResponse balancesResponse =
+                apiClient
+                        .fetchBalances(accountEntityResponse.getBban())
+                        .getBody(BalancesResponse.class);
         return accountEntityResponse.toTinkAccount(balancesResponse);
     }
 }
