@@ -10,16 +10,6 @@ public final class SubsequentGenerationAgentStrategyFactory {
         throw new AssertionError();
     }
 
-    /** @deprecated This strategy should eventually be removed. Use nxgen() instead. */
-    @Deprecated
-    public static SubsequentGenerationAgentStrategy legacy(
-            final CredentialsRequest credentialsRequest,
-            final AgentContext context,
-            final SignatureKeyPair signatureKeyPair) {
-        return new LegacySubsequentGenerationAgentStrategy(
-                credentialsRequest, context, signatureKeyPair);
-    }
-
     public static SubsequentGenerationAgentStrategy nxgen(
             final CredentialsRequest credentialsRequest,
             final AgentContext context,
