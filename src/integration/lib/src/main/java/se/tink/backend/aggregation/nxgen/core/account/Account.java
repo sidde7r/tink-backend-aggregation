@@ -10,9 +10,9 @@ import com.google.common.collect.Maps;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -51,6 +51,7 @@ public abstract class Account {
     protected Set<AccountFlag> accountFlags;
     protected ExactCurrencyAmount exactBalance;
     protected ExactCurrencyAmount exactAvailableCredit;
+    protected Map<String, String> payload;
 
     // Exists for interoperability only, do not ever use
     protected Account(
@@ -69,6 +70,7 @@ public abstract class Account {
         this.holderName = builder.getHolderNames().stream().findFirst().orElse(null);
         this.temporaryStorage = builder.getTransientStorage();
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
+        this.payload = builder.getPayload();
     }
 
     // This will be removed as part of the improved step builder + agent builder refactoring project
@@ -85,6 +87,7 @@ public abstract class Account {
         this.exactBalance = builder.getExactBalance();
         this.exactAvailableCredit =
                 Optional.ofNullable(builder.getExactAvailableCredit()).orElse(null);
+        this.payload = Maps.newHashMap();
         // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or
         // '-').
         Preconditions.checkState(
@@ -101,6 +104,7 @@ public abstract class Account {
         this.temporaryStorage = builder.getTemporaryStorage();
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
         this.productName = builder.getProductName();
+        this.payload = Maps.newHashMap();
 
         if (Strings.isNullOrEmpty(builder.getAlias())) {
             // Fallback in case the received alias happened to be null at run-time.
@@ -221,6 +225,10 @@ public abstract class Account {
         return this.apiIdentifier;
     }
 
+    public Map<String, String> getPayload() {
+        return payload;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Account && Objects.equal(hashCode(), obj.hashCode());
@@ -272,13 +280,15 @@ public abstract class Account {
     }
 
     private String createPayload(User user) {
-        if (!FeatureFlags.FeatureFlagGroup.MULTI_CURRENCY_FOR_POCS.isFlagInGroup(user.getFlags())) {
+        if (FeatureFlags.FeatureFlagGroup.MULTI_CURRENCY_FOR_POCS.isFlagInGroup(user.getFlags())) {
+            payload.put("currency", exactBalance.getCurrencyCode());
+        }
+
+        if (payload.isEmpty()) {
             return null;
         }
 
-        HashMap<String, String> map = Maps.newHashMap();
-        map.put("currency", exactBalance.getCurrencyCode());
-        return SerializationUtils.serializeToString(map);
+        return SerializationUtils.serializeToString(payload);
     }
 
     // This will be removed as part of the improved step builder + agent builder refactoring project

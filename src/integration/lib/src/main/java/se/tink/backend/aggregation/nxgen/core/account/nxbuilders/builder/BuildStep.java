@@ -37,5 +37,14 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      */
     <V> B putInTemporaryStorage(@Nonnull String key, @Nonnull V value);
 
+    /**
+     * Stores the value under the given key in the account payload.
+     *
+     * @param key Key to store the value under.
+     * @param value The value to be stored.
+     * @return The final step of the builder.
+     */
+    B putPayload(@Nonnull String key, @Nonnull String value);
+
     B setBankIdentifier(String number);
 }

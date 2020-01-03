@@ -4,7 +4,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -22,6 +24,7 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     private final List<HolderName> holderNames = new ArrayList<>();
     protected final List<AccountFlag> accountFlags = new ArrayList<>();
     private final TemporaryStorage temporaryStorage = new TemporaryStorage();
+    protected Map<String, String> payload = new HashMap<>();
 
     protected abstract B buildStep();
 
@@ -90,4 +93,13 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     TemporaryStorage getTransientStorage() {
         return temporaryStorage;
     }
+
+    public B putPayload(@Nonnull String key, @Nonnull String value) {
+        payload.put(key, value);
+        return buildStep();
+    }
+
+    public Map<String, String> getPayload() {
+        return payload;
+    };
 }
