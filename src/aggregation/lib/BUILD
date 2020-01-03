@@ -168,6 +168,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/ing",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/labanquepostale",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/monabanq",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/societegenerale",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/gb/openbanking/handelsbanken",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/hu/openbanking/granitbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/hu/openbanking/mkb",
