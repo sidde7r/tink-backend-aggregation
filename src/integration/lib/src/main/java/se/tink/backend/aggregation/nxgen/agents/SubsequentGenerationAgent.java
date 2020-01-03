@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.SuperAbstractAgent;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -34,7 +35,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
  * imposing authenticator removed.
  */
 public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
-        implements TransferExecutorNxgen, PersistentLogin {
+        implements TransferExecutorNxgen, PaymentControllerable, PersistentLogin {
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -166,6 +167,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         return Optional.ofNullable(transferController);
     }
 
+    @Override
     public Optional<PaymentController> getPaymentController() {
         if (paymentController == null) {
             paymentController = constructPaymentController().orElse(null);

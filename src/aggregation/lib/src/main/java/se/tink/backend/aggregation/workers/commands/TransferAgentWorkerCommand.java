@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -88,14 +88,12 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 } else {
                     transferExecutor.execute(transfer);
                 }
-            } else if (agent instanceof SubsequentGenerationAgent) {
-                SubsequentGenerationAgent<?> subsequentGenerationAgent =
-                        (SubsequentGenerationAgent) agent;
+            } else if (agent instanceof PaymentControllerable) {
+                PaymentControllerable paymentControllerable = (PaymentControllerable) agent;
 
-                if (subsequentGenerationAgent.getPaymentController().isPresent()) {
+                if (paymentControllerable.getPaymentController().isPresent()) {
                     handlePayment(
-                            subsequentGenerationAgent.getPaymentController().get(),
-                            transferRequest);
+                            paymentControllerable.getPaymentController().get(), transferRequest);
                 } else {
                     TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
                     if (transferRequest.isUpdate()) {
