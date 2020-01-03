@@ -52,7 +52,7 @@ public class NovoBancoAgent extends NextGenerationAgent
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), true);
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         apiClient = new NovoBancoApiClient(client, sessionStorage);
         authenticator = new NovoBancoAuthenticator(apiClient, sessionStorage);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();

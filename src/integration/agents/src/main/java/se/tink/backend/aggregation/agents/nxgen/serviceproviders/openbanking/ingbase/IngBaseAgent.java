@@ -49,7 +49,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
 
     public IngBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, true);
+        super(request, context, signatureKeyPair);
         configureHttpClient(client);
         isManualAuthentication = shouldDoManualAuthentication(request.getCredentials());
         /*

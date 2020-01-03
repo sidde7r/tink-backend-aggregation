@@ -36,7 +36,7 @@ public final class NordeaPartnerAgent extends NextGenerationAgent
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), true);
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         apiClient = new NordeaPartnerApiClient(client, sessionStorage, credentials);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
 

@@ -33,7 +33,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), true);
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         apiClient = new SocieteGeneraleApiClient(client, persistentStorage);
 
         societeGeneraleConfiguration =
