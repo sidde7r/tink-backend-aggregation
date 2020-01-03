@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.remember;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.remember;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardBaseAgentTest;
 
