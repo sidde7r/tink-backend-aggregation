@@ -47,23 +47,6 @@ public abstract class CmcicAgent extends NextGenerationAgent
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    public CmcicAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            boolean useNextGenClient) {
-        super(request, context, signatureKeyPair, useNextGenClient);
-
-        cmcicConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
-
-        apiClient = new CmcicApiClient(client, persistentStorage, sessionStorage);
-
-        clientName = request.getProvider().getPayload();
-
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-    }
-
     protected abstract String getIntegrationName();
 
     @Override

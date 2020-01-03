@@ -8,6 +8,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class CicBankAgent extends EuroInformationAgent {
     public CicBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new CicBankConfiguration(), true);
+        super(request, context, signatureKeyPair, new CicBankConfiguration());
     }
 }

@@ -50,16 +50,7 @@ public abstract class EuroInformationAgent extends NextGenerationAgent
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
             EuroInformationConfiguration config) {
-        this(request, context, signatureKeyPair, config, false);
-    }
-
-    protected EuroInformationAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            EuroInformationConfiguration config,
-            boolean useNextGenClient) {
-        super(request, context, signatureKeyPair, useNextGenClient);
+        super(request, context, signatureKeyPair);
         this.config = config;
         this.apiClient = new EuroInformationApiClient(this.client, sessionStorage, config);
 
