@@ -121,4 +121,10 @@ public class ICSConstants {
         public static final SimpleDateFormat LAST_LOGGED_TIME_FORMAT =
                 new SimpleDateFormat("EEE, dd MMMM yyyy HH:mm:ss z");
     }
+
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 4;
+        public static final int MAX_RETRY_SLEEP_MILLISECONDS = 2000;
+        public static final boolean IS_FIXED_SLEEP_TIME = false;
+    }
 }
