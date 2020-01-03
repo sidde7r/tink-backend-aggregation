@@ -100,7 +100,10 @@ public abstract class EnterCardAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         EnterCardBasePaymentExecutor enterCardBasePaymentExecutor =
                 new EnterCardBasePaymentExecutor(
-                        apiClient, supplementalInformationHelper, enterCardConfiguration);
+                        apiClient,
+                        supplementalInformationHelper,
+                        enterCardConfiguration,
+                        strongAuthenticationState);
 
         return Optional.of(
                 new PaymentController(enterCardBasePaymentExecutor, enterCardBasePaymentExecutor));

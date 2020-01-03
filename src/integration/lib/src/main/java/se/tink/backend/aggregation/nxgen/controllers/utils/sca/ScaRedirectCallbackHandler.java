@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -56,15 +55,15 @@ public class ScaRedirectCallbackHandler {
      * different parameters to them, and check for them in the result.
      *
      * @param redirectUrl URL to open on the client
-     * @param scaState State token used on the SCA callback URL.
+     * @param supplementalInformationKey Supplemental information key, from
+     *     StrongAuthenticationState.
      * @return Parameters passed to the SCA callback (including the state parameter), or empty if it
      *     timed out.
      */
-    public Optional<Map<String, String>> handleRedirect(URL redirectUrl, String scaState) {
+    public Optional<Map<String, String>> handleRedirect(
+            URL redirectUrl, String supplementalInformationKey) {
         final ThirdPartyAppAuthenticationPayload payload = getRedirectPayload(redirectUrl);
         supplementalInformationHelper.openThirdPartyApp(payload);
-
-        final String supplementalInformationKey = OAuthUtils.formatSupplementalKey(scaState);
         return supplementalInformationHelper.waitForSupplementalInformation(
                 supplementalInformationKey, waitFor, unit);
     }
