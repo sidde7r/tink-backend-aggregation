@@ -45,9 +45,8 @@ public class BoursoramaMessageSignFilterTest {
     @Test
     public void singleSignatureHeaderIsAdded() {
         HttpRequestImpl request = new HttpRequestImpl(HttpMethod.GET, new URL("dummy.url"));
-        when(
-                        signatureHeaderGenerator.getSignatureHeaderValue(
-                                any(), any(), any(), any(), any(), any()))
+        when(signatureHeaderGenerator.getSignatureHeaderValue(
+                        any(), any(), any(), any(), any(), any()))
                 .thenReturn("SIGNATURE_HEADER_VALUE");
 
         filter.getSignatureAndAddAsHeader(request);
@@ -75,8 +74,7 @@ public class BoursoramaMessageSignFilterTest {
                 .as("single Digest header is added to request")
                 .hasSize(1);
 
-        assertThat(request.getHeaders().getFirst(Keys.DIGEST))
-                .isEqualTo("DIGEST_HEADER_VALUE");
+        assertThat(request.getHeaders().getFirst(Keys.DIGEST)).isEqualTo("DIGEST_HEADER_VALUE");
     }
 
     @Test

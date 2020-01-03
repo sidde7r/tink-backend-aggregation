@@ -61,8 +61,8 @@ public class BoursoramaApiClient {
         return baseAISRequest(Urls.TRANSACTIONS_TEMPLATE + resourceId, userHash)
                 // FIXME transaction pagination does not work on sandbox - adding params results in
                 // status 403
-                                .queryParam("dateFrom", API_DATE_FORMAT.format(dateFrom))
-                                .queryParam("dateTo", API_DATE_FORMAT.format(dateTo))
+                .queryParam("dateFrom", API_DATE_FORMAT.format(dateFrom))
+                .queryParam("dateTo", API_DATE_FORMAT.format(dateTo))
                 .get(TransactionsResponse.class);
     }
 
@@ -70,6 +70,4 @@ public class BoursoramaApiClient {
         String url = String.format(urlTemplate, userHash);
         return client.request(configuration.getBaseUrl() + url).type(MediaType.APPLICATION_JSON);
     }
-
-
 }
