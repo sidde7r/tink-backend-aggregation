@@ -46,7 +46,7 @@ public class CaixaAgent extends NextGenerationAgent
 
     public CaixaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, true);
+        super(request, context, signatureKeyPair);
 
         this.apiClient = new CaixaApiClient(client);
         this.transactionalAccountRefreshController =

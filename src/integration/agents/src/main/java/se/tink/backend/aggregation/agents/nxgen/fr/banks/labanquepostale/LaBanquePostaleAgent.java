@@ -25,7 +25,7 @@ public class LaBanquePostaleAgent extends NextGenerationAgent
 
     public LaBanquePostaleAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, true);
+        super(request, context, signatureKeyPair);
         apiClient = new LaBanquePostaleApiClient(client);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();

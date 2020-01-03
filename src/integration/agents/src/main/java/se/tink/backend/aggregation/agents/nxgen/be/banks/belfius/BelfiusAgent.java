@@ -49,7 +49,7 @@ public class BelfiusAgent extends NextGenerationAgent
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair(), true);
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         this.belfiusSessionStorage = new BelfiusSessionStorage(this.sessionStorage);
 
         client.addFilter(
