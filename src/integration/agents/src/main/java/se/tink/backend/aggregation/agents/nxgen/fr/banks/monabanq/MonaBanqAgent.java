@@ -8,6 +8,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class MonaBanqAgent extends EuroInformationAgent {
     public MonaBanqAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new MonaBanqConfiguration(), true);
+        super(request, context, signatureKeyPair, new MonaBanqConfiguration());
     }
 }
