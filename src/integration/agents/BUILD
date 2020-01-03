@@ -317,6 +317,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/alandsbanken",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/handelsbanken",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/nordea",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/opbank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/samlink",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/spankki",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/banquepopulaire",
