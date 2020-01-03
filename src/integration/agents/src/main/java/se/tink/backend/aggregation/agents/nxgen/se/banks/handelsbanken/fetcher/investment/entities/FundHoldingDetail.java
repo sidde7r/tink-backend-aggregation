@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.DoubleDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -21,13 +20,23 @@ public class FundHoldingDetail {
         return holdingUnits == 0d;
     }
 
-    public Instrument applyTo(Instrument instrument) {
-        instrument.setAverageAcquisitionPrice(
-                HandelsbankenAmount.asDoubleOrElseNull(averageValueOfCost));
-        instrument.setMarketValue(marketValueFormatted);
-        instrument.setPrice(HandelsbankenAmount.asDoubleOrElseNull(price));
-        instrument.setProfit(HandelsbankenAmount.asDoubleOrElseNull(totalChange));
-        instrument.setQuantity(holdingUnits);
-        return instrument;
+    public double getHoldingUnits() {
+        return holdingUnits;
+    }
+
+    public Double getMarketValueFormatted() {
+        return marketValueFormatted;
+    }
+
+    public HandelsbankenAmount getPrice() {
+        return price;
+    }
+
+    public HandelsbankenAmount getTotalChange() {
+        return totalChange;
+    }
+
+    public HandelsbankenAmount getAverageValueOfCost() {
+        return averageValueOfCost;
     }
 }

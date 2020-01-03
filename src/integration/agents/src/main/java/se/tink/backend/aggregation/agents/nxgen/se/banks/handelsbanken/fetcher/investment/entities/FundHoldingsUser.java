@@ -2,13 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 
 @JsonObject
 public class FundHoldingsUser {
@@ -29,41 +33,42 @@ public class FundHoldingsUser {
         return fundHoldingSummary != null ? fundHoldingSummary.getPurchaseValue() : 0;
     }
 
-    public Portfolio applyTo(Portfolio portfolio) {
-        double summaryMarketValue = toSummaryMarketValue();
-        portfolio.setTotalValue(summaryMarketValue);
-        portfolio.setTotalProfit(summaryMarketValue - toSummaryPurchaseValue());
-
-        portfolio.setUniqueIdentifier(getIdentifier());
-
-        portfolio.setInstruments(toInstruments());
-        return portfolio;
-    }
-
-    private List<Instrument> toInstruments() {
-        if (fundHoldingList == null) {
+    private List<InstrumentModule> toInstrumentModules() {
+        if (Objects.isNull(fundHoldingList)) {
             return Collections.emptyList();
         }
+
         return fundHoldingList.stream()
-                .map(FundHolding::toInstrument)
+                .map(FundHolding::toInstrumentModule)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
     public InvestmentAccount toAccount(CustodyAccount custodyAccount) {
-        return InvestmentAccount.builder(getIdentifier())
-                .setAccountNumber(getIdentifier())
-                .setName(custodyAccount.getTitle())
-                .setCashBalance(Amount.inSEK(0))
-                .setPortfolios(Collections.singletonList(toPortfolio(custodyAccount)))
+        return InvestmentAccount.nxBuilder()
+                .withPortfolios(toPortfolioModule(custodyAccount))
+                .withZeroCashBalance(custodyAccount.getTinkAmount().getCurrency())
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getIdentifier())
+                                .withAccountNumber(getIdentifier())
+                                .withAccountName(custodyAccount.getTitle())
+                                .addIdentifier(AccountIdentifier.create(Type.TINK, getIdentifier()))
+                                .build())
                 .build();
     }
 
-    private Portfolio toPortfolio(CustodyAccount custodyAccount) {
-        Portfolio portfolio = new Portfolio();
-        portfolio.setType(Portfolio.Type.DEPOT);
-        portfolio.setRawType(custodyAccount.getType());
-        return applyTo(portfolio);
+    private PortfolioModule toPortfolioModule(CustodyAccount custodyAccount) {
+        double summaryMarketValue = toSummaryMarketValue();
+        return PortfolioModule.builder()
+                .withType(PortfolioType.DEPOT)
+                .withUniqueIdentifier(getIdentifier())
+                .withCashValue(0.0)
+                .withTotalProfit(summaryMarketValue - toSummaryPurchaseValue())
+                .withTotalValue(summaryMarketValue)
+                .withInstruments(toInstrumentModules())
+                .setRawType(custodyAccount.getType())
+                .build();
     }
 }

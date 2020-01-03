@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
@@ -74,6 +75,7 @@ public class CustodyAccount extends BaseResponse {
         return type;
     }
 
+    @JsonIgnore
     public Amount getTinkAmount() {
         return Optional.ofNullable(marketValue)
                 .map(HandelsbankenAmount::asAmount)
