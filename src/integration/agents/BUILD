@@ -298,6 +298,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/ringkjobinglandbobank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/skjern",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/sparekassensjaellandfyn",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/sparekassenvendsyssel",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/sydbank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/banks/aslhv",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bankinter",
