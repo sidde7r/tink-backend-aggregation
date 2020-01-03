@@ -2,7 +2,10 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "dnb_unit_tests",
-    srcs = glob(["component/**/*.java"]),
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["agent/*.java"],
+    ),
     tags = [
         "external",
     ],
