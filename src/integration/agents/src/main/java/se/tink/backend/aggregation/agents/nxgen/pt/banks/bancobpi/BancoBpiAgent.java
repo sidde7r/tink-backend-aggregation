@@ -50,7 +50,7 @@ public class BancoBpiAgent extends SubsequentProgressiveGenerationAgent
 
     public BancoBpiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(SubsequentGenerationAgentStrategyFactory.legacy(request, context, signatureKeyPair));
+        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
     }
 
     @Override
