@@ -172,6 +172,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/gb/openbanking/handelsbanken",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/hu/openbanking/granitbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/hu/openbanking/mkb",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/hu/openbanking/raiffeisen",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/hu/openbanking/sberbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/hu/openbanking/unicredit",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/creditcards/amex",
