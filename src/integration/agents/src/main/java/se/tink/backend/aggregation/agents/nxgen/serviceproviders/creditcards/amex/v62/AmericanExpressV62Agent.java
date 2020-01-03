@@ -63,30 +63,6 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
-    protected AmericanExpressV62Agent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            AmericanExpressV62Configuration config,
-            boolean useNextGenClient) {
-        super(request, context, signatureKeyPair, useNextGenClient);
-        this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
-        this.client.addFilter(new NoHttpResponseErrorFilter());
-        this.client.addFilter(new TimeoutFilter());
-        this.client.addFilter(
-            new AmericanExpressV62HttpRetryFilter(
-                AmericanExpressV62Constants.HttpFilters.MAX_NUM_RETRIES,
-                AmericanExpressV62Constants.HttpFilters.RETRY_SLEEP_MILLISECONDS));
-
-        this.apiClient =
-                new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
-        this.config = config;
-        this.gateway = new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
-        this.instanceStorage = new AmericanExpressV62Storage();
-
-        this.creditCardRefreshController = constructCreditCardRefreshController();
-    }
-
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
