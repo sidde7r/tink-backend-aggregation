@@ -28,7 +28,7 @@ public abstract class BerlinGroupAgent<
             final CredentialsRequest request,
             final AgentContext context,
             final AgentsServiceConfiguration agentsServiceConfiguration) {
-        this(request, context, agentsServiceConfiguration, false);
+        this(request, context, agentsServiceConfiguration, true);
     }
 
     public BerlinGroupAgent(
