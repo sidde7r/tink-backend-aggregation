@@ -36,9 +36,8 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
     public BnpParibasBaseAgent(
             final CredentialsRequest request,
             final AgentContext context,
-            final SignatureKeyPair signatureKeyPair,
-            boolean useNextGenClient) {
-        super(request, context, signatureKeyPair, useNextGenClient);
+            final SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         this.apiClient = new BnpParibasApiBaseClient(client, sessionStorage);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
