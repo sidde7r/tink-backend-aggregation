@@ -19,10 +19,6 @@ public class TransactionEntity {
         return LocalDate.parse(bookingDate);
     }
 
-    public LocalDate getTransactionDate() {
-        return LocalDate.parse(transactionDate);
-    }
-
     public String getCreditDebitIndicator() {
         return creditDebitIndicator;
     }

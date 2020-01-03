@@ -300,7 +300,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: 'https://api-dsp2-sandbox.boursorama.com'
         redirectUrl: 'https://127.0.0.1:7357/api/v1/thirdparty/callback'
-        clientId: 'SE-FINA-44059'
+        clientId: 'PSDSE-FINA-44059'
         qsealKeyUrl: "https://cdn.tink.se/eidas/tink.pem"
     bpcegroup:
       tink:

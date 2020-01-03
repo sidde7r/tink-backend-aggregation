@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher;
 
+import static java.util.stream.Collectors.collectingAndThen;
+
 import java.util.Collection;
-import java.util.List;
+import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -12,29 +14,28 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BoursoramaTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount>, TransactionFetcher<TransactionalAccount> {
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionDatePaginator<TransactionalAccount> {
 
-    //        CLBD Accounting Balance
-    //        XPCD Instant Balance
-    //        VALU Value-date balance
-    //        OTHR Other Balance
     private static final String INSTANT_BALANCE = "XPCD";
     private static final String ACCOUNTING_BALANCE = "XPCD";
 
     private static final String DEBIT_TRANSACTION_CODE = "DBIT";
     private static final String CASH_ACCOUNT = "CACC";
+    private static final String STATUS_BOOKED = "BOOK";
 
     private final BoursoramaApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -57,18 +58,27 @@ public class BoursoramaTransactionalAccountFetcher
     }
 
     @Override
-    public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+
         String accessToken = sessionStorage.get(BoursoramaConstants.USER_HASH);
 
-        return apiClient.fetchTransactions(accessToken, account.getApiIdentifier())
+        return apiClient
+                .fetchTransactions(accessToken, account.getApiIdentifier(), fromDate, toDate)
                 .getTransactions().stream()
                 .map(this::mapTransaction)
-                .collect(Collectors.toList());
+                .collect(
+                        collectingAndThen(
+                                Collectors.toList(),
+                                transactions ->
+                                        PaginatorResponseImpl.create(
+                                                transactions,
+                                                false /*fixme - temporarily disabling pagination because of bugs in the api*/)));
     }
 
-    private Optional<TransactionalAccount> map(AccountEntity a, String accessToken) {
+    private Optional<TransactionalAccount> map(AccountEntity account, String accessToken) {
         BalanceAmountEntity balance =
-                apiClient.fetchBalances(accessToken, a.getResourceId()).getBalances().stream()
+                apiClient.fetchBalances(accessToken, account.getResourceId()).getBalances().stream()
                         .filter((this::isAvailableBalance))
                         .findAny()
                         .map(BalanceEntity::getBalanceAmount)
@@ -76,7 +86,7 @@ public class BoursoramaTransactionalAccountFetcher
                                 () ->
                                         new IllegalArgumentException(
                                                 "Could not find right type balance for account with id: "
-                                                        + a.getAccountId()));
+                                                        + account.getAccountId()));
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
@@ -86,15 +96,16 @@ public class BoursoramaTransactionalAccountFetcher
                                 ExactCurrencyAmount.of(balance.getAmount(), balance.getCurrency())))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(a.getResourceId())
-                                .withAccountNumber(a.getAccountId().getIban())
-                                .withAccountName(a.getName())
+                                .withUniqueIdentifier(account.getResourceId())
+                                .withAccountNumber(account.getAccountId().getIban())
+                                .withAccountName(account.getName())
                                 .addIdentifier(
                                         new IbanIdentifier(
-                                                a.getBicFi(), a.getAccountId().getIban()))
-                                .setProductName(a.getProduct())
+                                                account.getBicFi(),
+                                                account.getAccountId().getIban()))
+                                .setProductName(account.getProduct())
                                 .build())
-                .setApiIdentifier(a.getResourceId())
+                .setApiIdentifier(account.getResourceId())
                 .build();
     }
 
@@ -103,22 +114,23 @@ public class BoursoramaTransactionalAccountFetcher
                 || ACCOUNTING_BALANCE.equals(balanceEntity.getBalanceType());
     }
 
-    private AggregationTransaction mapTransaction(TransactionEntity a) {
+    private Transaction mapTransaction(TransactionEntity transaction) {
         return Transaction.builder()
-                .setAmount(mapTransactionAmount(a))
-                .setDescription(StringUtils.join(a.getRemittanceInformation(), ';'))
-                .setDate(a.getTransactionDate())
-                .setRawDetails(a.getEntryReference())
+                .setAmount(mapTransactionAmount(transaction))
+                .setDescription(StringUtils.join(transaction.getRemittanceInformation(), ';'))
+                .setDate(transaction.getBookingDate())
+                .setRawDetails(transaction.getEntryReference())
+                .setPending(!STATUS_BOOKED.equals(transaction.getStatus()))
                 .build();
     }
 
-    private ExactCurrencyAmount mapTransactionAmount(TransactionEntity a) {
+    private ExactCurrencyAmount mapTransactionAmount(TransactionEntity transaction) {
         ExactCurrencyAmount amount =
                 ExactCurrencyAmount.of(
-                        a.getTransactionAmount().getAmount(),
-                        a.getTransactionAmount().getCurrency());
+                        transaction.getTransactionAmount().getAmount(),
+                        transaction.getTransactionAmount().getCurrency());
 
-        return DEBIT_TRANSACTION_CODE.equals(a.getCreditDebitIndicator())
+        return DEBIT_TRANSACTION_CODE.equals(transaction.getCreditDebitIndicator())
                 ? amount.negate()
                 : amount;
     }

@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.RefreshTokenRequest;
@@ -17,6 +18,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 public class BoursoramaApiClient {
 
+    private static final SimpleDateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
     private final TinkHttpClient client;
     private final BoursoramaConfiguration configuration;
 
@@ -27,10 +30,9 @@ public class BoursoramaApiClient {
 
     public TokenResponse exchangeAuthorizationCode(TokenRequest tokenRequest)
             throws JsonProcessingException {
-        String requestBody = serializeRequestBody(tokenRequest);
 
         return client.request(configuration.getBaseUrl() + Urls.CONSUME_AUTH_CODE)
-                .body(requestBody, MediaType.APPLICATION_JSON)
+                .body(tokenRequest, MediaType.APPLICATION_JSON)
                 .post(TokenResponse.class);
     }
 
@@ -53,8 +55,14 @@ public class BoursoramaApiClient {
                 .get(BalanceResponse.class);
     }
 
-    public TransactionsResponse fetchTransactions(String userHash, String resourceId) {
+    public TransactionsResponse fetchTransactions(
+            String userHash, String resourceId, Date dateFrom, Date dateTo) {
+
         return baseAISRequest(Urls.TRANSACTIONS_TEMPLATE + resourceId, userHash)
+                // FIXME transaction pagination does not work on sandbox - adding params results in
+                // status 403
+                                .queryParam("dateFrom", API_DATE_FORMAT.format(dateFrom))
+                                .queryParam("dateTo", API_DATE_FORMAT.format(dateTo))
                 .get(TransactionsResponse.class);
     }
 
@@ -63,11 +71,5 @@ public class BoursoramaApiClient {
         return client.request(configuration.getBaseUrl() + url).type(MediaType.APPLICATION_JSON);
     }
 
-    private String serializeRequestBody(Object body) {
-        try {
-            return new ObjectMapper().writeValueAsString(body);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
+
 }
