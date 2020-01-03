@@ -19,6 +19,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.AccessExceededFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.RateLimitRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -55,8 +57,9 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
         client.addFilter(
                 new RateLimitRetryFilter(
                         ICSConstants.HttpClient.MAX_RETRIES,
-                        ICSConstants.HttpClient.MAX_RETRY_SLEEP_MILLISECONDS,
-                        ICSConstants.HttpClient.IS_FIXED_SLEEP_TIME));
+                        ICSConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new AccessExceededFilter());
+        client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     @Override
