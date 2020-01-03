@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.SabadellLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.SabadellAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.SabadellTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.filter.SabadellBankServiceErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.session.SabadellSessionHandler;
 import se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -37,7 +38,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SabadellAgent extends NextGenerationAgent
@@ -80,7 +80,7 @@ public class SabadellAgent extends NextGenerationAgent
     protected void configureHttpClient(TinkHttpClient client) {
         client.addMessageWriter(
                 new NoEscapeOfBackslashMessageBodyWriter(InitiateSessionRequestEntity.class));
-        client.addFilter(new BankServiceInternalErrorFilter());
+        client.addFilter(new SabadellBankServiceErrorFilter());
     }
 
     @Override
