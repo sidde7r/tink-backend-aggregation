@@ -464,6 +464,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/entercard/coop",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/entercard/moregolf",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/entercard/remember",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/icabanken",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/nordea",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/resursbank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/sebopenbanking",
