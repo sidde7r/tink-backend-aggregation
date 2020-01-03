@@ -27,11 +27,23 @@ public class TransactionsFetchResponse {
             throws RequestException {
         try {
             JSONObject data = new JSONObject(rawJsonResponse).getJSONObject("data");
+            handleFetchingError(data);
             parsePagination(data.getJSONObject("PaginacaoOut"));
             parseTransactions(data.getJSONObject("ListaMovimentos").getJSONArray("List"), account);
         } catch (JSONException ex) {
             throw new RequestException(
                     "Credit card transactions fetching unexpected response format");
+        }
+    }
+
+    private void handleFetchingError(JSONObject data) throws JSONException, RequestException {
+        JSONArray errors =
+                data.getJSONObject("TransactionStatus")
+                        .getJSONObject("TransactionErrors")
+                        .getJSONArray("List");
+        if (errors.length() > 0) {
+            throw new RequestException(
+                    "Bank side error occured during fetching credit card transactions");
         }
     }
 

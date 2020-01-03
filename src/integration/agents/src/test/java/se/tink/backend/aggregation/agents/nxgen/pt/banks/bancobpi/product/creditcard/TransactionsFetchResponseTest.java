@@ -52,4 +52,16 @@ public class TransactionsFetchResponseTest {
         // then
         Assert.assertTrue(objectUnderTest.isLastPage());
     }
+
+    @Test(expected = RequestException.class)
+    public void shouldThrowRequestExceptionWhenResponseHasErrorData() throws RequestException {
+        // given
+        final String rawResponseWithError =
+                "{\"versionInfo\": {\"hasModuleVersionChanged\": false,\"hasApiVersionChanged\": false},\"data\": {\"TransactionStatus\": {\"OperationStatusId\": 1,\"TransactionErrors\": {\"List\": [{\"TransactionError\": {\"Source\": \"\",\"Code\": \"\",\"Level\": 0,\"Description\": \"\"}}]},\"AuthStatusReason\": {\"List\": [],\"EmptyListItem\": {\"Status\": \"\",\"Code\": \"\",\"Description\": \"\"}}},\"PaginacaoOut\": {\"uuid\": \"cf14916d-a7c2-411e-8cca-b4b035798412\",\"lastPage\": true,\"pageNumber\": 1,\"pageSize\": 10,\"currentPage\": \"1\",\"recordCount\": \"25\"},\"ListaMovimentos\": {\"List\": [{\"NumeroCartaoMasked\": \"\",\"DataTransaccao\": \"2019-12-17\",\"DataMovimento\": \"2019-12-17\",\"DescricaoTransaccao\": \"S/ENTREGA-PAGAMENTO\",\"MontanteTransaccao\": \"-242.00\",\"Pontos\": \"0.00\",\"PercentagemDesconto\": \"0.000\",\"MontanteDesconto\": \"0.00\",\"CodigoMoedaOrigem\": 0,\"MontanteOrigem\": \"0.00\",\"NumeroSequencia\": 1,\"NumeroContaCartaoMasked\": \"\",\"DataExtracto\": \"01-01-1900\",\"Extracto\": {\"indicador\": false,\"data\": \"1900-01-01T00:00:00\"}},{\"NumeroCartaoMasked\": \"\",\"DataTransaccao\": \"2019-12-13\",\"DataMovimento\": \"2019-12-13\",\"DescricaoTransaccao\": \"IMPOSTO DE SELO\",\"MontanteTransaccao\": \"0.42\",\"Pontos\": \"0.00\",\"PercentagemDesconto\": \"0.000\",\"MontanteDesconto\": \"0.00\",\"CodigoMoedaOrigem\": 0,\"MontanteOrigem\": \"0.00\",\"NumeroSequencia\": 2,\"NumeroContaCartaoMasked\": \"\",\"DataExtracto\": \"01-01-1900\",\"Extracto\": {\"indicador\": true,\"data\": \"1900-01-01T00:00:00\"}}]},\"RequestValid\": true}}";
+        // when
+        TransactionsFetchResponse objectUnderTest =
+                new TransactionsFetchResponse(rawResponseWithError, account);
+        // then
+        // exception should be thrown
+    }
 }
