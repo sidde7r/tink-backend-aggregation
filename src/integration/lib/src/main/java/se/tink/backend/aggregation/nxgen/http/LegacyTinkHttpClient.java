@@ -93,6 +93,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+/** @deprecated Use {@link NextGenTinkHttpClient} instead. */
+@Deprecated
 public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         implements TinkHttpClient {
 

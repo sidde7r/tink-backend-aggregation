@@ -57,7 +57,7 @@ public class SantanderAgent extends SubsequentGenerationAgent<PasswordAuthentica
 
     public SantanderAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(SubsequentGenerationAgentStrategyFactory.legacy(request, context, signatureKeyPair));
+        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
 
         apiClient = new SantanderApiClient(client, sessionStorage);
         authenticator =
