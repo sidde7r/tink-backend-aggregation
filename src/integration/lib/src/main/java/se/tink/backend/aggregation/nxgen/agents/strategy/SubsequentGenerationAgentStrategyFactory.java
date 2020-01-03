@@ -27,18 +27,4 @@ public final class SubsequentGenerationAgentStrategyFactory {
         return new NextGenSubsequentGenerationAgentStrategy(
                 credentialsRequest, context, signatureKeyPair);
     }
-
-    /**
-     * @deprecated This switching method should eventually be removed. Just use nxgen() directly.
-     */
-    public static SubsequentGenerationAgentStrategy create(
-            CredentialsRequest request,
-            final AgentContext context,
-            final SignatureKeyPair signatureKeyPair,
-            final boolean useNextGenClient) {
-        if (useNextGenClient) {
-            return nxgen(request, context, signatureKeyPair);
-        }
-        return legacy(request, context, signatureKeyPair);
-    }
 }
