@@ -29,6 +29,7 @@ public class BankinterCreditCardFetcher
     public Collection<CreditCardAccount> fetchAccounts() {
         return this.apiClient.fetchGlobalPosition().getCreditCardLinks().stream()
                 .map(apiClient::fetchCreditCard)
+                .filter(CreditCardResponse::isCreditCard)
                 .map(CreditCardResponse::toCreditCardAccount)
                 .collect(Collectors.toList());
     }

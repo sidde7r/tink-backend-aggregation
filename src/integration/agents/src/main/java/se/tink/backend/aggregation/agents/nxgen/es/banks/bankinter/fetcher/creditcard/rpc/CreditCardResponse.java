@@ -1,8 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.rpc;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.CardDetails;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.CardState;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.CardTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
@@ -14,13 +24,55 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CreditCardResponse extends HtmlResponse {
-    static final Pattern MASKED_CARD_NUMBER_PATTERN = Pattern.compile("^\\*{12}(\\d{4})$");
+    private static final Logger LOG = LoggerFactory.getLogger(CreditCardResponse.class);
+    private static final Pattern MASKED_CARD_NUMBER_PATTERN = Pattern.compile("^\\*{12}(\\d{4})$");
     private static final Pattern TRANSACTIONS_JSF_SOURCE_PATTERN =
             Pattern.compile(
                     "source:'(movimientos-form:j_id[_0-9a-f]+)',process:'@all',update:'movimientos-form:listaMovimientos");
+    private final Map<String, String> cardDetails;
 
     public CreditCardResponse(String body) {
         super(body);
+        cardDetails = parseCardDetails();
+
+        // log unknown values
+        if (!CardTypes.ALL.contains(getCardType())) {
+            LOG.warn("Unknown card type: " + getCardType());
+        }
+
+        if (!CardState.ALL.contains(getCardState())) {
+            LOG.warn("Unknown card state: " + getCardState());
+        }
+    }
+
+    private Map<String, String> parseCardDetails() {
+        final NodeList keyNodes =
+                evaluateXPath("//div[contains(@class,'head_datos_detalle')]/dl/dt", NodeList.class);
+
+        final HashMap<String, String> dataValues = new HashMap<String, String>();
+        for (int i = 0; i < keyNodes.getLength(); i++) {
+            final Node keyNode = keyNodes.item(i);
+            final Node valueNode = evaluateXPath(keyNode, "following-sibling::dd", Node.class);
+            if (!Objects.isNull(keyNode) && !Objects.isNull(valueNode)) {
+                dataValues.put(
+                        keyNode.getTextContent().trim().toLowerCase(),
+                        valueNode.getTextContent().trim());
+            }
+        }
+
+        return dataValues;
+    }
+
+    private String getCardType() {
+        return cardDetails.get(CardDetails.TYPE);
+    }
+
+    private String getCardState() {
+        return cardDetails.get(CardDetails.STATE);
+    }
+
+    public boolean isCreditCard() {
+        return CardTypes.CREDIT.contains(getCardType());
     }
 
     public CreditCardAccount toCreditCardAccount() {
