@@ -12,7 +12,9 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.c
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -36,6 +38,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
     private SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
     private SocieteGeneraleTransactionalAccountFetcher accountFetcher;
     private SocieteGeneraleTransactionFetcher transactionFetcher;
+    private SignatureHeaderProvider signatureHeaderProvider;
 
     public SocieteGeneraleAgent(
             CredentialsRequest request,
@@ -43,28 +46,26 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         apiClient = new SocieteGeneraleApiClient(client, persistentStorage);
+        apiClient.setConfiguration(societeGeneraleConfiguration);
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
 
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        signatureHeaderProvider = new SignatureHeaderProvider();
+
+        transactionalAccountRefreshController =
+                getTransactionalAccountRefreshController(
+                        agentsServiceConfiguration.getEidasProxy());
         societeGeneraleIdentityDataFetcher =
                 new SocieteGeneraleIdentityDataFetcher(
-                        apiClient, societeGeneraleConfiguration, sessionStorage);
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
+                        apiClient,
+                        societeGeneraleConfiguration,
+                        sessionStorage,
+                        signatureHeaderProvider,
+                        agentsServiceConfiguration.getEidasProxy(),
+                        getEidasIdentity());
 
         societeGeneraleConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(SocieteGeneraleConfiguration.class);
-
-        apiClient.setConfiguration(societeGeneraleConfiguration);
-        client.setEidasProxy(configuration.getEidasProxy());
-
-        accountFetcher.setConfiguration(configuration.getEidasProxy(), getEidasIdentity());
-        transactionFetcher.setConfiguration(configuration.getEidasProxy(), getEidasIdentity());
-        societeGeneraleIdentityDataFetcher.setConfiguration(
-                configuration.getEidasProxy(), getEidasIdentity());
     }
 
     @Override
@@ -114,14 +115,25 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            EidasProxyConfiguration eidasProxyConfiguration) {
         accountFetcher =
                 new SocieteGeneraleTransactionalAccountFetcher(
-                        apiClient, societeGeneraleConfiguration, sessionStorage);
+                        apiClient,
+                        societeGeneraleConfiguration,
+                        sessionStorage,
+                        signatureHeaderProvider,
+                        eidasProxyConfiguration,
+                        getEidasIdentity());
 
         transactionFetcher =
                 new SocieteGeneraleTransactionFetcher(
-                        apiClient, societeGeneraleConfiguration, sessionStorage);
+                        apiClient,
+                        societeGeneraleConfiguration,
+                        sessionStorage,
+                        signatureHeaderProvider,
+                        eidasProxyConfiguration,
+                        getEidasIdentity());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

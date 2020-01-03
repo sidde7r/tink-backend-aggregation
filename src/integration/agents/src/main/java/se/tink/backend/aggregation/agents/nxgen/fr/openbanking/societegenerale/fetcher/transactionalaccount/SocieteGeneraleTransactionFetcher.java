@@ -4,7 +4,7 @@ import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SocieteGeneraleSignatureUtils;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -19,20 +19,21 @@ public class SocieteGeneraleTransactionFetcher
     private final SocieteGeneraleApiClient apiClient;
     private final SocieteGeneraleConfiguration societeGeneraleConfiguration;
     private final SessionStorage sessionStorage;
-    private EidasProxyConfiguration eidasProxyConfiguration;
-    private EidasIdentity eidasIdentity;
+    private final SignatureHeaderProvider signatureHeaderProvider;
+    private final EidasProxyConfiguration eidasProxyConfiguration;
+    private final EidasIdentity eidasIdentity;
 
     public SocieteGeneraleTransactionFetcher(
             SocieteGeneraleApiClient apiClient,
             SocieteGeneraleConfiguration societeGeneraleConfiguration,
-            SessionStorage sessionStorage) {
+            SessionStorage sessionStorage,
+            SignatureHeaderProvider signatureHeaderProvider,
+            EidasProxyConfiguration eidasProxyConfiguration,
+            EidasIdentity eidasIdentity) {
         this.apiClient = apiClient;
         this.societeGeneraleConfiguration = societeGeneraleConfiguration;
         this.sessionStorage = sessionStorage;
-    }
-
-    public void setConfiguration(
-            EidasProxyConfiguration eidasProxyConfiguration, EidasIdentity eidasIdentity) {
+        this.signatureHeaderProvider = signatureHeaderProvider;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
     }
@@ -46,7 +47,7 @@ public class SocieteGeneraleTransactionFetcher
     }
 
     private String buildSignature(String requestId) {
-        return SocieteGeneraleSignatureUtils.buildSignatureHeader(
+        return signatureHeaderProvider.buildSignatureHeader(
                 eidasProxyConfiguration,
                 eidasIdentity,
                 sessionStorage.get(StorageKeys.TOKEN),

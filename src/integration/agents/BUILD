@@ -414,6 +414,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/monabanq",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/paypal",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/societegenerale",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/societegenerale/fetcher/transactionalaccount",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/gb/openbanking/handelsbanken",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/gb/openbanking/paypal",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/hu/openbanking/granitbank",
