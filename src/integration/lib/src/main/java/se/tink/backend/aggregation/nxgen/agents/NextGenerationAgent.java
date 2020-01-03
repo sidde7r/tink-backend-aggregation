@@ -20,7 +20,7 @@ public abstract class NextGenerationAgent extends SubsequentGenerationAgent<Auth
 
     protected NextGenerationAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        this(request, context, signatureKeyPair, false);
+        this(request, context, signatureKeyPair, true);
     }
 
     protected NextGenerationAgent(
