@@ -95,6 +95,7 @@ public final class BankinterConstants {
 
     public static class CardDetails {
         public static final String TYPE = "tipo";
+        public static final String HOLDER_NAME = "titular";
         public static final String STATE = "estado";
     }
 

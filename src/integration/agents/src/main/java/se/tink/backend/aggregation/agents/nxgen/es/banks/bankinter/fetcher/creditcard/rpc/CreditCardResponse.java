@@ -71,6 +71,10 @@ public class CreditCardResponse extends HtmlResponse {
         return cardDetails.get(CardDetails.STATE);
     }
 
+    private String getHolderName() {
+        return cardDetails.get(CardDetails.HOLDER_NAME);
+    }
+
     public boolean isCreditCard() {
         return CardTypes.CREDIT.contains(getCardType());
     }
@@ -104,6 +108,7 @@ public class CreditCardResponse extends HtmlResponse {
                                         AccountIdentifier.create(
                                                 Type.PAYMENT_CARD_NUMBER, cardNumberDigits))
                                 .build())
+                .addHolderName(getHolderName())
                 .putInTemporaryStorage(StorageKeys.FIRST_PAGINATION_KEY, getFirstPaginationKey())
                 .build();
     }
