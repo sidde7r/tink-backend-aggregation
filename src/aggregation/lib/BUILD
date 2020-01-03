@@ -27,6 +27,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/openbanking/bawag",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/openbanking/erstebank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/openbanking/ing",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/openbanking/raiffeisen",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/openbanking/unicredit",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/argenta",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/axa",
