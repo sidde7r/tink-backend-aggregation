@@ -234,4 +234,8 @@ public class HandelsbankenSEConstants {
             }
         }
     }
+
+    public static class AccountPayloadKeys {
+        public static final String FUND_ACCOUNT_NUMBER = "fundAccountNumbers";
+    }
 }

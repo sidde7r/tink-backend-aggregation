@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
@@ -43,5 +44,17 @@ public class FundHolding {
                                         fundHoldingDetail.getTotalChange()))
                         .setRawType(companyName)
                         .build());
+    }
+
+    public String getIsin() {
+        return isin;
+    }
+
+    @JsonIgnore
+    public Optional<String> getFundAccount() {
+        if (Objects.isNull(fundHoldingDetail)) {
+            return Optional.empty();
+        }
+        return Optional.of(fundHoldingDetail.getAccount());
     }
 }

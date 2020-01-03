@@ -15,6 +15,7 @@ public class FundHoldingDetail {
     private HandelsbankenAmount totalChange;
     private HandelsbankenAmount averageValueOfCost;
     private HandelsbankenAmount price;
+    private String account;
 
     public boolean hasNoValue() {
         return holdingUnits == 0d;
@@ -38,5 +39,9 @@ public class FundHoldingDetail {
 
     public HandelsbankenAmount getAverageValueOfCost() {
         return averageValueOfCost;
+    }
+
+    public String getAccount() {
+        return account;
     }
 }
