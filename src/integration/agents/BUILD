@@ -278,6 +278,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/norisbank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/postbank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/santander",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/sparkassen",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/targobank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/unicredit",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/bankdatadk",
