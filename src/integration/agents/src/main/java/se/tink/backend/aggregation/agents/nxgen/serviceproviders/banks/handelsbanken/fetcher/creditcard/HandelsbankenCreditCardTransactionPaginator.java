@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenSECreditCard;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenCreditCard;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenPaginatorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -34,7 +34,7 @@ public abstract class HandelsbankenCreditCardTransactionPaginator<
             CreditCardAccount account, URL key) {
 
         if (key != null) {
-            CreditCardTransactionsResponse<HandelsbankenSECreditCard> response =
+            CreditCardTransactionsResponse<HandelsbankenCreditCard> response =
                     client.creditCardTransactions(key);
             return new HandelsbankenPaginatorResponse(
                     response.tinkTransactions(account), response.getPaginationKey());
@@ -59,7 +59,7 @@ public abstract class HandelsbankenCreditCardTransactionPaginator<
                                     removeSummaryTransactions(
                                             fetchAccountTransactions(handelsbankenAccount));
 
-                            CreditCardTransactionsResponse<HandelsbankenSECreditCard> response =
+                            CreditCardTransactionsResponse<HandelsbankenCreditCard> response =
                                     client.creditCardTransactions(
                                             handelsbankenAccount.getCardTransactionsUrl());
 
