@@ -1,0 +1,28 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "saastopankki",
+    srcs = glob(["**/*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/saastopankki",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/samlink",
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib:lib_test",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:commons_io_commons_io",
+        "//third_party:org_mockito_mockito_core",
+    ],
+)
