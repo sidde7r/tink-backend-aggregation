@@ -305,6 +305,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/sparekassenvendsyssel",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/sydbank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/ee/banks/aslhv",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bankia",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bankinter",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/bbva",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/santander",
