@@ -34,8 +34,7 @@ public class SessionStorage extends Storage implements SensitiveValuesStorage {
     public String put(String key, Object value, boolean mask) {
         final String valueToStore = super.put(key, value);
         if (mask) {
-            Set<String> newSensitiveValues =
-                    SensitiveValuesStorage.extractSensitiveValues(valueToStore);
+            Set<String> newSensitiveValues = StorageUtils.extractSensitiveValues(valueToStore);
             secretValuesSubject.onNext(ImmutableSet.copyOf(newSensitiveValues));
         }
         return valueToStore;
