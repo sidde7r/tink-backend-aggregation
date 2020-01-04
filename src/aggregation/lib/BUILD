@@ -107,6 +107,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/openbanking/targobank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/aktia",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/alandsbanken",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/danskebank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/op",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/spankki",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/creditcards/amex",
