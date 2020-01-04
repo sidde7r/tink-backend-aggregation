@@ -327,6 +327,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/aktia",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/alandsbanken",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/nordea/v33",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/omasp",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/op",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/banks/spankki",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/creditcards/amex",
