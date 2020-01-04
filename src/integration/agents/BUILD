@@ -311,6 +311,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/evobanco",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/ibercaja",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/imaginbank",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/ing/v195",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/santander",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/targo",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/creditcards/amex",
