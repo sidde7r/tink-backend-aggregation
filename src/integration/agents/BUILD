@@ -351,6 +351,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/labanquepostale",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/lcl",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/monabanq",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/societegenerale",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/creditcards/amex",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/bnpparibas",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/bpcegroup",
