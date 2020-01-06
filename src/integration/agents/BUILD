@@ -432,6 +432,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/ubi",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/unicredit",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/widiba",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/mx/banks/citibanamex",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/bunq",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/ics",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/bunq",
