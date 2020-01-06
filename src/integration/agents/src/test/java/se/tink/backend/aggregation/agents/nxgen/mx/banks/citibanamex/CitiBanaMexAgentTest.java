@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.mx;
+package se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex;
 
 import org.junit.AfterClass;
 import org.junit.Before;

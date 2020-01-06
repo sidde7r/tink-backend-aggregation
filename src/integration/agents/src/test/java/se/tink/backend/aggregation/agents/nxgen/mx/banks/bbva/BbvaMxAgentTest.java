@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.mx;
+package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -7,7 +7,6 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 
 public class BbvaMxAgentTest {
 
