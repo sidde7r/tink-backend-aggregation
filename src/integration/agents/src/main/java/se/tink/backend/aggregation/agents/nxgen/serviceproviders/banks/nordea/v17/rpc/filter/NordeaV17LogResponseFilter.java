@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.http.filter.LogResponseFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.LogResponseFilter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class NordeaV17LogResponseFilter extends LogResponseFilter {
