@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.rpc;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +15,6 @@ import org.w3c.dom.NodeList;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.CardDetails;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.CardState;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.CardTypes;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -79,7 +80,7 @@ public class CreditCardResponse extends HtmlResponse {
         return CardTypes.CREDIT.contains(getCardType());
     }
 
-    public CreditCardAccount toCreditCardAccount() {
+    public CreditCardAccount toCreditCardAccount(String accountLink) {
         final String maskedCardNumber;
         final String cardNumberDigits;
         try {
@@ -109,7 +110,7 @@ public class CreditCardResponse extends HtmlResponse {
                                                 Type.PAYMENT_CARD_NUMBER, cardNumberDigits))
                                 .build())
                 .addHolderName(getHolderName())
-                .putInTemporaryStorage(StorageKeys.FIRST_PAGINATION_KEY, getFirstPaginationKey())
+                .setApiIdentifier(Preconditions.checkNotNull(Strings.emptyToNull(accountLink)))
                 .build();
     }
 
@@ -158,7 +159,7 @@ public class CreditCardResponse extends HtmlResponse {
                         .replaceAll("\\s+", ""));
     }
 
-    private PaginationKey getFirstPaginationKey() {
+    public PaginationKey getFirstPaginationKey() {
         final Matcher matcher = TRANSACTIONS_JSF_SOURCE_PATTERN.matcher(body);
         if (matcher.find()) {
             final String jsfSource = matcher.group(1);

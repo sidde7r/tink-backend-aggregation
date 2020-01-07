@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.cred
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.rpc.CreditCardResponse;
@@ -28,20 +28,28 @@ public class BankinterCreditCardFetcher
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return this.apiClient.fetchGlobalPosition().getCreditCardLinks().stream()
-                .map(apiClient::fetchCreditCard)
-                .filter(CreditCardResponse::isCreditCard)
-                .map(CreditCardResponse::toCreditCardAccount)
+                .map(this::fetchCreditCardAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    private Optional<CreditCardAccount> fetchCreditCardAccount(String accountLink) {
+        final CreditCardResponse cardResponse = apiClient.fetchCreditCard(accountLink);
+        if (!cardResponse.isCreditCard()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(cardResponse.toCreditCardAccount(accountLink));
     }
 
     public TransactionsResponse fetchTransactionsPage(
             CreditCardAccount account, PaginationKey key) {
         if (Objects.isNull(key)) {
             // first page, get view state from account
-            key =
-                    account.getFromTemporaryStorage(
-                                    StorageKeys.FIRST_PAGINATION_KEY, PaginationKey.class)
-                            .get();
+            final CreditCardResponse cardResponse =
+                    apiClient.fetchCreditCard(account.getApiIdentifier());
+            key = cardResponse.getFirstPaginationKey();
         }
 
         return apiClient.fetchJsfUpdate(
