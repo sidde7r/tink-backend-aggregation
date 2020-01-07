@@ -35,7 +35,6 @@ junit_test(
         "//src/integration/sa_agent/sa_grpc_api:sa-grpc-api",
         "//third_party:standalone_agent_test_libs",
         "//third_party/sa_agent:grpc_client_libs",
-        "@org_slf4j_slf4j_api//jar",
     ],
 )
 
@@ -54,7 +53,5 @@ junit_test(
         "//src/integration/sa_agent/sa_agent_framework:sa-agent-framework",
         "//third_party:standalone_agent_test_libs",
         "//third_party/sa_agent:grpc_client_libs",
-        "@junit_junit//jar",
-        "@org_slf4j_slf4j_api//jar",
     ],
 )
