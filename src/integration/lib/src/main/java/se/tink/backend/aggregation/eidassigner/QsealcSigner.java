@@ -30,12 +30,12 @@ public class QsealcSigner {
     private final EidasIdentity eidasIdentity;
 
     private QsealcSigner(
-            QsealcSignerHttpClient httpClient,
+            QsealcSignerHttpClient qsealcSignerHttpClient,
             QsealcAlg alg,
             String host,
             String oldCertId,
             EidasIdentity eidasIdentity) {
-        this.qsealcSignerHttpClient = httpClient;
+        this.qsealcSignerHttpClient = qsealcSignerHttpClient;
         this.alg = alg;
         this.host = host;
         this.oldCertId = oldCertId;
@@ -64,7 +64,7 @@ public class QsealcSigner {
         try {
             log.info("Return a singleton httpclient");
             return new QsealcSigner(
-                    QsealcSignerHttpClient.getHttpClient(conf),
+                    QsealcSignerHttpClient.create(conf),
                     alg,
                     conf.getHost(),
                     oldCertId,

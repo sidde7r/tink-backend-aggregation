@@ -81,14 +81,14 @@ public class QsealcSignerHttpClientTest {
             Assert.assertNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
 
             QsealcSignerHttpClient httpClient_first_get =
-                    QsealcSignerHttpClient.getHttpClient(configuration);
+                    QsealcSignerHttpClient.create(configuration);
             QsealcSignerHttpClient httpClient_second_get =
-                    QsealcSignerHttpClient.getHttpClient(configuration);
+                    QsealcSignerHttpClient.create(configuration);
             Assert.assertEquals(httpClient_first_get, httpClient_second_get);
             Assert.assertNotNull(QsealcSignerHttpClient.httpClient);
             Assert.assertNotNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
 
-            QsealcSignerHttpClient httpClient = QsealcSignerHttpClient.getHttpClient(configuration);
+            QsealcSignerHttpClient httpClient = QsealcSignerHttpClient.create(configuration);
             HttpPost post = new HttpPost("http://127.0.0.1:11111/test/");
             CloseableHttpResponse response = httpClient.execute(post);
             Assert.assertEquals(200, response.getStatusLine().getStatusCode());

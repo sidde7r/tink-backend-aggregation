@@ -30,7 +30,7 @@ public class QsealcSignerHttpClient {
     static CloseableHttpClient httpClient;
     static QsealcSignerHttpClient qsealcSignerHttpClient;
 
-    static synchronized QsealcSignerHttpClient getHttpClient(InternalEidasProxyConfiguration conf) {
+    static synchronized QsealcSignerHttpClient create(InternalEidasProxyConfiguration conf) {
         if (qsealcSignerHttpClient == null) {
             qsealcSignerHttpClient = new QsealcSignerHttpClient();
         }
