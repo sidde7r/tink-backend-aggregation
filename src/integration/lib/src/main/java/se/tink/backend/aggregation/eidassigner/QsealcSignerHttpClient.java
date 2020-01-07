@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.eidassigner;
 
+import java.io.IOException;
 import java.security.KeyStore;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.HttpClientConnectionManager;
@@ -15,6 +17,7 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeaderElementIterator;
@@ -23,10 +26,14 @@ import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfigu
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 
 public class QsealcSignerHttpClient {
-    private static HttpClient httpClient;
+    private static CloseableHttpClient httpClient;
     private static IdleConnectionMonitorThread staleMonitor;
+    private static QsealcSignerHttpClient qsealcSignerHttpClient;
 
-    static synchronized HttpClient getHttpClient(InternalEidasProxyConfiguration conf) {
+    static synchronized QsealcSignerHttpClient getHttpClient(InternalEidasProxyConfiguration conf) {
+        if (qsealcSignerHttpClient == null) {
+            qsealcSignerHttpClient = new QsealcSignerHttpClient();
+        }
         if (httpClient == null) {
             try {
                 KeyStore trustStore = conf.getRootCaTrustStore();
@@ -91,7 +98,13 @@ public class QsealcSignerHttpClient {
                 throw new IllegalStateException(e);
             }
         }
-        return httpClient;
+        return qsealcSignerHttpClient;
+    }
+
+    public CloseableHttpResponse execute(HttpPost post) throws IOException {
+        try (CloseableHttpResponse response = httpClient.execute(post)) {
+            return response;
+        }
     }
 
     private static class IdleConnectionMonitorThread extends Thread {

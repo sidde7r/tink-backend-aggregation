@@ -13,6 +13,7 @@ junit_test(
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",
         "//third_party:jetty_server9",
+        "//third_party:commons_io_commons_io",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",

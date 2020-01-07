@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.slf4j.Logger;
@@ -24,14 +23,14 @@ public class QsealcSigner {
     private static final String TINK_QSEALC_CLUSTERID = "X-Tink-QSealC-ClusterId";
     private static final String TINK_REQUESTER = "X-SignRequester";
 
-    private final HttpClient httpClient;
+    private final QsealcSignerHttpClient httpClient;
     private final QsealcAlg alg;
     private final String host;
     private final String oldCertId;
     private final EidasIdentity eidasIdentity;
 
     private QsealcSigner(
-            HttpClient httpClient,
+            QsealcSignerHttpClient httpClient,
             QsealcAlg alg,
             String host,
             String oldCertId,
