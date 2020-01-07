@@ -18,7 +18,7 @@ public class SibsConstants {
         public static final String PSU_INVOLVED = "psuInvolved";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_FROM = "dateFrom";
-        public static final String TIP_REDIRECT_PREFERRED = "tppRedirectPreferred";
+        public static final String TPP_REDIRECT_PREFERRED = "tppRedirectPreferred";
     }
 
     public static class HeaderValues {
