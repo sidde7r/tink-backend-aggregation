@@ -26,9 +26,9 @@ import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfigu
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 
 public class QsealcSignerHttpClient {
-    private static CloseableHttpClient httpClient;
     private static IdleConnectionMonitorThread staleMonitor;
-    private static QsealcSignerHttpClient qsealcSignerHttpClient;
+    static CloseableHttpClient httpClient;
+    static QsealcSignerHttpClient qsealcSignerHttpClient;
 
     static synchronized QsealcSignerHttpClient getHttpClient(InternalEidasProxyConfiguration conf) {
         if (qsealcSignerHttpClient == null) {

@@ -77,12 +77,16 @@ public class QsealcSignerHttpClientTest {
     public void qsealcSignerHttpClientTest() {
         try {
             Assert.assertEquals("development", configuration.getEnvironment());
+            Assert.assertNull(QsealcSignerHttpClient.httpClient);
+            Assert.assertNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
 
             QsealcSignerHttpClient httpClient_first_get =
                     QsealcSignerHttpClient.getHttpClient(configuration);
             QsealcSignerHttpClient httpClient_second_get =
                     QsealcSignerHttpClient.getHttpClient(configuration);
             Assert.assertEquals(httpClient_first_get, httpClient_second_get);
+            Assert.assertNotNull(QsealcSignerHttpClient.httpClient);
+            Assert.assertNotNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
 
             QsealcSignerHttpClient httpClient = QsealcSignerHttpClient.getHttpClient(configuration);
             HttpPost post = new HttpPost("http://127.0.0.1:11111/test/");

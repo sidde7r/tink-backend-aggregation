@@ -23,7 +23,7 @@ public class QsealcSigner {
     private static final String TINK_QSEALC_CLUSTERID = "X-Tink-QSealC-ClusterId";
     private static final String TINK_REQUESTER = "X-SignRequester";
 
-    private final QsealcSignerHttpClient httpClient;
+    private final QsealcSignerHttpClient qsealcSignerHttpClient;
     private final QsealcAlg alg;
     private final String host;
     private final String oldCertId;
@@ -35,7 +35,7 @@ public class QsealcSigner {
             String host,
             String oldCertId,
             EidasIdentity eidasIdentity) {
-        this.httpClient = httpClient;
+        this.qsealcSignerHttpClient = httpClient;
         this.alg = alg;
         this.host = host;
         this.oldCertId = oldCertId;
@@ -98,7 +98,7 @@ public class QsealcSigner {
             post.setHeader(TINK_REQUESTER, eidasIdentity.getRequester());
             post.setEntity(new ByteArrayEntity(Base64.getEncoder().encode(signingData)));
             long start = System.nanoTime();
-            HttpResponse response = httpClient.execute(post);
+            HttpResponse response = qsealcSignerHttpClient.execute(post);
             long total = System.nanoTime() - start;
             long eidasSigningRoundtrip = TimeUnit.SECONDS.convert(total, TimeUnit.NANOSECONDS);
             if (eidasSigningRoundtrip > 0) {
