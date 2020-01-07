@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public abstract class NemIdCodeAppAuthenticator<T> implements ThirdPartyAppAuthenticator<String> {

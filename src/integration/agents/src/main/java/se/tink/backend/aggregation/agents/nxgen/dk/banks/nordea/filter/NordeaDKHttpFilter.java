@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.http.filter.AbstractRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.AbstractRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public class NordeaDKHttpFilter extends AbstractRetryFilter {

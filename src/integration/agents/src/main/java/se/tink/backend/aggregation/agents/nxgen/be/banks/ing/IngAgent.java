@@ -43,8 +43,8 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
 public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
         implements RefreshTransferDestinationExecutor,

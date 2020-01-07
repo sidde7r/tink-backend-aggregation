@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class EnterCardApiClient {
