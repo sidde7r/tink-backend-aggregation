@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter;
 
+import com.google.common.collect.Sets;
+import java.util.Set;
+
 public final class BankinterConstants {
 
     public static final String INTEGRATION_NAME = "bankinter";
@@ -88,5 +91,23 @@ public final class BankinterConstants {
     public static class StorageKeys {
         public static final String FIRST_PAGINATION_KEY = "firstPaginationKey";
         public static final String RESPONSE_BODY = "responseBody";
+    }
+
+    public static class CardDetails {
+        public static final String TYPE = "tipo";
+        public static final String HOLDER_NAME = "titular";
+        public static final String STATE = "estado";
+    }
+
+    public static class CardTypes {
+        public static final Set<String> CREDIT = Sets.newHashSet("visa clasi");
+        public static final Set<String> DEBIT = Sets.newHashSet("visa debit");
+        public static final Set<String> ALL = Sets.union(CREDIT, DEBIT);
+    }
+
+    public static class CardState {
+        public static final String REQUESTED = "solicitada";
+        public static final String ENABLED = "activa";
+        public static final Set<String> ALL = Sets.newHashSet(REQUESTED, ENABLED);
     }
 }
