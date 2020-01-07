@@ -25,11 +25,11 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 public abstract class Filter {
     private Filter next;
 
-    /* package */ void setNext(Filter next) {
+    public void setNext(Filter next) {
         this.next = next;
     }
 
-    /* package */ final Filter getNext() {
+    public final Filter getNext() {
         return next;
     }
 
