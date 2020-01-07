@@ -19,15 +19,15 @@ public class HandelsbankenAccountConverter implements HandelsbankenBaseAccountCo
                             "Allkonto Ung",
                             "Allkonto",
                             "Checkkonto",
-                            "Privatkonto")
+                            "Privatkonto",
+                            "shb-anställds konto")
                     .put(TransactionalAccountType.CHECKING, "euro privat")
                     // Not transactional accounts
                     .ignoreKeys(
                             // Credit card
                             "allkortskonto",
                             // Business account
-                            "valutakonto utan ränta",
-                            "shb-anställds konto")
+                            "valutakonto utan ränta")
                     .build();
 
     @Override
