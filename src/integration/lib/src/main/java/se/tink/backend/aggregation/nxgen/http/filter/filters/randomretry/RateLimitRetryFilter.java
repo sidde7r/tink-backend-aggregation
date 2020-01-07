@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.filter;
+package se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry;
 
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
