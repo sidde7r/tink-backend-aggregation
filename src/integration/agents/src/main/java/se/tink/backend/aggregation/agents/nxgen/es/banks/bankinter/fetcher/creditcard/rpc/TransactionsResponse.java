@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.cred
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -53,6 +54,15 @@ public class TransactionsResponse extends JsfUpdateResponse {
                 transactions, "//table[contains(@class,'tableSlide')]/tbody/tr", NodeList.class);
     }
 
+    private boolean hasNoTransactions() {
+        if (getTransactionRows().getLength() == 1) {
+            final Node row = getTransactionRows().item(0);
+            return evaluateXPath(row, "td[contains(@class,'sinMov')]", Boolean.class)
+                    .booleanValue();
+        }
+        return false;
+    }
+
     private Optional<LocalDate> getTransactionDate(Node row) {
         final String dateValue = evaluateXPath(row, "td[1]", String.class).trim();
         if (dateValue.isEmpty()) {
@@ -79,6 +89,10 @@ public class TransactionsResponse extends JsfUpdateResponse {
     }
 
     public List<? extends Transaction> toTinkTransactions() {
+        if (hasNoTransactions()) {
+            return Collections.emptyList();
+        }
+
         LocalDate transactionDate = null;
         ArrayList<Transaction> transactions = new ArrayList<>();
         final NodeList transactionRows = getTransactionRows();

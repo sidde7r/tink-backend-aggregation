@@ -86,6 +86,13 @@ public class TransactionsResponseTest {
         assertNull(response.getNextKey());
     }
 
+    @Test
+    public void testEmptyPageTransactionsResponse() {
+        final TransactionsResponse response =
+                loadTestResponse("12.card_transactions_empty.xhtml", TransactionsResponse.class);
+        assertEquals(0, response.toTinkTransactions().size());
+    }
+
     private TransactionMatcher matchesTransaction(String date, String description, double eur) {
         return new TransactionMatcher(date, description, eur);
     }
