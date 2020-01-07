@@ -194,10 +194,10 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 ClientResponse internalResponse =
                         resource.method(httpRequest.getMethod().toString(), ClientResponse.class);
                 // `HttpResponse` uses the `ClientResponse` object internally
-                return new HttpResponse(httpRequest, internalResponse);
+                return new JerseyHttpResponse(httpRequest, internalResponse);
             } catch (UniformInterfaceException e) {
                 throw new HttpResponseException(
-                        e, httpRequest, new HttpResponse(httpRequest, e.getResponse()));
+                        e, httpRequest, new JerseyHttpResponse(httpRequest, e.getResponse()));
             } catch (ClientHandlerException e) {
                 throw new HttpClientException(e, httpRequest);
             }
