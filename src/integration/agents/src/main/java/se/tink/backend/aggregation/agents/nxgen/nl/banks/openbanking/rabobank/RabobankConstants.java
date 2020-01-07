@@ -83,4 +83,9 @@ public class RabobankConstants {
                 "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";
         public static final String PSU_IP_ADDRESS = "0.0.0.0";
     }
+
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 4;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
+    }
 }

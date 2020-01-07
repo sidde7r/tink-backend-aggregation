@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.http.filter.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
@@ -74,8 +73,6 @@ public final class RabobankApiClient {
         this.requestIsManual = requestIsManual;
 
         this.qsealcPem = rabobankConfiguration.getQsealCert();
-
-        client.addFilter(new AccessExceededFilter());
     }
 
     public TokenResponse exchangeAuthorizationCode(final Form request) {

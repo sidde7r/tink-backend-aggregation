@@ -31,6 +31,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.AccessExceededFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.RateLimitRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class RabobankAgent
@@ -51,7 +54,7 @@ public final class RabobankAgent
         super(
                 SubsequentGenerationAgentStrategyFactory.nxgen(
                         request, context, agentsConfiguration.getSignatureKeyPair()));
-
+        configureHttpClient(client);
         clientName = request.getProvider().getPayload();
 
         final RabobankConfiguration rabobankConfiguration =
@@ -96,6 +99,14 @@ public final class RabobankAgent
             ImmutableSet<String> whitelistedValues = ImmutableSet.of(refreshToken);
             context.getLogMasker().addAgentWhitelistedValues(whitelistedValues);
         }
+    }
+
+    private void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(
+                new RateLimitRetryFilter(
+                        RabobankConstants.HttpClient.MAX_RETRIES,
+                        RabobankConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new AccessExceededFilter());
     }
 
     @Override
