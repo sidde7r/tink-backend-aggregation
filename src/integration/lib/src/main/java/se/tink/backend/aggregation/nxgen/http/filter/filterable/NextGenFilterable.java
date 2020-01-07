@@ -1,10 +1,11 @@
-package se.tink.backend.aggregation.nxgen.http.filter;
+package se.tink.backend.aggregation.nxgen.http.filter.filterable;
 
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
+import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.DefaultOrderedFiltersSorter;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.OrderedFiltersSorter;
 

@@ -1,4 +1,6 @@
-package se.tink.backend.aggregation.nxgen.http.filter;
+package se.tink.backend.aggregation.nxgen.http.filter.filterable;
+
+import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 
 public interface Filterable<F extends Filterable> {
 
