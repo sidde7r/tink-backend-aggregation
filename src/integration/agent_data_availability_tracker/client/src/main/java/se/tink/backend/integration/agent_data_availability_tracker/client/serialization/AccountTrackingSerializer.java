@@ -22,6 +22,8 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
                 .putRedacted("bankId", account.getBankId())
                 .putRedacted("name", account.getName())
                 .putRedacted("holderName", account.getHolderName())
+                .putRedacted("balance", account.getNullableBalance())
+                .putRedacted("availableCredit", account.getNullableAvailableCredit())
                 .putListed("type", account.getType());
 
         account.getIdentifiers().stream()
