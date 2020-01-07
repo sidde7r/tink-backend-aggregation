@@ -88,6 +88,30 @@ public class Hash {
         return hmac("HmacSHA512", key, data);
     }
 
+    public static String md5Base64(final byte[]... datas) {
+        return BASE64.encodeToString(md5(datas));
+    }
+
+    public static String md5Base64(String data) {
+        return BASE64.encodeToString(md5(data));
+    }
+
+    public static String md5AsHex(final byte[]... datas) {
+        return Hex.encodeHexString(md5(datas));
+    }
+
+    public static String md5AsHex(String data) {
+        return Hex.encodeHexString(md5(data));
+    }
+
+    public static byte[] md5(final String data) {
+        return hashFunction("MD5", data.getBytes());
+    }
+
+    public static byte[] md5(final byte[]... datas) {
+        return hashFunction("MD5", datas);
+    }
+
     private static byte[] hashFunction(String algorithm, final byte[]... datas) {
         try {
             MessageDigest md = MessageDigest.getInstance(algorithm);
