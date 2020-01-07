@@ -26,9 +26,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
-import se.tink.backend.aggregation.nxgen.http.filter.NoHttpResponseErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.NoHttpResponseErrorFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AmericanExpressV62Agent extends NextGenerationAgent
