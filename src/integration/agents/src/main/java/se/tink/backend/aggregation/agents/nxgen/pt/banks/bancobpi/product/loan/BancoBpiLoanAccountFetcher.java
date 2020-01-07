@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.BancoB
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.AccountIdentifier;
@@ -29,8 +28,7 @@ public class BancoBpiLoanAccountFetcher implements AccountFetcher<LoanAccount> {
     public Collection<LoanAccount> fetchAccounts() {
         try {
             List<BancoBpiProductData> loans =
-                    clientApi.getProductsByType(
-                            BancoBpiProductType.LOAN, BancoBpiProductType.MORTGAGE);
+                    clientApi.getProductsByType(BancoBpiProductType.getLoanProductTypes());
             return mapToLoanAccount(loans);
         } catch (RequestException e) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception(e.getMessage());
@@ -72,13 +70,6 @@ public class BancoBpiLoanAccountFetcher implements AccountFetcher<LoanAccount> {
     }
 
     private LoanDetails.Type mapToLoanType(BancoBpiProductData data) {
-        switch (BancoBpiProductType.getByCode(data.getCodeAlfa())) {
-            case LOAN:
-                return Type.CREDIT;
-            case MORTGAGE:
-                return Type.MORTGAGE;
-        }
-        throw new IllegalArgumentException(
-                "Product with code " + data.getCodeAlfa() + " is unexpected");
+        return BancoBpiProductType.getByCode(data.getCodeAlfa()).getDomainLoanType();
     }
 }

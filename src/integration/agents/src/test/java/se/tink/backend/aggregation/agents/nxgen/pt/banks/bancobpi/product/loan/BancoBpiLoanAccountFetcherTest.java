@@ -34,9 +34,7 @@ public class BancoBpiLoanAccountFetcherTest {
         // given
         BancoBpiProductData p1 = createLoanProduct(BancoBpiProductType.LOAN);
         List<BancoBpiProductData> products = Lists.newArrayList(p1);
-        Mockito.when(
-                        clientApi.getProductsByType(
-                                BancoBpiProductType.LOAN, BancoBpiProductType.MORTGAGE))
+        Mockito.when(clientApi.getProductsByType(BancoBpiProductType.getLoanProductTypes()))
                 .thenReturn(products);
         // when
         Collection<LoanAccount> accounts = objectUnderTest.fetchAccounts();
@@ -56,13 +54,35 @@ public class BancoBpiLoanAccountFetcherTest {
     }
 
     @Test
+    public void shouldReturnVehicleAccount() throws RequestException {
+        // given
+        BancoBpiProductData p1 = createLoanProduct(BancoBpiProductType.LOAN_VEHICLE);
+        List<BancoBpiProductData> products = Lists.newArrayList(p1);
+        Mockito.when(clientApi.getProductsByType(BancoBpiProductType.getLoanProductTypes()))
+                .thenReturn(products);
+        // when
+        Collection<LoanAccount> accounts = objectUnderTest.fetchAccounts();
+        // then
+        Assert.assertFalse(accounts.isEmpty());
+        Assert.assertEquals(1, accounts.size());
+        LoanAccount a = accounts.iterator().next();
+        Assert.assertEquals(p1.getNumber(), a.getAccountNumber());
+        Assert.assertEquals(p1.getName(), a.getName());
+        Assert.assertTrue(
+                p1.getInitialBalance().doubleValue()
+                        == a.getDetails().getInitialBalance().doubleValue());
+        Assert.assertEquals(p1.getCurrencyCode(), a.getDetails().getInitialBalance().getCurrency());
+        Assert.assertEquals(p1.getBalance(), a.getExactBalance().getExactValue());
+        Assert.assertEquals(p1.getCurrencyCode(), a.getExactBalance().getCurrencyCode());
+        Assert.assertEquals(Type.VEHICLE, a.getDetails().getType());
+    }
+
+    @Test
     public void shouldReturnMortgageAccount() throws RequestException {
         // given
         BancoBpiProductData p1 = createLoanProduct(BancoBpiProductType.MORTGAGE);
         List<BancoBpiProductData> products = Lists.newArrayList(p1);
-        Mockito.when(
-                        clientApi.getProductsByType(
-                                BancoBpiProductType.LOAN, BancoBpiProductType.MORTGAGE))
+        Mockito.when(clientApi.getProductsByType(BancoBpiProductType.getLoanProductTypes()))
                 .thenReturn(products);
         // when
         Collection<LoanAccount> accounts = objectUnderTest.fetchAccounts();
@@ -87,9 +107,7 @@ public class BancoBpiLoanAccountFetcherTest {
         BancoBpiProductData p1 = createLoanProduct(BancoBpiProductType.MORTGAGE);
         BancoBpiProductData p2 = createLoanProduct(BancoBpiProductType.LOAN);
         List<BancoBpiProductData> products = Lists.newArrayList(p1, p2);
-        Mockito.when(
-                        clientApi.getProductsByType(
-                                BancoBpiProductType.LOAN, BancoBpiProductType.MORTGAGE))
+        Mockito.when(clientApi.getProductsByType(BancoBpiProductType.getLoanProductTypes()))
                 .thenReturn(products);
         // when
         Collection<LoanAccount> accounts = objectUnderTest.fetchAccounts();
