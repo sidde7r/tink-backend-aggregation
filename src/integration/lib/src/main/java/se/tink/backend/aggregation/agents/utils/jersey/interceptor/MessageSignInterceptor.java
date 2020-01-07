@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.jersey;
+package se.tink.backend.aggregation.agents.utils.jersey.interceptor;
 
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
