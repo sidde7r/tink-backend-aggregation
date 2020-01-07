@@ -5,10 +5,18 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public final class DnbConstants {
 
     public static final String CHARSET = "UTF-8";
+    public static final String DEFAULT_CURRENCY = "NOK";
 
     public final class ProductNumber {
-        // Account name "Brukskonto Aksje", product Name is 6503
         public static final String StockAccount = "6503";
+    }
+
+    public static final class QueryParam {
+        public static final String PREVENT_CACHE = "request.preventCache";
+        public static final String COUNT = "count";
+        public static final String SYSTEM = "system";
+        public static final String ID = "id";
+        public static final String COOKIE_SUPPORT = "cookiesupport";
     }
 
     public final class PostParameter {
@@ -21,7 +29,8 @@ public final class DnbConstants {
     public final class Header {
         public static final String REQUEST_WITH_KEY = "X-Requested-With";
         public static final String REQUEST_WITH_VALUE = "XMLHttpRequest";
-
+        public static final String ORIGIN = "Origin";
+        public static final String REFERER = "Referer";
         // OAuth
         public static final String METHOD_POST = "POST";
         public static final String METHOD_GET = "GET";

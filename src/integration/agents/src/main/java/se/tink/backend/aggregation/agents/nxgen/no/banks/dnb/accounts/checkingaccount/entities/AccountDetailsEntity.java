@@ -3,12 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkinga
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -158,18 +160,26 @@ public class AccountDetailsEntity {
         return ipa;
     }
 
-    public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(getType(), number, Amount.inNOK(availableBalanceNok))
-                .setAccountNumber(number)
-                .setName(getTinkAccountName())
-                .setBankIdentifier(number)
-                .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                .addIdentifier(AccountIdentifier.create(Type.NO, number))
+    public Optional<TransactionalAccount> toTransactionalAccount() {
+        BalanceModule balance =
+                BalanceModule.of(ExactCurrencyAmount.of(availableBalanceNok, currency));
+        IdModule id =
+                IdModule.builder()
+                        .withUniqueIdentifier(number)
+                        .withAccountNumber(number)
+                        .withAccountName(getTinkAccountName())
+                        .addIdentifier(AccountIdentifier.create(Type.NO, number))
+                        .build();
+        return TransactionalAccount.nxBuilder()
+                .withType(getType())
+                .withInferredAccountFlags()
+                .withBalance(balance)
+                .withId(id)
                 .build();
     }
 
-    private AccountTypes getType() {
-        return savings ? AccountTypes.SAVINGS : AccountTypes.CHECKING;
+    private TransactionalAccountType getType() {
+        return savings ? TransactionalAccountType.SAVINGS : TransactionalAccountType.CHECKING;
     }
 
     public String getTinkAccountName() {

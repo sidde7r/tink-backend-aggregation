@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkinga
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbConstants;
@@ -28,6 +29,8 @@ public class DnbAccountFetcher implements AccountFetcher<TransactionalAccount> {
                                         account.getProductNumber(),
                                         DnbConstants.ProductNumber.StockAccount))
                 .map(AccountDetailsEntity::toTransactionalAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

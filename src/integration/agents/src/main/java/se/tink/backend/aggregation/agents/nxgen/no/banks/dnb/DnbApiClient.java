@@ -17,7 +17,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingaccount.rpc.AccountListResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.rpc.FetchCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.rpc.GetCardResponse;
@@ -40,7 +39,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 public class DnbApiClient {
 
-    private static final Pattern ISIN = Pattern.compile("ISIN:\\s*([A-Za-z0-9]{11}[0-9])");
+    public static final String TRUE = "TRUE";
+    private static final Pattern ISIN = Pattern.compile("ISIN:\\s*([A-Za-z0-9]{11}[0-9])");;
     private final TinkHttpClient client;
     private final DnbTimestampUtil timestampUtil;
     private List<CardEntity> cards = null;
@@ -53,8 +53,8 @@ public class DnbApiClient {
     public void getStartMobile() {
         this.client
                 .request(DnbConstants.Url.INIT_LOGIN)
-                .header("Origin", DnbConstants.Url.BASE_URL)
-                .header("Referer", DnbConstants.Url.INIT_LOGIN)
+                .header(DnbConstants.Header.ORIGIN, DnbConstants.Url.BASE_URL)
+                .header(DnbConstants.Header.REFERER, DnbConstants.Url.INIT_LOGIN)
                 .get(HttpResponse.class);
     }
 
@@ -66,8 +66,8 @@ public class DnbApiClient {
 
         return this.client
                 .request(DnbConstants.Url.INIT_LOGIN)
-                .header("Origin", DnbConstants.Url.BASE_URL)
-                .header("Referer", DnbConstants.Url.INIT_LOGIN)
+                .header(DnbConstants.Header.ORIGIN, DnbConstants.Url.BASE_URL)
+                .header(DnbConstants.Header.REFERER, DnbConstants.Url.INIT_LOGIN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_ATOM_XML_TYPE)
                 .post(HttpResponse.class, startMobileParameters);
@@ -76,8 +76,8 @@ public class DnbApiClient {
     public void initiateSession(URI uri) {
         this.client
                 .request(uri.toString())
-                .header("Origin", DnbConstants.Url.BASE_URL)
-                .header("Referer", DnbConstants.Url.INIT_LOGIN)
+                .header(DnbConstants.Header.ORIGIN, DnbConstants.Url.BASE_URL)
+                .header(DnbConstants.Header.REFERER, DnbConstants.Url.INIT_LOGIN)
                 .accept(MediaType.WILDCARD)
                 .get(HttpResponse.class);
     }
@@ -85,7 +85,7 @@ public class DnbApiClient {
     public InstrumentInfoResponse getInstrumentInfo(URI referer) {
         return this.client
                 .request(DnbConstants.Url.INSTRUMENT_INFO)
-                .header("Referer", referer)
+                .header(DnbConstants.Header.REFERER, referer)
                 .header(
                         DnbConstants.Header.REQUEST_WITH_KEY,
                         DnbConstants.Header.REQUEST_WITH_VALUE)
@@ -96,9 +96,10 @@ public class DnbApiClient {
     public InitiateBankIdResponse getInitiateBankId(URI referer) {
         return this.client
                 .request(DnbConstants.Url.INIT_BANKID)
-                .queryParam("cookiesupport", "TRUE")
-                .queryParam("request.preventCache", String.valueOf(new Date().getTime()))
-                .header("Referer", referer)
+                .queryParam(DnbConstants.QueryParam.COOKIE_SUPPORT, TRUE)
+                .queryParam(
+                        DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
+                .header(DnbConstants.Header.REFERER, referer)
                 .header(
                         DnbConstants.Header.REQUEST_WITH_KEY,
                         DnbConstants.Header.REQUEST_WITH_VALUE)
@@ -112,9 +113,10 @@ public class DnbApiClient {
 
         return this.client
                 .request(DnbConstants.Url.CHALLENGE)
-                .queryParam("request.preventCache", String.valueOf(new Date().getTime()))
-                .header("Origin", DnbConstants.Url.BASE_URL)
-                .header("Referer", referer)
+                .queryParam(
+                        DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
+                .header(DnbConstants.Header.ORIGIN, DnbConstants.Url.BASE_URL)
+                .header(DnbConstants.Header.REFERER, referer)
                 .header(
                         DnbConstants.Header.REQUEST_WITH_KEY,
                         DnbConstants.Header.REQUEST_WITH_VALUE)
@@ -125,8 +127,9 @@ public class DnbApiClient {
     public CollectChallengeResponse getCollectBankId(URI referer) {
         return this.client
                 .request(DnbConstants.Url.COLLECT_BANKID)
-                .queryParam("request.preventCache", String.valueOf(new Date().getTime()))
-                .header("Referer", referer)
+                .queryParam(
+                        DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
+                .header(DnbConstants.Header.REFERER, referer)
                 .header(
                         DnbConstants.Header.REQUEST_WITH_KEY,
                         DnbConstants.Header.REQUEST_WITH_VALUE)
@@ -137,32 +140,22 @@ public class DnbApiClient {
     public void getFinalizeLogon(URI referer) {
         this.client
                 .request(DnbConstants.Url.FINALIZE_LOGON)
-                .header("Referer", referer)
+                .header(DnbConstants.Header.REFERER, referer)
                 .get(HttpResponse.class);
     }
 
     public void getFirstRequestAfterLogon(URI referer) {
         this.client
                 .request(DnbConstants.Url.FIRST_REQUEST)
-                .header("Referer", referer)
+                .header(DnbConstants.Header.REFERER, referer)
                 .get(HttpResponse.class);
-    }
-
-    public AccountResponse fecthAccount() {
-        return this.client
-                .request(DnbConstants.Url.FETCH_ACCOUNTS)
-                .queryParam("request.preventCache", String.valueOf(new Date().getTime()))
-                .header("Referer", DnbConstants.Url.FIRST_REQUEST)
-                .header(
-                        DnbConstants.Header.REQUEST_WITH_KEY,
-                        DnbConstants.Header.REQUEST_WITH_VALUE)
-                .get(AccountResponse.class);
     }
 
     public AccountListResponse fetchAccounts() {
         return this.client
                 .request(DnbConstants.Url.FETCH_ACCOUNT_DETAILS)
-                .queryParam("request.preventCache", String.valueOf(new Date().getTime()))
+                .queryParam(
+                        DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
                 .header(
                         DnbConstants.Header.REQUEST_WITH_KEY,
                         DnbConstants.Header.REQUEST_WITH_VALUE)
@@ -174,8 +167,9 @@ public class DnbApiClient {
                 .request(
                         String.format(
                                 DnbConstants.Url.FETCH_TRANSACTIONS, account.getAccountNumber()))
-                .queryParam("count", String.valueOf(count))
-                .queryParam("request.preventCache", String.valueOf(new Date().getTime()))
+                .queryParam(DnbConstants.QueryParam.COUNT, String.valueOf(count))
+                .queryParam(
+                        DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
                 .header(
                         DnbConstants.Header.REQUEST_WITH_KEY,
                         DnbConstants.Header.REQUEST_WITH_VALUE)
@@ -187,7 +181,9 @@ public class DnbApiClient {
         ListCardResponse listCardResponse =
                 this.client
                         .request(DnbConstants.Url.LIST_CARDS)
-                        .queryParam("request.preventCache", String.valueOf(new Date().getTime()))
+                        .queryParam(
+                                DnbConstants.QueryParam.PREVENT_CACHE,
+                                String.valueOf(new Date().getTime()))
                         .header(
                                 DnbConstants.Header.REQUEST_WITH_KEY,
                                 DnbConstants.Header.REQUEST_WITH_VALUE)
@@ -203,7 +199,9 @@ public class DnbApiClient {
                             String.format(
                                     DnbConstants.Url.GET_CARD,
                                     URLEncoder.encode(cardId, DnbConstants.CHARSET)))
-                    .queryParam("request.preventCache", String.valueOf(new Date().getTime()))
+                    .queryParam(
+                            DnbConstants.QueryParam.PREVENT_CACHE,
+                            String.valueOf(new Date().getTime()))
                     .header(
                             DnbConstants.Header.REQUEST_WITH_KEY,
                             DnbConstants.Header.REQUEST_WITH_VALUE)
@@ -227,7 +225,9 @@ public class DnbApiClient {
                             String.format(
                                     DnbConstants.Url.FETCH_CARD_TRANSACTIONS,
                                     URLEncoder.encode(cardId, DnbConstants.CHARSET)))
-                    .queryParam("request.preventCache", String.valueOf(new Date().getTime()))
+                    .queryParam(
+                            DnbConstants.QueryParam.PREVENT_CACHE,
+                            String.valueOf(new Date().getTime()))
                     .header(
                             DnbConstants.Header.REQUEST_WITH_KEY,
                             DnbConstants.Header.REQUEST_WITH_VALUE)
@@ -313,40 +313,16 @@ public class DnbApiClient {
                             DnbConstants.Header.METHOD_POST, DnbConstants.Url.GET_ACCESS_TOKEN);
             String timestamp = this.timestampUtil.getTimestampInSeconds();
             String nonce = this.timestampUtil.getNonce();
-            encoder.putPair(
-                    DnbConstants.Header.OAUTH_CONSUMER_KEY_KEY,
-                    DnbOAuthEncoder.encode(DnbConstants.Header.OAUTH_CONSUMER_KEY_VALUE));
-            encoder.putPair(DnbConstants.Header.OAUTH_NONCE_KEY, nonce);
-            encoder.putPair(
-                    DnbConstants.Header.OAUTH_SIGNATURE_METHOD_KEY,
-                    DnbConstants.Header.OAUTH_SIGNATURE_METHOD_VALUE);
-            encoder.putPair(DnbConstants.Header.OAUTH_TIMESTAMP_KEY, timestamp);
-            encoder.putPair(DnbConstants.Header.OAUTH_TOKEN_KEY, oauthToken);
-            encoder.putPair(DnbConstants.Header.OAUTH_VERIFIER_KEY, oauthVerifier);
-            encoder.putPair(
-                    DnbConstants.Header.OAUTH_VERSION_KEY, DnbConstants.Header.OAUTH_VERSION_VALUE);
-
+            fillEncoderData(nonce, timestamp, oauthToken, encoder);
             String signData = encoder.toString();
 
             // xiacheng NOTE: key is a combination of api secret "&" with tokensecret
             String signature =
                     this.doSign(signData, DnbConstants.OAuth.DNB_API_SECRET + "&" + oauthSecret);
 
-            DnbOAuthHeaderFormatter oAuthHeaderFormatter = new DnbOAuthHeaderFormatter();
-            oAuthHeaderFormatter.putPair(
-                    DnbConstants.Header.OAUTH_SIGNATURE_METHOD_KEY,
-                    DnbConstants.Header.OAUTH_SIGNATURE_METHOD_VALUE);
-            oAuthHeaderFormatter.putPair(
-                    DnbConstants.Header.OAUTH_CONSUMER_KEY_KEY,
-                    DnbOAuthEncoder.encode(DnbConstants.Header.OAUTH_CONSUMER_KEY_VALUE));
-            oAuthHeaderFormatter.putPair(
-                    DnbConstants.Header.OAUTH_VERSION_KEY, DnbConstants.Header.OAUTH_VERSION_VALUE);
-            oAuthHeaderFormatter.putPair(DnbConstants.Header.OAUTH_TIMESTAMP_KEY, timestamp);
-            oAuthHeaderFormatter.putPair(DnbConstants.Header.OAUTH_NONCE_KEY, nonce);
+            DnbOAuthHeaderFormatter oAuthHeaderFormatter =
+                    getAndFillHeaderFormatter(timestamp, nonce, oauthToken, signature);
             oAuthHeaderFormatter.putPair(DnbConstants.Header.OAUTH_VERIFIER_KEY, oauthVerifier);
-            oAuthHeaderFormatter.putPair(DnbConstants.Header.OAUTH_TOKEN_KEY, oauthToken);
-            oAuthHeaderFormatter.putPair(
-                    DnbConstants.Header.OAUTH_SIGNATURE_KEY, DnbOAuthEncoder.encode(signature));
 
             return this.createOAuthRequest(
                             DnbConstants.Url.GET_ACCESS_TOKEN, oAuthHeaderFormatter.toString())
@@ -354,6 +330,26 @@ public class DnbApiClient {
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Unsupported encoding exception!", e);
         }
+    }
+
+    private DnbOAuthHeaderFormatter getAndFillHeaderFormatter(
+            String timestamp, String nonce, String oauthToken, String signature)
+            throws UnsupportedEncodingException {
+        DnbOAuthHeaderFormatter oAuthHeaderFormatter = new DnbOAuthHeaderFormatter();
+        oAuthHeaderFormatter.putPair(
+                DnbConstants.Header.OAUTH_SIGNATURE_METHOD_KEY,
+                DnbConstants.Header.OAUTH_SIGNATURE_METHOD_VALUE);
+        oAuthHeaderFormatter.putPair(
+                DnbConstants.Header.OAUTH_CONSUMER_KEY_KEY,
+                DnbOAuthEncoder.encode(DnbConstants.Header.OAUTH_CONSUMER_KEY_VALUE));
+        oAuthHeaderFormatter.putPair(
+                DnbConstants.Header.OAUTH_VERSION_KEY, DnbConstants.Header.OAUTH_VERSION_VALUE);
+        oAuthHeaderFormatter.putPair(DnbConstants.Header.OAUTH_TIMESTAMP_KEY, timestamp);
+        oAuthHeaderFormatter.putPair(DnbConstants.Header.OAUTH_NONCE_KEY, nonce);
+        oAuthHeaderFormatter.putPair(DnbConstants.Header.OAUTH_TOKEN_KEY, oauthToken);
+        oAuthHeaderFormatter.putPair(
+                DnbConstants.Header.OAUTH_SIGNATURE_KEY, DnbOAuthEncoder.encode(signature));
+        return oAuthHeaderFormatter;
     }
 
     ////// OAuth End ///////
@@ -424,8 +420,8 @@ public class DnbApiClient {
                 this.getGenericSignature(
                         DnbConstants.Header.METHOD_GET,
                         DnbConstants.Url.GET_FUND_DETAIL
-                                .parameter("system", fundSystem)
-                                .parameter("id", fundId)
+                                .parameter(DnbConstants.QueryParam.SYSTEM, fundSystem)
+                                .parameter(DnbConstants.QueryParam.ID, fundId)
                                 .get(),
                         nonce,
                         timestamp,
@@ -436,8 +432,8 @@ public class DnbApiClient {
 
         return this.createOAuthRequest(
                         DnbConstants.Url.GET_FUND_DETAIL
-                                .parameter("system", fundSystem)
-                                .parameter("id", fundId)
+                                .parameter(DnbConstants.QueryParam.SYSTEM, fundSystem)
+                                .parameter(DnbConstants.QueryParam.ID, fundId)
                                 .get(),
                         authorizationHeader)
                 .get(FetchFundDetailResponse.class);
@@ -464,21 +460,8 @@ public class DnbApiClient {
     private String formGenericAuthorizationHeader(
             String timestamp, String nonce, String oauthToken, String signature) {
         try {
-            DnbOAuthHeaderFormatter oAuthHeaderFormatter = new DnbOAuthHeaderFormatter();
-            oAuthHeaderFormatter.putPair(
-                    DnbConstants.Header.OAUTH_SIGNATURE_METHOD_KEY,
-                    DnbConstants.Header.OAUTH_SIGNATURE_METHOD_VALUE);
-            oAuthHeaderFormatter.putPair(
-                    DnbConstants.Header.OAUTH_CONSUMER_KEY_KEY,
-                    DnbOAuthEncoder.encode(DnbConstants.Header.OAUTH_CONSUMER_KEY_VALUE));
-            oAuthHeaderFormatter.putPair(
-                    DnbConstants.Header.OAUTH_VERSION_KEY, DnbConstants.Header.OAUTH_VERSION_VALUE);
-            oAuthHeaderFormatter.putPair(DnbConstants.Header.OAUTH_TIMESTAMP_KEY, timestamp);
-            oAuthHeaderFormatter.putPair(DnbConstants.Header.OAUTH_NONCE_KEY, nonce);
-            oAuthHeaderFormatter.putPair(DnbConstants.Header.OAUTH_TOKEN_KEY, oauthToken);
-            oAuthHeaderFormatter.putPair(
-                    DnbConstants.Header.OAUTH_SIGNATURE_KEY, DnbOAuthEncoder.encode(signature));
-
+            DnbOAuthHeaderFormatter oAuthHeaderFormatter =
+                    getAndFillHeaderFormatter(timestamp, nonce, oauthToken, signature);
             return oAuthHeaderFormatter.toString();
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Unsupported encoding exception!", e);
@@ -495,17 +478,7 @@ public class DnbApiClient {
         try {
             // The order here matters as it composes the signing data.
             DnbSignDataUrlEncoder encoder = new DnbSignDataUrlEncoder(method, url);
-            encoder.putPair(
-                    DnbConstants.Header.OAUTH_CONSUMER_KEY_KEY,
-                    DnbOAuthEncoder.encode(DnbConstants.Header.OAUTH_CONSUMER_KEY_VALUE));
-            encoder.putPair(DnbConstants.Header.OAUTH_NONCE_KEY, nonce);
-            encoder.putPair(
-                    DnbConstants.Header.OAUTH_SIGNATURE_METHOD_KEY,
-                    DnbConstants.Header.OAUTH_SIGNATURE_METHOD_VALUE);
-            encoder.putPair(DnbConstants.Header.OAUTH_TIMESTAMP_KEY, timestamp);
-            encoder.putPair(DnbConstants.Header.OAUTH_TOKEN_KEY, oauthToken);
-            encoder.putPair(
-                    DnbConstants.Header.OAUTH_VERSION_KEY, DnbConstants.Header.OAUTH_VERSION_VALUE);
+            fillEncoderData(nonce, timestamp, oauthToken, encoder);
             String signData = encoder.toString();
 
             // xiacheng NOTE: key is a combination of api secret "&" with tokensecret
@@ -513,6 +486,22 @@ public class DnbApiClient {
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Unsupported encoding exception!", e);
         }
+    }
+
+    private void fillEncoderData(
+            String nonce, String timestamp, String oauthToken, DnbSignDataUrlEncoder encoder)
+            throws UnsupportedEncodingException {
+        encoder.putPair(
+                DnbConstants.Header.OAUTH_CONSUMER_KEY_KEY,
+                DnbOAuthEncoder.encode(DnbConstants.Header.OAUTH_CONSUMER_KEY_VALUE));
+        encoder.putPair(DnbConstants.Header.OAUTH_NONCE_KEY, nonce);
+        encoder.putPair(
+                DnbConstants.Header.OAUTH_SIGNATURE_METHOD_KEY,
+                DnbConstants.Header.OAUTH_SIGNATURE_METHOD_VALUE);
+        encoder.putPair(DnbConstants.Header.OAUTH_TIMESTAMP_KEY, timestamp);
+        encoder.putPair(DnbConstants.Header.OAUTH_TOKEN_KEY, oauthToken);
+        encoder.putPair(
+                DnbConstants.Header.OAUTH_VERSION_KEY, DnbConstants.Header.OAUTH_VERSION_VALUE);
     }
 
     private String doSign(String data, String key) {

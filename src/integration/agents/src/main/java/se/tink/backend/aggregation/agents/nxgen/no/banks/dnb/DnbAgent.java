@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingac
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.DnbCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.DnbCreditTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.authenticator.DnbAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.session.DnbSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -117,6 +116,6 @@ public class DnbAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new DnbSessionHandler();
+        return SessionHandler.alwaysFail();
     }
 }
