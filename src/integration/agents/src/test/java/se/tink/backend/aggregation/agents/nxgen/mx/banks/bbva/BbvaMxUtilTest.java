@@ -1,8 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.mx.util;
+package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva;
 
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxUtils;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.DeviceActivationRequest;
 
 public class BbvaMxUtilTest {
