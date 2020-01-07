@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public final class AccessExceededFilter extends Filter {
-    private static final CharSequence ACCESS_EXCEEDED = "access_exceeded";
 
     @Override
     public HttpResponse handle(final HttpRequest httpRequest)
@@ -17,10 +16,8 @@ public final class AccessExceededFilter extends Filter {
         // HTTP 429: Too Many Requests
         if (response.getStatus() == 429) {
             String body = response.getBody(String.class).toLowerCase();
-            if (body.contains(ACCESS_EXCEEDED)) {
-                throw BankServiceError.ACCESS_EXCEEDED.exception(
-                        "Http status: " + response.getStatus() + "Error body: " + body);
-            }
+            throw BankServiceError.ACCESS_EXCEEDED.exception(
+                    "Http status: " + response.getStatus() + " Error body: " + body);
         }
 
         return response;
