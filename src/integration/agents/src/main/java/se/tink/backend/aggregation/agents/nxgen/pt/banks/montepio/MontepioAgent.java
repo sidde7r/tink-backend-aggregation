@@ -15,9 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.credit
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.investments.MontepioInvestmentAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.loans.MontepioLoansFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class MontepioAgent extends NextGenerationAgent
+public class MontepioAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
@@ -38,26 +38,27 @@ public class MontepioAgent extends NextGenerationAgent
     private final InvestmentRefreshController investmentRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final LoanRefreshController loanRefreshController;
+    private final StatelessProgressiveAuthenticator authenticator;
 
     public MontepioAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
         this.apiClient = new MontepioApiClient(client, sessionStorage);
         this.transactionalAccountRefreshController = constructAccountRefreshController();
         this.investmentRefreshController = constructInvestmentRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.loanRefreshController = constructLoanRefreshController();
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        MontepioAuthenticator montepioAuthenticator = new MontepioAuthenticator(apiClient);
-        return new PasswordAuthenticationController(montepioAuthenticator);
+        this.authenticator = new MontepioAuthenticator(apiClient);
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    public StatelessProgressiveAuthenticator getAuthenticator() {
+        return authenticator;
     }
 
     private LoanRefreshController constructLoanRefreshController() {
