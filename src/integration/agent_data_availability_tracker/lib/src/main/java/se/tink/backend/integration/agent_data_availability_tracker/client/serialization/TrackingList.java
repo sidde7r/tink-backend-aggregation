@@ -122,6 +122,16 @@ public class TrackingList {
             return this;
         }
 
+        /**
+         * Put explicit null for the given key in the map.
+         *
+         * @param key Key identifying the field.
+         */
+        public Builder putNull(@Nonnull String key) {
+            put(key, "null");
+            return this;
+        }
+
         public TrackingList build() {
             return new TrackingList(fields);
         }
