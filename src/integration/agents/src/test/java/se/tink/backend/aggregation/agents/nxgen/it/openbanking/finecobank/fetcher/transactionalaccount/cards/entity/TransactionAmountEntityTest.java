@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.math.BigDecimal;
 import org.junit.Test;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class TransactionAmountEntityTest {
 
@@ -15,12 +16,16 @@ public class TransactionAmountEntityTest {
     public void toTinkAmountWithNegativeAmount() throws IOException {
         // given
         String givenAmount = "-92.54";
-        BigDecimal expectedAmount = new BigDecimal("-92.54");
+        String givenCurrency = "EUR";
+        // and
         TransactionAmountEntity transactionAmountEntity =
-                amountToTransactionAmountEntity(givenAmount);
+                amountToTransactionAmountEntity(givenAmount, givenCurrency);
+        // and
+        ExactCurrencyAmount expectedAmount =
+                new ExactCurrencyAmount(new BigDecimal(givenAmount), givenCurrency);
 
         // when
-        BigDecimal result = transactionAmountEntity.toTinkAmount().getExactValue();
+        ExactCurrencyAmount result = transactionAmountEntity.toTinkAmount();
 
         // then
         assertThat(result).isEqualTo(expectedAmount);
@@ -30,12 +35,16 @@ public class TransactionAmountEntityTest {
     public void toTinkAmountWithZeroAmount() throws IOException {
         // given
         String givenAmount = "0.0";
-        BigDecimal expectedAmount = new BigDecimal("0.0");
+        String givenCurrency = "EUR";
+        // and
         TransactionAmountEntity transactionAmountEntity =
-                amountToTransactionAmountEntity(givenAmount);
+                amountToTransactionAmountEntity(givenAmount, givenCurrency);
+        // and
+        ExactCurrencyAmount expectedAmount =
+                new ExactCurrencyAmount(new BigDecimal(givenAmount), givenCurrency);
 
         // when
-        BigDecimal result = transactionAmountEntity.toTinkAmount().getExactValue();
+        ExactCurrencyAmount result = transactionAmountEntity.toTinkAmount();
 
         // then
         assertThat(result).isEqualTo(expectedAmount);
@@ -45,21 +54,25 @@ public class TransactionAmountEntityTest {
     public void toTinkAmountWithPositiveAmount() throws IOException {
         // given
         String givenAmount = "234.15";
-        BigDecimal expectedAmount = new BigDecimal("234.15");
+        String givenCurrency = "EUR";
+        // and
         TransactionAmountEntity transactionAmountEntity =
-                amountToTransactionAmountEntity(givenAmount);
+                amountToTransactionAmountEntity(givenAmount, givenCurrency);
+        // and
+        ExactCurrencyAmount expectedAmount =
+                new ExactCurrencyAmount(new BigDecimal(givenAmount), givenCurrency);
 
         // when
-        BigDecimal result = transactionAmountEntity.toTinkAmount().getExactValue();
+        ExactCurrencyAmount result = transactionAmountEntity.toTinkAmount();
 
         // then
         assertThat(result).isEqualTo(expectedAmount);
     }
 
-    private static TransactionAmountEntity amountToTransactionAmountEntity(final String amount)
-            throws IOException {
+    private static TransactionAmountEntity amountToTransactionAmountEntity(
+            final String amount, final String currency) throws IOException {
         return OBJECT_MAPPER.readValue(
-                "{\"amount\":" + amount + ", \"currency\": \"EUR\"}",
+                "{\"amount\":" + amount + ", \"currency\": \"" + currency + "\"}",
                 TransactionAmountEntity.class);
     }
 }
