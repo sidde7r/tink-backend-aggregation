@@ -36,7 +36,7 @@ public class AccountResponse extends HtmlResponse {
             Pattern.compile("source:'(j_id[_0-9a-f]+:cargaRemotaMovimientos)'");
     private static final Pattern ACCOUNT_INFO_JSF_SOURCE_PATTERN =
             Pattern.compile(
-                    "source:'movimientos-cabecera:(j_id[_0-9a-f]+)'\\s*,process:'@all',update:'movimientos-cabecera:head-datos-detalle");
+                    "source:'(movimientos-cabecera:j_id[_0-9a-f]+)'\\s*,process:'@all',update:'movimientos-cabecera:head-datos-detalle");
 
     public AccountResponse(String body) {
         super(body);
