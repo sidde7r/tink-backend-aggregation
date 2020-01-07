@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants.ErrorCode;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @JsonObject
 public class NemIdErrorEntity {

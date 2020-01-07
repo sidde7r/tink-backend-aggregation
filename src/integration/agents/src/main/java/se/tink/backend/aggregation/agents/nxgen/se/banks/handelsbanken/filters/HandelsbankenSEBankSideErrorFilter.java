@@ -7,10 +7,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.XmlErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class HandelsbankenSEBankSideErrorFilter extends Filter {
 

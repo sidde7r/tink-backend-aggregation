@@ -6,7 +6,7 @@ import static io.vavr.Predicates.instanceOf;
 import java.util.function.Predicate;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.ErrorResponse;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public final class OpenbankPredicates {
     /** Checks if exception has the prerequisites for being an Openbank ErrorResponse */

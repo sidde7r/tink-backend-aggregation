@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.entities.ErrorEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @JsonObject
 public class ErrorResponse {

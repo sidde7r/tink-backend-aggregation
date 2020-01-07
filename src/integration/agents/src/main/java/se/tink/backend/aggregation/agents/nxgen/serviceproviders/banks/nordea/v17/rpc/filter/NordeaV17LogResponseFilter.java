@@ -6,10 +6,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v1
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.rpc.NordeaResponse;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.LogResponseFilter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class NordeaV17LogResponseFilter extends LogResponseFilter {
     private static final LogTag FOUND_CREDIT_CARD_CONTINUE_KEY_LOG_TAG =

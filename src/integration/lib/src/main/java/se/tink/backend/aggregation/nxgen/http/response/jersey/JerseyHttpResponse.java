@@ -14,9 +14,9 @@ import javax.ws.rs.core.NewCookie;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.RedirectLocations;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class JerseyHttpResponse implements HttpResponse {
     private final HttpRequest request;

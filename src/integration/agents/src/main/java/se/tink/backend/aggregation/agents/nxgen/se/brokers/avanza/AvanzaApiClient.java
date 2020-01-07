@@ -34,8 +34,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transa
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class AvanzaApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaApiClient.class);

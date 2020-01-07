@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc.B
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final AggregationLogger log = new AggregationLogger(BecCreditCardFetcher.class);

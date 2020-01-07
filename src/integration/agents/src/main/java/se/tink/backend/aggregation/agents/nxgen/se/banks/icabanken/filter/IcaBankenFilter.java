@@ -9,10 +9,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenCons
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.rpc.ErrorResponse;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class IcaBankenFilter extends Filter {
 

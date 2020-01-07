@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.SantanderApiC
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.SantanderConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
 

@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtSessionExpiredParser;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class IngAtSessionHandler implements SessionHandler {
     private final IngAtApiClient apiClient;

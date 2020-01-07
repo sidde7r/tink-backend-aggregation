@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc.Request;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc.Response;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SebApiClient {

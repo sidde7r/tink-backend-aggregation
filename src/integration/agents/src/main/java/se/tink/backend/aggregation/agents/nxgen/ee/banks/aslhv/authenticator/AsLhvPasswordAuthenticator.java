@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.IsAuthenticat
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.LoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class AsLhvPasswordAuthenticator implements PasswordAuthenticator {
 

@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInform
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 

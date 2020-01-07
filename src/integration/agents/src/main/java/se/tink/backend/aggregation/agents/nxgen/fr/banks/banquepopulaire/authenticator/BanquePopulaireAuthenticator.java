@@ -16,8 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authent
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.rpc.PasswordValidationResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.rpc.TokensResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BanquePopulaireAuthenticator implements PasswordAuthenticator {

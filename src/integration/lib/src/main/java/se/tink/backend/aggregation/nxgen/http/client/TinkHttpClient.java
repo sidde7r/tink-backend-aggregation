@@ -16,10 +16,10 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.SerializeContainer;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.Filterable;
 import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 

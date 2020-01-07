@@ -21,8 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBa
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcabankenPersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String> {
