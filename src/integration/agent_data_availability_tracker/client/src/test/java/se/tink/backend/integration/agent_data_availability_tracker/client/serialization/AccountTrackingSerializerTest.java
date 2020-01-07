@@ -116,6 +116,19 @@ public class AccountTrackingSerializerTest {
 
     @Test
     public void ensureFieldsWith_infinitePossibleValues_areNotTracked() {
-        // TODO: Implement when we are tracking balance, etc.
+        ImmutableSet<String> unlistedFieldKeys =
+                ImmutableSet.<String>builder()
+                        .add("Account<null>.balance", "Account<null>.availableCredit")
+                        .build();
+
+        Account account = new Account();
+        account.setBalance(100.0);
+        account.setAvailableCredit(100.0);
+
+        List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
+
+        Assert.assertTrue(
+                "Failed: all entries in secretFieldKeys set is unlisted",
+                TrackingSerializationTestHelper.isAllUnlisted(unlistedFieldKeys, entries));
     }
 }

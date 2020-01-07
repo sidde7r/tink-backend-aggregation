@@ -250,7 +250,7 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
                 subAccount.setName(card.getCardProductName());
                 subAccount.setBankId(cardNumber.replaceAll("[^\\dA-Za-z]", ""));
                 subAccount.setType(AccountTypes.CREDIT_CARD);
-                subAccount.setBalance(0);
+                subAccount.setBalance(0d);
 
                 subCardsByCardNumber.put(cardNumber, new SubCard(subAccount));
             }
