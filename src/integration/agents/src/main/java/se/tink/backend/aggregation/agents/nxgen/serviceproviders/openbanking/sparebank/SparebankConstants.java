@@ -36,7 +36,7 @@ public final class SparebankConstants {
     public static class TransactionsResponse {
         public static final int CONSECUTIVE_EMPTY_PAGES = 1;
         public static final String ERROR_MESSAGE = "scaRedirect";
-        public static final int NO_OF_DAYS = 89;
+        public static final int NO_OF_DAYS = 100;
     }
 
     public static class Urls {
