@@ -64,7 +64,7 @@ public class CreditCardResponse extends HtmlResponse {
     }
 
     private String getCardType() {
-        return cardDetails.get(CardDetails.TYPE);
+        return cardDetails.get(CardDetails.TYPE).toLowerCase();
     }
 
     private String getCardState() {

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.rpc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterTestData.loadTestResponse;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ public class CreditCardResponseTest {
     public void testCreditCardResponse() throws ParseException {
         final CreditCardResponse response =
                 loadTestResponse("7.tarjetas_ficha.xhtml", CreditCardResponse.class);
+        assertTrue(response.isCreditCard());
 
         final CreditCardAccount account = response.toCreditCardAccount();
         assertEquals("Visa Clasica", account.getName());
