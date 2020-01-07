@@ -99,15 +99,6 @@ public class JerseyHttpResponse implements HttpResponse {
         return internalResponse.getLocation();
     }
 
-    /**
-     * Get the language.
-     *
-     * @return the language, otherwise <code>null</code> if not present.
-     */
-    public String getLanguage() {
-        return internalResponse.getLanguage();
-    }
-
     @Override
     public List<NewCookie> getCookies() {
         return internalResponse.getCookies();
