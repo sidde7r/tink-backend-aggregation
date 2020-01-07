@@ -39,63 +39,33 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
         HttpResponse startMobileResponse = apiClient.postStartMobile(nationalId);
 
         bankIdReferer = startMobileResponse.getLocation();
-
-        if (bankIdReferer == null) {
-            if (startMobileResponse.hasBody()
-                    && startMobileResponse
-                            .getBody(String.class)
-                            .toLowerCase()
-                            .contains(DnbConstants.Messages.SSN_FORMAT_ERROR)) {
-                throw BankIdError.USER_VALIDATION_ERROR.exception();
-            }
-
-            throw new IllegalStateException("Could not authenticate");
-        }
+        verifyStartMobileResponse(startMobileResponse);
 
         apiClient.initiateSession(bankIdReferer);
 
         InstrumentInfoResponse instrumentInfoResponse = apiClient.getInstrumentInfo(bankIdReferer);
-
-        if (!instrumentInfoResponse.isSuccess()) {
-            throw new IllegalStateException("Could not fetch instrument info");
-        }
+        verifyInstrumentInfoResponse(instrumentInfoResponse);
 
         InitiateBankIdResponse initiateBankIdResponse = apiClient.getInitiateBankId(bankIdReferer);
-
-        if (!initiateBankIdResponse.isSuccess()) {
-            throw new IllegalStateException(
-                    String.format(
-                            "error msg: %s, user msg: %s",
-                            initiateBankIdResponse.getMessage().getErrorMessage(),
-                            initiateBankIdResponse.getMessage().getUserMessage()));
-        }
+        verifyInitiateBankIdResponse(initiateBankIdResponse);
 
         CollectChallengeResponse collectChallengeResponse =
                 apiClient.postCollectChallenge(bankIdReferer, mobilenumber);
 
-        if (collectChallengeResponse.isSuccess()) {
-            return collectChallengeResponse.getMessage().getApplicationData();
+        if (!collectChallengeResponse.isSuccess()) {
+            String userMessage =
+                    collectChallengeResponse.getMessage().getUserMessage().toLowerCase();
+            verifyCollectChallengeResponse(userMessage);
+            String errorCode = getBankIdErrorCode(collectChallengeResponse, userMessage);
+            handleBankIdError(collectChallengeResponse, errorCode);
         }
 
-        String userMessage = collectChallengeResponse.getMessage().getUserMessage().toLowerCase();
-        if (Objects.equals(DnbConstants.Messages.GENERIC_BANKID_ERROR, userMessage)) {
-            throw BankIdError.BLOCKED.exception(
-                    new LocalizableKey(
-                            "Have you received a new mobile phone, made changes to your mobile subscription "
-                                    + "or have a new SIM card? In that case, you must delete BankID Mobile and re-enable the service."));
-        }
-        String errorCode;
-        Matcher matcher = BANKID_ERROR_PATTERN.matcher(userMessage);
-        if (!matcher.find()) {
-            throw new IllegalStateException(
-                    String.format(
-                            "could not initiate bankid, user message: %s, error message: %s",
-                            collectChallengeResponse.getMessage().getUserMessage(),
-                            collectChallengeResponse.getMessage().getErrorMessage()));
-        } else {
-            errorCode = matcher.group(0);
-        }
+        return collectChallengeResponse.getMessage().getApplicationData();
+    }
 
+    private void handleBankIdError(
+            CollectChallengeResponse collectChallengeResponse, String errorCode)
+            throws BankIdException, LoginException {
         switch (errorCode) {
             case DnbConstants.Messages.BANKID_ALREADY_IN_PROGRESS:
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
@@ -152,6 +122,62 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
                                 "could not initiate bankid, user message: %s, error message: %s",
                                 collectChallengeResponse.getMessage().getUserMessage(),
                                 collectChallengeResponse.getMessage().getErrorMessage()));
+        }
+    }
+
+    private String getBankIdErrorCode(
+            CollectChallengeResponse collectChallengeResponse, String userMessage) {
+        String errorCode;
+        Matcher matcher = BANKID_ERROR_PATTERN.matcher(userMessage);
+        if (!matcher.find()) {
+            throw new IllegalStateException(
+                    String.format(
+                            "could not initiate bankid, user message: %s, error message: %s",
+                            collectChallengeResponse.getMessage().getUserMessage(),
+                            collectChallengeResponse.getMessage().getErrorMessage()));
+        } else {
+            errorCode = matcher.group(0);
+        }
+        return errorCode;
+    }
+
+    private void verifyCollectChallengeResponse(String userMessage) throws BankIdException {
+        if (Objects.equals(DnbConstants.Messages.GENERIC_BANKID_ERROR, userMessage)) {
+            throw BankIdError.BLOCKED.exception(
+                    new LocalizableKey(
+                            "Have you received a new mobile phone, made changes to your mobile subscription "
+                                    + "or have a new SIM card? In that case, you must delete BankID Mobile and re-enable the service."));
+        }
+    }
+
+    private void verifyInitiateBankIdResponse(InitiateBankIdResponse initiateBankIdResponse) {
+        if (!initiateBankIdResponse.isSuccess()) {
+            throw new IllegalStateException(
+                    String.format(
+                            "error msg: %s, user msg: %s",
+                            initiateBankIdResponse.getMessage().getErrorMessage(),
+                            initiateBankIdResponse.getMessage().getUserMessage()));
+        }
+    }
+
+    private void verifyInstrumentInfoResponse(InstrumentInfoResponse instrumentInfoResponse) {
+        if (!instrumentInfoResponse.isSuccess()) {
+            throw new IllegalStateException("Could not fetch instrument info");
+        }
+    }
+
+    private void verifyStartMobileResponse(HttpResponse startMobileResponse)
+            throws BankIdException {
+        if (bankIdReferer == null) {
+            if (startMobileResponse.hasBody()
+                    && startMobileResponse
+                            .getBody(String.class)
+                            .toLowerCase()
+                            .contains(DnbConstants.Messages.SSN_FORMAT_ERROR)) {
+                throw BankIdError.USER_VALIDATION_ERROR.exception();
+            }
+
+            throw new IllegalStateException("Could not authenticate");
         }
     }
 
