@@ -45,7 +45,7 @@ public class Account implements Cloneable {
             };
     private String accountNumber;
     private AccountExclusion accountExclusion;
-    private double availableCredit;
+    private Double availableCredit;
     private ExactCurrencyAmount exactAvailableCredit;
     private Double balance;
     private ExactCurrencyAmount exactBalance;
@@ -109,11 +109,26 @@ public class Account implements Cloneable {
         this.accountNumber = accountNumber;
     }
 
+    /**
+     * Returns availableCredit for the account. Translating a null balance to zero.
+     *
+     * @return availableCredit of the account
+     */
+    @JsonProperty("availableCredit")
     public double getAvailableCredit() {
+        return this.availableCredit == null ? 0.0d : this.availableCredit;
+    }
+
+    /**
+     * Returns availableCredit for the account. Value may be null.
+     *
+     * @return availableCredit of the account
+     */
+    public Double getNullableAvailableCredit() {
         return this.availableCredit;
     }
 
-    public void setAvailableCredit(double availableCredit) {
+    public void setAvailableCredit(Double availableCredit) {
         this.availableCredit = availableCredit;
     }
 
