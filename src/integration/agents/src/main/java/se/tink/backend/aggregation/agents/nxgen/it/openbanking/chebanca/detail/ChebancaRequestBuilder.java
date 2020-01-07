@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail;
 
 import static java.util.Objects.requireNonNull;
+import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.DateConfig.ZONE_ID;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class ChebancaRequestBuilder {
     }
 
     public RequestBuilder buildRequest(URL url, String requestBody, String httpMethod) {
-        String date = RequestDateFormatter.getDateFormatted(LocalDateTime.now());
+        String date = RequestDateFormatter.getDateFormatted(ZonedDateTime.now(ZONE_ID));
         String requestId = UUID.randomUUID().toString();
         RequestBuilder requestBuilder = client.request(url);
         String digest = null;
