@@ -34,19 +34,17 @@ public class BankinterTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         final GlobalPositionResponse globalPosition = apiClient.fetchGlobalPosition();
-        return globalPosition.getAccountIds().stream()
+        return globalPosition.getAccountLinks().stream()
                 .map(
-                        accountId -> {
-                            AccountResponse accountResponse =
-                                    apiClient.fetchAccount(accountId.intValue());
+                        accountLink -> {
+                            AccountResponse accountResponse = apiClient.fetchAccount(accountLink);
                             JsfUpdateResponse accountInfoResponse =
                                     apiClient.fetchJsfUpdate(
                                             Urls.ACCOUNT,
                                             accountResponse.getAccountInfoJsfSource(),
                                             accountResponse.getViewState(FormValues.ACCOUNT_HEADER),
                                             JsfPart.ACCOUNT_DETAILS);
-                            return accountResponse.toTinkAccount(
-                                    accountId.intValue(), accountInfoResponse);
+                            return accountResponse.toTinkAccount(accountLink, accountInfoResponse);
                         })
                 .filter(Optional::isPresent)
                 .map(Optional::get)

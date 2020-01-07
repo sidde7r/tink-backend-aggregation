@@ -11,8 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterCons
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.rpc.CreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.identitydata.rpc.IdentityDataResponse;
@@ -70,22 +68,15 @@ public final class BankinterApiClient {
     }
 
     public GlobalPositionResponse fetchGlobalPosition() {
-        return new GlobalPositionResponse(
-                client.request(Urls.GLOBAL_POSITION).get(HttpResponse.class).getBody(String.class));
+        return new GlobalPositionResponse(client.request(Urls.GLOBAL_POSITION).get(String.class));
     }
 
-    public AccountResponse fetchAccount(int accountIndex) {
-        return new AccountResponse(
-                client.request(Urls.ACCOUNT)
-                        .queryParam(QueryKeys.ACCOUNT_INDEX, Integer.toString(accountIndex))
-                        .queryParam(QueryKeys.INDEX, QueryValues.INDEX_N)
-                        .get(HttpResponse.class)
-                        .getBody(String.class));
+    public AccountResponse fetchAccount(String url) {
+        return new AccountResponse(client.request(Urls.BASE + url).get(String.class));
     }
 
     public InvestmentResponse fetchInvestmentAccount(String url) {
-        return new InvestmentResponse(
-                client.request(Urls.BASE + url).get(HttpResponse.class).getBody(String.class));
+        return new InvestmentResponse(client.request(Urls.BASE + url).get(String.class));
     }
 
     public CreditCardResponse fetchCreditCard(String url) {

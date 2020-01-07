@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter;
 
 import com.google.common.collect.Sets;
 import java.util.Set;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public final class BankinterConstants {
 
@@ -11,6 +14,12 @@ public final class BankinterConstants {
     private BankinterConstants() {
         throw new AssertionError();
     }
+
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    // N = cuenta nómina, C = COINC, Cuenta Corriente, E-cuenta
+                    .put(AccountTypes.CHECKING, AccountFlag.PSD2_PAYMENT_ACCOUNT, "N", "C")
+                    .build();
 
     public static class Urls {
         public static final String BASE = "https://bancaonline.bankinter.com";
@@ -69,11 +78,7 @@ public final class BankinterConstants {
 
     public static class QueryKeys {
         public static final String ACCOUNT_INDEX = "INDEX_CTA";
-        public static final String INDEX = "IND";
-    }
-
-    public static class QueryValues {
-        public static final String INDEX_N = "N";
+        public static final String ACCOUNT_TYPE = "IND";
     }
 
     public static class HeaderKeys {

@@ -11,8 +11,10 @@ public class GlobalPositionResponseTest {
         GlobalPositionResponse response =
                 loadTestResponse("1.extracto_integral.xhtml", GlobalPositionResponse.class);
 
-        assertEquals(1, response.getAccountIds().size());
-        assertEquals(0, response.getAccountIds().get(0).intValue());
+        assertEquals(1, response.getAccountLinks().size());
+        assertEquals(
+                "/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=0&IND=N",
+                response.getAccountLinks().get(0));
 
         assertEquals(2, response.getInvestmentLinks().size());
         assertEquals(
