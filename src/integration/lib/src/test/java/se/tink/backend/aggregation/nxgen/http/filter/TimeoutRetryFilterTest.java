@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.http.filter;
 import java.net.SocketTimeoutException;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
 public class TimeoutRetryFilterTest {

@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.readers.CharacterEncodedMessageBodyReader;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 

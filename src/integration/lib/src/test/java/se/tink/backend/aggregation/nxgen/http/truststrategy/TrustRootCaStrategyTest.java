@@ -5,8 +5,8 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 
 @Ignore
 public class TrustRootCaStrategyTest {

@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.filters
 
 import com.google.common.base.Strings;
 import java.util.Objects;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;

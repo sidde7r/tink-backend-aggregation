@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 
 @JsonObject
 public class ErrorResponse {

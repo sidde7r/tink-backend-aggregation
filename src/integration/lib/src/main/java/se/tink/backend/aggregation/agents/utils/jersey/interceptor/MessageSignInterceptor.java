@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.jersey.interceptor;
 
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;

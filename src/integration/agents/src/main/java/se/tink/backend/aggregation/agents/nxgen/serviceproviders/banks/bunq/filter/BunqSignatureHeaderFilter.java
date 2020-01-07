@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.Bunq
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.entities.TokenEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;

@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaStorage;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 
 public class AxaSessionHandler implements SessionHandler {
 
