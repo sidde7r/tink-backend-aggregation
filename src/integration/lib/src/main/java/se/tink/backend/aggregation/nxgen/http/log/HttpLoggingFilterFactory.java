@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
+import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 
 /**
  * The reason for this abstraction is that a single filter instance cannot be attached to multiple
