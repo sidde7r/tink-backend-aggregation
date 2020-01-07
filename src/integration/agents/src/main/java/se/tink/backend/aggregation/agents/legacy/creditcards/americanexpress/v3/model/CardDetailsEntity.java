@@ -105,7 +105,7 @@ public class CardDetailsEntity {
         // and extra cards in the app, so for now we just set the total balance to 0 in the "n/a"
         // case.
         if (Objects.equal(totalBalance.toLowerCase(), "n/a")) {
-            a.setBalance(0);
+            a.setBalance(0d);
         } else {
             a.setBalance(
                     -StringUtils.parseAmount(
