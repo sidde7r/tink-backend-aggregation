@@ -18,6 +18,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/dnb",
         "//src/integration/api",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/libraries/serialization",
         "//third_party:org_mockito_mockito_core",
     ],
