@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SebAuthenticator implements OAuth2Authenticator {

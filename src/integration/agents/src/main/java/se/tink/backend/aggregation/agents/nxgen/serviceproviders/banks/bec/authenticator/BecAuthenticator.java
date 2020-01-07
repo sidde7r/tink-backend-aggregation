@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecCo
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.rpc.LoginErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 
 public class BecAuthenticator implements PasswordAuthenticator {
 

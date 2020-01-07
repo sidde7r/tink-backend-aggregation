@@ -7,8 +7,8 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 public interface HttpResponse {

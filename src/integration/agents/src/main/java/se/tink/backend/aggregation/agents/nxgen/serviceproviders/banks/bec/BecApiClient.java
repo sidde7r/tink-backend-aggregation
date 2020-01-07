@@ -31,7 +31,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 

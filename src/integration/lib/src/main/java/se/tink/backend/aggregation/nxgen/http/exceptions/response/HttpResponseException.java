@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.exceptions;
+package se.tink.backend.aggregation.nxgen.http.exceptions.response;
 
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSECons
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 
 public class NordeaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static Logger LOG = LoggerFactory.getLogger(NordeaInvestmentFetcher.class);

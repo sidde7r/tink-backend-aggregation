@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfileHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;

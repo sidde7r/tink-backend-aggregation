@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.AccountIdentifier;

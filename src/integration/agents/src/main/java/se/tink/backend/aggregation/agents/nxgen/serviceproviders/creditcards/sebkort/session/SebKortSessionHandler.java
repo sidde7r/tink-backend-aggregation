@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.exceptions.SebKortUnexpectedMediaTypeException;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SebKortSessionHandler implements SessionHandler {

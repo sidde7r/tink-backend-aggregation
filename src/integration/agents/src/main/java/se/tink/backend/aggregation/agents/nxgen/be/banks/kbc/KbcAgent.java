@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 

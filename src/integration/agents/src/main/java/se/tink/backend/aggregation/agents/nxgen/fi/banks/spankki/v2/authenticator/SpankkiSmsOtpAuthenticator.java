@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticato
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.utils.SpankkiAuthUtils;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.entities.StatusEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.LocalizableKey;

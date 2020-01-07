@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.ValidateSubscriptionResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BbvaMxAuthenticator implements Authenticator {

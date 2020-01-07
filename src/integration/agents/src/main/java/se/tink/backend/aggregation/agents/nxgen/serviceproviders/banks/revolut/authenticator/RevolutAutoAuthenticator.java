@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.R
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 
 public class RevolutAutoAuthenticator implements AutoAuthenticator {
     private static final Logger log = LoggerFactory.getLogger(RevolutAutoAuthenticator.class);

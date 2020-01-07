@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 
 public class SebCreditCardAccountFetcher<A extends Account>
         implements AccountFetcher<CreditCardAccount> {

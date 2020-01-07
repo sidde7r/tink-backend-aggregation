@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.L
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.Envelope;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 
 public class BawagPskPasswordAuthenticator implements PasswordAuthenticator {
 

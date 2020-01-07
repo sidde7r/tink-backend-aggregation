@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.nxgen.http.metrics;
 
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;

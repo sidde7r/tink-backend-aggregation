@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBankenFormatUtils;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;

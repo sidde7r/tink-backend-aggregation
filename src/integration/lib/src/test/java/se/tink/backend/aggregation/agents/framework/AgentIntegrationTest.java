@@ -55,8 +55,8 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;

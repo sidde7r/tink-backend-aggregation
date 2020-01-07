@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErro
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {

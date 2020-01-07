@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.LoginResponse
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class AsLhvApiClient {

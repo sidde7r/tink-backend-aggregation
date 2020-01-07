@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc.AgreementsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 
 public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SdcBankIdAuthenticator.class);

@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {

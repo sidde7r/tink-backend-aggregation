@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsSe
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.SoapFaultErrorEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.response.HttpResponseException;
 
 public class SantanderEsAuthenticator implements PasswordAuthenticator {
 
