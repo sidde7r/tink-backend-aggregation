@@ -41,7 +41,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.BankServiceInternalErrorFilter;
-import se.tink.backend.aggregation.nxgen.http.filter.ExecutionTimeLoggingFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ExecutionTimeLoggingFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
