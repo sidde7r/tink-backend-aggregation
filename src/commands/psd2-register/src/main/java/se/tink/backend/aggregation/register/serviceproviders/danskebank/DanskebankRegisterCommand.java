@@ -5,7 +5,7 @@ import java.util.Arrays;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.register.serviceproviders.danskebank.jwt.QsealcJwtCreator;
 import se.tink.backend.aggregation.register.serviceproviders.danskebank.rpc.RegistrationRequest;
 

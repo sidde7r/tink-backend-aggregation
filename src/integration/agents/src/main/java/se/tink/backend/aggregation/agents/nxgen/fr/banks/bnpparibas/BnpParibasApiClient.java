@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.rpc.UserOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.storage.BnpParibasPersistentStorage;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class BnpParibasApiClient {
     private final TinkHttpClient client;

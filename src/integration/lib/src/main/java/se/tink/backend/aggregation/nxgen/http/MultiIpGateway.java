@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public final class MultiIpGateway {
     private final Logger logger = LoggerFactory.getLogger(MultiIpGateway.class);

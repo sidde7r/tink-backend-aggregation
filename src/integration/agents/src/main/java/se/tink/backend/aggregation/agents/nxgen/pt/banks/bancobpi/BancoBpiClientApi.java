@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.accoun
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.creditcard.PreAccountAndTransactionsFetchRequest;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class BancoBpiClientApi {
 

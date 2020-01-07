@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.Request
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAccountsContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class PinAuthenticationRequest extends DefaultRequest<PinAuthenticationResponse> {
 

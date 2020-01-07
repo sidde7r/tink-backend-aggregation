@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.r
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.utils.AbnAmroUtils;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 

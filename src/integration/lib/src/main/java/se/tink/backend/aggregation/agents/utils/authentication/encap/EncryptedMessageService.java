@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.encrypted.RequestBody;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class EncryptedMessageService {
 

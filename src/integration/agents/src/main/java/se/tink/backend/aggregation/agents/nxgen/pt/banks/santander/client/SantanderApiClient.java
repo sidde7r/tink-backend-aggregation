@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.RESPONSE_CODES;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.SantanderConstants.STORAGE;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SantanderApiClient {

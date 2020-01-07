@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 // Copied from se.tink.backend.aggregation.nxgen.http.filter.AbstractRetryFilter with minor
 // modification (because legacy agent don't use
-// se.tink.backend.aggregation.nxgen.http.TinkHttpClient)
+// se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient)
 public class JerseyTimeoutRetryFilter extends ClientFilter {
     private static final Logger log = LoggerFactory.getLogger(JerseyTimeoutRetryFilter.class);
     private final int maxNumRetries;
