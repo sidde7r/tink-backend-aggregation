@@ -764,6 +764,41 @@
                             			});
                             //-->
 
+
+
+                          </script>
+                        </li>
+                        <li
+                          class="boxSortableDefault boxSortablePrimary goAccounts card-ops__container"
+                          style="overflow:visible;" id="7" sec="1" data-track="true"
+                          data-type="enlace" data-position="Posicion global"
+                          data-element="Cuentas&gt;BoxCuenta">
+                          <h4 class="nameCCC">Cuenta Coinc</h4>
+                          <span class="numCCC">.... .... .... .... 2222</span>
+                          <span class="amount">423,<small>26 €</small>
+				</span>
+
+                          <!--INICIO boton operar cuentas-->
+
+                          <!--INICIO boton operar cuentas-->
+                          <!--FIN boton operar cuentas-->
+
+                          <!--FIN boton operar cuentas-->
+                          <div class="hidden-xs hidden-sm"></div>
+                          <script type="text/javascript"><!--
+
+
+                                  $("li[id='7']").on("click", function (e) {
+                                    if (e.target.id =='7' ||
+                                      e.target.className=='nameCCC' ||
+                                      e.target.className=='numCCC' ||
+                                      e.target.className=='amount'){
+                                        location.href = '/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=6&IND=C';
+                                    }
+                                    llamadaStop(e);
+                                  });
+                            //-->
+
                           </script>
                         </li>
                         <!-- ini rt offert box -->
