@@ -15,7 +15,7 @@ public class TransactionAmountEntityTest {
     public void toTinkAmountWithNegativeAmount() throws IOException {
         // given
         String givenAmount = "-92.54";
-        BigDecimal expectedAmount = new BigDecimal("92.54");
+        BigDecimal expectedAmount = new BigDecimal("-92.54");
         TransactionAmountEntity transactionAmountEntity =
                 amountToTransactionAmountEntity(givenAmount);
 
@@ -45,7 +45,7 @@ public class TransactionAmountEntityTest {
     public void toTinkAmountWithPositiveAmount() throws IOException {
         // given
         String givenAmount = "234.15";
-        BigDecimal expectedAmount = new BigDecimal("-234.15");
+        BigDecimal expectedAmount = new BigDecimal("234.15");
         TransactionAmountEntity transactionAmountEntity =
                 amountToTransactionAmountEntity(givenAmount);
 
