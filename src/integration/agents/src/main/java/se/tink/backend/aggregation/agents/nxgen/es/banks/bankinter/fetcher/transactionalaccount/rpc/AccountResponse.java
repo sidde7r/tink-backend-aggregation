@@ -17,7 +17,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
@@ -101,9 +100,7 @@ public class AccountResponse extends HtmlResponse {
                                         .withAccountName(getAccountName())
                                         .addIdentifier(accountIdentifier)
                                         .build())
-                        .setApiIdentifier(getAccountIndex(accountLink))
-                        .putInTemporaryStorage(
-                                StorageKeys.FIRST_PAGINATION_KEY, getFirstPaginationKey());
+                        .setApiIdentifier(accountLink);
 
         final List<String> holderNames = getHolderNames(accountInfo);
         for (String name : holderNames) {
@@ -132,10 +129,6 @@ public class AccountResponse extends HtmlResponse {
                                                 paramName, url)));
     }
 
-    private String getAccountIndex(String accountLink) {
-        return getUrlParameter(Urls.BASE + accountLink, QueryKeys.ACCOUNT_INDEX);
-    }
-
     private String getAccountType(String accountLink) {
         return getUrlParameter(Urls.BASE + accountLink, QueryKeys.ACCOUNT_TYPE);
     }
@@ -149,7 +142,7 @@ public class AccountResponse extends HtmlResponse {
         }
     }
 
-    private PaginationKey getFirstPaginationKey() {
+    public PaginationKey getFirstPaginationKey() {
         final Matcher matcher = TRANSACTIONS_JSF_SOURCE_PATTERN.matcher(body);
         if (matcher.find()) {
             final String jsfSource = matcher.group(1);

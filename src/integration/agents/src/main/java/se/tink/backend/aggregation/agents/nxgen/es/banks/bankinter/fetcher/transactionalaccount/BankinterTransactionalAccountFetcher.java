@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc.AccountResponse;
@@ -55,13 +54,9 @@ public class BankinterTransactionalAccountFetcher
             TransactionalAccount account, PaginationKey nextKey) {
         if (Objects.isNull(nextKey)) {
             // first page, get view state from account
-            nextKey =
-                    account.getFromTemporaryStorage(
-                                    StorageKeys.FIRST_PAGINATION_KEY, PaginationKey.class)
-                            .orElseThrow(
-                                    () ->
-                                            new IllegalStateException(
-                                                    "Could not get initial pagination key."));
+            final AccountResponse accountResponse =
+                    apiClient.fetchAccount(account.getApiIdentifier());
+            nextKey = accountResponse.getFirstPaginationKey();
         }
         return apiClient.fetchJsfUpdate(
                 Urls.ACCOUNT,
