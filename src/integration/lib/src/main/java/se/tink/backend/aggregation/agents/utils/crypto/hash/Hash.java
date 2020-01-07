@@ -25,7 +25,7 @@ public class Hash {
     }
 
     public static String sha1AsHex(final byte[]... datas) {
-        return Hex.encodeHexString(sha("SHA-1", datas));
+        return Hex.encodeHexString(hashFunction("SHA-1", datas));
     }
 
     public static String sha1AsHex(String data) {
@@ -33,7 +33,7 @@ public class Hash {
     }
 
     public static String sha256AsHex(final byte[]... datas) {
-        return Hex.encodeHexString(sha("SHA-256", datas));
+        return Hex.encodeHexString(hashFunction("SHA-256", datas));
     }
 
     public static String sha256AsHex(final String data) {
@@ -41,19 +41,19 @@ public class Hash {
     }
 
     public static byte[] sha1(final String data) {
-        return sha("SHA-1", data.getBytes());
+        return hashFunction("SHA-1", data.getBytes());
     }
 
     public static byte[] sha256(final String data) {
-        return sha("SHA-256", data.getBytes());
+        return hashFunction("SHA-256", data.getBytes());
     }
 
     public static byte[] sha1(final byte[]... datas) {
-        return sha("SHA-1", datas);
+        return hashFunction("SHA-1", datas);
     }
 
     public static byte[] sha256(final byte[]... datas) {
-        return sha("SHA-256", datas);
+        return hashFunction("SHA-256", datas);
     }
 
     public static String sha256Base64(final byte[]... datas) {
@@ -77,18 +77,18 @@ public class Hash {
     }
 
     public static byte[] sha512(final byte[]... datas) {
-        return sha("SHA-512", datas);
+        return hashFunction("SHA-512", datas);
     }
 
     public static byte[] sha512(final String data) {
-        return sha("SHA-512", data.getBytes());
+        return hashFunction("SHA-512", data.getBytes());
     }
 
     public static byte[] hmacSha512(final byte[] key, final byte[] data) {
         return hmac("HmacSHA512", key, data);
     }
 
-    private static byte[] sha(String algorithm, final byte[]... datas) {
+    private static byte[] hashFunction(String algorithm, final byte[]... datas) {
         try {
             MessageDigest md = MessageDigest.getInstance(algorithm);
             for (byte[] data : datas) {
