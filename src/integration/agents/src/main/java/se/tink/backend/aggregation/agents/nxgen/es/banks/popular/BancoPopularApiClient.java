@@ -27,10 +27,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.Set
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.SetContractResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.sessionhandler.rpc.KeepAliveResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 

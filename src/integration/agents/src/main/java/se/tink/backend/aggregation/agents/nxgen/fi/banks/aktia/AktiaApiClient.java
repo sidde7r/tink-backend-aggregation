@@ -20,9 +20,9 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transacti
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.rpc.AccountsSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class AktiaApiClient {
     private final TinkHttpClient httpClient;

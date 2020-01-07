@@ -33,10 +33,10 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.ErrorMessageResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.FinancialInstituationsListResponse;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class Sparebank1ApiClient {

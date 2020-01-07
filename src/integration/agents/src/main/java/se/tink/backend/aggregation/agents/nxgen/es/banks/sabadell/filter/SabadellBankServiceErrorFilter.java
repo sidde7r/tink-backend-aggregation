@@ -2,13 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.filter;
 
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 /**
  * Utility filter to throw a Tink {@link BankServiceError} when an API call responds with <code>

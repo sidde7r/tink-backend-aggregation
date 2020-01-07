@@ -16,6 +16,7 @@ import org.apache.http.impl.client.RedirectLocations;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class JerseyHttpResponse implements HttpResponse {
     private final HttpRequest request;

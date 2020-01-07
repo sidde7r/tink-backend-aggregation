@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.http.exceptions;
 
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 /**
  * A runtime exception thrown by a http method or HttpResponse when the status code of the HTTP

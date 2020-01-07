@@ -27,8 +27,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.loan.Mort
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BbvaLoanFetcher.class);

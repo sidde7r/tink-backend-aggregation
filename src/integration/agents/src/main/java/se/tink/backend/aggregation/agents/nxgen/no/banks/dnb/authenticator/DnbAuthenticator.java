@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.authenticator.rpc.C
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.authenticator.rpc.InitiateBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.authenticator.rpc.InstrumentInfoResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class DnbAuthenticator implements BankIdAuthenticatorNO {

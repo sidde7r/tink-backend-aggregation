@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http;
+package se.tink.backend.aggregation.nxgen.http.response;
 
 import com.sun.jersey.api.client.ClientResponse;
 import java.io.InputStream;

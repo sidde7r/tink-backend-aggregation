@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class IngSessionHandler implements SessionHandler {
     private static final Logger log = LoggerFactory.getLogger(IngSessionHandler.class);

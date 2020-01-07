@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.filter;
 
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.AbstractRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 /** Retry if we get error 502 or 503 from Nordea (as per their suggestion) */
 @FilterOrder(category = FilterPhases.REQUEST_HANDLE, order = 2)

@@ -21,8 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.rpc.Custome
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.rpc.ErrorStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String> {

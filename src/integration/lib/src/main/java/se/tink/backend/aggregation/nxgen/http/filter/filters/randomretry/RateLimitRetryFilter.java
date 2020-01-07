@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry;
 
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 /**
  * This filter will back off and retry a given amount of times when an API call responds with <code>

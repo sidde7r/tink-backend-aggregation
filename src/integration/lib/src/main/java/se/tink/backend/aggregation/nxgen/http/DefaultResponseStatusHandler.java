@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.http;
 
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class DefaultResponseStatusHandler implements HttpResponseStatusHandler {
 

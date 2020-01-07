@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.Filterable;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public interface RequestBuilder extends Filterable<RequestBuilder> {

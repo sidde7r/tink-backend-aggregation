@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankCryp
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.entity.EncryptionValuesEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.entity.TokenEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class ErsteBankPasswordAuthenticator implements PasswordAuthenticator {
 

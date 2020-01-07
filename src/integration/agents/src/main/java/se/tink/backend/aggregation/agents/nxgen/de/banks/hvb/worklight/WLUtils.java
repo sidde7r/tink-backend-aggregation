@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight;
 
 import java.util.regex.Matcher;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class WLUtils {
