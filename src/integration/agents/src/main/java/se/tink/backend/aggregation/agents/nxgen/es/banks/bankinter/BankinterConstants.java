@@ -105,7 +105,7 @@ public final class BankinterConstants {
     }
 
     public static class CardTypes {
-        public static final Set<String> CREDIT = Sets.newHashSet("visa clasi");
+        public static final Set<String> CREDIT = Sets.newHashSet("visa clasi", "visa oro");
         public static final Set<String> DEBIT = Sets.newHashSet("visa debit");
         public static final Set<String> ALL = Sets.union(CREDIT, DEBIT);
     }
