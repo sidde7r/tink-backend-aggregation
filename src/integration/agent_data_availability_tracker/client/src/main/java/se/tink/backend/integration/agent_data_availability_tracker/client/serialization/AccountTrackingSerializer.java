@@ -24,11 +24,17 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
                 .putRedacted("holderName", account.getHolderName())
                 .putListed("type", account.getType());
 
-        account.getIdentifiers().stream()
-                .map(AccountIdentifier::getType)
-                .map(AccountIdentifier.Type::toString)
-                .forEach(value -> listBuilder.putListed("identifiers", value));
+        // If no identifiers are present we want to record that as a null value.
+        if (!account.getIdentifiers().isEmpty()) {
+            account.getIdentifiers().stream()
+                    .map(AccountIdentifier::getType)
+                    .map(AccountIdentifier.Type::toString)
+                    .forEach(value -> listBuilder.putListed("identifiers", value));
+        } else {
+            listBuilder.putNull("identifiers");
+        }
 
+        // Accounts without flags are currently valid, so we do not track this as null if empty.
         account.getFlags().forEach(value -> listBuilder.putListed("flags", value));
 
         return listBuilder.build();
