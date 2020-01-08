@@ -19,7 +19,8 @@ public abstract class AgentRuntimeExceptionImpl extends RuntimeException impleme
         this(error, userMessage, null);
     }
 
-    public AgentRuntimeExceptionImpl(AgentBaseError error, LocalizableKey userMessage, Throwable cause) {
+    public AgentRuntimeExceptionImpl(
+            AgentBaseError error, LocalizableKey userMessage, Throwable cause) {
         super(String.format("Cause: %s.%s", error.getClass().getSimpleName(), error.name()), cause);
         this.error = Objects.requireNonNull(error, "error object is mandatory");
         this.userMessage = userMessage;

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.filters;
 
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants.ErrorMessages;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;

@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.Default;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginResponse;

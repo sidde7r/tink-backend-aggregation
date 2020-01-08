@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.fetcher.transactional.entity.CategoriesEntity;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.rpc.BaseResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;

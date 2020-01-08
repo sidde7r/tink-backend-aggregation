@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.entities;
 
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants.ErrorCode;
 import se.tink.backend.aggregation.annotations.JsonObject;

@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.investment;
 
-import static org.junit.Assert.*;
-
 import com.google.common.collect.Lists;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.BancoBpiClientApi;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiProductData;

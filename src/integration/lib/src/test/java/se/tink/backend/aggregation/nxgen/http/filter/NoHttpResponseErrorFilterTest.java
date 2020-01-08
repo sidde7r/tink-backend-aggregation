@@ -10,7 +10,7 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import org.apache.http.NoHttpResponseException;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.NoHttpResponseErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
