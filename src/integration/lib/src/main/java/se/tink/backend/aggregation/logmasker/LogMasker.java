@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.log;
+package se.tink.backend.aggregation.logmasker;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;

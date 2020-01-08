@@ -15,8 +15,8 @@ import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
-import se.tink.backend.aggregation.log.LogMasker;
-import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
@@ -55,7 +55,7 @@ public class RestIoLoggingFilter extends Filter {
      * Takes a logMasker that masks sensitive values from logs, the loggingMode parameter should *
      * only be passed with the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the
      * * logMasker handles the sensitive values in the provider. use {@link *
-     * se.tink.backend.aggregation.log.LogMasker#shouldLog(Provider)} if you can.
+     * se.tink.backend.aggregation.logmasker.LogMasker#shouldLog(Provider)} if you can.
      *
      * @param loggingStream
      * @param logMasker Masks values from logs.

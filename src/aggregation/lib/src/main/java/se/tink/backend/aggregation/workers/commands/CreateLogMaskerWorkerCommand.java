@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.workers.commands;
 
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;

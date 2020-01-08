@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.log;
+package se.tink.backend.aggregation.logmasker;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
