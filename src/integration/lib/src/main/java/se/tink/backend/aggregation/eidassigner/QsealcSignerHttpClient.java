@@ -78,7 +78,7 @@ public class QsealcSignerHttpClient {
                                     return Long.parseLong(value) * 1000;
                                 }
                             }
-                            return 60 * 1000;
+                            return 5 * 60 * 1000;
                         };
 
                 httpClient =
