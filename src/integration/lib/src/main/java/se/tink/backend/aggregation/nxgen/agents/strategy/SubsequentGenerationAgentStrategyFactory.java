@@ -17,4 +17,13 @@ public final class SubsequentGenerationAgentStrategyFactory {
         return new NextGenSubsequentGenerationAgentStrategy(
                 credentialsRequest, context, signatureKeyPair);
     }
+
+    @Deprecated
+    public static SubsequentGenerationAgentStrategy legacy(
+            final CredentialsRequest credentialsRequest,
+            final AgentContext context,
+            final SignatureKeyPair signatureKeyPair) {
+        return new LegacySubsequentGenerationAgentStrategy(
+                credentialsRequest, context, signatureKeyPair);
+    }
 }
