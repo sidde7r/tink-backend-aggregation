@@ -101,6 +101,7 @@ public final class IngBaseConstants {
         public static final String MISSING_TOKEN = "Cannot find Token!";
         public static final String MISSING_CLIENT_ID = "Cannot find client id!";
         public static final String INVALID_GRANT_ERROR = "invalid_grant";
+        public static final String NOT_FOUND = "NOT_FOUND";
     }
 
     public static class Retry {
