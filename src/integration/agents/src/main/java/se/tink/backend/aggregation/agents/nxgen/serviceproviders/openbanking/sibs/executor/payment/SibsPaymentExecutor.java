@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsPaymentType;
@@ -49,7 +50,7 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .withInstructedAmount(
                                 SibsAmountEntity.of(
                                         paymentRequest.getPayment().getExactCurrencyAmount()))
-                        .withCreditorName(paymentRequest.getPayment().getCreditor().getName());
+                        .withCreditorName(SibsConstants.FormValues.PAYMENT_INITIATION_DEFAULT_NAME);
 
         LocalDate paymentExecutionDate = paymentRequest.getPayment().getExecutionDate();
 
