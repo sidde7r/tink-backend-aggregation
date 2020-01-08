@@ -34,6 +34,6 @@ public class MontepioAuthenticator extends StatelessProgressiveAuthenticator {
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
-        return true;
+        return request.isUpdate() || request.isCreate();
     }
 }

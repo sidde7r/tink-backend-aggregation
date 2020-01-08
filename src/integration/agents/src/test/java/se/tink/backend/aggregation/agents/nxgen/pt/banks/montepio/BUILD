@@ -3,21 +3,18 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "montepio",
     srcs = glob(["**/*.java"]),
-    data = [
-        "//data:aggregation_test",
-        "//etc:development",
-    ],
-    tags = [
-        "external",
-        "manual",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/montepio",
-        "//src/integration/api",
         "//src/integration/credentials:service",
-        "//src/integration/lib:lib_test",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/lib",
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:com_google_guava_guava",
+        "//third_party:net_bytebuddy_byte_buddy",
+        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:org_json_json",
+        "//third_party:org_mockito_mockito_core",
+        "//third_party:org_objenesis_objenesis",
+        "//third_party:pl_pragmatists_junitparams",
     ],
 )
