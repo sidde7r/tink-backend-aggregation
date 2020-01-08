@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.Bankin
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterTestData.loadTestResponse;
 
 import org.junit.Test;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.JsfUpdateResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
@@ -20,13 +21,18 @@ public class AccountResponseTest {
                         "3.movimientos-cabecera-head-datos-detalle.xhtml", JsfUpdateResponse.class);
 
         final TransactionalAccount account =
-                accountResponse.toTinkAccount(0, accountInfo).orElse(null);
+                accountResponse
+                        .toTinkAccount(
+                                "/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=0&IND=N",
+                                accountInfo)
+                        .orElse(null);
         assertEquals("0", account.getApiIdentifier());
         assertEquals(1, account.getIdentifiers().size());
         assertEquals(TEST_DATA_IBAN, account.getIdentifiers().get(0).getIdentifier());
         assertEquals(TEST_DATA_IBAN, account.getIdModule().getAccountNumber());
         assertEquals(TEST_DATA_IBAN, account.getIdModule().getUniqueId());
         assertEquals("Cuenta nómina", account.getIdModule().getAccountName());
+        assertEquals(AccountTypes.CHECKING, account.getType());
         // FIXME: account only holds the first holder name
         assertEquals(Amount.inEUR(31337.42), account.getBalance());
     }

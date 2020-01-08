@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc.AccountResponse;
@@ -34,19 +33,17 @@ public class BankinterTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         final GlobalPositionResponse globalPosition = apiClient.fetchGlobalPosition();
-        return globalPosition.getAccountIds().stream()
+        return globalPosition.getAccountLinks().stream()
                 .map(
-                        accountId -> {
-                            AccountResponse accountResponse =
-                                    apiClient.fetchAccount(accountId.intValue());
+                        accountLink -> {
+                            AccountResponse accountResponse = apiClient.fetchAccount(accountLink);
                             JsfUpdateResponse accountInfoResponse =
                                     apiClient.fetchJsfUpdate(
                                             Urls.ACCOUNT,
                                             accountResponse.getAccountInfoJsfSource(),
                                             accountResponse.getViewState(FormValues.ACCOUNT_HEADER),
                                             JsfPart.ACCOUNT_DETAILS);
-                            return accountResponse.toTinkAccount(
-                                    accountId.intValue(), accountInfoResponse);
+                            return accountResponse.toTinkAccount(accountLink, accountInfoResponse);
                         })
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -57,13 +54,9 @@ public class BankinterTransactionalAccountFetcher
             TransactionalAccount account, PaginationKey nextKey) {
         if (Objects.isNull(nextKey)) {
             // first page, get view state from account
-            nextKey =
-                    account.getFromTemporaryStorage(
-                                    StorageKeys.FIRST_PAGINATION_KEY, PaginationKey.class)
-                            .orElseThrow(
-                                    () ->
-                                            new IllegalStateException(
-                                                    "Could not get initial pagination key."));
+            final AccountResponse accountResponse =
+                    apiClient.fetchAccount(account.getApiIdentifier());
+            nextKey = accountResponse.getFirstPaginationKey();
         }
         return apiClient.fetchJsfUpdate(
                 Urls.ACCOUNT,

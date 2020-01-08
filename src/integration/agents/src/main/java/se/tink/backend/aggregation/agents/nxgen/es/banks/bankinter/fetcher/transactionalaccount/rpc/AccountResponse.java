@@ -1,17 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.ACCOUNT_TYPE_MAPPER;
+
 import com.google.common.base.Strings;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.JsfUpdateResponse;
@@ -19,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -30,7 +35,7 @@ public class AccountResponse extends HtmlResponse {
             Pattern.compile("source:'(j_id[_0-9a-f]+:cargaRemotaMovimientos)'");
     private static final Pattern ACCOUNT_INFO_JSF_SOURCE_PATTERN =
             Pattern.compile(
-                    "source:'movimientos-cabecera:(j_id[_0-9a-f]+)'\\s*,process:'@all',update:'movimientos-cabecera:head-datos-detalle");
+                    "source:'(movimientos-cabecera:j_id[_0-9a-f]+)'\\s*,process:'@all',update:'movimientos-cabecera:head-datos-detalle");
 
     public AccountResponse(String body) {
         super(body);
@@ -82,12 +87,11 @@ public class AccountResponse extends HtmlResponse {
     }
 
     public Optional<TransactionalAccount> toTinkAccount(
-            int accountIndex, JsfUpdateResponse accountInfo) {
+            String accountLink, JsfUpdateResponse accountInfo) {
         final AccountIdentifier accountIdentifier = getAccountIdentifier();
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
-                        .withType(TransactionalAccountType.CHECKING)
-                        .withPaymentAccountFlag()
+                        .withTypeAndFlagsFrom(ACCOUNT_TYPE_MAPPER, getAccountType(accountLink))
                         .withBalance(BalanceModule.of(getBalance()))
                         .withId(
                                 IdModule.builder()
@@ -96,9 +100,7 @@ public class AccountResponse extends HtmlResponse {
                                         .withAccountName(getAccountName())
                                         .addIdentifier(accountIdentifier)
                                         .build())
-                        .setApiIdentifier(Integer.toString(accountIndex))
-                        .putInTemporaryStorage(
-                                StorageKeys.FIRST_PAGINATION_KEY, getFirstPaginationKey());
+                        .setApiIdentifier(accountLink);
 
         final List<String> holderNames = getHolderNames(accountInfo);
         for (String name : holderNames) {
@@ -106,6 +108,29 @@ public class AccountResponse extends HtmlResponse {
         }
 
         return builder.build();
+    }
+
+    private String getUrlParameter(String url, String paramName) {
+        final List<NameValuePair> queryParams;
+        try {
+            queryParams = new URIBuilder(url).getQueryParams();
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException(String.format("Cannot parse URL: %s", url), e);
+        }
+        return queryParams.stream()
+                .filter(param -> param.getName().equalsIgnoreCase(paramName))
+                .map(param -> param.getValue())
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        String.format(
+                                                "Cannot find %s in URL parameters: %s",
+                                                paramName, url)));
+    }
+
+    private String getAccountType(String accountLink) {
+        return getUrlParameter(Urls.BASE + accountLink, QueryKeys.ACCOUNT_TYPE);
     }
 
     public String getAccountInfoJsfSource() {
@@ -117,7 +142,7 @@ public class AccountResponse extends HtmlResponse {
         }
     }
 
-    private PaginationKey getFirstPaginationKey() {
+    public PaginationKey getFirstPaginationKey() {
         final Matcher matcher = TRANSACTIONS_JSF_SOURCE_PATTERN.matcher(body);
         if (matcher.find()) {
             final String jsfSource = matcher.group(1);
