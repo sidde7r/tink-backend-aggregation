@@ -100,6 +100,7 @@ public abstract class OpenbankConstants {
     public static class ErrorCodes {
         public static final String INVALID_LOGIN_USERNAME_TYPE = "NotNull";
         public static final String INCORRECT_CREDENTIALS = "bad.input.credentials.incorrect";
+        public static final String NO_RECORDS_FOUND = "XX9511";
     }
 
     public static class LogTags {
