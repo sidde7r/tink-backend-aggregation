@@ -141,11 +141,19 @@ public final class IngBaseApiClient {
     }
 
     public FetchTransactionsResponse fetchTransactionsPage(final String transactionsUrl) {
-        return buildRequestWithSignature(
-                        transactionsUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
-                .addBearerToken(getTokenFromSession())
-                .type(MediaType.APPLICATION_JSON)
-                .get(FetchTransactionsResponse.class);
+        try {
+            return buildRequestWithSignature(
+                            transactionsUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
+                    .addBearerToken(getTokenFromSession())
+                    .type(MediaType.APPLICATION_JSON)
+                    .get(FetchTransactionsResponse.class);
+        } catch (HttpResponseException e) {
+            final String message = e.getResponse().getBody(String.class);
+            if (message.contains(ErrorMessages.NOT_FOUND)) {
+                return new FetchTransactionsResponse();
+            }
+            throw e;
+        }
     }
 
     public URL getAuthorizeUrl(final String state) {
