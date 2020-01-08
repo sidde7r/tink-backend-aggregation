@@ -66,7 +66,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             ImmutableSet.of(
                     "22d854bfe1a2486c8a0173d330cf6322",
                     "36cbaccd848148449f34c2b4305db932",
-                    "a1f9f90779924e0bbae96e0b6bf5cb78",
                     "cd7eda70a19143478b8844dcda83038d",
                     "0ff7cba8c4094e29b94ba6812ad81d96",
                     "db6edf80de054c7aa14c6fe8aa26e8c8",
@@ -82,7 +81,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                     "6efdcfbed9644b97aeeaf8b8c261d96c",
                     "61584d2fd46d435583c3826c468f7f43",
                     "cee545c0bbc843b3861b959d4b884d42",
-                    "5ed32ef6a7314a658b1c57a5431f2978",
                     "655e700ff6a74a618484ee28bca05d95",
                     "755100024c524107950b31447b418391",
                     "77973c9a15c04098b819754fd1c40f52",
