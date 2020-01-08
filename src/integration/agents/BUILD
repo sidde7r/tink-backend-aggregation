@@ -21,6 +21,7 @@ java_library(
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",

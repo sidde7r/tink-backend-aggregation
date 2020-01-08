@@ -19,6 +19,7 @@ junit_test(
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
