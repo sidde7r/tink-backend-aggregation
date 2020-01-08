@@ -84,7 +84,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             SignatureKeyPair signatureKeyPair,
             UkOpenBankingAisConfig aisConfig,
             boolean disableSslVerification) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, true);
         this.disableSslVerification = disableSslVerification;
 
         tinkProvider = request.getProvider();
