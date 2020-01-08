@@ -14,8 +14,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
-import se.tink.backend.aggregation.utils.SensitiveValuesCollectionStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.masker.SensitiveValuesCollectionStringMaskerBuilder;
 
 public class LogMaskerTest {
 

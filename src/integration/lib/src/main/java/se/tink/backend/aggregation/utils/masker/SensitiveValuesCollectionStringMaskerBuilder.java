@@ -1,11 +1,9 @@
-package se.tink.backend.aggregation.utils;
+package se.tink.backend.aggregation.utils.masker;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import java.util.regex.Pattern;
-import se.tink.backend.aggregation.log.LogMasker;
-import se.tink.backend.aggregation.utils.masker.StringMaskerBuilder;
 
 public class SensitiveValuesCollectionStringMaskerBuilder implements StringMaskerBuilder {
 
@@ -16,7 +14,7 @@ public class SensitiveValuesCollectionStringMaskerBuilder implements StringMaske
                 ImmutableSet.copyOf(sensitiveValuesToMask);
         this.sensitiveValuesToMask =
                 ImmutableList.sortedCopyOf(
-                        LogMasker.SENSITIVE_VALUES_SORTING_COMPARATOR,
+                        MaskingConstants.SENSITIVE_VALUES_SORTING_COMPARATOR,
                         sensitiveValuesToMaskWithoutDuplicates);
     }
 

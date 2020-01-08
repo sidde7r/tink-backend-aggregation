@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils;
+package se.tink.backend.aggregation.utils.masker;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -15,8 +15,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.log.LogMasker;
-import se.tink.backend.aggregation.utils.masker.StringMaskerBuilder;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 
 public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
@@ -67,7 +65,7 @@ public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
         }
 
         return ImmutableList.sortedCopyOf(
-                LogMasker.SENSITIVE_VALUES_SORTING_COMPARATOR, valuesToMask);
+                MaskingConstants.SENSITIVE_VALUES_SORTING_COMPARATOR, valuesToMask);
     }
 
     private Optional<String> getNonEmptyPropertyValue(CredentialsProperty property) {

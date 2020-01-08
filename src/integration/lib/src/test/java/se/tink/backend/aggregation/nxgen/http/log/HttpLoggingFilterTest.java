@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 
 @Ignore
 public class HttpLoggingFilterTest {

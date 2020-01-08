@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.utils.CredentialsStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 
 public final class VolksbankApiClientTest {
 

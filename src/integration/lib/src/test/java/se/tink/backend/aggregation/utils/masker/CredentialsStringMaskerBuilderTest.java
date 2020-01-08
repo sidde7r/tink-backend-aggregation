@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils;
+package se.tink.backend.aggregation.utils.masker;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -22,7 +22,6 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.JsonFlattener;
@@ -229,7 +228,7 @@ public class CredentialsStringMaskerBuilderTest {
         Set<String> sensitiveValuesToCompare = new HashSet<>(sensitiveValuesOriginalMap.values());
         Arrays.stream(extraValues).forEach(sensitiveValuesToCompare::add);
         return sensitiveValuesToCompare.stream()
-                .sorted(LogMasker.SENSITIVE_VALUES_SORTING_COMPARATOR)
+                .sorted(MaskingConstants.SENSITIVE_VALUES_SORTING_COMPARATOR)
                 .collect(Collectors.toList());
     }
 

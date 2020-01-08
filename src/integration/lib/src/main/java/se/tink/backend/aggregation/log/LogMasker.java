@@ -5,23 +5,18 @@ import com.google.common.collect.ImmutableSet;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.utils.masker.Base64Masker;
-import se.tink.backend.aggregation.utils.SensitiveValuesCollectionStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.StringMasker;
+import se.tink.backend.aggregation.utils.masker.Base64Masker;
+import se.tink.backend.aggregation.utils.masker.SensitiveValuesCollectionStringMaskerBuilder;
 import se.tink.backend.aggregation.utils.masker.StringMaskerBuilder;
 
 public class LogMasker {
 
-    public static final Comparator<String> SENSITIVE_VALUES_SORTING_COMPARATOR =
-            Comparator.comparing(String::length)
-                    .reversed()
-                    .thenComparing(Comparator.naturalOrder());
     private static final ImmutableSet<String> WHITELISTED_SENSITIVE_VALUES =
             ImmutableSet.<String>builder().add("true").add("false").build();
     private static final ImmutableSet<String> MARKETS_MASKER_COVERS_SECRETS_FOR =
