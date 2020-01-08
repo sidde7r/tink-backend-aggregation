@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Auth
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Messages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public final class BbvaPredicates {
     public static final CheckedPredicate<HttpResponse> IS_HTML_MEDIA_TYPE =

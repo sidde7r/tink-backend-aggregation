@@ -1,6 +1,5 @@
-package se.tink.backend.aggregation.nxgen.http.exceptions;
+package se.tink.backend.aggregation.nxgen.http.response;
 
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
 /**

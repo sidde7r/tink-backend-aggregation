@@ -56,7 +56,7 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
+import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.demo.DemoCredentials.DemoUserFeature;

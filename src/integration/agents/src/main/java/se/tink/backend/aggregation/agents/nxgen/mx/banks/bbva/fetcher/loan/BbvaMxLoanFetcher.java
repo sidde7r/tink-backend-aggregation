@@ -6,7 +6,7 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class BbvaMxLoanFetcher implements AccountFetcher<LoanAccount> {
 

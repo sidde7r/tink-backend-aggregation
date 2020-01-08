@@ -61,7 +61,7 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
-import se.tink.backend.aggregation.agents.utils.jersey.MessageSignInterceptor;
+import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -70,13 +70,13 @@ import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.log.LogMasker;
 import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
-import se.tink.backend.aggregation.nxgen.http.filter.NextGenFilterable;
-import se.tink.backend.aggregation.nxgen.http.filter.RestIoLoggingFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.NextGenFilterable;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.RestIoLoggingFilter;
 import se.tink.backend.aggregation.nxgen.http.hostnameverifier.ProxyHostnameVerifier;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;
@@ -89,6 +89,9 @@ import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.jersey.JerseyHttpResponse;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -193,10 +196,10 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 ClientResponse internalResponse =
                         resource.method(httpRequest.getMethod().toString(), ClientResponse.class);
                 // `HttpResponse` uses the `ClientResponse` object internally
-                return new HttpResponse(httpRequest, internalResponse);
+                return new JerseyHttpResponse(httpRequest, internalResponse);
             } catch (UniformInterfaceException e) {
                 throw new HttpResponseException(
-                        e, httpRequest, new HttpResponse(httpRequest, e.getResponse()));
+                        e, httpRequest, new JerseyHttpResponse(httpRequest, e.getResponse()));
             } catch (ClientHandlerException e) {
                 throw new HttpClientException(e, httpRequest);
             }

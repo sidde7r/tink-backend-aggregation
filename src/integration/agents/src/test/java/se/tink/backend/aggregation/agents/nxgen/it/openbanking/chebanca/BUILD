@@ -24,6 +24,7 @@ junit_test(
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",

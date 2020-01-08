@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Cli;
 import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Header;
 import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Url;

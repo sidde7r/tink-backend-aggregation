@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.sec
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator, AutoAuthenticator {
 

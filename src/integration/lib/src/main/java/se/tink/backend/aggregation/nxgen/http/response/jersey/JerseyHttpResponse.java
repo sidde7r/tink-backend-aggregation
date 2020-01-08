@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http;
+package se.tink.backend.aggregation.nxgen.http.response.jersey;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
@@ -13,15 +13,16 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.RedirectLocations;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
-public class HttpResponse {
+public class JerseyHttpResponse implements HttpResponse {
     private final HttpRequest request;
     private final ClientResponse internalResponse;
 
-    public HttpResponse(HttpRequest request, ClientResponse internalResponse) {
+    public JerseyHttpResponse(HttpRequest request, ClientResponse internalResponse) {
         this.request = request;
         this.internalResponse = internalResponse;
 
@@ -30,6 +31,7 @@ public class HttpResponse {
         internalResponse.bufferEntity();
     }
 
+    @Override
     public HttpRequest getRequest() {
         return request;
     }
@@ -38,6 +40,7 @@ public class HttpResponse {
      * 1. Redirects are populated in Apache's DefaultRedirectStrategy and stored on Apache's HttpContext.
      * 2. The context is accessed and read in TinkApacheHttpClient4Handler and copied to Jersey's response object.
      */
+    @Override
     public List<URI> getRedirects() {
         Object o =
                 internalResponse
@@ -49,33 +52,17 @@ public class HttpResponse {
         return ((RedirectLocations) o).getAll();
     }
 
-    /**
-     * Get the HTTP headers of the response.
-     *
-     * @return the HTTP headers of the response.
-     */
+    @Override
     public MultivaluedMap<String, String> getHeaders() {
         return internalResponse.getHeaders();
     }
 
-    /**
-     * Get the status code.
-     *
-     * @return the status code.
-     */
+    @Override
     public int getStatus() {
         return internalResponse.getStatus();
     }
 
-    /**
-     * Checks if there is a body available.
-     *
-     * <p>reset() is called on getEntityInputStream() before check is done. This is because
-     * hasEntity() returns false when we receive "exceptions", i.e. http status >= 400 otherwise.
-     * Should IOException be thrown during reset(), false is returned.
-     *
-     * @return true if there is a body present in the response.
-     */
+    @Override
     public boolean hasBody() {
         try {
             internalResponse.getEntityInputStream().reset();
@@ -85,26 +72,12 @@ public class HttpResponse {
         }
     }
 
-    /**
-     * Get the input stream of the response.
-     *
-     * @return the input stream of the response.
-     */
+    @Override
     public InputStream getBodyInputStream() {
         return internalResponse.getEntityInputStream();
     }
 
-    /**
-     * Get the body of the response.
-     *
-     * <p>If the body is not an instance of Closeable then the body input stream is closed.
-     *
-     * @param <T> the type of the response.
-     * @param c the type of the body.
-     * @return an instance of the type <code>c</code>.
-     * @throws HttpClientException if there is an error processing the response.
-     * @throws HttpResponseException if the response status is 204 (No Content).
-     */
+    @Override
     public <T> T getBody(Class<T> c) throws HttpClientException, HttpResponseException {
         try {
             // Reset the input stream so that we can read multiple times from it.
@@ -117,42 +90,22 @@ public class HttpResponse {
         }
     }
 
-    /**
-     * Get the media type of the response.
-     *
-     * @return the media type.
-     */
+    @Override
     public MediaType getType() {
         return internalResponse.getType();
     }
 
-    /**
-     * Get the location.
-     *
-     * @return the location, otherwise <code>null</code> if not present.
-     */
+    @Override
     public URI getLocation() {
         return internalResponse.getLocation();
     }
 
-    /**
-     * Get the language.
-     *
-     * @return the language, otherwise <code>null</code> if not present.
-     */
-    public String getLanguage() {
-        return internalResponse.getLanguage();
-    }
-
-    /**
-     * Get the list of cookies.
-     *
-     * @return the cookies.
-     */
+    @Override
     public List<NewCookie> getCookies() {
         return internalResponse.getCookies();
     }
 
+    @Override
     public ClientResponse getInternalResponse() {
         return internalResponse;
     }

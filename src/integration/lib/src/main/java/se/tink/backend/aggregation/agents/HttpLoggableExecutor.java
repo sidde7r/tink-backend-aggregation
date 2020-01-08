@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents;
 
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
+import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 
 public interface HttpLoggableExecutor {
     /**

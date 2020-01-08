@@ -11,7 +11,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.register.fi.opbank.OPBankRegisterConstants.Option;
 import se.tink.backend.aggregation.register.fi.opbank.utils.PSD2Utils;
 

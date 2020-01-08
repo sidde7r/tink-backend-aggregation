@@ -36,7 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.Benefi
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.OutboxItem;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferDestination;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferSource;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.i18n.Catalog;

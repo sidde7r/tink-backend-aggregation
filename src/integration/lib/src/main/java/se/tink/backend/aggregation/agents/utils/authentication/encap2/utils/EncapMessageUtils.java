@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.Reques
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 

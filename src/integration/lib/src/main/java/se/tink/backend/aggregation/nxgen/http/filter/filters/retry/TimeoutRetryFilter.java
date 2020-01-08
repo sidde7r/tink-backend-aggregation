@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.filter;
+package se.tink.backend.aggregation.nxgen.http.filter.filters.retry;
 
 import java.net.SocketTimeoutException;
 import org.apache.commons.lang3.exception.ExceptionUtils;

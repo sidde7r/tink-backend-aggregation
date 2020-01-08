@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.G
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LogonResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.Digipass;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.OtpChallengeResponse;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public final class AxaCommonAuthenticator {
     public static void authenticate(final AxaApiClient apiClient, final AxaStorage storage)

@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.filters.JyskeBank
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.rpc.FetchInvestmentResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class JyskeApiClient {

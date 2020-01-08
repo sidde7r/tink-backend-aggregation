@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.authent
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class NorwegianAuthenticator implements BankIdAuthenticator<OrderBankIdResponse> {
 

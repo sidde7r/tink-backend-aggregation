@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.nxgen.http.filter;
 
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 /*
    Example:
@@ -25,11 +25,11 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 public abstract class Filter {
     private Filter next;
 
-    /* package */ void setNext(Filter next) {
+    public void setNext(Filter next) {
         this.next = next;
     }
 
-    /* package */ final Filter getNext() {
+    public final Filter getNext() {
         return next;
     }
 

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.strategy;
 
 import se.tink.backend.aggregation.agents.CompositeAgentContext;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /**

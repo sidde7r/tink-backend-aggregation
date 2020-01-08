@@ -1,23 +1,23 @@
-package se.tink.backend.aggregation.nxgen.http.filter;
+package se.tink.backend.aggregation.nxgen.http.filter.filters.retry;
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.lang.invoke.MethodHandles;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.math3.random.RandomDataGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 /**
- * An abstract random retry filter, that can repeat its operation depending on the result of each
- * request. Operations will be retried at most a certain amount of times with random sleep time
- * in-between each attempt.
+ * An abstract retry filter, that can repeat its operation depending on the result of each request.
+ * Operations will be retried at most a certain amount of times with fixed sleep in-between each
+ * attempt.
  */
-public abstract class AbstractRandomRetryFilter extends Filter {
+public abstract class AbstractRetryFilter extends Filter {
 
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -26,10 +26,10 @@ public abstract class AbstractRandomRetryFilter extends Filter {
 
     /**
      * @param maxNumRetries Number of additional retries to be performed.
-     * @param retrySleepMilliseconds Time in milliseconds that will be spent sleeping between
+     * @param retrySleepMilliseconds Time im milliseconds that will be spent sleeping between
      *     retries.
      */
-    public AbstractRandomRetryFilter(int maxNumRetries, long retrySleepMilliseconds) {
+    public AbstractRetryFilter(int maxNumRetries, long retrySleepMilliseconds) {
         Preconditions.checkArgument(maxNumRetries > 0, "Number of retries has to be positive.");
         Preconditions.checkArgument(
                 retrySleepMilliseconds >= 0, "Sleep time between attempts must not be negative.");
@@ -40,12 +40,10 @@ public abstract class AbstractRandomRetryFilter extends Filter {
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
-        long maxSleepMilliseconds;
 
         for (int retryCount = 0; retryCount <= maxNumRetries; retryCount++) {
 
             try {
-                maxSleepMilliseconds = (retryCount + 1) * retrySleepMilliseconds;
                 HttpResponse httpResponse = nextFilter(httpRequest);
                 if (shouldRetry(httpResponse) && !isLastAttempt(retryCount)) {
                     log.warn(
@@ -54,8 +52,7 @@ public abstract class AbstractRandomRetryFilter extends Filter {
                             maxNumRetries);
 
                     Uninterruptibles.sleepUninterruptibly(
-                            (new RandomDataGenerator().nextLong(0, maxSleepMilliseconds)),
-                            TimeUnit.MILLISECONDS);
+                            retrySleepMilliseconds, TimeUnit.MILLISECONDS);
 
                     continue;
                 }

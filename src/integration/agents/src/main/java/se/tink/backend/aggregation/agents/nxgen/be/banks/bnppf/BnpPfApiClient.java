@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf;
 
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.rpc.FetchPfmPreferencesResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.rpc.FetchTransactionsResponse;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class BnpPfApiClient {
 

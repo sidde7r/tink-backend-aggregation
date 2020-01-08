@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.UnsuccessfulApiCallException;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class HttpResponseCheckerTest {
     private static final int ERROR_RESPONSE_CODE = 300;

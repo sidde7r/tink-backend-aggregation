@@ -21,7 +21,7 @@ import org.assertj.core.util.Strings;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
+import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 
 public class JerseyClientWrapperTest {
     @Rule

@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.filter;
 
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.filter.AbstractRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.AbstractRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class AmericanExpressV62HttpRetryFilter extends AbstractRetryFilter {
     /**

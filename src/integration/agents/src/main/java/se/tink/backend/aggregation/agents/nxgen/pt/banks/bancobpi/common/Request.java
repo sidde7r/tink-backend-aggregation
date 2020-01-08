@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common;
 
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public interface Request<RESPONSE> {
 
