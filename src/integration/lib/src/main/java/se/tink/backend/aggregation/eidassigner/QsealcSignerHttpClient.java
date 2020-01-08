@@ -108,7 +108,7 @@ public class QsealcSignerHttpClient {
     private static class IdleConnectionMonitorThread extends Thread {
 
         private final HttpClientConnectionManager connMgr;
-        private volatile AtomicBoolean shutdown;
+        private volatile AtomicBoolean shutdown = new AtomicBoolean(false);
 
         IdleConnectionMonitorThread(HttpClientConnectionManager connMgr) {
             super();
