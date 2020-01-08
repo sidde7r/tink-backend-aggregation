@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.iface.Identifiable;
@@ -22,7 +21,7 @@ import se.tink.libraries.transfer.iface.UuidIdentifiable;
 import se.tink.libraries.uuid.UUIDUtils;
 
 /**
- * Extension of AggregationLogger to provide custom formatter for - {@link Credentials}
+ * Extension of AggregationLogger to provide custom formatter for Credentials
  *
  * <p>The methods for (String, String, String) and similar are deprecated, and should be converted
  * to type-safe alternatives.
