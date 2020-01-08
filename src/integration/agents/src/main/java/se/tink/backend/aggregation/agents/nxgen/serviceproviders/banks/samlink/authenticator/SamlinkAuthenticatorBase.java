@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.
 import java.util.Optional;
 import org.apache.commons.httpclient.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AgentExceptionImpl;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;

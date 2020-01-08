@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.exceptions;
 
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.libraries.i18n.LocalizableKey;
 

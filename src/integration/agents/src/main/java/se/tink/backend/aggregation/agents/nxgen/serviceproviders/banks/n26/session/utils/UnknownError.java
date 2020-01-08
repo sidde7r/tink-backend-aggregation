@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.session.utils;
 
-import se.tink.backend.aggregation.agents.exceptions.errors.AgentBaseError;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentBaseError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 // TODO: Work on correct implementation of this class

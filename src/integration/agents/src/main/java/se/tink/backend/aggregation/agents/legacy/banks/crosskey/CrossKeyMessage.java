@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.banks.crosskey;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
-import se.tink.backend.aggregation.agents.exceptions.errors.AgentError;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;

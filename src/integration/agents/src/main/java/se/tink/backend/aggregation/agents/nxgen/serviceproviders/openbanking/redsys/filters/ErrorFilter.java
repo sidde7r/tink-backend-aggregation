@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.filters;
 
-import se.tink.backend.aggregation.agents.exceptions.errors.AgentRuntimeError;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentRuntimeError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;

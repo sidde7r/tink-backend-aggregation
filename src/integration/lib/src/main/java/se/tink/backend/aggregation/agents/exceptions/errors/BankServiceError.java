@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.errors;
 
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentRuntimeError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public enum BankServiceError implements AgentRuntimeError {
