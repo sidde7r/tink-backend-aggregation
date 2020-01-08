@@ -26,10 +26,12 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.paym
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.CreditCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.TransactionResponse;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -84,6 +86,34 @@ public class DnbApiClient {
                                         String.format(Urls.BALANCES, accountId))))
                 .header(HeaderKeys.CONSENT_ID, getConsentId())
                 .get(HttpResponse.class);
+    }
+
+    public PaginatorResponse fetchCreditCardTransactions(
+            CreditCardAccount account, Date fromDate, Date toDate) {
+        try {
+            return createRequest(
+                            new URL(
+                                    DnbConstants.BASE_URL.concat(
+                                            String.format(
+                                                    Urls.CREDIT_CARD_TRANSACTION,
+                                                    account.getAccountNumber()))))
+                    .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
+                    .queryParam(
+                            QueryKeys.FROM_DATE,
+                            ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                    .queryParam(
+                            QueryKeys.TO_DATE, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                    .header(HeaderKeys.CONSENT_ID, getConsentId())
+                    .get(TransactionResponse.class);
+        } catch (HttpResponseException e) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
+    }
+
+    public CreditCardAccountResponse fetchCreditCardAccounts() {
+        return createRequest(new URL(DnbConstants.BASE_URL.concat(Urls.CREDIT_CARDS)))
+                .header(DnbConstants.HeaderKeys.CONSENT_ID, getConsentId())
+                .get(CreditCardAccountResponse.class);
     }
 
     public PaginatorResponse fetchTransactions(final String accountId, Date fromDate, Date toDate) {

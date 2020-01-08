@@ -31,6 +31,8 @@ public final class DnbConstants {
         public static final String TRANSACTIONS = ACCOUNTS + "/%s/transactions";
         public static final String PAYMENTS = "/v1/payments/{paymentType}";
         public static final String GET_PAYMENT = PAYMENTS + "/{paymentId}";
+        public static final String CREDIT_CARDS = "/v1/card-accounts";
+        public static final String CREDIT_CARD_TRANSACTION = CREDIT_CARDS + "/%s/transactions";
     }
 
     public static class StorageKeys {
@@ -73,6 +75,7 @@ public final class DnbConstants {
         public static final String CODE = "code";
         public static final String FROM_DATE = "dateFrom";
         public static final String TO_DATE = "dateTo";
+        public static final String SSN = "SSN";
     }
 
     public static class QueryValues {
