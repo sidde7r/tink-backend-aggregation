@@ -10,6 +10,7 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/retry",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
