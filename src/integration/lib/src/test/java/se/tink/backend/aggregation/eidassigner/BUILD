@@ -12,6 +12,7 @@ junit_test(
         "//src/libraries/simple_http_server",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",
+        "//third_party:commons_io_commons_io",
         "//third_party:jetty_server9",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",

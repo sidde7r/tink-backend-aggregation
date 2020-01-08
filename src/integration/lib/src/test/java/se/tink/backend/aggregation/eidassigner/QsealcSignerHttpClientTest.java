@@ -18,13 +18,15 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -75,14 +77,20 @@ public class QsealcSignerHttpClientTest {
     public void qsealcSignerHttpClientTest() {
         try {
             Assert.assertEquals("development", configuration.getEnvironment());
+            Assert.assertNull(QsealcSignerHttpClient.httpClient);
+            Assert.assertNotNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
 
-            HttpClient httpClient_first_get = QsealcSignerHttpClient.getHttpClient(configuration);
-            HttpClient httpClient_second_get = QsealcSignerHttpClient.getHttpClient(configuration);
+            QsealcSignerHttpClient httpClient_first_get =
+                    QsealcSignerHttpClient.create(configuration);
+            QsealcSignerHttpClient httpClient_second_get =
+                    QsealcSignerHttpClient.create(configuration);
             Assert.assertEquals(httpClient_first_get, httpClient_second_get);
+            Assert.assertNotNull(QsealcSignerHttpClient.httpClient);
+            Assert.assertNotNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
 
-            HttpClient httpClient = QsealcSignerHttpClient.getHttpClient(configuration);
+            QsealcSignerHttpClient httpClient = QsealcSignerHttpClient.create(configuration);
             HttpPost post = new HttpPost("http://127.0.0.1:11111/test/");
-            HttpResponse response = httpClient.execute(post);
+            CloseableHttpResponse response = httpClient.execute(post);
             Assert.assertEquals(200, response.getStatusLine().getStatusCode());
 
             HttpPost postHttps = new HttpPost("https://127.0.0.1:12345/test/");
@@ -95,7 +103,7 @@ public class QsealcSignerHttpClientTest {
                             QsealcAlg.EIDAS_JWT_RSA_SHA256,
                             new EidasIdentity("", "", ""));
             String result = signer.getJWSToken("".getBytes());
-            Assert.assertEquals("", result);
+            Assert.assertEquals("signature", result);
         } catch (Exception e) {
             Assert.fail("Exception occurred");
         }
@@ -110,6 +118,9 @@ public class QsealcSignerHttpClientTest {
                 HttpServletResponse httpServletResponse)
                 throws IOException, ServletException {
             httpServletResponse.setStatus(200);
+            IOUtils.write(
+                    Base64.getEncoder().encode("signature".getBytes()),
+                    httpServletResponse.getOutputStream());
             request.setHandled(true);
         }
     }
