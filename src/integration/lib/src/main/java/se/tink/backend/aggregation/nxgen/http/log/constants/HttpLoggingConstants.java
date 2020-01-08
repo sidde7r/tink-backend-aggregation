@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.log;
+package se.tink.backend.aggregation.nxgen.http.log.constants;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;

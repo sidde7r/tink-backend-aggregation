@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientExcept
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
-import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingConstants;
+import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
