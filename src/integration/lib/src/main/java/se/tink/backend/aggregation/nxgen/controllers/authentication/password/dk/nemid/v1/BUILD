@@ -8,6 +8,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//third_party:com_google_guava_guava",
         "//third_party:org_apache_httpcomponents_httpclient",
