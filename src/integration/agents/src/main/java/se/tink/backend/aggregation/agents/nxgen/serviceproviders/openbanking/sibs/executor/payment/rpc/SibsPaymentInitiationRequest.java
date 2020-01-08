@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.time.LocalDate;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAddressEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.SibsAmountEntity;
@@ -116,7 +115,7 @@ public class SibsPaymentInitiationRequest {
         }
 
         public Builder withCreditorName(String creditorName) {
-            this.creditorName = StringUtils.stripAccents(creditorName);
+            this.creditorName = creditorName;
             return this;
         }
 
