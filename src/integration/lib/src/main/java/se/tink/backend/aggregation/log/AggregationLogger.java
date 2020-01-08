@@ -13,12 +13,12 @@ import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.account.iface.Identifiable;
 import se.tink.libraries.application.GenericApplication;
-import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.transfer.iface.UuidIdentifiable;
 import se.tink.libraries.uuid.UUIDUtils;
 
 /**
@@ -151,23 +151,23 @@ public class AggregationLogger {
         return new String(Arrays.copyOfRange(chars, start, start + length));
     }
 
-    private String format(Transfer transfer) {
+    private String format(UuidIdentifiable transfer) {
         return "[transferId: " + UUIDUtils.toTinkUUID(transfer.getId()) + "] ";
     }
 
-    public void info(Transfer transfer, String message) {
+    public void info(UuidIdentifiable transfer, String message) {
         this.log.info(format(transfer) + message);
     }
 
-    public void error(Transfer transfer, String message) {
+    public void error(UuidIdentifiable transfer, String message) {
         this.log.error(format(transfer) + message);
     }
 
-    public void error(Transfer transfer, String message, Throwable e) {
+    public void error(UuidIdentifiable transfer, String message, Throwable e) {
         this.log.error(format(transfer) + message, e);
     }
 
-    public void info(Account account, String message) {
+    public void info(Identifiable account, String message) {
         this.log.info(String.format("[accountId: %s] %s", account.getId(), message));
     }
 

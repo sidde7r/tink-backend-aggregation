@@ -6,8 +6,8 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.log.LogMasker;
-import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 
 /**

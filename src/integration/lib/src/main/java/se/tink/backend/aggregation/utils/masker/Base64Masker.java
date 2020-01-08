@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils;
+package se.tink.backend.aggregation.utils.masker;
 
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import com.google.common.collect.ImmutableList;

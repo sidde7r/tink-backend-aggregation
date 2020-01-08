@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.SamlRe
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapMessageUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapSoapUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;

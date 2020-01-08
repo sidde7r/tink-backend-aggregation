@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableList;
 import java.util.regex.Pattern;
 import org.junit.Test;
+import se.tink.backend.aggregation.utils.masker.SensitiveValuesCollectionStringMaskerBuilder;
 
 public class SensitiveValuesCollectionStringMaskerBuilderTest {
 

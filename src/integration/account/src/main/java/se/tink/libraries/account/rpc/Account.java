@@ -21,6 +21,7 @@ import se.tink.libraries.account.enums.AccountExclusion;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.enums.AccountTypes;
 import se.tink.libraries.account.identifiers.GiroIdentifier;
+import se.tink.libraries.account.iface.Identifiable;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.TransferDestination;
@@ -31,7 +32,7 @@ import se.tink.libraries.uuid.UUIDUtils;
         fieldVisibility = JsonAutoDetect.Visibility.ANY,
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class Account implements Cloneable {
+public class Account implements Identifiable, Cloneable {
     private String accountNumber;
     private double availableCredit;
     private double balance;
@@ -104,6 +105,7 @@ public class Account implements Cloneable {
         return this.credentialsId;
     }
 
+    @Override
     public String getId() {
         return this.id;
     }

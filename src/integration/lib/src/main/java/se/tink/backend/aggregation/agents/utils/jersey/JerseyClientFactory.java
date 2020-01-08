@@ -20,8 +20,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.TextUtils;
-import se.tink.backend.aggregation.log.LogMasker;
-import se.tink.backend.aggregation.log.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.net.client.factory.AbstractJerseyClientFactory;
 import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;
@@ -35,7 +35,7 @@ public class JerseyClientFactory extends AbstractJerseyClientFactory {
      * Takes a logMasker that masks sensitive values from logs, the loggingMode parameter should *
      * only be passed with the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the
      * * logMasker handles the sensitive values in the provider. use {@link *
-     * se.tink.backend.aggregation.log.LogMasker#shouldLog(Provider)} if you can.
+     * se.tink.backend.aggregation.logmasker.LogMasker#shouldLog(Provider)} if you can.
      *
      * @param logMasker masks values from logs.
      * @param loggingMode determines if logs should be produced at all.

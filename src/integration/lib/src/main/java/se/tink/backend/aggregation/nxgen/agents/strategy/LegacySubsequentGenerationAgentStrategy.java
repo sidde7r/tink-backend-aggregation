@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.strategy;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
