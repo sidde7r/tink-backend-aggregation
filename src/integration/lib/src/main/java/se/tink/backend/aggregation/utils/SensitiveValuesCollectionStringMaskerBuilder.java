@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.utils.masker.StringMaskerBuilder;
 
 public class SensitiveValuesCollectionStringMaskerBuilder implements StringMaskerBuilder {
 

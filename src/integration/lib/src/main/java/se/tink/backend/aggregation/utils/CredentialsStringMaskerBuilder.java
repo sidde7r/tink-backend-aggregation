@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.log.LogMasker;
+import se.tink.backend.aggregation.utils.masker.StringMaskerBuilder;
 import se.tink.libraries.serialization.utils.JsonFlattener;
 
 public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {

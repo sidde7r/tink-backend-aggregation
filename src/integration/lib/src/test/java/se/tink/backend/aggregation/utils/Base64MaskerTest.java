@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.utils.masker.Base64Masker;
 
 public class Base64MaskerTest {
 
