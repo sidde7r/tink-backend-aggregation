@@ -28,6 +28,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.iface.UuidIdentifiable;
 import se.tink.libraries.uuid.UUIDUtils;
 
 @SuppressWarnings("serial")
@@ -35,7 +36,7 @@ import se.tink.libraries.uuid.UUIDUtils;
         fieldVisibility = JsonAutoDetect.Visibility.ANY,
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class Transfer implements Serializable, Cloneable {
+public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     private static final String FOUR_POINT_PRECISION_FORMAT_STRING = "0.0000";
 
     private static final String TINK_GENERATED_MESSAGE_FORMAT = "TinkGenerated://";
@@ -216,6 +217,7 @@ public class Transfer implements Serializable, Cloneable {
         this.sourceMessage = serializeGeneratedMessage(generatedSourceMessage);
     }
 
+    @Override
     public UUID getId() {
         return id;
     }
