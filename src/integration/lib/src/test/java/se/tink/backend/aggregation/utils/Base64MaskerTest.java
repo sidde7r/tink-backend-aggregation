@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.utils.masker.Base64Masker;
+import se.tink.backend.aggregation.utils.masker.StringMasker;
 
 public class Base64MaskerTest {
 

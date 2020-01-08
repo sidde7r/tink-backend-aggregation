@@ -10,9 +10,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.utils.masker.Base64Masker;
 import se.tink.backend.aggregation.utils.masker.SensitiveValuesCollectionStringMaskerBuilder;
+import se.tink.backend.aggregation.utils.masker.StringMasker;
 import se.tink.backend.aggregation.utils.masker.StringMaskerBuilder;
 
 public class LogMasker {
