@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.http.filter.filterable;
 
-import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 
 /*
  * A {@link Filter} instance MUST be occur at most once in any {@link Filterable} instance,

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.filter;
+package se.tink.backend.aggregation.nxgen.http.filter.filters.iface;
 
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
