@@ -78,7 +78,7 @@ public class QsealcSignerHttpClientTest {
         try {
             Assert.assertEquals("development", configuration.getEnvironment());
             Assert.assertNull(QsealcSignerHttpClient.httpClient);
-            Assert.assertNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
+            Assert.assertNotNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
 
             QsealcSignerHttpClient httpClient_first_get =
                     QsealcSignerHttpClient.create(configuration);

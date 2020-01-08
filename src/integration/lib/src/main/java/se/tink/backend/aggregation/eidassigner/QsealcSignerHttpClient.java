@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.eidassigner;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.SSLContext;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
@@ -28,12 +29,9 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 public class QsealcSignerHttpClient {
     private static IdleConnectionMonitorThread staleMonitor;
     static CloseableHttpClient httpClient;
-    static QsealcSignerHttpClient qsealcSignerHttpClient;
+    static QsealcSignerHttpClient qsealcSignerHttpClient = new QsealcSignerHttpClient();
 
     static synchronized QsealcSignerHttpClient create(InternalEidasProxyConfiguration conf) {
-        if (qsealcSignerHttpClient == null) {
-            qsealcSignerHttpClient = new QsealcSignerHttpClient();
-        }
         if (httpClient == null) {
             try {
                 KeyStore trustStore = conf.getRootCaTrustStore();
@@ -80,7 +78,7 @@ public class QsealcSignerHttpClient {
                                     return Long.parseLong(value) * 1000;
                                 }
                             }
-                            return 600 * 1000;
+                            return 60 * 1000;
                         };
 
                 httpClient =
@@ -110,7 +108,7 @@ public class QsealcSignerHttpClient {
     private static class IdleConnectionMonitorThread extends Thread {
 
         private final HttpClientConnectionManager connMgr;
-        private volatile boolean shutdown;
+        private volatile AtomicBoolean shutdown;
 
         IdleConnectionMonitorThread(HttpClientConnectionManager connMgr) {
             super();
@@ -120,7 +118,7 @@ public class QsealcSignerHttpClient {
         @Override
         public void run() {
             try {
-                while (!shutdown) {
+                while (!shutdown.get()) {
                     synchronized (this) {
                         wait(5000);
                         connMgr.closeExpiredConnections();
@@ -133,7 +131,7 @@ public class QsealcSignerHttpClient {
         }
 
         public void shutdown() {
-            shutdown = true;
+            shutdown.set(true);
             synchronized (this) {
                 notifyAll();
             }
