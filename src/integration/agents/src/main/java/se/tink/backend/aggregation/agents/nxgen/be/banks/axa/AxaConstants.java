@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public final class AxaConstants {
     private AxaConstants() {

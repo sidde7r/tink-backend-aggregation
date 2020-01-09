@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authentic
 
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 @JsonObject
 public class TokenRequest {

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public class TokenRequest {
     private final String clientId;

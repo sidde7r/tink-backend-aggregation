@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.http;
 
 import javax.annotation.Nonnull;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public abstract class AbstractForm {
 

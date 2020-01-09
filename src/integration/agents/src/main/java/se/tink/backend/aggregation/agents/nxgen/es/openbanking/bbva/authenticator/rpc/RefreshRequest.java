@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.FormKeys;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public class RefreshRequest {
 

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConstants.QueryKeys;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public class TokenRequest {
     private String grantType;

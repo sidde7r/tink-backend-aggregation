@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetTran
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.rpc.PendingRequestsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.rpc.PendingRequestsResponse;
-import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public final class AxaApiClient {
 
