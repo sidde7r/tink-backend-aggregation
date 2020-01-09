@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
@@ -16,6 +17,9 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassword<String> {
+
+    private static final int RESEND_CODE_MAX_ATTEMPTS = 3;
+
     private final RevolutApiClient apiClient;
     private final PersistentStorage persistentStorage;
 
@@ -37,13 +41,29 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassw
             throw LoginError.NOT_CUSTOMER.exception();
         }
 
+        // Sometimes the registration options that we need to register the device is not available
+        // immediately. Attempting to sign in again will make them available.
+        for (int numAttempts = 0; numAttempts < RESEND_CODE_MAX_ATTEMPTS; numAttempts++) {
+
+            if (tryRegisterDevice(username, password)) {
+                return username;
+            }
+        }
+
+        // If the user has tried to register the device within a short time-frame it is possible
+        // that the registration options we need will not be available for several minutes.
+        throw LoginError.REGISTER_DEVICE_ERROR.exception();
+    }
+
+    private boolean tryRegisterDevice(String username, String password) throws LoginException {
+
         // For a new device id this will cause Revolut to send an email that deep-links the
         // verification code to the Revolut app. For known device ids this will be an SMS instead.
         SignInResponse signInResponse = apiClient.signIn(username, password);
 
         // If SMS channel is used then everything is fine.
         if (signInResponse.isSmsChannel()) {
-            return username;
+            return true;
         }
 
         // If we get a deep-link email we need to resend the code via voice call so that the user
@@ -51,14 +71,10 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassw
         if (apiClient.getVerificationOptions(username).hasCallOption()) {
 
             apiClient.resendCodeViaCall(username);
-        } else {
-
-            // Voice call has a cool down time of 1 minute. This will happen if the user tried to
-            // register twice in close succession.
-            throw LoginError.REGISTER_DEVICE_ERROR.exception();
+            return true;
         }
 
-        return username;
+        return false;
     }
 
     @Override
