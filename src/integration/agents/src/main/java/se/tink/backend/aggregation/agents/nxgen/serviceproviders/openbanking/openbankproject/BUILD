@@ -10,6 +10,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",

@@ -65,8 +65,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.StartFlowRe
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.TechnicalResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;

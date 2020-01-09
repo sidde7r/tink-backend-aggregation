@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;

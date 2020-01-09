@@ -32,8 +32,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.constants.CommonHeaders;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 

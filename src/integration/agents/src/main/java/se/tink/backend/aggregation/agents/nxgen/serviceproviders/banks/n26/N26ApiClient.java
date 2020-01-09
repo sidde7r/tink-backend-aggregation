@@ -27,9 +27,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.SpaceTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.TransactionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;

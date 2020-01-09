@@ -75,6 +75,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientExcept
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.NextGenFilterable;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.RestIoLoggingFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;

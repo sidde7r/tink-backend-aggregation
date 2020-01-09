@@ -19,8 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.Marke
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.MortgageDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.MortgageInstallmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.rpc.PortfolioDetailsResponse;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 

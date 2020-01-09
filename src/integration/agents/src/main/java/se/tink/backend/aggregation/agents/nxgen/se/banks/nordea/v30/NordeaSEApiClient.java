@@ -42,8 +42,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.rpc.FetchBeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.rpc.ErrorResponse;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
