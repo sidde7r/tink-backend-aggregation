@@ -1,0 +1,15 @@
+java_library(
+    name = "request",
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/header",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//third_party:com_sun_jersey_jersey_core",
+    ],
+)

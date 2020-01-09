@@ -11,8 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.ent
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.rpc.UpcomingTransactionsResponse;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 

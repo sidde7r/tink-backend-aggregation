@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http;
+package se.tink.backend.aggregation.nxgen.http.filter.filterable.request;
 
 import java.util.Base64;
 import java.util.Locale;

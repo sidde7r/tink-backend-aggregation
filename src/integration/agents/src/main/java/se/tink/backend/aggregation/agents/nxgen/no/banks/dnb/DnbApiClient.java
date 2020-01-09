@@ -33,8 +33,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.oauth.DnbS
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.oauth.DnbTimestampUtil;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.oauth.rpc.InitMyWealthResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class DnbApiClient {

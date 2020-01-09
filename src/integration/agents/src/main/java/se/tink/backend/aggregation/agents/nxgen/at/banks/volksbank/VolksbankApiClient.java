@@ -23,8 +23,8 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.entities.MainFetchTransactionsForDatesChangeForm;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.entities.MainFetchTransactionsGeneralCustomForm;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.entities.MainSelectAccountForm;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;

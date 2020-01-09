@@ -12,8 +12,8 @@ import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.TransactionalAccountBaseInfo;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
 public class TransactionalAccountBalanceRequestTest {
 

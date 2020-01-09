@@ -13,6 +13,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/retry",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/header",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",

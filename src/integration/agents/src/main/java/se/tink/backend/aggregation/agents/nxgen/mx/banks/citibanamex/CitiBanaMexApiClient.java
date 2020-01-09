@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.fetcher.transactional.rpc.PreviousTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.citibanamex.session.rpc.OfferResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
