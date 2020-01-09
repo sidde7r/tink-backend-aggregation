@@ -42,6 +42,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations/abnamro",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
