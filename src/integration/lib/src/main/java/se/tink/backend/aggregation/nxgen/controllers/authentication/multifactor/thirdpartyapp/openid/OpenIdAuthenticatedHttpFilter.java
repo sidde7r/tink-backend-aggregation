@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MultivaluedMap;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -41,14 +42,26 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
             return false;
         }
 
-        String receivedInteractionId =
-                headers.getFirst(OpenIdConstants.HttpHeaders.X_FAPI_INTERACTION_ID);
-        if (Strings.isNullOrEmpty(receivedInteractionId)) {
+        Optional<String> receivedInteractionId =
+                headers.keySet().stream()
+                        .filter(
+                                key ->
+                                        key.toLowerCase()
+                                                .equals(
+                                                        OpenIdConstants.HttpHeaders
+                                                                .X_FAPI_INTERACTION_ID
+                                                                .toLowerCase()))
+                        .map(key -> headers.getFirst(key))
+                        .findFirst();
+
+        if (!receivedInteractionId.isPresent()
+                || Strings.isNullOrEmpty(receivedInteractionId.get())) {
             return false;
         }
 
         // Some banks have a bug where they send our interaction Id twice, comma-separated.
-        return Arrays.stream(receivedInteractionId.split(",")).anyMatch(interactionId::equals);
+        return Arrays.stream(receivedInteractionId.get().split(","))
+                .anyMatch(interactionId::equals);
     }
 
     @Override
