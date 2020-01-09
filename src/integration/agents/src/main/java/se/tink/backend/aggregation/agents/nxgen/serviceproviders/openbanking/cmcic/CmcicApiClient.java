@@ -42,7 +42,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public final class CmcicApiClient {
+public class CmcicApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
