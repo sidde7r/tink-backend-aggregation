@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.persistent;
+package se.tink.backend.aggregation.nxgen.http.filter.filters.persistent;
 
 import com.google.common.collect.Sets;
 import java.util.HashSet;

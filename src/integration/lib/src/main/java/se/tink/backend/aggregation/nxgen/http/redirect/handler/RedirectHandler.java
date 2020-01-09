@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.redirect;
+package se.tink.backend.aggregation.nxgen.http.redirect.handler;
 
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;

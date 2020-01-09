@@ -8,6 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolException;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
+import se.tink.backend.aggregation.nxgen.http.redirect.handler.RedirectHandler;
 
 // The LaxRedirectStrategy automatically redirects all HEAD, GET, POST, and DELETE requests.
 public class ApacheHttpRedirectStrategy extends LaxRedirectStrategy {
