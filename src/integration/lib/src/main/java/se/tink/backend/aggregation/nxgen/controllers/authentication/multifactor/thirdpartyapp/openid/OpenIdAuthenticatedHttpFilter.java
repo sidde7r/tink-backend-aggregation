@@ -74,9 +74,12 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
 
         HttpResponse httpResponse = nextFilter(httpRequest);
 
-        if (!verifyInteractionId(interactionId, httpResponse)) {
-            throw new HttpResponseException(
-                    "X_FAPI_INTERACTION_ID does not match.", httpRequest, httpResponse);
+        // Only validate for non-error responses.
+        if (httpResponse.getStatus() < 400) {
+            if (!verifyInteractionId(interactionId, httpResponse)) {
+                throw new HttpResponseException(
+                        "X_FAPI_INTERACTION_ID does not match.", httpRequest, httpResponse);
+            }
         }
 
         return httpResponse;
