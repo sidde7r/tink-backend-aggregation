@@ -50,7 +50,9 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .withInstructedAmount(
                                 SibsAmountEntity.of(
                                         paymentRequest.getPayment().getExactCurrencyAmount()))
-                        .withCreditorName(SibsConstants.FormValues.PAYMENT_INITIATION_DEFAULT_NAME);
+                        .withCreditorName(SibsConstants.FormValues.PAYMENT_INITIATION_DEFAULT_NAME)
+                        .withChargeBearer(
+                                SibsConstants.FormValues.PAYMENT_INITIATION_DEFAULT_CHARGE_BEARER);
 
         LocalDate paymentExecutionDate = paymentRequest.getPayment().getExecutionDate();
 
