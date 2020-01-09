@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
+import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 
 public final class BbvaConstants {
 

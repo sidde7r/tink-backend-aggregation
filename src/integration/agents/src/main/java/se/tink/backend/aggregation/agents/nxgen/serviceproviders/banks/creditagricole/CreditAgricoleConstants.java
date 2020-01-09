@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole;
 
-import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
+import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class CreditAgricoleConstants {
