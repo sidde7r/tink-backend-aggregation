@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
 import se.tink.backend.aggregation.utils.MapValueMasker;
 import se.tink.backend.aggregation.utils.MapValueMaskerImpl;
 import se.tink.libraries.date.ThreadSafeDateFormat;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.exceptions.errors;
+package se.tink.backend.aggregation.agents.exceptions.agent;
 
 import se.tink.libraries.i18n.LocalizableKey;
 

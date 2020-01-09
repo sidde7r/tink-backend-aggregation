@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.http.filter.engine;
 
 import java.util.List;
-import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 
 public interface OrderedFiltersSorter {
 

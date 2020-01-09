@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
-import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.DefaultOrderedFiltersSorter;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.OrderedFiltersSorter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 
 public abstract class NextGenFilterable<T extends Filterable> implements Filterable<T> {
 

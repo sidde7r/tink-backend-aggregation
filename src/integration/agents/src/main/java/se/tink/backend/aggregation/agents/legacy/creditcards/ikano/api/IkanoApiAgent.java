@@ -20,8 +20,8 @@ import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserError
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.CardList;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;

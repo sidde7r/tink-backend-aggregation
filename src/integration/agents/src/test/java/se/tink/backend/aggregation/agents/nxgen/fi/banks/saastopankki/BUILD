@@ -20,6 +20,7 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//third_party:com_github_tomakehurst_wiremock",

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 
 public abstract class AbstractOrderedFiltersSorter
         implements OrderedFiltersSorter, Comparator<Pair<Integer, Filter>> {

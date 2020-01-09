@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator;
 
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.CodeExchangeForm;

@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import se.tink.backend.aggregation.agents.exceptions.AgentExceptionImpl;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.entities.ResponseMessage;
 import se.tink.backend.aggregation.annotations.JsonObject;

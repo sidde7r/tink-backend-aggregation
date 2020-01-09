@@ -22,7 +22,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
-import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingConstants;
+import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**

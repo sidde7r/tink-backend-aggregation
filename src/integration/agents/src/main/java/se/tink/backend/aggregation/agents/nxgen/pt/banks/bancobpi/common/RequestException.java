@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common;
 
-import se.tink.backend.aggregation.agents.exceptions.errors.AgentBaseError;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentBaseError;
 
 public class RequestException extends Exception {
 

@@ -1,22 +1,21 @@
-package se.tink.backend.aggregation.agents.exceptions;
+package se.tink.backend.aggregation.agents.exceptions.agent;
 
 import java.util.Objects;
-import se.tink.backend.aggregation.agents.exceptions.errors.AgentError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public abstract class AgentExceptionImpl extends Exception implements AgentException {
     private final LocalizableKey userMessage;
     private final AgentError error;
 
-    AgentExceptionImpl(AgentError error) {
+    public AgentExceptionImpl(AgentError error) {
         this(error, error.userMessage());
     }
 
-    AgentExceptionImpl(AgentError error, Throwable cause) {
+    public AgentExceptionImpl(AgentError error, Throwable cause) {
         this(error, error.userMessage(), cause);
     }
 
-    AgentExceptionImpl(AgentError error, LocalizableKey userMessage) {
+    public AgentExceptionImpl(AgentError error, LocalizableKey userMessage) {
         this(error, userMessage, null);
     }
 
@@ -26,7 +25,7 @@ public abstract class AgentExceptionImpl extends Exception implements AgentExcep
         this.userMessage = error.userMessage();
     }
 
-    AgentExceptionImpl(AgentError error, LocalizableKey userMessage, Throwable cause) {
+    public AgentExceptionImpl(AgentError error, LocalizableKey userMessage, Throwable cause) {
         super(String.format("Cause: %s.%s", error.getClass().getSimpleName(), error.name()), cause);
         this.error = Objects.requireNonNull(error, "error object is mandatory");
         this.userMessage = userMessage;

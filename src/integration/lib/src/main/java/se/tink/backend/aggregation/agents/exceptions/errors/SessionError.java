@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.errors;
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public enum SessionError implements AgentError {

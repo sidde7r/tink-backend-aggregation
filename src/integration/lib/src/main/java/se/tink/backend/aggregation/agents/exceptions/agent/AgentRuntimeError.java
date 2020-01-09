@@ -1,6 +1,5 @@
-package se.tink.backend.aggregation.agents.exceptions.errors;
+package se.tink.backend.aggregation.agents.exceptions.agent;
 
-import se.tink.backend.aggregation.agents.exceptions.AgentRuntimeExceptionImpl;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public interface AgentRuntimeError extends AgentBaseError {
