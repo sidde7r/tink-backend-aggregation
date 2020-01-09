@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.oidcrequestobject.JwtAuthPayload;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.EidasIdentity;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
 public final class JwtUtils {
 

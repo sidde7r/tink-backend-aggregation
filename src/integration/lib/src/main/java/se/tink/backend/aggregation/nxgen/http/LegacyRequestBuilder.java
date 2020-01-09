@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.LegacyFilterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
+import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
+import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;

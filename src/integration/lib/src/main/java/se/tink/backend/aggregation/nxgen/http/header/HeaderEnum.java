@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http;
+package se.tink.backend.aggregation.nxgen.http.header;
 
 public interface HeaderEnum {
     String getKey();

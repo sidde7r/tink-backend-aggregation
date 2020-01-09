@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
-import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
+import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 
 public final class AmericanExpressV62Constants {
 

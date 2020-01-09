@@ -9,6 +9,7 @@ junit_test(
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/identity",
         "//src/libraries/simple_http_server",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",

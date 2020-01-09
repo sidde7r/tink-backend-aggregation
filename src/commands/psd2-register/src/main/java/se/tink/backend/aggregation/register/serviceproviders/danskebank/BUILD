@@ -11,6 +11,7 @@ java_binary(
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/identity",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_auth0_java_jwt",
