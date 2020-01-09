@@ -10,6 +10,8 @@ import com.google.common.collect.Lists;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
@@ -127,6 +129,7 @@ public class PCBW2581 {
         loan.setInterest(getInterestRate());
         loan.setMonthlyAmortization(getMonthlyAmortization());
         loan.setNextDayOfTermsChange(getNextDayOfTermsChange());
+        loan.setNumMonthsBound(getNumMonthBoundFromName());
         // PCBW2581 only contains mortgages
         loan.setType(Loan.Type.MORTGAGE);
 
@@ -142,6 +145,17 @@ public class PCBW2581 {
         loan.setSerializedLoanResponse(serializedResponse);
 
         return loan;
+    }
+
+    private Integer getNumMonthBoundFromName() {
+        if (Strings.isNullOrEmpty(loanName)) {
+            Pattern pattern = Pattern.compile("BOLÅN - BOTTENLÅN MED (\\d?)-MÅNADERS RÄNTA");
+            Matcher matcher = pattern.matcher(loanName.toUpperCase());
+            if (matcher.find()) {
+                return Integer.valueOf(matcher.group(1));
+            }
+        }
+        return null;
     }
 
     public String getLoanNumber() {
