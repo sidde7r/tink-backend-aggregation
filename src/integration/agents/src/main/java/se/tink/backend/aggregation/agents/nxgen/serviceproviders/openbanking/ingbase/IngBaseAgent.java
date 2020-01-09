@@ -34,8 +34,8 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.NotFoundRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
@@ -77,10 +77,9 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         IngBaseConstants.HttpClient.MAX_ATTEMPTS,
                         IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(
-                new TimeoutRetryFilter(
+                new NotFoundRetryFilter(
                         IngBaseConstants.HttpClient.MAX_ATTEMPTS,
-                        IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS,
-                        HttpResponseException.class));
+                        IngBaseConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new TimeoutFilter());
     }
 

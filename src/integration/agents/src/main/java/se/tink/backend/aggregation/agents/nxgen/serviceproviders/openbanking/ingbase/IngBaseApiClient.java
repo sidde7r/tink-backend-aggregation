@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
-import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.gson.Gson;
 import java.security.cert.CertificateException;
 import java.time.LocalDate;
@@ -8,10 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
@@ -43,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheC
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
@@ -96,24 +92,12 @@ public final class IngBaseApiClient {
     }
 
     public FetchAccountsResponse fetchAccounts() {
-        // Add retry mechanism since receiving 404 from bank sometimes when the accounts exist
-        for (int i = 0; i < IngBaseConstants.Retry.MAX_ATTEMPTS; i++) {
-            try {
-                return buildRequestWithSignature(
-                                Urls.ACCOUNTS, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
-                        .addBearerToken(getTokenFromSession())
-                        .type(MediaType.APPLICATION_JSON)
-                        .get(FetchAccountsResponse.class);
-            } catch (HttpResponseException e) {
-                if (e.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND
-                        && i < IngBaseConstants.Retry.MAX_ATTEMPTS - 1) {
-                    Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
-                } else {
-                    throw e;
-                }
-            }
-        }
-        return new FetchAccountsResponse();
+
+        return buildRequestWithSignature(
+                        Urls.ACCOUNTS, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
+                .addBearerToken(getTokenFromSession())
+                .type(MediaType.APPLICATION_JSON)
+                .get(FetchAccountsResponse.class);
     }
 
     public FetchBalancesResponse fetchBalances(final AccountEntity account) {
@@ -141,19 +125,11 @@ public final class IngBaseApiClient {
     }
 
     public FetchTransactionsResponse fetchTransactionsPage(final String transactionsUrl) {
-        try {
-            return buildRequestWithSignature(
-                            transactionsUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
-                    .addBearerToken(getTokenFromSession())
-                    .type(MediaType.APPLICATION_JSON)
-                    .get(FetchTransactionsResponse.class);
-        } catch (HttpResponseException e) {
-            final String message = e.getResponse().getBody(String.class);
-            if (message.contains(ErrorMessages.NOT_FOUND)) {
-                return new FetchTransactionsResponse();
-            }
-            throw e;
-        }
+        return buildRequestWithSignature(
+                        transactionsUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
+                .addBearerToken(getTokenFromSession())
+                .type(MediaType.APPLICATION_JSON)
+                .get(FetchTransactionsResponse.class);
     }
 
     public URL getAuthorizeUrl(final String state) {
