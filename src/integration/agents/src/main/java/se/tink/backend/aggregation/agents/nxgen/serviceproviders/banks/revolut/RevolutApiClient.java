@@ -5,11 +5,18 @@ import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants.Params;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.ConfirmSignInRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.ConfirmSignInResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.ResendCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.SignInRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.SignInResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.UserExistResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.VerificationOptionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.investment.rpc.InvestmentAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.investment.rpc.StockInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.investment.rpc.StockPriceResponse;
@@ -21,6 +28,7 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -48,14 +56,26 @@ public class RevolutApiClient {
                 .get(UserExistResponse.class);
     }
 
-    public void signIn(String username, String password) {
-        SignInRequest request = SignInRequest.build(username, password);
+    public SignInResponse signIn(String username, String password) throws LoginException {
 
-        HttpResponse response =
-                getAppAuthorizedPostRequest(RevolutConstants.Urls.SIGN_IN)
-                        .post(HttpResponse.class, request);
+        try {
 
-        Preconditions.checkState(successfulRequest(response.getStatus()), "Init of sign in failed");
+            SignInRequest request = SignInRequest.build(username, password);
+            return getAppAuthorizedPostRequest(RevolutConstants.Urls.SIGN_IN)
+                    .post(SignInResponse.class, request);
+
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            }
+            throw e;
+        }
+    }
+
+    public VerificationOptionsResponse getVerificationOptions(String username) {
+        return getAppAuthorizedRequest(Urls.VERIFICATION_OPTIONS)
+                .queryParam(Params.PHONE, username)
+                .get(VerificationOptionsResponse.class);
     }
 
     public void resendCodeViaCall(String username) {

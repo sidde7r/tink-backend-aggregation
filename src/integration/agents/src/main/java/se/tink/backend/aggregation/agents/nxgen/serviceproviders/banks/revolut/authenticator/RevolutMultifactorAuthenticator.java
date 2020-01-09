@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.ConfirmSignInResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.SignInResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.UserExistResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticatorPassword;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -36,14 +37,25 @@ public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassw
             throw LoginError.NOT_CUSTOMER.exception();
         }
 
-        // This request will trigger a verification code being sent to the user's phone via text
-        try {
-            apiClient.signIn(username, password);
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
-            }
-            throw e;
+        // For a new device id this will cause Revolut to send an email that deep-links the
+        // verification code to the Revolut app. For known device ids this will be an SMS instead.
+        SignInResponse signInResponse = apiClient.signIn(username, password);
+
+        // If SMS channel is used then everything is fine.
+        if (signInResponse.isSmsChannel()) {
+            return username;
+        }
+
+        // If we get a deep-link email we need to resend the code via voice call so that the user
+        // may enter it manually.
+        if (apiClient.getVerificationOptions(username).hasCallOption()) {
+
+            apiClient.resendCodeViaCall(username);
+        } else {
+
+            // Voice call has a cool down time of 1 minute. This will happen if the user tried to
+            // register twice in close succession.
+            throw LoginError.REGISTER_DEVICE_ERROR.exception();
         }
 
         return username;

@@ -14,6 +14,8 @@ public class RevolutConstants {
 
         public static final URL USER_EXIST = new URL(HOST + "/user/exist");
         public static final URL SIGN_IN = new URL(HOST + "/signin");
+        public static final URL VERIFICATION_OPTIONS = new URL(HOST + "/verification/options");
+        public static final URL RESEND_SMS_CODE = new URL(HOST + "/verification-code/resend");
         public static final URL RESEND_CODE_VIA_CALL = new URL(HOST + "/verification-code/call");
         public static final URL CONFIRM_SIGN_IN = new URL(HOST + "/signin/confirm");
         public static final URL FEATURES = new URL(HOST + "/features");
@@ -45,18 +47,23 @@ public class RevolutConstants {
     }
 
     public static final class Params {
+        public static final String PHONE = "phone";
         public static final String PHONES = "phones";
         public static final String COUNT = "count";
         public static final String TO = "to";
     }
 
+    public static final class VerificationCodeChannel {
+        public static final String SMS = "SMS";
+        public static final String EMAIL = "EMAIL";
+        public static final String CALL = "CALL";
+    }
+
     public enum AppAuthenticationValues {
         API_VERSION("X-Api-Version", "1"),
-        APP_VERSION("X-Client-Version", "6.16"),
+        APP_VERSION("X-Client-Version", "6.23.1"),
         MODEL("X-Device-Model", "iPhone8,1"),
-        USER_AGENT(
-                "User-Agent",
-                "Revolut/5.1 (iPhone; iOS 10.2; Scale/2.00;Tink (+https://www.tink.se/; noc@tink.se))");
+        USER_AGENT("User-Agent", "Revolut/com.revolut.revolut 6633 (iPhone; iOS 12.4)");
 
         private final String key;
         private final String value;
