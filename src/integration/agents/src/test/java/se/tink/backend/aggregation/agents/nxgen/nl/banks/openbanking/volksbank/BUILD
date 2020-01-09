@@ -17,6 +17,7 @@ junit_test(
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",

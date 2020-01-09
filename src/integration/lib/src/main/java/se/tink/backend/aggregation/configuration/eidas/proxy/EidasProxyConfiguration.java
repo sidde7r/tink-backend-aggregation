@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.configuration;
+package se.tink.backend.aggregation.configuration.eidas.proxy;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
