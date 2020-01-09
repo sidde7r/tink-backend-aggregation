@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.parser;
 
 import com.google.common.base.Strings;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +23,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v1
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.builder.LoanModuleBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.identifiers.NorwegianIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class NordeaNoParser extends NordeaV17Parser {
     public NordeaNoParser(TransactionParser parser) {
@@ -55,41 +60,54 @@ public class NordeaNoParser extends NordeaV17Parser {
 
     @Override
     public LoanAccount parseLoanAccount(ProductEntity pe, LoanDetailsEntity loanDetails) {
-        LoanAccount.Builder<?, ?> accountBuilder =
-                LoanAccount.builder(
-                                pe.getAccountNumber(false),
-                                pe.getBalanceAmount().orElse(loanDetails.getBalanceAmount()))
-                        .setAccountNumber(pe.getAccountNumber(false))
-                        .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(false)))
-                        .setBankIdentifier(pe.getNordeaAccountIdV2());
 
+        LoanModuleBuildStep lmbs =
+                LoanModule.builder()
+                        .withType(
+                                AccountType.getLoanTypeForCode(pe.getNordeaProductTypeExtension()))
+                        .withBalance(
+                                ExactCurrencyAmount.of(
+                                        loanDetails.getBalance(), NordeaNoConstants.CURRENCY))
+                        .withInterestRate(loanDetails.getInterestRate());
         loanDetails
                 .getLoanData()
                 .ifPresent(
-                        loanData ->
-                                accountBuilder
-                                        .setInterestRate(loanData.getInterest())
-                                        .setDetails(
-                                                LoanDetails.builder(
-                                                                AccountType.getLoanTypeForCode(
-                                                                        pe
-                                                                                .getNordeaProductTypeExtension()))
-                                                        .setLoanNumber(loanData.getLocalNumber())
-                                                        .setNextDayOfTermsChange(
-                                                                loanData.getInterestTermEnds())
-                                                        .setMonthlyAmortization(
-                                                                new Amount(
-                                                                        loanData.getCurrency(),
-                                                                        loanDetails
-                                                                                .getFollowingPayment()
-                                                                                .getAmortization()))
-                                                        .setInitialBalance(
-                                                                new Amount(
-                                                                        loanData.getCurrency(),
-                                                                        loanData.getGranted()))
-                                                        .build()));
+                        ld ->
+                                lmbs.setLoanNumber(ld.getLocalNumber())
+                                        .setNextDayOfTermsChange(
+                                                ld.getInterestTermEnds()
+                                                        .toInstant()
+                                                        .atZone(
+                                                                ZoneId.of(
+                                                                        NordeaNoConstants
+                                                                                .DEFAULT_ZONE_ID))
+                                                        .toLocalDate())
+                                        .setMonthlyAmortization(
+                                                ExactCurrencyAmount.of(
+                                                        loanDetails
+                                                                .getFollowingPayment()
+                                                                .getAmortization(),
+                                                        NordeaNoConstants.CURRENCY))
+                                        .setInitialBalance(
+                                                ExactCurrencyAmount.of(
+                                                        ld.getGranted(),
+                                                        NordeaNoConstants.CURRENCY)));
+        LoanModule loanModule = lmbs.build();
 
-        return accountBuilder.build();
+        String accountNumber = pe.getAccountNumber(false);
+        IdModule idModule =
+                IdModule.builder()
+                        .withUniqueIdentifier(accountNumber)
+                        .withAccountNumber(accountNumber)
+                        .withAccountName(getTinkAccountName(pe).orElse(accountNumber))
+                        .addIdentifier(new NorwegianIdentifier(accountNumber))
+                        .build();
+
+        return LoanAccount.nxBuilder()
+                .withLoanDetails(loanModule)
+                .withId(idModule)
+                .setApiIdentifier(pe.getNordeaAccountIdV2())
+                .build();
     }
 
     @Override

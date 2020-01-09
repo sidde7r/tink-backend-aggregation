@@ -1,53 +1,68 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-public class NordeaNoAgentTest extends NextGenerationAgentTest<NordeaNoAgent> {
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
+public class NordeaNoAgentTest {
 
-    private Credentials credentials;
+    private enum Arg implements ArgumentManager.ArgumentManagerEnum {
+        USERNAME,
+        PASSWORD(true),
+        MOBILENUMBER(true);
 
-    public NordeaNoAgentTest() {
-        super(NordeaNoAgent.class);
+        private boolean optional;
+
+        Arg(boolean optional) {
+            this.optional = optional;
+        }
+
+        Arg() {
+            this.optional = false;
+        }
+
+        @Override
+        public boolean isOptional() {
+            return optional;
+        }
     }
+
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
     @Before
-    public void setup() {
-        credentials = new Credentials();
-        credentials.setUsername(USERNAME);
+    public void setUp() throws Exception {
+        manager.before();
     }
 
     @Test
-    public void testPasswordLogin() throws Exception {
-        credentials.setPassword(PASSWORD);
-        credentials.setType(CredentialsTypes.PASSWORD);
-
-        testLogin(credentials);
+    public void testRefreshBankId() throws Exception {
+        new AgentIntegrationTest.Builder("no", "no-nordea-bankid")
+                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.MOBILENUMBER, manager.get(Arg.MOBILENUMBER))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(true)
+                .expectLoggedIn(false)
+                .build()
+                .testRefresh();
     }
 
     @Test
-    public void testBankIdLogin() throws Exception {
-        credentials.setType(CredentialsTypes.MOBILE_BANKID);
-
-        testLogin(credentials);
+    public void testRefreshLightLogin() throws Exception {
+        new AgentIntegrationTest.Builder("no", "no-nordea-lightlogin")
+                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(true)
+                .expectLoggedIn(false)
+                .build()
+                .testRefresh();
     }
 
-    @Test
-    public void testRefresh() throws Exception {
-        credentials.setPassword(PASSWORD);
-        credentials.setType(CredentialsTypes.PASSWORD);
-
-        testRefresh(credentials);
-    }
-
-    @Override
-    public String getCurrency() {
-        return CurrencyConstants.NO.getCode();
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 }

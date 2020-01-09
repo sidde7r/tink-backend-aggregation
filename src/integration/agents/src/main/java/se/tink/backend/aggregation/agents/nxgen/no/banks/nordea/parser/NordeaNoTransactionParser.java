@@ -5,7 +5,6 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import java.util.Date;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.entities.payments.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.transactionalaccount.entities.TransactionEntity;
@@ -60,12 +59,9 @@ public class NordeaNoTransactionParser implements TransactionParser {
     @Override
     @VisibleForTesting
     public Date getDate(PaymentEntity pe) {
-        return Optional.ofNullable(pe.getPaymentDate())
-                .map(
-                        date ->
-                                AgentParsingUtils.parseDate(
-                                        pe.getPaymentDate().substring(0, 10), true))
-                .orElse(null);
+        return pe.getPaymentDate() == null
+                ? null
+                : AgentParsingUtils.parseDate(pe.getPaymentDate().substring(0, 10), true);
     }
 
     @Override

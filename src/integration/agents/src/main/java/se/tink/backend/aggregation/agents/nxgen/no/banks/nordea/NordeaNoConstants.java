@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class NordeaNoConstants {
     public static final String MARKET_CODE = "NO";
     public static final String CURRENCY = "NOK";
+    public static final String DEFAULT_ZONE_ID = "CET";
 
     public static class AccountType {
         private static final Map<String, String> ACCOUNT_NAMES_BY_CODE = Maps.newHashMap();
