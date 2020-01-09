@@ -63,7 +63,7 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
         return apiClient
                 .createPayment(
                         sibsPaymentRequest,
-                        getPaymentType(paymentRequest),
+                        SibsPaymentType.fromDomainPayment(paymentRequest.getPayment()),
                         strongAuthenticationState.getState())
                 .toTinkPaymentResponse(paymentRequest, strongAuthenticationState.getState());
     }
@@ -84,7 +84,8 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         return apiClient
                 .getPayment(
-                        paymentRequest.getPayment().getUniqueId(), getPaymentType(paymentRequest))
+                        paymentRequest.getPayment().getUniqueId(),
+                        SibsPaymentType.fromDomainPayment(paymentRequest.getPayment()))
                 .toTinkPaymentResponse(paymentRequest.getStorage());
     }
 
@@ -92,7 +93,8 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
         return signPaymentStrategy.sign(
-                paymentMultiStepRequest, getPaymentType(paymentMultiStepRequest));
+                paymentMultiStepRequest,
+                SibsPaymentType.fromDomainPayment(paymentMultiStepRequest.getPayment()));
     }
 
     @Override
@@ -106,7 +108,8 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
         return apiClient
                 .cancelPayment(
-                        paymentRequest.getPayment().getUniqueId(), getPaymentType(paymentRequest))
+                        paymentRequest.getPayment().getUniqueId(),
+                        SibsPaymentType.fromDomainPayment(paymentRequest.getPayment()))
                 .toTinkResponse();
     }
 
@@ -119,13 +122,5 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
         }
 
         return new PaymentListResponse(response);
-    }
-
-    private SibsPaymentType getPaymentType(PaymentRequest paymentRequest) {
-        if (paymentRequest.getPayment().isSepa()) {
-            return SibsPaymentType.SEPA_CREDIT_TRANSFERS;
-        } else {
-            return SibsPaymentType.CROSS_BORDER_CREDIT_TRANSFERS;
-        }
     }
 }
