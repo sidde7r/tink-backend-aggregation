@@ -75,6 +75,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.LegacyFilterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
+import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.hostnameverifier.ProxyHostnameVerifier;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;

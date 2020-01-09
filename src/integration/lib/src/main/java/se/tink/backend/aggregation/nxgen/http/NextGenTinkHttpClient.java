@@ -77,6 +77,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.NextGenFilterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.RestIoLoggingFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
+import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.hostnameverifier.ProxyHostnameVerifier;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;
