@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.entities;
 
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankConstants;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class MainSelectAccountForm extends AbstractForm {
 

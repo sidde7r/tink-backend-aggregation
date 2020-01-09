@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.SocieteGeneraleConstants;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class AuthenticationRequest extends AbstractForm {
 

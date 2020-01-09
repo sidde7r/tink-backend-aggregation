@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc;
 
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class ExchangeTokenForm extends AbstractForm {
     public ExchangeTokenForm() {

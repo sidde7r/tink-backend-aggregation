@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.entities.AuthGrantTypeEntity;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class AccessTokenRequest extends AbstractForm {
     public AccessTokenRequest withGrantType(AuthGrantTypeEntity grantType) {

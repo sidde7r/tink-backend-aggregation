@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetConstants;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class GetSessionForm extends AbstractForm {
     private GetSessionForm(String auth, String service) {

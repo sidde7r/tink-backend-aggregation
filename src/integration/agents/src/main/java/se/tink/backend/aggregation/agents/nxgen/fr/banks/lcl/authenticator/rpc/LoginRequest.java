@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class LoginRequest extends AbstractForm {
 

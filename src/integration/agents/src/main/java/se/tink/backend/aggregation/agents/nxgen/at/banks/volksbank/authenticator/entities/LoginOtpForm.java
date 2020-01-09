@@ -5,7 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.Volksb
 import java.util.Date;
 import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankConstants;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class LoginOtpForm extends AbstractForm {
 

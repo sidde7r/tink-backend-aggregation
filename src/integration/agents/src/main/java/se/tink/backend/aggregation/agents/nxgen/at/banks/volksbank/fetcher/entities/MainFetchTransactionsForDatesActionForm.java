@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.enti
 
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankConstants;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class MainFetchTransactionsForDatesActionForm extends AbstractForm {
