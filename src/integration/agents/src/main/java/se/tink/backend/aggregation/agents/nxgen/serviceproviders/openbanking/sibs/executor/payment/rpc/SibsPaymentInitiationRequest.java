@@ -19,6 +19,7 @@ public class SibsPaymentInitiationRequest {
     private SibsAccountReferenceEntity creditorAccount;
     private String creditorAgent;
     private String creditorName;
+    private String chargeBearer;
     private SibsAddressEntity creditorAddress;
     private String remittanceInformationUnstructured;
     private String creditorClearingCode;
@@ -31,6 +32,7 @@ public class SibsPaymentInitiationRequest {
         this.creditorAccount = builder.creditorAccount;
         this.creditorAgent = builder.creditorAgent;
         this.creditorName = builder.creditorName;
+        this.chargeBearer = builder.chargeBearer;
         this.creditorAddress = builder.creditorAddress;
         this.remittanceInformationUnstructured = builder.remittanceInformationUnstructured;
         this.creditorClearingCode = builder.creditorClearingCode;
@@ -61,6 +63,10 @@ public class SibsPaymentInitiationRequest {
         return creditorName;
     }
 
+    public String getChargeBearer() {
+        return chargeBearer;
+    }
+
     public SibsAddressEntity getCreditorAddress() {
         return creditorAddress;
     }
@@ -84,6 +90,7 @@ public class SibsPaymentInitiationRequest {
         private SibsAccountReferenceEntity creditorAccount;
         private String creditorAgent;
         private String creditorName;
+        private String chargeBearer;
         private SibsAddressEntity creditorAddress;
         private String remittanceInformationUnstructured;
         private String creditorClearingCode;
@@ -116,6 +123,11 @@ public class SibsPaymentInitiationRequest {
 
         public Builder withCreditorName(String creditorName) {
             this.creditorName = creditorName;
+            return this;
+        }
+
+        public Builder withChargeBearer(String chargeBearer) {
+            this.chargeBearer = chargeBearer;
             return this;
         }
 

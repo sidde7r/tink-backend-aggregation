@@ -67,6 +67,7 @@ public final class SibsConstants {
     public static class FormValues {
         public static final String ALL_ACCOUNTS = "all-accounts";
         public static final String PAYMENT_INITIATION_DEFAULT_NAME = "Payment Initiation";
+        public static final String PAYMENT_INITIATION_DEFAULT_CHARGE_BEARER = "SHAR";
         public static final Integer FREQUENCY_PER_DAY = 4;
     }
 
