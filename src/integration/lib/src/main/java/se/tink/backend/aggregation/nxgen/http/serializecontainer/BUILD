@@ -1,0 +1,11 @@
+java_library(
+    name = "serializecontainer",
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/persistent",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_google_guava_guava",
+        "//third_party:org_apache_httpcomponents_httpclient",
+    ],
+)
