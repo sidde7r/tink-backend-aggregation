@@ -76,14 +76,14 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientExcept
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.LegacyFilterable;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.Header;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.PersistentHeaderFilter;
 import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.hostnameverifier.ProxyHostnameVerifier;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpRequestExecutor;
 import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
-import se.tink.backend.aggregation.nxgen.http.persistent.Header;
-import se.tink.backend.aggregation.nxgen.http.persistent.PersistentHeaderFilter;
 import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;

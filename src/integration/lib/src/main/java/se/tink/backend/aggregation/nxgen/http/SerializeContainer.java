@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import se.tink.backend.aggregation.nxgen.http.persistent.Header;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.persistent.Header;
 
 public class SerializeContainer {
     private List<Cookie> cookies = Lists.newArrayList();

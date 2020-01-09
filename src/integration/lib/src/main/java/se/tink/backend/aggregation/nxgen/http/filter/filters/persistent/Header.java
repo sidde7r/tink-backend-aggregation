@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.http.persistent;
+package se.tink.backend.aggregation.nxgen.http.filter.filters.persistent;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
