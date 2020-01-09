@@ -21,8 +21,8 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
 
     private static final int CONSENTS_LIFETIME_IN_DAYS = 90;
     private final SibsUserState userState;
-    private List<AuthenticationStep> manualAuthSteps = new LinkedList<>();
-    private StrongAuthenticationState strongAuthenticationState;
+    private final List<AuthenticationStep> manualAuthSteps = new LinkedList<>();
+    private final StrongAuthenticationState strongAuthenticationState;
     private final ConsentManager consentManager;
     private final Credentials credentials;
 

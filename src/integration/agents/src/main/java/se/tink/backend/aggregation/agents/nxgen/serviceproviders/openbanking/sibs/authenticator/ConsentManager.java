@@ -8,14 +8,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class ConsentManager {
 
-    private SibsBaseApiClient apiClient;
-    private SibsUserState userState;
-    private StrongAuthenticationState strongAuthenticationState;
+    private final SibsBaseApiClient apiClient;
+    private final SibsUserState userState;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     ConsentManager(
             SibsBaseApiClient apiClient,

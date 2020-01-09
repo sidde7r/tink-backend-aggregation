@@ -2,7 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "sign",
-    srcs = glob(["*.java"]),
+    srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
         "//etc:development",
@@ -14,6 +14,7 @@ junit_test(
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_google_guava_guava",
