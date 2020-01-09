@@ -72,21 +72,24 @@ public class NordeaNoParser extends NordeaV17Parser {
         loanDetails
                 .getLoanData()
                 .ifPresent(
-                        loanData -> loanModuleBuildStep
-                                    .setLoanNumber(loanData.getLocalNumber())
-                                    .setNextDayOfTermsChange(
-                                            loanData.getInterestTermEnds()
-                                                    .toInstant()
-                                                    .atZone(NordeaNoConstants.DEFAULT_ZONE_ID)
-                                                    .toLocalDate())
-                                    .setMonthlyAmortization(
-                                            ExactCurrencyAmount.of(
-                                                    loanDetails
-                                                            .getFollowingPayment()
-                                                            .getAmortization(),
-                                                    NordeaNoConstants.CURRENCY))
-                                    .setInitialBalance(ExactCurrencyAmount.of(loanData.getGranted(), NordeaNoConstants.CURRENCY)));
-                        );
+                        loanData ->
+                                loanModuleBuildStep
+                                        .setLoanNumber(loanData.getLocalNumber())
+                                        .setNextDayOfTermsChange(
+                                                loanData.getInterestTermEnds()
+                                                        .toInstant()
+                                                        .atZone(NordeaNoConstants.DEFAULT_ZONE_ID)
+                                                        .toLocalDate())
+                                        .setMonthlyAmortization(
+                                                ExactCurrencyAmount.of(
+                                                        loanDetails
+                                                                .getFollowingPayment()
+                                                                .getAmortization(),
+                                                        NordeaNoConstants.CURRENCY))
+                                        .setInitialBalance(
+                                                ExactCurrencyAmount.of(
+                                                        loanData.getGranted(),
+                                                        NordeaNoConstants.CURRENCY)));
         LoanModule loanModule = loanModuleBuildStep.build();
 
         String accountNumber = productEntity.getAccountNumber(false);
