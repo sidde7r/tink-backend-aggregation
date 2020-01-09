@@ -44,6 +44,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.libraries.simple_http_server.SimpleHTTPServer;
 
 public class QsealcSignerHttpClientTest {

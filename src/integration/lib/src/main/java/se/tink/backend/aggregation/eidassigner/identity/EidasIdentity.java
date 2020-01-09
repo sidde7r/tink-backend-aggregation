@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.eidassigner;
+package se.tink.backend.aggregation.eidassigner.identity;
 
 public class EidasIdentity {
     private final String clusterId;

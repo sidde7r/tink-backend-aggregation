@@ -14,6 +14,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
 public class QsealcSigner {
 
