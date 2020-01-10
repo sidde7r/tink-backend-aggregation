@@ -146,17 +146,15 @@ public class CreditCardResponse extends HtmlResponse {
     private ExactCurrencyAmount getBalance() {
         return parseAmount(
                 evaluateXPath(
-                                "//div[contains(@class,'saldoGastado')]//p[contains(@class,'cifra')]",
-                                String.class)
-                        .replaceAll("\\s+", ""));
+                        "//div[contains(@class,'saldoGastado')]//p[contains(@class,'cifra')]",
+                        String.class));
     }
 
     private ExactCurrencyAmount getAvailableCredit() {
         return parseAmount(
                 evaluateXPath(
-                                "//div[contains(@class,'saldoDisponible')]//p[contains(@class,'cifra')]",
-                                String.class)
-                        .replaceAll("\\s+", ""));
+                        "//div[contains(@class,'saldoDisponible')]//p[contains(@class,'cifra')]",
+                        String.class));
     }
 
     public PaginationKey getFirstPaginationKey() {

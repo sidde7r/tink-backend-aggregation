@@ -104,7 +104,7 @@ public class InvestmentResponse extends HtmlResponse {
         if (Objects.isNull(node)) {
             return BigDecimal.ZERO;
         }
-        return parseAmount(node.getTextContent().replaceAll("\\s+", "")).getExactValue();
+        return parseAmount(node.getTextContent()).getExactValue();
     }
 
     private Transaction toTinkTransaction(Node node) {
@@ -126,8 +126,7 @@ public class InvestmentResponse extends HtmlResponse {
                         node,
                         "div[contains(@class,'tableSecond')]/div[contains(@class,'heightRowDetails')]/p",
                         Node.class);
-        final ExactCurrencyAmount amount =
-                parseAmount(amountNode.getTextContent().replaceAll("\\s+", ""));
+        final ExactCurrencyAmount amount = parseAmount(amountNode.getTextContent());
 
         return new Transaction.Builder()
                 .setAmount(amount)

@@ -71,7 +71,7 @@ public class TransactionsResponse extends JsfUpdateResponse {
                         "../../preceding::td[text() != '' and ./following-sibling::td[@colspan='4']][1]",
                         String.class);
         final String description = evaluateXPath(row, "td[2]", String.class).trim();
-        final String amount = evaluateXPath(row, "td[3]", String.class).replaceAll("\\s", "");
+        final String amount = evaluateXPath(row, "td[3]", String.class);
 
         return builder.setDate(parseTransactionDate(date))
                 .setDescription(description)

@@ -63,8 +63,8 @@ public class AccountResponse extends HtmlResponse {
 
     protected ExactCurrencyAmount getBalance() {
         final String balanceString =
-                evaluateXPath("//div[@class='saldoMov']//p[contains(@class,'cifra')]", String.class)
-                        .replaceAll("\\s", "");
+                evaluateXPath(
+                        "//div[@class='saldoMov']//p[contains(@class,'cifra')]", String.class);
         if (Strings.isNullOrEmpty(balanceString)) {
             throw new IllegalStateException("Did not find account balance.");
         }

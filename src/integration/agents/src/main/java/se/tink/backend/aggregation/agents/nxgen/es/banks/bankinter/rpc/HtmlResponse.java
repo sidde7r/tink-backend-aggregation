@@ -38,6 +38,8 @@ public class HtmlResponse {
     protected final Document document;
     private static final XPathFactory xpathFactory = XPathFactory.newInstance();
     private final DecimalFormat amountFormat;
+    private static final Pattern AMOUNT_PATTERN =
+            Pattern.compile("[\\+\\-]?[0-9\\.,]+(?:€|EUROS)?");
     private static final DateTimeFormatter TRANSACTION_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Pattern TRANSACTION_DATE_PATTERN =
@@ -100,13 +102,16 @@ public class HtmlResponse {
         this.document = parseHTML(this.body);
     }
 
+    @VisibleForTesting
     protected ExactCurrencyAmount parseAmount(String amountString) {
-        if (!amountString.endsWith("€")) {
-            throw new IllegalStateException("Unknown account currency for " + amountString);
+        final String amountWithoutSpaces = amountString.replaceAll("[\\s\\u00a0]+", "");
+        if (!AMOUNT_PATTERN.matcher(amountWithoutSpaces).matches()) {
+            throw new IllegalStateException(
+                    "Unexpected amount format for '" + amountWithoutSpaces + "'");
         }
 
         return ExactCurrencyAmount.of(
-                parseValue(amountString), BankinterConstants.DEFAULT_CURRENCY);
+                parseValue(amountWithoutSpaces), BankinterConstants.DEFAULT_CURRENCY);
     }
 
     protected BigDecimal parseValue(String amountString) {

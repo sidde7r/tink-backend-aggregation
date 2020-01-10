@@ -211,8 +211,7 @@ public class LoanResponse extends HtmlResponse {
         final String dateValue = evaluateXPath(node, "div[1]/span", String.class);
         final String status = evaluateXPath(node, "div[2]/span", String.class);
         final ExactCurrencyAmount amount =
-                parseAmount(
-                        evaluateXPath(node, "div[3]/span", String.class).replaceAll("\\s+", ""));
+                parseAmount(evaluateXPath(node, "div[3]/span", String.class));
 
         final boolean paid = status.equalsIgnoreCase(InstallmentStatus.PAID);
         final LocalDate date = LocalDate.parse(dateValue, DATE_FORMATTER);
@@ -236,15 +235,5 @@ public class LoanResponse extends HtmlResponse {
             transactions.add(toTinkTransaction(transactionNodes.item(i)));
         }
         return transactions;
-    }
-
-    @Override
-    protected ExactCurrencyAmount parseAmount(String amountString) {
-        if (amountString.matches(".*\\d$")) {
-            // no currency included
-            return super.parseAmount(amountString + "€");
-        } else {
-            return super.parseAmount(amountString.replace("EUROS", "€"));
-        }
     }
 }

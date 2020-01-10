@@ -16,4 +16,13 @@ public class HtmlResponseTest {
                 HTML_WITH_DASHES_REMOVED,
                 HtmlResponse.removeDoubleDashesFromComments(HTML_WITH_DASHES));
     }
+
+    @Test
+    public void testParseAmount() {
+        final HtmlResponse response = new HtmlResponse("<html/>");
+        assertEquals(1337.42, response.parseAmount("1.337,42").getDoubleValue(), 0.001);
+        assertEquals(1337.42, response.parseAmount("1.337,42 €").getDoubleValue(), 0.001);
+        assertEquals(1337.42, response.parseAmount("1.337,42 EUROS").getDoubleValue(), 0.001);
+        assertEquals(1337.42, response.parseAmount("1.337,42 ").getDoubleValue(), 0.001);
+    }
 }
