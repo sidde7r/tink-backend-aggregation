@@ -160,7 +160,6 @@ public class AccountEntity {
         CoopConstants.AccountType accountType = CoopConstants.AccountType.valueOf(this.accountType);
         if (accountType == null) {
             accountType = CoopConstants.AccountType.guessFromName(this.accountName);
-            ;
         }
 
         return accountType;

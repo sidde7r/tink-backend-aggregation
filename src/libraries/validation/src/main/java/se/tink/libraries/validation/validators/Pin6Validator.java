@@ -45,7 +45,6 @@ public class Pin6Validator {
         if (oldPin6.equals(newPin6)) {
             throw new InvalidPin6Exception("Old and new pin6 must not be the same.");
         }
-        ;
     }
 
     private static Long countMaxOccurrences(String input) {

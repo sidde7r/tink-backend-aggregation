@@ -44,7 +44,7 @@ public class StringCondition extends Condition {
         StringNotEqualsIgnoreCase,
 
         /** Negated form of {@link #StringLike} */
-        StringNotLike;
+        StringNotLike
     }
 
     /**

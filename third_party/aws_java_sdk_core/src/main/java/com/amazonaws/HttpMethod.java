@@ -21,5 +21,5 @@ public enum HttpMethod {
     PUT,
     DELETE,
     HEAD,
-    PATCH;
+    PATCH
 }

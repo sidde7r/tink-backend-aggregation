@@ -29,5 +29,5 @@ public class Payload {
     @JsonProperty("ServiceInfo")
     public String getServiceInfo() {
         return null;
-    };
+    }
 }

@@ -51,5 +51,5 @@ public class IdentityDataV31Fetcher extends IdentityDataFetcher {
             }
         }
         return null;
-    };
+    }
 }

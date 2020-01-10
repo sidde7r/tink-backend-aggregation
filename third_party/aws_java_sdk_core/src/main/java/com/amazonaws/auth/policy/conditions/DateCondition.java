@@ -27,14 +27,14 @@ import java.util.Date;
 public class DateCondition extends Condition {
 
     /** Enumeration of the supported ways a date comparison can be evaluated. */
-    public static enum DateComparisonType {
+    public enum DateComparisonType {
         DateEquals,
         DateGreaterThan,
         DateGreaterThanEquals,
         DateLessThan,
         DateLessThanEquals,
-        DateNotEquals;
-    };
+        DateNotEquals
+    }
 
     /**
      * Constructs a new access policy condition that compares the current time (on the AWS servers)

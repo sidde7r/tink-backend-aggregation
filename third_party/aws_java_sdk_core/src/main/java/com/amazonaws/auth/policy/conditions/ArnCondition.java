@@ -61,8 +61,8 @@ public class ArnCondition extends Condition {
         ArnNotEquals,
 
         /** Negated form of {@link #ArnLike} */
-        ArnNotLike;
-    };
+        ArnNotLike
+    }
 
     /**
      * Constructs a new access control policy condition that compares ARNs (Amazon Resource Names).

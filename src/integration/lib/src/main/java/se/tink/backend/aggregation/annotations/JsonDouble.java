@@ -80,6 +80,6 @@ public @interface JsonDouble {
 
     enum JsonType {
         STRING,
-        NUMERIC;
+        NUMERIC
     }
 }

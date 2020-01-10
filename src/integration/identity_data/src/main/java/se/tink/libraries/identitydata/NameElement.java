@@ -5,7 +5,7 @@ public class NameElement {
     public enum Type {
         FIRST_NAME,
         SURNAME,
-        FULLNAME;
+        FULLNAME
     }
 
     private final Type type;

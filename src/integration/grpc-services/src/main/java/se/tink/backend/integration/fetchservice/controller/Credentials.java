@@ -47,6 +47,6 @@ public class Credentials {
         PASSWORD,
         THIRD_PARTY_AUTHENTICATION,
         KEYFOB,
-        FRAUD;
+        FRAUD
     }
 }

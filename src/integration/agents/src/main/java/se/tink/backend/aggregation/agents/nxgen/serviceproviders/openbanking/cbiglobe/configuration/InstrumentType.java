@@ -2,5 +2,5 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 
 public enum InstrumentType {
     ACCOUNTS,
-    CARDS_ACCOUNTS;
+    CARDS_ACCOUNTS
 }

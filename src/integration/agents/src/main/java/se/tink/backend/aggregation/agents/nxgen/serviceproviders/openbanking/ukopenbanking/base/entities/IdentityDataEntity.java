@@ -10,5 +10,5 @@ public class IdentityDataEntity {
 
     public String getName() {
         return name;
-    };
+    }
 }
