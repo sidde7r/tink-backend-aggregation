@@ -13,7 +13,7 @@ public class AmountEntity {
     @JsonProperty private BigDecimal balance;
 
     public BigDecimal getGranted() {
-        return granted;
+        return granted.abs();
     }
 
     public BigDecimal getDrawn() {
@@ -29,6 +29,6 @@ public class AmountEntity {
     }
 
     public BigDecimal getBalance() {
-        return balance;
+        return balance.abs();
     }
 }
