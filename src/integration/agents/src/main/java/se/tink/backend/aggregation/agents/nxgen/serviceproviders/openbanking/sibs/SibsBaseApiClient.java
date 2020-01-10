@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentAccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
@@ -106,30 +107,26 @@ public class SibsBaseApiClient {
                 .get(TransactionsResponse.class);
     }
 
-    public URL buildAuthorizeUrl(String state) {
+    public ConsentResponse createConsent(String state) {
         ConsentRequest consentRequest = getConsentRequest();
         URL createConsent = createUrl(SibsConstants.Urls.CREATE_CONSENT);
-        ConsentResponse consentResponse =
-                client.request(createConsent)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .type(MediaType.APPLICATION_JSON)
-                        .header(
-                                SibsConstants.HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(configuration.getRedirectUrl())
-                                        .queryParam(QueryKeys.STATE, state))
-                        .post(ConsentResponse.class, consentRequest);
-
-        userState.startManualAuthentication(consentResponse);
-
-        return new URL(consentResponse.getLinks().getRedirect());
+        return client.request(createConsent)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .header(
+                        SibsConstants.HeaderKeys.TPP_REDIRECT_URI,
+                        new URL(configuration.getRedirectUrl()).queryParam(QueryKeys.STATE, state))
+                .post(ConsentResponse.class, consentRequest);
     }
 
-    public ConsentStatusResponse getConsentStatus() throws SessionException {
+    public ConsentStatus getConsentStatus() throws SessionException {
         try {
             URL consentStatus =
                     createUrl(SibsConstants.Urls.CONSENT_STATUS)
                             .parameter(PathParameterKeys.CONSENT_ID, userState.getConsentId());
-            return client.request(consentStatus).get(ConsentStatusResponse.class);
+            return client.request(consentStatus)
+                    .get(ConsentStatusResponse.class)
+                    .getConsentStatus();
         } catch (IllegalStateException ex) {
             if (ex.getCause() instanceof SessionException) {
                 throw (SessionException) ex.getCause();

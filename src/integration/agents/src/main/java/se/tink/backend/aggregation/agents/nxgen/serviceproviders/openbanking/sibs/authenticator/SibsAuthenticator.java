@@ -2,114 +2,86 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.MessageCodes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentStatusResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SibsAuthenticator {
+public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
 
-    private static final int NINETY_DAYS = 90;
-    private final SibsBaseApiClient apiClient;
-    private final Credentials credentials;
+    private static final int CONSENTS_LIFETIME_IN_DAYS = 90;
     private final SibsUserState userState;
-
-    private enum AuthenticationState {
-        MANUAL_ON_GOING,
-        MANUAL_SUCCEEDED,
-        AUTO
-    }
+    private final List<AuthenticationStep> manualAuthSteps = new LinkedList<>();
+    private final StrongAuthenticationState strongAuthenticationState;
+    private final ConsentManager consentManager;
+    private final Credentials credentials;
 
     public SibsAuthenticator(
-            SibsBaseApiClient apiClient, SibsUserState userState, Credentials credentials) {
-        this.apiClient = apiClient;
-        this.credentials = credentials;
+            SibsBaseApiClient apiClient,
+            SibsUserState userState,
+            Credentials credentials,
+            StrongAuthenticationState strongAuthenticationState) {
         this.userState = userState;
+        this.strongAuthenticationState = strongAuthenticationState;
+        this.consentManager = new ConsentManager(apiClient, userState, strongAuthenticationState);
+        this.credentials = credentials;
     }
 
-    public URL buildAuthorizeUrl(String state) {
-        return apiClient.buildAuthorizeUrl(state);
-    }
-
-    public ConsentStatus getConsentStatus() throws SessionException {
-        return mapToConsentStatus(apiClient.getConsentStatus());
-    }
-
-    private AuthenticationState getCurrentAuthenticationState() throws SessionException {
-        ConsentStatus consentStatus = getConsentStatus();
-        final boolean manualAuthenticationInProgress = userState.isManualAuthenticationInProgress();
-        if (manualAuthenticationInProgress) {
-            if (consentStatus.isAcceptedStatus()) {
-                return AuthenticationState.MANUAL_SUCCEEDED;
-            } else {
-                return AuthenticationState.MANUAL_ON_GOING;
-            }
+    @Override
+    public Iterable<? extends AuthenticationStep> authenticationSteps()
+            throws AuthenticationException, AuthorizationException {
+        if (isAutoAuthenticationPossible()) {
+            return Collections.emptyList();
         }
-        return AuthenticationState.AUTO;
+        return getManualAuthenticationSteps();
     }
 
-    private ConsentStatus mapToConsentStatus(final ConsentStatusResponse response) {
-        String consentStatusString = "unknown state";
+    private List<AuthenticationStep> getManualAuthenticationSteps() {
+        if (manualAuthSteps.isEmpty()) {
+            manualAuthSteps.add(
+                    SibsThirdPartyAuthenticationStep.create(
+                            consentManager, this, strongAuthenticationState));
+        }
+        return manualAuthSteps;
+    }
+
+    @Override
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        return !isAutoAuthenticationPossible();
+    }
+
+    private boolean isAutoAuthenticationPossible() {
         try {
-            consentStatusString = response.getTransactionStatus();
-            return ConsentStatus.valueOf(consentStatusString);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalStateException(
-                    SibsConstants.ErrorMessages.UNKNOWN_TRANSACTION_STATE
-                            + "="
-                            + consentStatusString,
-                    e);
+            return !userState.isManualAuthenticationInProgress()
+                    && consentManager.getStatus().isAcceptedStatus();
+        } catch (SessionException e) {
+            return false;
         }
     }
 
-    public void autoAuthenticate() throws SessionException {
-        try {
-            AuthenticationState authenticationState = getCurrentAuthenticationState();
-            if (authenticationState != AuthenticationState.AUTO) {
-                if (authenticationState == AuthenticationState.MANUAL_SUCCEEDED) {
-                    userState.finishManualAuthentication();
-                }
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-        } catch (HttpResponseException e) {
-            handleInvalidConsents(e);
-        }
+    void handleManualAuthenticationSuccess() {
+        Date sessionExpiryDate =
+                Date.from(
+                        LocalDateTime.now()
+                                .plusDays(CONSENTS_LIFETIME_IN_DAYS)
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant());
+
+        credentials.setSessionExpiryDate(sessionExpiryDate);
+        userState.finishManualAuthentication();
     }
 
-    public void setSessionExpiryDateIfAccepted(ConsentStatus consentStatus) {
-        if (consentStatus.isAcceptedStatus()) {
-            Date sessionExpiryDate =
-                    Date.from(
-                            LocalDateTime.now()
-                                    .plusDays(NINETY_DAYS)
-                                    .atZone(ZoneId.systemDefault())
-                                    .toInstant());
-
-            credentials.setSessionExpiryDate(sessionExpiryDate);
-        }
-    }
-
-    private void handleInvalidConsents(HttpResponseException rethrowIfNotConsentProblems)
-            throws SessionException {
-        final String message = rethrowIfNotConsentProblems.getResponse().getBody(String.class);
-        if (isConsentsProblem(message)) {
-            userState.removeConsent();
-            throw SessionError.SESSION_EXPIRED.exception(rethrowIfNotConsentProblems);
-        }
-        throw rethrowIfNotConsentProblems;
-    }
-
-    private boolean isConsentsProblem(String message) {
-        return message.contains(MessageCodes.CONSENT_INVALID.name())
-                || message.contains(MessageCodes.CONSENT_EXPIRED.name())
-                || message.contains(MessageCodes.CONSENT_UNKNOWN.name());
+    void handleManualAuthenticationFailure() {
+        userState.resetAuthenticationState();
     }
 }

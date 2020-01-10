@@ -20,5 +20,11 @@ public enum MessageCodes {
     ACCESS_EXCEEDED,
     REQUESTED_FORMATS_INVALID,
     CARD_INVALID,
-    NO_PIIS_ACTIVATION
+    NO_PIIS_ACTIVATION;
+
+    public static boolean isConsentProblem(String message) {
+        return message.contains(MessageCodes.CONSENT_INVALID.name())
+                || message.contains(MessageCodes.CONSENT_EXPIRED.name())
+                || message.contains(MessageCodes.CONSENT_UNKNOWN.name());
+    }
 }

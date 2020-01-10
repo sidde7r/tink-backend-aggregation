@@ -9,22 +9,18 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementIn
 
 public class AutomaticAuthenticationStep implements AuthenticationStep {
 
-    private ProcessCallback processCallback;
+    private CallbackProcessorEmpty callbackProcessor;
     private String stepId;
 
-    public interface ProcessCallback {
-        void process() throws AuthenticationException;
-    }
-
-    public AutomaticAuthenticationStep(ProcessCallback processCallback, String stepId) {
-        this.processCallback = processCallback;
+    public AutomaticAuthenticationStep(CallbackProcessorEmpty callbackProcessor, String stepId) {
+        this.callbackProcessor = callbackProcessor;
         this.stepId = stepId;
     }
 
     @Override
     public Optional<SupplementInformationRequester> execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        processCallback.process();
+        callbackProcessor.process();
         return Optional.empty();
     }
 
