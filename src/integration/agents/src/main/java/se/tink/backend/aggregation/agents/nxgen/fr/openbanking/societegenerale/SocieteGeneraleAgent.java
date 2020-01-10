@@ -2,11 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.SocieteGeneraleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -22,12 +25,15 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class SocieteGeneraleAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshIdentityDataExecutor {
 
     private final SocieteGeneraleApiClient apiClient;
     private SocieteGeneraleConfiguration societeGeneraleConfiguration;
     private TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AutoAuthenticationController authenticator;
+    private SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
 
     public SocieteGeneraleAgent(
             CredentialsRequest request,
@@ -43,6 +49,13 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
         apiClient.setConfiguration(societeGeneraleConfiguration);
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        societeGeneraleIdentityDataFetcher =
+                new SocieteGeneraleIdentityDataFetcher(
+                        apiClient,
+                        societeGeneraleConfiguration,
+                        sessionStorage,
+                        getEidasIdentity(),
+                        configuration.getEidasProxy());
     }
 
     @Override
@@ -116,5 +129,10 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(transactionFetcher)));
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return societeGeneraleIdentityDataFetcher.response();
     }
 }
