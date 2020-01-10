@@ -193,5 +193,5 @@ public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
                 return LocalDate.of(1970, 1, 1);
             }
         };
-    };
+    }
 }

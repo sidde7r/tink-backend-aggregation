@@ -63,9 +63,9 @@ public class Statement {
      * The effect is the result that you want a policy statement to return at evaluation time. A
      * policy statement can either allow access or explicitly deny access.
      */
-    public static enum Effect {
+    public enum Effect {
         Allow(),
-        Deny();
+        Deny()
     }
 
     private String id;

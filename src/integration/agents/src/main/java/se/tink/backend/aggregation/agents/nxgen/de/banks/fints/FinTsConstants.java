@@ -61,7 +61,7 @@ public class FinTsConstants {
         HIBPA, // Bank parameter
         HISALS, // Balance query parameter
         HIKAZS, // Account sales/period parameter
-        HIUPD; // Account information
+        HIUPD // Account information
     }
 
     public static class AccountType {

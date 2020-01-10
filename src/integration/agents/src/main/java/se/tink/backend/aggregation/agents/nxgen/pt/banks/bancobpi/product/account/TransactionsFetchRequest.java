@@ -36,7 +36,6 @@ public class TransactionsFetchRequest extends DefaultRequest<TransactionsFetchRe
                                         new RequestException(
                                                 "Cant' find account with number "
                                                         + account.getAccountNumber()));
-        ;
     }
 
     @Override

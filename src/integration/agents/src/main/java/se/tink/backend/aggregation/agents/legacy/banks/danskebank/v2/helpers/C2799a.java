@@ -574,7 +574,6 @@ public class C2799a {
                                         | (input[p++] & 0xff);
                         tailLen = 0;
                     }
-                    ;
                     break;
 
                 case 2:

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.standalone.grpc;
 
 import io.grpc.ManagedChannel;
-import java.util.*;
 import se.tink.backend.aggregation.agents.standalone.GenericAgentConfiguration;
 import se.tink.backend.aggregation.agents.standalone.GenericAgentConstants;
 import se.tink.backend.aggregation.agents.standalone.entity.ConsentStatus;

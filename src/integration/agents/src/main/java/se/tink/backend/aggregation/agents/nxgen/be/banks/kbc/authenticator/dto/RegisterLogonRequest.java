@@ -88,7 +88,6 @@ public class RegisterLogonRequest {
 
         public Builder response(String response) {
             this.response = TypeValuePair.createText(response);
-            ;
             return this;
         }
 
@@ -99,31 +98,26 @@ public class RegisterLogonRequest {
 
         public Builder applicationId(String applicationId) {
             this.applicationId = TypeValuePair.createText(applicationId);
-            ;
             return this;
         }
 
         public Builder language(String language) {
             this.language = TypeValuePair.createText(language);
-            ;
             return this;
         }
 
         public Builder company(String company) {
             this.company = TypeValuePair.createText(company);
-            ;
             return this;
         }
 
         public Builder username(String username) {
             this.username = TypeValuePair.createText(username);
-            ;
             return this;
         }
 
         public Builder ucrType(String ucrType) {
             this.ucrType = TypeValuePair.createText(ucrType);
-            ;
             return this;
         }
 

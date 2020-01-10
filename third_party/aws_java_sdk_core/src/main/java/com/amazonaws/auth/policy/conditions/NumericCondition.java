@@ -30,8 +30,8 @@ public class NumericCondition extends Condition {
         NumericGreaterThanEquals,
         NumericLessThan,
         NumericLessThanEquals,
-        NumericNotEquals;
-    };
+        NumericNotEquals
+    }
 
     /**
      * Constructs a new access policy condition that compares two numbers.

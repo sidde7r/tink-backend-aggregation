@@ -101,5 +101,5 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
 
     public Map<String, String> getPayload() {
         return payload;
-    };
+    }
 }

@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 public class DnbApiClient {
 
     public static final String TRUE = "TRUE";
-    private static final Pattern ISIN = Pattern.compile("ISIN:\\s*([A-Za-z0-9]{11}[0-9])");;
+    private static final Pattern ISIN = Pattern.compile("ISIN:\\s*([A-Za-z0-9]{11}[0-9])");
     private final TinkHttpClient client;
     private final DnbTimestampUtil timestampUtil;
     private List<CardEntity> cards = null;

@@ -14,5 +14,5 @@ public class IdentityDataFetcher {
 
     public IdentityDataEntity fetchUserDetails(URL identityDataEndpointURL) {
         return null;
-    };
+    }
 }

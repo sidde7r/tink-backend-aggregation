@@ -31,7 +31,7 @@ public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
     }
 
     public String getStringValue() {
-        return new Double(getDoubleValue()).toString();
+        return Double.toString(getDoubleValue());
     }
 
     public long getUnscaledValue() {

@@ -82,7 +82,7 @@ public final class RetryPolicy {
         this.backoffStrategy = backoffStrategy;
         this.maxErrorRetry = maxErrorRetry;
         this.honorMaxErrorRetryInClientConfig = honorMaxErrorRetryInClientConfig;
-    };
+    }
 
     /**
      * Returns the retry condition included in this retry policy.

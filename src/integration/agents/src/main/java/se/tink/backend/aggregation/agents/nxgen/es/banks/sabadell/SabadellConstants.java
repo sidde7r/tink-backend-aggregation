@@ -134,7 +134,7 @@ public final class SabadellConstants {
         public static final LogTag SERVICING_FUNDS_ACCOUNT_DETAILS =
                 LogTag.from("es_sabadell_servicing_funds_account_details");
         public static final LogTag SAVINGS_PLAN_DETAILS =
-                LogTag.from("es_sabadell_savings_plan_details");;
+                LogTag.from("es_sabadell_savings_plan_details");
         public static final LogTag LOAN_DETAILS = LogTag.from("es_sabadell_loan_details");
     }
 

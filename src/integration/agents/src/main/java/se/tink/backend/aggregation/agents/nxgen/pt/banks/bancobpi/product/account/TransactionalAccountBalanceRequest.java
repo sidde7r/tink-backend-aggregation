@@ -81,7 +81,7 @@ public class TransactionalAccountBalanceRequest extends DefaultRequest<BigDecima
         @SerializedName("Conta")
         Conta conta;
 
-        public CarouselStructureElement() {};
+        public CarouselStructureElement() {}
 
         CarouselStructureElement(TransactionalAccountBaseInfo accountBaseInfo) {
             titulo = accountBaseInfo.getAccountName();
@@ -93,7 +93,7 @@ public class TransactionalAccountBalanceRequest extends DefaultRequest<BigDecima
         @SerializedName("Conta")
         ContaInternal conta;
 
-        public Conta() {};
+        public Conta() {}
 
         Conta(TransactionalAccountBaseInfo accountBaseInfo) {
             conta = new ContaInternal(accountBaseInfo);

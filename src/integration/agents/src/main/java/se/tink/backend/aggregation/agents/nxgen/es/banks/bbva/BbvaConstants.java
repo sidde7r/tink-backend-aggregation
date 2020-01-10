@@ -137,7 +137,7 @@ public final class BbvaConstants {
 
     public static final class HeaderKeys {
 
-        public static final String TSEC_KEY = "tsec";;
+        public static final String TSEC_KEY = "tsec";
     }
 
     public static final class PostParameter {
