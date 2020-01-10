@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.payment.rpc.Payment;
 
 public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -45,8 +44,11 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
         SibsPaymentInitiationRequest.Builder builder =
                 new SibsPaymentInitiationRequest.Builder()
-                        .withCreditorAccount(fromCreditor(paymentRequest.getPayment()))
-                        .withDebtorAccount(fromDebtor(paymentRequest.getPayment()))
+                        .withCreditorAccount(
+                                SibsAccountReferenceEntity.fromCreditor(
+                                        paymentRequest.getPayment()))
+                        .withDebtorAccount(
+                                SibsAccountReferenceEntity.fromDebtor(paymentRequest.getPayment()))
                         .withInstructedAmount(
                                 SibsAmountEntity.of(
                                         paymentRequest.getPayment().getExactCurrencyAmount()))
@@ -68,18 +70,6 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         SibsPaymentType.fromDomainPayment(paymentRequest.getPayment()),
                         strongAuthenticationState.getState())
                 .toTinkPaymentResponse(paymentRequest, strongAuthenticationState.getState());
-    }
-
-    private SibsAccountReferenceEntity fromCreditor(Payment payment) {
-        return SibsAccountReferenceEntity.of(
-                () -> payment.getCreditor().getAccountIdentifierType(),
-                () -> payment.getCreditor().getAccountNumber());
-    }
-
-    private SibsAccountReferenceEntity fromDebtor(Payment payment) {
-        return SibsAccountReferenceEntity.of(
-                () -> payment.getDebtor().getAccountIdentifierType(),
-                () -> payment.getDebtor().getAccountNumber());
     }
 
     @Override

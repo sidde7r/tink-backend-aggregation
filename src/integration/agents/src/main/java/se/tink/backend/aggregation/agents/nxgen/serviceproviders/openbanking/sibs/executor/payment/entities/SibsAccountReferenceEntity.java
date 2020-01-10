@@ -10,6 +10,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
+import se.tink.libraries.payment.rpc.Payment;
 
 @JsonInclude(Include.NON_NULL)
 @JsonObject
@@ -117,5 +118,17 @@ public class SibsAccountReferenceEntity {
             throw new PaymentException("Unsupported payment type returned");
         }
         return debtor;
+    }
+
+    public static SibsAccountReferenceEntity fromCreditor(Payment payment) {
+        return SibsAccountReferenceEntity.of(
+                () -> payment.getCreditor().getAccountIdentifierType(),
+                () -> payment.getCreditor().getAccountNumber());
+    }
+
+    public static SibsAccountReferenceEntity fromDebtor(Payment payment) {
+        return SibsAccountReferenceEntity.of(
+                () -> payment.getDebtor().getAccountIdentifierType(),
+                () -> payment.getDebtor().getAccountNumber());
     }
 }
