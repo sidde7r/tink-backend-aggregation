@@ -12,16 +12,15 @@ public class PinCodeGeneratorAuthenticationStep implements AuthenticationStep {
 
     private static final int DEFAULT_LENGTH = 4;
     private final int length;
-    private final SingleFieldCallbackProcessor callbackProcessor;
+    private final CallbackProcessorSingleData callbackProcessor;
 
-    public PinCodeGeneratorAuthenticationStep(
-            final SingleFieldCallbackProcessor callbackProcessor) {
+    public PinCodeGeneratorAuthenticationStep(final CallbackProcessorSingleData callbackProcessor) {
         length = DEFAULT_LENGTH;
         this.callbackProcessor = callbackProcessor;
     }
 
     public PinCodeGeneratorAuthenticationStep(
-            final SingleFieldCallbackProcessor callbackProcessor, int length) {
+            final CallbackProcessorSingleData callbackProcessor, int length) {
         this.length = length;
         this.callbackProcessor = callbackProcessor;
     }

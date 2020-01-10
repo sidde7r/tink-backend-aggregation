@@ -6,7 +6,15 @@ public class SingleSupplementalFieldAuthenticationStep
         extends SupplementalFieldsAuthenticationStep {
 
     public SingleSupplementalFieldAuthenticationStep(
-            SingleFieldCallbackProcessor callbackProcessor, Field field) {
+            CallbackProcessorSingleData callbackProcessor, Field field) {
         super((fields) -> callbackProcessor.process(fields.get(field.getName())), field);
+    }
+
+    public SingleSupplementalFieldAuthenticationStep(
+            CallbackProcessorSingleDataAndCredentials callbackProcessor, Field field) {
+        super(
+                (fields, credentials) ->
+                        callbackProcessor.process(fields.get(field.getName()), credentials),
+                field);
     }
 }

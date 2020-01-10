@@ -12,11 +12,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 public class PinCodeGeneratorAuthenticationStepTest {
 
     private PinCodeGeneratorAuthenticationStep objectUnderStep;
-    private SingleFieldCallbackProcessor callbackProcessor;
+    private CallbackProcessorSingleData callbackProcessor;
 
     @Before
     public void init() {
-        callbackProcessor = Mockito.mock(SingleFieldCallbackProcessor.class);
+        callbackProcessor = Mockito.mock(CallbackProcessorSingleData.class);
         objectUnderStep = new PinCodeGeneratorAuthenticationStep(callbackProcessor);
     }
 
