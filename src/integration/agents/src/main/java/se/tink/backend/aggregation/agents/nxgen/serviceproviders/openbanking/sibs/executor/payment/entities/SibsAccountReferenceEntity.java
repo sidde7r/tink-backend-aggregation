@@ -93,7 +93,7 @@ public class SibsAccountReferenceEntity {
     }
 
     public Creditor toTinkCreditor() throws PaymentException {
-        Creditor creditor = null;
+        Creditor creditor;
         if (StringUtils.isNotEmpty(iban)) {
             creditor = new Creditor(AccountIdentifier.create(Type.IBAN, iban));
         } else if (StringUtils.isNotEmpty(msisdn)) {
