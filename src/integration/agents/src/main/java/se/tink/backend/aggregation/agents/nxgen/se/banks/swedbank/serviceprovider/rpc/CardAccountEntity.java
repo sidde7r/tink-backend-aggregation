@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -64,10 +63,5 @@ public class CardAccountEntity {
 
     public String getCardNumber() {
         return cardNumber;
-    }
-
-    @JsonIgnore
-    public boolean isNotBlocked() {
-        return !blocked;
     }
 }
