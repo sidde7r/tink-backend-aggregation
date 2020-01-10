@@ -4,7 +4,6 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants.Errors;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -31,11 +30,8 @@ public class SwedbankSeHttpFilter extends Filter {
     private void handleException(HttpResponse response) {
         if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
             String error = Strings.nullToEmpty(response.getBody(String.class)).toLowerCase();
-            if (error.contains(SwedbankSEConstants.Errors.INTERNAL_SERVER_ERROR.toLowerCase())
-                    && error.contains(Errors.INTERNAL_TECHNICAL_ERROR.toLowerCase())) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception(
-                        "Http status: " + response.getStatus() + ", body: " + error);
-            }
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Http status: " + response.getStatus() + ", body: " + error);
         }
     }
 }
