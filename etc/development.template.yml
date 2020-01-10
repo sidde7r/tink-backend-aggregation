@@ -972,6 +972,16 @@ agentsServiceConfiguration:
         psuIdType: DE_ONLB_NORIS
         psuIpAddress: 127.0.0.1
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    norwegian:
+      tink:
+        clientId: dummyClientId
+        clientSecret: dummyClientSecret
+        eidasQwac: Tink
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        keyId: "SN=6a3616cca87dc6204f498a3223e59c09,CA=CN=MULTICERT Trust Services\
+                  \ Certification Authority 002,OU=Certification Authority,O=MULTICERT - Servi\xE7\
+                  os de Certifica\xE7\xE3o Electr\xF3nica S.A.,C=PT"
+        tokenUrl: https://identity.banknorwegian.no/connect/token
     novobanco:
       tink:
         aspspCode: NVB
