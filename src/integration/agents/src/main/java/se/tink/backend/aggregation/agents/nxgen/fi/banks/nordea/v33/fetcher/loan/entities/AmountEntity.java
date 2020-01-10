@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AmountEntity {
-
     @JsonProperty private BigDecimal granted;
     @JsonProperty private BigDecimal drawn;
     @JsonProperty private BigDecimal undrawn;
@@ -14,11 +13,7 @@ public class AmountEntity {
     @JsonProperty private BigDecimal balance;
 
     public BigDecimal getGranted() {
-        if (granted.compareTo(BigDecimal.ZERO) > 0) {
-            return granted;
-        } else {
-            return granted.negate();
-        }
+        return granted.abs();
     }
 
     public BigDecimal getDrawn() {
@@ -34,10 +29,6 @@ public class AmountEntity {
     }
 
     public BigDecimal getBalance() {
-        if (balance.compareTo(BigDecimal.ZERO) > 0) {
-            return balance;
-        } else {
-            return balance.negate();
-        }
+        return balance.abs();
     }
 }
