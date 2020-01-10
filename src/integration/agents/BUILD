@@ -282,6 +282,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/hvb",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/santander",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/targo",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/ahoisandbox",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/comdirect",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/commerzbank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/deutschebank",

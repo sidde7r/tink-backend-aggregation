@@ -55,6 +55,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/santander",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/targo",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/creditcards/amex",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/ahoisandbox",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/comdirect",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/commerzbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/dkb",
