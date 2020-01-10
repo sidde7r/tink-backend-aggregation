@@ -17,21 +17,23 @@ public class SocieteGeneraleTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, URL> {
 
     private final SocieteGeneraleApiClient apiClient;
-    private final EidasProxyConfiguration eidasProxyConfiguration;
     private final SocieteGeneraleConfiguration societeGeneraleConfiguration;
     private final SessionStorage sessionStorage;
-    private final EidasIdentity eidasIdentity;
+    private EidasProxyConfiguration eidasProxyConfiguration;
+    private EidasIdentity eidasIdentity;
 
     public SocieteGeneraleTransactionFetcher(
             SocieteGeneraleApiClient apiClient,
-            EidasProxyConfiguration eidasProxyConfiguration,
             SocieteGeneraleConfiguration societeGeneraleConfiguration,
-            SessionStorage sessionStorage,
-            EidasIdentity eidasIdentity) {
+            SessionStorage sessionStorage) {
         this.apiClient = apiClient;
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.societeGeneraleConfiguration = societeGeneraleConfiguration;
         this.sessionStorage = sessionStorage;
+    }
+
+    public void setConfiguration(
+            EidasProxyConfiguration eidasProxyConfiguration, EidasIdentity eidasIdentity) {
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
     }
 

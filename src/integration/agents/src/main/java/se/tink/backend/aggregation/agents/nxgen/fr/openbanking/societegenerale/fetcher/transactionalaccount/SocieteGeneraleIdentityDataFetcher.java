@@ -18,18 +18,20 @@ public class SocieteGeneraleIdentityDataFetcher implements IdentityDataFetcher {
     private final SocieteGeneraleApiClient apiClient;
     private final SocieteGeneraleConfiguration configuration;
     private final SessionStorage sessionStorage;
-    private final EidasIdentity eidasIdentity;
-    private final EidasProxyConfiguration eidasProxyConfiguration;
+    private EidasIdentity eidasIdentity;
+    private EidasProxyConfiguration eidasProxyConfiguration;
 
     public SocieteGeneraleIdentityDataFetcher(
             SocieteGeneraleApiClient apiClient,
             SocieteGeneraleConfiguration configuration,
-            SessionStorage sessionStorage,
-            EidasIdentity eidasIdentity,
-            EidasProxyConfiguration eidasProxyConfiguration) {
+            SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.configuration = configuration;
         this.sessionStorage = sessionStorage;
+    }
+
+    public void setConfiguration(
+            EidasProxyConfiguration eidasProxyConfiguration, EidasIdentity eidasIdentity) {
         this.eidasIdentity = eidasIdentity;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
     }

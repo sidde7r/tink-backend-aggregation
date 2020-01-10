@@ -22,20 +22,22 @@ public class SocieteGeneraleTransactionalAccountFetcher
 
     private final SocieteGeneraleApiClient apiClient;
     private final SocieteGeneraleConfiguration configuration;
-    private final EidasProxyConfiguration eidasProxyConfiguration;
+    private EidasProxyConfiguration eidasProxyConfiguration;
     private final SessionStorage sessionStorage;
-    private final EidasIdentity eidasIdentity;
+    private EidasIdentity eidasIdentity;
 
     public SocieteGeneraleTransactionalAccountFetcher(
             SocieteGeneraleApiClient apiClient,
             SocieteGeneraleConfiguration configuration,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            SessionStorage sessionStorage,
-            EidasIdentity eidasIdentity) {
+            SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.configuration = configuration;
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.sessionStorage = sessionStorage;
+    }
+
+    public void setConfiguration(
+            EidasProxyConfiguration eidasProxyConfiguration, EidasIdentity eidasIdentity) {
+        this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
     }
 
