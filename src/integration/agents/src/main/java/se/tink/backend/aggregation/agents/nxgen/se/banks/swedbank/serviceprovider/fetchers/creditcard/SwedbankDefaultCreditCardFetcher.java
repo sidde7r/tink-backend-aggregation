@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
@@ -49,11 +50,9 @@ public class SwedbankDefaultCreditCardFetcher
             if (cardAccounts != null) {
                 tinkCardAccounts.addAll(
                         cardAccounts.stream()
-                                .filter(
-                                        CardAccountEntity
-                                                ::isNotBlocked) // blocked card accounts have no
-                                // links
                                 .map(CardAccountEntity::getLinks)
+                                .filter(Objects::nonNull) // blocked & business cards have no
+                                // links
                                 .map(LinksEntity::getNext)
                                 .map(apiClient::cardAccountDetails)
                                 .map(
