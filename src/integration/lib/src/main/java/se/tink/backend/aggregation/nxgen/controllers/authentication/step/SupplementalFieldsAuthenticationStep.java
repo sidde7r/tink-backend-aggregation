@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.step;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -14,17 +13,21 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementIn
 
 public class SupplementalFieldsAuthenticationStep implements AuthenticationStep {
 
-    public interface CallbackProcessor {
-        void process(final Map<String, String> nameValueCallback) throws AuthenticationException;
-    }
-
     private List<Field> fields = new LinkedList<>();
-    private CallbackProcessor callbackProcessor;
+    private CallbackProcessorMultiData callbackProcessor;
+    private CallbackProcessorMultiDataAndCredentials callbackProcessorCredentials;
 
     public SupplementalFieldsAuthenticationStep(
-            final CallbackProcessor callbackProcessor, final Field... fields) {
+            final CallbackProcessorMultiData callbackProcessor, final Field... fields) {
         Arrays.stream(fields).forEach(f -> this.fields.add(f));
         this.callbackProcessor = callbackProcessor;
+    }
+
+    public SupplementalFieldsAuthenticationStep(
+            final CallbackProcessorMultiDataAndCredentials callbackProcessor,
+            final Field... fields) {
+        Arrays.stream(fields).forEach(f -> this.fields.add(f));
+        this.callbackProcessorCredentials = callbackProcessor;
     }
 
     @Override
@@ -34,7 +37,16 @@ public class SupplementalFieldsAuthenticationStep implements AuthenticationStep 
             return Optional.of(
                     new SupplementInformationRequester.Builder().withFields(fields).build());
         }
-        callbackProcessor.process(request.getUserInputs());
+        callback(request);
         return Optional.empty();
+    }
+
+    private void callback(AuthenticationRequest request)
+            throws AuthenticationException, AuthorizationException {
+        if (callbackProcessor != null) {
+            callbackProcessor.process(request.getUserInputs());
+        } else {
+            callbackProcessorCredentials.process(request.getUserInputs(), request.getCredentials());
+        }
     }
 }

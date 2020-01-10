@@ -6,7 +6,13 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 public class OtpStep extends SingleSupplementalFieldAuthenticationStep {
 
     public OtpStep(
-            final SingleFieldCallbackProcessor callbackProcessor,
+            final CallbackProcessorSingleData callbackProcessor,
+            final SupplementalInformationFormer supplementalInformationFormer) {
+        super(callbackProcessor, supplementalInformationFormer.getField(Key.OTP_INPUT));
+    }
+
+    public OtpStep(
+            final CallbackProcessorSingleDataAndCredentials callbackProcessor,
             final SupplementalInformationFormer supplementalInformationFormer) {
         super(callbackProcessor, supplementalInformationFormer.getField(Key.OTP_INPUT));
     }
