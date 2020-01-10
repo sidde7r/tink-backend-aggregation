@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno;
 
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoConstants.Authentication.BANKS_WITH_PIN_AUTHENTICATION;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -35,12 +37,10 @@ public class SdcNoAgent extends SdcAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        if (SdcNoConstants.Authentication.BANKS_WITH_PIN_AUTHENTICATION.contains(
-                agentConfiguration.getBankCode())) {
+        if (BANKS_WITH_PIN_AUTHENTICATION.contains(agentConfiguration.getBankCode())) {
             return constructPinAuthenticator();
-        } else {
-            return constructSmsAuthenticator();
         }
+        return constructSmsAuthenticator();
     }
 
     private Authenticator constructSmsAuthenticator() {
