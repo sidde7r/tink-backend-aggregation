@@ -3,7 +3,6 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/aggregation/api",
         "//src/integration/api",
         "//src/libraries/serialization",
         "//third_party:com_google_guava_guava",
