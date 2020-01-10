@@ -46,9 +46,3 @@ Every day the cronjob runs and checks if we have any missing client-configuratio
 - Deploy aggregation production.
 - Command will provision the client the next time it runs.
 - Next steps should be similar to before (map the apiKey to the aggregation-controller secrets).
-
-
-
-
-
-

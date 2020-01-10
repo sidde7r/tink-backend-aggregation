@@ -21,7 +21,6 @@ public class AgentFactory {
         this.configuration = configuration;
     }
 
-    @SuppressWarnings("unchecked")
     public static Class<? extends Agent> getAgentClass(Credentials credentials, Provider provider)
             throws Exception {
         Class<? extends Agent> agentClass;
@@ -108,7 +107,6 @@ public class AgentFactory {
         return agent;
     }
 
-    @SuppressWarnings("unchecked")
     public static Class<? extends Agent> getAgentClass(String className) throws Exception {
         return AgentClassFactory.getAgentClass(className);
     }
