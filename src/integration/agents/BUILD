@@ -297,6 +297,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/sparkassen",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/targobank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/unicredit",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/demofinancialinstitution",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/bankdatadk",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/danskebank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyske/authenticator",
