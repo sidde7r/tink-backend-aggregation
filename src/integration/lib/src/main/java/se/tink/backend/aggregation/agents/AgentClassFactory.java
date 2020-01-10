@@ -7,7 +7,6 @@ public class AgentClassFactory {
     public static final String DEFAULT_AGENT_PACKAGE_CLASS_PREFIX =
             "se.tink.backend.aggregation.agents";
 
-    @SuppressWarnings("unchecked")
     public static Class<? extends Agent> getAgentClass(Provider provider)
             throws ClassNotFoundException {
         return getAgentClass(provider.getClassName());

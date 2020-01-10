@@ -53,7 +53,6 @@ public class HandelsbankenFICreditCardTransactionFetcher
         }
     }
 
-    @SuppressWarnings("unchecked")
     public List<Transaction> fetchTransactionsFor(CreditCardAccount account) {
         // Fetch transactions for creditcards that are accounts.
         // They will have both account transactions and credit card transactions.
