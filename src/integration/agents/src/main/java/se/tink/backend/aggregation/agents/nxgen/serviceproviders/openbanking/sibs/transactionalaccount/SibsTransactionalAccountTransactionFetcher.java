@@ -38,7 +38,7 @@ public class SibsTransactionalAccountTransactionFetcher
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
         if (StringUtils.isNotEmpty(key)) {
-            key = key.replaceAll(StringUtils.SPACE, ENCODED_SPACE);
+            key = key.replace(StringUtils.SPACE, ENCODED_SPACE);
         }
         return Optional.ofNullable(key)
                 .map(apiClient::getTransactionsForKey)
