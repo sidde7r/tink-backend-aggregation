@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
@@ -28,8 +27,7 @@ public class BoursoramaApiClient {
         this.configuration = configuration;
     }
 
-    public TokenResponse exchangeAuthorizationCode(TokenRequest tokenRequest)
-            throws JsonProcessingException {
+    public TokenResponse exchangeAuthorizationCode(TokenRequest tokenRequest) {
 
         return client.request(configuration.getBaseUrl() + Urls.CONSUME_AUTH_CODE)
                 .body(tokenRequest, MediaType.APPLICATION_JSON)

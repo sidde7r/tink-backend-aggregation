@@ -67,13 +67,7 @@ public class BoursoramaTransactionalAccountFetcher
                 .fetchTransactions(accessToken, account.getApiIdentifier(), fromDate, toDate)
                 .getTransactions().stream()
                 .map(this::mapTransaction)
-                .collect(
-                        collectingAndThen(
-                                Collectors.toList(),
-                                transactions ->
-                                        PaginatorResponseImpl.create(
-                                                transactions,
-                                                false /*fixme - temporarily disabling pagination because of bugs in the api*/)));
+                .collect(collectingAndThen(Collectors.toList(), PaginatorResponseImpl::create));
     }
 
     private Optional<TransactionalAccount> map(AccountEntity account, String accessToken) {

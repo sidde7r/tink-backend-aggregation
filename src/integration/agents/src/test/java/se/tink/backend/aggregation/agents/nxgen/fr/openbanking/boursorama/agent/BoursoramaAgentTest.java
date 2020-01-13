@@ -15,9 +15,9 @@ public class BoursoramaAgentTest {
                 new AgentIntegrationTest.Builder("fr", "fr-boursorama-ob")
                         .setAppId("tink")
                         .setFinancialInstitutionId("boursorama")
-                        .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true)
+                        .expectLoggedIn(true)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray());
     }

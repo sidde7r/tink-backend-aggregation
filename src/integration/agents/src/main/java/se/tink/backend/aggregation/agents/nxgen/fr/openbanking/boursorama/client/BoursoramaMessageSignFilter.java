@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BoursoramaMessageSignFilter extends Filter {
 
@@ -74,14 +73,8 @@ public class BoursoramaMessageSignFilter extends Filter {
 
     private String serializeBodyIfNecessary(HttpRequest request) {
         Object requestBody = request.getBody();
-        return requestBody instanceof String ? (String) requestBody : serialize(requestBody);
-    }
-
-    private String serialize(Object object) {
-        try {
-            return new ObjectMapper().writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException(e);
-        }
+        return requestBody instanceof String
+                ? (String) requestBody
+                : SerializationUtils.serializeToString(requestBody);
     }
 }

@@ -16,7 +16,6 @@ public class BoursoramaAuthenticationFilter extends Filter {
 
     @Override
     public HttpResponse handle(HttpRequest httpRequest) {
-
         httpRequest.getHeaders().add(HttpHeaders.AUTHORIZATION, oAuth2Token.toAuthorizeHeader());
         return nextFilter(httpRequest);
     }

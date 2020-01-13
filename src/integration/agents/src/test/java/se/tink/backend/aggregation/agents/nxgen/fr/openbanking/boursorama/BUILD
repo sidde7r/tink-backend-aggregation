@@ -11,6 +11,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
+#        "//src/integration/transfer:mocks",
         "//third_party:net_bytebuddy_byte_buddy",
         "//third_party:org_objenesis_objenesis",
     ],
