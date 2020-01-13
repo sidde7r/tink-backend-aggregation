@@ -4,13 +4,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public interface UkOpenBankingConfig {
-    public String getInitialTransactionsPaginationKey(String accountId);
+    String getInitialTransactionsPaginationKey(String accountId);
 
-    public URL getUpcomingTransactionRequestURL(URL apiBaseUrl, String accountId);
+    URL getUpcomingTransactionRequestURL(URL apiBaseUrl, String accountId);
 
-    public URL getBulkAccountRequestURL(URL apiBaseUrl);
+    URL getBulkAccountRequestURL(URL apiBaseUrl);
 
-    public URL getAccountBalanceRequestURL(URL apiBaseUrl, String accountId);
+    URL getAccountBalanceRequestURL(URL apiBaseUrl, String accountId);
 
     <T extends AccountPermissionResponse> String getIntentId(T accountPermissionResponse);
 

@@ -33,7 +33,7 @@ public class KbcOtpUtils {
     }
 
     private interface KbcWhiteBoxAes extends Library {
-        public void kbc_wb_aes128_encrypt(byte[] input, byte[] output);
+        void kbc_wb_aes128_encrypt(byte[] input, byte[] output);
     }
 
     private static byte[] xor(byte[] a, byte[] b) {

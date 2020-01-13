@@ -7,21 +7,21 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public interface EuroInformationConfiguration extends ClientConfiguration {
 
-    public String getUrl();
+    String getUrl();
 
-    public String getTarget();
+    String getTarget();
 
-    public String getAppVersion();
+    String getAppVersion();
 
-    public default String getAppVersionKey() {
+    default String getAppVersionKey() {
         return APP_VERSION;
     }
 
-    public default String getLoginSubpage() {
+    default String getLoginSubpage() {
         return EuroInformationConstants.Url.LOGIN;
     }
 
-    public default Optional<String> getInitEndpoint() {
+    default Optional<String> getInitEndpoint() {
         return Optional.of(EuroInformationConstants.Url.INIT);
     }
 }

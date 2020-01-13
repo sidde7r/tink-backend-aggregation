@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public interface SwedbankApiClientProvider {
 
-    public <T extends SwedbankDefaultApiClient> T getApiAgent(
+    <T extends SwedbankDefaultApiClient> T getApiAgent(
             TinkHttpClient client,
             SwedbankConfiguration configuration,
             Credentials credentials,
