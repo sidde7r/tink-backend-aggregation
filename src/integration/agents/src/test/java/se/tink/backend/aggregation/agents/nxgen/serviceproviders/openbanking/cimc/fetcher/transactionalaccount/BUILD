@@ -17,7 +17,6 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cmcic",
         "//src/integration/identity_data",
         "//src/integration/lib",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//third_party:org_hamcrest_hamcrest_library",
         "//third_party:org_mockito_mockito_core",
     ],
