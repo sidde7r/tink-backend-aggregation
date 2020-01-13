@@ -244,7 +244,6 @@ public class SEBAgentUtils {
                 exchangeRate = Double.parseDouble(matcher.group("exchangeRate").replace(",", "."));
             } else {
                 log.warn("Cannot parse foreign description: " + originalDescription);
-                return;
             }
         }
     }

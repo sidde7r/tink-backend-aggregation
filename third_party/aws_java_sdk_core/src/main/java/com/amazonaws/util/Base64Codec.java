@@ -102,7 +102,6 @@ class Base64Codec implements Codec {
         dest[d++] =
                 (byte) alphabets[(p & MASK_4BITS) << 2 | (p = src[s]) >>> 6 & MASK_2BITS]; //   4 2
         dest[d] = (byte) alphabets[p & MASK_6BITS]; //     6
-        return;
     }
 
     void encode2bytes(byte[] src, int s, byte[] dest, int d) {
@@ -113,7 +112,6 @@ class Base64Codec implements Codec {
                 (byte) alphabets[(p & MASK_2BITS) << 4 | (p = src[s]) >>> 4 & MASK_4BITS]; // 2 4
         dest[d++] = (byte) alphabets[(p & MASK_4BITS) << 2]; //   4
         dest[d] = PAD;
-        return;
     }
 
     void encode1byte(byte[] src, int s, byte[] dest, int d) {
@@ -123,7 +121,6 @@ class Base64Codec implements Codec {
         dest[d++] = (byte) alphabets[(p & MASK_2BITS) << 4]; // 2
         dest[d++] = PAD;
         dest[d] = PAD;
-        return;
     }
 
     void decode4bytes(byte[] src, int s, byte[] dest, int d) {
@@ -133,7 +130,6 @@ class Base64Codec implements Codec {
         dest[d++] =
                 (byte) ((p & MASK_4BITS) << 4 | (p = pos(src[s++])) >>> 2 & MASK_4BITS); //   4 4
         dest[d] = (byte) ((p & MASK_2BITS) << 6 | pos(src[s])); //     2 6
-        return;
     }
 
     /**
@@ -156,7 +152,6 @@ class Base64Codec implements Codec {
         }
 
         dest[d] = (byte) ((p & MASK_2BITS) << 6 | pos(src[s])); //     2 6
-        return;
     }
 
     @Override
