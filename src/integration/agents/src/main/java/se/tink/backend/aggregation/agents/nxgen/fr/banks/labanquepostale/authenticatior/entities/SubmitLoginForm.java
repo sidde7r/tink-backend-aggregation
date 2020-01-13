@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.authen
 import com.google.common.base.Preconditions;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.LaBanquePostaleConstants;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class SubmitLoginForm extends AbstractForm {
 

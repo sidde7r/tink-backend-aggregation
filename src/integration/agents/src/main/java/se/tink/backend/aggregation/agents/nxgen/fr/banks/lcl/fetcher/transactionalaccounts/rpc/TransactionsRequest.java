@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactio
 
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactionalaccounts.entities.AccountDetailsEntity;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class TransactionsRequest extends AbstractForm {
 

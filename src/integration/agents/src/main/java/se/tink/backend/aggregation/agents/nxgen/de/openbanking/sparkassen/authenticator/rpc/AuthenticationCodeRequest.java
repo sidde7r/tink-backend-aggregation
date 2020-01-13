@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public class AuthenticationCodeRequest {
     @JsonProperty("client_id")

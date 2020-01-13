@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class AuthorizationRequest extends AbstractForm {
     private AuthorizationRequest(

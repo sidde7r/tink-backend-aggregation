@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.authe
 
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.RaiffeisenConstants.FormKeys;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class TokenRequest extends AbstractForm {
 

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.FormKeys;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class GetTokenForm extends AbstractForm {
     private GetTokenForm(String grantType, String username, String password) {

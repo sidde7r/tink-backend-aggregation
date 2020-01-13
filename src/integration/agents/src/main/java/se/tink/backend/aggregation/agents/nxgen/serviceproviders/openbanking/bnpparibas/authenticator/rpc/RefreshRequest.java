@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public class RefreshRequest {
     private final String refreshToken;

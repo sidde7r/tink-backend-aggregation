@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.http;
 
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public final class FormTest {
     @Test

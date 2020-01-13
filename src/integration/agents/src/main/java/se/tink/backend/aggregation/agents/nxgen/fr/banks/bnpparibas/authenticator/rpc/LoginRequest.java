@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticat
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.storage.BnpParibasPersistentStorage;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class LoginRequest extends AbstractForm {
 

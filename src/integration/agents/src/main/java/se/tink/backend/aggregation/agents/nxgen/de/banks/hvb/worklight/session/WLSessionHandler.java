@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConfig;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConstants;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public final class WLSessionHandler {

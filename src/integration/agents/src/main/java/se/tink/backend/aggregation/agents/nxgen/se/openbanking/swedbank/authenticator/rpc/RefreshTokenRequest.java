@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authent
 
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 @JsonObject
 public class RefreshTokenRequest {

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class CodeExchangeForm extends AbstractForm {
 

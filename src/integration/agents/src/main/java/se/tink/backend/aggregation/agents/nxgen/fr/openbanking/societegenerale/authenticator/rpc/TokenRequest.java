@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class TokenRequest extends AbstractForm {
 

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authen
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.FormKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 @JsonObject
 public class TokenRequest {

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticator.entity;
 
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.RaiffeisenConstants;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public class TokenEntity {
     private String grantType;

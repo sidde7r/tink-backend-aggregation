@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.rpc;
 
 import javax.annotation.Nonnull;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class RefreshRequest extends AbstractForm {
 

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenti
 
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 @JsonObject
 public class RefreshTokenRequest {

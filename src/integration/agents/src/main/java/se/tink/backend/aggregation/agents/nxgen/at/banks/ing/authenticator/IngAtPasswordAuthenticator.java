@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtPassword
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtRSAPublicKeyParser;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtRsa;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
