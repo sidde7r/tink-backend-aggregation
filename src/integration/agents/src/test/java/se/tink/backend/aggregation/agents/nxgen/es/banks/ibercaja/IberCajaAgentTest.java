@@ -7,16 +7,12 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgentTest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class IberCajaAgentTest {
     private final ArgumentManager<UsernamePasswordArgumentEnum> helper =
             new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
-
-    private final AgentIntegrationTest.Builder builder =
-            new AgentIntegrationTest.Builder("es", "es-ibercaja-password")
-                    .loadCredentialsBefore(false)
-                    .saveCredentialsAfter(false);
 
     @Before
     public void before() {
@@ -28,15 +24,26 @@ public class IberCajaAgentTest {
         ArgumentManager.afterClass();
     }
 
-    @Test
-    public void testRefresh() throws Exception {
-        builder.addCredentialField(
+    private AgentIntegrationTest createAgentTest() {
+        return new AgentIntegrationTest.Builder("es", "es-ibercaja-password")
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .addCredentialField(
                         Field.Key.USERNAME, helper.get(UsernamePasswordArgumentEnum.USERNAME))
                 .addCredentialField(
                         Field.Key.PASSWORD, helper.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                .build()
-                .testRefresh();
+                .build();
+    }
+
+    @Test
+    public void testRefresh() throws Exception {
+        createAgentTest().testRefresh();
+    }
+
+    @Test
+    public void testDualAgentTest() throws Exception {
+        RedsysAgentTest.runDualAgentTest("es-redsys-ibercaja-ob", createAgentTest());
     }
 }

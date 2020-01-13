@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgentTest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class SabadellAgentTest {
@@ -23,9 +24,8 @@ public class SabadellAgentTest {
         ArgumentManager.afterClass();
     }
 
-    @Test
-    public void testRefresh() throws Exception {
-        new AgentIntegrationTest.Builder("es", "es-bancosabadell-password")
+    private AgentIntegrationTest createAgentTest() {
+        return new AgentIntegrationTest.Builder("es", "es-bancosabadell-password")
                 .addCredentialField(
                         Field.Key.USERNAME,
                         usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))
@@ -36,7 +36,16 @@ public class SabadellAgentTest {
                 .saveCredentialsAfter(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                .build()
-                .testRefresh();
+                .build();
+    }
+
+    @Test
+    public void testRefresh() throws Exception {
+        createAgentTest().testRefresh();
+    }
+
+    @Test
+    public void testDualAgentTest() throws Exception {
+        RedsysAgentTest.runDualAgentTest("es-redsys-sabadell-ob", createAgentTest());
     }
 }

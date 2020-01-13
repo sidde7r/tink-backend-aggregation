@@ -59,12 +59,10 @@ public class NordeaNoTransactionParser implements TransactionParser {
 
     @Override
     @VisibleForTesting
-    public Date getDate(PaymentEntity pe) {
-        return Optional.ofNullable(pe.getPaymentDate())
-                .map(
-                        date ->
-                                AgentParsingUtils.parseDate(
-                                        pe.getPaymentDate().substring(0, 10), true))
+    public Date getDate(PaymentEntity paymentEntity) {
+        return Optional.ofNullable(paymentEntity.getPaymentDate())
+                .map(date -> date.substring(0, 10))
+                .map(date -> AgentParsingUtils.parseDate(date, true))
                 .orElse(null);
     }
 
