@@ -44,16 +44,12 @@ public class TransactionRequestURLBuilder {
         }
 
         Builder withUrlParam(String paramName, String paramValue) {
-            if (paramValue != null) {
-                url = url.parameter(paramName, paramValue);
-            }
+            url = url.parameter(paramName, paramValue);
             return this;
         }
 
         Builder withUrlQueryParam(String paramName, String paramValue) {
-            if (paramValue != null) {
-                url = url.queryParam(paramName, paramValue);
-            }
+            url = url.queryParam(paramName, paramValue);
             return this;
         }
 
