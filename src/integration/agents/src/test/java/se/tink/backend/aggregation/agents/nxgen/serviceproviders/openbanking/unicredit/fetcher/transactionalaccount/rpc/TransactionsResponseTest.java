@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,14 +54,19 @@ public class TransactionsResponseTest {
                         accountEntityProps(),
                         Arrays.asList(
                                 transactionEntityProps("123.0"), transactionEntityProps("234.0")));
+        // and
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         // when
         Collection<? extends Transaction> result = transactionsResponse.getTinkTransactions();
 
         // then
         for (Transaction transaction : result) {
+            assertThat(transaction.getDescription())
+                    .isEqualTo("test-remittance-information-unstructured");
             assertThat(transaction.getExactAmount().getExactValue())
                     .isIn(new BigDecimal("123.0"), new BigDecimal("234.0"));
+            assertThat(dateFormat.format(transaction.getDate())).isEqualTo("2019-10-11");
         }
     }
 
@@ -72,7 +79,7 @@ public class TransactionsResponseTest {
 
     private Properties transactionEntityProps(final String amount) {
         Properties transaction = new Properties();
-        transaction.setProperty("bookingDate", "2019-10-10");
+        transaction.setProperty("bookingDate", "2019-10-11");
         transaction.setProperty(
                 "remittanceInformationUnstructured", "test-remittance-information-unstructured");
 
@@ -91,6 +98,7 @@ public class TransactionsResponseTest {
         booked.put("booked", transactions);
 
         Gson gsonObj = new Gson();
+
         try {
             return OBJECT_MAPPER.readValue(
                     "{\"account\":"
