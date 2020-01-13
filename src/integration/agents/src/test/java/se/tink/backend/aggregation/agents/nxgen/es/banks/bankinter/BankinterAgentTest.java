@@ -22,7 +22,6 @@ public class BankinterAgentTest {
     @Before
     public void setup() {
         manager.before();
-        ;
     }
 
     private AgentIntegrationTest createAgentTest() {
