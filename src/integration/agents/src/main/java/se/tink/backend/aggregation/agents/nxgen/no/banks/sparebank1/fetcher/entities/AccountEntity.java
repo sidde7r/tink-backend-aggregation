@@ -1,12 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities;
 
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.AccountTypes.CURRENT_ACCOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.AccountTypes.DISPOSABLE_ACCOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.AccountTypes.SAVINGS_ACCOUNT;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.HashMap;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Keys;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -44,9 +49,7 @@ public class AccountEntity {
                                 disposableAmountInteger, disposableAmountFraction))
                 .setAccountNumber(getTinkFormattedAccountNumber())
                 .setName(name)
-                .putInTemporaryStorage(
-                        Sparebank1Constants.Keys.TRANSACTIONS_LINK,
-                        links.get(Sparebank1Constants.Keys.TRANSACTIONS_KEY))
+                .putInTemporaryStorage(Keys.TRANSACTIONS_LINK, links.get(Keys.TRANSACTIONS_KEY))
                 .build();
     }
 
@@ -64,16 +67,14 @@ public class AccountEntity {
     @JsonIgnore
     private AccountTypes getTinkAccountType() {
         switch (accountType.toLowerCase()) {
-            case Sparebank1Constants.AccountTypes.CURRENT_ACCOUNT:
-            case Sparebank1Constants.AccountTypes.DISPOSABLE_ACCOUNT:
+            case CURRENT_ACCOUNT:
+            case DISPOSABLE_ACCOUNT:
                 return AccountTypes.CHECKING;
-            case Sparebank1Constants.AccountTypes.SAVINGS_ACCOUNT:
+            case SAVINGS_ACCOUNT:
                 return AccountTypes.SAVINGS;
             default:
                 log.info(
-                        String.format(
-                                "%s: %s (%s)",
-                                Sparebank1Constants.Tags.UNKNOWN_ACCOUNT_TYPE, accountType, name));
+                        String.format("%s: %s (%s)", Tags.UNKNOWN_ACCOUNT_TYPE, accountType, name));
                 return AccountTypes.CHECKING;
         }
     }

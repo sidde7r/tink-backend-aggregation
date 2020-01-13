@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.Lin
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 
 @JsonObject
 public class LoanEntity {
@@ -39,7 +40,7 @@ public class LoanEntity {
                                 : loanDetails.getName())
                 .setInterestRate(loanDetails.getInterestRate())
                 .setDetails(
-                        LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
+                        LoanDetails.builder(Type.DERIVE_FROM_NAME)
                                 .setInitialBalance(loanDetails.getInitialBalance())
                                 .setSecurity(loanDetails.getCollateral())
                                 .build())
