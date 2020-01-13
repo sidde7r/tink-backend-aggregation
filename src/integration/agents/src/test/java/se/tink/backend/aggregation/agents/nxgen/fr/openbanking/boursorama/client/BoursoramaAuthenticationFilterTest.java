@@ -15,7 +15,6 @@ public class BoursoramaAuthenticationFilterTest {
     private static final String TOKEN_VALUE = "TOKENTOKEN";
     private BoursoramaAuthenticationFilter boursoramaAuthenticationFilter;
 
-
     @Before
     public void setUp() throws Exception {
         OAuth2Token token = OAuth2Token.createBearer(TOKEN_VALUE, "refresh_token", 12345);

@@ -31,7 +31,7 @@ public class BoursoramaTransactionalAccountFetcher
                 TransactionDatePaginator<TransactionalAccount> {
 
     private static final String INSTANT_BALANCE = "XPCD";
-    private static final String ACCOUNTING_BALANCE = "XPCD";
+    private static final String ACCOUNTING_BALANCE = "CLBD";
 
     private static final String DEBIT_TRANSACTION_CODE = "DBIT";
     private static final String CASH_ACCOUNT = "CACC";
@@ -48,10 +48,10 @@ public class BoursoramaTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        String accessToken = sessionStorage.get(BoursoramaConstants.USER_HASH);
-        return apiClient.fetchAccounts(accessToken).getAccounts().stream()
+        String userHash = sessionStorage.get(BoursoramaConstants.USER_HASH);
+        return apiClient.fetchAccounts(userHash).getAccounts().stream()
                 .filter(a -> a.getCashAccountType().equals(CASH_ACCOUNT))
-                .map(account -> map(account, accessToken))
+                .map(account -> map(account, userHash))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
@@ -61,18 +61,17 @@ public class BoursoramaTransactionalAccountFetcher
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
 
-        String accessToken = sessionStorage.get(BoursoramaConstants.USER_HASH);
+        String userHash = sessionStorage.get(BoursoramaConstants.USER_HASH);
 
-        return apiClient
-                .fetchTransactions(accessToken, account.getApiIdentifier(), fromDate, toDate)
+        return apiClient.fetchTransactions(userHash, account.getApiIdentifier(), fromDate, toDate)
                 .getTransactions().stream()
                 .map(this::mapTransaction)
                 .collect(collectingAndThen(Collectors.toList(), PaginatorResponseImpl::create));
     }
 
-    private Optional<TransactionalAccount> map(AccountEntity account, String accessToken) {
+    private Optional<TransactionalAccount> map(AccountEntity account, String userHash) {
         BalanceAmountEntity balance =
-                apiClient.fetchBalances(accessToken, account.getResourceId()).getBalances().stream()
+                apiClient.fetchBalances(userHash, account.getResourceId()).getBalances().stream()
                         .filter((this::isAvailableBalance))
                         .findAny()
                         .map(BalanceEntity::getBalanceAmount)

@@ -33,33 +33,34 @@ public class BoursoramaAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-                return new URL("https://clients.boursorama.com/oauth/v2/authorisation/" +
-         configuration.getClientId())
-                        .queryParam(
-                                "successRedirect",
-                                configuration.getRedirectUrl() + "?state=" + state)
-                        .queryParam(
-                                "errorRedirect",
-                                configuration.getRedirectUrl()  + "?state=" + state);
-//        return new URL("https://127.0.0.1:7357/api/v1/thirdparty/callback?code=123&state=" + state);
+        //                return new URL("https://clients.boursorama.com/oauth/v2/authorisation/" +
+        //         configuration.getClientId())
+        //                        .queryParam(
+        //                                "successRedirect",
+        //                                configuration.getRedirectUrl() + "?state=" + state)
+        //                        .queryParam(
+        //                                "errorRedirect",
+        //                                configuration.getRedirectUrl()  + "?state=" + state);
+        return new URL("https://127.0.0.1:7357/api/v1/thirdparty/callback?code=123&state=" + state);
     }
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) {
-                TokenResponse tokenResponse =
-                        apiClient.exchangeAuthorizationCode(
-                                new TokenRequest("tokenResponse", code, "PSDSE-FINA-44059"));
+        //                TokenResponse tokenResponse =
+        //                        apiClient.exchangeAuthorizationCode(
+        //                                new TokenRequest("tokenResponse", code,
+        // "PSDSE-FINA-44059"));
+        //
+        //                return OAuth2Token.create(
+        //                        tokenResponse.getTokenType(),
+        //                        tokenResponse.getAccessToken().getParsedString(),
+        //                        tokenResponse.getRefreshToken(),
+        //                        tokenResponse.getExpiresIn());
 
-                return OAuth2Token.create(
-                        tokenResponse.getTokenType(),
-                        tokenResponse.getAccessToken().getParsedString(),
-                        tokenResponse.getRefreshToken(),
-                        tokenResponse.getExpiresIn());
+        String sandboxToken =
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IkhTMjU2In0.eyJqdGkiOiJjZTdiNTVmNzlmY2ZlIiwic3ViIjoiZHNwMiIsImF1ZCI6Ii4qXFwuYm91cnNvcmFtYVxcLmNvbSIsImV4cCI6MTg2NDIyNDY1NCwiaWF0IjoxNTQ4ODY0NjU0LCJuYmYiOjE1NDg4NjQ2NTQsInNlc3Npb24iOnsidXNlcklkIjoiMDAwMDAwMDAiLCJsZXZlbCI6IkNVU1RPTUVSIn0sImlzcyI6IkFkbWluIEpXVCBCb3Vyc29yYW1hIiwidXNlckhhc2giOiI3MDM1MmY0MTA2MWVkYTQiLCJvcmciOiJCMTkiLCJvYXV0aCI6ImM2OTdjOWUxZTUxZjg4Y2U2NWJjOGM4NWNmMjhkMDcyYWNmMDQyNTQifQ.3sewgdSK4OJfcsrVK2eqa8FF2jvDfdpiyBuIOh0CMRI";
 
-//        String sandboxToken =
-//                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IkhTMjU2In0.eyJqdGkiOiJjZTdiNTVmNzlmY2ZlIiwic3ViIjoiZHNwMiIsImF1ZCI6Ii4qXFwuYm91cnNvcmFtYVxcLmNvbSIsImV4cCI6MTg2NDIyNDY1NCwiaWF0IjoxNTQ4ODY0NjU0LCJuYmYiOjE1NDg4NjQ2NTQsInNlc3Npb24iOnsidXNlcklkIjoiMDAwMDAwMDAiLCJsZXZlbCI6IkNVU1RPTUVSIn0sImlzcyI6IkFkbWluIEpXVCBCb3Vyc29yYW1hIiwidXNlckhhc2giOiI3MDM1MmY0MTA2MWVkYTQiLCJvcmciOiJCMTkiLCJvYXV0aCI6ImM2OTdjOWUxZTUxZjg4Y2U2NWJjOGM4NWNmMjhkMDcyYWNmMDQyNTQifQ.3sewgdSK4OJfcsrVK2eqa8FF2jvDfdpiyBuIOh0CMRI";
-//
-//        return OAuth2Token.createBearer(sandboxToken, "", 99999999999L);
+        return OAuth2Token.createBearer(sandboxToken, "", 99999999999L);
     }
 
     @Override
