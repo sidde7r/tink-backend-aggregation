@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.transaction;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -8,7 +10,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 public class TransactionsWrapperEntityTest {
@@ -24,7 +25,7 @@ public class TransactionsWrapperEntityTest {
         List<TransactionEntity> result = entity.getBooked();
 
         // then
-        Assertions.assertThat(result).isEmpty();
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -38,7 +39,7 @@ public class TransactionsWrapperEntityTest {
 
         // then
         for (TransactionEntity transaction : result) {
-            Assertions.assertThat(transaction.transactionId)
+            assertThat(transaction.transactionId)
                     .isIn("test-transaction-id-1", "test-transaction-id-2");
         }
     }

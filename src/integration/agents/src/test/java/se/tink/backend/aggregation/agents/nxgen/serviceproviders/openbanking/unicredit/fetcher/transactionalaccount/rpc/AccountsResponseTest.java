@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -9,7 +11,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.account.AccountEntity;
 
@@ -26,7 +27,7 @@ public class AccountsResponseTest {
         List<AccountEntity> result = accountsResponse.getAccounts();
 
         // then
-        Assertions.assertThat(result).isEmpty();
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -39,9 +40,9 @@ public class AccountsResponseTest {
         List<AccountEntity> result = accountsResponse.getAccounts();
 
         // then
-        Assertions.assertThat(result).hasSize(2);
-        Assertions.assertThat(result.get(0).getResourceId()).isEqualTo("test-resource-id1");
-        Assertions.assertThat(result.get(1).getResourceId()).isEqualTo("test-resource-id2");
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getResourceId()).isEqualTo("test-resource-id1");
+        assertThat(result.get(1).getResourceId()).isEqualTo("test-resource-id2");
     }
 
     private Properties accountEntityProps(final String suffix) {

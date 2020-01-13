@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc;
 
+import static org.assertj.core.api.Assertions.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -10,7 +12,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Properties;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -27,7 +28,7 @@ public class TransactionsResponseTest {
         Optional<Boolean> result = transactionsResponse.canFetchMore();
 
         // then
-        Assertions.assertThat(result.isPresent()).isFalse();
+        assertThat(result.isPresent()).isFalse();
     }
 
     @Test
@@ -40,7 +41,7 @@ public class TransactionsResponseTest {
         Collection<? extends Transaction> result = transactionsResponse.getTinkTransactions();
 
         // then
-        Assertions.assertThat(result).isEmpty();
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -57,7 +58,7 @@ public class TransactionsResponseTest {
 
         // then
         for (Transaction transaction : result) {
-            Assertions.assertThat(transaction.getExactAmount().getExactValue())
+            assertThat(transaction.getExactAmount().getExactValue())
                     .isIn(new BigDecimal("123.0"), new BigDecimal("234.0"));
         }
     }

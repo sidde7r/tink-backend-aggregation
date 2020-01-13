@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.account;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -7,7 +9,6 @@ import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Properties;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -31,15 +32,13 @@ public class AccountEntityTest {
         Optional<TransactionalAccount> result = entity.toTinkAccount(balanceAmount);
 
         // then
-        Assertions.assertThat(result.get().getType()).isEqualTo(AccountTypes.CHECKING);
-        Assertions.assertThat(result.get().getIdentifiers())
-                .contains(new IbanIdentifier("test-iban"));
-        Assertions.assertThat(result.get().getApiIdentifier()).isEqualTo("test-resource-id");
-        Assertions.assertThat(result.get().getBankIdentifier()).isEqualTo("test-resource-id");
-        Assertions.assertThat(result.get().getExactBalance())
+        assertThat(result.get().getType()).isEqualTo(AccountTypes.CHECKING);
+        assertThat(result.get().getIdentifiers()).contains(new IbanIdentifier("test-iban"));
+        assertThat(result.get().getApiIdentifier()).isEqualTo("test-resource-id");
+        assertThat(result.get().getBankIdentifier()).isEqualTo("test-resource-id");
+        assertThat(result.get().getExactBalance())
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR"));
-        Assertions.assertThat(result.get().getAccountFlags())
-                .contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        assertThat(result.get().getAccountFlags()).contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
     }
 
     private Properties accountEntityProps() {

@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountsResponse;
@@ -23,14 +23,14 @@ public class UnicreditTransactionalAccountFetcherTest {
 
     @Before
     public void setUp() {
-        apiClient = Mockito.mock(UnicreditBaseApiClient.class);
+        apiClient = mock(UnicreditBaseApiClient.class);
         accountFetcher = new UnicreditTransactionalAccountFetcher(apiClient);
     }
 
     @Test
     public void fetchAccountWhenApiReturnsNoAccounts() {
         // given
-        AccountsResponse accountsResponse = Mockito.mock(AccountsResponse.class);
+        AccountsResponse accountsResponse = mock(AccountsResponse.class);
         given(accountsResponse.getAccounts()).willReturn(Collections.emptyList());
         // and
         given(apiClient.fetchAccounts()).willReturn(accountsResponse);
@@ -39,15 +39,15 @@ public class UnicreditTransactionalAccountFetcherTest {
         Collection<TransactionalAccount> result = accountFetcher.fetchAccounts();
 
         // then
-        Assertions.assertThat(result).isEmpty();
+        assertThat(result).isEmpty();
     }
 
     @Test
     public void fetchAccountsWhenApiReturnsAccount() {
         // given
-        ExactCurrencyAmount balanceAmount = Mockito.mock(ExactCurrencyAmount.class);
+        ExactCurrencyAmount balanceAmount = mock(ExactCurrencyAmount.class);
         // and
-        TransactionalAccount transactionalAccount = Mockito.mock(TransactionalAccount.class);
+        TransactionalAccount transactionalAccount = mock(TransactionalAccount.class);
         // and
         AccountEntity accountEntity =
                 mockAccountEntity("sample resource id", balanceAmount, transactionalAccount);
@@ -59,14 +59,14 @@ public class UnicreditTransactionalAccountFetcherTest {
         Collection<TransactionalAccount> result = accountFetcher.fetchAccounts();
 
         // then
-        Assertions.assertThat(result).containsOnly(transactionalAccount);
+        assertThat(result).containsOnly(transactionalAccount);
     }
 
     private AccountEntity mockAccountEntity(
             final String resourceId,
             final ExactCurrencyAmount balanceAmount,
             final TransactionalAccount transactionalAccount) {
-        AccountEntity accountEntity = Mockito.mock(AccountEntity.class);
+        AccountEntity accountEntity = mock(AccountEntity.class);
         given(accountEntity.getResourceId()).willReturn(resourceId);
         given(accountEntity.toTinkAccount(balanceAmount))
                 .willReturn(Optional.of(transactionalAccount));
@@ -74,7 +74,7 @@ public class UnicreditTransactionalAccountFetcherTest {
     }
 
     private AccountsResponse mockAccountsResponse(final AccountEntity accountEntity) {
-        AccountsResponse accountsResponse = Mockito.mock(AccountsResponse.class);
+        AccountsResponse accountsResponse = mock(AccountsResponse.class);
         given(accountsResponse.getAccounts()).willReturn(Collections.singletonList(accountEntity));
         given(apiClient.fetchAccounts()).willReturn(accountsResponse);
         return accountsResponse;
@@ -82,7 +82,7 @@ public class UnicreditTransactionalAccountFetcherTest {
 
     private BalancesResponse mockBalancesResponse(
             final String resourceId, final ExactCurrencyAmount balanceAmount) {
-        BalancesResponse balancesResponse = Mockito.mock(BalancesResponse.class);
+        BalancesResponse balancesResponse = mock(BalancesResponse.class);
         given(balancesResponse.getBalance()).willReturn(balanceAmount);
         given(apiClient.fetchAccountBalance(resourceId)).willReturn(balancesResponse);
         return balancesResponse;

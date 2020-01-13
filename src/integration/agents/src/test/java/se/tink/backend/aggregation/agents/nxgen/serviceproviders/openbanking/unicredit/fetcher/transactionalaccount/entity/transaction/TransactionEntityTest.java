@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.transaction;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.util.Properties;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -23,10 +24,8 @@ public class TransactionEntityTest {
         Transaction result = entity.toTinkTransaction();
 
         // then
-        Assertions.assertThat(result.getDescription())
-                .isEqualTo("test-remittance-information-unstructured");
-        Assertions.assertThat(result.getExactAmount().getExactValue())
-                .isEqualTo(new BigDecimal("123.45"));
+        assertThat(result.getDescription()).isEqualTo("test-remittance-information-unstructured");
+        assertThat(result.getExactAmount().getExactValue()).isEqualTo(new BigDecimal("123.45"));
     }
 
     private Properties transactionEntityProps(final String amount) {

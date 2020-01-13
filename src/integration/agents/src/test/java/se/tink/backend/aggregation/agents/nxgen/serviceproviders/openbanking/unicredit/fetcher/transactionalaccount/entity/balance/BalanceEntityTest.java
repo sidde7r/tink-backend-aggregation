@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.balance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.util.Properties;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -22,10 +24,10 @@ public class BalanceEntityTest {
         BalanceEntity entity = balanceAsJson(balanceProperties);
 
         // when
-        Throwable result = Assertions.catchThrowable(entity::getAmount);
+        Throwable result = catchThrowable(entity::getAmount);
 
         // then
-        Assertions.assertThat(result).isInstanceOf(IllegalStateException.class);
+        assertThat(result).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -37,8 +39,7 @@ public class BalanceEntityTest {
         ExactCurrencyAmount result = entity.getAmount();
 
         // then
-        Assertions.assertThat(result)
-                .isEqualTo(new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR"));
+        assertThat(result).isEqualTo(new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR"));
     }
 
     @Test
@@ -48,10 +49,10 @@ public class BalanceEntityTest {
         BalanceEntity entity = balanceAsJson(balanceEntityProps(nonExistingType));
 
         // when
-        Throwable result = Assertions.catchThrowable(entity::getBalanceMappingPriority);
+        Throwable result = catchThrowable(entity::getBalanceMappingPriority);
 
         // then
-        Assertions.assertThat(result)
+        assertThat(result)
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(
                         "There is balanceType of value '"
@@ -68,7 +69,7 @@ public class BalanceEntityTest {
         int result = entity.getBalanceMappingPriority();
 
         // then
-        Assertions.assertThat(result).isEqualTo(1);
+        assertThat(result).isEqualTo(1);
     }
 
     private Properties balanceEntityProps(final String balanceType) {

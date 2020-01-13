@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -9,7 +12,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -24,10 +26,10 @@ public class BalancesResponseTest {
                 balancesAsResponse(accountEntityProps(), Collections.emptyList());
 
         // when
-        Throwable result = Assertions.catchThrowable(balancesResponse::getBalance);
+        Throwable result = catchThrowable(balancesResponse::getBalance);
 
         // then
-        Assertions.assertThat(result)
+        assertThat(result)
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Account balance not found");
     }
@@ -49,7 +51,7 @@ public class BalancesResponseTest {
         ExactCurrencyAmount result = balancesResponse.getBalance();
 
         // then
-        Assertions.assertThat(result).isEqualTo(expectedAmount);
+        assertThat(result).isEqualTo(expectedAmount);
     }
 
     private Properties accountEntityProps() {
