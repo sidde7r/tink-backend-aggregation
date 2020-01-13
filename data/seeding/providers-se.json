@@ -2119,7 +2119,7 @@
             "accessType": "OTHER",
             "backgroundRefreshEnabled": true,
             "backgroundRefreshMaxFrequency": 4,
-            "className": "nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerAgent",
+            "className": "nxgen.se.banks.nordea.partner.NordeaPartnerSeAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "currency": "SEK",
             "displayName": "Nordea",

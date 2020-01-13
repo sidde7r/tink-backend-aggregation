@@ -7,14 +7,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -97,26 +90,8 @@ public class AccountEntity {
     @JsonProperty("transaction_list_search_criteria")
     private TransactionListSearchCriteriaEntity transactionListSearchCriteria;
 
-    public Optional<TransactionalAccount> toTinkTransactionalAccount() {
-        return TransactionalAccount.nxBuilder()
-                .withTypeAndFlagsFrom(
-                        NordeaPartnerConstants.TRANSACTIONAL_ACCOUNT_TYPE_MAPPER, category)
-                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(availableBalance, currency)))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(displayAccountNumber)
-                                .withAccountName(nickname)
-                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
-                                .setProductName(productName)
-                                .build())
-                .addHolderName(getHolderName())
-                .setApiIdentifier(accountId)
-                .build();
-    }
-
     @JsonIgnore
-    private String getHolderName() {
+    public String getHolderName() {
         return Optional.ofNullable(roles).orElse(Collections.emptyList()).stream()
                 .filter(RolesEntity::isOwner)
                 .map(RolesEntity::getName)
@@ -127,5 +102,121 @@ public class AccountEntity {
     @JsonIgnore
     public boolean hasIban() {
         return !Strings.isNullOrEmpty(iban);
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public String getMainAccountNumber() {
+        return mainAccountNumber;
+    }
+
+    public String getDisplayAccountNumber() {
+        return displayAccountNumber;
+    }
+
+    public String getIban() {
+        return iban;
+    }
+
+    public String getBic() {
+        return bic;
+    }
+
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public String getProductCode() {
+        return productCode;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public BigDecimal getBookedBalance() {
+        return bookedBalance;
+    }
+
+    public BigDecimal getCreditLimit() {
+        return creditLimit;
+    }
+
+    public BigDecimal getAvailableBalance() {
+        return availableBalance;
+    }
+
+    public BigDecimal getEquivalentBalance() {
+        return equivalentBalance;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getEquivalentCurrency() {
+        return equivalentCurrency;
+    }
+
+    public int getRemainingFreeWithdrawals() {
+        return remainingFreeWithdrawals;
+    }
+
+    public String getLatestTransactionDate() {
+        return latestTransactionDate;
+    }
+
+    public String getStatementFormat() {
+        return statementFormat;
+    }
+
+    public String getMaturityDueDate() {
+        return maturityDueDate;
+    }
+
+    public boolean isCoveredByDepositGuarantee() {
+        return coveredByDepositGuarantee;
+    }
+
+    public List<RolesEntity> getRoles() {
+        return roles;
+    }
+
+    public PermissionsEntity getPermissions() {
+        return permissions;
+    }
+
+    public InterestInfoEntity getInterestInfo() {
+        return interestInfo;
+    }
+
+    public FlexiDepositEntity getFlexiDeposit() {
+        return flexiDeposit;
+    }
+
+    public TransactionListSearchCriteriaEntity getTransactionListSearchCriteria() {
+        return transactionListSearchCriteria;
     }
 }
