@@ -28,7 +28,6 @@ public final class BecConstants {
     public static final class Crypto {
         public static final String AES = "AES";
         public static final String X509 = "X509";
-        public static final String UTF8 = "UTF-8";
     }
 
     static final class Meta {
