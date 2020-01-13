@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestCreation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.HalPaymentRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PaymentRequestResourceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.util.CodeChallengeUtil;
@@ -41,7 +42,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public final class CmcicApiClient {
+public class CmcicApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
@@ -290,5 +291,14 @@ public final class CmcicApiClient {
         SimpleDateFormat dateFormat = new SimpleDateFormat(Signature.DATE_FORMAT, Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone(Signature.TIMEZONE));
         return dateFormat.format(calendar.getTime());
+    }
+
+    public EndUserIdentityResponse getEndUserIdentity() {
+        String baseUrl = getConfiguration().getBaseUrl();
+        String basePath = getConfiguration().getBasePath();
+
+        return createAispRequestInSession(
+                        new URL(baseUrl), basePath + Urls.FETCH_END_USER_IDENTITY, HttpMethod.GET)
+                .get(EndUserIdentityResponse.class);
     }
 }
