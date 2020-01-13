@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgentTest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class LaCaixaAgentTest {
@@ -23,9 +24,8 @@ public class LaCaixaAgentTest {
         manager.before();
     }
 
-    @Test
-    public void testRefresh() throws Exception {
-        new AgentIntegrationTest.Builder("es", "es-lacaixa-password")
+    private AgentIntegrationTest createAgentTest() {
+        return new AgentIntegrationTest.Builder("es", "es-lacaixa-password")
                 .addCredentialField(
                         Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
                 .addCredentialField(
@@ -34,7 +34,16 @@ public class LaCaixaAgentTest {
                 .saveCredentialsAfter(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                .build()
-                .testRefresh();
+                .build();
+    }
+
+    @Test
+    public void testRefresh() throws Exception {
+        createAgentTest().testRefresh();
+    }
+
+    @Test
+    public void testDualAgentTest() throws Exception {
+        RedsysAgentTest.runDualAgentTest("es-redsys-caixabank-ob", createAgentTest());
     }
 }

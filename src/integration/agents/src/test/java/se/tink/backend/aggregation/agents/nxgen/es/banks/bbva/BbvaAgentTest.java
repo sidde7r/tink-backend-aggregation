@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysAgentTest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class BbvaAgentTest {
@@ -23,9 +24,8 @@ public class BbvaAgentTest {
         manager.before();
     }
 
-    @Test
-    public void testLogin() throws Exception {
-        new AgentIntegrationTest.Builder("es", "es-bbva-password")
+    private AgentIntegrationTest createAgentTest() {
+        return new AgentIntegrationTest.Builder("es", "es-bbva-password")
                 .addCredentialField(
                         Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
                 .addCredentialField(
@@ -37,7 +37,16 @@ public class BbvaAgentTest {
                 .doLogout(true)
                 .setFinancialInstitutionId("bbva")
                 .setAppId("tink")
-                .build()
-                .testRefresh();
+                .build();
+    }
+
+    @Test
+    public void testRefresh() throws Exception {
+        createAgentTest().testRefresh();
+    }
+
+    @Test
+    public void testDualAgentTest() throws Exception {
+        RedsysAgentTest.runDualAgentTest("es-redsys-bbva-ob", createAgentTest());
     }
 }
