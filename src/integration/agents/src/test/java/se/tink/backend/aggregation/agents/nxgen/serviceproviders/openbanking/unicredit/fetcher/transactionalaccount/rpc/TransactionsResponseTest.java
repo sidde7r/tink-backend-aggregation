@@ -15,6 +15,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class TransactionsResponseTest {
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Test
@@ -28,7 +29,6 @@ public class TransactionsResponseTest {
         // then
         Assertions.assertThat(result.isPresent()).isFalse();
     }
-
 
     @Test
     public void getTinkTransactionsForEmptyTransactionsInResponse() {

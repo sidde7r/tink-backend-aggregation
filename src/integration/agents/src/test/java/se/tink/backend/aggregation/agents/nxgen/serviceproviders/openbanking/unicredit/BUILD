@@ -12,9 +12,12 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
+        "//src/integration/account:enums",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/unicredit",
         "//src/integration/amount",
+        "//src/integration/api",
         "//src/integration/lib",
+        "//src/libraries/account_identifier",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_code_gson_gson",
         "//third_party:org_assertj_assertj_core",
