@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.auth
 
 import com.google.api.client.util.Base64;
 import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -85,10 +85,10 @@ public final class BecSecurityHelper {
             if (paramArrayOfByte != null && symmetricKey != null) {
                 return new String(
                         Base64.encodeBase64(encryptPayload(symmetricKey, paramArrayOfByte)),
-                        BecConstants.Crypto.UTF8);
+                        StandardCharsets.UTF_8);
             }
             return null;
-        } catch (UnsupportedEncodingException | GeneralSecurityException e) {
+        } catch (GeneralSecurityException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
@@ -98,11 +98,11 @@ public final class BecSecurityHelper {
         try {
             if (paramString != null) {
                 byte[] arrayOfByte =
-                        Base64.decodeBase64(paramString.getBytes(BecConstants.Crypto.UTF8));
+                        Base64.decodeBase64(paramString.getBytes(StandardCharsets.UTF_8));
                 return decryptPayload(symmetricKey, arrayOfByte);
             }
             return null;
-        } catch (UnsupportedEncodingException | GeneralSecurityException e) {
+        } catch (GeneralSecurityException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
@@ -161,10 +161,6 @@ public final class BecSecurityHelper {
     }
 
     private String toJsonString(byte[] paramArrayOfByte) {
-        try {
-            return new String(Base64.encodeBase64(paramArrayOfByte), BecConstants.Crypto.UTF8);
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Unsupported encoding: UTF-8", e);
-        }
+        return new String(Base64.encodeBase64(paramArrayOfByte), StandardCharsets.UTF_8);
     }
 }
