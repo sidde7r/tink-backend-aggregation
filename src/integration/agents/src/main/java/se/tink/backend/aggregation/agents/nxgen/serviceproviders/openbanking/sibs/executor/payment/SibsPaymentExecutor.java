@@ -52,7 +52,21 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .withInstructedAmount(
                                 SibsAmountEntity.of(
                                         paymentRequest.getPayment().getExactCurrencyAmount()))
+                        /*
+                            PIS requirements is to provide payee name during payment initiation. Currently Tink
+                            implementation doesn't allow to provide this name from the user. Temporary solution
+                            is to default it to "Payment Initiation" but in the future, another field should be
+                            provided in the mobile app, to allow user to provide this value which should be placed
+                            as a creditorName (payee).
+                        */
                         .withCreditorName(SibsConstants.FormValues.PAYMENT_INITIATION_DEFAULT_NAME)
+                        /*
+                            SIBS Documentation says that this field is optional and default value is SHAR if not
+                            provided. However CreditoAgricola validation rules breaks if this value is not provided
+                            explicitly in the code. That's why we've added this value for every bank. As a future fix
+                            or flow improvement it should be chosen by user from mobile app or by algorithm (depends
+                            on tech analysis.
+                        */
                         .withChargeBearer(
                                 SibsConstants.FormValues.PAYMENT_INITIATION_DEFAULT_CHARGE_BEARER);
 
