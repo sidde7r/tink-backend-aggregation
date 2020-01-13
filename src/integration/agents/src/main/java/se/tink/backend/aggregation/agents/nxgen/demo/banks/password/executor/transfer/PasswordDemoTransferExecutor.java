@@ -20,29 +20,60 @@ public class PasswordDemoTransferExecutor implements BankTransferExecutor {
 
     @Override
     public Optional<String> executeTransfer(Transfer transfer) {
-        Optional<String> sourceAccountName = transfer.getSource().getName();
 
-        if (sourceAccountName.isPresent()) {
-            String accountName = sourceAccountName.get().toLowerCase().replaceAll("\\s+", "");
-            if (accountName.contains("checkingaccounttinkzerobalance")) {
-                // Mock the payment failure for zero balance checking accounts
-                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage(
-                                "The transfer amount is larger than what is available on the account (test)")
-                        .setMessage(
-                                "The transfer amount is larger than what is available on the account (test)")
-                        .build();
-            }
+        // This block handles PIS only business use case as source-account will be null in request
+        if (credentials
+                .getProviderName()
+                .equals("uk-test-open-banking-redirect")) { // This block handles PIS only business
+            // use case as source-account will not
+            // be sent in request
 
-            if (accountName.contains("savingsaccount")) {
-                // Mock the user cancel for transfers from the saving accounts
-                throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setEndUserMessage("Cancel on payment signing (test)")
-                        .setMessage("Cancel on payment signing (test)")
-                        .build();
+            // not need to throw exception for success case
+        }
+        if (credentials
+                .getProviderName()
+                .equals("uk-test-open-banking-redirect-failed")) { // FAILED case
+
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setEndUserMessage(
+                            "The transfer amount is larger than what is available on the account (test)")
+                    .setMessage(
+                            "The transfer amount is larger than what is available on the account (test)")
+                    .build();
+        }
+        if (credentials
+                .getProviderName()
+                .equals("uk-test-open-banking-redirect-canceled")) { // CANCELLED case
+
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage("Cancel on payment signing (test)")
+                    .setMessage("Cancel on payment signing (test)")
+                    .build();
+        } else { // This block handles AIS+PIS business use case as source-account will be sent in
+            // request
+            Optional<String> sourceAccountName = transfer.getSource().getName();
+
+            if (sourceAccountName.isPresent()) {
+                String accountName = sourceAccountName.get().toLowerCase().replaceAll("\\s+", "");
+                if (accountName.contains("checkingaccounttinkzerobalance")) {
+                    // Mock the payment failure for zero balance checking accounts
+                    throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                            .setEndUserMessage(
+                                    "The transfer amount is larger than what is available on the account (test)")
+                            .setMessage(
+                                    "The transfer amount is larger than what is available on the account (test)")
+                            .build();
+                }
+
+                if (accountName.contains("savingsaccount")) {
+                    // Mock the user cancel for transfers from the saving accounts
+                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                            .setEndUserMessage("Cancel on payment signing (test)")
+                            .setMessage("Cancel on payment signing (test)")
+                            .build();
+                }
             }
         }
-
         return Optional.empty();
     }
 }
