@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.clien
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -31,12 +34,11 @@ public class BoursoramaMessageSignFilter extends Filter {
         return nextFilter(request);
     }
 
-
     private void appendAdditionalHeaders(HttpRequest request) {
         request.getHeaders().add(Psd2Headers.Keys.X_REQUEST_ID, UUID.randomUUID());
-//        String date =
-//            DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneId.of("GMT")));
-//        request.getHeaders().add(Psd2Headers.Keys.DATE, date);
+        String date =
+                DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneId.of("GMT")));
+        request.getHeaders().add(Psd2Headers.Keys.DATE, date);
     }
 
     private void addSignatureHeader(HttpRequest request) {
@@ -82,6 +84,4 @@ public class BoursoramaMessageSignFilter extends Filter {
             throw new IllegalArgumentException(e);
         }
     }
-
-
 }
