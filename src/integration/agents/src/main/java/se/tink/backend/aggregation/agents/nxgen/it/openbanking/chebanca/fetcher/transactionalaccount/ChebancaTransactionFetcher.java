@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher
 
 import static se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.ErrorMessages.TRANSACTIONS_FETCH_FAILED;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -34,21 +35,37 @@ public class ChebancaTransactionFetcher implements TransactionDatePaginator<Tran
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        HttpResponse response =
-                apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
-        HttpResponseChecker.checkIfSuccessfulResponse(
-                response, HttpServletResponse.SC_OK, TRANSACTIONS_FETCH_FAILED);
+        List<Transaction> transactions = new ArrayList<>();
+        Long nextAccounting = null;
+        Long nextNotAccounting = null;
+        do {
+            HttpResponse response =
+                    apiClient.getTransactions(
+                            account.getApiIdentifier(),
+                            fromDate,
+                            toDate,
+                            nextAccounting,
+                            nextNotAccounting);
+            HttpResponseChecker.checkIfSuccessfulResponse(
+                    response, HttpServletResponse.SC_OK, TRANSACTIONS_FETCH_FAILED);
 
-        GetTransactionsResponse dataResp = response.getBody(GetTransactionsResponse.class);
-        Collection<? extends Transaction> transactions = getTinkTransactions(dataResp);
+            GetTransactionsResponse dataResp = response.getBody(GetTransactionsResponse.class);
+            nextAccounting = dataResp.getData().getNextAccounting();
+            nextNotAccounting = dataResp.getData().getNextNotAccounting();
+            transactions.addAll(getTinkTransactions(dataResp));
+        } while (moreTransactionsLeftForDateRange(nextAccounting)
+                || moreTransactionsLeftForDateRange(nextNotAccounting));
         return PaginatorResponseImpl.create(transactions, !transactions.isEmpty());
     }
 
-    private Collection<? extends Transaction> getTinkTransactions(
-            GetTransactionsResponse response) {
-        Collection<? extends Transaction> accountedTransactions =
+    private boolean moreTransactionsLeftForDateRange(Long nextTransactionIdx) {
+        return nextTransactionIdx != null && nextTransactionIdx > 0;
+    }
+
+    private List<Transaction> getTinkTransactions(GetTransactionsResponse response) {
+        Collection<Transaction> accountedTransactions =
                 mapTransactionEntities(getAccountedTransactionEntities(response), false);
-        Collection<? extends Transaction> pendingTransactions =
+        Collection<Transaction> pendingTransactions =
                 mapTransactionEntities(getPendingTransactionEntities(response), true);
 
         return Stream.of(accountedTransactions, pendingTransactions)
@@ -56,7 +73,7 @@ public class ChebancaTransactionFetcher implements TransactionDatePaginator<Tran
                 .collect(Collectors.toList());
     }
 
-    private Collection<? extends Transaction> mapTransactionEntities(
+    private Collection<Transaction> mapTransactionEntities(
             List<TransactionEntity> transactionEntities, boolean isPending) {
         return Optional.of(transactionEntities)
                 .map(Collection::stream)

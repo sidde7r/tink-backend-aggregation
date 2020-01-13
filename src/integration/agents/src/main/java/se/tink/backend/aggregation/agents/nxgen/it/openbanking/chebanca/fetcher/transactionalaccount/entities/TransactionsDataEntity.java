@@ -12,6 +12,12 @@ public class TransactionsDataEntity {
     @JsonProperty("numberTransactionsNotAccounting")
     private Long numberTransactionsNotAccounting;
 
+    @JsonProperty("nextAccounting")
+    private Long nextAccounting;
+
+    @JsonProperty("nextNotAccounting")
+    private Long nextNotAccounting;
+
     @JsonProperty("updateDate")
     private String updateDate;
 
@@ -36,6 +42,14 @@ public class TransactionsDataEntity {
 
     public Long getNumberTransactionsNotAccounting() {
         return numberTransactionsNotAccounting;
+    }
+
+    public Long getNextAccounting() {
+        return nextAccounting;
+    }
+
+    public Long getNextNotAccounting() {
+        return nextNotAccounting;
     }
 
     public String getUpdateDate() {
