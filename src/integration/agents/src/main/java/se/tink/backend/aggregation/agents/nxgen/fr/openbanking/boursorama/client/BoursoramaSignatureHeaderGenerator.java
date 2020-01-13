@@ -3,24 +3,24 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.clien
 import java.net.URI;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.EidasIdentity;
+import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
 public class BoursoramaSignatureHeaderGenerator {
 
     private final EidasProxyConfiguration eidasProxyConf;
     private final EidasIdentity eidasIdentity;
-    private final String qwacKeyUrl;
+    private final String qsealKeyUrl;
 
     public BoursoramaSignatureHeaderGenerator(
             EidasProxyConfiguration eidasProxyConf,
             EidasIdentity eidasIdentity,
-            String qwacKeyUrl) {
+            String qsealKeyUrl) {
         this.eidasProxyConf = eidasProxyConf;
         this.eidasIdentity = eidasIdentity;
-        this.qwacKeyUrl = qwacKeyUrl;
+        this.qsealKeyUrl = qsealKeyUrl;
     }
 
     String getDigestHeaderValue(String requestBody) {
@@ -42,9 +42,9 @@ public class BoursoramaSignatureHeaderGenerator {
 
         return String.join(
                 ",",
-                "keyId=" + '"' + qwacKeyUrl + '"',
+                "keyId=" + '"' + qsealKeyUrl + '"',
                 "algorithm=\"rsa-sha256\"",
-                "headers=\"(request-target) Digest X-Request-Id date content-type\"",
+                "headers=\"(request-target) Digest X-Request-ID Date Content-Type\"",
                 "signature=" + '"' + signature + '"');
     }
 

@@ -13,18 +13,9 @@ junit_test(
         "manual",
     ],
     visibility = ["//visibility:public"],
-    runtime_deps = [
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
-    ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/boursorama",
-        "//src/integration/amount",
-        "//src/integration/api",
-        "//src/integration/lib",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//src/libraries/serialization",
+        "//src/integration/credentials:service"
     ],
 )

@@ -2,16 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.clien
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
-import se.tink.backend.aggregation.agents.utils.jersey.MessageSignInterceptor;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
-public class BoursoramaMessageSignFilter extends MessageSignInterceptor {
+public class BoursoramaMessageSignFilter extends Filter {
 
     private final BoursoramaSignatureHeaderGenerator boursoramaSignatureHeaderGenerator;
 
@@ -21,15 +21,25 @@ public class BoursoramaMessageSignFilter extends MessageSignInterceptor {
     }
 
     @Override
-    protected void appendAdditionalHeaders(HttpRequest request) {
-        request.getHeaders().add(Psd2Headers.Keys.X_REQUEST_ID, UUID.randomUUID());
-        String date =
-                DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneId.of("GMT")));
-        request.getHeaders().add(Psd2Headers.Keys.DATE, date);
+    public HttpResponse handle(HttpRequest request)
+            throws HttpClientException, HttpResponseException {
+
+        appendAdditionalHeaders(request);
+        String serializedBody = prepareRequestBody(request);
+        addDigestHeader(serializedBody, request);
+        addSignatureHeader(request);
+        return nextFilter(request);
     }
 
-    @Override
-    protected void getSignatureAndAddAsHeader(HttpRequest request) {
+
+    private void appendAdditionalHeaders(HttpRequest request) {
+        request.getHeaders().add(Psd2Headers.Keys.X_REQUEST_ID, UUID.randomUUID());
+//        String date =
+//            DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneId.of("GMT")));
+//        request.getHeaders().add(Psd2Headers.Keys.DATE, date);
+    }
+
+    private void addSignatureHeader(HttpRequest request) {
         String signatureHeaderValue =
                 boursoramaSignatureHeaderGenerator.getSignatureHeaderValue(
                         request.getMethod().name(),
@@ -43,22 +53,26 @@ public class BoursoramaMessageSignFilter extends MessageSignInterceptor {
         request.getHeaders().add(Psd2Headers.Keys.SIGNATURE, signatureHeaderValue);
     }
 
-    @Override
-    protected void prepareDigestAndAddAsHeader(HttpRequest request) {
-        serializeBodyIfNecessary(request);
+    private void addDigestHeader(String serializedBody, HttpRequest request) {
         request.getHeaders()
                 .add(
                         Psd2Headers.Keys.DIGEST,
-                        boursoramaSignatureHeaderGenerator.getDigestHeaderValue(
-                                (String) request.getBody()));
+                        boursoramaSignatureHeaderGenerator.getDigestHeaderValue(serializedBody));
     }
 
-    private void serializeBodyIfNecessary(HttpRequest request) {
-        Object requestBody = request.getBody();
-        String serializedBody =
-                requestBody instanceof String ? (String) requestBody : serialize(requestBody);
+    private String prepareRequestBody(HttpRequest request) {
+        if (request.getBody() == null) {
+            return "";
+        } else {
+            String serializedBody = serializeBodyIfNecessary(request);
+            request.setBody(serializedBody);
+            return serializedBody;
+        }
+    }
 
-        request.setBody(serializedBody);
+    private String serializeBodyIfNecessary(HttpRequest request) {
+        Object requestBody = request.getBody();
+        return requestBody instanceof String ? (String) requestBody : serialize(requestBody);
     }
 
     private String serialize(Object object) {
@@ -68,4 +82,6 @@ public class BoursoramaMessageSignFilter extends MessageSignInterceptor {
             throw new IllegalArgumentException(e);
         }
     }
+
+
 }

@@ -2,11 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.clien
 
 import javax.ws.rs.core.HttpHeaders;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class BoursoramaAuthenticationFilter extends Filter {
 
@@ -17,8 +15,7 @@ public class BoursoramaAuthenticationFilter extends Filter {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest)
-            throws HttpClientException, HttpResponseException {
+    public HttpResponse handle(HttpRequest httpRequest) {
 
         httpRequest.getHeaders().add(HttpHeaders.AUTHORIZATION, oAuth2Token.toAuthorizeHeader());
         return nextFilter(httpRequest);
