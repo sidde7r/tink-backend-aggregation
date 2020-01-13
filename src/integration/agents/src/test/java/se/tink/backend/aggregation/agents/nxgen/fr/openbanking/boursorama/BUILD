@@ -20,6 +20,7 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
