@@ -21,18 +21,15 @@ public class PasswordDemoTransferExecutor implements BankTransferExecutor {
     @Override
     public Optional<String> executeTransfer(Transfer transfer) {
 
+        String providerName = credentials.getProviderName();
         // This block handles PIS only business use case as source-account will be null in request
-        if (credentials
-                .getProviderName()
-                .equals("uk-test-open-banking-redirect")) { // This block handles PIS only business
+        if ("uk-test-open-banking-redirect"
+                .equals(providerName)) { // This block handles PIS only business
             // use case as source-account will not
             // be sent in request
 
             // not need to throw exception for success case
-        }
-        if (credentials
-                .getProviderName()
-                .equals("uk-test-open-banking-redirect-failed")) { // FAILED case
+        } else if ("uk-test-open-banking-redirect-failed".equals(providerName)) { // FAILED case
 
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(
@@ -40,10 +37,8 @@ public class PasswordDemoTransferExecutor implements BankTransferExecutor {
                     .setMessage(
                             "The transfer amount is larger than what is available on the account (test)")
                     .build();
-        }
-        if (credentials
-                .getProviderName()
-                .equals("uk-test-open-banking-redirect-canceled")) { // CANCELLED case
+        } else if ("uk-test-open-banking-redirect-cancelled"
+                .equals(providerName)) { // CANCELLED case
 
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage("Cancel on payment signing (test)")
