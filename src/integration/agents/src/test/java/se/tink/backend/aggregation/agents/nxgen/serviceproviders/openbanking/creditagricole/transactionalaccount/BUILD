@@ -16,6 +16,7 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/creditagricole",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//third_party:org_hamcrest_hamcrest_library",
         "//third_party:org_mockito_mockito_core",
     ],

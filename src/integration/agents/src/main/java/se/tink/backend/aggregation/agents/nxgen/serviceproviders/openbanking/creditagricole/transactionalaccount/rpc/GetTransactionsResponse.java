@@ -22,7 +22,7 @@ public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<
 
     @Override
     public URL nextKey() {
-        if (links.getNext() == null || links.getNext().getHref() == null) {
+        if (links == null || links.getNext() == null || links.getNext().getHref() == null) {
             return null;
         }
         return new URL(links.getNext().getHref());
@@ -38,7 +38,8 @@ public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.of(
-                links.getNext() != null
+                links != null
+                        && links.getNext() != null
                         && links.getNext().getHref() != null
                         && links.getSelf() != null
                         && links.getSelf().getHref() != null
