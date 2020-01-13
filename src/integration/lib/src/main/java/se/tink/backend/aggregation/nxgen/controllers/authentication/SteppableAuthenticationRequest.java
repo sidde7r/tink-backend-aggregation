@@ -60,4 +60,8 @@ public final class SteppableAuthenticationRequest implements AuthenticationStepp
     public int hashCode() {
         return Objects.hash(stepIdentifier, payload);
     }
+
+    void clearManualStepCallbackData() {
+        payload.clearCallbackDataAndInputs();
+    }
 }

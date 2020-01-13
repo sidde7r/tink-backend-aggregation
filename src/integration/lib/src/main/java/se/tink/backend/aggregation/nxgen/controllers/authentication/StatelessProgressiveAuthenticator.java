@@ -15,6 +15,7 @@ public abstract class StatelessProgressiveAuthenticator implements Authenticatio
         List<? extends AuthenticationStep> stepsToProcess = findAndExtractStepsToProcess(request);
         for (AuthenticationStep step : stepsToProcess) {
             Optional<SupplementInformationRequester> response = step.execute(request.getPayload());
+            request.clearManualStepCallbackData();
             if (response.isPresent()) {
                 return SteppableAuthenticationResponse.intermediateResponse(
                         step.getIdentifier(), response.get());
