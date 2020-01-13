@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.useractivation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.DeviceValues;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Identity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.entities.useractivation.DeviceInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.entities.useractivation.PinSrpDataEntity;
@@ -20,11 +20,11 @@ public class FinishActivationRequest {
     public static FinishActivationRequest create(Sparebank1Identity identity) {
         FinishActivationRequest request = new FinishActivationRequest();
 
-        request.setDeviceDescription(Sparebank1Constants.DeviceValues.DESCRIPTION);
+        request.setDeviceDescription(DeviceValues.DESCRIPTION);
         request.setDeviceId(identity.getDeviceId());
         request.setBase64EncodedPublicKey(identity.getUserName());
         request.setDeviceInfo(DeviceInfoEntity.create());
-        request.setType(Sparebank1Constants.DeviceValues.STRONG);
+        request.setType(DeviceValues.STRONG);
         request.setPinSrpData(PinSrpDataEntity.create(identity));
 
         return request;

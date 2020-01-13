@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Keys;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -52,13 +52,13 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(links.containsKey(Sparebank1Constants.Keys.MORE_TRANSACTIONS_KEY));
+        return Optional.of(links.containsKey(Keys.MORE_TRANSACTIONS_KEY));
     }
 
     @Override
     public String nextKey() {
         if (canFetchMore().isPresent()) {
-            return links.get(Sparebank1Constants.Keys.MORE_TRANSACTIONS_KEY).getHref();
+            return links.get(Keys.MORE_TRANSACTIONS_KEY).getHref();
         }
 
         return null;

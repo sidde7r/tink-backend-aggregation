@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Keys;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.Sparebank1Authenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.RestRootResponse;
@@ -82,14 +83,14 @@ public class Sparebank1Agent extends NextGenerationAgent
     private RestRootResponse getRestRootResponse(FinancialInstitutionEntity financialInstitution) {
         LinkEntity restRootLink =
                 Preconditions.checkNotNull(
-                        financialInstitution.getLinks().get(Sparebank1Constants.Keys.REST_ROOT_KEY),
+                        financialInstitution.getLinks().get(Keys.REST_ROOT_KEY),
                         "Link to the rest root not found");
 
         return apiClient.get(restRootLink.getHref(), RestRootResponse.class);
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setUserAgent(Sparebank1Constants.Headers.USER_AGENT);
+        client.setUserAgent(Headers.USER_AGENT);
         AddRefererFilter filter = new AddRefererFilter();
         client.addFilter(filter);
     }

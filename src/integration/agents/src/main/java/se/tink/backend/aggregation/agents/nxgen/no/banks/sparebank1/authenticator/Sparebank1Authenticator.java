@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.BankIdErrorCodes;
+
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.Preconditions;
 import com.nimbusds.srp6.SRP6ClientCredentials;
@@ -22,8 +24,9 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.BankIdStatuses;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Keys;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Identity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.FinishAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.FinishAuthenticationResponse;
@@ -111,9 +114,9 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
     private void handleKnownBankIdErrors(String bankIdErrorCode)
             throws LoginException, BankIdException {
         switch (bankIdErrorCode) {
-            case Sparebank1Constants.BankIdErrorCodes.C161:
+            case BankIdErrorCodes.C161:
                 throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception();
-            case Sparebank1Constants.BankIdErrorCodes.C167:
+            case BankIdErrorCodes.C167:
                 throw BankIdError.INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE.exception();
         }
     }
@@ -124,17 +127,17 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
             PollBankIdResponse pollResponse = apiClient.pollBankId();
             String pollStatus = pollResponse.getPollStatus();
 
-            if (Sparebank1Constants.BankIdStatuses.WAITING.equalsIgnoreCase(pollStatus)) {
+            if (BankIdStatuses.WAITING.equalsIgnoreCase(pollStatus)) {
                 pollWaitCounter++;
                 return BankIdStatus.WAITING;
-            } else if (Sparebank1Constants.BankIdStatuses.COMPLETE.equalsIgnoreCase(pollStatus)) {
+            } else if (BankIdStatuses.COMPLETE.equalsIgnoreCase(pollStatus)) {
                 continueActivation();
                 return BankIdStatus.DONE;
             } else {
                 log.info(
                         String.format(
                                 "%s: Unknown poll status: %s",
-                                Sparebank1Constants.Tags.BANKID_POLL_UNKNOWN_STATUS, pollStatus));
+                                Tags.BANKID_POLL_UNKNOWN_STATUS, pollStatus));
                 return BankIdStatus.FAILED_UNKNOWN;
             }
         } catch (HttpResponseException e) {
@@ -179,7 +182,7 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
 
         LinkEntity challengeLink =
                 Preconditions.checkNotNull(
-                        restRootResponse.getLinks().get(Sparebank1Constants.Keys.CHALLENGE_KEY),
+                        restRootResponse.getLinks().get(Keys.CHALLENGE_KEY),
                         "Challenge link not find.");
 
         FinishActivationResponse activateUserResponse =
@@ -202,8 +205,7 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
 
         LinkEntity loginLink =
                 Preconditions.checkNotNull(
-                        restRootResponse.getLinks().get(Sparebank1Constants.Keys.LOGIN_KEY),
-                        "Login link not found");
+                        restRootResponse.getLinks().get(Keys.LOGIN_KEY), "Login link not found");
 
         InitiateAuthenticationResponse initAuthResponse =
                 apiClient.initAuthentication(identity, loginLink.getHref());
@@ -212,9 +214,7 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
                 createFinishAuthenticationRequest(clientSession, initAuthResponse, identity);
         LinkEntity validateSessionLink =
                 Preconditions.checkNotNull(
-                        initAuthResponse
-                                .getLinks()
-                                .get(Sparebank1Constants.Keys.VALIDATE_SESSION_KEY),
+                        initAuthResponse.getLinks().get(Keys.VALIDATE_SESSION_KEY),
                         "Validate session key link not found");
 
         FinishAuthenticationResponse step2Response =
