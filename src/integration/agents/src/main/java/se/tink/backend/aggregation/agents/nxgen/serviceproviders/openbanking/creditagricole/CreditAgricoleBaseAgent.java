@@ -21,7 +21,9 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CreditAgricoleBaseAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshIdentityDataExecutor {
 
     private final CreditAgricoleBaseApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
