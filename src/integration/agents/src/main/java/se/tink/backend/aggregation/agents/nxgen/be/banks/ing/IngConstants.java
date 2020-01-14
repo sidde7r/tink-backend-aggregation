@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
+import com.google.common.collect.ImmutableSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -159,6 +161,11 @@ public class IngConstants {
         public static final String INVESTMENT_ACCOUNT = "4";
         public static final String TRANSFER_TO_OWN_RULE = "OWN";
         public static final String TRANSFER_TO_ALL_RULE = "";
+    }
+
+    public static final class InstrumentTypes {
+        public static final Set<String> STOCK = ImmutableSet.of("stock", "equity");
+        public static final Set<String> FUND = ImmutableSet.of("fund");
     }
 
     public static final class Transactions {
