@@ -296,6 +296,12 @@ agentsServiceConfiguration:
         openbankStetVersion: 1.4.0.47.develop
         organisationId: 26766eb3-f144-4c92-89a2-3d9ec6c4f72d
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    boursorama:
+      tink:
+        baseUrl: 'https://api-dsp2-sandbox.boursorama.com'
+        redirectUrl: 'https://127.0.0.1:7357/api/v1/thirdparty/callback'
+        clientId: 'PSDSE-FINA-44059'
+        qsealKeyUrl: "https://cdn.tink.se/eidas/tink.pem"
     bpcegroup:
       tink:
         clientId: 53dc4681-3b81-4adb-9ec0-c01bfdbfa72b
