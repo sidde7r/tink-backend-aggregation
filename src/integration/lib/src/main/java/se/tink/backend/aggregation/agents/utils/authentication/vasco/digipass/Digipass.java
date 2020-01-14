@@ -5,7 +5,6 @@ import com.google.common.primitives.Bytes;
 import java.security.KeyPair;
 import java.security.PublicKey;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,12 +165,12 @@ public class Digipass {
                 this.otpKey,
                 otpCounter,
                 epochTime,
+                true,
                 challenges);
     }
 
-    private String calculateOtp(int otpCounter, String challenge) {
-        return calculateOtp(
-                otpCounter, Collections.singletonList(EncodingUtils.decodeHexString(challenge)));
+    private String calculateOtp(int otpCounter, String challengeAsHex) {
+        return calculateOtp(otpCounter, OtpUtils.constructChallengeArray(challengeAsHex));
     }
 
     private String calculateDerivationCode(String otpResponse) {

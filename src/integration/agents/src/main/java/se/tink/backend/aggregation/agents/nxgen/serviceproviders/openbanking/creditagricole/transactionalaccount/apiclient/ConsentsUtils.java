@@ -33,8 +33,8 @@ class ConsentsUtils {
     }
 
     private static PutConsentsRequest buildBody(
-            final List<AccountIdEntity> listOfNecessaryConstents) {
+            final List<AccountIdEntity> listOfNecessaryConsents) {
         return new PutConsentsRequest(
-                listOfNecessaryConstents, listOfNecessaryConstents, false, false);
+                listOfNecessaryConsents, listOfNecessaryConsents, false, true);
     }
 }

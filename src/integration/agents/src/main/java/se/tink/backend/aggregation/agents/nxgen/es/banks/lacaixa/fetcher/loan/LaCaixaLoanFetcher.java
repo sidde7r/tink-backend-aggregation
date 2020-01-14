@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -51,6 +52,7 @@ public class LaCaixaLoanFetcher implements AccountFetcher<LoanAccount> {
         }
 
         return recurseAllLoans(loanListResponse)
+                .filter(loanList -> Objects.nonNull(loanList.getLoans()))
                 .flatMap(loanList -> loanList.getLoans().stream())
                 .map(this::fetchLoanDetailsAggregate)
                 .filter(Optional::isPresent)

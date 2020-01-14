@@ -2,17 +2,20 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.p
 
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public class NordeaPartnerConstants {
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String INTEGRATION_NAME = "nordeapartner";
 
     public static final TransactionalAccountTypeMapper TRANSACTIONAL_ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
-                    .put(TransactionalAccountType.CHECKING, "TRANSACTION")
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "TRANSACTION")
                     .put(TransactionalAccountType.SAVINGS, "SAVINGS")
                     .build();
-    public static final String INTEGRATION_NAME = "nordeapartner";
 
     public class EndPoints {
         public static final String PARTNER_PATH = "/partners/{partner_id}";

@@ -8,6 +8,7 @@ import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
+import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils.AbroadTransactionParser;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
 
@@ -95,6 +96,20 @@ public class SEBAgentUtilsTest {
         assertEquals("6.8657", String.valueOf(parser.getExchangeRate()));
         assertEquals("VANCOUVER", parser.getRegion());
         assertEquals("2017-06-27", DateFormatUtils.format(parser.getDate(), "yyyy-MM-dd"));
+
+        // Test description with characters before/after currency
+        parser =
+                new AbroadTransactionParser(
+                        currentDate,
+                        "JI HUA SHAN KAO YA      FCNYA         1.029,00-46 KURS 1,3403",
+                        "BEIJING     /17-07-04");
+        parser.parse();
+        assertEquals("JI HUA SHAN KAO YA", parser.getDescription());
+        assertEquals("CNY", parser.getLocalCurrency());
+        assertEquals("-1029.0", String.valueOf(parser.getLocalAmount()));
+        assertEquals("1.3403", String.valueOf(parser.getExchangeRate()));
+        assertEquals("BEIJING", parser.getRegion());
+        assertEquals("2017-07-04", DateFormatUtils.format(parser.getDate(), "yyyy-MM-dd"));
     }
 
     @Test

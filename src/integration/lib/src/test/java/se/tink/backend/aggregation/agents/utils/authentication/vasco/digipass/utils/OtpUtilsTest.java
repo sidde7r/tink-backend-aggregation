@@ -62,6 +62,7 @@ public class OtpUtilsTest {
                         key,
                         0,
                         EPOCH_TIME,
+                        true,
                         Collections.singletonList(EncodingUtils.decodeHexString(CHALLENGE_0)));
 
         Assert.assertEquals(

@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.NordeaPartnerJweHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.encryption.NordeaPartnerKeystore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.configuration.NordeaPartnerConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.mapper.DefaultPartnerAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.mapper.NordeaPartnerAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.NordeaPartnerTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.filter.NordeaHttpRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.filter.NordeaServiceUnavailableFilter;
@@ -25,12 +27,13 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternal
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class NordeaPartnerAgent extends NextGenerationAgent
+public abstract class NordeaPartnerAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final NordeaPartnerApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private NordeaPartnerJweHelper jweHelper;
+    protected NordeaPartnerAccountMapper accountMapper;
 
     public NordeaPartnerAgent(
             CredentialsRequest request,
@@ -81,6 +84,13 @@ public final class NordeaPartnerAgent extends NextGenerationAgent
         return new NordeaPartnerSessionHandler(sessionStorage);
     }
 
+    protected NordeaPartnerAccountMapper getAccountMapper() {
+        if (accountMapper == null) {
+            accountMapper = new DefaultPartnerAccountMapper();
+        }
+        return accountMapper;
+    }
+
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
         return transactionalAccountRefreshController.fetchCheckingAccounts();
@@ -103,7 +113,7 @@ public final class NordeaPartnerAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         NordeaPartnerTransactionalAccountFetcher accountFetcher =
-                new NordeaPartnerTransactionalAccountFetcher(apiClient);
+                new NordeaPartnerTransactionalAccountFetcher(apiClient, getAccountMapper());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
