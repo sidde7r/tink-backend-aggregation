@@ -475,7 +475,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/bancobpi",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/caixa",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/montepio/agent",
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/novobanco",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/novobanco/agent",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/santander",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/activobank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/atlanticoeuropa",
