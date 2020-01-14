@@ -1,10 +1,5 @@
 package se.tink.backend.aggregation.eidassigner;
 
-import java.io.IOException;
-import java.security.KeyStore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import javax.net.ssl.SSLContext;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.client.config.RequestConfig;
@@ -23,10 +18,24 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
+import se.tink.libraries.metrics.collection.MetricCollector;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.types.gauges.LastUpdateGauge;
+import se.tink.libraries.metrics.types.gauges.OptionalGaugeSampler;
+
+import javax.net.ssl.SSLContext;
+import java.io.IOException;
+import java.security.KeyStore;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QsealcSignerHttpClient {
+    private static final Logger log = LoggerFactory.getLogger(QsealcSignerHttpClient.class);
     private static IdleConnectionMonitorThread staleMonitor;
     static CloseableHttpClient httpClient;
     static QsealcSignerHttpClient qsealcSignerHttpClient = new QsealcSignerHttpClient();
@@ -57,6 +66,15 @@ public class QsealcSignerHttpClient {
                                         .build());
                 connectionManager.setMaxTotal(200);
                 connectionManager.setDefaultMaxPerRoute(200);
+
+                try {
+                    new MetricCollector().register(MetricId.newId("qsealc_signer_http_connection_pool_status_pending"), LastUpdateGauge.class, new OptionalGaugeSampler(()-> Optional.of(connectionManager.getTotalStats().getPending())));
+                    new MetricCollector().register(MetricId.newId("qsealc_signer_http_connection_pool_status_available"), LastUpdateGauge.class, new OptionalGaugeSampler(()-> Optional.of(connectionManager.getTotalStats().getAvailable())));
+                    new MetricCollector().register(MetricId.newId("qsealc_signer_http_connection_pool_status_leased"), LastUpdateGauge.class, new OptionalGaugeSampler(()-> Optional.of(connectionManager.getTotalStats().getLeased())));
+                    new MetricCollector().register(MetricId.newId("qsealc_signer_http_connection_pool_status_max"), LastUpdateGauge.class, new OptionalGaugeSampler(()-> Optional.of(connectionManager.getTotalStats().getMax())));
+                } catch (Exception e) {
+                    log.info("Failed to register metric collector for qsealc signer httpclient");
+                }
 
                 RequestConfig config =
                         RequestConfig.custom()
