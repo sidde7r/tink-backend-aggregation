@@ -75,7 +75,7 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
                 continue;
             }
 
-            indexByDigit.put(digit, BnpParibasConstants.Auth.INDEX_0 + Integer.toString(i + 1));
+            indexByDigit.put(digit, BnpParibasConstants.Auth.INDEX_0 + (i + 1));
         }
 
         return indexByDigit;
