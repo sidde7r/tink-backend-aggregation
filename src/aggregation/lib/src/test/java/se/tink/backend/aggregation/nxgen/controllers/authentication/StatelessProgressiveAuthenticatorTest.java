@@ -88,6 +88,8 @@ public class StatelessProgressiveAuthenticatorTest {
         // then
         Assert.assertFalse(result.getStepIdentifier().isPresent());
         Assert.assertNull(result.getSupplementInformationRequester());
+        Assert.assertTrue(request.getPayload().getUserInputs().isEmpty());
+        Assert.assertTrue(request.getPayload().getCallbackData().isEmpty());
     }
 
     @Test(expected = IllegalStateException.class)

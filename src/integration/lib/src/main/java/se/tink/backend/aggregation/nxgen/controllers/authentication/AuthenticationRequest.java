@@ -10,8 +10,8 @@ import se.tink.backend.agents.rpc.Credentials;
 public final class AuthenticationRequest implements Credentialsable {
 
     private Credentials credentials;
-    private ImmutableMap<String, String> userInputs;
-    private ImmutableMap<String, String> callbackData;
+    private ImmutableMap<String, String> userInputs = ImmutableMap.of();
+    private ImmutableMap<String, String> callbackData = ImmutableMap.of();
 
     public AuthenticationRequest(final Credentials credentials) {
         this.credentials = credentials;
@@ -68,5 +68,10 @@ public final class AuthenticationRequest implements Credentialsable {
     @Override
     public int hashCode() {
         return Objects.hash(credentials, userInputs, callbackData);
+    }
+
+    void clearCallbackDataAndInputs() {
+        callbackData = ImmutableMap.of();
+        userInputs = ImmutableMap.of();
     }
 }
