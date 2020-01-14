@@ -191,6 +191,10 @@ public class IngConstants {
         public static final LogTag UNKNOWN_ERROR_CODE = LogTag.from("#ING_UNKNOWN_ERROR_CODE");
         public static final LogTag AUTH_STEP2 = LogTag.from("#AUTH_STEP2");
         public static final LogTag AUTH_STEP3 = LogTag.from("#AUTH_STEP3");
+        public static final LogTag UNKNOWN_INSTRUMENT_TYPE =
+                LogTag.from("ingbe_unknown_instrument_type");
+        public static final LogTag INSTRUMENT_FETCHING_ERROR =
+                LogTag.from("ingbe_error_instrument_fetch");
     }
 
     public static final class Transfers {
