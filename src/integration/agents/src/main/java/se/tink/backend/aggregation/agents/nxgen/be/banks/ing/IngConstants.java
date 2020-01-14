@@ -69,6 +69,9 @@ public class IngConstants {
         public static final String GET_ACCOUNTS = "getaccountbalanceandavailability";
         public static final String GET_TRANSACTIONS = "gettransactions";
         public static final String GET_PENDING_PAYMENTS = "getpendingpaymentsonaccount";
+        public static final String GET_SECURITIES_PORTFOLIO = "getsecuritiesportfolios";
+        public static final String GET_SECURITIES__PORTFOLIO_VALUATION =
+                "getsecuritiesportfoliosvaluation";
         public static final String CREDITCARD_LIST = "getcreditcardlist";
         public static final String CREDITCARD_TRANSACTIONS = "gettransactionsoncreditcard";
         public static final String GET_TRUSTED_BENEFICIARIES = "getmobiletrustedbeneficiaries";
