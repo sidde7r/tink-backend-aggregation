@@ -1,0 +1,7 @@
+{
+  "data": {
+    "numberTransactionsAccounting": 50,
+    "numberTransactionsNotAccounting": 88,
+    "showNotAccounting": true
+  }
+}

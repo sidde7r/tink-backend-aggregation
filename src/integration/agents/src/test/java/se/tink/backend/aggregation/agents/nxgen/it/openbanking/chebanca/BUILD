@@ -6,6 +6,9 @@ junit_test(
         ["**/*.java"],
         exclude = ["agent/**/*.java"],
     ),
+    data = [
+        "//data/test/agents/it/ob/chebanca",
+    ],
     tags = [
         "external",
     ],

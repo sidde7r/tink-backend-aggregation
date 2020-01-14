@@ -123,6 +123,8 @@ public final class ChebancaConstants {
         public static final String CUSTOMER_ID = "customerId";
         public static final String PRODUCT_ID = "productId";
         public static final String RESOURCE_ID = "resourceId";
+        public static final String NEXT_ACCOUNTING_ID = "nextAccounting";
+        public static final String NEXT_NOT_ACCOUNTING_ID = "nextNotAccounting";
     }
 
     public static class DateConfig {

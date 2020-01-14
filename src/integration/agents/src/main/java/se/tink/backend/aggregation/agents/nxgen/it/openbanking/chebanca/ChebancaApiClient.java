@@ -131,9 +131,19 @@ public class ChebancaApiClient {
                 .put(HttpResponse.class, new ConfirmConsentRequest());
     }
 
-    public HttpResponse getTransactions(String accountId, Date fromDate, Date toDate) {
+    public HttpResponse getTransactions(
+            String accountId,
+            Date fromDate,
+            Date toDate,
+            Long nextAccountingIdx,
+            Long nextNotAccountingIdx) {
         return createRequestWithBearerToken(
-                        buildTransactionRequestUrl(accountId, fromDate, toDate),
+                        buildTransactionRequestUrl(
+                                accountId,
+                                fromDate,
+                                toDate,
+                                nextAccountingIdx,
+                                nextNotAccountingIdx),
                         null,
                         HeaderKeys.GET_METHOD)
                 .get(HttpResponse.class);
@@ -182,8 +192,18 @@ public class ChebancaApiClient {
                 .addBearerToken(getTokenFromStorage());
     }
 
-    private URL buildTransactionRequestUrl(String accountId, Date fromDate, Date toDate) {
+    private URL buildTransactionRequestUrl(
+            String accountId,
+            Date fromDate,
+            Date toDate,
+            Long nextAccountingIdx,
+            Long nextNotAccountingIdx) {
         return TransactionRequestURLBuilder.buildTransactionRequestUrl(
-                persistentStorage.get(StorageKeys.CUSTOMER_ID), accountId, fromDate, toDate);
+                persistentStorage.get(StorageKeys.CUSTOMER_ID),
+                accountId,
+                fromDate,
+                toDate,
+                nextAccountingIdx,
+                nextNotAccountingIdx);
     }
 }
