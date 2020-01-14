@@ -48,6 +48,14 @@ public class LoginResponseEntity extends BaseMobileResponseEntity {
         return findRequest(RequestEntity::isGetPendingPayments);
     }
 
+    public Optional<URL> findInvestmentPortfolioRequest() {
+        return findRequest(RequestEntity::isGetInvestmentPortfolio);
+    }
+
+    public Optional<URL> findInvestmentPortfolioValFlowRequest() {
+        return findRequest(RequestEntity::isGetInvestmentPortfolioValFlow);
+    }
+
     public Optional<URL> findTrustedBeneficiariesRequest() {
         return findRequest(RequestEntity::isTrustedBenficiariesRequest);
     }

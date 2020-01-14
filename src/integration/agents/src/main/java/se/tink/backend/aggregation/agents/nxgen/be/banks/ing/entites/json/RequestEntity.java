@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json;
 import java.util.List;
 import org.apache.commons.lang3.StringEscapeUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.RequestNames;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -26,6 +27,14 @@ public class RequestEntity {
 
     public boolean isGetAccounts() {
         return nameEquals(IngConstants.RequestNames.GET_ACCOUNTS);
+    }
+
+    public boolean isGetInvestmentPortfolio() {
+        return nameEquals(RequestNames.GET_SECURITIES_PORTFOLIO);
+    }
+
+    public boolean isGetInvestmentPortfolioValFlow() {
+        return nameEquals(RequestNames.GET_SECURITIES__PORTFOLIO_VALUATION);
     }
 
     public boolean isGetPendingPayments() {
