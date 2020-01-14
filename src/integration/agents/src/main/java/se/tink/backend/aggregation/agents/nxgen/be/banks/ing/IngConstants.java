@@ -8,7 +8,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class IngConstants {
 
-    public static final String APP_VERSION = "8.11";
+    public static final String APP_VERSION = "8.15.1";
 
     public static final class Urls {
         static final String HOST = "https://mobilebanking.ing.be";
