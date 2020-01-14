@@ -79,7 +79,7 @@ public class BoursoramaTransactionalAccountFetcher
                                 () ->
                                         new IllegalArgumentException(
                                                 "Could not find right type balance for account with id: "
-                                                        + account.getAccountId()));
+                                                        + account.getResourceId()));
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)

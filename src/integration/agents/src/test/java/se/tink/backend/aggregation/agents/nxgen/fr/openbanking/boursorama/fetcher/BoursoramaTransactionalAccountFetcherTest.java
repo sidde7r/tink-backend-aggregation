@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -46,6 +48,7 @@ public class BoursoramaTransactionalAccountFetcherTest {
 
     @Test
     public void accountsAreCorrectlyMapped() {
+        //given
         AccountsResponse accountsResponse =
                 SerializationUtils.deserializeFromString(
                         AccountsData.FETCH_ACCOUNTS_RESPONSE, AccountsResponse.class);
@@ -54,11 +57,14 @@ public class BoursoramaTransactionalAccountFetcherTest {
                 SerializationUtils.deserializeFromString(
                         AccountsData.FETCH_BALANCES_RESPONSE, BalanceResponse.class);
 
+        //when
         when(apiClient.fetchAccounts(eq("USER_HASH_123"))).thenReturn(accountsResponse);
         when(apiClient.fetchBalances(eq("USER_HASH_123"), anyString())).thenReturn(balanceResponse);
 
         List<TransactionalAccount> accounts = new ArrayList<>(accountFetcher.fetchAccounts());
 
+
+        //then
         assertThat(accounts.size()).isEqualTo(1).as("Credit and Debit cards are skipped");
         assertAccountEquals(
                 accounts.get(0),
@@ -71,8 +77,9 @@ public class BoursoramaTransactionalAccountFetcherTest {
                 "3B9F0FCF487ECF9FCDC4CBAFDD0A2E6D");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void whenBalanceIsUnavailable_ExceptionIsThrown() {
+        //given
         AccountsResponse accountsResponse =
                 SerializationUtils.deserializeFromString(
                         AccountsData.FETCH_ACCOUNTS_RESPONSE, AccountsResponse.class);
@@ -82,14 +89,21 @@ public class BoursoramaTransactionalAccountFetcherTest {
                         AccountsData.FETCH_BALANCES_RESPONSE_INVALID_BALANCE_TYPE,
                         BalanceResponse.class);
 
+        //when
         when(apiClient.fetchAccounts(eq("USER_HASH_123"))).thenReturn(accountsResponse);
         when(apiClient.fetchBalances(eq("USER_HASH_123"), anyString())).thenReturn(balanceResponse);
 
-        accountFetcher.fetchAccounts();
+        //then
+        Throwable thrown = catchThrowable(accountFetcher::fetchAccounts);
+        Assertions.assertThat(thrown)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("3B9F0FCF487ECF9FCDC4CBAFDD0A2E6D")
+                .as("exception contains account id, for which balance is unavailable");
     }
 
     @Test
     public void transactionsAreCorrectlyMapped() throws ParseException {
+        //given
         TransactionalAccount account = mock(TransactionalAccount.class);
 
         Date dateFrom = new SimpleDateFormat("yyyy-MM-dd").parse("2019-01-01");
@@ -99,9 +113,11 @@ public class BoursoramaTransactionalAccountFetcherTest {
                 SerializationUtils.deserializeFromString(
                         TransactionsData.FETCH_TRANSACTIONS_RESPONSE, TransactionsResponse.class);
 
+        //when
         when(account.getApiIdentifier()).thenReturn("123456");
         when(apiClient.fetchTransactions("USER_HASH_123", "123456", dateFrom, dateTo))
                 .thenReturn(accountsResponse);
+
 
         PaginatorResponse paginatorResponse =
                 accountFetcher.getTransactionsFor(account, dateFrom, dateTo);
@@ -147,7 +163,4 @@ public class BoursoramaTransactionalAccountFetcherTest {
         assertThat(account.getType()).isEqualTo(type);
         assertThat(account.getApiIdentifier()).isEqualTo(apiIdentifier);
     }
-
-    @Test
-    public void getTransactionsFor() {}
 }
