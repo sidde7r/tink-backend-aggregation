@@ -14,9 +14,9 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_google_guava_guava//jar",
-        "@org_slf4j_slf4j_api//jar",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )
