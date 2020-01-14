@@ -6,7 +6,6 @@ import se.tink.libraries.account.enums.AccountFlag;
 
 public class NordeaPartnerConstants {
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String INTEGRATION_NAME = "nordeapartner";
 
     public static final TransactionalAccountTypeMapper TRANSACTIONAL_ACCOUNT_TYPE_MAPPER =
