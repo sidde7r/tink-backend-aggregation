@@ -21,9 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CreditAgricoleBaseAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                RefreshIdentityDataExecutor {
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final CreditAgricoleBaseApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -108,7 +106,6 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                         new TransactionKeyPaginationController<>(accountFetcher)));
     }
 
-    @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         final CreditAgricoleBaseIdentityDataFetcher creditAgricoleBaseIdentityDataFetcher =
                 new CreditAgricoleBaseIdentityDataFetcher(apiClient);
