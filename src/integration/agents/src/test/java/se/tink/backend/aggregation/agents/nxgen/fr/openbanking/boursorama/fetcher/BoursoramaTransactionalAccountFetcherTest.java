@@ -48,7 +48,7 @@ public class BoursoramaTransactionalAccountFetcherTest {
 
     @Test
     public void accountsAreCorrectlyMapped() {
-        //given
+        // given
         AccountsResponse accountsResponse =
                 SerializationUtils.deserializeFromString(
                         AccountsData.FETCH_ACCOUNTS_RESPONSE, AccountsResponse.class);
@@ -57,14 +57,13 @@ public class BoursoramaTransactionalAccountFetcherTest {
                 SerializationUtils.deserializeFromString(
                         AccountsData.FETCH_BALANCES_RESPONSE, BalanceResponse.class);
 
-        //when
+        // when
         when(apiClient.fetchAccounts(eq("USER_HASH_123"))).thenReturn(accountsResponse);
         when(apiClient.fetchBalances(eq("USER_HASH_123"), anyString())).thenReturn(balanceResponse);
 
         List<TransactionalAccount> accounts = new ArrayList<>(accountFetcher.fetchAccounts());
 
-
-        //then
+        // then
         assertThat(accounts.size()).isEqualTo(1).as("Credit and Debit cards are skipped");
         assertAccountEquals(
                 accounts.get(0),
@@ -79,7 +78,7 @@ public class BoursoramaTransactionalAccountFetcherTest {
 
     @Test
     public void whenBalanceIsUnavailable_ExceptionIsThrown() {
-        //given
+        // given
         AccountsResponse accountsResponse =
                 SerializationUtils.deserializeFromString(
                         AccountsData.FETCH_ACCOUNTS_RESPONSE, AccountsResponse.class);
@@ -89,11 +88,11 @@ public class BoursoramaTransactionalAccountFetcherTest {
                         AccountsData.FETCH_BALANCES_RESPONSE_INVALID_BALANCE_TYPE,
                         BalanceResponse.class);
 
-        //when
+        // when
         when(apiClient.fetchAccounts(eq("USER_HASH_123"))).thenReturn(accountsResponse);
         when(apiClient.fetchBalances(eq("USER_HASH_123"), anyString())).thenReturn(balanceResponse);
 
-        //then
+        // then
         Throwable thrown = catchThrowable(accountFetcher::fetchAccounts);
         Assertions.assertThat(thrown)
                 .isInstanceOf(IllegalArgumentException.class)
@@ -103,7 +102,7 @@ public class BoursoramaTransactionalAccountFetcherTest {
 
     @Test
     public void transactionsAreCorrectlyMapped() throws ParseException {
-        //given
+        // given
         TransactionalAccount account = mock(TransactionalAccount.class);
 
         Date dateFrom = new SimpleDateFormat("yyyy-MM-dd").parse("2019-01-01");
@@ -113,11 +112,10 @@ public class BoursoramaTransactionalAccountFetcherTest {
                 SerializationUtils.deserializeFromString(
                         TransactionsData.FETCH_TRANSACTIONS_RESPONSE, TransactionsResponse.class);
 
-        //when
+        // when
         when(account.getApiIdentifier()).thenReturn("123456");
         when(apiClient.fetchTransactions("USER_HASH_123", "123456", dateFrom, dateTo))
                 .thenReturn(accountsResponse);
-
 
         PaginatorResponse paginatorResponse =
                 accountFetcher.getTransactionsFor(account, dateFrom, dateTo);

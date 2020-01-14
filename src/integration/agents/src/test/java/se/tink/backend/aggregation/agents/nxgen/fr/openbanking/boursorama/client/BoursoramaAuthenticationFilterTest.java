@@ -26,13 +26,13 @@ public class BoursoramaAuthenticationFilterTest {
 
     @Test
     public void handle() {
-        //given
+        // given
         HttpRequestImpl request = new HttpRequestImpl(HttpMethod.GET, new URL("dummy.url"));
 
-        //when
+        // when
         boursoramaAuthenticationFilter.handle(request);
 
-        //then
+        // then
         Assertions.assertThat(request.getHeaders().getFirst("Authorization"))
                 .isEqualTo("Bearer " + TOKEN_VALUE);
     }
