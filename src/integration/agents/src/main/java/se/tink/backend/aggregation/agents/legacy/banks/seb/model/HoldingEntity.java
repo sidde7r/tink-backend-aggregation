@@ -68,10 +68,6 @@ public class HoldingEntity {
     @JsonProperty("LANDKOD")
     private String land;
 
-    // Creating the object here because we are already using Tink's StringUtils from backend.
-    private org.apache.commons.lang3.StringUtils stringUtils =
-            new org.apache.commons.lang3.StringUtils();
-
     public long getDepotNumber() {
         return depotNumber;
     }
@@ -185,7 +181,7 @@ public class HoldingEntity {
     }
 
     public Double getAverageAcquisitionValue() {
-        return stringUtils.isNumeric(averageAcquisitionValue)
+        return org.apache.commons.lang3.StringUtils.isNumeric(averageAcquisitionValue)
                 ? StringUtils.parseAmount(averageAcquisitionValue)
                 : null;
     }
@@ -219,7 +215,9 @@ public class HoldingEntity {
     }
 
     public Double getProfit() {
-        return stringUtils.isNumeric(profit) ? StringUtils.parseAmount(profit) : null;
+        return org.apache.commons.lang3.StringUtils.isNumeric(profit)
+                ? StringUtils.parseAmount(profit)
+                : null;
     }
 
     public void setProfit(String profit) {
