@@ -60,7 +60,7 @@ public class ExternalAccount implements GeneralAccountEntity {
 
         if (!parsedIdentifier.isPresent()) {
             return new SwedishIdentifier(
-                    (String) null); // Need to return identifier, but it should not be valid
+                    null); // Need to return identifier, but it should not be valid
         }
 
         return parsedIdentifier.get();
