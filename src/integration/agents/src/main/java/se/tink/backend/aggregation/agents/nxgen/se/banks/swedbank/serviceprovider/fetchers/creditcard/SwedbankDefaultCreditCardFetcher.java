@@ -31,10 +31,8 @@ public class SwedbankDefaultCreditCardFetcher
     public SwedbankDefaultCreditCardFetcher(
             SwedbankDefaultApiClient apiClient, String defaultCurrency) {
         this.apiClient = Preconditions.checkNotNull(apiClient, "ApiClient cannot be null.");
-        ;
         this.defaultCurrency =
                 Preconditions.checkNotNull(defaultCurrency, "Default currency cannot be null.");
-        ;
     }
 
     @Override
