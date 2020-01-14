@@ -233,7 +233,7 @@ public class SEBAgentUtils {
             // CITIZEN&IMM-EAPPS ENLIGN3CAD4             7,00-22 KURS 6,8657
             Pattern descriptionPattern =
                     Pattern.compile(
-                            "(?<description>.+?) *[A-Z0-9]?(?<localCurrency>[A-Z]{3})[A-Z0-9]? *(?<localAmount>\\d+,\\d+)(?<localAmountSign>([-+]| )).* KURS (?<exchangeRate>\\d+,\\d+)");
+                            "(?<description>.+?) *[A-Z0-9]?(?<localCurrency>[A-Z]{3})[A-Z0-9]? *(?<localAmount>[\\.0-9]+(,\\d+)?)(?<localAmountSign>([-+]| )).* KURS (?<exchangeRate>\\d+,\\d+)");
             matcher = descriptionPattern.matcher(originalDescription);
             if (matcher.find()) {
                 description = matcher.group("description");

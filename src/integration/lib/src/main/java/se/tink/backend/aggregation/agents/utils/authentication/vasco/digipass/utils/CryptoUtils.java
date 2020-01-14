@@ -107,4 +107,14 @@ public class CryptoUtils {
 
         return output;
     }
+
+    public static byte[] encryptSignatureAndLogonId(byte[] key, byte[] signature, String logonId) {
+        byte[] data = Bytes.concat(signature, logonId.getBytes());
+        return AES.encryptEcbPkcs5(key, data);
+    }
+
+    public static byte[] createSubKey(byte[] key, byte subKeyId) {
+        byte[] data = new byte[] {subKeyId};
+        return AES.encryptEcbPkcs5(key, data);
+    }
 }

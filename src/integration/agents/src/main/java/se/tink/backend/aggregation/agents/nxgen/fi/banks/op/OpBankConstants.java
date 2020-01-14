@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class OpBankConstants {
+    public static final String AUTH_TOKEN_KEY = "f944972f20ea3de522f312d4a5baf0f9";
+    public static final String AUTH_TOKEN_START = "F";
 
     public static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final String LANGUAGE_CODE = "en";
@@ -163,6 +165,10 @@ public class OpBankConstants {
     public static class LoginConstants {
         public static final String GROUP_ID = "mob";
         public static final String TOUCH_ID_ENABLED = "false";
+    }
+
+    public static class Activation {
+        public static final String ACTIVATION_HMAC_DATA = "0100b0000001";
     }
 
     public static class Authentication {
