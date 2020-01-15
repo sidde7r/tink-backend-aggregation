@@ -24,7 +24,7 @@ public class TransactionRequestURLBuilderTest {
         assertThat(url)
                 .isEqualTo(
                         new URL(
-                                "https://sandbox-api.chebanca.io/private/customers/customer123/products/account234/transactions/retrieve?dateFrom=30%2F06%2F3919&dateTo=31%2F12%2F3919"));
+                                "https://external-api.chebanca.io/private/customers/customer123/products/account234/transactions/retrieve?dateFrom=30%2F06%2F3919&dateTo=31%2F12%2F3919"));
     }
 
     @Test
@@ -42,7 +42,7 @@ public class TransactionRequestURLBuilderTest {
         assertThat(url)
                 .isEqualTo(
                         new URL(
-                                "https://sandbox-api.chebanca.io/private/customers/customerABC/products/account999/transactions/retrieve?dateFrom=10%2F03%2F3918&dateTo=22%2F05%2F3918&nextAccounting=5&nextNotAccounting=12"));
+                                "https://external-api.chebanca.io/private/customers/customerABC/products/account999/transactions/retrieve?dateFrom=10%2F03%2F3918&dateTo=22%2F05%2F3918&nextAccounting=5&nextNotAccounting=12"));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class TransactionRequestURLBuilderTest {
         assertThat(url)
                 .isEqualTo(
                         new URL(
-                                "https://sandbox-api.chebanca.io/private/customers/customerABC/products/account999/transactions/retrieve?dateFrom=10%2F03%2F3918&dateTo=22%2F05%2F3918&nextAccounting=10"));
+                                "https://external-api.chebanca.io/private/customers/customerABC/products/account999/transactions/retrieve?dateFrom=10%2F03%2F3918&dateTo=22%2F05%2F3918&nextAccounting=10"));
     }
 
     @Test
@@ -78,6 +78,6 @@ public class TransactionRequestURLBuilderTest {
         assertThat(url)
                 .isEqualTo(
                         new URL(
-                                "https://sandbox-api.chebanca.io/private/customers/customerABC/products/account999/transactions/retrieve?dateFrom=10%2F03%2F3918&dateTo=22%2F05%2F3918&nextNotAccounting=9"));
+                                "https://external-api.chebanca.io/private/customers/customerABC/products/account999/transactions/retrieve?dateFrom=10%2F03%2F3918&dateTo=22%2F05%2F3918&nextNotAccounting=9"));
     }
 }

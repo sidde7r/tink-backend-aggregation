@@ -36,7 +36,10 @@ public class ChebancaAuthenticatorTest {
         URL loginURl = authenticator.buildAuthorizeUrl(CLIENT_STATE);
 
         // then
-        assertEquals(new URL(getExpectedLoginEndpoint()), loginURl);
+        assertEquals(
+                new URL(
+                        "https://clienti.chebanca.it/auth/oauth/v2/authorize/login?action=display&sessionID=1234-567&sessionData=someSessionData&resourceId=12ab34cd"),
+                loginURl);
     }
 
     @Test
@@ -67,7 +70,7 @@ public class ChebancaAuthenticatorTest {
 
     private HttpResponse getMockedSuccessfulResponse() throws URISyntaxException {
         HttpResponse response = mock(HttpResponse.class);
-        when(response.getLocation()).thenReturn(new URI(getExpectedLoginEndpoint()));
+        when(response.getLocation()).thenReturn(new URI(getLocationRedirectOfLoginEndpoint()));
         when(response.getStatus()).thenReturn(302);
         return response;
     }
@@ -80,12 +83,12 @@ public class ChebancaAuthenticatorTest {
 
     private URL getEndpointURL() {
         return new URL(
-                "https://sandbox-api.chebanca.io/auth/oauth/v2/authorize?response_type=code&client_id"
+                "https://external-api.chebanca.io/auth/oauth/v2/authorize?response_type=code&client_id"
                         + "=client123&redirect_uri=http%3A%2F%2Ffoo.bar&state=clientState");
     }
 
-    private String getExpectedLoginEndpoint() {
-        return "https://developer.chebanca.it/sandbox/login?action=display&sessionID=1234-567"
+    private String getLocationRedirectOfLoginEndpoint() {
+        return "https://clienti.chebanca.it/auth/oauth/v2/authorize/login?action=display&sessionID=1234-567"
                 + "&sessionData=someSessionData&resourceId=12ab34cd";
     }
 }
