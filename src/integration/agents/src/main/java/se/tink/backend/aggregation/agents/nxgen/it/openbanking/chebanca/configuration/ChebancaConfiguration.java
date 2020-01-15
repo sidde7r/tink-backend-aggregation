@@ -1,17 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @JsonObject
 public class ChebancaConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
-    private String redirectUrl;
-    private String certificateId;
-    private String applicationId;
-    private String baseUrl;
+    @JsonProperty @Secret private String clientId;
+
+    @JsonProperty @SensitiveSecret private String clientSecret;
+
+    @JsonProperty @AgentConfigParam private String redirectUrl;
+
+    @JsonProperty @Secret private String certificateId;
+
+    @JsonProperty @Secret private String applicationId;
 
     public ChebancaConfiguration() {}
 
@@ -20,14 +27,12 @@ public class ChebancaConfiguration implements ClientConfiguration {
             String clientSecret,
             String redirectUrl,
             String certificateId,
-            String applicationId,
-            String baseUrl) {
+            String applicationId) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUrl = redirectUrl;
         this.certificateId = certificateId;
         this.applicationId = applicationId;
-        this.baseUrl = baseUrl;
     }
 
     public String getApplicationId() {
@@ -48,9 +53,5 @@ public class ChebancaConfiguration implements ClientConfiguration {
 
     public String getRedirectUrl() {
         return redirectUrl;
-    }
-
-    public String getBaseUrl() {
-        return baseUrl;
     }
 }

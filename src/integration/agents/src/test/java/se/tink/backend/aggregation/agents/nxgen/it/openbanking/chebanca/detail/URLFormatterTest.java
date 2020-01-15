@@ -35,32 +35,32 @@ public class URLFormatterTest {
                 new Object[][] {
                     {
                         "post",
-                        "https://sandbox-api.chebanca.io/authorize/foo/bar",
+                        "https://external-api.chebanca.io/authorize/foo/bar",
                         "post /authorize/foo/bar"
                     },
                     {
                         "get",
-                        "https://sandbox-api.chebanca.io/authorize/foo/bar",
+                        "https://external-api.chebanca.io/authorize/foo/bar",
                         "get /authorize/foo/bar"
                     },
                     {
                         "put",
-                        "https://sandbox-api.chebanca.io/authorize/foo/bar",
+                        "https://external-api.chebanca.io/authorize/foo/bar",
                         "put /authorize/foo/bar"
                     },
                     {
                         "post",
-                        "https://sandbox-api.chebanca.io/authorize?foo=bar",
+                        "https://external-api.chebanca.io/authorize?foo=bar",
                         "post /authorize?foo=bar"
                     },
                     {
                         "get",
-                        "https://sandbox-api.chebanca.io/authorize?foo=bar",
+                        "https://external-api.chebanca.io/authorize?foo=bar",
                         "get /authorize?foo=bar"
                     },
                     {
                         "put",
-                        "https://sandbox-api.chebanca.io/authorize?foo=bar",
+                        "https://external-api.chebanca.io/authorize?foo=bar",
                         "put /authorize?foo=bar"
                     },
                 });

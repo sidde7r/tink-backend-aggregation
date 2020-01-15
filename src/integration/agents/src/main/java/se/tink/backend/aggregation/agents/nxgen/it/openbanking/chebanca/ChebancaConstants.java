@@ -50,7 +50,8 @@ public final class ChebancaConstants {
     }
 
     public static class Urls {
-        public static final String BASE_URL = "https://sandbox-api.chebanca.io";
+        public static final String BASE_URL = "https://external-api.chebanca.io";
+        public static final String SANDBOX_BASE_URL = "https://sandbox-api.chebanca.io";
         public static final URL AUTHORIZE = new URL(BASE_URL + ApiServices.AUTHORIZE);
         public static final URL TOKEN = new URL(BASE_URL + ApiServices.TOKEN);
         public static final URL CUSTOMER_ID = new URL(BASE_URL + ApiServices.CUSTOMER_ID);

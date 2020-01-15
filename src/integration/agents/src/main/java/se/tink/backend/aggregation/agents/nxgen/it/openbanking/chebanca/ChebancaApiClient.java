@@ -160,7 +160,6 @@ public class ChebancaApiClient {
         requireNonNull(Strings.emptyToNull(config.getRedirectUrl()));
         requireNonNull(Strings.emptyToNull(config.getCertificateId()));
         requireNonNull(Strings.emptyToNull(config.getApplicationId()));
-        requireNonNull(Strings.emptyToNull(config.getBaseUrl()));
         return config;
     }
 
