@@ -32,7 +32,7 @@ public class SupplementalFieldsAuthenticationStepTest {
         // given
         Field field = Mockito.mock(Field.class);
         SupplementalFieldsAuthenticationStep objectUnderTest =
-                new SupplementalFieldsAuthenticationStep((values) -> {}, field);
+                new SupplementalFieldsAuthenticationStep("stepId", (values) -> {}, field);
         // when
         Optional<SupplementInformationRequester> result =
                 objectUnderTest.execute(authenticationRequest);
@@ -58,7 +58,7 @@ public class SupplementalFieldsAuthenticationStepTest {
         CallbackProcessorMultiData callbackProcessor =
                 Mockito.mock(CallbackProcessorMultiData.class);
         SupplementalFieldsAuthenticationStep objectUnderTest =
-                new SupplementalFieldsAuthenticationStep(callbackProcessor, field);
+                new SupplementalFieldsAuthenticationStep("stepId", callbackProcessor, field);
         // when
         Optional<SupplementInformationRequester> result =
                 objectUnderTest.execute(authenticationRequest);
@@ -80,7 +80,7 @@ public class SupplementalFieldsAuthenticationStepTest {
         CallbackProcessorMultiDataAndCredentials callbackProcessor =
                 Mockito.mock(CallbackProcessorMultiDataAndCredentials.class);
         SupplementalFieldsAuthenticationStep objectUnderTest =
-                new SupplementalFieldsAuthenticationStep(callbackProcessor, field);
+                new SupplementalFieldsAuthenticationStep("stepId", callbackProcessor, field);
         // when
         Optional<SupplementInformationRequester> result =
                 objectUnderTest.execute(authenticationRequest);
