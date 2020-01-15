@@ -49,10 +49,9 @@ public class AccountBalanceEntity {
         // ExternalLimitType.AVAILABLE is not useful when calculating credit exclusive balance so
         // this is ignored.
         for (CreditLineEntity credit : creditLine) {
-            if (credit.getType() != UkOpenBankingApiDefinitions.ExternalLimitType.AVAILABLE) {
-                if (credit.isIncluded()) {
-                    return total.subtract(credit.getAmount());
-                }
+            if (credit.getType() != UkOpenBankingApiDefinitions.ExternalLimitType.AVAILABLE
+                    && credit.isIncluded()) {
+                return total.subtract(credit.getAmount());
             }
         }
 
