@@ -81,7 +81,8 @@ public final class BbvaTypeMappers {
             TypeMapper.<LoanDetails.Type>builder()
                     .put(
                             LoanDetails.Type.BLANCO,
-                            "00021" // PRESTAMO 5,50% & RESTO CONSUMO CREDICONSUMO
+                            "00021", // PRESTAMO 5,50% & RESTO CONSUMO CREDICONSUMO
+                            "00022" // PRESTAMO ONLINE NEGOCIOS
                             )
                     .build();
 }

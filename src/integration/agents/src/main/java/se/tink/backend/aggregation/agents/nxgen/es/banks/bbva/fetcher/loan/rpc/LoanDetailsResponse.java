@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entit
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class LoanDetailsResponse {
@@ -85,6 +87,18 @@ public class LoanDetailsResponse {
     }
 
     @JsonIgnore
+    public ExactCurrencyAmount getBalance() {
+        if (Objects.nonNull(pendingAmount)) {
+            return pendingAmount.toTinkAmount().negate();
+        }
+
+        // Sometimes pendingAmount isn't there
+        final BigDecimal balance =
+                initialAmount.getAmount().subtract(redeemedAmount.getAmount()).negate();
+        return ExactCurrencyAmount.of(balance, initialAmount.getCurrency());
+    }
+
+    @JsonIgnore
     public Optional<LoanModule> getLoanModuleWithTypeAndLoanNumber(
             LoanDetails.Type loanType, String loanNumber) {
 
@@ -98,7 +112,7 @@ public class LoanDetailsResponse {
         return Optional.of(
                 LoanModule.builder()
                         .withType(loanType)
-                        .withBalance(pendingAmount.toTinkAmount().negate())
+                        .withBalance(getBalance())
                         .withInterestRate(interestRate.doubleValue())
                         .setInitialBalance(initialAmount.toTinkAmount().negate())
                         .setMonthlyAmortization(installments.getInstallmentAmount().toTinkAmount())

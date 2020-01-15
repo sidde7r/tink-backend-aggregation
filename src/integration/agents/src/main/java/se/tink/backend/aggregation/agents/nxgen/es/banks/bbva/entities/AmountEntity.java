@@ -36,4 +36,9 @@ public class AmountEntity {
     public BigDecimal getAmount() {
         return amount;
     }
+
+    @JsonIgnore
+    public String getCurrency() {
+        return currency;
+    }
 }
