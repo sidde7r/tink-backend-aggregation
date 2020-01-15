@@ -312,13 +312,19 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
             } else if (this.channel.getState(false) == ConnectivityState.SHUTDOWN) {
                 try {
                     if (tppSecretsServiceConfiguration != null && sslContext != null) {
-                        this.channel =
+
+                        ManagedChannel newChannel =
                                 NettyChannelBuilder.forAddress(
                                                 tppSecretsServiceConfiguration.getHost(),
                                                 tppSecretsServiceConfiguration.getPort())
                                         .useTransportSecurity()
                                         .sslContext(sslContext)
                                         .build();
+                        newChannel.notifyWhenStateChanged(
+                                this.channel.getState(false), this::reconnectIfNecessary);
+                        this.channel = newChannel;
+                        internalSecretsServiceStub =
+                                InternalSecretsServiceGrpc.newBlockingStub(channel);
                     }
                 } catch (Exception e) {
                     log.info(
