@@ -206,18 +206,12 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-
-        String consentId =
-                paymentMultiStepRequest
-                        .getStorage()
-                        .get(UkOpenBankingV31Constants.Storage.CONSENT_ID);
-
         switch (paymentMultiStepRequest.getStep()) {
             case SigningStepConstants.STEP_INIT:
                 return init(paymentMultiStepRequest);
 
             case UkOpenBankingV31Constants.Step.AUTHORIZE:
-                return authorized(paymentMultiStepRequest, consentId);
+                return authorized(paymentMultiStepRequest);
 
             case UkOpenBankingV31Constants.Step.SUFFICIENT_FUNDS:
                 return sufficientFunds(paymentMultiStepRequest);
@@ -256,8 +250,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         }
     }
 
-    private PaymentMultiStepResponse authorized(
-            PaymentMultiStepRequest paymentMultiStepRequest, String consentId)
+    private PaymentMultiStepResponse authorized(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
 
         String step =
