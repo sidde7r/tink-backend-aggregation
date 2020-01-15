@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 
