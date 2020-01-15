@@ -153,7 +153,6 @@ public class QsealcSignerHttpClient {
                 throw new IllegalStateException(e);
             }
         }
-        log.info("Leased connections {}", connectionManager.getTotalStats());
         return qsealcSignerHttpClient;
     }
 
