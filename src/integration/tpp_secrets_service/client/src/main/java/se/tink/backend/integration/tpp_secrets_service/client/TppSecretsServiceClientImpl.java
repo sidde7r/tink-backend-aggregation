@@ -322,7 +322,7 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
                     }
                 } catch (Exception e) {
                     log.info(
-                            "Secrets service client reconnect due to ping failed {} in IDLE state",
+                            "Secrets service client reconnect due to ping failed {} in shutdown state",
                             e.getMessage());
                     this.channel.resetConnectBackoff();
                 }
