@@ -39,6 +39,7 @@ public class QsealcSignerHttpClient {
     private static IdleConnectionMonitorThread staleMonitor;
     static CloseableHttpClient httpClient;
     static QsealcSignerHttpClient qsealcSignerHttpClient = new QsealcSignerHttpClient();
+    static PoolingHttpClientConnectionManager connectionManager;
 
     static synchronized QsealcSignerHttpClient create(InternalEidasProxyConfiguration conf) {
         if (httpClient == null) {
@@ -56,7 +57,7 @@ public class QsealcSignerHttpClient {
                 SSLConnectionSocketFactory sslsf =
                         new SSLConnectionSocketFactory(sslContext, new AllowAllHostnameVerifier());
 
-                PoolingHttpClientConnectionManager connectionManager =
+                connectionManager =
                         new PoolingHttpClientConnectionManager(
                                 RegistryBuilder.<ConnectionSocketFactory>create()
                                         .register(
@@ -114,6 +115,7 @@ public class QsealcSignerHttpClient {
                 throw new IllegalStateException(e);
             }
         }
+        log.info("Leased connections {}", connectionManager.getTotalStats());
         return qsealcSignerHttpClient;
     }
 

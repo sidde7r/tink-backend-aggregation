@@ -2,28 +2,6 @@ package se.tink.backend.aggregation.eidassigner;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.io.Files;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.Security;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -46,6 +24,34 @@ import org.yaml.snakeyaml.representer.Representer;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.libraries.simple_http_server.SimpleHTTPServer;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.Security;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QsealcSignerHttpClientTest {
 
@@ -105,6 +111,27 @@ public class QsealcSignerHttpClientTest {
                             new EidasIdentity("", "", ""));
             String result = signer.getJWSToken("".getBytes());
             Assert.assertEquals("signature", result);
+        } catch (Exception e) {
+            Assert.fail("Exception occurred");
+        }
+    }
+
+    @Test
+    public void qsealcSignerHttpClientPerformanceTest() {
+        AtomicBoolean flag = new AtomicBoolean(false);
+        ScheduledExecutorService timer = Executors.newScheduledThreadPool(1);
+        timer.schedule(() -> flag.set(true), 20, TimeUnit.SECONDS);
+        ExecutorService executorService = Executors.newFixedThreadPool(160);
+        try {
+            while (!flag.get()) {
+                executorService.submit(()->{QsealcSigner signer =
+                        QsealcSigner.build(
+                                configuration,
+                                QsealcAlg.EIDAS_JWT_RSA_SHA256,
+                                new EidasIdentity("", "", ""));
+                    String result = signer.getJWSToken("".getBytes());});
+
+            }
         } catch (Exception e) {
             Assert.fail("Exception occurred");
         }
