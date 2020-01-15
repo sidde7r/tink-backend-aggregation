@@ -3,12 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.agent;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +14,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -34,7 +32,7 @@ public class DnbAgentPaymentTest {
 
     @Test
     public void testPayments() throws Exception {
-        builder.build().testGenericPayment(createListMockedDomesticPayment(4));
+        builder.build().testGenericPayment(createListMockedDomesticPayment(1));
     }
 
     @Before
@@ -43,6 +41,8 @@ public class DnbAgentPaymentTest {
         builder =
                 new AgentIntegrationTest.Builder("no", "no-dnb-ob")
                         .addCredentialField("PSU-ID", manager.get(PsuIdArgumentEnum.PSU_ID))
+                        .setFinancialInstitutionId("dnb")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
@@ -53,28 +53,31 @@ public class DnbAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
-            doReturn(Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.DK).toString()).when(creditor).getAccountNumber();
-            doReturn("John Smith").when(creditor).getName();
+            doReturn(Type.NO).when(creditor).getAccountIdentifierType();
+            doReturn("EnterAccountNumberHere").when(creditor).getAccountNumber();
+            doReturn("Lars").when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.NO).toString()).when(debtor).getAccountNumber();
+            doReturn(Type.NO).when(debtor).getAccountIdentifierType();
+            doReturn("EnterAccountNumberHere").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inNOK(new Random().nextInt(50000));
+            ExactCurrencyAmount exactCurrencyAmount =
+                    new ExactCurrencyAmount(new BigDecimal(1), "NOK");
             LocalDate executionDate = LocalDate.now();
-            String currency = "NOK";
 
             listOfMockedPayments.add(
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(exactCurrencyAmount)
                             .withExecutionDate(executionDate)
-                            .withCurrency(currency)
                             .build());
         }
 
         return listOfMockedPayments;
+    }
+
+    private enum Arg {
+        PSU_ID,
     }
 }

@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.DnbAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.DnbAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.configuration.DnbConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.DndPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.DnbPaymentController;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.DnbPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbCreditCardTransactionFetcher;
@@ -139,8 +140,13 @@ public final class DnbAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        DndPaymentExecutor dndPaymentExecutor = new DndPaymentExecutor(apiClient);
+        DnbPaymentExecutor dnbPaymentExecutor = new DnbPaymentExecutor(apiClient, sessionStorage);
 
-        return Optional.of(new PaymentController(dndPaymentExecutor, dndPaymentExecutor));
+        return Optional.of(
+                new DnbPaymentController(
+                        dnbPaymentExecutor,
+                        supplementalInformationHelper,
+                        persistentStorage,
+                        strongAuthenticationState));
     }
 }
