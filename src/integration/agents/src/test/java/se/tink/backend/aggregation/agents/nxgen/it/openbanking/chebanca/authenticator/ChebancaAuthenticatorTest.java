@@ -22,7 +22,6 @@ public class ChebancaAuthenticatorTest {
     private static final String REDIRECT_URL = "http://foo.bar";
     private static final String CERTIFICATE_ID = "certificateId";
     private static final String APP_ID = "appId";
-    private static final String BASE_URL = "https://sandbox-api.chebanca.io";
     private static final String CLIENT_STATE = "clientState";
     private static final int ERROR_RESPONSE_CODE = 404;
 
@@ -60,7 +59,7 @@ public class ChebancaAuthenticatorTest {
         when(client.getLoginUrl(getEndpointURL())).thenReturn(response);
         ChebancaConfiguration config =
                 new ChebancaConfiguration(
-                        CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CERTIFICATE_ID, APP_ID, BASE_URL);
+                        CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CERTIFICATE_ID, APP_ID);
         StrongAuthenticationState state = new StrongAuthenticationState(CLIENT_STATE);
 
         this.authenticator = new ChebancaAuthenticator(client, config, state);
