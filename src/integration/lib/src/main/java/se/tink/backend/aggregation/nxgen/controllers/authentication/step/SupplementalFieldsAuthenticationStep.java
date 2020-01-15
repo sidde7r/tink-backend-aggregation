@@ -13,21 +13,30 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementIn
 
 public class SupplementalFieldsAuthenticationStep implements AuthenticationStep {
 
-    private List<Field> fields = new LinkedList<>();
+    private final List<Field> fields = new LinkedList<>();
     private CallbackProcessorMultiData callbackProcessor;
     private CallbackProcessorMultiDataAndCredentials callbackProcessorCredentials;
+    private final String stepId;
 
     public SupplementalFieldsAuthenticationStep(
-            final CallbackProcessorMultiData callbackProcessor, final Field... fields) {
-        Arrays.stream(fields).forEach(f -> this.fields.add(f));
+            final String stepId,
+            final CallbackProcessorMultiData callbackProcessor,
+            final Field... fields) {
+        this(stepId, fields);
         this.callbackProcessor = callbackProcessor;
     }
 
     public SupplementalFieldsAuthenticationStep(
+            final String stepId,
             final CallbackProcessorMultiDataAndCredentials callbackProcessor,
             final Field... fields) {
-        Arrays.stream(fields).forEach(f -> this.fields.add(f));
+        this(stepId, fields);
         this.callbackProcessorCredentials = callbackProcessor;
+    }
+
+    private SupplementalFieldsAuthenticationStep(final String stepId, final Field... fields) {
+        Arrays.stream(fields).forEach(f -> this.fields.add(f));
+        this.stepId = stepId;
     }
 
     @Override
@@ -48,5 +57,10 @@ public class SupplementalFieldsAuthenticationStep implements AuthenticationStep 
         } else {
             callbackProcessorCredentials.process(request.getUserInputs(), request.getCredentials());
         }
+    }
+
+    @Override
+    public String getIdentifier() {
+        return stepId;
     }
 }
