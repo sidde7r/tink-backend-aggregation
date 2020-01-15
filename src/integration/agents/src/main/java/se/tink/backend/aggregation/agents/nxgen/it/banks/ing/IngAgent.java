@@ -1,0 +1,90 @@
+package se.tink.backend.aggregation.agents.nxgen.it.banks.ing;
+
+import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.login.LoginProcess;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.RegistrationProcess;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ModuleDependenciesRegistration;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ModuleDependenciesRegistry;
+import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.UserInteractionMultiStepsProcess;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+
+public class IngAgent extends SubsequentGenerationAgent<IngAuthenticator>
+        implements ProgressiveAuthAgent {
+
+    private RegistrationProcess registrationProcess;
+
+    private LoginProcess loginProcess;
+    private IngAuthenticator ingAuthenticator;
+
+    public IngAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
+        initializeAgentDependencies(new IngModuleDependenciesRegistration());
+    }
+
+    public IngAgent(
+            ModuleDependenciesRegistration moduleDependenciesRegistration,
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair) {
+        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
+        initializeAgentDependencies(moduleDependenciesRegistration);
+    }
+
+    private void initializeAgentDependencies(
+            ModuleDependenciesRegistration moduleDependenciesRegistration) {
+        configureHttpClient();
+        moduleDependenciesRegistration.registerExternalDependencies(client, sessionStorage);
+        moduleDependenciesRegistration.registerInternalModuleDependencies();
+        ModuleDependenciesRegistry moduleDependenciesRegistry =
+                moduleDependenciesRegistration.createModuleDependenciesRegistry();
+        this.ingAuthenticator = moduleDependenciesRegistry.getBean(IngAuthenticator.class);
+        this.registrationProcess = moduleDependenciesRegistry.getBean(RegistrationProcess.class);
+        this.loginProcess = moduleDependenciesRegistry.getBean(LoginProcess.class);
+        // Agent should have lifecycle methods and below methods should be invoked there
+        registrationProcess.registerSteps();
+        loginProcess.registerSteps();
+    }
+
+    private void configureHttpClient() {
+        client.addMessageReader(new BodyReader());
+    }
+
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    public IngAuthenticator getAuthenticator() {
+        return ingAuthenticator;
+    }
+
+    @Override
+    public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
+            throws Exception {
+        UserInteractionMultiStepsProcess process =
+                determineAuthenticationProcess(userRegistered(request));
+        return process.execute(request);
+    }
+
+    private UserInteractionMultiStepsProcess determineAuthenticationProcess(boolean isRegistered) {
+        return isRegistered ? loginProcess : registrationProcess;
+    }
+
+    private boolean userRegistered(SteppableAuthenticationRequest request) {
+        return false;
+    }
+
+    @Override
+    public boolean login() throws Exception {
+        throw new UnsupportedOperationException("login() not supported");
+    }
+}

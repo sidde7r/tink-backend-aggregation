@@ -104,6 +104,10 @@ public class RSA {
         return encrypt("RSA/ECB/PKCS1Padding", publicKey, data);
     }
 
+    public static byte[] encryptEcbNoPadding(RSAPublicKey publicKey, byte[] data) {
+        return encrypt("RSA/ECB/NoPadding", publicKey, data);
+    }
+
     public static byte[] encryptEcbOaepMgf1(RSAPublicKey publicKey, byte[] data) {
         return encrypt("RSA/ECB/OAEPWithSHA-1AndMGF1Padding", publicKey, data);
     }
