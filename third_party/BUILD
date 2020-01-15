@@ -1902,6 +1902,16 @@ java_library(
 )
 
 java_library(
+    name = "lombok_libs",
+    licenses = ["notice"],
+    visibility = ["//visibility:public"],
+    exports = [
+        "//third_party:lombok_plugin",
+        "@lombok//:org_projectlombok_lombok",
+    ],
+)
+
+java_library(
     name = "standalone_agent_test_libs",
     licenses = ["notice"],
     visibility = ["//visibility:public"],
