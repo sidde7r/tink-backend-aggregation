@@ -68,49 +68,42 @@ public class QsealcSignerHttpClient {
                 connectionManager.setDefaultMaxPerRoute(200);
 
                 try {
-                    new MetricCollector()
-                            .register(
-                                    MetricId.newId(
-                                            "qsealc_signer_http_connection_pool_status_pending"),
-                                    LastUpdateGauge.class,
-                                    new OptionalGaugeSampler(
-                                            () ->
-                                                    Optional.of(
-                                                            connectionManager
-                                                                    .getTotalStats()
-                                                                    .getPending())));
-                    new MetricCollector()
-                            .register(
-                                    MetricId.newId(
-                                            "qsealc_signer_http_connection_pool_status_available"),
-                                    LastUpdateGauge.class,
-                                    new OptionalGaugeSampler(
-                                            () ->
-                                                    Optional.of(
-                                                            connectionManager
-                                                                    .getTotalStats()
-                                                                    .getAvailable())));
-                    new MetricCollector()
-                            .register(
-                                    MetricId.newId(
-                                            "qsealc_signer_http_connection_pool_status_leased"),
-                                    LastUpdateGauge.class,
-                                    new OptionalGaugeSampler(
-                                            () ->
-                                                    Optional.of(
-                                                            connectionManager
-                                                                    .getTotalStats()
-                                                                    .getLeased())));
-                    new MetricCollector()
-                            .register(
-                                    MetricId.newId("qsealc_signer_http_connection_pool_status_max"),
-                                    LastUpdateGauge.class,
-                                    new OptionalGaugeSampler(
-                                            () ->
-                                                    Optional.of(
-                                                            connectionManager
-                                                                    .getTotalStats()
-                                                                    .getMax())));
+                    MetricCollector metricCollector = new MetricCollector();
+                    metricCollector.register(
+                            MetricId.newId("qsealc_signer_http_connection_pool_status_pending"),
+                            LastUpdateGauge.class,
+                            new OptionalGaugeSampler(
+                                    () ->
+                                            Optional.of(
+                                                    connectionManager
+                                                            .getTotalStats()
+                                                            .getPending())));
+
+                    metricCollector.register(
+                            MetricId.newId("qsealc_signer_http_connection_pool_status_available"),
+                            LastUpdateGauge.class,
+                            new OptionalGaugeSampler(
+                                    () ->
+                                            Optional.of(
+                                                    connectionManager
+                                                            .getTotalStats()
+                                                            .getAvailable())));
+
+                    metricCollector.register(
+                            MetricId.newId("qsealc_signer_http_connection_pool_status_leased"),
+                            LastUpdateGauge.class,
+                            new OptionalGaugeSampler(
+                                    () ->
+                                            Optional.of(
+                                                    connectionManager
+                                                            .getTotalStats()
+                                                            .getLeased())));
+                    metricCollector.register(
+                            MetricId.newId("qsealc_signer_http_connection_pool_status_max"),
+                            LastUpdateGauge.class,
+                            new OptionalGaugeSampler(
+                                    () -> Optional.of(connectionManager.getTotalStats().getMax())));
+                    metricCollector.register();
                 } catch (Exception e) {
                     log.info("Failed to register metric collector for qsealc signer httpclient");
                 }
