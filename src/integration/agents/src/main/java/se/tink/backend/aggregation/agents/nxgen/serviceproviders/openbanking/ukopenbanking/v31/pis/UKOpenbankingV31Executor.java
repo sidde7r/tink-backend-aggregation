@@ -260,7 +260,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                         .map(p -> p.getPayment().getStatus())
                         .filter(s -> s == PaymentStatus.PENDING)
                         .map(s -> UkOpenBankingV31Constants.Step.SUFFICIENT_FUNDS)
-                        .orElseGet(() -> UkOpenBankingV31Constants.Step.AUTHORIZE);
+                        .orElse(UkOpenBankingV31Constants.Step.AUTHORIZE);
 
         return new PaymentMultiStepResponse(paymentMultiStepRequest, step, new ArrayList<>());
     }
