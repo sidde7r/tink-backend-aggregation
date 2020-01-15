@@ -55,6 +55,7 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
     private final TppSecretsServiceConfiguration tppSecretsServiceConfiguration;
     private ManagedChannel channel;
     private final boolean enabled;
+    private final SslContext sslContext;
 
     @Inject
     public TppSecretsServiceClientImpl(
@@ -64,13 +65,12 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
 
         this.tppSecretsServiceConfiguration = tppSecretsServiceConfiguration;
         this.enabled = tppSecretsServiceConfiguration.isEnabled();
+        sslContext = buildSslContext();
     }
 
     @Override
     public void start() {
         if (enabled) {
-            SslContext sslContext = buildSslContext();
-
             this.channel =
                     NettyChannelBuilder.forAddress(
                                     tppSecretsServiceConfiguration.getHost(),
@@ -303,6 +303,23 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
             } else if (this.channel.getState(false) == ConnectivityState.IDLE) {
                 try {
                     this.internalSecretsServiceStub.ping(PingMessage.newBuilder().build());
+                } catch (Exception e) {
+                    log.info(
+                            "Secrets service client reconnect due to ping failed {} in IDLE state",
+                            e.getMessage());
+                    this.channel.resetConnectBackoff();
+                }
+            } else if (this.channel.getState(false) == ConnectivityState.SHUTDOWN) {
+                try {
+                    if (tppSecretsServiceConfiguration != null && sslContext != null) {
+                        this.channel =
+                                NettyChannelBuilder.forAddress(
+                                                tppSecretsServiceConfiguration.getHost(),
+                                                tppSecretsServiceConfiguration.getPort())
+                                        .useTransportSecurity()
+                                        .sslContext(sslContext)
+                                        .build();
+                    }
                 } catch (Exception e) {
                     log.info(
                             "Secrets service client reconnect due to ping failed {} in IDLE state",
