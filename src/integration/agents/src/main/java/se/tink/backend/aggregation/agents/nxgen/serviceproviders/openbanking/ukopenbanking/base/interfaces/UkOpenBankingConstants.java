@@ -76,8 +76,8 @@ public abstract class UkOpenBankingConstants {
         }
 
         public static class UrlParameterKeys {
-            public static final String consentId = "consentId";
-            public static final String paymentId = "paymentId";
+            public static final String CONSENT_ID = "consentId";
+            public static final String PAYMENT_ID = "paymentId";
         }
     }
 
