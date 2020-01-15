@@ -55,6 +55,7 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
     private final TppSecretsServiceConfiguration tppSecretsServiceConfiguration;
     private ManagedChannel channel;
     private final boolean enabled;
+    private final SslContext sslContext;
 
     @Inject
     public TppSecretsServiceClientImpl(
@@ -64,13 +65,12 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
 
         this.tppSecretsServiceConfiguration = tppSecretsServiceConfiguration;
         this.enabled = tppSecretsServiceConfiguration.isEnabled();
+        sslContext = buildSslContext();
     }
 
     @Override
     public void start() {
         if (enabled) {
-            SslContext sslContext = buildSslContext();
-
             this.channel =
                     NettyChannelBuilder.forAddress(
                                     tppSecretsServiceConfiguration.getHost(),
@@ -306,6 +306,29 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
                 } catch (Exception e) {
                     log.info(
                             "Secrets service client reconnect due to ping failed {} in IDLE state",
+                            e.getMessage());
+                    this.channel.resetConnectBackoff();
+                }
+            } else if (this.channel.getState(false) == ConnectivityState.SHUTDOWN) {
+                try {
+                    if (tppSecretsServiceConfiguration != null && sslContext != null) {
+
+                        ManagedChannel newChannel =
+                                NettyChannelBuilder.forAddress(
+                                                tppSecretsServiceConfiguration.getHost(),
+                                                tppSecretsServiceConfiguration.getPort())
+                                        .useTransportSecurity()
+                                        .sslContext(sslContext)
+                                        .build();
+                        newChannel.notifyWhenStateChanged(
+                                this.channel.getState(false), this::reconnectIfNecessary);
+                        this.channel = newChannel;
+                        internalSecretsServiceStub =
+                                InternalSecretsServiceGrpc.newBlockingStub(channel);
+                    }
+                } catch (Exception e) {
+                    log.info(
+                            "Secrets service client reconnect due to ping failed {} in shutdown state",
                             e.getMessage());
                     this.channel.resetConnectBackoff();
                 }
