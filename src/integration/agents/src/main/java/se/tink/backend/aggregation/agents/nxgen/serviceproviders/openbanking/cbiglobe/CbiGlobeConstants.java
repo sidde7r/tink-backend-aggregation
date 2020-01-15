@@ -110,10 +110,12 @@ public final class CbiGlobeConstants {
         public static final String CONSENT_ID = "consent-id";
         public static final String PSU_ID_TYPE = "psu-id-type";
         public static final String PSU_IP_ADDRESS = "psu-ip-address";
+        public static final String OPERATION_NAME = "operation-name";
     }
 
     public static class HeaderValues {
         public static final String DEFAULT_PSU_IP_ADDRESS = "0.0.0.0";
+        public static final String UPDATE_PSU_DATA = "updatePsuData";
     }
 
     public static class FormValues {
@@ -124,10 +126,7 @@ public final class CbiGlobeConstants {
         public static final String FREQUENCY_PER_DAY_ONE = "1";
         public static final String FALSE = "false";
         public static final String FREQUENCY_PER_DAY = "4";
-    }
-
-    public static class LogTags {
-        public static final String UNKNOWN_STATE = "unknown state";
+        public static final int CONSENT_VALID_PERIOD_DAYS = 89;
     }
 
     public static class IdTags {

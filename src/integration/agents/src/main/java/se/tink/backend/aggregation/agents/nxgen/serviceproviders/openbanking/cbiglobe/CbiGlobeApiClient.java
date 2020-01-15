@@ -16,10 +16,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
@@ -120,25 +123,40 @@ public class CbiGlobeApiClient {
                                         MessageCodes.NO_ACCESS_TOKEN_IN_STORAGE.name()));
     }
 
-    public GetTokenResponse getToken(String authorizationHeader) {
+    public GetTokenResponse getToken(String clientId, String clientSecret) {
         return createRequest(Urls.TOKEN)
-                .header(HeaderKeys.AUTHORIZATION, authorizationHeader)
+                .addBasicAuth(clientId, clientSecret)
                 .queryParam(QueryKeys.GRANT_TYPE, QueryValues.CLIENT_CREDENTIALS)
                 .queryParam(QueryKeys.SCOPE, QueryValues.PRODUCTION)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(GetTokenResponse.class);
     }
 
-    public RequestBuilder createConsentRequest(String redirectUrl) {
+    public ConsentResponse createConsent(
+            String state, ConsentType consentType, ConsentRequest consentRequest) {
+        RequestBuilder request = createConsentRequest(state, consentType);
+        return request.post(ConsentResponse.class, consentRequest);
+    }
+
+    protected RequestBuilder createConsentRequest(String state, ConsentType consentType) {
+        String redirectUrl = createRedirectUrl(state, consentType);
         return createRequestInSession(Urls.CONSENTS)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
                 .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
     }
 
-    public ConsentResponse createConsent(ConsentRequest consentRequest, String redirectUrl) {
-        RequestBuilder request = createConsentRequest(redirectUrl);
-        return request.post(ConsentResponse.class, consentRequest);
+    public String createRedirectUrl(String state, ConsentType consentType) {
+        return new URL(configuration.getRedirectUrl())
+                .queryParam(QueryKeys.STATE, state)
+                .queryParam(QueryKeys.CODE, consentType.getCode())
+                .get();
+    }
+
+    public ConsentResponse updateConsent(String consentId, UpdateConsentRequest body) {
+        return createRequestInSession(Urls.CONSENTS.concat("/" + consentId))
+                .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA)
+                .put(ConsentResponse.class, body);
     }
 
     public GetAccountsResponse getAccounts() {
@@ -199,25 +217,18 @@ public class CbiGlobeApiClient {
         return getTokenFromStorage().isValid();
     }
 
-    public ConsentResponse getConsentStatus(String consentType) throws SessionException {
+    public ConsentStatus getConsentStatus(String consentType) throws SessionException {
         return createRequestInSession(
                         Urls.CONSENTS_STATUS.parameter(
                                 IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)))
-                .get(ConsentResponse.class);
+                .get(ConsentResponse.class)
+                .getConsentStatus();
     }
 
     public String getConsentIdFromStorage(String consentType) throws SessionException {
         return persistentStorage
                 .get(consentType, String.class)
-                .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
-    }
-
-    public void removeAccountsFromStorage() {
-        persistentStorage.remove(StorageKeys.ACCOUNTS);
-    }
-
-    public void removeConsentFromPersistentStorage() {
-        persistentStorage.remove(StorageKeys.CONSENT_ID);
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
