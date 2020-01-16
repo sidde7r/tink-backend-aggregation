@@ -31,6 +31,11 @@ public interface ProviderConfigurationService {
             @HeaderParam(Headers.CLUSTER_ENVIRONMENT) String clusterEnvironment,
             @PathParam("market") String market);
 
+    @Path("/all/list")
+    @GET
+    @TeamOwnership(Team.INTEGRATION)
+    List<ProviderConfiguration> listAll();
+
     @Path("/{providerName}")
     @GET
     @TeamOwnership(Team.INTEGRATION)
