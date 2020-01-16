@@ -13,6 +13,13 @@ find_aws_log_link_query = {
             },
             {
                 "match_phrase": {
+                    "doc.mdc.credentialsId": {
+                        "query": "<credentialsId>"
+                    }
+                }
+            },
+            {
+                "match_phrase": {
                     "doc.mdc.providerName": {
                         "query": "<providerName>"
                     }

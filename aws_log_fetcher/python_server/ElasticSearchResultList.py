@@ -9,7 +9,7 @@ class ElasticSearchResultList:
         self.uniqueKeys = set()
 
         for element in self.data:
-            key = element.requestId + "_" + element.providerName
+            key = element.requestId + "_" + element.credentialsId + "_" + element.providerName
             self.uniqueKeys.add(key)
 
     def get_unique_keys(self):

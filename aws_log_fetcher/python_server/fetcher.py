@@ -52,7 +52,7 @@ async def run(cookie,
     # First determine the set of requestIDs for the result of the query
     result = elasticsearch_manager.make_query(query)
     unique_keys = result.get_unique_keys()
-    await send_message(ws, "Fetched unique requestID+providerName pairs. There are " + str(
+    await send_message(ws, "Fetched unique requestID+credentialsID+providerName pairs. There are " + str(
         len(unique_keys)) + " unique pair", payload)
 
     # Get the timestamps for the lower and upper limit of time range used in the query
@@ -71,7 +71,8 @@ async def run(cookie,
     for index, key in enumerate(unique_keys):
 
         request_id = key.split("_")[0]
-        provider_name = key.split("_")[1]
+        credentials_id = key.split("_")[1]
+        provider_name = key.split("_")[2]
 
         # For each <requestID,providerName> pair, make a query to ElasticSearch to fetch all logs belonging to this
         # pair. Note that we are using a bigger time range to ensure that we will fetch all logs
@@ -80,14 +81,15 @@ async def run(cookie,
         logs_for_session = elasticsearch_manager.make_query(query=json.dumps(find_aws_log_link_query),
                                                             replacements=[
                                                                 ("<requestId>", request_id),
+                                                                ("<credentialsId>", credentials_id),
                                                                 ("<providerName>", provider_name),
                                                                 ("<gte>", gte_date),
                                                                 ("<lte>", lte_date)
                                                             ])
 
-        await send_message(ws, "Fetched logs for the flow with requestID = " + request_id
-                           + " and provider name = " + provider_name + " (flow " + str(index + 1) + "/" + str(
-            len(unique_keys)) + ")", payload)
+        await send_message(ws, "Fetched log for the flow with requestID = " + request_id
+                           + ", credentialsID = " + credentials_id + ", provider name = " + provider_name +
+                           " (flow " + str(index + 1) + "/" + str(len(unique_keys)) + ")", payload)
 
         # Now we have all logs for the session identified by request_id. Find AWS HTTP debug log for it
         # TODO: If log is older than 7 days we need to ignore them since we do not keep those logs
