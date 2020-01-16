@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.Chebanca
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.detail.AuthorizationURLBuilder;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.detail.TokenResponseConverter;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration.ChebancaConfiguration;
@@ -58,11 +59,10 @@ public class ChebancaAuthenticator implements OAuth2Authenticator {
                         configuration.getRedirectUrl());
 
         HttpResponse response = apiClient.createToken(tokenRequest);
-
         HttpResponseChecker.checkIfSuccessfulResponse(
                 response, HttpServletResponse.SC_OK, GET_TOKEN_FAILED);
 
-        return response.getBody(TokenResponse.class).toTinkToken();
+        return TokenResponseConverter.toOAuthToken(response.getBody(TokenResponse.class));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ChebancaAuthenticator implements OAuth2Authenticator {
         HttpResponseChecker.checkIfSuccessfulResponse(
                 response, HttpServletResponse.SC_OK, GET_TOKEN_FAILED);
 
-        return response.getBody(TokenResponse.class).toTinkToken();
+        return TokenResponseConverter.toOAuthToken(response.getBody(TokenResponse.class));
     }
 
     @Override
