@@ -305,6 +305,12 @@ maven_jar(
     sha1 = "479c1e06db31c432330183f5cae684163f186146"
 )
 
+maven_jar(
+    name = "com_google_guava_failureaccess",
+    artifact = "com.google.guava:failureaccess:1.0.1",
+    sha1 = "1dcf1de382a0bf95a3d8b0849546c88bac1292c9"
+)
+
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
