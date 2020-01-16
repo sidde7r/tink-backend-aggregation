@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.constants.EnabledMarkets;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -61,8 +60,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
             try {
 
-                if (!Strings.isNullOrEmpty(market)
-                        && EnabledMarkets.ENABLED_MARKETS.contains(market.toUpperCase())) {
+                if (!Strings.isNullOrEmpty(market)) {
 
                     context.getCachedAccountsWithFeatures()
                             .forEach(

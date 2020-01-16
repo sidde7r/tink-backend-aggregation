@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.constants.EnabledMarkets;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -144,8 +143,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     }
 
     private void sendIdentityToAgentDataAvailabilityTracker() {
-        if (Strings.isNullOrEmpty(market)
-                || !EnabledMarkets.ENABLED_MARKETS.contains(market.toUpperCase())) {
+        if (Strings.isNullOrEmpty(market)) {
             return;
         }
 
