@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.PaymentRequestValues;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.enums.DnbPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -17,15 +18,19 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.rpc.Payment;
 
-public class DndPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+public class DnbPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private final DnbApiClient apiClient;
-    private ArrayList<PaymentResponse> createdPaymentList;
+    private final SessionStorage sessionStorage;
 
-    public DndPaymentExecutor(DnbApiClient apiClient) {
+    public DnbPaymentExecutor(DnbApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
-        createdPaymentList = new ArrayList<>();
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -43,20 +48,16 @@ public class DndPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         .withDebtor(debtor)
                         .withAmount(amount)
                         .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
-                        .withAdditionalInformation(
-                                PaymentRequestValues.CREDITOR_AGENT,
-                                PaymentRequestValues.REGULATORY_REPORTING_CODE,
-                                PaymentRequestValues.REGULATORY_REPORTING_INFORMATION)
                         .build();
 
-        PaymentResponse paymentResponse =
-                apiClient
-                        .createPayment(createPaymentRequest, dnbPaymentType)
-                        .toTinkPaymentResponse(creditor, debtor, amount, dnbPaymentType);
+        CreatePaymentResponse createPaymentResponse =
+                apiClient.createPayment(createPaymentRequest, dnbPaymentType);
 
-        createdPaymentList.add(paymentResponse);
+        sessionStorage.put(
+                createPaymentResponse.getPaymentId(), createPaymentResponse.getLinks().getHref());
 
-        return paymentResponse;
+        return createPaymentResponse.toTinkPaymentResponse(
+                creditor, debtor, amount, dnbPaymentType);
     }
 
     @Override
@@ -70,8 +71,11 @@ public class DndPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
-        throw new NotImplementedException(
-                "sign not yet implemented for " + this.getClass().getName());
+        final Payment payment = paymentMultiStepRequest.getPayment();
+        payment.setStatus(PaymentStatus.PAID);
+
+        return new PaymentMultiStepResponse(
+                payment, SigningStepConstants.STEP_FINALIZE, new ArrayList<>());
     }
 
     @Override
@@ -89,6 +93,9 @@ public class DndPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        return new PaymentListResponse(createdPaymentList);
+        return new PaymentListResponse(
+                paymentListRequest.getPaymentRequestList().stream()
+                        .map(req -> new PaymentResponse(req.getPayment()))
+                        .collect(Collectors.toList()));
     }
 }

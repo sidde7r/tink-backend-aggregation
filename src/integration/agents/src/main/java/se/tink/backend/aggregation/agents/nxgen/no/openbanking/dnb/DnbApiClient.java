@@ -137,7 +137,7 @@ public class DnbApiClient {
 
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, DnbPaymentType dnbPaymentType) {
-        return createRequestWithoutRedirectHeader(
+        return createRequest(
                         new URL(DnbConstants.BASE_URL.concat(Urls.PAYMENTS))
                                 .parameter(IdTags.PAYMENT_TYPE, dnbPaymentType.toString()))
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)

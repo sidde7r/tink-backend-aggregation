@@ -9,12 +9,23 @@ import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public enum DnbPaymentType {
-    NorwegianCrossBorderCreditTransfers(
+    SEPA_CREDIT_TRANSFERS("sepa-credit-transfers", PaymentType.SEPA),
+    NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS(
+            "norwegian-domestic-credit-transfers", PaymentType.DOMESTIC),
+    NORWEGIAN_CROSS_BORDER_CREDIT_TRANSFERS(
             "norwegian-cross-border-credit-transfers", PaymentType.INTERNATIONAL),
-    NorwegianDomesticCreditTransfers("norwegian-domestic-credit-transfers", PaymentType.DOMESTIC),
-    NorwegianDomesticPaymentToSelf("norwegian-domestic-payment-to-self", PaymentType.DOMESTIC),
-    Undefined("Undefined", PaymentType.UNDEFINED);
+    UNDEFINED("Undefined", PaymentType.UNDEFINED);
 
+    // We map the payee and recipment account type identifier
+    // The transfer cannot be made between different types (ex. IBAN, NO)
+    private static final GenericTypeMapper<DnbPaymentType, TypePair>
+            accountIdentifiersToPaymentTypeMapper =
+                    GenericTypeMapper.<DnbPaymentType, TypePair>genericBuilder()
+                            .put(
+                                    NORWEGIAN_DOMESTIC_CREDIT_TRANSFERS,
+                                    new TypePair(Type.NO, Type.NO))
+                            .put(SEPA_CREDIT_TRANSFERS, new TypePair(Type.IBAN, Type.IBAN))
+                            .build();
     private String text;
     private PaymentType paymentType;
 
@@ -22,16 +33,6 @@ public enum DnbPaymentType {
         this.text = text;
         this.paymentType = paymentType;
     }
-
-    private static final GenericTypeMapper<DnbPaymentType, TypePair>
-            accountIdentifiersToPaymentTypeMapper =
-                    GenericTypeMapper.<DnbPaymentType, TypePair>genericBuilder()
-                            .put(NorwegianDomesticCreditTransfers, new TypePair(Type.NO, Type.NO))
-                            .put(
-                                    NorwegianCrossBorderCreditTransfers,
-                                    new TypePair(Type.IBAN, Type.IBAN),
-                                    new TypePair(Type.NO, Type.IBAN))
-                            .build();
 
     public static DnbPaymentType getDnbPaymentType(PaymentRequest paymentRequest) {
         Pair<Type, Type> accountIdentifiersKey =

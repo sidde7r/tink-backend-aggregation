@@ -78,11 +78,9 @@ public class CreatePaymentRequest {
                 String creditorAgent,
                 String regulatoryReportingCode,
                 String regulatoryReportingInformation) {
-            if (dnbPaymentType.equals(DnbPaymentType.NorwegianCrossBorderCreditTransfers)) {
-                this.creditorAgent = creditorAgent;
-                this.regulatoryReportingCode = regulatoryReportingCode;
-                this.regulatoryReportingInformation = regulatoryReportingInformation;
-            }
+            this.creditorAgent = creditorAgent;
+            this.regulatoryReportingCode = regulatoryReportingCode;
+            this.regulatoryReportingInformation = regulatoryReportingInformation;
 
             return this;
         }

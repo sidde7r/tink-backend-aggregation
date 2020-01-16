@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.enums.DnbPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.enums.DnbPaymentType;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -13,13 +14,16 @@ import se.tink.libraries.payment.rpc.Payment;
 @JsonObject
 public class CreatePaymentResponse {
     private String transactionStatus;
+
+    @JsonProperty("paymentId")
     private String paymentId;
 
     @JsonProperty("_links")
-    private LinksEntity links;
+    private Href links;
 
     private String psuMessage;
 
+    @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(
             AccountEntity creditor,
             AccountEntity debtor,
@@ -40,5 +44,15 @@ public class CreatePaymentResponse {
         Payment tinkPayment = buildingPaymentResponse.build();
 
         return new PaymentResponse(tinkPayment);
+    }
+
+    @JsonIgnore
+    public Href getLinks() {
+        return links;
+    }
+
+    @JsonIgnore
+    public String getPaymentId() {
+        return paymentId;
     }
 }
