@@ -258,11 +258,6 @@ public class NordeaSEConstants {
                 "Invalid destination account number, it is too long.";
     }
 
-    public static class TransactionalAccounts {
-        public static final String PERSONAL_ACCOUNT = "PERSONKONTO";
-        public static final String NORDEA_CLEARING_NUMBER = "3300";
-    }
-
     public static class ProductName {
         public static final String INVESTMENT = "ISK";
         public static final String BUSINESS = "FÖRETAG";

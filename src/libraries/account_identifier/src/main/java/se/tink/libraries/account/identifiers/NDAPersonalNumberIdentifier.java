@@ -5,6 +5,7 @@ import se.tink.libraries.social.security.SocialSecurityNumber;
 
 public class NDAPersonalNumberIdentifier extends AccountIdentifier {
 
+    public static final int LENGTH = 10;
     private static final String CLEARING_NUMBER = "3300";
     private String accountNumber;
     private final boolean isValid;

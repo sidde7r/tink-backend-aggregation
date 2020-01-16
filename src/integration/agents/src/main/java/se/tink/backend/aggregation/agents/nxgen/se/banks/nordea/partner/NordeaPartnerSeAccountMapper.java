@@ -44,8 +44,8 @@ public class NordeaPartnerSeAccountMapper implements NordeaPartnerAccountMapper 
 
     private SwedishIdentifier getAccountIdentifier(AccountEntity account) {
         final String formattedAccountNumber = formatAccountNumber(account.getAccountId());
-        if (NordeaPartnerSeConstants.PERSONAL_ACCOUNT.equalsIgnoreCase(account.getProductName())) {
-            AccountIdentifier ssnIdentifier =
+        if (formattedAccountNumber.length() == NDAPersonalNumberIdentifier.LENGTH) {
+            final AccountIdentifier ssnIdentifier =
                     AccountIdentifier.create(Type.SE_NDA_SSN, formattedAccountNumber);
             if (ssnIdentifier.isValid()) {
                 return ssnIdentifier.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier();
