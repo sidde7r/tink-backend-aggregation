@@ -23,19 +23,19 @@ public interface UkOpenBankingAisConfig {
 
     URL getApiBaseURL();
 
-    public URL getWellKnownURL();
+    URL getWellKnownURL();
 
-    public URL getIdentityDataURL();
+    URL getIdentityDataURL();
 
-    public URL getAppToAppURL();
+    URL getAppToAppURL();
 
-    public List<String> getAdditionalPermissions();
+    List<String> getAdditionalPermissions();
 
     void setIdentityData(IdentityDataEntity identityData);
 
-    public IdentityDataEntity getIdentityData();
+    IdentityDataEntity getIdentityData();
 
     void setHolderName(String holderName);
 
-    public String getHolderName();
+    String getHolderName();
 }
