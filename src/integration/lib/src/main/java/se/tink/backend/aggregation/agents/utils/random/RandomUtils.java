@@ -6,6 +6,7 @@ import java.util.Random;
 import org.apache.commons.codec.binary.Hex;
 
 public class RandomUtils {
+
     private static final Random random = new SecureRandom();
     private static final Base64.Encoder encoder = Base64.getUrlEncoder();
 
@@ -27,5 +28,12 @@ public class RandomUtils {
 
     public static int randomInt(int bound) {
         return random.nextInt(bound);
+    }
+
+    public static int generateRandomNumberInRange(int minimum, int maximum) {
+        if (minimum >= maximum) {
+            throw new IllegalArgumentException("Maximum must be greater than minimum");
+        }
+        return new Random().nextInt((maximum - minimum) + 1) + minimum;
     }
 }
