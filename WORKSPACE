@@ -299,6 +299,12 @@ maven_jar(
     sha1 = "ed28ded51a8b1c6b112568def5f4b455e6809019"
 )
 
+maven_jar(
+    name = "javax_annotation_javax_annotation_api",
+    artifact = "javax.annotation:javax.annotation-api:1.2",
+    sha1 = "479c1e06db31c432330183f5cae684163f186146"
+)
+
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
