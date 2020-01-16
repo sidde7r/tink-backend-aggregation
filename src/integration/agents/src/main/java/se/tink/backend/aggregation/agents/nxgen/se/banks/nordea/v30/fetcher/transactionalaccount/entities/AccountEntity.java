@@ -118,15 +118,15 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     public AccountIdentifier getAccountIdentifier() {
-        if (NordeaSEConstants.TransactionalAccounts.PERSONAL_ACCOUNT.equalsIgnoreCase(
-                productName)) {
-            AccountIdentifier ssnIdentifier =
-                    AccountIdentifier.create(Type.SE_NDA_SSN, formatAccountNumber());
+        final String formattedAccountNumber = formatAccountNumber();
+        if (formattedAccountNumber.length() == NDAPersonalNumberIdentifier.LENGTH) {
+            final AccountIdentifier ssnIdentifier =
+                    AccountIdentifier.create(Type.SE_NDA_SSN, formattedAccountNumber);
             if (ssnIdentifier.isValid()) {
                 return ssnIdentifier;
             }
         }
-        return AccountIdentifier.create(AccountIdentifier.Type.SE, formatAccountNumber());
+        return AccountIdentifier.create(AccountIdentifier.Type.SE, formattedAccountNumber);
     }
 
     @JsonIgnore
