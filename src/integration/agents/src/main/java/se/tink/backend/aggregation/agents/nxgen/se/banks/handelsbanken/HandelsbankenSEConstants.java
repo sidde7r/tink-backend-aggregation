@@ -53,6 +53,12 @@ public class HandelsbankenSEConstants {
         public static final String DONE = "AUTHENTICATED";
     }
 
+    public static final class BankIdErrorMessages {
+        public static final String FAILED_TRY_AGAIN =
+                "Legitimeringen misslyckades. Var god försök igen.";
+        public static final String CANCELLED = "Åtgärden avbruten.";
+    }
+
     public static final class BankIdUserMessages {
         public static final LocalizableKey ACTIVATION_NEEDED =
                 new LocalizableKey("You need to activate your BankID in the Handelsbanken app.");

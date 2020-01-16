@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.BankIdErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -39,11 +40,26 @@ public class AuthenticateResponse extends BaseResponse {
                 case HandelsbankenSEConstants.BankIdAuthentication.TIMEOUT:
                     return BankIdStatus.TIMEOUT;
                 case HandelsbankenSEConstants.BankIdAuthentication.FAILED_UNKNOWN:
-                    return BankIdStatus.FAILED_UNKNOWN;
+                    return errorToBankIdStatus(getMessage());
             }
         }
 
         return BankIdStatus.WAITING;
+    }
+
+    private BankIdStatus errorToBankIdStatus(String message) {
+        if (Strings.isNullOrEmpty(message)) {
+            return BankIdStatus.FAILED_UNKNOWN;
+        }
+
+        if (BankIdErrorMessages.FAILED_TRY_AGAIN.equalsIgnoreCase(message)) {
+            return BankIdStatus.TIMEOUT;
+        } else if (BankIdErrorMessages.CANCELLED.equalsIgnoreCase(message)) {
+            return BankIdStatus.CANCELLED;
+        }
+
+        LOGGER.info("Status FAILED_UNKNOWN, message: " + message);
+        return BankIdStatus.FAILED_UNKNOWN;
     }
 
     public URL toAuthorize() {
