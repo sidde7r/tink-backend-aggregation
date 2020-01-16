@@ -284,6 +284,7 @@ public class IngConstants {
         public static final String LOGIN_RESPONSE_NOT_FOUND = "Could not fetch login response.";
         public static final String TRANSFER_ACCOUNTS_NOT_FOUND =
                 "Could not fetch users' accounts when for transfer.";
+        public static final String PERSISTED_OTP_NULL = "Could not find stored OTP.";
     }
 
     static class HttpClient {

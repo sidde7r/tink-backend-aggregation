@@ -108,7 +108,7 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
         return locationHeader.toLowerCase().contains(IngConstants.Headers.ERROR_CODE_WRONG_OTP);
     }
 
-    private HttpResponse trustBuilderLoginWithOtp(String authUrl) {
+    private HttpResponse trustBuilderLoginWithOtp(String authUrl) throws SessionException {
         int otp = calcOtp();
         return this.apiClient.trustBuilderLogin(
                 authUrl,
@@ -119,8 +119,13 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
                 this.persistentStorage.get(IngConstants.Storage.PSN));
     }
 
-    private int calcOtp() {
+    private int calcOtp() throws SessionException {
         String storageOtp = this.persistentStorage.get(IngConstants.Storage.OTP_COUNTER);
+        if (Strings.isNullOrEmpty(storageOtp)) {
+            LOGGER.warn(String.format("%s", IngConstants.LogMessage.PERSISTED_OTP_NULL));
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
         int otpCounter = Integer.parseInt(storageOtp);
         byte[] otpKey =
                 EncodingUtils.decodeHexString(
