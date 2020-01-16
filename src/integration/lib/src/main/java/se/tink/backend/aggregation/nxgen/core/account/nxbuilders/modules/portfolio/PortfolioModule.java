@@ -144,8 +144,6 @@ public final class PortfolioModule {
         public PortfolioBuildStep withInstruments(
                 @Nonnull List<InstrumentModule> instrumentModules) {
             Preconditions.checkNotNull(instrumentModules, "Instruments List must not be null.");
-            Preconditions.checkArgument(
-                    instrumentModules.size() > 0, "Instruments must not be empty.");
             instrumentModules.forEach(this::addInstrument);
             return this;
         }
