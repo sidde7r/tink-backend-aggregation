@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.a
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @JsonObject
 public class TokenResponse {
@@ -58,14 +60,17 @@ public class TokenResponse {
         return Long.parseLong(refreshTokenExpiresIn);
     }
 
-    public OAuth2Token toOauthToken() {
+    public OAuth2Token toOauthToken(PersistentStorage persistentStorage) {
 
         logger.info("Got new refresh token " + refreshToken);
-        return OAuth2Token.create(
-                getTokenType(),
-                getAccessToken(),
-                getRefreshToken(),
-                getExpiresIn(),
-                getRefreshTokenExpiresIn());
+        OAuth2Token token =
+                OAuth2Token.create(
+                        getTokenType(),
+                        getAccessToken(),
+                        getRefreshToken(),
+                        getExpiresIn(),
+                        getRefreshTokenExpiresIn());
+        persistentStorage.put(StorageKey.OAUTH_TOKEN, token);
+        return token;
     }
 }
