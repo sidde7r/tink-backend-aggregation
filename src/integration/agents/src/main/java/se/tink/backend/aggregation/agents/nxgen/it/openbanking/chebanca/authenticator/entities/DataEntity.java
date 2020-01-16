@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @JsonObject
 public class DataEntity {
@@ -25,8 +23,27 @@ public class DataEntity {
     @JsonProperty("token_type")
     private String tokenType;
 
-    @JsonIgnore
-    public OAuth2Token toTinkToken() {
-        return OAuth2Token.create(tokenType, accessToken, refreshToken, expiresIn, rtExpiresIn);
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public long getExpiresIn() {
+        return expiresIn;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public long getRtExpiresIn() {
+        return rtExpiresIn;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public String getTokenType() {
+        return tokenType;
     }
 }
