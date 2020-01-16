@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authe
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import se.tink.backend.agents.rpc.Field;
@@ -14,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ScaMethodEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 
 public class ScaMethodFieldAuthenticationStep implements AuthenticationStep {
@@ -28,11 +28,11 @@ public class ScaMethodFieldAuthenticationStep implements AuthenticationStep {
     }
 
     @Override
-    public Optional<SupplementInformationRequester> execute(AuthenticationRequest request)
+    public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         if (request.getUserInputs() == null || request.getUserInputs().isEmpty()) {
             List<ScaMethodEntity> methods = userState.getScaMethods();
-            return Optional.of(
+            return AuthenticationStepResponse.requestForSupplementInformation(
                     new SupplementInformationRequester.Builder()
                             .withFields(Collections.singletonList(buildScaMethodsField(methods)))
                             .build());
@@ -40,7 +40,7 @@ public class ScaMethodFieldAuthenticationStep implements AuthenticationStep {
 
         saveScaMethod(request.getUserInputs().get(CHOSEN_SCA_METHOD));
 
-        return Optional.empty();
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     @Override

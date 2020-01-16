@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.rpc.CheckTimeRespon
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.rpc.RegisterDevice2Response;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.rpc.RegisterDevice3Response;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.OtpStep;
@@ -56,7 +57,7 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps() {
+    public List<? extends AuthenticationStep> authenticationSteps() {
         return manualAuthenticationSteps;
     }
 
@@ -89,10 +90,11 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
         sessionStorage.put(SESSION_STORAGE_KEY_USER_PASSWORD, password);
     }
 
-    void registerDevice() throws LoginException {
+    AuthenticationStepResponse registerDevice() throws LoginException {
         if (!OK_RESPONSE_CODE.equals(apiClient.registerDevice().getExitCode())) {
             throw LoginError.REGISTER_DEVICE_ERROR.exception();
         }
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     void processOtp(String otp) throws LoginException {
@@ -102,7 +104,7 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
         }
     }
 
-    void registerDevice3() {
+    AuthenticationStepResponse registerDevice3() {
         String deviceId = getDeviceId();
         RegisterDevice3Response registerDevice3Response =
                 apiClient.registerDevice3(
@@ -117,9 +119,10 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
         sessionStorage.put(SESSION_STORAGE_KEY_TOTP_MASK, TotpSeedXmlHelper.getTotpMask(seedXml));
         sessionStorage.put(
                 SESSION_STORAGE_KEY_TOTP_DIGITS, TotpSeedXmlHelper.getTotpDigits(seedXml));
+        return AuthenticationStepResponse.executeNextStep();
     }
 
-    void confirmDevice() {
+    AuthenticationStepResponse confirmDevice() {
         int digits = Integer.parseInt(sessionStorage.get(SESSION_STORAGE_KEY_TOTP_DIGITS));
         String mask = sessionStorage.get(SESSION_STORAGE_KEY_TOTP_MASK);
         String password = sessionStorage.get(SESSION_STORAGE_KEY_USER_PASSWORD);
@@ -131,6 +134,7 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
                         - Integer.parseInt(response.getPayload().getDifferenceInSeconds());
         String totp = TotpCalculator.calculateTOTP(digits, mask, password, currentTime);
         apiClient.confirmDevice(deviceId, totp);
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     String getDeviceId() {

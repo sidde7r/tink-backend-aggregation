@@ -15,16 +15,17 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppRequestParamsProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 
-public class SibsThirdPartyAuthenticationStep {
+public class SibsThirdPartyAppRequestParamsProvider implements ThirdPartyAppRequestParamsProvider {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(SibsThirdPartyAuthenticationStep.class);
+            LoggerFactory.getLogger(SibsThirdPartyAppRequestParamsProvider.class);
 
     private static final long SLEEP_TIME = 10L;
     private static final int RETRY_ATTEMPTS = 10;
+    static final String STEP_ID = "sibsThirdPartyAuthenticationStep";
 
     private final Retryer<ConsentStatus> consentStatusRetryer;
 
@@ -32,7 +33,7 @@ public class SibsThirdPartyAuthenticationStep {
     private final ConsentManager consentManager;
     private final SibsAuthenticator authenticator;
 
-    private SibsThirdPartyAuthenticationStep(
+    SibsThirdPartyAppRequestParamsProvider(
             final ConsentManager consentManager,
             final SibsAuthenticator sibsAuthenticator,
             final StrongAuthenticationState strongAuthenticationState) {
@@ -50,30 +51,7 @@ public class SibsThirdPartyAuthenticationStep {
                 .build();
     }
 
-    static ThirdPartyAppAuthenticationStep create(
-            final ConsentManager consentManager,
-            SibsAuthenticator sibsAuthenticator,
-            StrongAuthenticationState strongAuthenticationState) {
-        SibsThirdPartyAuthenticationStep factory =
-                new SibsThirdPartyAuthenticationStep(
-                        consentManager, sibsAuthenticator, strongAuthenticationState);
-        return new ThirdPartyAppAuthenticationStep(
-                factory.getAppPayload(),
-                factory.getWaitRequest(),
-                factory::processThirdPartyCallback);
-    }
-
-    private ThirdPartyAppAuthenticationPayload getAppPayload() {
-        return ThirdPartyAppAuthenticationPayload.of(consentManager.create());
-    }
-
-    private SupplementalWaitRequest getWaitRequest() {
-        return new SupplementalWaitRequest(
-                strongAuthenticationState.getSupplementalKey(), SLEEP_TIME, TimeUnit.MINUTES);
-    }
-
-    private void processThirdPartyCallback(Map<String, String> callbackData)
-            throws AuthorizationException {
+    void processThirdPartyCallback(Map<String, String> callbackData) throws AuthorizationException {
         boolean authFailed = false;
         try {
             ConsentStatus consentStatus = consentStatusRetryer.call(consentManager::getStatus);
@@ -93,5 +71,16 @@ public class SibsThirdPartyAuthenticationStep {
                     AuthorizationError.UNAUTHORIZED,
                     "Authorization failed, consents status is not accepted.");
         }
+    }
+
+    @Override
+    public ThirdPartyAppAuthenticationPayload getPayload() {
+        return ThirdPartyAppAuthenticationPayload.of(consentManager.create());
+    }
+
+    @Override
+    public SupplementalWaitRequest getWaitingConfiguration() {
+        return new SupplementalWaitRequest(
+                strongAuthenticationState.getSupplementalKey(), SLEEP_TIME, TimeUnit.MINUTES);
     }
 }

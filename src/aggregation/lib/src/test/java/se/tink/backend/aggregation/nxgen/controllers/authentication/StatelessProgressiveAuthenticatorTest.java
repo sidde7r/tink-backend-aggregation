@@ -1,129 +1,158 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class StatelessProgressiveAuthenticatorTest {
 
+    private Credentials credentials;
+
+    @Before
+    public void init() {
+        credentials = Mockito.mock(Credentials.class);
+    }
+
     @Test
-    public void
-            processAuthenticationShouldRespondWithFinalResponseWhenContainsOnlyOneAutomaticStep()
-                    throws AuthenticationException, AuthorizationException {
+    public void shouldIterateOverAuthenticationSteps()
+            throws AuthenticationException, AuthorizationException {
+        // given
+        AuthenticationStep step1 =
+                mockAuthenticationStep("step1", AuthenticationStepResponse.executeNextStep(), null);
+        AuthenticationStep step2 =
+                mockAuthenticationStep("step2", AuthenticationStepResponse.executeNextStep(), null);
+        StatelessProgressiveAuthenticator objectUnderTest = createObjectUnderTest(step1, step2);
+        // when
+        SteppableAuthenticationResponse result =
+                objectUnderTest.processAuthentication(
+                        SteppableAuthenticationRequest.initialRequest(credentials));
+        // then
+        Assert.assertFalse(result.getStepIdentifier().isPresent());
+        Mockito.verify(step1).execute(Mockito.any());
+        Mockito.verify(step2).execute(Mockito.any());
+    }
+
+    @Test
+    public void shouldExecuteStepWithRequestedIdFromPreviousStep()
+            throws AuthenticationException, AuthorizationException {
+        // given
+        AuthenticationStep step1 =
+                mockAuthenticationStep(
+                        "step1", AuthenticationStepResponse.executeStepWithId("step3"), null);
+        AuthenticationStep stepToOmit =
+                mockAuthenticationStep("step2", AuthenticationStepResponse.executeNextStep(), null);
+        AuthenticationStep step3 =
+                mockAuthenticationStep("step3", AuthenticationStepResponse.executeNextStep(), null);
+        StatelessProgressiveAuthenticator objectUnderTest =
+                createObjectUnderTest(step1, stepToOmit, step3);
+        // when
+        SteppableAuthenticationResponse result =
+                objectUnderTest.processAuthentication(
+                        SteppableAuthenticationRequest.initialRequest(credentials));
+        // then
+        Assert.assertFalse(result.getStepIdentifier().isPresent());
+        Mockito.verify(step1).execute(Mockito.any());
+        Mockito.verify(stepToOmit, Mockito.never()).execute(Mockito.any());
+        Mockito.verify(step3).execute(Mockito.any());
+    }
+
+    @Test
+    public void shouldSucceededAuthenticationOnDemand()
+            throws AuthenticationException, AuthorizationException {
+        // given
+        AuthenticationStep step1 =
+                mockAuthenticationStep(
+                        "step1", AuthenticationStepResponse.authenticationSucceeded(), null);
+        AuthenticationStep stepToOmit =
+                mockAuthenticationStep("step2", AuthenticationStepResponse.executeNextStep(), null);
+        StatelessProgressiveAuthenticator objectUnderTest =
+                createObjectUnderTest(step1, stepToOmit);
+        // when
+        SteppableAuthenticationResponse result =
+                objectUnderTest.processAuthentication(
+                        SteppableAuthenticationRequest.initialRequest(credentials));
+        // then
+        Assert.assertFalse(result.getStepIdentifier().isPresent());
+        Mockito.verify(step1).execute(Mockito.any());
+        Mockito.verify(stepToOmit, Mockito.never()).execute(Mockito.any());
+    }
+
+    @Test
+    public void shouldRequestForSupplementInformation()
+            throws AuthenticationException, AuthorizationException {
+        // given
+        SupplementInformationRequester supplementInformationRequester =
+                new SupplementInformationRequester.Builder()
+                        .withFields(Lists.newArrayList(Mockito.mock(Field.class)))
+                        .build();
+        AuthenticationStep step1 =
+                mockAuthenticationStep(
+                        "step1",
+                        AuthenticationStepResponse.requestForSupplementInformation(
+                                supplementInformationRequester),
+                        null);
+        AuthenticationStep step2 =
+                mockAuthenticationStep("step2", AuthenticationStepResponse.executeNextStep(), null);
+        StatelessProgressiveAuthenticator objectUnderTest = createObjectUnderTest(step1, step2);
+        // when
+        SteppableAuthenticationResponse result =
+                objectUnderTest.processAuthentication(
+                        SteppableAuthenticationRequest.initialRequest(credentials));
+        // then
+        Assert.assertTrue(result.getStepIdentifier().isPresent());
+        Assert.assertEquals("step1", result.getStepIdentifier().get());
+        Mockito.verify(step1).execute(Mockito.any());
+        Mockito.verify(step2, Mockito.never()).execute(Mockito.any());
+    }
+
+    @Test
+    public void shouldExecuteStepWithRequestedIdInInput()
+            throws AuthenticationException, AuthorizationException {
         // given
         SteppableAuthenticationRequest request =
-                SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
-        AuthenticationStep automaticStep =
-                mockAuthenticationStep("stepId", request.getPayload(), null);
-        Iterable<AuthenticationStep> steps = Lists.newArrayList(automaticStep);
-        StatelessProgressiveAuthenticator objectUnderTest = createAuthenticator(steps);
+                SteppableAuthenticationRequest.subsequentRequest(
+                        "step2", new AuthenticationRequest(credentials));
+        AuthenticationStep step1 =
+                mockAuthenticationStep("step1", AuthenticationStepResponse.executeNextStep(), null);
+        AuthenticationStep step2 =
+                mockAuthenticationStep("step2", AuthenticationStepResponse.executeNextStep(), null);
+        StatelessProgressiveAuthenticator objectUnderTest = createObjectUnderTest(step1, step2);
         // when
         SteppableAuthenticationResponse result = objectUnderTest.processAuthentication(request);
         // then
-        Assert.assertFalse(result.getStepIdentifier().isPresent());
-        Assert.assertNull(result.getSupplementInformationRequester());
+        Mockito.verify(step1, Mockito.never()).execute(Mockito.any());
+        Mockito.verify(step2).execute(Mockito.any());
     }
 
     private AuthenticationStep mockAuthenticationStep(
-            String stepId, AuthenticationRequest request, SupplementInformationRequester response)
+            String stepId, AuthenticationStepResponse response, AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         AuthenticationStep step = Mockito.mock(AuthenticationStep.class);
-        Mockito.when(step.execute(request)).thenReturn(Optional.ofNullable(response));
+        Mockito.when(step.execute(request != null ? request : Mockito.any())).thenReturn(response);
         Mockito.when(step.getIdentifier()).thenReturn(stepId);
         return step;
     }
 
-    @Test
-    public void
-            processAuthenticationShouldRespondWithIntermediateResponseWhenContainsOnlyOneManualStep()
-                    throws AuthenticationException, AuthorizationException {
-        // given
-        final String stepId = "stepId";
-        SteppableAuthenticationRequest firstRequest =
-                SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
-
-        SupplementInformationRequester supplementInformationRequester =
-                SupplementInformationRequester.empty();
-        AuthenticationStep manualStep =
-                mockAuthenticationStep(
-                        stepId, firstRequest.getPayload(), supplementInformationRequester);
-        Iterable<AuthenticationStep> steps = Lists.newArrayList(manualStep);
-        StatelessProgressiveAuthenticator objectUnderTest = createAuthenticator(steps);
-        // when
-        SteppableAuthenticationResponse result =
-                objectUnderTest.processAuthentication(firstRequest);
-        // then
-        Assert.assertTrue(result.getStepIdentifier().isPresent());
-        Assert.assertEquals(stepId, result.getStepIdentifier().get());
-        Assert.assertNotNull(result.getSupplementInformationRequester());
-    }
-
-    @Test
-    public void processAuthenticationShouldExecuteStepWithRequestedIdentifier()
-            throws AuthenticationException, AuthorizationException {
-        // given
-        final String stepIdToExecute = "stepIdToExecute";
-        SteppableAuthenticationRequest request =
-                SteppableAuthenticationRequest.subsequentRequest(
-                        stepIdToExecute,
-                        new AuthenticationRequest(Mockito.mock(Credentials.class))
-                                .withCallbackData(ImmutableMap.of("key", "value")));
-        AuthenticationStep stepToOmit = Mockito.mock(AuthenticationStep.class);
-        Mockito.when(stepToOmit.execute(Mockito.any()))
-                .thenReturn(Optional.of(SupplementInformationRequester.empty()));
-        Mockito.when(stepToOmit.getIdentifier()).thenReturn("stepToOmit");
-        AuthenticationStep stepToExecute =
-                mockAuthenticationStep(stepIdToExecute, request.getPayload(), null);
-        Iterable<AuthenticationStep> steps = Lists.newArrayList(stepToOmit, stepToExecute);
-        StatelessProgressiveAuthenticator objectUnderTest = createAuthenticator(steps);
-        // when
-        SteppableAuthenticationResponse result = objectUnderTest.processAuthentication(request);
-        // then
-        Assert.assertFalse(result.getStepIdentifier().isPresent());
-        Assert.assertNull(result.getSupplementInformationRequester());
-        Assert.assertTrue(request.getPayload().getUserInputs().isEmpty());
-        Assert.assertTrue(request.getPayload().getCallbackData().isEmpty());
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void processAuthenticationShouldThrowExceptionWhenStepDoesNotExist()
-            throws AuthenticationException, AuthorizationException {
-        // given
-        SteppableAuthenticationRequest request =
-                SteppableAuthenticationRequest.subsequentRequest(
-                        "wrongStepId",
-                        new AuthenticationRequest(Mockito.mock(Credentials.class))
-                                .withCallbackData(ImmutableMap.of("key", "value")));
-        AuthenticationStep step = Mockito.mock(AuthenticationStep.class);
-        Mockito.when(step.getIdentifier()).thenReturn("stepId");
-
-        Iterable<AuthenticationStep> steps = Lists.newArrayList(step);
-        StatelessProgressiveAuthenticator objectUnderTest = createAuthenticator(steps);
-        // when
-        objectUnderTest.processAuthentication(request);
-        // then
-        // IllegalStateException
-    }
-
-    private StatelessProgressiveAuthenticator createAuthenticator(
-            Iterable<? extends AuthenticationStep> authSteps) {
+    private StatelessProgressiveAuthenticator createObjectUnderTest(
+            AuthenticationStep... authSteps) {
         return new StatelessProgressiveAuthenticator() {
             @Override
-            public boolean isManualAuthentication(CredentialsRequest request) {
-                return true;
+            public List<? extends AuthenticationStep> authenticationSteps() {
+                return Arrays.asList(authSteps);
             }
 
             @Override
-            public Iterable<? extends AuthenticationStep> authenticationSteps()
-                    throws AuthenticationException, AuthorizationException {
-                return authSteps;
+            public boolean isManualAuthentication(CredentialsRequest request) {
+                return false;
             }
         };
     }

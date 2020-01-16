@@ -2,16 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -19,7 +19,7 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
 
     private static final int CONSENTS_LIFETIME_IN_DAYS = 90;
     private final SibsUserState userState;
-    private final List<AuthenticationStep> manualAuthSteps = new LinkedList<>();
+    private final List<AuthenticationStep> authSteps = new LinkedList<>();
     private final StrongAuthenticationState strongAuthenticationState;
     private final ConsentManager consentManager;
     private final Credentials credentials;
@@ -36,25 +36,34 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps() {
-        if (isAutoAuthenticationPossible()) {
-            return Collections.emptyList();
+    public List<? extends AuthenticationStep> authenticationSteps() {
+        if (authSteps.isEmpty()) {
+            SibsThirdPartyAppRequestParamsProvider sibsThirdPartyAppRequestParamsProvider =
+                    new SibsThirdPartyAppRequestParamsProvider(
+                            consentManager, this, strongAuthenticationState);
+            authSteps.add(
+                    new AutomaticAuthenticationStep(
+                            () -> processAutoAuthentication(), "autoAuthenticationStep"));
+            authSteps.add(
+                    new ThirdPartyAppAuthenticationStep(
+                            SibsThirdPartyAppRequestParamsProvider.STEP_ID,
+                            sibsThirdPartyAppRequestParamsProvider,
+                            sibsThirdPartyAppRequestParamsProvider::processThirdPartyCallback));
         }
-        return getManualAuthenticationSteps();
-    }
-
-    private List<AuthenticationStep> getManualAuthenticationSteps() {
-        if (manualAuthSteps.isEmpty()) {
-            manualAuthSteps.add(
-                    SibsThirdPartyAuthenticationStep.create(
-                            consentManager, this, strongAuthenticationState));
-        }
-        return manualAuthSteps;
+        return authSteps;
     }
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
         return !isAutoAuthenticationPossible();
+    }
+
+    private AuthenticationStepResponse processAutoAuthentication() {
+        if (isAutoAuthenticationPossible()) {
+            return AuthenticationStepResponse.authenticationSucceeded();
+        } else {
+            return AuthenticationStepResponse.executeNextStep();
+        }
     }
 
     private boolean isAutoAuthenticationPossible() {

@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.AuthenticationResponse;
@@ -22,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.Request
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.OtpStep;
@@ -73,8 +73,7 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps()
-            throws AuthenticationException, AuthorizationException {
+    public List<? extends AuthenticationStep> authenticationSteps() {
         if (authContext.isDeviceActivationFinished()) {
             manualAuthenticationFlag = false;
             return autoAuthenticationSteps;
@@ -113,8 +112,9 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
         authContext.setMobileChallengeRequestedToken(response.getMobileChallengeRequestedToken());
     }
 
-    private void processModuleVersionGetting() throws LoginException {
+    private AuthenticationStepResponse processModuleVersionGetting() throws LoginException {
         authContext.setModuleVersion(callLoginRequest(new ModuleVersionRequest(authContext)));
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private void handleResponse(final AuthenticationResponse response, final LoginError loginError)
@@ -124,7 +124,7 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
         }
     }
 
-    public void processPinAuthentication() throws AuthenticationException {
+    public AuthenticationStepResponse processPinAuthentication() throws AuthenticationException {
         PinAuthenticationRequest request = new PinAuthenticationRequest(entityManager);
         PinAuthenticationResponse response = callLoginRequest(request);
         authContext.setSessionCSRFToken(response.getCsrfToken());
@@ -134,6 +134,7 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
             authContext.clearAuthData();
             throw ex;
         }
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     @Override

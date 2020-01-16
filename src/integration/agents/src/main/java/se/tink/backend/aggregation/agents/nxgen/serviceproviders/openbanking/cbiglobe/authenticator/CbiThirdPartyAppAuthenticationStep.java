@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
 
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -10,10 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.*;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 
@@ -27,10 +23,10 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
     private final StrongAuthenticationState strongAuthenticationState;
 
     @Override
-    public Optional<SupplementInformationRequester> execute(AuthenticationRequest request)
+    public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         if (request.getCallbackData() == null || request.getCallbackData().isEmpty()) {
-            return Optional.of(
+            return AuthenticationStepResponse.requestForSupplementInformation(
                     new SupplementInformationRequester.Builder()
                             .withThirdPartyAppAuthenticationPayload(
                                     thirdPartyAppRequestParamsProvider.getPayload())
@@ -42,7 +38,7 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
                 request.getCallbackData().getOrDefault(QueryKeys.CODE, consentType.getCode());
 
         if (!codeValue.equalsIgnoreCase(consentType.getCode())) {
-            return Optional.of(
+            return AuthenticationStepResponse.requestForSupplementInformation(
                     new SupplementInformationRequester.Builder()
                             .withSupplementalWaitRequest(getWaitingConfiguration())
                             .build());
@@ -50,7 +46,7 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
 
         processThirdPartyCallback();
 
-        return Optional.empty();
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private SupplementalWaitRequest getWaitingConfiguration() {

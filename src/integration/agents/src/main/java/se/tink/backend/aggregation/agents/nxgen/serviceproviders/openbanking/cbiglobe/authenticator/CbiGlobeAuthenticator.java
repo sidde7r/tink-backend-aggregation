@@ -56,7 +56,7 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     @Override
-    public Iterable<? extends AuthenticationStep> authenticationSteps() {
+    public List<? extends AuthenticationStep> authenticationSteps() {
         if (isAutoAuthenticationPossible()) {
             return Collections.emptyList();
         }
