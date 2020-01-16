@@ -55,7 +55,7 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
     private final TppSecretsServiceConfiguration tppSecretsServiceConfiguration;
     private ManagedChannel channel;
     private final boolean enabled;
-    private final SslContext sslContext;
+    private SslContext sslContext;
 
     @Inject
     public TppSecretsServiceClientImpl(
@@ -65,7 +65,9 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
 
         this.tppSecretsServiceConfiguration = tppSecretsServiceConfiguration;
         this.enabled = tppSecretsServiceConfiguration.isEnabled();
-        sslContext = buildSslContext();
+        if (this.enabled) {
+            sslContext = buildSslContext();
+        }
     }
 
     @Override
