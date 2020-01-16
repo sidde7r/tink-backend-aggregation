@@ -22,7 +22,7 @@ public class TransactionsResponseTest {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Test
-    public void canFetchMore() {
+    public void canFetchMoreAlwaysReturnsEmptyOptional() {
         // given
         TransactionsResponse transactionsResponse = new TransactionsResponse();
 
