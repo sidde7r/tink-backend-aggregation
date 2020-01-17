@@ -14,10 +14,10 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class UnicreditApiClient extends UnicreditBaseApiClient {
 
     UnicreditApiClient(
-        TinkHttpClient client,
-        PersistentStorage persistentStorage,
-        Credentials credentials,
-        boolean manualRequest) {
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            Credentials credentials,
+            boolean manualRequest) {
         super(client, persistentStorage, credentials, manualRequest);
     }
 
