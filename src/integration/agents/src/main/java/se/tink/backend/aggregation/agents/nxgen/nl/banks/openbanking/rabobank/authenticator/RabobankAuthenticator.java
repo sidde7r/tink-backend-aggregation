@@ -77,7 +77,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
         final String consentId = getConsentId(tokenResponse.getScope());
         persistentStorage.put(StorageKey.CONSENT_ID, consentId);
 
-        return tokenResponse.toOauthToken();
+        return tokenResponse.toOauthToken(persistentStorage);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         .build();
 
         try {
-            return apiClient.refreshAccessToken(request).toOauthToken();
+            return apiClient.refreshAccessToken(request).toOauthToken(persistentStorage);
         } catch (final HttpResponseException exception) {
             throw SessionError.SESSION_EXPIRED.exception(exception);
         }
