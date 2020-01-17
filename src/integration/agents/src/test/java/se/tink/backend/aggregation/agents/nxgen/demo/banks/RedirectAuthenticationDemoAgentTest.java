@@ -8,9 +8,9 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class RedirectAuthenticationDemoAgentTest {
-    private final String SOURCE_IDENTIFIER = "";
-    private final String DESTINATION_IDENTIFIER = "";
-    private final String SOURCE_ACCOUNT_NAME = "";
+    private final String SOURCE_IDENTIFIER = "1234567891234";
+    private final String DESTINATION_IDENTIFIER = "1434567891234";
+    private final String SOURCE_ACCOUNT_NAME = "ha";
 
     @Test
     public void testTransfer() throws Exception {
@@ -40,6 +40,6 @@ public class RedirectAuthenticationDemoAgentTest {
                 .setFinancialInstitutionId("dummy")
                 .setAppId("dummy")
                 .build()
-                .testBankTransfer(transfer);
+                .testBankTransferUK(transfer, false);
     }
 }
