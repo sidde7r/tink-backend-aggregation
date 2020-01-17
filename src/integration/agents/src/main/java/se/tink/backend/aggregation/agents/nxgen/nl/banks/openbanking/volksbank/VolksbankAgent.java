@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.a
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -78,17 +80,7 @@ public class VolksbankAgent
 
         client.setEidasProxy(eidasProxyConfiguration);
 
-        // Prevent read timeouts
-        client.setTimeout(HttpClient.READ_TIMEOUT_MILLISECONDS);
-        client.addFilter(
-                new TimeoutRetryFilter(
-                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-
-        // This line is needed to trigger the MetricFilter to be added as early as possible. It
-        // circumvents a bug which I think works like this: If we get a read timeout on the
-        // very first request, we will get a NullPointerException in MetricFilter::handle due to
-        // MetricFilter::next being null.
-        client.getInternalClient();
+        configureHttpClient(client);
 
         transactionalAccountRefreshController =
                 new TransactionalAccountRefreshController(
@@ -128,6 +120,17 @@ public class VolksbankAgent
                         oAuth2AuthenticationController);
 
         progressiveAuthenticator = autoAuthenticationController;
+    }
+
+    private void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        HttpClient.MAX_RETRIES,
+                        RandomUtils.generateRandomNumberInRange(
+                                HttpClient.RETRY_SLEEP_MILLISECONDS_MINIMUM,
+                                HttpClient.RETRY_SLEEP_MILLISECONDS_MAXIMUM)));
+        // Prevent read timeouts
+        client.getInternalClient();
     }
 
     @Override
