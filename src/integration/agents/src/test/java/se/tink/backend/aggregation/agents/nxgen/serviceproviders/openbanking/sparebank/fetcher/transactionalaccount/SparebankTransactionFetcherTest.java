@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -51,15 +52,15 @@ public class SparebankTransactionFetcherTest {
     @Test
     public void shouldRethrowExceptionWhenExceptionDoesNotMentionScaRedirect() {
         when(httpResponse.getBody(any())).thenReturn("123456");
-        Exception exception = new HttpResponseException("", null, httpResponse);
+        String message = "A example message to test rethrow";
+        Exception exception = new HttpResponseException(message, null, httpResponse);
         when(apiClient.fetchTransactions(anyString(), any(Date.class), any(Date.class)))
                 .thenThrow(exception);
 
-        try {
-            transactionFetcher.getTransactionsFor(account, anyDate, anyDate);
-            fail();
-        } catch (Exception e) {
-            assertEquals(e, exception);
-        }
+        Throwable throwable =
+                catchThrowable(
+                        () -> transactionFetcher.getTransactionsFor(account, anyDate, anyDate));
+
+        assertThat(throwable).isEqualTo(exception);
     }
 }

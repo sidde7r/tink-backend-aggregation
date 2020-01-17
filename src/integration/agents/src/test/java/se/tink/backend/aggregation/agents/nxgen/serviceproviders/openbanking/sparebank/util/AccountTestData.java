@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.data;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.util;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;

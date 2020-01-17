@@ -58,7 +58,10 @@ public class AccountEntity {
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .orElseThrow(() -> new IllegalStateException("No amount found"));
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        SparebankConstants.ErrorMessages.NO_AMOUNT_FOUND));
     }
 
     private String getUniqueIdentifier() {

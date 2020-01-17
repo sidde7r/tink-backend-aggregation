@@ -5,6 +5,7 @@ import static io.vavr.Predicates.not;
 import com.google.common.base.Strings;
 import io.vavr.control.Try;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -22,7 +23,10 @@ public class SparebankAuthenticator {
                 .recoverWith(HttpResponseException.class, this::maybeGetRedirectUri)
                 .filter(not(Strings::isNullOrEmpty))
                 .map(URL::new)
-                .getOrElseThrow(() -> new IllegalStateException("SCA redirect missing"));
+                .getOrElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        SparebankConstants.ErrorMessages.SCA_REDIRECT_MISSING));
     }
 
     private Try<String> maybeGetRedirectUri(HttpResponseException e) {

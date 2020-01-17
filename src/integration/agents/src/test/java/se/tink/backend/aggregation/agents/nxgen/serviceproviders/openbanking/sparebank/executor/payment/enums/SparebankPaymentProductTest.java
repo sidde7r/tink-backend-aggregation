@@ -1,21 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.libraries.payment.enums.PaymentType;
 
 @RunWith(JUnitParamsRunner.class)
 public class SparebankPaymentProductTest {
 
-    @Rule public ExpectedException thrown = ExpectedException.none();
+    private static final String NOT_A_STATUS_STRING = "something_that_is_not_a_payment_status";
 
     private Object[] stringToSparebank() {
         return new Object[] {
@@ -60,9 +61,14 @@ public class SparebankPaymentProductTest {
 
     @Test
     public void shouldThrowWhenNoMatchingSparebankPaymentProductFound() {
-        thrown.expect(IllegalStateException.class);
-
-        SparebankPaymentProduct.fromString("something_that_is_not_a_payment_status");
+        Throwable throwable =
+                catchThrowable(() -> SparebankPaymentProduct.fromString(NOT_A_STATUS_STRING));
+        assertThat(throwable)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(
+                        String.format(
+                                SparebankConstants.ErrorMessages.CANT_MAP_TO_PAYMENT_PRODUCT_ERROR,
+                                NOT_A_STATUS_STRING));
     }
 
     @Test
@@ -78,7 +84,17 @@ public class SparebankPaymentProductTest {
     @Parameters(method = "unsupportedTinkPaymentProducts")
     public void shouldThrowWhenMapToTinkPaymentProductCalledWithUnsupportedTinkPaymentProduct(
             PaymentType searchStatus) {
-        thrown.expect(IllegalStateException.class);
-        SparebankPaymentProduct.mapTinkPaymentTypeToSparebankPaymentProduct(searchStatus);
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                SparebankPaymentProduct.mapTinkPaymentTypeToSparebankPaymentProduct(
+                                        searchStatus));
+        assertThat(throwable)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(
+                        String.format(
+                                SparebankConstants.ErrorMessages
+                                        .MAPING_TO_TINK_PAYMENT_STATUS_ERROR,
+                                searchStatus));
     }
 }

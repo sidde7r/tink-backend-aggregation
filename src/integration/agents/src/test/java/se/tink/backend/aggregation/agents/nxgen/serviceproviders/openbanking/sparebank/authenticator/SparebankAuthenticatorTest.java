@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -7,10 +9,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -18,8 +19,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SparebankAuthenticatorTest {
-
-    @Rule public ExpectedException thrown = ExpectedException.none();
 
     private SparebankApiClient apiClient;
     private SparebankAuthenticator authenticator;
@@ -38,9 +37,10 @@ public class SparebankAuthenticatorTest {
                 new HttpResponseException("", null, httpResponse);
         when(apiClient.getScaRedirect(anyString())).thenThrow(httpResponseException);
 
-        thrown.expect(IllegalStateException.class);
-
-        authenticator.buildAuthorizeUrl("");
+        Throwable throwable = catchThrowable(() -> authenticator.buildAuthorizeUrl(""));
+        assertThat(throwable)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(SparebankConstants.ErrorMessages.SCA_REDIRECT_MISSING);
     }
 
     @Test

@@ -78,8 +78,7 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
         AmountEntity amount = AmountEntity.of(paymentRequest);
 
         if (paymentProduct == SparebankPaymentProduct.CROSS_BORDER_CREDIT_TRANSFER) {
-            throw new IllegalStateException(
-                    "Cross border credit transfers are still not supported");
+            throw new IllegalStateException(ErrorMessages.INTERNATIONAL_TRANFER_NOT_SUPPORTED);
         }
 
         String requestedExecutionDay =
@@ -112,8 +111,7 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
         if (paymentProduct == SparebankPaymentProduct.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER) {
             // The bank doesn't support fetching domestic payment. For domestic payment only
             // creating payment initiation and signing payment aka making a payment is possible
-            throw new IllegalStateException(
-                    "Fetching domestic payments not supported by this bank");
+            throw new IllegalStateException(ErrorMessages.DOMESTIC_FETCHING_NOT_SUPPORTED);
         }
 
         return apiClient

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -10,11 +12,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import junitparams.JUnitParamsRunner;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums.SparebankPaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest;
@@ -35,7 +36,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
 public class SparebankPaymentExecutorTest {
-    @Rule public ExpectedException thrown = ExpectedException.none();
 
     private static final String CURRENCY = "NOK";
     private static final String PAYMENT_UNIQUE_ID = "1234asdf";
@@ -130,18 +130,27 @@ public class SparebankPaymentExecutorTest {
 
     @Test
     public void shouldThrowWhenTryingToScheduleInernationalPayment() {
-        thrown.expect(IllegalStateException.class);
-
-        paymentExecutor.create(
-                getPaymentRequestForCreatingPayment(ACCOUNT_IBAN_FIRST, ACCOUNT_NORWAY_SECOND));
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                paymentExecutor.create(
+                                        getPaymentRequestForCreatingPayment(
+                                                ACCOUNT_IBAN_FIRST, ACCOUNT_NORWAY_SECOND)));
+        assertThat(throwable)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(SparebankConstants.ErrorMessages.INTERNATIONAL_TRANFER_NOT_SUPPORTED);
     }
 
     @Test
     public void shouldThrowWhenTryingToFetchDomesticPayment() {
-        thrown.expect(IllegalStateException.class);
-
-        PaymentRequest paymentRequest = getPaymentRequestForFetchingPayment(PaymentType.DOMESTIC);
-        paymentExecutor.fetch(paymentRequest);
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                paymentExecutor.fetch(
+                                        getPaymentRequestForFetchingPayment(PaymentType.DOMESTIC)));
+        assertThat(throwable)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(SparebankConstants.ErrorMessages.DOMESTIC_FETCHING_NOT_SUPPORTED);
     }
 
     @Test
