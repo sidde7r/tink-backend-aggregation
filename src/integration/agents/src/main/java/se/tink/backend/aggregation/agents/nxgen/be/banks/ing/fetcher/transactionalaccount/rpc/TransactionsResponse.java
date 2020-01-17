@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.TransactionsResponseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -66,6 +67,8 @@ public class TransactionsResponse implements PaginatorResponse {
                 return false;
             } else if (IngConstants.ErrorCodes.STARTING_DATE_ENTERED_IS_WRONG.equalsIgnoreCase(
                     errorCode.get())) {
+                return false;
+            } else if (ErrorCodes.ACCOUNT_NOT_VALID.equalsIgnoreCase(errorCode.get())) {
                 return false;
             } else {
                 throw new IllegalStateException(
