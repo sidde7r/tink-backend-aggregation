@@ -66,7 +66,7 @@ public class FundHoldingsUser {
     public InvestmentAccount toAccount(CustodyAccount custodyAccount) {
         return InvestmentAccount.nxBuilder()
                 .withPortfolios(toPortfolioModule(custodyAccount))
-                .withZeroCashBalance(custodyAccount.getTinkAmount().getCurrency())
+                .withZeroCashBalance(getCurrency(custodyAccount))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getIdentifier())
@@ -78,6 +78,10 @@ public class FundHoldingsUser {
                         AccountPayloadKeys.FUND_ACCOUNT_NUMBER,
                         SerializationUtils.serializeToString(getFundAccountMapping()))
                 .build();
+    }
+
+    private String getCurrency(CustodyAccount custodyAccount) {
+        return Optional.ofNullable(custodyAccount.getTinkAmount().getCurrency()).orElse("");
     }
 
     private PortfolioModule toPortfolioModule(CustodyAccount custodyAccount) {
