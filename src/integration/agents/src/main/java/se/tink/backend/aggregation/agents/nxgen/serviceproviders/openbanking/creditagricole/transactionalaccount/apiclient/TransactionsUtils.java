@@ -1,65 +1,65 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.apache.http.HttpStatus;
+import javax.ws.rs.core.MultivaluedMap;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 class TransactionsUtils {
 
-    static final LocalDate BIG_BANG_DATE = LocalDate.of(1970, 1, 1);
-    private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern(
-                    CreditAgricoleBaseConstants.DateFormat.PAGINATION_DATE_FORMAT);
+    private static final SimpleDateFormat DATE_FORMATTER =
+            new SimpleDateFormat(CreditAgricoleBaseConstants.DateFormat.API_DATE_FORMAT);
 
-    static GetTransactionsResponse get(
+    HttpRequest constructFetchTransactionRequest(
             final String id,
-            final URL next,
+            final Date dateFrom,
+            final Date dateTo,
             final PersistentStorage persistentStorage,
-            final TinkHttpClient client,
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration) {
 
-        final String authToken = "Bearer " + StorageUtils.getTokenFromStorage(persistentStorage);
+        URL requestUrl = constructURL(id, dateFrom, dateTo, creditAgricoleConfiguration);
+        HttpRequestImpl request = new HttpRequestImpl(HttpMethod.GET, requestUrl);
+        addHeaders(persistentStorage, creditAgricoleConfiguration, request);
 
-        final HttpResponse resp =
-                client.request(getUrl(creditAgricoleConfiguration.getBaseUrl(), id, next))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .type(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.AUTHORIZATION, authToken)
-                        .header(
-                                HeaderKeys.PSU_IP_ADDRESS,
-                                creditAgricoleConfiguration.getPsuIpAddress())
-                        // dateFrom param is required in order to fetch all transactions
-                        // without this param will fetch only todays data
-                        .queryParam(
-                                CreditAgricoleBaseConstants.QueryKeys.DATE_FROM,
-                                DATE_FORMATTER.format(BIG_BANG_DATE))
-                        .get(HttpResponse.class);
-
-        if (HttpStatus.SC_NO_CONTENT == resp.getStatus()) {
-            return new GetTransactionsResponse();
-        }
-        return resp.getBody(GetTransactionsResponse.class);
+        return request;
     }
 
-    static String getUrl(final String baseUrl, final String id, final URL next) {
-        return Optional.ofNullable(next)
-                .map(n -> new URL(baseUrl + n.get()))
-                .orElseGet(
-                        () ->
-                                new URL(baseUrl + ApiServices.TRANSACTIONS)
-                                        .parameter(IdTags.ACCOUNT_ID, id))
-                .get();
+    private URL constructURL(
+            String id,
+            Date dateFrom,
+            Date dateTo,
+            CreditAgricoleBaseConfiguration creditAgricoleConfiguration) {
+        return new URL(creditAgricoleConfiguration.getBaseUrl() + ApiServices.TRANSACTIONS)
+                .parameter(IdTags.ACCOUNT_ID, id)
+                .queryParam(
+                        CreditAgricoleBaseConstants.QueryKeys.DATE_FROM,
+                        DATE_FORMATTER.format(dateFrom))
+                .queryParam(
+                        CreditAgricoleBaseConstants.QueryKeys.DATE_TO,
+                        DATE_FORMATTER.format(dateTo));
+    }
+
+    private void addHeaders(
+            PersistentStorage persistentStorage,
+            CreditAgricoleBaseConfiguration creditAgricoleConfiguration,
+            HttpRequestImpl request) {
+        MultivaluedMap<String, Object> headers = request.getHeaders();
+
+        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+        headers.add(
+                HeaderKeys.AUTHORIZATION,
+                "Bearer " + StorageUtils.getTokenFromStorage(persistentStorage));
+        headers.add(HeaderKeys.PSU_IP_ADDRESS, creditAgricoleConfiguration.getPsuIpAddress());
     }
 }

@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient;
 
 import com.google.common.base.Preconditions;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
@@ -13,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class CreditAgricoleBaseApiClient {
@@ -60,8 +62,19 @@ public class CreditAgricoleBaseApiClient {
         ConsentsUtils.put(persistentStorage, client, listOfNecessaryConstents, configuration);
     }
 
-    public GetTransactionsResponse getTransactions(final String id, final URL next) {
-        return TransactionsUtils.get(id, next, persistentStorage, client, configuration);
+    public GetTransactionsResponse getTransactions(
+            final String id, final Date dateFrom, final Date dateTo) {
+
+        TransactionsUtils transactionsUtils = new TransactionsUtils();
+        HttpResponse response =
+                client.request(
+                        HttpResponse.class,
+                        transactionsUtils.constructFetchTransactionRequest(
+                                id, dateFrom, dateTo, persistentStorage, configuration));
+        if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
+            return new GetTransactionsResponse();
+        }
+        return response.getBody(GetTransactionsResponse.class);
     }
 
     public EndUserIdentityResponse getEndUserIdentity() {
