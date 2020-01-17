@@ -33,6 +33,6 @@ public class UkOpenBankingUpcomingTransactionFetcher<ResponseType>
 
         return converter.toUpcomingTransactions(
                 apiClient.fetchUpcomingTransactions(
-                        ukOpenBankingAisConfig, account.getBankIdentifier(), responseType));
+                        ukOpenBankingAisConfig, account.getApiIdentifier(), responseType));
     }
 }

@@ -69,7 +69,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             AccountType account, String key) {
 
-        updateAccountPaginationCount(account.getBankIdentifier());
+        updateAccountPaginationCount(account.getApiIdentifier());
 
         if (paginationCount > PAGINATION_LIMIT) {
             return TransactionKeyPaginatorResponseImpl.createEmpty();
@@ -77,7 +77,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
         if (key == null) {
             final OffsetDateTime fromDate =
-                    getLastTransactionsFetchedDate(account.getBankIdentifier());
+                    getLastTransactionsFetchedDate(account.getApiIdentifier());
 
             /*
             We need to send in fromDate when fetching transactions to improve the performance
@@ -91,7 +91,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
             key =
                     ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
-                                    account.getBankIdentifier())
+                                    account.getApiIdentifier())
                             + FROM_BOOKING_DATE_TIME
                             + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(fromDate);
         }
@@ -102,7 +102,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                             apiClient.fetchAccountTransactions(
                                     ukOpenBankingAisConfig, key, responseType),
                             account);
-            setFetchingTransactionsUntil(account.getBankIdentifier());
+            setFetchingTransactionsUntil(account.getApiIdentifier());
             return response;
         } catch (HttpResponseException e) {
 
@@ -131,7 +131,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
                 key =
                         ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
-                                        account.getBankIdentifier())
+                                        account.getApiIdentifier())
                                 + FROM_BOOKING_DATE_TIME
                                 + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
                                         OffsetDateTime.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
@@ -140,7 +140,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                                 apiClient.fetchAccountTransactions(
                                         ukOpenBankingAisConfig, key, responseType),
                                 account);
-                setFetchingTransactionsUntil(account.getBankIdentifier());
+                setFetchingTransactionsUntil(account.getApiIdentifier());
                 return response;
             }
 
