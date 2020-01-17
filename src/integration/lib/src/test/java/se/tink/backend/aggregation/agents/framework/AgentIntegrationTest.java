@@ -630,6 +630,28 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
+    public void testBankTransferUK(Transfer transfer, boolean isUpdate) throws Exception {
+        initiateCredentials();
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        Agent agent = createAgent(credentialsRequest);
+        try {
+            // login(agent, credentialsRequest);
+            doBankTransfer(agent, transfer, isUpdate);
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
+    }
+
     public void testBankTransfer(Transfer transfer) throws Exception {
         testBankTransfer(transfer, false);
     }

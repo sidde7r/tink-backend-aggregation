@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.executor.transfer.PasswordDemoTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectOAuth2Authenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoTransferExecutor;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
@@ -98,8 +98,30 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        PasswordDemoTransferExecutor transferExecutor =
-                new PasswordDemoTransferExecutor(credentials, supplementalRequester);
+        String callbackUri = request.getCallbackUri();
+
+        RedirectOAuth2Authenticator redirectOAuth2Authenticator =
+                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri);
+
+        OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        redirectOAuth2Authenticator,
+                        credentials,
+                        strongAuthenticationState);
+
+        ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController =
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper);
+
+        RedirectDemoTransferExecutor transferExecutor =
+                new RedirectDemoTransferExecutor(
+                        credentials,
+                        supplementalRequester,
+                        controller,
+                        supplementalInformationHelper,
+                        thirdPartyAppAuthenticationController);
 
         return Optional.of(new TransferController(null, transferExecutor, null, null));
     }

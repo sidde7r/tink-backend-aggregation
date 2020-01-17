@@ -144,6 +144,12 @@ public final class SparebankConstants {
                 "Cannot map Sparebank payment status %s to Tink payment status";
         public static final String NO_ACCOUNT_TYPE_FOUND =
                 "No PaymentType found for your AccountIdentifiers pair: %s";
+        public static final String SCA_REDIRECT_MISSING = "SCA redirect missing";
+        public static final String NO_AMOUNT_FOUND = "No amount found";
+        public static final String INTERNATIONAL_TRANFER_NOT_SUPPORTED =
+                "Cross border credit transfers are still not supported";
+        public static final String DOMESTIC_FETCHING_NOT_SUPPORTED =
+                "Fetching domestic payments not supported by this bank";
     }
 
     enum HEADERS_TO_SIGN {
