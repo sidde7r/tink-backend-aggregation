@@ -187,6 +187,8 @@ clients:
     aggregatorIdentifier: "Ica Spara"
   it-bnp-bnl-testing:
     aggregatorIdentifier: "BNL Gruppo BNP Paribas"
+  it-poste-testing:
+    aggregatorIdentifier: "Poste Italiane"
   kbc-production:
     aggregatorIdentifier: "KBC"
   kbc-testing:
