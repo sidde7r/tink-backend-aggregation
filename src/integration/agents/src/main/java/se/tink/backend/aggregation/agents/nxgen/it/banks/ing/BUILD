@@ -3,10 +3,8 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:service",
-        "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",
@@ -17,9 +15,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/libraries/account_identifier",
-        "//src/libraries/i18n",
-        "//src/libraries/pair",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
@@ -33,6 +28,5 @@ java_library(
         "//third_party:lombok_libs",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_slf4j_slf4j_api",
-        "@tink_httpcore_4_4_9",
     ],
 )
