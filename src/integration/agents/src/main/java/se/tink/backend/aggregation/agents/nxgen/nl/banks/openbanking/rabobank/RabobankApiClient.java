@@ -122,7 +122,7 @@ public final class RabobankApiClient {
             logger.info(
                     "Rabobank buildRequest MIYAG-737 : {} : Authorization: {}",
                     url,
-                    RabobankUtils.getOauthToken(storage).toAuthorizeHeader());
+                    oauth2Token.toAuthorizeHeader());
         }
     }
 
