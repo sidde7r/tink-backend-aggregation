@@ -24,7 +24,7 @@ public class ArgentaAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("be", "be-argenta-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-argenta-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("argenta")
