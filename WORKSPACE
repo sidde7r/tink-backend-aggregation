@@ -293,6 +293,24 @@ maven_jar(
     sha1 = "c658daf41b1ecf934ccd21e83eeeb18703355afb",
 )
 
+maven_jar(
+    name = "com_google_j2objc_j2objc_annotations",
+    artifact = "com.google.j2objc:j2objc-annotations:1.1",
+    sha1 = "ed28ded51a8b1c6b112568def5f4b455e6809019"
+)
+
+maven_jar(
+    name = "javax_annotation_javax_annotation_api",
+    artifact = "javax.annotation:javax.annotation-api:1.2",
+    sha1 = "479c1e06db31c432330183f5cae684163f186146"
+)
+
+maven_jar(
+    name = "com_google_guava_failureaccess",
+    artifact = "com.google.guava:failureaccess:1.0.1",
+    sha1 = "1dcf1de382a0bf95a3d8b0849546c88bac1292c9"
+)
+
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
