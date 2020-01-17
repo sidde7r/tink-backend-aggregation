@@ -16,6 +16,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/banks/isp",
+        "//src/integration/api",
         "//third_party:org_assertj_assertj_core",
     ],
 )
