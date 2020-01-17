@@ -262,8 +262,7 @@ public final class RabobankApiClient {
                     logger.warn(message, e);
                     return new EmptyFinalPaginatorResponse();
                     // TODO - Below case for debug purpose
-                } else if (message.toLowerCase()
-                        .equalsIgnoreCase("Validate REST: Invalid JSON format")) {
+                } else if (message.toLowerCase().contains("Invalid JSON format")) {
                     logger.info("booking status: {}", bookingStatus);
                 }
                 throw new IllegalStateException(String.format("Unexpected error: %s", message), e);
