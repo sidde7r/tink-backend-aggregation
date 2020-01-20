@@ -32,7 +32,7 @@ public class AktiaTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        String aktiaAccountId = account.getBankIdentifier();
+        String aktiaAccountId = account.getApiIdentifier();
 
         if (Strings.isNullOrEmpty(key)) {
             return apiClient.getAccountTransactions(aktiaAccountId);
