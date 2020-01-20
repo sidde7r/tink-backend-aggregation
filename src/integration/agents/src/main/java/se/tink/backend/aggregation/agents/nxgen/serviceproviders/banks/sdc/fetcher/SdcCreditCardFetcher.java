@@ -111,8 +111,7 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher
 
         Collection<? extends Transaction> transactions = Collections.emptyList();
 
-        SdcAccountKey creditCardAccountId =
-                this.creditCardAccounts.get(account.getApiIdentifier());
+        SdcAccountKey creditCardAccountId = this.creditCardAccounts.get(account.getApiIdentifier());
         SearchTransactionsRequest searchTransactionsRequest =
                 new SearchTransactionsRequest()
                         .setAccountId(creditCardAccountId.getAccountId())
