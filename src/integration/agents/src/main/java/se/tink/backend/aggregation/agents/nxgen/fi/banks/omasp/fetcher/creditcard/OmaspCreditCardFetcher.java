@@ -32,7 +32,7 @@ public class OmaspCreditCardFetcher
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
         CreditCardDetailsResponse cardDetails =
-                apiClient.getCreditCardDetails(account.getBankIdentifier());
+                apiClient.getCreditCardDetails(account.getApiIdentifier());
         return cardDetails.getTransactions().stream()
                 .map(transaction -> transaction.toTinkTransaction(account))
                 .collect(Collectors.toList());
