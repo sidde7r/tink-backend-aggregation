@@ -21,7 +21,7 @@ public class TransactionalAccountTest {
                         .setName("")
                         .build();
 
-        assertEquals("123456", transactionalAccount.getBankIdentifier());
+        assertEquals("123456", transactionalAccount.getApiIdentifier());
     }
 
     @Test
