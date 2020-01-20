@@ -52,7 +52,7 @@ public class CrossKeyCreditCardFetcher
             CreditCardAccount account, Date fromDate, Date toDate) {
         Collection<? extends Transaction> transactions =
                 this.client
-                        .fetchCreditCardTransactions(account.getBankIdentifier(), fromDate, toDate)
+                        .fetchCreditCardTransactions(account.getApiIdentifier(), fromDate, toDate)
                         .stream()
                         .map(CreditCardTransactionEntity::toTinkTransaction)
                         .collect(Collectors.toList());
