@@ -74,7 +74,7 @@ public class VolvoFinansTransactionalAccountFetcher
 
     private List<Transaction> getTransactionsBatch(
             Account account, LocalDate localFromDate, LocalDate localToDate) {
-        String accountId = account.getBankIdentifier();
+        String accountId = account.getApiIdentifier();
         int limit = VolvoFinansConstants.Pagination.LIMIT;
         int offset = 0;
 
