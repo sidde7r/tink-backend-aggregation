@@ -679,37 +679,18 @@ spec:
         of its login attempts the past 60 minutes.
 
 ### Provider level fails
-  - alert: HighProviderErrorRatioIntegration
+  - alert: HighProviderErrorRatio
     expr: |
       # Never triggers on providers that did less than 10 operations past 60
       # minutes. This filters out small providers which are less critical to fix
       # quickly.
-      sum(increase(tink_executions_total{market!~"ES|SE"}[1h])) BY (provider) > 10 and
+      sum(increase(tink_executions_total[1h])) BY (provider) > 10 and
       # Providers where over 50% of the requests have failed.
-      ratio:tink_provider_errors_integration:delta60m > 50
+      ratio:tink_provider_errors:delta60m > 50
     for: 15m
     labels:
       severity: ping
       who: integration
-    annotations:
-      description: Investigate further in https://kibana.global.tink.network/goto/e0e04ba547d2d76936afa0788febabc8
-        (and possibly add the provider in search query). This alert never triggers
-        on providers that did less than 10 operations past 60 minutes.
-      summary: Provider <{ $labels.provider }> has failed over 50%
-        of its operations the past 60 minutes
-
-  - alert: HighProviderErrorRatioCobra
-    expr: |
-      # Never triggers on providers that did less than 10 operations past 60
-      # minutes. This filters out small providers which are less critical to fix
-      # quickly.
-      sum(increase(tink_executions_total{market=~"ES|SE"}[1h])) BY (provider) > 10 and
-      # Providers where over 50% of the requests have failed.
-      ratio:tink_provider_errors_cobra:delta60m > 50
-    for: 15m
-    labels:
-      severity: ping
-      who: cobra-kai
     annotations:
       description: Investigate further in https://kibana.global.tink.network/goto/e0e04ba547d2d76936afa0788febabc8
         (and possibly add the provider in search query). This alert never triggers
@@ -816,10 +797,6 @@ spec:
         / sum(increase(tink_accounts_refresh_total[1h])) BY (provider)
 
     # Calculate the the ration of provider errors (without authentication errors).
-  - record: ratio:tink_provider_errors_integration:delta60m
-    expr: 100 * ((sum(increase(tink_temporary_errors_total{market!~"ES|SE"}[1h])) BY (provider)) /
-      (sum(increase(tink_executions_total{market!~"ES|SE"}[1h])) BY (provider)))
-
-  - record: ratio:tink_provider_errors_cobra:delta60m
-    expr: 100 * ((sum(increase(tink_temporary_errors_total{market=~"ES|SE"}[1h])) BY (provider)) /
-      (sum(increase(tink_executions_total{market=~"ES|SE"}[1h])) BY (provider)))
+  - record: ratio:tink_provider_errors:delta60m
+    expr: 100 * ((sum(increase(tink_temporary_errors_total[1h])) BY (provider)) /
+      (sum(increase(tink_executions_total[1h])) BY (provider)))
