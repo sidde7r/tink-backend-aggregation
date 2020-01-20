@@ -38,7 +38,7 @@ public class IngTransactionFetcher
 
         return apiClient.getTransactions(
                 transactionsUrl,
-                account.getBankIdentifier(),
+                account.getApiIdentifier(),
                 getStartIndex(page),
                 getEndIndex(page));
     }
@@ -52,7 +52,7 @@ public class IngTransactionFetcher
                         .map(
                                 loginResponse ->
                                         apiClient.getPendingPayments(
-                                                loginResponse, account.getBankIdentifier()))
+                                                loginResponse, account.getApiIdentifier()))
                         .orElseThrow(() -> new IllegalStateException("Login response not found."));
 
         return pendingPaymentsResponseEntity.getPendingPayments().stream()
