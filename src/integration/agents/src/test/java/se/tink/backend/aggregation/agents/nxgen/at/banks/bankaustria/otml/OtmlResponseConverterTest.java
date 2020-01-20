@@ -34,12 +34,12 @@ public class OtmlResponseConverterTest {
         TransactionalAccount account = iterator.next();
         Assert.assertEquals(account.getAccountNumber(), BankAustriaTestData.RandomData.IBAN_1);
         Assert.assertEquals(
-                account.getBankIdentifier(), BankAustriaTestData.RandomData.BANK_ID_ACCOUNT_KEY_1);
+                account.getApiIdentifier(), BankAustriaTestData.RandomData.BANK_ID_ACCOUNT_KEY_1);
         Assert.assertEquals(AccountTypes.CHECKING, account.getType());
         account = iterator.next();
         Assert.assertEquals(account.getAccountNumber(), BankAustriaTestData.RandomData.IBAN_2);
         Assert.assertEquals(
-                account.getBankIdentifier(), BankAustriaTestData.RandomData.BANK_ID_ACCOUNT_KEY_2);
+                account.getApiIdentifier(), BankAustriaTestData.RandomData.BANK_ID_ACCOUNT_KEY_2);
         Assert.assertEquals(AccountTypes.SAVINGS, account.getType());
     }
 

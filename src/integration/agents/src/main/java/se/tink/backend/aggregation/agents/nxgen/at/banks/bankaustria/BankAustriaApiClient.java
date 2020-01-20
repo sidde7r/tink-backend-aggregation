@@ -90,7 +90,7 @@ public class BankAustriaApiClient {
                 getRequestWithHeaders(url)
                         .post(
                                 OtmlResponse.class,
-                                getFormForGenericAccount(account.getBankIdentifier()));
+                                getFormForGenericAccount(account.getApiIdentifier()));
 
         return response;
     }
@@ -108,7 +108,7 @@ public class BankAustriaApiClient {
                         .post(
                                 OtmlResponse.class,
                                 getFormForDatePagination(
-                                        account.getBankIdentifier(), fromDate, toDate));
+                                        account.getApiIdentifier(), fromDate, toDate));
         return response;
     }
 
