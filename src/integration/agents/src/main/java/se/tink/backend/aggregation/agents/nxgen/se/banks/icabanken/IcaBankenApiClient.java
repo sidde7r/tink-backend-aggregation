@@ -156,7 +156,7 @@ public class IcaBankenApiClient {
                         IcaBankenConstants.Urls.TRANSACTIONS
                                 .parameter(
                                         IcaBankenConstants.IdTags.IDENTIFIER_TAG,
-                                        account.getBankIdentifier())
+                                        account.getApiIdentifier())
                                 .queryParam(
                                         IcaBankenConstants.IdTags.TO_DATE_TAG,
                                         ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate)))
@@ -168,7 +168,7 @@ public class IcaBankenApiClient {
         return createRequest(
                         IcaBankenConstants.Urls.TRANSACTIONS.parameter(
                                 IcaBankenConstants.IdTags.IDENTIFIER_TAG,
-                                account.getBankIdentifier()))
+                                account.getApiIdentifier()))
                 .get(TransactionsResponse.class)
                 .getBody();
     }
@@ -177,7 +177,7 @@ public class IcaBankenApiClient {
         return createRequest(
                         IcaBankenConstants.Urls.RESERVED_TRANSACTIONS.parameter(
                                 IcaBankenConstants.IdTags.IDENTIFIER_TAG,
-                                account.getBankIdentifier()))
+                                account.getApiIdentifier()))
                 .get(TransactionsResponse.class)
                 .getBody();
     }
