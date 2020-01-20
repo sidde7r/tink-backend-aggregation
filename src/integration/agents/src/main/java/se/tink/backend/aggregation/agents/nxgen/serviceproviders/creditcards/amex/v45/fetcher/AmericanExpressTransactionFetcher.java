@@ -38,7 +38,7 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
         List<AggregationTransaction> transactions = new ArrayList<>();
-        Integer cardIndex = Integer.valueOf(account.getBankIdentifier());
+        Integer cardIndex = Integer.valueOf(account.getApiIdentifier());
 
         if (getPendingTransactionsWithoutError(cardIndex, transactions)) {
             getTransactions(account, transactions);

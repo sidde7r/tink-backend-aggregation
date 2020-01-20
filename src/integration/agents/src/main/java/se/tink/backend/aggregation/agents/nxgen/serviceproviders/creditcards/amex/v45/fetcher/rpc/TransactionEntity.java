@@ -62,6 +62,6 @@ public class TransactionEntity {
                     e);
         }
 
-        return transactionSuppIndex.equals(Integer.valueOf(account.getBankIdentifier()));
+        return transactionSuppIndex.equals(Integer.valueOf(account.getApiIdentifier()));
     }
 }
