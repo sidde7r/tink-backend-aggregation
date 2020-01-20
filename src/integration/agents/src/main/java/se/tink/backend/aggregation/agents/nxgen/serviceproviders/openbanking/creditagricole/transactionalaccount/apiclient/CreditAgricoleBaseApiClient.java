@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -22,11 +23,16 @@ public class CreditAgricoleBaseApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private final RequestFactory requestFactory;
     private CreditAgricoleBaseConfiguration configuration;
 
-    public CreditAgricoleBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public CreditAgricoleBaseApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            RequestFactory requestFactory) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.requestFactory = requestFactory;
     }
 
     public void setConfiguration(CreditAgricoleBaseConfiguration configuration) {
@@ -65,12 +71,12 @@ public class CreditAgricoleBaseApiClient {
     public GetTransactionsResponse getTransactions(
             final String id, final Date dateFrom, final Date dateTo) {
 
-        TransactionsUtils transactionsUtils = new TransactionsUtils();
-        HttpResponse response =
-                client.request(
-                        HttpResponse.class,
-                        transactionsUtils.constructFetchTransactionRequest(
-                                id, dateFrom, dateTo, persistentStorage, configuration));
+        HttpRequest request =
+                requestFactory.constructFetchTransactionRequest(
+                        id, dateFrom, dateTo, persistentStorage, configuration);
+
+        HttpResponse response = client.request(HttpResponse.class, request);
+
         if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
             return new GetTransactionsResponse();
         }

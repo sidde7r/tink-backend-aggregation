@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.RequestFactory;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -39,7 +40,8 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        this.apiClient = new CreditAgricoleBaseApiClient(client, persistentStorage);
+        this.apiClient =
+                new CreditAgricoleBaseApiClient(client, persistentStorage, new RequestFactory());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

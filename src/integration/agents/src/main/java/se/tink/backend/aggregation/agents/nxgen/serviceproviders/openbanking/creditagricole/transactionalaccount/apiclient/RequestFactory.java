@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-class TransactionsUtils {
+public class RequestFactory {
 
     private static final SimpleDateFormat DATE_FORMATTER =
             new SimpleDateFormat(CreditAgricoleBaseConstants.DateFormat.API_DATE_FORMAT);

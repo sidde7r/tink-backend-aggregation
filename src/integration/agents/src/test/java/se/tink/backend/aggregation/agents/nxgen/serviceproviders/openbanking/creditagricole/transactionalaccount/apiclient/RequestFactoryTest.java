@@ -20,15 +20,15 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class TransactionsUtilsTest {
+public class RequestFactoryTest {
 
-    private TransactionsUtils transactionsUtils;
+    private RequestFactory requestFactory;
     private PersistentStorage persistentStorage;
     private CreditAgricoleBaseConfiguration configuration;
 
     @Before
     public void setUp() throws Exception {
-        transactionsUtils = new TransactionsUtils();
+        requestFactory = new RequestFactory();
         persistentStorage = Mockito.mock(PersistentStorage.class);
         configuration = Mockito.mock(CreditAgricoleBaseConfiguration.class);
     }
@@ -48,7 +48,7 @@ public class TransactionsUtilsTest {
                 .thenReturn(Optional.of(accesToken));
 
         HttpRequest request =
-                transactionsUtils.constructFetchTransactionRequest(
+                requestFactory.constructFetchTransactionRequest(
                         "123_ACCOUNT_ID", dateFrom, dateTo, persistentStorage, configuration);
 
         // then
