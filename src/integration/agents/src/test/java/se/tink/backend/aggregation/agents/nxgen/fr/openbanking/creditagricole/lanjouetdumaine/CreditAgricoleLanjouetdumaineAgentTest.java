@@ -12,10 +12,10 @@ public final class CreditAgricoleLanjouetdumaineAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("fr", "fr-creditagricolelanjouetdumaine-ob")
-                    .setFinancialInstitutionId("creditagricolelanjouetdumaine")
-                    .setAppId("tink")
+                        .setFinancialInstitutionId("creditagricolelanjouetdumaine")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
+                        .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);
     }
 
