@@ -46,7 +46,7 @@ public class LaBanquePostaleTransactionalAccountFetcher
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
 
         TransactionsResponse response =
-                apiClient.getTransactions(account.getBankIdentifier(), account.getType());
+                apiClient.getTransactions(account.getApiIdentifier(), account.getType());
 
         List<Transaction> transactions =
                 response.getTransactions().stream()
