@@ -83,7 +83,7 @@ public class IcaBankenTransactionFetcher {
         return Optional.ofNullable(upcomingTransactions).orElseGet(Collections::emptyList).stream()
                 .filter(
                         upcomingTransactionEntity ->
-                                account.getBankIdentifier()
+                                account.getApiIdentifier()
                                         .equalsIgnoreCase(
                                                 upcomingTransactionEntity.getFromAccountId()))
                 .map(UpcomingTransactionEntity::toUpcomingTransaction)

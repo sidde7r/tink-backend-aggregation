@@ -46,7 +46,7 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
     public boolean is(Account account) {
         return isCreditCard()
                 && numberMasked != null
-                && numberMasked.equals(account.getBankIdentifier());
+                && numberMasked.equals(account.getApiIdentifier());
     }
 
     public boolean hasInvertedTransactions() {
