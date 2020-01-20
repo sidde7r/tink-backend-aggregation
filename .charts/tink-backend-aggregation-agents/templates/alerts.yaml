@@ -9,13 +9,13 @@ spec:
   # All Markets.
   # For metrics that lack market properties.
 
-  - alert: TransferSuccessRateLowIntegration
+  - alert: TransferSuccessRateLow
     expr: |
         # Failed attempts above 25%
-        (sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', market!~"ES|SE", status=~"FAILED"}[30m])) by (provider)
-            / sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', market!~"ES|SE"}[30m])) by (provider) > 0.25)
+        (sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', status=~"FAILED"}[30m])) by (provider)
+            / sum(increase(tink_transfer_count_total{transfer_type='bank-transfer'}[30m])) by (provider) > 0.25)
         # At least this many attempts.
-        and sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', market!~"ES|SE"}[30m])) by (provider) > 2
+        and sum(increase(tink_transfer_count_total{transfer_type='bank-transfer'}[30m])) by (provider) > 2
     for: 5m
     labels:
         severity: urgent
@@ -27,31 +27,13 @@ spec:
             the last 30 minutes.
         tags: <{ $labels.provider }>
 
-  - alert: TransferSuccessRateLowCobra
-    expr: |
-      # Failed attempts above 25%
-      (sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', market=~"ES|SE", status=~"FAILED"}[30m])) by (provider)
-          / sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', market=~"ES|SE"}[30m])) by (provider) > 0.25)
-      # At least this many attempts.
-      and sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', market=~"ES|SE"}[30m])) by (provider) > 2
-    for: 5m
-    labels:
-      severity: urgent
-      who: cobra-kai
-    annotations:
-      description: Transfers failing more than 25% ( <{ $value }> ) for the last 30 minutes.
-        Investigate immediately.
-      summary: Transfers failing more than 25% ( <{ $value }> ) for <{ $labels.provider }>
-        the last 30 minutes.
-      tags: <{ $labels.provider }>
-
-  - alert: PaymentSuccessRateLowIntegration
+  - alert: PaymentSuccessRateLow
     expr: |
         # Failed attempts above 25%
-        (sum(increase(tink_transfer_count_total{transfer_type='payment', market!~"ES|SE", status=~"FAILED"}[30m])) by (provider)
-            / sum(increase(tink_transfer_count_total{transfer_type='payment', market!~"ES|SE"}[30m])) by (provider) > 0.25)
+        (sum(increase(tink_transfer_count_total{transfer_type='payment', status=~"FAILED"}[30m])) by (provider)
+            / sum(increase(tink_transfer_count_total{transfer_type='payment'}[30m])) by (provider) > 0.25)
         # At least this many attempts.
-        and sum(increase(tink_transfer_count_total{transfer_type='payment', market!~"ES|SE"}[30m])) by (provider) > 2
+        and sum(increase(tink_transfer_count_total{transfer_type='payment'}[30m])) by (provider) > 2
     for: 5m
     labels:
         severity: urgent
@@ -62,24 +44,6 @@ spec:
         summary: Payments failing more than 25% ( <{ $value }> ) for <{ $labels.provider }>
             the last 30 minutes.
         tags: <{ $labels.provider }>
-
-  - alert: PaymentSuccessRateLowCobra
-    expr: |
-      # Failed attempts above 25%
-      (sum(increase(tink_transfer_count_total{transfer_type='payment', market=~"ES|SE", status=~"FAILED"}[30m])) by (provider)
-          / sum(increase(tink_transfer_count_total{transfer_type='payment, market=~"ES|SE"'}[30m])) by (provider) > 0.25)
-      # At least this many attempts.
-      and sum(increase(tink_transfer_count_total{transfer_type='payment', market=~"ES|SE"}[30m])) by (provider) > 2
-    for: 5m
-    labels:
-      severity: urgent
-      who: cobra-kai
-    annotations:
-      description: Payments failing more than 25% ( <{ $value }> ) for the last 30 minutes.
-        Investigate immediately.
-      summary: Payments failing more than 25% ( <{ $value }> ) for <{ $labels.provider }>
-        the last 30 minutes.
-      tags: <{ $labels.provider }>
         
   - alert: EInvoiceSuccessRateLow
     expr: |
@@ -91,7 +55,7 @@ spec:
     for: 5m
     labels:
         severity: urgent
-        who: cobra-kai
+        who: integration
     annotations:
         description: EInvoice failing more than 10% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -113,7 +77,7 @@ spec:
     for: 5m
     labels:
         severity: urgent
-        who: cobra-kai
+        who: integration
     annotations:
         description: Login success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -131,7 +95,7 @@ spec:
     for: 5m
     labels:
         severity: urgent
-        who: cobra-kai
+        who: integration
     annotations:
         description: Refresh success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -335,7 +299,7 @@ spec:
     for: 5m
     labels:
         severity: urgent
-        who: cobra-kai
+        who: integration
     annotations:
         description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
             Investigate immediately.
@@ -353,7 +317,7 @@ spec:
     for: 5m
     labels:
         severity: urgent
-        who: cobra-kai
+        who: integration
     annotations:
         description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
             Investigate immediately.
@@ -584,13 +548,13 @@ spec:
         tags: <{ $labels.className }>
 
 ### Bank side failures
-  - alert: BankServerUnavailableForLoginIntegration
+  - alert: BankServerUnavailableForLogin
     expr: |
       # Unavailable outcome above 50%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"unavailable", market!~"ES|SE"}[30m])) by (action,className)
-          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  market!~"ES|SE"}[30m])) by (action,className) > 0.50)
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable"}[30m])) by (action,className)
+          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 0.50)
       # At least this many attempts.
-      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  market!~"ES|SE"}[30m])) by (action,className) > 10
+      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 10
     for: 5m
     labels:
       severity: ping
@@ -602,53 +566,17 @@ spec:
         the last 30 minutes.
       tags: <{ $labels.className }>
 
-  - alert: BankServerUnavailableForLoginCobra
+  - alert: BankServerUnavailableForRefresh
     expr: |
       # Unavailable outcome above 50%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"unavailable", market=~"ES|SE"}[30m])) by (action,className)
-          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market=~"ES|SE"}[30m])) by (action,className) > 0.50)
+      (sum(increase(tink_agent_refresh_total{outcome=~"unavailable"}[30m])) by (className)
+          / sum(increase(tink_agent_refresh_total[30m])) by (className) > 0.50)
       # At least this many attempts.
-      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market=~"ES|SE"}[30m])) by (action,className) > 10
-    for: 5m
-    labels:
-      severity: ping
-      who: cobra-kai
-    annotations:
-      description: Login unavailable rate is above 50% ( <{ $value }> ) for the last 30 minutes.
-        Investigate immediately.
-      summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-        the last 30 minutes.
-      tags: <{ $labels.className }>
-
-  - alert: BankServerUnavailableForRefreshIntegration
-    expr: |
-      # Unavailable outcome above 50%
-      (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market!~"ES|SE"}[30m])) by (className)
-          / sum(increase(tink_agent_refresh_total{market!~"ES|SE"}[30m])) by (className) > 0.50)
-      # At least this many attempts.
-      and sum(increase(tink_agent_refresh_total{market!~"ES|SE"}[30m])) by (className) > 10
+      and sum(increase(tink_agent_refresh_total[30m])) by (className) > 10
     for: 5m
     labels:
       severity: ping
       who: integration
-    annotations:
-      description: Refresh unavailable rate is above 50% ( <{ $value }> ) for the last 30 minutes.
-        Investigate immediately.
-      summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-        the last 30 minutes.
-      tags: <{ $labels.className }>
-
-  - alert: BankServerUnavailableForRefreshCobra
-    expr: |
-      # Unavailable outcome above 50%
-      (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market=~"ES|SE"}[30m])) by (className)
-          / sum(increase(tink_agent_refresh_total{market=~"ES|SE"}[30m])) by (className) > 0.50)
-      # At least this many attempts.
-      and sum(increase(tink_agent_refresh_total{market=~"ES|SE"}[30m])) by (className) > 10
-    for: 5m
-    labels:
-      severity: ping
-      who: cobra-kai
     annotations:
       description: Refresh unavailable rate is above 50% ( <{ $value }> ) for the last 30 minutes.
         Investigate immediately.
@@ -657,95 +585,37 @@ spec:
       tags: <{ $labels.className }>
 
 ### Agent level login failures
-  - alert: HighProviderFailedLoginRatioIntegration
+  - alert: HighProviderFailedLoginRatio
     expr: |
       # Never trigger on agents with less than 40 login attempts past 60 minutes.
       # This filters out small agents which are less critical to fix quickly
-      sum(increase(tink_agent_login_total{action="login", market!~"ES|SE"}[1h])) BY (className) > 40 and
+      sum(increase(tink_agent_login_total{action="login"}[1h])) BY (className) > 40 and
       # Agents where more than 20% of the login attempts fail.
-      sum(increase(tink_agent_login_total{action="login",outcome="failed", market!~"ES|SE"}[30m])) BY (className)
-          / sum(increase(tink_agent_login_total{action="login", market!~"ES|SE"}[30m])) BY (className) > 0.20
+      sum(increase(tink_agent_login_total{action="login",outcome="failed"}[30m])) BY (className) / sum(increase(tink_agent_login_total{action="login"}[30m])) BY (className) > 0.20
     for: 30m
     labels:
       severity: urgent
       who: integration
     annotations:
       description: To learn more check out the metric `tink_agent_login_total`. This
-        alert never triggers on agents that did less than 40 operations in the
-        past 60 minutes.
-      summary: Agent <{ $labels.className }> has failed over 20%
-        of its login attempts the past 60 minutes.
-
-  - alert: HighProviderFailedLoginRatioES
-    expr: |
-      # Never trigger on agents with less than 40 login attempts past 60 minutes.
-      # This filters out small agents which are less critical to fix quickly
-      sum(increase(tink_agent_login_total{action="login", market="ES"}[1h])) BY (className) > 40 and
-      # Agents where more than 20% of the login attempts fail.
-      sum(increase(tink_agent_login_total{action="login",outcome="failed", market="ES"}[30m])) BY (className)
-          / sum(increase(tink_agent_login_total{action="login", market="ES"}[30m])) BY (className) > 0.20
-    for: 30m
-    labels:
-      severity: urgent
-      who: cobra-kai
-    annotations:
-      description: To learn more check out the metric `tink_agent_login_total`. This
-        alert never triggers on agents that did less than 40 operations in the
-        past 60 minutes.
-      summary: Agent <{ $labels.className }> has failed over 20%
-        of its login attempts the past 60 minutes.
-
-  - alert: HighProviderFailedLoginRatioSE
-    expr: |
-      # Never trigger on agents with less than 40 login attempts past 60 minutes.
-      # This filters out small agents which are less critical to fix quickly
-      sum(increase(tink_agent_login_total{action="login", market="SE"}[1h])) BY (className) > 40 and
-      # Agents where more than 20% of the login attempts fail.
-      sum(increase(tink_agent_login_total{action="login",outcome="failed", market="SE"}[30m])) BY (className)
-          / sum(increase(tink_agent_login_total{action="login", market="SE"}[30m])) BY (className) > 0.20
-    for: 30m
-    labels:
-      severity: urgent
-      who: cobra-kai
-    annotations:
-      description: To learn more check out the metric `tink_agent_login_total`. This
-        alert never triggers on agents that did less than 40 operations in the
+        alert never triggers on agents that did less than 10 operations in the
         past 60 minutes.
       summary: Agent <{ $labels.className }> has failed over 20%
         of its login attempts the past 60 minutes.
 
 ### Provider level fails
-  - alert: HighProviderErrorRatioIntegration
+  - alert: HighProviderErrorRatio
     expr: |
       # Never triggers on providers that did less than 10 operations past 60
       # minutes. This filters out small providers which are less critical to fix
       # quickly.
-      sum(increase(tink_executions_total{market!~"ES|SE"}[1h])) BY (provider) > 10 and
+      sum(increase(tink_executions_total[1h])) BY (provider) > 10 and
       # Providers where over 50% of the requests have failed.
-      ratio:tink_provider_errors_integration:delta60m > 50
+      ratio:tink_provider_errors:delta60m > 50
     for: 15m
     labels:
       severity: ping
       who: integration
-    annotations:
-      description: Investigate further in https://kibana.global.tink.network/goto/e0e04ba547d2d76936afa0788febabc8
-        (and possibly add the provider in search query). This alert never triggers
-        on providers that did less than 10 operations past 60 minutes.
-      summary: Provider <{ $labels.provider }> has failed over 50%
-        of its operations the past 60 minutes
-
-  - alert: HighProviderErrorRatioCobra
-    expr: |
-      # Never triggers on providers that did less than 10 operations past 60
-      # minutes. This filters out small providers which are less critical to fix
-      # quickly.
-      sum(increase(tink_executions_total{market=~"ES|SE"}[1h])) BY (provider) > 10 and
-      # Providers where over 50% of the requests have failed.
-      ratio:tink_provider_errors_cobra:delta60m > 50
-    for: 15m
-    labels:
-      severity: ping
-      who: cobra-kai
     annotations:
       description: Investigate further in https://kibana.global.tink.network/goto/e0e04ba547d2d76936afa0788febabc8
         (and possibly add the provider in search query). This alert never triggers
@@ -852,10 +722,6 @@ spec:
         / sum(increase(tink_accounts_refresh_total[1h])) BY (provider)
 
     # Calculate the the ration of provider errors (without authentication errors).
-  - record: ratio:tink_provider_errors_integration:delta60m
-    expr: 100 * ((sum(increase(tink_temporary_errors_total{market!~"ES|SE"}[1h])) BY (provider)) /
-      (sum(increase(tink_executions_total{market!~"ES|SE"}[1h])) BY (provider)))
-
-  - record: ratio:tink_provider_errors_cobra:delta60m
-    expr: 100 * ((sum(increase(tink_temporary_errors_total{market=~"ES|SE"}[1h])) BY (provider)) /
-      (sum(increase(tink_executions_total{market=~"ES|SE"}[1h])) BY (provider)))
+  - record: ratio:tink_provider_errors:delta60m
+    expr: 100 * ((sum(increase(tink_temporary_errors_total[1h])) BY (provider)) /
+      (sum(increase(tink_executions_total[1h])) BY (provider)))
