@@ -30,7 +30,7 @@ public class RevolutTransactionFetcher
                 new TransactionKeyPaginatorResponseImpl<>();
 
         String accountCurrency = account.getFromTemporaryStorage(RevolutConstants.Storage.CURRENCY);
-        String accountBankId = account.getBankIdentifier();
+        String accountBankId = account.getApiIdentifier();
 
         if (account.getType().equals(AccountTypes.CHECKING)) {
             Collection<TransactionEntity> transactionEntities =

@@ -61,7 +61,7 @@ public class NordeaV20CreditCardFetcher
         }
 
         CreditCardTransactionsResponse transactionsResponse =
-                client.fetchCreditCardTransactions(account.getBankIdentifier(), key);
+                client.fetchCreditCardTransactions(account.getApiIdentifier(), key);
 
         Collection<CreditCardTransaction> transactions =
                 transactionsResponse.getTransactions().stream()

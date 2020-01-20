@@ -73,7 +73,7 @@ public class NordeaV17CreditCardFetcher
                 new TransactionKeyPaginatorResponseImpl<>();
 
         CreditCardTransactionsResponse response =
-                client.fetchCreditCardTransactions(account.getBankIdentifier(), invoicePeriod);
+                client.fetchCreditCardTransactions(account.getApiIdentifier(), invoicePeriod);
 
         Collection<CreditCardTransaction> transactions =
                 response.getTransactions().stream()

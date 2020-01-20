@@ -99,7 +99,7 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account>
         FutureTransactionsResponse futureTransactionsResponse =
                 this.apiClient.listUpcomingTransactions(
                         FutureTransactionsRequest.create(
-                                this.languageCode, account.getBankIdentifier()));
+                                this.languageCode, account.getApiIdentifier()));
 
         return futureTransactionsResponse.getTransactions().stream()
                 .map(TransactionEntity::toTinkUpcomingTransaction)

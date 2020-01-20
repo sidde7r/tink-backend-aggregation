@@ -81,7 +81,7 @@ public class NordeaV17TransactionalAccountFetcher
         }
 
         TransactionsResponse response =
-                client.fetchTransactions(account.getBankIdentifier(), Strings.nullToEmpty(key));
+                client.fetchTransactions(account.getApiIdentifier(), Strings.nullToEmpty(key));
 
         Collection<Transaction> transactions =
                 response.getTransactions().stream()
