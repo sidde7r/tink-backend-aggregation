@@ -34,5 +34,6 @@ java_library(
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:jetty_server9",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )
