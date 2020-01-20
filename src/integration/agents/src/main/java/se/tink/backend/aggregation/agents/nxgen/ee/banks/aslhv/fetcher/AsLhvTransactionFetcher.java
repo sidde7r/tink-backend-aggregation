@@ -24,7 +24,7 @@ public class AsLhvTransactionFetcher {
     public <T extends Account> PaginatorResponse getTransactionsFor(
             final T account, final Date fromDate, final Date toDate) {
         final GetAccountTransactionsResponse response =
-                apiClient.getAccountTransactions(account.getBankIdentifier(), fromDate, toDate);
+                apiClient.getAccountTransactions(account.getApiIdentifier(), fromDate, toDate);
         if (!response.requestSuccessful()) {
             throw new IllegalStateException(
                     String.format(
