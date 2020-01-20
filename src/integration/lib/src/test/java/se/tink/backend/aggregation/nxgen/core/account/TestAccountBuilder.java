@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.nxgen.core.account;
 
 import java.util.List;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 
