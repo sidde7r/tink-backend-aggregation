@@ -41,7 +41,7 @@ public class CoopTransactionalAccountFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        int accountType = Integer.parseInt(account.getBankIdentifier());
+        int accountType = Integer.parseInt(account.getApiIdentifier());
 
         try {
             return apiClient.fetchTransactions(page, accountType);
