@@ -21,7 +21,7 @@ public class IberCajaInvestmentAccountFetcher implements AccountFetcher<Investme
 
         for (InvestmentAccount i : investmentAccounts) {
             // make the call so that the response will be logged to s3
-            bankClient.fetchInvestmentTransactionDetails(i.getBankIdentifier());
+            bankClient.fetchInvestmentTransactionDetails(i.getApiIdentifier());
         }
 
         return investmentAccounts;

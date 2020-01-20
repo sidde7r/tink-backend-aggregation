@@ -29,7 +29,7 @@ public class IberCajaCreditCardTransactionalFetcher
             CreditCardAccount account, Date fromDate, Date toDate) {
 
         return bankClient.fetchCreditCardsTransactionList(
-                account.getBankIdentifier(),
+                account.getApiIdentifier(),
                 IberCajaConstants.DefaultRequestParams.REQUEST_ORDER,
                 IberCajaConstants.DefaultRequestParams.REQUEST_TYPE,
                 format(fromDate),
