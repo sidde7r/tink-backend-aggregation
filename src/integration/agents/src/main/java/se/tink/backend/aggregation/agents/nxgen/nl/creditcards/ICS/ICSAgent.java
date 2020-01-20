@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.NoHttpResponseErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -56,9 +58,9 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(
                 new RateLimitRetryFilter(
-                        ICSConstants.HttpClient.MAX_RETRIES,
-                        ICSConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
+                        HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new AccessExceededFilter());
+        client.addFilter(new NoHttpResponseErrorFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
     }
 

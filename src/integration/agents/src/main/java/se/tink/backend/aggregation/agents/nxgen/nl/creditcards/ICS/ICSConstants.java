@@ -123,7 +123,7 @@ public class ICSConstants {
     }
 
     public static class HttpClient {
-        public static final int MAX_RETRIES = 4;
+        public static final int MAX_RETRIES = 5;
         public static final int RETRY_SLEEP_MILLISECONDS = 2000;
     }
 }
