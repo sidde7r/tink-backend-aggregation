@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient;
 
 import com.google.common.base.Preconditions;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
@@ -13,18 +15,24 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class CreditAgricoleBaseApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private final RequestFactory requestFactory;
     private CreditAgricoleBaseConfiguration configuration;
 
-    public CreditAgricoleBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public CreditAgricoleBaseApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            RequestFactory requestFactory) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.requestFactory = requestFactory;
     }
 
     public void setConfiguration(CreditAgricoleBaseConfiguration configuration) {
@@ -60,8 +68,19 @@ public class CreditAgricoleBaseApiClient {
         ConsentsUtils.put(persistentStorage, client, listOfNecessaryConstents, configuration);
     }
 
-    public GetTransactionsResponse getTransactions(final String id, final URL next) {
-        return TransactionsUtils.get(id, next, persistentStorage, client, configuration);
+    public GetTransactionsResponse getTransactions(
+            final String id, final Date dateFrom, final Date dateTo) {
+
+        HttpRequest request =
+                requestFactory.constructFetchTransactionRequest(
+                        id, dateFrom, dateTo, persistentStorage, configuration);
+
+        HttpResponse response = client.request(HttpResponse.class, request);
+
+        if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
+            return new GetTransactionsResponse();
+        }
+        return response.getBody(GetTransactionsResponse.class);
     }
 
     public EndUserIdentityResponse getEndUserIdentity() {
