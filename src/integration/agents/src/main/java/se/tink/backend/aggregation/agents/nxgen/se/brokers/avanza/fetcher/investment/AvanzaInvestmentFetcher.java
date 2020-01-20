@@ -145,7 +145,7 @@ public class AvanzaInvestmentFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             InvestmentAccount account, Date fromDate, Date toDate) {
-        final String accId = account.getBankIdentifier();
+        final String accId = account.getApiIdentifier();
         final String fromDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate);
         final String toDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate);
 
