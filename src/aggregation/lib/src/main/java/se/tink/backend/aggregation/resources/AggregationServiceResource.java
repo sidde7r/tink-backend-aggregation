@@ -269,12 +269,26 @@ public class AggregationServiceResource implements AggregationService {
             boolean includeDescriptions,
             boolean includeExamples,
             ClientInfo clientInfo) {
-        Provider provider =
-                Provider.of(
-                        providerConfigurationService.getProviderByName(
-                                clientInfo.getClusterName(),
-                                clientInfo.getClusterEnvironment(),
-                                providerName));
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(providerName), "providerName cannot be empty/null.");
+
+        List<ProviderConfiguration> allProviders = providerConfigurationService.listAll();
+
+        List<ProviderConfiguration> filteredProviders =
+                allProviders.stream()
+                        .filter(prv -> Objects.equals(providerName, prv.getName()))
+                        .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
+                        // Trying to get rid of possible sandbox providers if they exist.
+                        .filter(prv -> !StringUtils.containsIgnoreCase(prv.getName(), "sandbox"))
+                        .collect(Collectors.toList());
+
+        Preconditions.checkState(
+                filteredProviders.size() == 1,
+                String.format(
+                        "Trying to get secrets template. Should find 1 provider for providerName : %s, but found instead : %d",
+                        providerName, filteredProviders.size()));
+
+        Provider provider = Provider.of(filteredProviders.get(0));
         return new ClientConfigurationTemplateBuilder(
                         provider, includeDescriptions, includeExamples)
                 .buildTemplate();
@@ -289,7 +303,7 @@ public class AggregationServiceResource implements AggregationService {
 
         Preconditions.checkNotNull(
                 Strings.emptyToNull(financialInstitutionId),
-                "FinancialInstitutionId in SecretsNamesValidationRequest cannot be null.");
+                "FinancialInstitutionId in SecretsNamesValidationRequest cannot be empty/null.");
         Preconditions.checkNotNull(
                 request.getSecretsNames(),
                 "SecretsNames in SecretsNamesValidationRequest cannot be null.");
@@ -309,9 +323,7 @@ public class AggregationServiceResource implements AggregationService {
                 request.getExcludedAgentConfigParamNames(),
                 "ExcludedAgentConfigParamNames in SecretsNamesValidationRequest cannot be null.");
 
-        List<ProviderConfiguration> allProviders =
-                providerConfigurationService.list(
-                        clientInfo.getClusterName(), clientInfo.getClusterEnvironment());
+        List<ProviderConfiguration> allProviders = providerConfigurationService.listAll();
 
         List<ProviderConfiguration> filteredProviders =
                 allProviders.stream()
