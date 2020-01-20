@@ -12,6 +12,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.HttpResponseChecker;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.detail.TransactionMapper;
@@ -27,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class ChebancaTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
     private final ChebancaApiClient apiClient;
+    private static final Logger logger = LoggerFactory.getLogger(ChebancaTransactionFetcher.class);
 
     public ChebancaTransactionFetcher(ChebancaApiClient apiClient) {
         this.apiClient = apiClient;
@@ -55,7 +58,11 @@ public class ChebancaTransactionFetcher implements TransactionDatePaginator<Tran
             transactions.addAll(getTinkTransactions(dataResp));
         } while (moreTransactionsLeftForDateRange(nextAccounting)
                 || moreTransactionsLeftForDateRange(nextNotAccounting));
-        return PaginatorResponseImpl.create(transactions, !transactions.isEmpty());
+        logger.info(
+                "Circuit breaker on: "
+                        + String.format(
+                                " %s, %s, %s", account.getAccountNumber(), fromDate, toDate));
+        return PaginatorResponseImpl.create(transactions, false);
     }
 
     private boolean moreTransactionsLeftForDateRange(Long nextTransactionIdx) {
