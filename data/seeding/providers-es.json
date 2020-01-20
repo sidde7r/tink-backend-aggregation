@@ -49,39 +49,6 @@
         },
         {
             "accessType": "OTHER",
-            "className": "nxgen.es.banks.popular.BancoPopularAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Banco Popular",
-            "fields": [
-                {
-                    "description": "Username",
-                    "immutable": true,
-                    "name": "username"
-                },
-                {
-                    "description": "Password",
-                    "hint": "NNNNNN",
-                    "masked": true,
-                    "maxLength": 6,
-                    "minLength": 6,
-                    "name": "password",
-                    "numeric": true,
-                    "pattern": "([0-9]{6})",
-                    "patternError": "Please enter your 6 digit online PIN.",
-                    "sensitive": true
-                }
-            ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "name": "es-bancopopular-password",
-            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OTHER",
             "className": "nxgen.es.banks.sabadell.SabadellAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Banco Sabadell",
