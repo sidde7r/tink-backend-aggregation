@@ -35,7 +35,7 @@ public class BnpPfTransactionalAccountFetcher
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        String externalAccountId = account.getBankIdentifier();
+        String externalAccountId = account.getApiIdentifier();
 
         Optional<PfmAccount> pfmAccount =
                 apiClient
