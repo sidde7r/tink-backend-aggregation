@@ -26,7 +26,7 @@ public class NordeaCreditCardTransactionsFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-        String accountId = account.getBankIdentifier();
+        String accountId = account.getApiIdentifier();
 
         if (Strings.isNullOrEmpty(accountId)) {
             return PaginatorResponseImpl.createEmpty(false);

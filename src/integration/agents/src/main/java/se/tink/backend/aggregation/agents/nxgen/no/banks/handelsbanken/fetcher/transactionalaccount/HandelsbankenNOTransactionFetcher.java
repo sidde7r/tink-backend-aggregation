@@ -27,7 +27,7 @@ public class HandelsbankenNOTransactionFetcher
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, int numberOfTransactions, int startIndex) {
 
-        String transactionUrlForAccount = account.getBankIdentifier();
+        String transactionUrlForAccount = account.getApiIdentifier();
         HttpResponse response =
                 apiClient.fetchTransactions(
                         transactionUrlForAccount, numberOfTransactions, startIndex);

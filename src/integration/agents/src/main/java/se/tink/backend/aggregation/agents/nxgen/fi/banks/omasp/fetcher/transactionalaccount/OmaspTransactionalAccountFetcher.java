@@ -76,7 +76,7 @@ public class OmaspTransactionalAccountFetcher
         TransactionsEntity transactionsEntity = transactionsEntities.get(page);
         TransactionDetailsResponse transactionDetailsResponse =
                 this.apiClient.getTransactionDetails(
-                        account.getBankIdentifier(), transactionsEntity.getId());
+                        account.getApiIdentifier(), transactionsEntity.getId());
 
         return PaginatorResponseImpl.create(
                 Collections.singletonList(transactionDetailsResponse.toTinkTransaction()),

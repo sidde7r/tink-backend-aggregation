@@ -42,7 +42,7 @@ public class SpankkiTransactionFetcher implements TransactionDatePaginator<Trans
         }
         GetTransactionsResponse transactionsResponse =
                 apiClient.fetchTransactions(
-                        account.getBankIdentifier(), formatDate(fromDate), formatDate(toDate));
+                        account.getApiIdentifier(), formatDate(fromDate), formatDate(toDate));
         if (transactionsResponse.getTransactions() != null) {
             transactions.addAll(
                     transactionsResponse.getTransactions().stream()

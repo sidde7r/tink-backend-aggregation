@@ -21,7 +21,7 @@ public class Sparebank1CreditCardTransactionFetcher
         // the bank
         // as long as there are more transactions to fetch.
         if (Strings.isNullOrEmpty(key)) {
-            return apiClient.fetchCreditCardTransactions(account.getBankIdentifier());
+            return apiClient.fetchCreditCardTransactions(account.getApiIdentifier());
         }
 
         return apiClient.get(key, CreditCardTransactionsResponse.class);

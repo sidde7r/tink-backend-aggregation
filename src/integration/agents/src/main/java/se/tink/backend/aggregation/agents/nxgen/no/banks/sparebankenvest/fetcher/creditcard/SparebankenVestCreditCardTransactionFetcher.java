@@ -31,7 +31,7 @@ public class SparebankenVestCreditCardTransactionFetcher
             CreditCardAccount account, Date fromDate, Date toDate) {
         List<CreditCardTransaction> transactions = new ArrayList<>();
 
-        BankIdentifier bankIdentifier = new BankIdentifier(account.getBankIdentifier());
+        BankIdentifier bankIdentifier = new BankIdentifier(account.getApiIdentifier());
 
         CreditCardTransactionsResponse transactionsResponse =
                 apiClient.fetchCreditCardTransactions(bankIdentifier, fromDate, toDate, 0);
