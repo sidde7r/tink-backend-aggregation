@@ -51,7 +51,7 @@ public class EvoBancoCreditCardFetcher
         }
 
         CardTransactionsResponse cardTransactionsResponse =
-                bankClient.fetchCardTransactions(account.getBankIdentifier(), page);
+                bankClient.fetchCardTransactions(account.getApiIdentifier(), page);
 
         cardTransactionsResponse.handleReturnCode();
 
