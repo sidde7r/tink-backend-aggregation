@@ -63,6 +63,11 @@ public class ProviderConfigurationServiceResource implements ProviderConfigurati
     }
 
     @Override
+    public List<ProviderConfiguration> listAll() {
+        return getProviderConfigurationService().listAll();
+    }
+
+    @Override
     public ProviderConfiguration getProviderByName(
             String clusterName, String clusterEnvironment, String providerName) {
         return getProviderConfigurationService()
