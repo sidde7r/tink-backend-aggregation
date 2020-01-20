@@ -86,7 +86,6 @@ public class RabobankConstants {
 
     public static class HttpClient {
         public static final int MAX_RETRIES = 5;
-        public static final int RETRY_SLEEP_MILLISECONDS_MINIMUM = 2000;
-        public static final int RETRY_SLEEP_MILLISECONDS_MAXIMUM = 10000;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
     }
 }
