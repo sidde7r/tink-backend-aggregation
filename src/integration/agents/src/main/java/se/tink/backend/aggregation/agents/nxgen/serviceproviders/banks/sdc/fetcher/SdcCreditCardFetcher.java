@@ -100,7 +100,7 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher
             CreditCardAccount account, Date fromDate, Date toDate) {
         SessionStorageAgreements agreements = getAgreements();
         SessionStorageAgreement agreement =
-                agreements.findAgreementForAccountBankId(account.getBankIdentifier());
+                agreements.findAgreementForAccountBankId(account.getApiIdentifier());
 
         Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity =
                 selectAgreement(agreement, agreements);
@@ -112,7 +112,7 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher
         Collection<? extends Transaction> transactions = Collections.emptyList();
 
         SdcAccountKey creditCardAccountId =
-                this.creditCardAccounts.get(account.getBankIdentifier());
+                this.creditCardAccounts.get(account.getApiIdentifier());
         SearchTransactionsRequest searchTransactionsRequest =
                 new SearchTransactionsRequest()
                         .setAccountId(creditCardAccountId.getAccountId())
