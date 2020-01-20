@@ -206,7 +206,7 @@ public class OtmlResponseConverter {
                         CheckingAccount.builder(iban)
                                 .setHolderName(holderName)
                                 .setBalance(amount)
-                                .setBankIdentifier(account.getBankIdentifier())
+                                .setBankIdentifier(account.getApiIdentifier())
                                 .setAccountNumber(iban)
                                 .setName(account.getName())
                                 .build();
@@ -217,7 +217,7 @@ public class OtmlResponseConverter {
                                 .setAccountNumber(iban)
                                 .setHolderName(holderName)
                                 .setName(account.getName())
-                                .setBankIdentifier(account.getBankIdentifier())
+                                .setBankIdentifier(account.getApiIdentifier())
                                 .build();
                 break;
 
