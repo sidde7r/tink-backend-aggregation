@@ -170,7 +170,7 @@ public class BanquePopulaireApiClient {
                                         + BanquePopulaireConstants.Urls.TRANSACTIONS_PATH)
                         .parameter(
                                 BanquePopulaireConstants.Fetcher.ACCOUNT_PARAMETER,
-                                account.getBankIdentifier())
+                                account.getApiIdentifier())
                         .queryParam(
                                 BanquePopulaireConstants.Query.PAGE_KEY,
                                 Optional.ofNullable(paginationKey).orElse(""))

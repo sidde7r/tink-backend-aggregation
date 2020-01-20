@@ -37,7 +37,7 @@ public class CaisseEpargneTransactionalAccountFetcher
             TransactionalAccount account, String key) {
 
         TransactionsRequest request = new TransactionsRequest();
-        request.setAccount(account.getBankIdentifier());
+        request.setAccount(account.getApiIdentifier());
         request.setPaginationKey(key);
 
         return apiClient.fetchTransactions(request);
