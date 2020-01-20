@@ -169,7 +169,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
 
     @Override
     public boolean is(Account account) {
-        return number != null && number.equals(account.getBankIdentifier());
+        return number != null && number.equals(account.getApiIdentifier());
     }
 
     public String getClearingNumber() {
