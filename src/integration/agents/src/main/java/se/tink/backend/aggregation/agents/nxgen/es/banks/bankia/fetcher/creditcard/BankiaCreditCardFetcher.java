@@ -47,7 +47,7 @@ public class BankiaCreditCardFetcher
         //  *   providing 20 (app default) transactions in the response and setting hasMore to true
         //      does not make the app request more transactions
 
-        String id = account.getBankIdentifier();
+        String id = account.getApiIdentifier();
 
         int maxLimit = 100;
         CardTransactionsResponse response = apiClient.getCardTransactions(id, maxLimit);
