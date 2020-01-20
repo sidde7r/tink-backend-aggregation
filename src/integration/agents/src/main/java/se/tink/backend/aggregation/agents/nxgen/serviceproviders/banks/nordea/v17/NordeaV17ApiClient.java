@@ -75,7 +75,7 @@ public class NordeaV17ApiClient {
                 .anyMatch(
                         pe ->
                                 Objects.equals(
-                                        account.getBankIdentifier(), pe.getNordeaAccountIdV2()));
+                                        account.getApiIdentifier(), pe.getNordeaAccountIdV2()));
     }
 
     public TransactionsResponse fetchTransactions(String accountId, String continueKey) {
