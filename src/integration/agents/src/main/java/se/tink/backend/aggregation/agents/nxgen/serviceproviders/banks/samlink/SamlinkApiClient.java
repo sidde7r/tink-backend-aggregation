@@ -111,7 +111,7 @@ public class SamlinkApiClient {
 
     public Optional<TransactionsResponse> getTransactions(TransactionalAccount account) {
         return Optional.ofNullable(account)
-                .map(TransactionalAccount::getBankIdentifier)
+                .map(TransactionalAccount::getApiIdentifier)
                 .map(link -> fetchTransactions(link, 0));
     }
 
@@ -228,7 +228,7 @@ public class SamlinkApiClient {
 
     public Optional<CreditCardTransactionsResponse> getTransactions(CreditCardAccount account) {
         return Optional.ofNullable(account)
-                .map(CreditCardAccount::getBankIdentifier)
+                .map(CreditCardAccount::getApiIdentifier)
                 .map(link -> fetchCreditCardTransactions(0, link));
     }
 
