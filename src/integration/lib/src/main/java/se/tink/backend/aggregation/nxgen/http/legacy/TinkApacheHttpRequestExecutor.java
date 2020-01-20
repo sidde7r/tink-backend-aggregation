@@ -59,7 +59,11 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
     private static final ImmutableSet<String> ALLOWED_CLUSTERIDS_FOR_QSEALCSIGN =
-            ImmutableSet.of("oxford-production", "kirkby-staging", "kirkby-production");
+            ImmutableSet.of(
+                    "oxford-production",
+                    "kirkby-staging",
+                    "kirkby-production",
+                    "neston-production");
 
     // All isAggregator=TRUE appIds
     private static final ImmutableSet<String> DISALLOWED_APPIDS_FOR_QSEALCSIGN =
@@ -362,6 +366,10 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                         QsealcAlg.EIDAS_JWT_RSA_SHA256,
                         eidasIdentity);
         String jwt = signer.getJWSToken(baseTokenString.getBytes());
+        // TODO: Remove it after nordea test TEMP to test Nordea qsealc signature
+        if ("neston-production".equals(eidasIdentity.getClusterId())) {
+            log.info("Got jwt token from neston {}", jwt);
+        }
         request.addHeader(SIGNATURE_HEADER_KEY, jwt);
     }
 
