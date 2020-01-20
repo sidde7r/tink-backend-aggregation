@@ -71,7 +71,7 @@ public class SdcSeCreditCardFetcher extends SdcCreditCardFetcher {
                             // return value
                             creditCards.add(creditCardAccount);
 
-                            String creditCardAccountId = creditCardAccount.getBankIdentifier();
+                            String creditCardAccountId = creditCardAccount.getApiIdentifier();
                             // keep BankIdentifier to be able to fetch transactions
                             this.creditCardAccounts.put(
                                     creditCardAccountId, account.getEntityKey());
