@@ -33,7 +33,7 @@ public class FilterAccountsResponseTest {
         assertTrue(accounts.size() == 1);
         for (TransactionalAccount account : accounts) {
             assertNotNull(account.getName());
-            assertNotNull(account.getBankIdentifier());
+            assertNotNull(account.getApiIdentifier());
             assertNotNull(account.getAccountNumber());
             assertTrue(account.getBalance().getValue() != 0);
             System.out.println("Account: " + account.toString() + ", TYPE: " + account.getType());

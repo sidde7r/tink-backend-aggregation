@@ -40,7 +40,7 @@ public class SdcTransactionFetcher extends SdcAgreementFetcher
             TransactionalAccount account, Date fromDate, Date toDate) {
         SessionStorageAgreements agreements = getAgreements();
         SessionStorageAgreement agreement =
-                agreements.findAgreementForAccountBankId(account.getBankIdentifier());
+                agreements.findAgreementForAccountBankId(account.getApiIdentifier());
 
         Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity =
                 selectAgreement(agreement, agreements);

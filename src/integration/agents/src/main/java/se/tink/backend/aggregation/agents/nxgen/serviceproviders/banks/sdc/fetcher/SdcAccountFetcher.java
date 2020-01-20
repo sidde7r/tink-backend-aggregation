@@ -42,7 +42,7 @@ public class SdcAccountFetcher extends SdcAgreementFetcher
                                     fetchAgreementAccounts();
 
                             for (TransactionalAccount account : agreementAccounts) {
-                                agreement.addAccountBankId(account.getBankIdentifier());
+                                agreement.addAccountBankId(account.getApiIdentifier());
                             }
 
                             accounts.addAll(agreementAccounts);
