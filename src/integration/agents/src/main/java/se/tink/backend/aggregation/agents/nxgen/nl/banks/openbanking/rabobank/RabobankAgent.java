@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.co
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.SandboxTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
@@ -34,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -106,9 +106,8 @@ public final class RabobankAgent
         client.addFilter(
                 new RateLimitRetryFilter(
                         RabobankConstants.HttpClient.MAX_RETRIES,
-                        RandomUtils.generateRandomNumberInRange(
-                                HttpClient.RETRY_SLEEP_MILLISECONDS_MINIMUM,
-                                HttpClient.RETRY_SLEEP_MILLISECONDS_MAXIMUM)));
+                        HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new AccessExceededFilter());
     }
 
     @Override
