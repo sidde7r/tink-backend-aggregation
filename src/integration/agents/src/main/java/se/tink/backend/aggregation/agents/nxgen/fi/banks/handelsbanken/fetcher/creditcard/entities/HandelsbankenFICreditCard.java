@@ -35,6 +35,6 @@ public class HandelsbankenFICreditCard extends HandelsbankenCreditCard {
 
     @Override
     public boolean is(Account account) {
-        return numberMasked != null && numberMasked.equals(account.getBankIdentifier());
+        return numberMasked != null && numberMasked.equals(account.getApiIdentifier());
     }
 }
