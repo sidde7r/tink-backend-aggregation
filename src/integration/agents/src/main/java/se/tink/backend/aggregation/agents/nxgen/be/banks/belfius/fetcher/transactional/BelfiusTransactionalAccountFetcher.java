@@ -106,7 +106,7 @@ public class BelfiusTransactionalAccountFetcher
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
             TransactionalAccount account) {
         List<UpcomingTransaction> transactionsAll = new ArrayList<>();
-        String key = account.getBankIdentifier();
+        String key = account.getApiIdentifier();
         boolean initialUpcomingTransactionRequest = true;
         FetchUpcomingTransactionsResponse response;
 
