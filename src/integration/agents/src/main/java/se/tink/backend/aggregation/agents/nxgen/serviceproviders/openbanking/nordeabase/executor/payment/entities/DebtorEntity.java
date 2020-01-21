@@ -2,10 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.enums.NordeaAccountType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.util.NordeaAccountIdentifierFormatter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payment.rpc.Debtor;
 
 @JsonObject
@@ -23,28 +21,23 @@ public class DebtorEntity {
 
     @JsonIgnore
     public static DebtorEntity of(PaymentRequest paymentRequest) {
-        Debtor debtor = paymentRequest.getPayment().getDebtor();
         return new DebtorEntity.Builder()
                 .withAccount(
                         new AccountEntity(
                                 NordeaAccountType.mapToNordeaAccountType(
-                                                debtor.getAccountIdentifierType())
+                                                paymentRequest
+                                                        .getPayment()
+                                                        .getDebtor()
+                                                        .getAccountIdentifierType())
                                         .name(),
                                 paymentRequest.getPayment().getCurrency(),
-                                getAccountNumber(debtor)))
+                                paymentRequest.getPayment().getDebtor().getAccountNumber()))
                 .build();
     }
 
     @JsonIgnore
     public Debtor toTinkDebtor() {
         return new Debtor(account.toTinkAccountIdentifier());
-    }
-
-    @JsonIgnore
-    private static String getAccountNumber(Debtor debtor) {
-        return AccountIdentifier.create(
-                        debtor.getAccountIdentifierType(), debtor.getAccountNumber())
-                .getIdentifier(new NordeaAccountIdentifierFormatter());
     }
 
     public static class Builder {
