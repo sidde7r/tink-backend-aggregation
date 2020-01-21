@@ -5,6 +5,7 @@ junit_test(
     srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:cryptography_test",
         "//etc:development",
     ],
     tags = [
@@ -18,6 +19,7 @@ junit_test(
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
