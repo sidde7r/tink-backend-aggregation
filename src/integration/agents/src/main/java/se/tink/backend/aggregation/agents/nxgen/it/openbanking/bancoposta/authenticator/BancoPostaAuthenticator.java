@@ -1,65 +1,39 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator;
 
-import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.BancoPostaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.ConsentScaResponse;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.ScaMethodEntity;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyAppAuthenticationStep;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
 
     public BancoPostaAuthenticator(
             CbiGlobeApiClient apiClient,
-            StrongAuthenticationState strongAuthenticationState,
-            CbiUserState userState,
+            PersistentStorage persistentStorage,
             CbiGlobeConfiguration configuration) {
-        super(apiClient, strongAuthenticationState, userState, configuration);
+        super(apiClient, persistentStorage, configuration);
     }
 
-    @Override
-    protected List<AuthenticationStep> getManualAuthenticationSteps() {
-        if (manualAuthenticationSteps.isEmpty()) {
-            buildManualAuthenticationSteps();
-        }
-
-        return manualAuthenticationSteps;
+    public URL buildAuthorizeUrl(ConsentResponse consentResponse, ScaMethodEntity scaMethodEntity) {
+        UpdateConsentRequest body =
+                new UpdateConsentRequest(scaMethodEntity.getAuthenticationMethodId());
+        ConsentResponse updateConsentResponse =
+                ((BancoPostaApiClient) apiClient)
+                        .updateConsent(consentResponse.getConsentId(), body);
+        return getScaUrl(updateConsentResponse);
     }
 
-    private void buildManualAuthenticationSteps() {
-        manualAuthenticationSteps.add(
-                new CreateAccountsConsentScaAuthenticationStep(
-                        consentManager, strongAuthenticationState, userState));
-
-        manualAuthenticationSteps.add(
-                new ScaMethodFieldAuthenticationStep(
-                        String.valueOf(manualAuthenticationSteps.size()), userState));
-
-        manualAuthenticationSteps.add(
-                new CbiThirdPartyAppAuthenticationStep(
-                        new BancoPostaConsentRequestParamsProvider(this, consentManager),
-                        ConsentType.ACCOUNT,
-                        consentManager,
-                        userState,
-                        strongAuthenticationState));
-
-        manualAuthenticationSteps.add(
-                new CreateTransactionsConsentScaAuthenticationStep(
-                        consentManager, strongAuthenticationState, userState));
-
-        manualAuthenticationSteps.add(
-                new ScaMethodFieldAuthenticationStep(
-                        String.valueOf(manualAuthenticationSteps.size()), userState));
-
-        manualAuthenticationSteps.add(
-                new CbiThirdPartyAppAuthenticationStep(
-                        new BancoPostaConsentRequestParamsProvider(this, consentManager),
-                        ConsentType.BALANCE_TRANSACTION,
-                        consentManager,
-                        userState,
-                        strongAuthenticationState));
+    public ConsentScaResponse getConsentResponse(
+            ConsentType consentType, ConsentRequest consentRequest, String state) {
+        String redirectUrl = createRedirectUrl(state, consentType);
+        return (ConsentScaResponse) createConsent(consentRequest, redirectUrl);
     }
 }

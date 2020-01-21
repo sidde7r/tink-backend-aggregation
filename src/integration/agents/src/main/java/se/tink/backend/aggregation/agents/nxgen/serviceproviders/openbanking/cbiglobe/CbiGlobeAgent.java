@@ -6,18 +6,18 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticationRedirectController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.SupplementalInformationProvider;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -29,26 +29,22 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilte
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
+public abstract class CbiGlobeAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     protected final String clientName;
     protected CbiGlobeApiClient apiClient;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
     protected TemporaryStorage temporaryStorage;
-    protected StatelessProgressiveAuthenticator authenticator;
-    protected CbiUserState userState;
 
     public CbiGlobeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
+        super(request, context, signatureKeyPair);
 
         temporaryStorage = new TemporaryStorage();
         apiClient = getApiClient(request.isManual());
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        userState = new CbiUserState(persistentStorage, sessionStorage);
-        authenticator = getAuthenticator();
 
         applyFilters(this.client);
     }
@@ -82,17 +78,15 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     }
 
     @Override
-    public StatelessProgressiveAuthenticator getAuthenticator() {
-        if (authenticator == null) {
-            authenticator =
-                    new CbiGlobeAuthenticator(
-                            apiClient,
-                            new StrongAuthenticationState(request.getAppUriId()),
-                            userState,
-                            getClientConfiguration());
-        }
+    protected Authenticator constructAuthenticator() {
+        final CbiGlobeAuthenticationController controller =
+                new CbiGlobeAuthenticationRedirectController(
+                        supplementalInformationHelper,
+                        new CbiGlobeAuthenticator(
+                                apiClient, persistentStorage, getClientConfiguration()),
+                        new StrongAuthenticationState(request.getAppUriId()));
 
-        return authenticator;
+        return new AutoAuthenticationController(request, systemUpdater, controller, controller);
     }
 
     @Override
@@ -135,13 +129,9 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProvider(request, supplementalRequester, credentials);
         CbiGlobePaymentExecutor paymentExecutor =
                 new CbiGlobePaymentExecutor(
-                        apiClient,
-                        supplementalInformationProvider.getSupplementalInformationHelper(),
-                        persistentStorage);
+                        apiClient, supplementalInformationHelper, persistentStorage);
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }

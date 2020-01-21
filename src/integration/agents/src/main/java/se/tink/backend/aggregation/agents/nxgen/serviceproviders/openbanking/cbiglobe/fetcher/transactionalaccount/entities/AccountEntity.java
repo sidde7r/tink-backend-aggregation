@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -16,7 +15,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-@NoArgsConstructor
 public class AccountEntity {
     @JsonProperty("_links")
     private LinksEntity links;
@@ -28,10 +26,6 @@ public class AccountEntity {
     private String resourceId;
     private String name;
     private String product;
-
-    public AccountEntity(String iban) {
-        this.iban = iban;
-    }
 
     public String getIban() {
         return iban;
