@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -46,7 +48,7 @@ public class BbvaAgent extends NextGenerationAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
-
+    private static final Logger log = LoggerFactory.getLogger(BbvaAgent.class);
     private BbvaApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
@@ -175,8 +177,13 @@ public class BbvaAgent extends NextGenerationAgent
 
         if (configuration.isFeatureEnabled(Proxy.ES_PROXY)) {
             // Setting proxy for Spain via TPP
-            PasswordBasedProxyConfiguration proxyConfiguration =
-                    configuration.getCountryProxy(Proxy.COUNTRY);
+            final PasswordBasedProxyConfiguration proxyConfiguration =
+                    configuration.getCountryProxy(
+                            Proxy.COUNTRY, credentials.getUserId().hashCode());
+            log.info(
+                    "Using proxy {} with username {}",
+                    proxyConfiguration.getHost(),
+                    proxyConfiguration.getUsername());
             client.setProductionProxy(
                     proxyConfiguration.getHost(),
                     proxyConfiguration.getUsername(),

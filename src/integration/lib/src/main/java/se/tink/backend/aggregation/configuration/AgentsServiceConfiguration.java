@@ -3,8 +3,11 @@ package se.tink.backend.aggregation.configuration;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Preconditions;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
@@ -112,6 +115,17 @@ public class AgentsServiceConfiguration {
 
     @JsonIgnore
     public PasswordBasedProxyConfiguration getCountryProxy(String country) {
-        return countryProxies.get(country);
+        return getCountryProxy(country, 0);
+    }
+
+    @JsonIgnore
+    public PasswordBasedProxyConfiguration getCountryProxy(String country, int seed) {
+        final List<String> countryKeys =
+                countryProxies.keySet().stream()
+                        .filter(key -> key.startsWith(country))
+                        .collect(Collectors.toList());
+        Preconditions.checkArgument(
+                countryKeys.size() > 0, "No proxies configured for country '%s'", country);
+        return countryProxies.get(countryKeys.get(seed % countryKeys.size()));
     }
 }
