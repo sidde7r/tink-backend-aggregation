@@ -59,7 +59,7 @@ public class NordeaV17TransactionalAccountFetcher
                         .filter(
                                 pe ->
                                         Objects.equals(
-                                                account.getBankIdentifier(),
+                                                account.getApiIdentifier(),
                                                 pe.getNordeaAccountIdV2()))
                         .filter(ProductEntity::canView)
                         .findFirst();
