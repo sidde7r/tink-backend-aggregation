@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.ConsentParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
@@ -23,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class VolksbankApiClient {
@@ -113,24 +111,13 @@ public class VolksbankApiClient {
 
         URL url = urlFactory.buildURL(Paths.ACCOUNTS);
 
-        String response = null;
-        try {
-            response =
-                    client.request(url)
-                            .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                            .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
-                            .header(HeaderKeys.CONSENT_ID, consentId)
-                            .addBearerToken(oAuth2Token)
-                            .get(String.class);
-        } catch (HttpResponseException e) {
-            if (e.getMessage().contains(ConsentParams.CONSENT_EXPIRED)) {
-                throw BankServiceError.CONSENT_EXPIRED.exception();
-            }
-            if (e.getMessage().contains(ConsentParams.CONSENT_INVALID)) {
-                throw BankServiceError.CONSENT_INVALID.exception();
-            }
-            throw e;
-        }
+        final String response =
+                client.request(url)
+                        .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                        .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
+                        .header(HeaderKeys.CONSENT_ID, consentId)
+                        .addBearerToken(oAuth2Token)
+                        .get(String.class);
         return getResponse(response, AccountsResponse.class);
     }
 
