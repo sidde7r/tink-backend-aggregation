@@ -279,6 +279,9 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         } else {
             this.logMasker.setCensorSensitiveHeaders(
                     this.configuration.isCensorSensitiveHeadersEnabled());
+            if (this.configuration.isMockServer()) {
+                this.disableSslVerification();
+            }
             debugOutputLoggingFilter =
                     new RestIoLoggingFilter(
                             printStream,
