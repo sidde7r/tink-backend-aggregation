@@ -19,7 +19,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
 
         try {
             this.language = request.getUser().getLocale().split("_")[0];
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             this.language = NordeaBaseConstants.QueryValues.DEFAULT_LANGUAGE;
         }
     }
