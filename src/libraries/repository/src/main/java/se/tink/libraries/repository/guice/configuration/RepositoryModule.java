@@ -25,18 +25,10 @@ public abstract class RepositoryModule extends AbstractModule {
                     .toInstance(applicationContext);
         }
 
-        bindCaches();
-
-        bindCentralizedDaos();
-
         bindRepositories();
     }
 
-    protected void bindCentralizedDaos() {}
-
     protected void bindRepositories() {}
-
-    protected void bindCaches() {}
 
     private AnnotationConfigApplicationContext centralizedApplicationContext() {
         SingletonRepositoryConfiguration.setConfiguration(databaseConfiguration);
