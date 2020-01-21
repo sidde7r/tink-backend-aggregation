@@ -53,7 +53,7 @@ public class IngInvestmentAccountFetcher
 
         return apiClient.getTransactions(
                 transactionsUrl,
-                account.getBankIdentifier(),
+                account.getApiIdentifier(),
                 getStartIndex(page),
                 getEndIndex(page));
     }

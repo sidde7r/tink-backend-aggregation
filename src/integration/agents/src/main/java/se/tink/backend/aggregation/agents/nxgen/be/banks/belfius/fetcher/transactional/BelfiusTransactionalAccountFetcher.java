@@ -76,7 +76,7 @@ public class BelfiusTransactionalAccountFetcher
 
     @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
-        String key = account.getBankIdentifier();
+        String key = account.getApiIdentifier();
         FetchTransactionsResponse response;
         response =
                 apiClient.fetchTransactions(

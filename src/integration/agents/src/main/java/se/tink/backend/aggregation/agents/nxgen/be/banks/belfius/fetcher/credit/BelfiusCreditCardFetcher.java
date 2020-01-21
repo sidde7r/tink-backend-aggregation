@@ -74,7 +74,7 @@ public class BelfiusCreditCardFetcher
      */
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
-        String key = account.getBankIdentifier();
+        String key = account.getApiIdentifier();
         boolean initialRequest = true;
         FetchTransactionsResponse response;
 

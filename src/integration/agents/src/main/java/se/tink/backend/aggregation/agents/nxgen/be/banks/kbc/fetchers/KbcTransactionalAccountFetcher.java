@@ -68,7 +68,7 @@ public class KbcTransactionalAccountFetcher
 
         try {
             return apiClient.fetchTransactions(
-                    account.getBankIdentifier(), key, userLanguage, cipherKey);
+                    account.getApiIdentifier(), key, userLanguage, cipherKey);
         } catch (IllegalStateException e) {
             if (noTransactionsFoundForLast12Months(e)) {
                 return new TransactionKeyPaginatorResponseImpl<>();
@@ -105,7 +105,7 @@ public class KbcTransactionalAccountFetcher
         String key = null;
         do {
             FutureTransactionsResponse response =
-                    apiClient.fetchFutureTransactions(account.getBankIdentifier(), key, cipherKey);
+                    apiClient.fetchFutureTransactions(account.getApiIdentifier(), key, cipherKey);
             upcomingTransactions.addAll(response.getUpcomingTransactions());
             key = response.hasNext() ? response.nextKey() : null;
         } while (key != null);
