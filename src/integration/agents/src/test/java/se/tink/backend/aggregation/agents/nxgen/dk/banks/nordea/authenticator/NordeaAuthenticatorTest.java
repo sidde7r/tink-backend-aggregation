@@ -5,15 +5,17 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestBase;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.TestConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
 
+@Ignore
 public class NordeaAuthenticatorTest extends NordeaTestBase {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         setUpTest();
     }
 
