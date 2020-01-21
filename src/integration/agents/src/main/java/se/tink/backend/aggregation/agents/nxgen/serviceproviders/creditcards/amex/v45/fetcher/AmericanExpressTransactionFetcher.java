@@ -69,7 +69,7 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
     private void getTransactions(
             CreditCardAccount card, List<AggregationTransaction> transactions) {
 
-        Integer cardIndex = Integer.valueOf(card.getBankIdentifier());
+        Integer cardIndex = Integer.valueOf(card.getApiIdentifier());
         TransactionResponse response =
                 apiClient.requestTransaction(createTransactionRequest(cardIndex, 0));
 
