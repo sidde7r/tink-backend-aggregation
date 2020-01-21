@@ -1,22 +1,19 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi;
 
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.BancoPostaConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.BancoPostaConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.ConsentScaResponse;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.UpdateConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.UbiConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.UbiConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
-public class BancoPostaApiClient extends CbiGlobeApiClient {
+public class UbiApiClient extends CbiGlobeApiClient {
 
-    public BancoPostaApiClient(
+    public UbiApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             boolean requestManual,
@@ -28,11 +25,5 @@ public class BancoPostaApiClient extends CbiGlobeApiClient {
         return createRequestInSession(Urls.CONSENTS.concat("/" + consentId))
                 .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA)
                 .put(ConsentResponse.class, body);
-    }
-
-    @Override
-    public ConsentScaResponse createConsent(ConsentRequest consentRequest, String redirectUrl) {
-        RequestBuilder rb = super.createConsentRequest(redirectUrl);
-        return rb.post(ConsentScaResponse.class, consentRequest);
     }
 }

@@ -5,7 +5,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 
 public class CbiGlobeUtils {
@@ -16,7 +15,7 @@ public class CbiGlobeUtils {
     }
 
     public static String formatDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z");
         return sdf.format(date);
     }
 

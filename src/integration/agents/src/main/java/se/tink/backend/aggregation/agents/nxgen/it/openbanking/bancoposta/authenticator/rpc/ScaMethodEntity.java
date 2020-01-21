@@ -1,12 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@NoArgsConstructor
-@AllArgsConstructor
 public class ScaMethodEntity {
 
     private String name;
