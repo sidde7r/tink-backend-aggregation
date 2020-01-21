@@ -149,7 +149,7 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher
                 // return value
                 creditCards.add(creditCardAccount);
 
-                String creditCardAccountId = creditCardAccount.getBankIdentifier();
+                String creditCardAccountId = creditCardAccount.getApiIdentifier();
                 // keep BankIdentifier to be able to fetch transactions
                 this.creditCardAccounts.put(
                         creditCardAccountId, creditCardProviderAccount.getEntityKey());
@@ -178,7 +178,7 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher
 
             CreditCardAccount creditCard = creditCardEntity.toTinkCard(sdcAccount);
 
-            String creditCardBankIdentifier = creditCard.getBankIdentifier();
+            String creditCardBankIdentifier = creditCard.getApiIdentifier();
 
             creditCards.add(creditCard);
             this.creditCardAccounts.put(

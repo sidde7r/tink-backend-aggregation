@@ -52,7 +52,7 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account>
 
         ListTransactionsRequest listTransactionsRequest =
                 ListTransactionsRequest.create(
-                        this.languageCode, account.getBankIdentifier(), from, to);
+                        this.languageCode, account.getApiIdentifier(), from, to);
         ListTransactionsResponse listTransactionsResponse;
 
         // Danske Bank has a limit of how far back in time we can fetch transactions.

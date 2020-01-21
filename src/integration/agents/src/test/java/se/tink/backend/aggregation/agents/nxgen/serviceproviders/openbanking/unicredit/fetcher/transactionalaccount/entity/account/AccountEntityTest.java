@@ -35,7 +35,6 @@ public class AccountEntityTest {
         assertThat(result.get().getType()).isEqualTo(AccountTypes.CHECKING);
         assertThat(result.get().getIdentifiers()).contains(new IbanIdentifier("test-iban"));
         assertThat(result.get().getApiIdentifier()).isEqualTo("test-resource-id");
-        assertThat(result.get().getBankIdentifier()).isEqualTo("test-resource-id");
         assertThat(result.get().getExactBalance())
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR"));
         assertThat(result.get().getAccountFlags()).contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
