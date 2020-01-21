@@ -3,22 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues.SCOPE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues.SCOPE_WITHOUT_PAYMENT;
 
-import com.google.common.base.Strings;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.TimeZone;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ApiService;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
@@ -33,9 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.util.SignatureUtil;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -48,14 +36,11 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.PaymentType;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NordeaBaseApiClient implements TokenInterface {
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected NordeaBaseConfiguration configuration;
-    private EidasProxyConfiguration eidasProxyConfiguration;
-    private EidasIdentity eidasIdentity;
 
     public NordeaBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -73,50 +58,30 @@ public class NordeaBaseApiClient implements TokenInterface {
                                         NordeaBaseConstants.ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    public void setConfiguration(
-            NordeaBaseConfiguration configuration,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity) {
+    public void setConfiguration(NordeaBaseConfiguration configuration) {
         this.configuration = configuration;
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.eidasIdentity = eidasIdentity;
     }
 
-    protected RequestBuilder createRequest(URL url, String httpMethod, String body) {
-        String digest = null;
-        if (!Strings.isNullOrEmpty(body)) {
-            digest = SignatureUtil.generateDigest(body);
-        }
-
-        String date = getServerDate();
-        RequestBuilder builder =
-                client.request(url)
-                        .type(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.X_CLIENT_ID, configuration.getClientId())
-                        .header(HeaderKeys.X_CLIENT_SECRET, configuration.getClientSecret())
-                        .header(HeaderKeys.ORIGINATING_HOST, HeaderValues.HOST)
-                        .header(HeaderKeys.ORIGINATING_DATE, date)
-                        .header(
-                                HeaderKeys.SIGNATURE,
-                                createSignature(url, httpMethod, digest, date));
-
-        if (!Strings.isNullOrEmpty(body)) {
-            builder.header(HeaderKeys.DIGEST, digest);
-        }
-
-        return builder;
+    protected RequestBuilder createRequest(URL url) {
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .header(NordeaBaseConstants.QueryKeys.X_CLIENT_ID, configuration.getClientId())
+                .header(
+                        NordeaBaseConstants.QueryKeys.X_CLIENT_SECRET,
+                        configuration.getClientSecret());
     }
 
-    private RequestBuilder createRequestInSession(URL url, String httpMethod, String body) {
+    private RequestBuilder createRequestInSession(URL url) {
         OAuth2Token token = getStoredToken();
-        return createRequest(url, httpMethod, body)
+        return createRequest(url)
                 .header(
                         NordeaBaseConstants.HeaderKeys.AUTHORIZATION,
                         token.getTokenType() + " " + token.getAccessToken());
     }
 
-    private RequestBuilder createTokenRequest(String body) {
-        return createRequest(NordeaBaseConstants.Urls.GET_TOKEN, HttpMethod.POST, body);
+    private RequestBuilder createTokenRequest() {
+        return createRequest(NordeaBaseConstants.Urls.GET_TOKEN);
     }
 
     public URL getAuthorizeUrl(String state, String country) {
@@ -138,15 +103,14 @@ public class NordeaBaseApiClient implements TokenInterface {
     }
 
     public OAuth2Token getToken(GetTokenForm form) {
-        String body = SerializationUtils.serializeToString(form);
-        return createTokenRequest(body)
+        return createTokenRequest()
                 .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(GetTokenResponse.class)
                 .toTinkToken();
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        return createTokenRequest(refreshToken)
+        return createTokenRequest()
                 .body(RefreshTokenForm.of(refreshToken), MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(GetTokenResponse.class)
                 .toTinkToken();
@@ -154,13 +118,12 @@ public class NordeaBaseApiClient implements TokenInterface {
 
     public GetAccountsResponse getAccounts() {
         return requestRefreshableGet(
-                createRequestInSession(NordeaBaseConstants.Urls.GET_ACCOUNTS, HttpMethod.GET, null),
+                createRequestInSession(NordeaBaseConstants.Urls.GET_ACCOUNTS),
                 GetAccountsResponse.class);
     }
 
     public GetAccountsResponse getCorporateAccounts() {
-        return createRequestInSession(Urls.GET_CORPORATE_ACCOUNTS, HttpMethod.GET, null)
-                .get(GetAccountsResponse.class);
+        return createRequestInSession(Urls.GET_CORPORATE_ACCOUNTS).get(GetAccountsResponse.class);
     }
 
     public GetTransactionsResponse getCorporateTransactions(
@@ -173,7 +136,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                         NordeaBaseConstants.IdTags.ACCOUNT_ID,
                                         account.getApiIdentifier()));
 
-        return createRequestInSession(url, HttpMethod.GET, null).get(GetTransactionsResponse.class);
+        return createRequestInSession(url).get(GetTransactionsResponse.class);
     }
 
     public GetTransactionsResponse getTransactions(TransactionalAccount account, String key) {
@@ -185,8 +148,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                         NordeaBaseConstants.IdTags.ACCOUNT_ID,
                                         account.getApiIdentifier()));
 
-        RequestBuilder request = createRequestInSession(url, HttpMethod.GET, null);
-
+        RequestBuilder request = createRequestInSession(url);
         return requestRefreshableGet(request, GetTransactionsResponse.class);
     }
 
@@ -206,14 +168,11 @@ public class NordeaBaseApiClient implements TokenInterface {
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, PaymentType paymentType)
             throws PaymentException {
-        String body = SerializationUtils.serializeToString(createPaymentRequest);
         try {
             return createRequestInSession(
                             NordeaBaseConstants.Urls.INITIATE_PAYMENT.parameter(
                                     NordeaBaseConstants.IdTags.PAYMENT_TYPE,
-                                    paymentType.toString()),
-                            HttpMethod.POST,
-                            body)
+                                    paymentType.toString()))
                     .post(CreatePaymentResponse.class, createPaymentRequest);
         } catch (HttpResponseException e) {
             handleHttpPisResponseException(e);
@@ -229,9 +188,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                     .parameter(
                                             NordeaBaseConstants.IdTags.PAYMENT_TYPE,
                                             paymentType.toString())
-                                    .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId),
-                            HttpMethod.PUT,
-                            null)
+                                    .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId))
                     .put(ConfirmPaymentResponse.class);
         } catch (HttpResponseException e) {
             handleHttpPisResponseException(e);
@@ -247,9 +204,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                     .parameter(
                                             NordeaBaseConstants.IdTags.PAYMENT_TYPE,
                                             paymentType.toString())
-                                    .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId),
-                            HttpMethod.GET,
-                            null)
+                                    .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId))
                     .get(GetPaymentResponse.class);
         } catch (HttpResponseException e) {
             handleHttpPisResponseException(e);
@@ -262,9 +217,7 @@ public class NordeaBaseApiClient implements TokenInterface {
             return createRequestInSession(
                             NordeaBaseConstants.Urls.GET_PAYMENTS.parameter(
                                     NordeaBaseConstants.IdTags.PAYMENT_TYPE,
-                                    paymentType.toString()),
-                            HttpMethod.GET,
-                            null)
+                                    paymentType.toString()))
                     .get(GetPaymentsResponse.class);
         } catch (HttpResponseException e) {
             handleHttpPisResponseException(e);
@@ -346,40 +299,5 @@ public class NordeaBaseApiClient implements TokenInterface {
                             "%s contain invalid scope(s), only support scopes AIS and PIS",
                             scopes.toString()));
         }
-    }
-
-    private String createSignature(
-            URL requestUrl, String httpMethod, final String body, String date) {
-        String contentType = MediaType.APPLICATION_JSON;
-        if (requestUrl.toString().contains(ApiService.GET_TOKEN_DECOUPLED)) {
-            contentType = MediaType.APPLICATION_FORM_URLENCODED;
-        }
-
-        if (!Strings.isNullOrEmpty(body)) {
-            return SignatureUtil.createPostSignature(
-                    getConfiguration().getClientId(),
-                    httpMethod,
-                    requestUrl.toUri(),
-                    date,
-                    body,
-                    contentType,
-                    eidasProxyConfiguration,
-                    eidasIdentity);
-        } else {
-            return SignatureUtil.createGetSignature(
-                    getConfiguration().getClientId(),
-                    httpMethod,
-                    requestUrl.toUri(),
-                    date,
-                    eidasProxyConfiguration,
-                    eidasIdentity);
-        }
-    }
-
-    private String getServerDate() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat(Signature.DATE_FORMAT, Locale.US);
-        dateFormat.setTimeZone(TimeZone.getTimeZone(Signature.TIMEZONE));
-        return dateFormat.format(calendar.getTime());
     }
 }

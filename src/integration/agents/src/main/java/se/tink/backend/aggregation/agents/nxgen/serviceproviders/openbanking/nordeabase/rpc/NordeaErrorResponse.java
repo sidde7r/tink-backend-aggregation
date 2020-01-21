@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.entities.ErrorEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -9,12 +8,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class NordeaErrorResponse extends NordeaBaseResponse {
     private ErrorEntity error;
 
-    @JsonIgnore
     public boolean isBankSideFailure() {
+
         return error.isBankSideFailure();
     }
 
-    @JsonIgnore
     public void checkPisError(Throwable cause) throws PaymentException {
         if (error != null) {
             error.parseAndThrowPis(cause);

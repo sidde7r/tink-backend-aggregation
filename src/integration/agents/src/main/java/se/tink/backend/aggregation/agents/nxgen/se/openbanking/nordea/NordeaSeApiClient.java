@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeResponse;
@@ -17,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class NordeaSeApiClient extends NordeaBaseApiClient {
 
@@ -28,27 +26,25 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
         this.client.addFilter(new TimeoutFilter());
     }
 
+    private RequestBuilder createRequestWithTppToken(URL url, String token) {
+        return createRequest(url)
+                .header(
+                        NordeaBaseConstants.HeaderKeys.AUTHORIZATION,
+                        NordeaSeConstants.HeaderValues.TOKEN_TYPE + " " + token);
+    }
+
     public AuthorizeResponse authorize(AuthorizeRequest authorizeRequest) {
-        String body = SerializationUtils.serializeToString(authorizeRequest);
-        return createRequest(NordeaSeConstants.Urls.AUTHORIZE, HttpMethod.POST, body)
+        return createRequest(NordeaSeConstants.Urls.AUTHORIZE)
                 .post(AuthorizeResponse.class, authorizeRequest);
     }
 
     public HttpResponse getCode(String orderRef, String token) {
-        return createRequestWithTppToken(
-                        new URL(NordeaSeConstants.Urls.GET_CODE + orderRef),
-                        token,
-                        HttpMethod.GET,
-                        null)
+        return createRequestWithTppToken(new URL(NordeaSeConstants.Urls.GET_CODE + orderRef), token)
                 .get(HttpResponse.class);
     }
 
     public OAuth2Token getToken(GetTokenForm form, String token) {
-        return createRequestWithTppToken(
-                        NordeaSeConstants.Urls.GET_TOKEN,
-                        token,
-                        HttpMethod.POST,
-                        form.getBodyValue())
+        return createRequestWithTppToken(NordeaSeConstants.Urls.GET_TOKEN, token)
                 .body(form, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(GetTokenResponse.class)
                 .toTinkToken();
@@ -56,17 +52,9 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
 
     @Override
     public OAuth2Token refreshToken(String refreshToken) {
-        return createRequest(NordeaSeConstants.Urls.GET_TOKEN, HttpMethod.POST, refreshToken)
+        return createRequest(NordeaSeConstants.Urls.GET_TOKEN)
                 .body(RefreshTokenForm.of(refreshToken), MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(GetTokenResponse.class)
                 .toTinkToken();
-    }
-
-    private RequestBuilder createRequestWithTppToken(
-            URL url, String token, String httpMethod, String body) {
-        return createRequest(url, httpMethod, body)
-                .header(
-                        NordeaBaseConstants.HeaderKeys.AUTHORIZATION,
-                        NordeaSeConstants.HeaderValues.TOKEN_TYPE + " " + token);
     }
 }

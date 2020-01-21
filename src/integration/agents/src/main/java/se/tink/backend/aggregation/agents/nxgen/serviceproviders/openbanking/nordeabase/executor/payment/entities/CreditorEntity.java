@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.enums.NordeaAccountType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -43,18 +42,12 @@ public class CreditorEntity {
                                 paymentRequest.getPayment().getCurrency(),
                                 paymentRequest.getPayment().getCreditor().getAccountNumber()))
                 .withMessage("Message")
-                .withReference(getReference(paymentRequest.getPayment().getUniqueId()))
                 .build();
     }
 
     @JsonIgnore
     public Creditor toTinkCreditor() {
         return new Creditor(account.toTinkAccountIdentifier());
-    }
-
-    @JsonIgnore
-    private static ReferenceEntity getReference(String uniqueId) {
-        return Strings.isNullOrEmpty(uniqueId) ? null : new ReferenceEntity("RF", uniqueId);
     }
 
     public static class Builder {
