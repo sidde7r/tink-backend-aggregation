@@ -211,15 +211,6 @@ public abstract class Account {
         return this.uniqueIdentifier.equals(sanitizeUniqueIdentifier(otherUniqueIdentifier));
     }
 
-    /**
-     * @deprecated Use getApiIdentifier() instead.
-     * @return Unique identifier on the bank side, not to be confused with rpc Account.getBankId
-     */
-    @Deprecated
-    public String getBankIdentifier() {
-        return this.apiIdentifier;
-    }
-
     /** @return Unique identifier on the bank side, not to be confused with rpc Account.getBankId */
     public String getApiIdentifier() {
         return this.apiIdentifier;
