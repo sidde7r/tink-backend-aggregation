@@ -22,7 +22,7 @@ public class NordeaTestBase {
     protected CompositeAgentContext context;
     protected TinkHttpClient tinkHttpClient;
 
-    protected void setUpTest() throws Exception {
+    protected void setUpTest() {
         username = TestConfig.USERNAME;
         password = TestConfig.PASSWORD;
 
