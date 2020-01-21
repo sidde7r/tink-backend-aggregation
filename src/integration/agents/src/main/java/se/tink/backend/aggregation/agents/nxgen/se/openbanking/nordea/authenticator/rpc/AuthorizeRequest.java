@@ -13,9 +13,6 @@ public class AuthorizeRequest {
     @JsonProperty("psu_id")
     private String psuId;
 
-    @JsonProperty("redirect_uri")
-    private String redirectUri;
-
     @JsonProperty("response_type")
     private String responseType;
 
@@ -27,13 +24,11 @@ public class AuthorizeRequest {
             long duration,
             String language,
             String psuId,
-            String redirectUri,
             String responseType,
             List<String> scope,
             String state) {
         this.duration = duration;
         this.language = language;
-        this.redirectUri = redirectUri;
         this.psuId = psuId;
         this.responseType = responseType;
         this.scope = scope;

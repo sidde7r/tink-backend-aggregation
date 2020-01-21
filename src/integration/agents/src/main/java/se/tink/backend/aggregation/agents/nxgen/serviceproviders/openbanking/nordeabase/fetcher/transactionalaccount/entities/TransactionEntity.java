@@ -11,9 +11,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class TransactionEntity {
 
-    @JsonProperty("_type")
-    private String type;
-
     private BigDecimal amount;
 
     @JsonProperty("booking_date")
@@ -22,14 +19,26 @@ public class TransactionEntity {
     @JsonProperty("card_number")
     private String cardNumber;
 
+    @JsonProperty("counterparty_account")
+    private String counterPartyAccount;
+
     @JsonProperty("counterparty_name")
-    private String counterpartyName;
+    private String counterPartyName;
 
     private String currency;
+
+    @JsonProperty("currency_rate")
+    private String currencyRate;
 
     private String message;
 
     private String narrative;
+
+    @JsonProperty("original_currency")
+    private String originalCurrency;
+
+    @JsonProperty("original_currency_amount")
+    private String originalCurrencyAmount;
 
     @JsonProperty("own_message")
     private String ownMessage;
