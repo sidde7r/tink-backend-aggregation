@@ -1134,8 +1134,10 @@ agentsServiceConfiguration:
     privateKeyPath: data/test/cryptography/private_rsa_key.pem
     publicKeyPath: data/test/cryptography/public_rsa_key.pub
   testConfiguration:
-    censorSensitiveHeaders: false
     debugOutput: true
+    censorSensitiveHeaders: false
+    mockServer: false
+    mockURL: "localhost:9999"
   tppSecretsServiceConfiguration:
     certificatesLocation: development-staging
     enabled: false

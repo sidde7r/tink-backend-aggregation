@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.nxgen.agents.strategy;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.CompositeAgentContext;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
@@ -25,7 +27,10 @@ public final class NextGenSubsequentGenerationAgentStrategy
         tinkHttpClient =
                 NextGenTinkHttpClient.builder(
                                 context.getLogMasker(),
-                                LogMasker.shouldLog(credentialsRequest.getProvider()))
+                                LogMasker.shouldLog(credentialsRequest.getProvider()),
+                                Optional.ofNullable(context.getConfiguration())
+                                        .map(AgentsServiceConfiguration::getTestConfiguration)
+                                        .orElse(null))
                         .setAggregatorInfo(context.getAggregatorInfo())
                         .setMetricRegistry(context.getMetricRegistry())
                         .setLogOutputStream(context.getLogOutputStream())
