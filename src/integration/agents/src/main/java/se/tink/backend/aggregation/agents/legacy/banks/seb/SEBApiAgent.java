@@ -557,8 +557,16 @@ public class SEBApiAgent extends AbstractAgent
         InvestmentDataRequest investmentDataRequest = new InvestmentDataRequest();
         investmentDataRequest.setRequest(requestWrappingEntity);
 
-        SebResponse sebResponse =
-                postAsJSON(FUND_HOLDING_URL, investmentDataRequest, SebResponse.class);
+        SebResponse sebResponse = new SebResponse();
+        try {
+            sebResponse = postAsJSON(FUND_HOLDING_URL, investmentDataRequest, SebResponse.class);
+        } catch (NullPointerException e) {
+            if (sebResponse.x.errorcode == 8021) {
+                return Collections.emptyMap();
+            }
+            throw e;
+        }
+
         Map<String, List<FundAccountEntity>> accountsByAccountNumber =
                 sebResponse.d.VODB.getFundAccounts().stream()
                         .collect(Collectors.groupingBy(FundAccountEntity::getAccountNumber));
@@ -984,7 +992,9 @@ public class SEBApiAgent extends AbstractAgent
 
         SebResponse accountsResponse = postAsJSON(ACCOUNTS_URL, payload, SebResponse.class);
 
-        if (accountsResponse.d == null || accountsResponse.d.VODB == null) {
+        if (accountsResponse.d == null
+                || accountsResponse.d.VODB == null
+                || accountsResponse.x.errorcode == 8021) {
             return Collections.emptyList();
         }
 
@@ -2387,6 +2397,9 @@ public class SEBApiAgent extends AbstractAgent
                         "Error fetching SEB eInvoices: %s",
                         sebResponse.getFirstErrorMessage().orElse(null)));
 
+        if (sebResponse.x.errorcode == 8021) {
+            return Collections.emptyList();
+        }
         return sebResponse.d.VODB.getEInvoices();
     }
 
