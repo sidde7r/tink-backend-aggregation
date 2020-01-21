@@ -17,6 +17,10 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.CreditCard;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.IdentityData;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.InvestmentAccounts;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.LoanAccount;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectOAuth2Authenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoTransferExecutor;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -131,7 +135,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         return new DemoInvestmentAccount() {
             @Override
             public String getAccountId() {
-                return "7777-444444444444";
+                return InvestmentAccounts.ACCOUNTID;
             }
 
             @Override
@@ -156,42 +160,42 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         return new DemoLoanAccount() {
             @Override
             public String getMortgageId() {
-                return "7777-333333333333";
+                return LoanAccount.MORTGAGEID;
             }
 
             @Override
             public String getBlancoId() {
-                return "7777-333334444444";
+                return LoanAccount.BLANCOID;
             }
 
             @Override
             public String getMortgageLoanName() {
-                return "Loan";
+                return LoanAccount.MORTGAGELOANNAME;
             }
 
             @Override
             public String getBlancoLoanName() {
-                return "Santander";
+                return LoanAccount.BLANCOLOANNAME;
             }
 
             @Override
             public double getMortgageInterestName() {
-                return 0.53;
+                return LoanAccount.MORTGAGEINTERESTNAME;
             }
 
             @Override
             public double getBlancoInterestName() {
-                return 1.73;
+                return LoanAccount.BLANCOINTERESTNAME;
             }
 
             @Override
             public double getMortgageBalance() {
-                return -2300D;
+                return LoanAccount.MORTGAGEBALANCE;
             }
 
             @Override
             public double getBlancoBalance() {
-                return -5D;
+                return LoanAccount.BLANCOBALANCE;
             }
         };
     }
@@ -209,32 +213,32 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                 new DemoCreditCardAccount() {
                     @Override
                     public String getAccountId() {
-                        return "1122 3344 - 1234";
+                        return CreditCard.ACCOUNTID;
                     }
 
                     @Override
                     public String getCreditCardNumber() {
-                        return "1234 5678 9101 1121";
+                        return CreditCard.CREDITCARDNUMBER;
                     }
 
                     @Override
                     public HolderName getNameOnCreditCard() {
-                        return new HolderName("Tink Tinkerton");
+                        return new HolderName(CreditCard.NAMEONCREDITCARD);
                     }
 
                     @Override
                     public String getAccountName() {
-                        return "Basic Credit Card";
+                        return CreditCard.ACCOUNTNAME;
                     }
 
                     @Override
                     public double getBalance() {
-                        return -1456D;
+                        return CreditCard.BALANCE;
                     }
 
                     @Override
                     public double getAvailableCredit() {
-                        return 8543D;
+                        return CreditCard.AVAILABLECREDIT;
                     }
                 });
     }
@@ -246,8 +250,9 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
             public List<NameElement> getNameElements() {
                 return new ArrayList<>(
                         Arrays.asList(
-                                new NameElement(NameElement.Type.FIRST_NAME, "Jane"),
-                                new NameElement(NameElement.Type.SURNAME, "Doe")));
+                                new NameElement(
+                                        NameElement.Type.FIRST_NAME, IdentityData.FIRST_NAME),
+                                new NameElement(NameElement.Type.SURNAME, IdentityData.SURNAME)));
             }
 
             @Override
