@@ -1,0 +1,81 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
+
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import lombok.AllArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+
+@AllArgsConstructor
+public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
+
+    private final CbiThirdPartyAppRequestParamsProvider thirdPartyAppRequestParamsProvider;
+    private final ConsentType consentType;
+    private final ConsentManager consentManager;
+    private final CbiUserState userState;
+    private final StrongAuthenticationState strongAuthenticationState;
+
+    @Override
+    public Optional<SupplementInformationRequester> execute(AuthenticationRequest request)
+            throws AuthenticationException, AuthorizationException {
+        if (request.getCallbackData() == null || request.getCallbackData().isEmpty()) {
+            return Optional.of(
+                    new SupplementInformationRequester.Builder()
+                            .withThirdPartyAppAuthenticationPayload(
+                                    thirdPartyAppRequestParamsProvider.getPayload())
+                            .withSupplementalWaitRequest(getWaitingConfiguration())
+                            .build());
+        }
+
+        String codeValue =
+                request.getCallbackData().getOrDefault(QueryKeys.CODE, consentType.getCode());
+
+        if (!codeValue.equalsIgnoreCase(consentType.getCode())) {
+            return Optional.of(
+                    new SupplementInformationRequester.Builder()
+                            .withSupplementalWaitRequest(getWaitingConfiguration())
+                            .build());
+        }
+
+        processThirdPartyCallback();
+
+        return Optional.empty();
+    }
+
+    private SupplementalWaitRequest getWaitingConfiguration() {
+        return new SupplementalWaitRequest(
+                strongAuthenticationState.getSupplementalKey(),
+                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES);
+    }
+
+    private void processThirdPartyCallback() throws AuthorizationException {
+        try {
+            if (consentManager.isConsentAccepted()) {
+                userState.finishManualAuthenticationStep();
+            } else {
+                throw new SessionException(SessionError.SESSION_EXPIRED);
+            }
+        } catch (SessionException e) {
+            throw new AuthorizationException(
+                    AuthorizationError.UNAUTHORIZED,
+                    "Authorization failed, consents status is not accepted.");
+        }
+    }
+
+    @Override
+    public String getIdentifier() {
+        return this.getClass().getSimpleName() + "_" + consentType;
+    }
+}
