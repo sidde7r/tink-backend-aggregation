@@ -23,7 +23,7 @@ public class OpBankAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("fi", "fi-opbank-openbanking")
+                new AgentIntegrationTest.Builder("fi", "fi-opbank-ob")
                         .addCredentialField(
                                 Field.Key.USERNAME,
                                 manager.get(UsernamePasswordArgumentEnum.USERNAME))

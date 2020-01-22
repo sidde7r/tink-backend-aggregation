@@ -24,7 +24,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class OpBankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final OpBankApiClient apiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -34,11 +33,14 @@ public final class OpBankAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+
         apiClient = new OpBankApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
 
-        final OpBankConfiguration opBankConfiguration = getClientConfiguration();
+        final OpBankConfiguration opBankConfiguration =
+                getAgentConfigurationController().getAgentConfiguration(OpBankConfiguration.class);
+        super.setConfiguration(agentsServiceConfiguration);
+
         apiClient.setConfiguration(
                 opBankConfiguration,
                 agentsServiceConfiguration.getEidasProxy(),
