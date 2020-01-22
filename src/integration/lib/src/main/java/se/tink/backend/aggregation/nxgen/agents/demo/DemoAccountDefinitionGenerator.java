@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
+import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.Uksortcodes;
+
 import com.google.common.collect.Lists;
-import java.net.URI;
 import java.util.List;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.account.identifiers.UkIdentifier;
 
 /** Deterministic account generator based on user-name and provider */
 public class DemoAccountDefinitionGenerator {
+
+    public static String ukProviderRegex = "^uk-.*";
 
     private static String createDeterministicKey(String combination) {
         return Integer.toString(combination.hashCode());
@@ -43,24 +44,23 @@ public class DemoAccountDefinitionGenerator {
                 + ("" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 7));
     }
 
-    private static String generateAccoutNumbersUK(String deterministicKey) {
-        return generateNumber(deterministicKey, 2)
-                + "-"
-                + generateNumber(deterministicKey, 2)
-                + "-"
-                + generateNumber(deterministicKey, 2)
-                + "-"
+    private static String generateAccoutNumbersUK(
+            String userDeterministicKey, String deterministicKey) {
+        Integer sortCode =
+                Uksortcodes.get(generateNumber(userDeterministicKey, 2) % Uksortcodes.size());
+        return sortCode
                 + ("" + generateNumber(deterministicKey, 4) + generateNumber(deterministicKey, 4));
     }
 
     public static DemoSavingsAccount getDemoSavingsAccounts(String username, String providerName) {
 
         String deterministicKey = createDeterministicKey("Savings" + username + providerName);
+        String userDeterministicKey = createDeterministicKey(username + providerName);
         return new DemoSavingsAccount() {
             @Override
             public String getAccountId() {
-                if (providerName == "uk-test-open-banking-redirect") {
-                    return generateAccoutNumbersUK(deterministicKey);
+                if (providerName.matches(ukProviderRegex)) {
+                    return generateAccoutNumbersUK(userDeterministicKey, deterministicKey);
                 } else return generateAccoutNumbers(deterministicKey);
             }
 
@@ -76,17 +76,13 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public List<AccountIdentifier> getIdentifiers() {
-                if (providerName == "uk-test-open-banking-redirect") {
-                    UkIdentifier recipientAccount = new UkIdentifier(getAccountId());
-                    AccountIdentifier identifier =
-                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
-                    return Lists.newArrayList(identifier);
-                } else {
-                    SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
-                    AccountIdentifier identifier =
-                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
-                    return Lists.newArrayList(identifier);
+                AccountIdentifier.Type type = AccountIdentifier.Type.SE;
+                if (providerName.matches(ukProviderRegex)) {
+                    type = AccountIdentifier.Type.SORT_CODE;
                 }
+                AccountIdentifier identifier =
+                        AccountIdentifier.create(type, getAccountId(), "testAccount");
+                return Lists.newArrayList(identifier);
             }
         };
     }
@@ -94,11 +90,13 @@ public class DemoAccountDefinitionGenerator {
     public static DemoTransactionAccount getDemoTransactionalAccount(
             String username, String providerName) {
         String deterministicKey = createDeterministicKey("Transaction" + username + providerName);
+        String userDeterministicKey = createDeterministicKey(username + providerName);
+
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
-                if (providerName == "uk-test-open-banking-redirect") {
-                    return generateAccoutNumbersUK(deterministicKey);
+                if (providerName.matches(ukProviderRegex)) {
+                    return generateAccoutNumbersUK(userDeterministicKey, deterministicKey);
                 } else return generateAccoutNumbers(deterministicKey);
             }
 
@@ -114,17 +112,13 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public List<AccountIdentifier> getIdentifiers() {
-                if (providerName == "uk-test-open-banking-redirect") {
-                    UkIdentifier recipientAccount = new UkIdentifier(getAccountId());
-                    AccountIdentifier identifier =
-                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
-                    return Lists.newArrayList(identifier);
-                } else {
-                    SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
-                    AccountIdentifier identifier =
-                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
-                    return Lists.newArrayList(identifier);
+                AccountIdentifier.Type type = AccountIdentifier.Type.SE;
+                if (providerName.matches(ukProviderRegex)) {
+                    type = AccountIdentifier.Type.SORT_CODE;
                 }
+                AccountIdentifier identifier =
+                        AccountIdentifier.create(type, getAccountId(), "testAccount");
+                return Lists.newArrayList(identifier);
             }
         };
     }
@@ -133,11 +127,13 @@ public class DemoAccountDefinitionGenerator {
             String username, String providerName) {
         String deterministicKey =
                 createDeterministicKey("Transaction with zero balance" + username + providerName);
+        String userDeterministicKey = createDeterministicKey(username + providerName);
+
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
-                if (providerName == "uk-test-open-banking-redirect") {
-                    return generateAccoutNumbersUK(deterministicKey);
+                if (providerName.matches(ukProviderRegex)) {
+                    return generateAccoutNumbersUK(userDeterministicKey, deterministicKey);
                 } else return generateAccoutNumbers(deterministicKey);
             }
 
@@ -153,17 +149,13 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public List<AccountIdentifier> getIdentifiers() {
-                if (providerName == "uk-test-open-banking-redirect") {
-                    UkIdentifier recipientAccount = new UkIdentifier(getAccountId());
-                    AccountIdentifier identifier =
-                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
-                    return Lists.newArrayList(identifier);
-                } else {
-                    SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
-                    AccountIdentifier identifier =
-                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
-                    return Lists.newArrayList(identifier);
+                AccountIdentifier.Type type = AccountIdentifier.Type.SE;
+                if (providerName.matches(ukProviderRegex)) {
+                    type = AccountIdentifier.Type.SORT_CODE;
                 }
+                AccountIdentifier identifier =
+                        AccountIdentifier.create(type, getAccountId(), "testAccount");
+                return Lists.newArrayList(identifier);
             }
         };
     }

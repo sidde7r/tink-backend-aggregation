@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.List;
 
 public class DemoConstants {
 
@@ -31,4 +33,9 @@ public class DemoConstants {
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
+
+    public static List<Integer> Uksortcodes =
+            Arrays.asList(
+                    90128, 70436, 236972, 230580, 40004, 40075, 40026, 87199, 608371, 401276,
+                    231470, 202678, 83210, 774926, 110001, 166300, 609104, 606004);
 }
