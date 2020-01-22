@@ -29,7 +29,9 @@ public class ServiceInvalidErrorFilter extends Filter {
         HttpResponse response = nextFilter(httpRequest);
 
         if (response.getStatus() == HttpStatus.SC_METHOD_NOT_ALLOWED) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            String body = response.getBody(String.class);
+            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                    "Http status: " + response.getStatus() + " Error body: " + body);
         }
 
         return response;

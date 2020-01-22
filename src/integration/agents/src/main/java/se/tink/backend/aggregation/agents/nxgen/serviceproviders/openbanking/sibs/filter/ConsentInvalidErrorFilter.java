@@ -12,26 +12,28 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 /**
  * Utility filter to throw a Tink {@link BankServiceError} when an SIBS API call responds with
  * <code>
- * HTTP 429 Too many requests</code>.
+ * HTTP 401 Unauthorized</code>.
  *
  * <p>Typical response body:
  *
- * <p>{ "httpCode":"429", "httpMessage":"Too Many Requests", "moreInformation":"Rate Limit exceeded"
- * }
+ * <p>{"transactionStatus":"RJCT","tppMessages":[{"category":"ERROR","code":"CONSENT_INVALID","text":"The
+ * consent definition is not complete or invalid. In case of being not complete, the bank is not
+ * supporting a completion of the consent towards the PSU. Additional information will be
+ * provided."}]}
  */
 @FilterOrder(category = FilterPhases.REQUEST_HANDLE, order = Integer.MIN_VALUE)
-public class RateLimitErrorFilter extends Filter {
+public final class ConsentInvalidErrorFilter extends Filter {
 
-    private static final int TOO_MANY_REQUESTS = 429;
+    private static final int CONSENT_INVALID = 401;
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest)
+    public HttpResponse handle(final HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
-        HttpResponse response = nextFilter(httpRequest);
+        final HttpResponse response = nextFilter(httpRequest);
 
-        if (response.getStatus() == TOO_MANY_REQUESTS) {
+        if (response.getStatus() == CONSENT_INVALID) {
             String body = response.getBody(String.class);
-            throw BankServiceError.BANK_SIDE_FAILURE.exception(
+            throw BankServiceError.CONSENT_INVALID.exception(
                     "Http status: " + response.getStatus() + " Error body: " + body);
         }
 
