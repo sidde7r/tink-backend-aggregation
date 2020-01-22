@@ -29,7 +29,7 @@ public class AmericanExpressV62UKMockServerAgentTest extends AgentIntegrationMoc
                         .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .isUsingWireMock(true)
+                        .useWireMock(getWireMockPort())
                         .build()
                         .testRefresh();
 

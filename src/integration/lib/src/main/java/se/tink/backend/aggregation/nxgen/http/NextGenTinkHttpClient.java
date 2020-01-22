@@ -830,7 +830,9 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 uri =
                         new URI(
                                 uri.getScheme().toLowerCase(Locale.US),
-                                configuration.getMockURL(),
+                                configuration.getMockURL()
+                                        + ":"
+                                        + configuration.getMockServerPort(),
                                 uri.getPath(),
                                 uri.getQuery(),
                                 uri.getFragment());

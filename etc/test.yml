@@ -11,7 +11,7 @@ agentsServiceConfiguration:
     debugOutput: true
     censorSensitiveHeaders: false
     mockServer: true
-    mockURL: "localhost:9999"
+    mockURL: "localhost"
   featureFlags:
     esProxy: false
 

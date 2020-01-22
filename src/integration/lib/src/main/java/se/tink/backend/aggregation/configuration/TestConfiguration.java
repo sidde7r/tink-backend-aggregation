@@ -1,16 +1,19 @@
 package se.tink.backend.aggregation.configuration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public final class TestConfiguration {
 
-    @JsonProperty private boolean censorSensitiveHeaders = true; // Default
+    @JsonProperty private boolean censorSensitiveHeaders = true;
     @JsonProperty private boolean debugOutput;
 
     @JsonProperty private boolean mockServer = false;
     @JsonProperty private String mockURL;
+
+    @JsonIgnore private int mockServerPort;
 
     public boolean isDebugOutputEnabled() {
         return debugOutput;
@@ -26,5 +29,13 @@ public final class TestConfiguration {
 
     public String getMockURL() {
         return mockURL;
+    }
+
+    public void setMockServerPort(int port) {
+        this.mockServerPort = port;
+    }
+
+    public int getMockServerPort() {
+        return mockServerPort;
     }
 }

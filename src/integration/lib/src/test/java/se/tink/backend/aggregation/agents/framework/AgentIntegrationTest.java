@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,6 +36,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.logmasker.LogMasker;
@@ -93,6 +95,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private Boolean requestFlagUpdate;
 
     private boolean isUsingWireMock = false;
+    private int wireMockPort;
 
     protected AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
@@ -108,7 +111,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
-        this.isUsingWireMock = builder.isUsingWireMock();
+        this.isUsingWireMock = builder.useWireMock();
+        if (this.isUsingWireMock) this.wireMockPort = builder.getWireMockPort();
         this.clusterIdForSecretsService =
                 MoreObjects.firstNonNull(
                         builder.getClusterIdForSecretsService(),
@@ -179,12 +183,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return refreshInformationRequest;
     }
 
-    private Agent createAgent(CredentialsRequest credentialsRequest, String configurationFile)
-            throws FileNotFoundException {
+    private AgentsServiceConfiguration readConfiguration(String configurationFile)
+            throws IOException, ConfigurationException {
+        AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
+                CONFIGURATION_FACTORY.build(new File(configurationFile));
+        return agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
+    }
+
+    private Agent createAgent(CredentialsRequest credentialsRequest) {
         try {
-            AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
-                    CONFIGURATION_FACTORY.build(new File(configurationFile));
-            configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
             ManagedTppSecretsServiceClient tppSecretsServiceClient =
                     new TppSecretsServiceClientImpl(
                             configuration.getTppSecretsServiceConfiguration());
@@ -206,19 +213,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
             return factory.create(cls, credentialsRequest, context);
         } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private Agent createAgent(CredentialsRequest credentialsRequest) {
-        try {
-            return createAgent(credentialsRequest, "etc/development.yml");
-        } catch (FileNotFoundException e) {
-            if (e.getMessage().equals("File etc/development.yml not found")) {
-                final String message =
-                        "etc/development.yml missing. Please make a copy of etc/development.template.yml.";
-                throw new IllegalStateException(message);
-            }
             throw new IllegalStateException(e);
         }
     }
@@ -567,8 +561,22 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
 
         Agent agent;
-        if (isUsingWireMock) agent = createAgent(credentialsRequest, "etc/test.yml");
-        else agent = createAgent(credentialsRequest);
+        if (isUsingWireMock) {
+            configuration = readConfiguration("etc/test.yml");
+            configuration.getTestConfiguration().setMockServerPort(this.wireMockPort);
+        } else {
+            try {
+                configuration = readConfiguration("etc/development.yml");
+            } catch (FileNotFoundException e) {
+                if (e.getMessage().equals("File etc/development.yml not found")) {
+                    final String message =
+                            "etc/development.yml missing. Please make a copy of etc/development.template.yml.";
+                    throw new IllegalStateException(message);
+                }
+                throw new IllegalStateException(e);
+            }
+        }
+        agent = createAgent(credentialsRequest);
 
         try {
             login(agent, credentialsRequest);
@@ -763,6 +771,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String clusterIdForSecretsService = null;
 
         private boolean isUsingWireMock = false;
+        private int wireMockPort;
 
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
@@ -771,8 +780,12 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             this.provider.setCurrency(marketProviders.getCurrency());
         }
 
-        public boolean isUsingWireMock() {
+        public boolean useWireMock() {
             return this.isUsingWireMock;
+        }
+
+        public int getWireMockPort() {
+            return this.wireMockPort;
         }
 
         private static String escapeMarket(String market) {
@@ -825,8 +838,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return this;
         }
 
-        public Builder isUsingWireMock(boolean value) {
-            this.isUsingWireMock = value;
+        public Builder useWireMock(int port) {
+            this.isUsingWireMock = true;
+            this.wireMockPort = port;
             return this;
         }
 

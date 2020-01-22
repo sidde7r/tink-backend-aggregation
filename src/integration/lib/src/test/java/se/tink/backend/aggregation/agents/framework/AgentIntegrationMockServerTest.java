@@ -6,10 +6,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -25,7 +25,13 @@ import se.tink.libraries.pair.Pair;
 
 public class AgentIntegrationMockServerTest {
 
-    @Rule public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().httpsPort(9999));
+    @Rule
+    public WireMockRule wireMockRule =
+            new WireMockRule(WireMockConfiguration.options().dynamicHttpsPort());
+
+    public int getWireMockPort() {
+        return wireMockRule.httpsPort();
+    }
 
     public void prepareMockServer(String mainPath, String mockResource, String host) {
         // TODO: Reset stub here
