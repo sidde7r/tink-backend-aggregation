@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
-public class AmericanExpressV62UKMockServerAgentTest extends AgentIntegrationMockServerTest {
+public final class AmericanExpressV62UKMockServerAgentTest extends AgentIntegrationMockServerTest {
 
     private String USERNAME = "testUser";
     private String PASSWORD = "testPassword";
