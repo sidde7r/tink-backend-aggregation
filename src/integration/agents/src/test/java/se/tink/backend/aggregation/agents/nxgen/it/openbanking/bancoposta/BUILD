@@ -2,7 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "bancoposta",
-    srcs = glob(["*.java"]),
+    srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
         "//data:cryptography_test",
@@ -10,7 +10,6 @@ junit_test(
     ],
     tags = [
         "external",
-        "manual",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
@@ -29,6 +28,8 @@ junit_test(
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
+        "//third_party:com_google_guava_guava",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
     ],
 )
