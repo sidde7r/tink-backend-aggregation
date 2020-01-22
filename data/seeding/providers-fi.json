@@ -397,7 +397,7 @@
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
-            "name": "fi-opbank-openbanking",
+            "name": "fi-opbank-ob",
             "passwordHelpText": null,
             "payload": "tink",
             "popular": true,
