@@ -6,21 +6,23 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public interface AmericanExpressV62Configuration extends ClientConfiguration {
 
+    default String getGitSha() {
+        return null;
+    }
+
     String getLocale();
 
     String getAppId();
 
     String getUserAgent();
-
     // == Credit Card Account ==
+
     String getBankId(CardEntity cardEntity);
 
     String getCurrency();
-
     // == Timeline Api ==
-    TimelineRequest createTimelineRequest(Integer cardIndex);
 
-    String getGitSha();
+    TimelineRequest createTimelineRequest(Integer cardIndex);
 
     String getAppVersion();
 }
