@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.a
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.configuration.VolksbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.VolksbankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.filter.BankErrorResponseFilter;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
@@ -127,6 +128,7 @@ public class VolksbankAgent
         client.addFilter(
                 new TimeoutRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new BankErrorResponseFilter());
         client.getInternalClient();
     }
 
