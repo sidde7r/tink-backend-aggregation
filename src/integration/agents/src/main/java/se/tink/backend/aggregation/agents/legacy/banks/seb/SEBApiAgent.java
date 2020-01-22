@@ -557,11 +557,20 @@ public class SEBApiAgent extends AbstractAgent
         InvestmentDataRequest investmentDataRequest = new InvestmentDataRequest();
         investmentDataRequest.setRequest(requestWrappingEntity);
 
-        SebResponse sebResponse =
+        final SebResponse sebResponse =
                 postAsJSON(FUND_HOLDING_URL, investmentDataRequest, SebResponse.class);
-        Map<String, List<FundAccountEntity>> accountsByAccountNumber =
-                sebResponse.d.VODB.getFundAccounts().stream()
-                        .collect(Collectors.groupingBy(FundAccountEntity::getAccountNumber));
+
+        Map<String, List<FundAccountEntity>> accountsByAccountNumber;
+        try {
+            accountsByAccountNumber =
+                    sebResponse.d.VODB.getFundAccounts().stream()
+                            .collect(Collectors.groupingBy(FundAccountEntity::getAccountNumber));
+        } catch (NullPointerException e) {
+            if (sebResponse.x.errorcode == 8021) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw e;
+        }
 
         accountsByAccountNumber.forEach(
                 (String key, List<FundAccountEntity> fundAccounts) -> {
@@ -982,7 +991,7 @@ public class SEBApiAgent extends AbstractAgent
         SebRequest payload = new SebRequest();
         payload.request.ServiceInput.add(new ServiceInput("KUND_ID", id));
 
-        SebResponse accountsResponse = postAsJSON(ACCOUNTS_URL, payload, SebResponse.class);
+        final SebResponse accountsResponse = postAsJSON(ACCOUNTS_URL, payload, SebResponse.class);
 
         if (accountsResponse.d == null || accountsResponse.d.VODB == null) {
             return Collections.emptyList();
@@ -2378,8 +2387,9 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private List<EInvoiceListEntity> fetchEInvoiceEntities() throws IllegalStateException {
-        SebRequest request = SebRequest.withSEB_KUND_NR(customerId).build();
-        SebResponse sebResponse = postAsJSON(EINVOICES_URL, request, SebResponse.class);
+        final SebRequest request = SebRequest.withSEB_KUND_NR(customerId).build();
+
+        final SebResponse sebResponse = postAsJSON(EINVOICES_URL, request, SebResponse.class);
 
         Preconditions.checkState(
                 !sebResponse.hasErrors(),
@@ -2387,7 +2397,14 @@ public class SEBApiAgent extends AbstractAgent
                         "Error fetching SEB eInvoices: %s",
                         sebResponse.getFirstErrorMessage().orElse(null)));
 
-        return sebResponse.d.VODB.getEInvoices();
+        try {
+            return sebResponse.d.VODB.getEInvoices();
+        } catch (NullPointerException e) {
+            if (sebResponse.x.errorcode == 8021) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw e;
+        }
     }
 
     private enum UserMessage implements LocalizableEnum {
