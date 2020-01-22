@@ -67,12 +67,17 @@ public class AgentIntegrationMockServerTest {
     private HTTPRequest parseRequest(
             List<String> requestLines, String requestHeaderPrefix, String host) {
 
+        /** First line contains HTTP_METHOD TARGET_URL */
         String[] firstLine =
                 requestLines.get(0).substring(requestHeaderPrefix.length()).trim().split(" ");
 
         String requestMethod = firstLine[0];
         String requestURL = firstLine[1].replace(host, "");
 
+        /**
+         * Starting from second line, we have request headers and in the last line, we (optionally)
+         * can have request body
+         */
         List<String> requestHeaders =
                 requestLines.subList(1, requestLines.size()).stream()
                         .filter(line -> line.startsWith(requestHeaderPrefix))
@@ -90,9 +95,15 @@ public class AgentIntegrationMockServerTest {
     }
 
     private HTTPResponse parseResponse(List<String> responseLines, String responseHeaderPrefix) {
-        Integer responseCode =
+
+        /** First line contains the status code for the HTTP response */
+        Integer statusCode =
                 new Integer(responseLines.get(0).substring(responseHeaderPrefix.length()).trim());
 
+        /**
+         * Starting from second line, we have response headers and in the last line, we (optionally)
+         * can have response body
+         */
         List<String> responseHeaders =
                 responseLines.subList(1, responseLines.size()).stream()
                         .filter(line -> line.startsWith(responseHeaderPrefix))
@@ -106,7 +117,7 @@ public class AgentIntegrationMockServerTest {
                         .filter(line -> line.trim().length() > 0)
                         .findFirst();
 
-        return new HTTPResponse(responseHeaders, responseBody, responseCode);
+        return new HTTPResponse(responseHeaders, responseBody, statusCode);
     }
 
     private List<Pair<HTTPRequest, HTTPResponse>> parseFileContent(
