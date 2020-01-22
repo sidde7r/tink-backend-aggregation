@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.UkIdentifier;
 
 /** Deterministic account generator based on user-name and provider */
 public class DemoAccountDefinitionGenerator {
@@ -42,12 +43,25 @@ public class DemoAccountDefinitionGenerator {
                 + ("" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 7));
     }
 
+    private static String generateAccoutNumbersUK(String deterministicKey) {
+        return generateNumber(deterministicKey, 2)
+                + "-"
+                + generateNumber(deterministicKey, 2)
+                + "-"
+                + generateNumber(deterministicKey, 2)
+                + "-"
+                + ("" + generateNumber(deterministicKey, 4) + generateNumber(deterministicKey, 4));
+    }
+
     public static DemoSavingsAccount getDemoSavingsAccounts(String username, String providerName) {
+
         String deterministicKey = createDeterministicKey("Savings" + username + providerName);
         return new DemoSavingsAccount() {
             @Override
             public String getAccountId() {
-                return generateAccoutNumbers(deterministicKey);
+                if (providerName == "uk-test-open-banking-redirect") {
+                    return generateAccoutNumbersUK(deterministicKey);
+                } else return generateAccoutNumbers(deterministicKey);
             }
 
             @Override
@@ -62,10 +76,17 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public List<AccountIdentifier> getIdentifiers() {
-                SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
-                AccountIdentifier identifier =
-                        AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
-                return Lists.newArrayList(identifier);
+                if (providerName == "uk-test-open-banking-redirect") {
+                    UkIdentifier recipientAccount = new UkIdentifier(getAccountId());
+                    AccountIdentifier identifier =
+                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                    return Lists.newArrayList(identifier);
+                } else {
+                    SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
+                    AccountIdentifier identifier =
+                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                    return Lists.newArrayList(identifier);
+                }
             }
         };
     }
@@ -76,7 +97,9 @@ public class DemoAccountDefinitionGenerator {
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
-                return generateAccoutNumbers(deterministicKey);
+                if (providerName == "uk-test-open-banking-redirect") {
+                    return generateAccoutNumbersUK(deterministicKey);
+                } else return generateAccoutNumbers(deterministicKey);
             }
 
             @Override
@@ -91,10 +114,17 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public List<AccountIdentifier> getIdentifiers() {
-                SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
-                AccountIdentifier identifier =
-                        AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
-                return Lists.newArrayList(identifier);
+                if (providerName == "uk-test-open-banking-redirect") {
+                    UkIdentifier recipientAccount = new UkIdentifier(getAccountId());
+                    AccountIdentifier identifier =
+                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                    return Lists.newArrayList(identifier);
+                } else {
+                    SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
+                    AccountIdentifier identifier =
+                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                    return Lists.newArrayList(identifier);
+                }
             }
         };
     }
@@ -106,7 +136,9 @@ public class DemoAccountDefinitionGenerator {
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
-                return generateAccoutNumbers(deterministicKey);
+                if (providerName == "uk-test-open-banking-redirect") {
+                    return generateAccoutNumbersUK(deterministicKey);
+                } else return generateAccoutNumbers(deterministicKey);
             }
 
             @Override
@@ -121,10 +153,17 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public List<AccountIdentifier> getIdentifiers() {
-                SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
-                AccountIdentifier identifier =
-                        AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
-                return Lists.newArrayList(identifier);
+                if (providerName == "uk-test-open-banking-redirect") {
+                    UkIdentifier recipientAccount = new UkIdentifier(getAccountId());
+                    AccountIdentifier identifier =
+                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                    return Lists.newArrayList(identifier);
+                } else {
+                    SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
+                    AccountIdentifier identifier =
+                            AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                    return Lists.newArrayList(identifier);
+                }
             }
         };
     }

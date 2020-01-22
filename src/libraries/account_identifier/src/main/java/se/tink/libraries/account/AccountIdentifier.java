@@ -24,6 +24,7 @@ public abstract class AccountIdentifier {
 
     public enum Type {
         BE("be"),
+        UK("uk"),
         DK("dk"),
         SE("se"),
         SE_SHB_INTERNAL("se-internal"),
@@ -235,6 +236,8 @@ public abstract class AccountIdentifier {
         switch (type) {
             case BE:
                 return new BelgianIdentifier(id);
+            case UK:
+                return new UkIdentifier(id);
             case DK:
                 return new DanishIdentifier(id);
             case SE:

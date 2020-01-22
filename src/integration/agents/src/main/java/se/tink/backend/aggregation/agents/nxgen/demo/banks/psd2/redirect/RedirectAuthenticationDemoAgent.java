@@ -140,12 +140,12 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
             @Override
             public String getName() {
-                return "SmallInvestment";
+                return InvestmentAccounts.ACCOUNTNAME;
             }
 
             @Override
             public double getAccountBalance() {
-                return 4563;
+                return InvestmentAccounts.ACCOUNTBALANCE;
             }
         };
     }
