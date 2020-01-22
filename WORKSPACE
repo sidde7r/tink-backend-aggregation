@@ -1561,8 +1561,8 @@ maven_jar(
 
 maven_jar(
     name = "org_javassist_javassist",
-    artifact = "org.javassist:javassist:3.21.0-GA",
-    sha1 = "598244f595db5c5fb713731eddbb1c91a58d959b",
+    artifact = "org.javassist:javassist:3.26.0-GA",
+    sha1 = "bb2890849968d8d8311ffba8c37b0ce16ce284dc",
 )
 
 maven_jar(
