@@ -62,6 +62,7 @@ public class ChebancaTransactionFetcher implements TransactionDatePaginator<Tran
                 "Circuit breaker on: "
                         + String.format(
                                 " %s, %s, %s", account.getAccountNumber(), fromDate, toDate));
+        logger.info("Transactions returned: " + transactions.size());
         return PaginatorResponseImpl.create(transactions, false);
     }
 
