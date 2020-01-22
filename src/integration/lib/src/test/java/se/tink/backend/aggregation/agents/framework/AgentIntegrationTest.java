@@ -92,6 +92,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
 
+    private boolean isUsingWireMock = false;
+
     protected AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
         this.user = builder.getUser();
@@ -106,6 +108,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
+        this.isUsingWireMock = builder.isUsingWireMock();
         this.clusterIdForSecretsService =
                 MoreObjects.firstNonNull(
                         builder.getClusterIdForSecretsService(),
@@ -176,10 +179,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return refreshInformationRequest;
     }
 
-    private Agent createAgent(CredentialsRequest credentialsRequest) {
+    private Agent createAgent(CredentialsRequest credentialsRequest, String configurationFile)
+            throws FileNotFoundException {
         try {
             AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
-                    CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
+                    CONFIGURATION_FACTORY.build(new File(configurationFile));
             configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
             ManagedTppSecretsServiceClient tppSecretsServiceClient =
                     new TppSecretsServiceClientImpl(
@@ -201,14 +205,20 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
             return factory.create(cls, credentialsRequest, context);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private Agent createAgent(CredentialsRequest credentialsRequest) {
+        try {
+            return createAgent(credentialsRequest, "etc/development.yml");
         } catch (FileNotFoundException e) {
             if (e.getMessage().equals("File etc/development.yml not found")) {
                 final String message =
                         "etc/development.yml missing. Please make a copy of etc/development.template.yml.";
                 throw new IllegalStateException(message);
             }
-            throw new IllegalStateException(e);
-        } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
@@ -555,7 +565,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     public NewAgentTestContext testRefresh(String credentialName) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
-        Agent agent = createAgent(credentialsRequest);
+
+        Agent agent;
+        if (isUsingWireMock) agent = createAgent(credentialsRequest, "etc/test.yml");
+        else agent = createAgent(credentialsRequest);
+
         try {
             login(agent, credentialsRequest);
             refresh(agent);
@@ -748,11 +762,17 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String redirectUrl;
         private String clusterIdForSecretsService = null;
 
+        private boolean isUsingWireMock = false;
+
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
             this.provider.setMarket(marketProviders.getMarket());
             this.provider.setCurrency(marketProviders.getCurrency());
+        }
+
+        public boolean isUsingWireMock() {
+            return this.isUsingWireMock;
         }
 
         private static String escapeMarket(String market) {
@@ -802,6 +822,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public Builder setUser(User user) {
             this.user = user;
+            return this;
+        }
+
+        public Builder isUsingWireMock(boolean value) {
+            this.isUsingWireMock = value;
             return this;
         }
 

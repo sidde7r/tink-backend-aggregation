@@ -7,13 +7,13 @@ public class HTTPResponse {
 
     private final List<String> responseHeaders;
     private final Optional<String> responseBody;
-    private final Integer responseCode;
+    private final Integer statusCode;
 
     public HTTPResponse(
-            List<String> responseHeaders, Optional<String> responseBody, Integer responseCode) {
+            List<String> responseHeaders, Optional<String> responseBody, Integer statusCode) {
         this.responseHeaders = responseHeaders;
         this.responseBody = responseBody;
-        this.responseCode = responseCode;
+        this.statusCode = statusCode;
     }
 
     public List<String> getResponseHeaders() {
@@ -24,7 +24,7 @@ public class HTTPResponse {
         return responseBody;
     }
 
-    public Integer getResponseCode() {
-        return responseCode;
+    public Integer getStatusCode() {
+        return statusCode;
     }
 }

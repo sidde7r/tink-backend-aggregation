@@ -30,11 +30,8 @@ public class AgentIntegrationMockServerTest {
     public void prepareMockServer(String mainPath, String mockResource, String host) {
         // TODO: Reset stub here
         // wireMockRule.reset();
-
         String fileContent = readFile(String.format("%s/%s", mainPath, mockResource));
-
         List<Pair<HTTPRequest, HTTPResponse>> data = parseFileContent(fileContent, host);
-
         buildMockServer(data);
     }
 
@@ -173,9 +170,8 @@ public class AgentIntegrationMockServerTest {
                     .map(header -> parseHeader(header))
                     .forEach(header -> builder.withHeader(header.first, equalTo(header.second)));
 
-            if (request.getRequestBody().isPresent()) {
-                builder.withRequestBody(equalToJson(request.getRequestBody().get(), true, true));
-            }
+            request.getRequestBody()
+                    .ifPresent(body -> builder.withRequestBody(equalToJson(body, true, true)));
 
             ResponseDefinitionBuilder res = aResponse();
 
@@ -183,11 +179,9 @@ public class AgentIntegrationMockServerTest {
                     .map(header -> parseHeader(header))
                     .forEach(header -> res.withHeader(header.first, header.second));
 
-            res.withStatus(response.getResponseCode());
+            res.withStatus(response.getStatusCode());
 
-            if (response.getResponseBody().isPresent()) {
-                res.withBody(response.getResponseBody().get());
-            }
+            response.getResponseBody().ifPresent(body -> res.withBody(body));
 
             builder.willReturn(res);
             wireMockRule.stubFor(builder);
