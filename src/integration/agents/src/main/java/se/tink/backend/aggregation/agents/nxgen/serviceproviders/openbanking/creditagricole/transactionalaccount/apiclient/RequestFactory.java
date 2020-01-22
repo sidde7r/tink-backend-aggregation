@@ -28,14 +28,15 @@ public class RequestFactory {
             final PersistentStorage persistentStorage,
             final CreditAgricoleBaseConfiguration creditAgricoleConfiguration) {
 
-        URL requestUrl = constructURL(id, dateFrom, dateTo, creditAgricoleConfiguration);
+        URL requestUrl =
+                constructTransactionsURL(id, dateFrom, dateTo, creditAgricoleConfiguration);
         HttpRequestImpl request = new HttpRequestImpl(HttpMethod.GET, requestUrl);
         addHeaders(persistentStorage, creditAgricoleConfiguration, request);
 
         return request;
     }
 
-    private URL constructURL(
+    private URL constructTransactionsURL(
             String id,
             Date dateFrom,
             Date dateTo,

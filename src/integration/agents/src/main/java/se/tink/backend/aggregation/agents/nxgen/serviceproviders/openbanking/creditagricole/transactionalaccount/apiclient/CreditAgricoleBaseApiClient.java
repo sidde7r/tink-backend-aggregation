@@ -64,8 +64,8 @@ public class CreditAgricoleBaseApiClient {
         return AccountsUtils.get(persistentStorage, client, configuration);
     }
 
-    public void putConsents(final List<AccountIdEntity> listOfNecessaryConstents) {
-        ConsentsUtils.put(persistentStorage, client, listOfNecessaryConstents, configuration);
+    public void putConsents(final List<AccountIdEntity> accountsToConsent) {
+        ConsentsUtils.put(persistentStorage, client, accountsToConsent, configuration);
     }
 
     public GetTransactionsResponse getTransactions(
