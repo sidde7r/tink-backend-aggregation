@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UkOpenBankingV31PisUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.RemittanceInformation;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -45,7 +46,9 @@ public class InternationalPaymentConsentInitiationRes {
                 new Builder()
                         .withStatus(UkOpenBankingV31Constants.toPaymentStatus(status))
                         .withExactCurrencyAmount(instructedAmount.toTinkAmount())
-                        .withReference(remittanceInformation.createTinkReference())
+                        .withReference(
+                                UkOpenBankingV31PisUtils.createTinkReference(
+                                        remittanceInformation.getReference()))
                         .withCreditor(creditorAccount.toCreditor())
                         .withCurrency(currencyOfTransfer)
                         .build();

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UkOpenBankingV31PisUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
@@ -26,9 +27,12 @@ public class DomesticPaymentResponseInitiation {
 
     public PaymentResponse toTinkPaymentResponse(
             String consentId, String domesticPaymentId, String status) {
+
         Payment payment =
                 new Builder()
-                        .withReference(remittanceInformation.createTinkReference())
+                        .withReference(
+                                UkOpenBankingV31PisUtils.createTinkReference(
+                                        remittanceInformation.getReference()))
                         .withCreditor(creditorAccount.toCreditor())
                         .withExactCurrencyAmount(instructedAmount.toTinkAmount())
                         .withDebtor(
