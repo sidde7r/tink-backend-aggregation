@@ -53,11 +53,14 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
                 .post(GetTokenResponse.class)
                 .toTinkToken();
     }
-
+    /* The body needs to be in the right alphabetical order or else it will break
+     * the underlying code has an LinkedHashMap which should fix this
+     */
     @Override
     public OAuth2Token refreshToken(String refreshToken) {
-        return createRequest(NordeaSeConstants.Urls.GET_TOKEN, HttpMethod.POST, refreshToken)
-                .body(RefreshTokenForm.of(refreshToken), MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+        final String body = RefreshTokenForm.of(refreshToken).getBodyValue();
+        return createRequest(NordeaSeConstants.Urls.GET_TOKEN, HttpMethod.POST, body)
+                .body(body, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(GetTokenResponse.class)
                 .toTinkToken();
     }
