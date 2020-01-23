@@ -32,12 +32,10 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor {
 
     private final SocieteGeneraleApiClient apiClient;
+    private final SocieteGeneraleAuthenticator authenticator;
     private SocieteGeneraleConfiguration societeGeneraleConfiguration;
     private TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private AutoAuthenticationController authenticator;
     private SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
-    private SocieteGeneraleTransactionalAccountFetcher accountFetcher;
-    private SocieteGeneraleTransactionFetcher transactionFetcher;
     private SignatureHeaderProvider signatureHeaderProvider;
 
     public SocieteGeneraleAgent(
@@ -45,15 +43,26 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-        apiClient = new SocieteGeneraleApiClient(client, persistentStorage);
-        apiClient.setConfiguration(societeGeneraleConfiguration);
+        societeGeneraleConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(SocieteGeneraleConfiguration.class);
+
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+
+        apiClient =
+                new SocieteGeneraleApiClient(
+                        client, persistentStorage, societeGeneraleConfiguration);
+
+        authenticator =
+                new SocieteGeneraleAuthenticator(
+                        apiClient, persistentStorage, societeGeneraleConfiguration);
 
         signatureHeaderProvider = new SignatureHeaderProvider();
 
         transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(
                         agentsServiceConfiguration.getEidasProxy());
+
         societeGeneraleIdentityDataFetcher =
                 new SocieteGeneraleIdentityDataFetcher(
                         apiClient,
@@ -62,10 +71,6 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                         signatureHeaderProvider,
                         agentsServiceConfiguration.getEidasProxy(),
                         getEidasIdentity());
-
-        societeGeneraleConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(SocieteGeneraleConfiguration.class);
     }
 
     @Override
@@ -74,20 +79,16 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new SocieteGeneraleAuthenticator(
-                                apiClient, persistentStorage, societeGeneraleConfiguration),
+                        authenticator,
                         credentials,
                         strongAuthenticationState);
 
-        authenticator =
-                new AutoAuthenticationController(
-                        request,
-                        context,
-                        new ThirdPartyAppAuthenticationController<>(
-                                controller, supplementalInformationHelper),
-                        controller);
-
-        return authenticator;
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
@@ -117,7 +118,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController(
             EidasProxyConfiguration eidasProxyConfiguration) {
-        accountFetcher =
+        SocieteGeneraleTransactionalAccountFetcher accountFetcher =
                 new SocieteGeneraleTransactionalAccountFetcher(
                         apiClient,
                         societeGeneraleConfiguration,
@@ -126,7 +127,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                         eidasProxyConfiguration,
                         getEidasIdentity());
 
-        transactionFetcher =
+        SocieteGeneraleTransactionFetcher transactionFetcher =
                 new SocieteGeneraleTransactionFetcher(
                         apiClient,
                         societeGeneraleConfiguration,
