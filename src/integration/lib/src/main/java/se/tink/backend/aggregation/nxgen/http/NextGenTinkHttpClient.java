@@ -59,11 +59,14 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.TestConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.constants.CommonHeaders;
@@ -145,6 +148,9 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     private HttpResponseStatusHandler responseStatusHandler;
 
+    private TestConfiguration configuration;
+    private static final Logger log = LoggerFactory.getLogger(NextGenTinkHttpClient.class);
+
     private class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
         private static final int TIMEOUT_MS = 30000;
@@ -220,7 +226,10 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
      * @param loggingMode determines if logs should be outputted at all.
      */
     private NextGenTinkHttpClient(
-            final Builder builder, LogMasker logMasker, LoggingMode loggingMode) {
+            final Builder builder,
+            LogMasker logMasker,
+            LoggingMode loggingMode,
+            TestConfiguration configuration) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(builder.getSignatureKeyPair());
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
@@ -241,6 +250,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                         : AggregatorInfo.getAggregatorForTesting();
         this.metricRegistry = builder.getMetricRegistry();
         this.provider = builder.getProvider();
+        this.configuration = configuration;
 
         // Add an initial redirect handler to fix any illegal location paths
         addRedirectHandler(new FixRedirectHandler());
@@ -263,8 +273,22 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         responseStatusHandler = new DefaultResponseStatusHandler();
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
-        debugOutputLoggingFilter =
-                new RestIoLoggingFilter(printStream, this.logMasker, this.loggingMode);
+        if (configuration == null) {
+            debugOutputLoggingFilter =
+                    new RestIoLoggingFilter(printStream, this.logMasker, this.loggingMode);
+        } else {
+            this.logMasker.setCensorSensitiveHeaders(
+                    this.configuration.isCensorSensitiveHeadersEnabled());
+            if (this.configuration.isMockServer()) {
+                this.disableSslVerification();
+            }
+            debugOutputLoggingFilter =
+                    new RestIoLoggingFilter(
+                            printStream,
+                            this.logMasker,
+                            this.configuration.isCensorSensitiveHeadersEnabled(),
+                            this.loggingMode);
+        }
         addFilter(new SendRequestFilter());
     }
 
@@ -283,6 +307,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         return new Builder(logMasker, loggingMode);
     }
 
+    public static NextGenTinkHttpClient.Builder builder(
+            LogMasker logMasker, LoggingMode loggingMode, TestConfiguration config) {
+        return new Builder(logMasker, loggingMode, config);
+    }
+
     public static final class Builder {
 
         private final LoggingMode loggingMode;
@@ -293,14 +322,20 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private Provider provider;
         private PrintStream printStream;
         private LogMasker logMasker;
+        private final TestConfiguration configuration;
 
         public Builder(LogMasker logMasker, LoggingMode loggingMode) {
+            this(logMasker, loggingMode, null);
+        }
+
+        public Builder(LogMasker logMasker, LoggingMode loggingMode, TestConfiguration config) {
             this.logMasker = logMasker;
             this.loggingMode = loggingMode;
+            this.configuration = config;
         }
 
         public NextGenTinkHttpClient build() {
-            return new NextGenTinkHttpClient(this, logMasker, loggingMode);
+            return new NextGenTinkHttpClient(this, logMasker, loggingMode, configuration);
         }
 
         public AggregatorInfo getAggregatorInfo() {
@@ -789,6 +824,23 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     }
 
     public RequestBuilder request(URL url) {
+        if (configuration != null && configuration.isMockServer()) {
+            try {
+                URI uri = new URI(url.toString());
+                uri =
+                        new URI(
+                                uri.getScheme().toLowerCase(Locale.US),
+                                configuration.getMockURL()
+                                        + ":"
+                                        + configuration.getMockServerPort(),
+                                uri.getPath(),
+                                uri.getQuery(),
+                                uri.getFragment());
+                url = new URL(uri.toString());
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         final RequestBuilder builder =
                 new NextGenRequestBuilder(
                         this.getFilters(),

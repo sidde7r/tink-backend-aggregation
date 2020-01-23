@@ -73,6 +73,7 @@ public class AgentFactory {
                                                 agentsServiceConfigurationParameterList));
 
         final Agent agent;
+        context.setConfiguration(configuration);
 
         if (hasStrategyConstructor) {
             Constructor<?> agentConstructor =

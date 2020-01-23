@@ -1,0 +1,36 @@
+agentsServiceConfiguration:
+  integrations:
+    an_agent:
+
+  tppSecretsServiceConfiguration:
+    host: "tink-integration-eidas-secrets-service.eidas-secrets-service.svc.cluster.local" # add to your /etc/hosts with the (minikube ip)
+    port: 30787
+    certificatesLocation: "development-staging"
+    enabled: false
+  testConfiguration:
+    debugOutput: true
+    censorSensitiveHeaders: false
+    mockServer: true
+    mockURL: "localhost"
+  featureFlags:
+    esProxy: false
+
+transfers:
+  enabled: true
+  duplicateTime: 1
+  aggregationTime: 5
+  bankTransferThreshold: 1000
+  paymentThreshold: 20000
+
+logging:
+  loggers:
+    se.tink: DEBUG
+    se.tink.org.eclipse: INFO
+    org.hibernate: WARN
+    org.apache.hadoop: INFO
+    org.apache.http.client.protocol.ResponseProcessCookies: ERROR
+  appenders:
+    - type: console
+      threshold: ALL
+      timeZone: Europe/Stockholm
+      logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread] R:%X{requestId} %blue(%logger) %message%n%xException'
