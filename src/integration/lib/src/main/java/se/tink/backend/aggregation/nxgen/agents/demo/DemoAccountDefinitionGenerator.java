@@ -49,7 +49,7 @@ public class DemoAccountDefinitionGenerator {
         Integer sortCode =
                 Uksortcodes.get(generateNumber(userDeterministicKey, 2) % Uksortcodes.size());
         return sortCode
-                + ("" + generateNumber(deterministicKey, 4) + generateNumber(deterministicKey, 4));
+                + ("" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 3));
     }
 
     public static DemoSavingsAccount getDemoSavingsAccounts(String username, String providerName) {
