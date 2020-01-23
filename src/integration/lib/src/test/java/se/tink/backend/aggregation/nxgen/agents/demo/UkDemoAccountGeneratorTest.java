@@ -19,7 +19,7 @@ public class UkDemoAccountGeneratorTest {
                 DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider);
         System.out.println(savingsAccount.getAccountId());
 
-        SortCodeIdentifier expectedRecipientAccount = new SortCodeIdentifier("40127646744674");
+        SortCodeIdentifier expectedRecipientAccount = new SortCodeIdentifier("40127658432661");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(URI.create(expectedRecipientAccount.toUriAsString()));
         Assert.assertEquals("Savings Account Tink", savingsAccount.getAccountName());
@@ -33,8 +33,9 @@ public class UkDemoAccountGeneratorTest {
         DemoTransactionAccount transactionAccount =
                 DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
                         testUserName, testProvider);
+        System.out.println(transactionAccount.getAccountId());
 
-        SortCodeIdentifier expectedRecipientAccount = new SortCodeIdentifier("40127611221122");
+        SortCodeIdentifier expectedRecipientAccount = new SortCodeIdentifier("40127671527841");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
                         AccountIdentifier.Type.SORT_CODE, expectedRecipientAccount.toString());
