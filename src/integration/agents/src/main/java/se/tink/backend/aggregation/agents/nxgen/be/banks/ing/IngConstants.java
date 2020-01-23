@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
+import com.google.common.collect.ImmutableSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -8,7 +10,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class IngConstants {
 
-    public static final String APP_VERSION = "8.11";
+    public static final String APP_VERSION = "8.15.1";
 
     public static final class Urls {
         static final String HOST = "https://mobilebanking.ing.be";
@@ -69,6 +71,9 @@ public class IngConstants {
         public static final String GET_ACCOUNTS = "getaccountbalanceandavailability";
         public static final String GET_TRANSACTIONS = "gettransactions";
         public static final String GET_PENDING_PAYMENTS = "getpendingpaymentsonaccount";
+        public static final String GET_SECURITIES_PORTFOLIO = "getsecuritiesportfolios";
+        public static final String GET_SECURITIES__PORTFOLIO_VALUATION =
+                "getsecuritiesportfoliosvaluation";
         public static final String CREDITCARD_LIST = "getcreditcardlist";
         public static final String CREDITCARD_TRANSACTIONS = "gettransactionsoncreditcard";
         public static final String GET_TRUSTED_BENEFICIARIES = "getmobiletrustedbeneficiaries";
@@ -158,6 +163,11 @@ public class IngConstants {
         public static final String TRANSFER_TO_ALL_RULE = "";
     }
 
+    public static final class InstrumentTypes {
+        public static final Set<String> STOCK = ImmutableSet.of("stock", "equity");
+        public static final Set<String> FUND = ImmutableSet.of("fund");
+    }
+
     public static final class Transactions {
         public static final Pattern TRANSACTION_PREFIX_PATTERN =
                 Pattern.compile(
@@ -181,6 +191,10 @@ public class IngConstants {
         public static final LogTag UNKNOWN_ERROR_CODE = LogTag.from("#ING_UNKNOWN_ERROR_CODE");
         public static final LogTag AUTH_STEP2 = LogTag.from("#AUTH_STEP2");
         public static final LogTag AUTH_STEP3 = LogTag.from("#AUTH_STEP3");
+        public static final LogTag UNKNOWN_INSTRUMENT_TYPE =
+                LogTag.from("ingbe_unknown_instrument_type");
+        public static final LogTag INSTRUMENT_FETCHING_ERROR =
+                LogTag.from("ingbe_error_instrument_fetch");
     }
 
     public static final class Transfers {
@@ -234,6 +248,7 @@ public class IngConstants {
         public static final String NO_ACCESS_TO_ONLINE_BANKING = "e50/01/g350-220";
         public static final String NO_LINKED_ACCOUNT = "e50/01/g353-000";
         public static final String ACCOUNT_CANCELLED = "e50/01/g322-000";
+        public static final String ACCOUNT_NOT_VALID = "EWS/01/G010-000";
         public static final String OUT_OF_SESSION = "001";
     }
 

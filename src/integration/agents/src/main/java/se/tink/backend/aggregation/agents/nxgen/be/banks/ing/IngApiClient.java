@@ -30,6 +30,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.Valida
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateThirdPartyTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateTrustedTransferBody;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateTrustedTransferResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.rpc.PortfolioRequestBody;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.rpc.PortfolioResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.PendingPaymentsResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.rpc.AccountsResponse;
@@ -172,6 +174,22 @@ public class IngApiClient {
                                 this.client
                                         .request(getUrlWithQueryParams(accountsUrl))
                                         .post(AccountsResponse.class, new BaseBody()));
+    }
+
+    public PortfolioResponse fetchInvestmentPortfolio(
+            LoginResponseEntity loginResponse, String bbanNumber) {
+        PortfolioRequestBody portfolioRequestBody = new PortfolioRequestBody(bbanNumber);
+
+        return loginResponse
+                .findInvestmentPortfolioValFlowRequest()
+                .map(
+                        url ->
+                                client.request(getUrlWithQueryParams(url))
+                                        .post(PortfolioResponse.class, portfolioRequestBody))
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Could not find portfolio request in list of requests."));
     }
 
     public TransactionsResponse getTransactions(

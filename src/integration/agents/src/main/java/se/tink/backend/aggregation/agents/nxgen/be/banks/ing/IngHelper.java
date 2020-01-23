@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,6 +63,21 @@ public class IngHelper {
         String amountWithoutScale = amount.substring(0, amount.length() - 1);
 
         BigDecimal bigDecimal = new BigDecimal(new BigInteger(amountWithoutScale), scale);
+        return bigDecimal.doubleValue();
+    }
+
+    public static Double parseBalanceStringToDouble(String balance) {
+        Preconditions.checkNotNull(balance);
+
+        BigDecimal bigDecimal =
+                new BigDecimal(new BigInteger(balance), 4).setScale(2, RoundingMode.HALF_UP);
+        return bigDecimal.doubleValue();
+    }
+
+    public static Double parseQuantityStringToDouble(String quantity) {
+        Preconditions.checkNotNull(quantity);
+
+        BigDecimal bigDecimal = new BigDecimal(new BigInteger(quantity), 2);
         return bigDecimal.doubleValue();
     }
 

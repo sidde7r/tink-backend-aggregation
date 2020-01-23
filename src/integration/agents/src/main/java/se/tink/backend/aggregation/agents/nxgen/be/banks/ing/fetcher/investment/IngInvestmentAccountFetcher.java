@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.rpc.PortfolioResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountListEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.rpc.AccountsResponse;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 
 public class IngInvestmentAccountFetcher
         implements AccountFetcher<InvestmentAccount>, TransactionPagePaginator<InvestmentAccount> {
+
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
 
@@ -29,6 +31,7 @@ public class IngInvestmentAccountFetcher
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
+
         return this.ingHelper
                 .retrieveLoginResponse()
                 .map(this::fetchAccountsFromLoginResponse)
@@ -43,8 +46,19 @@ public class IngInvestmentAccountFetcher
                 .map(AccountListEntity::stream)
                 .orElseGet(Stream::empty)
                 .filter(AccountEntity::isInvestmentType)
-                .map(account -> account.toTinkInvestmentAccount())
+                .map(
+                        account ->
+                                account.toTinkInvestmentAccount(
+                                        getInvestmentPortfolios(loginResponse, account)))
                 .collect(Collectors.toList());
+    }
+
+    public PortfolioResponseEntity getInvestmentPortfolios(
+            LoginResponseEntity loginResponse, AccountEntity accountEntity) {
+
+        final String bbanNumber =
+                accountEntity.getBbanNumber().replace(accountEntity.getAccount313(), "");
+        return apiClient.fetchInvestmentPortfolio(loginResponse, bbanNumber).getMobileResponse();
     }
 
     @Override

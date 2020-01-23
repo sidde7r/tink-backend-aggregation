@@ -1,19 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities;
 
 import com.google.api.client.util.Strings;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.entities.PortfolioEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.entities.SecurityEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.investment.rpc.PortfolioResponseEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -252,15 +260,49 @@ public class AccountEntity {
         return builder.build();
     }
 
-    public InvestmentAccount toTinkInvestmentAccount() {
-        return InvestmentAccount.builder(ibanNumber)
-                .setCashBalance(Amount.inEUR(IngHelper.parseAmountStringToDouble(balance)))
-                .setExactBalance(ExactCurrencyAmount.of(balance, currency))
-                .setBankIdentifier(bbanNumber)
-                .setAccountNumber(ibanNumber)
-                .setPortfolios(getPortfolio())
-                .setName(type)
+    public InvestmentAccount toTinkInvestmentAccount(
+            PortfolioResponseEntity portfolioResponseEntity) {
+        PortfolioEntity portfolioEntity = portfolioResponseEntity.getPortfolio();
+        return InvestmentAccount.nxBuilder()
+                .withPortfolios(toTinkPortfolio(portfolioEntity))
+                .withCashBalance(
+                        ExactCurrencyAmount.of(
+                                IngHelper.parseAmountStringToDouble(balance), currency))
+                .withId(toTinkIdModule(portfolioEntity))
                 .build();
+    }
+
+    private IdModule toTinkIdModule(PortfolioEntity portfolioEntity) {
+        final String bbanNumber = portfolioEntity.getPortfolioAccountNumberBBAN();
+        final String accountName = portfolioEntity.getPortfolioAccountName();
+
+        return IdModule.builder()
+                .withUniqueIdentifier(bbanNumber)
+                .withAccountNumber(bbanNumber)
+                .withAccountName(accountName)
+                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.BBAN, bbanNumber))
+                .build();
+    }
+
+    private PortfolioModule toTinkPortfolio(PortfolioEntity portfolioEntity) {
+
+        return PortfolioModule.builder()
+                .withType(PortfolioType.DEPOT)
+                .withUniqueIdentifier(portfolioEntity.getPortfolioAccountNumberBBAN())
+                .withCashValue(
+                        IngHelper.parseBalanceStringToDouble(portfolioEntity.getPortfolioBalance()))
+                .withTotalProfit(0)
+                .withTotalValue(
+                        IngHelper.parseBalanceStringToDouble(portfolioEntity.getPortfolioBalance()))
+                .withInstruments(getInstrumentModules(portfolioEntity))
+                .build();
+    }
+
+    private List<InstrumentModule> getInstrumentModules(PortfolioEntity portfolioEntity) {
+        final List<SecurityEntity> securities = portfolioEntity.getSecurities();
+        return Optional.ofNullable(securities).orElse(Collections.emptyList()).stream()
+                .map(SecurityEntity::toTinkInstrument)
+                .collect(Collectors.toList());
     }
 
     private HolderName getHolderName(final LoginResponseEntity loginResponse) {
@@ -289,19 +331,5 @@ public class AccountEntity {
                                 "Could not map account type [%s] to a Tink account type", type));
                 return AccountTypes.OTHER;
         }
-    }
-
-    private List<Portfolio> getPortfolio() {
-        Portfolio portfolio = new Portfolio();
-
-        portfolio.setUniqueIdentifier(bbanNumber);
-        portfolio.setType(Portfolio.Type.DEPOT);
-        portfolio.setTotalValue(IngHelper.parseAmountStringToDouble(balance));
-        /* Already asked ambassador to buy some funds and stocks to get overall view of
-        transactions for investment account including instruments.  */
-        // TODO : Fix this instrument list once transactions available from the bank
-        portfolio.setInstruments(new ArrayList<>());
-
-        return Collections.singletonList(portfolio);
     }
 }
