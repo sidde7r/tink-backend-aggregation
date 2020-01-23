@@ -5,6 +5,7 @@ junit_test(
     srcs = glob(["*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:cryptography_test",
         "//etc:development",
     ],
     tags = [
@@ -12,6 +13,7 @@ junit_test(
         "manual",
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/spankki"],
     deps = [
         "//src/integration/amount",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
