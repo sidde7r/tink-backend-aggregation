@@ -18,15 +18,15 @@ public class SocieteGeneraleApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private SocieteGeneraleConfiguration configuration;
+    private final SocieteGeneraleConfiguration configuration;
 
-    public SocieteGeneraleApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public SocieteGeneraleApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            SocieteGeneraleConfiguration configuration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-    }
-
-    public void setConfiguration(SocieteGeneraleConfiguration societeGeneraleConfiguration) {
-        this.configuration = societeGeneraleConfiguration;
+        this.configuration = configuration;
     }
 
     public TokenResponse exchangeAuthorizationCodeOrRefreshToken(TokenRequest request) {
