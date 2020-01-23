@@ -556,7 +556,7 @@
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
-            "name": "fi-spankki-oauth2",
+            "name": "fi-spankki-ob",
             "passwordHelpText": null,
             "payload": "tink",
             "popular": true,
