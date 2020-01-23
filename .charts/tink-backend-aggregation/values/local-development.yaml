@@ -31,8 +31,8 @@ clients:
 initialDelaySeconds: 10
 
 tppSecretsServiceConfiguration:
-  certificatesLocation: "development-staging"
-  enabled: true
+  certificatesLocation: "development-local"
+  enabled: false
 
 providerConfigurationServiceConfiguration:
   enabled: false
