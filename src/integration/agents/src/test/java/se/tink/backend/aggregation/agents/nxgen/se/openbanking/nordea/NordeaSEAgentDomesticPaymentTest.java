@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
@@ -44,6 +45,8 @@ public class NordeaSEAgentDomesticPaymentTest {
                 new AgentIntegrationTest.Builder("SE", "se-nordea-oauth2")
                         .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("nordea")
+                        .setAppId("tink")
                         .loadCredentialsBefore(
                                 Boolean.parseBoolean(
                                         loadBeforeSaveAfterManager.get(
@@ -57,6 +60,11 @@ public class NordeaSEAgentDomesticPaymentTest {
     @Test
     public void testPayments() throws Exception {
         builder.build().testGenericPayment(createRealDomesticPayment());
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 
     private List<Payment> createRealDomesticPayment() {

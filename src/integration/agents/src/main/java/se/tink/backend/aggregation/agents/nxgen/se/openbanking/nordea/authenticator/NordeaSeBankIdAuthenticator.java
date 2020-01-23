@@ -142,7 +142,6 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
         return GetTokenForm.builder()
                 .setCode(getCodeResponse.getResponse().getCode())
                 .setGrantType(NordeaBaseConstants.FormValues.AUTHORIZATION_CODE)
-                .setRedirectUri(apiClient.getConfiguration().getRedirectUrl())
                 .build();
     }
 
@@ -151,7 +150,6 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
                 NordeaSeConstants.FormValues.DURATION_MINUTES,
                 language,
                 ssn,
-                apiClient.getConfiguration().getRedirectUrl(),
                 NordeaSeConstants.FormValues.RESPONSE_TYPE,
                 getScopes(),
                 NordeaSeConstants.FormValues.STATE);

@@ -52,7 +52,7 @@ public final class NordeaBaseConstants {
     }
 
     public static class ApiService {
-        public static final String VERSION = "/v3";
+        public static final String VERSION = "/v4";
         public static final String AUTHORIZE = VERSION + "/authorize";
         public static final String GET_TOKEN = VERSION + "/authorize/token";
         public static final String GET_ACCOUNTS = VERSION + "/accounts";
@@ -66,6 +66,7 @@ public final class NordeaBaseConstants {
         public static final String GET_CORPORATE_ACCOUNTS = "/v2/accounts";
         public static final String GET_CORPORATE_TRANSACTIONS =
                 "/v2/accounts/{accountId}/transactions";
+        public static final String GET_TOKEN_DECOUPLED = "/v4/authorize-decoupled/token";
     }
 
     public static class StorageKeys {
@@ -75,8 +76,6 @@ public final class NordeaBaseConstants {
 
     public static class QueryKeys {
         public static final String CLIENT_ID = "client_id";
-        public static final String X_CLIENT_ID = "X-IBM-Client-Id";
-        public static final String X_CLIENT_SECRET = "X-IBM-Client-Secret";
         public static final String STATE = "state";
         public static final String DURATION = "duration";
         public static final String COUNTRY = "country";
@@ -96,6 +95,37 @@ public final class NordeaBaseConstants {
 
     public static class HeaderKeys {
         public static final String AUTHORIZATION = "Authorization";
+        public static final String X_CLIENT_ID = "X-IBM-Client-Id";
+        public static final String X_CLIENT_SECRET = "X-IBM-Client-Secret";
+        public static final String SIGNATURE = "Signature";
+        public static final String DIGEST = "digest";
+        public static final String ORIGINATING_DATE = "X-Nordea-Originating-Date";
+        public static final String ORIGINATING_HOST = "X-Nordea-Originating-Host";
+    }
+
+    public static class HeaderValues {
+        public static final String HOST = "api.nordea.com";
+    }
+
+    public static class Signature {
+        public static final String DELIMITER_NEXT_LINE = "\n";
+        public static final String DELIMITER_COMMA = ",";
+        public static final String DOUBLE_QUOTE = "\"";
+        public static final String KEY_ID = "keyId=\"";
+        public static final String ALGORITHM = "algorithm=\"rsa-sha256\"";
+        public static final String POST_HEADERS =
+                "headers=\"(request-target) x-nordea-originating-host x-nordea-originating-date content-type digest\"";
+        public static final String GET_HEADERS =
+                "headers=\"(request-target) x-nordea-originating-host x-nordea-originating-date\"";
+        public static final String SIGNATURE = "signature=\"";
+        public static final String TIMEZONE = "GMT";
+        public static final String DIGEST = "digest: ";
+        public static final String DIGEST_PREFIX = "SHA-256=";
+        public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
+        public static final String CONTENT_TYPE = "content-type: ";
+        public static final String REQUEST_TARGET = "(request-target): ";
+        public static final String ORIGINATING_HOST = "x-nordea-originating-host: ";
+        public static final String ORIGINATING_DATE = "x-nordea-originating-date: ";
     }
 
     public static class FormKeys {
