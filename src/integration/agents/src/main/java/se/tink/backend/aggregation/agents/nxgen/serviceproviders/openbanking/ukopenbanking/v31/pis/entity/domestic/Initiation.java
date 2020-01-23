@@ -12,7 +12,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -64,8 +63,8 @@ public class Initiation {
     }
 
     @JsonIgnore
-    public Reference getReference() {
-        return remittanceInformation.createTinkReference();
+    public String getReference() {
+        return remittanceInformation.getReference();
     }
 
     public String getInstructionIdentification() {
