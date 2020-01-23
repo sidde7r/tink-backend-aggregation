@@ -1,14 +1,17 @@
 package se.tink.backend.aggregation.nxgen.http.filter.filters;
 
+import static org.apache.commons.lang3.StringUtils.LF;
+import static org.apache.commons.lang3.StringUtils.SPACE;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Charsets;
 import com.sun.jersey.api.client.ClientHandlerException;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +34,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class RestIoLoggingFilter extends Filter {
 
     private static final String NOTIFICATION_PREFIX = "* ";
-
     private static final String REQUEST_PREFIX = "> ";
-
     private static final String RESPONSE_PREFIX = "< ";
 
     private final PrintStream loggingStream;
@@ -81,11 +82,8 @@ public class RestIoLoggingFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
         long id = ++this._id;
-
         logRequest(id, httpRequest);
-
         HttpResponse response = getNext().handle(httpRequest);
-
         logResponse(id, response);
 
         return response;
@@ -112,43 +110,42 @@ public class RestIoLoggingFilter extends Filter {
 
     private void logRequest(long id, HttpRequest request) {
         StringBuilder b = new StringBuilder();
-
         appendRequestLine(b, id, request);
         appendRequestHeaders(b, id, request.getHeaders());
-        appendRequestBody(b, id, request.getBody());
+        appendRequestBody(b, request.getBody());
         log(b);
     }
 
-    private void appendRequestBody(StringBuilder b, long id, Object body) {
+    private void appendRequestBody(StringBuilder b, Object body) {
         if (body == null) {
             return;
         }
 
         if (body instanceof String) {
-            b.append(body).append("\n");
+            b.append(body).append(LF);
             return;
         }
 
         ObjectMapper om = new ObjectMapper();
         try {
-            b.append(om.writeValueAsString(body)).append("\n");
+            b.append(om.writeValueAsString(body)).append(LF);
         } catch (JsonProcessingException e) {
-            b.append("Error during body serialization '").append(body).append("'").append("\n");
+            b.append("Error during body serialization '").append(body).append("'").append(LF);
         }
     }
 
     private void appendRequestLine(StringBuilder b, long id, HttpRequest request) {
-        prefixId(b, id).append(NOTIFICATION_PREFIX).append("Client out-bound request").append("\n");
+        prefixId(b, id).append(NOTIFICATION_PREFIX).append("Client out-bound request").append(LF);
         prefixId(b, id)
                 .append(NOTIFICATION_PREFIX)
                 .append(ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()))
-                .append("\n");
+                .append(LF);
         prefixId(b, id)
                 .append(REQUEST_PREFIX)
                 .append(request.getMethod())
-                .append(" ")
+                .append(SPACE)
                 .append(request.getURI().toASCIIString())
-                .append("\n");
+                .append(LF);
     }
 
     private void appendRequestHeaders(
@@ -178,7 +175,7 @@ public class RestIoLoggingFilter extends Filter {
                     .append(header)
                     .append(": ")
                     .append(censorSensitiveHeaders ? censorHeaderValue(header, value) : value)
-                    .append("\n");
+                    .append(LF);
         }
     }
 
@@ -189,7 +186,7 @@ public class RestIoLoggingFilter extends Filter {
         appendResponseHeaders(b, id, response.getHeaders());
 
         InputStream stream = response.getBodyInputStream();
-        try {
+        try (StringBuilderWriter sw = new StringBuilderWriter()) {
 
             if (!response.getBodyInputStream().markSupported()) {
                 stream = new BufferedInputStream(stream);
@@ -198,8 +195,7 @@ public class RestIoLoggingFilter extends Filter {
 
             stream.mark(Integer.MAX_VALUE);
 
-            StringBuilderWriter sw = new StringBuilderWriter();
-            InputStreamReader in = new InputStreamReader(stream, Charsets.UTF_8);
+            InputStreamReader in = new InputStreamReader(stream, StandardCharsets.UTF_8);
             long charsCopied = IOUtils.copyLarge(in, sw, 0, MAX_SIZE);
             if (charsCopied == MAX_SIZE) {
                 sw.write(" ... more ...");
@@ -207,9 +203,7 @@ public class RestIoLoggingFilter extends Filter {
             String content = sw.toString();
 
             b.append(content);
-
-            b.append("\n");
-
+            b.append(LF);
             stream.reset();
 
         } catch (IOException ex) {
@@ -219,12 +213,12 @@ public class RestIoLoggingFilter extends Filter {
     }
 
     private void appendResponseLine(StringBuilder b, long id, HttpResponse response) {
-        prefixId(b, id).append(NOTIFICATION_PREFIX).append("Client in-bound response").append("\n");
+        prefixId(b, id).append(NOTIFICATION_PREFIX).append("Client in-bound response").append(LF);
         prefixId(b, id)
                 .append(NOTIFICATION_PREFIX)
                 .append(ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()))
-                .append("\n");
-        prefixId(b, id).append(RESPONSE_PREFIX).append(response.getStatus()).append("\n");
+                .append(LF);
+        prefixId(b, id).append(RESPONSE_PREFIX).append(response.getStatus()).append(LF);
     }
 
     private void appendResponseHeaders(
@@ -237,16 +231,9 @@ public class RestIoLoggingFilter extends Filter {
                         .append(header)
                         .append(": ")
                         .append(censorSensitiveHeaders ? censorHeaderValue(header, value) : value)
-                        .append("\n");
+                        .append(LF);
             }
         }
-        prefixId(b, id).append(RESPONSE_PREFIX).append("\n");
-    }
-
-    private void printEntity(StringBuilder b, byte[] entity) {
-        if (entity.length == 0) {
-            return;
-        }
-        b.append(new String(entity)).append("\n");
+        prefixId(b, id).append(RESPONSE_PREFIX).append(LF);
     }
 }
