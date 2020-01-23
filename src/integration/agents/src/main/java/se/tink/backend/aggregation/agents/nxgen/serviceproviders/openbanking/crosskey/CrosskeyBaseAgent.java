@@ -66,7 +66,6 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         final CrosskeyBaseConfiguration crosskeyBaseConfiguration = getClientConfiguration();
-        crosskeyBaseConfiguration.setxFapiFinancialId(getxFapiFinancialId());
 
         apiClient.setConfiguration(
                 crosskeyBaseConfiguration,
