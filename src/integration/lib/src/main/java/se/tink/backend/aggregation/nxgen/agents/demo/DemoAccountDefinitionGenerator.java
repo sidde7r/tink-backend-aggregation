@@ -11,7 +11,7 @@ import se.tink.libraries.account.AccountIdentifier;
 /** Deterministic account generator based on user-name and provider */
 public class DemoAccountDefinitionGenerator {
 
-    public static String ukProviderRegex = "^uk-.*";
+    public static String ukProviderRegex = "^(?:uk|gb)-.*";
 
     private static String createDeterministicKey(String combination) {
         return Integer.toString(combination.hashCode());
