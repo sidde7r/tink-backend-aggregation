@@ -6,11 +6,11 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class RequestDateFormatter {
+class RequestDateFormatter {
     private static final DateTimeFormatter formatter =
             DateTimeFormatter.ofPattern(REQUEST_DATE_TIME_FMT).withLocale(Locale.US);
 
-    public static String getDateFormatted(ZonedDateTime date) {
+    static String getDateFormatted(ZonedDateTime date) {
         return date.format(formatter);
     }
 }

@@ -1,19 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca;
 
 import java.time.ZoneId;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class ChebancaConstants {
-
-    public static final String INTEGRATION_NAME = "chebanca";
-    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            AccountTypeMapper.builder()
-                    .put(AccountTypes.CHECKING, "CONTO CORRENTE")
-                    .put(AccountTypes.CREDIT_CARD, "CARTA DI CREDITO")
-                    .build();
 
     public enum HeadersToSign {
         REQUEST_TARGET("(request-target)"),
@@ -110,7 +101,6 @@ public final class ChebancaConstants {
         public static final String GET_METHOD = "get";
         public static final String POST_METHOD = "post";
         public static final String PUT_METHOD = "put";
-        public static final String LOCATION = "Location";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
     }
 

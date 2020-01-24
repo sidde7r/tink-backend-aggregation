@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class URLFormatter {
+class URLFormatter {
     private static final String EXPECTED_FORMAT = "%s %s";
 
-    public static String formatToString(String httpMethod, URL url) {
+    static String formatToString(String httpMethod, URL url) {
         return String.format(EXPECTED_FORMAT, httpMethod, extractUrlWithoutBase(url));
     }
 
