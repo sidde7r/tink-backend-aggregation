@@ -10,7 +10,7 @@ junit_test(
     ],
     tags = [
         "external",
-        #"manual",
+        "manual",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
