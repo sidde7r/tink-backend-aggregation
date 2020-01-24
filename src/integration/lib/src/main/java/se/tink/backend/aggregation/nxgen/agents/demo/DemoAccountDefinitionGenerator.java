@@ -34,13 +34,13 @@ public class DemoAccountDefinitionGenerator {
         return (double) (generateNumber(deterministicKey, digits)) / 100;
     }
 
-    private static String generateAccoutNumbers(String deterministicKey) {
+    private static String generateAccountNumbers(String deterministicKey) {
         return ("" + generateNumber(deterministicKey, 4))
                 + "-"
                 + ("" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 7));
     }
 
-    private static String generateAccoutNumbersUK(
+    private static String generateAccountNumbersUK(
             String userDeterministicKey, String deterministicKey) {
         Integer sortCode =
                 DemoConstants.UK_SORT_CODES.get(
@@ -63,8 +63,8 @@ public class DemoAccountDefinitionGenerator {
             @Override
             public String getAccountId() {
                 if (providerName.matches(DemoConstants.UK_PROVIDERS_REGEX)) {
-                    return generateAccoutNumbersUK(userDeterministicKey, deterministicKey);
-                } else return generateAccoutNumbers(deterministicKey);
+                    return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
+                } else return generateAccountNumbers(deterministicKey);
             }
 
             @Override
@@ -105,8 +105,8 @@ public class DemoAccountDefinitionGenerator {
             @Override
             public String getAccountId() {
                 if (providerName.matches(DemoConstants.UK_PROVIDERS_REGEX)) {
-                    return generateAccoutNumbersUK(userDeterministicKey, deterministicKey);
-                } else return generateAccoutNumbers(deterministicKey);
+                    return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
+                } else return generateAccountNumbers(deterministicKey);
             }
 
             @Override
@@ -150,8 +150,8 @@ public class DemoAccountDefinitionGenerator {
             @Override
             public String getAccountId() {
                 if (providerName.matches(DemoConstants.UK_PROVIDERS_REGEX)) {
-                    return generateAccoutNumbersUK(userDeterministicKey, deterministicKey);
-                } else return generateAccoutNumbers(deterministicKey);
+                    return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
+                } else return generateAccountNumbers(deterministicKey);
             }
 
             @Override
