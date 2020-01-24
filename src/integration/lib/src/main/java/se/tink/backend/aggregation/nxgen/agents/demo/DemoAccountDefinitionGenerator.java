@@ -51,8 +51,13 @@ public class DemoAccountDefinitionGenerator {
     }
 
     public static DemoSavingsAccount getDemoSavingsAccounts(String username, String providerName) {
+        return getDemoSavingsAccounts(username, providerName, 0);
+    }
 
-        String deterministicKey = createDeterministicKey("Savings" + username + providerName);
+    public static DemoSavingsAccount getDemoSavingsAccounts(
+            String username, String providerName, int key) {
+        String deterministicKey =
+                createDeterministicKey("Savings" + (key != 0 ? key : "") + username + providerName);
         String userDeterministicKey = createDeterministicKey(username + providerName);
         return new DemoSavingsAccount() {
             @Override
@@ -64,7 +69,7 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public String getAccountName() {
-                return "Savings Account " + username;
+                return "Savings Account " + username + (key != 0 ? " " + key : "");
             }
 
             @Override
@@ -87,9 +92,15 @@ public class DemoAccountDefinitionGenerator {
 
     public static DemoTransactionAccount getDemoTransactionalAccount(
             String username, String providerName) {
-        String deterministicKey = createDeterministicKey("Transaction" + username + providerName);
-        String userDeterministicKey = createDeterministicKey(username + providerName);
+        return getDemoTransactionalAccount(username, providerName, 0);
+    }
 
+    public static DemoTransactionAccount getDemoTransactionalAccount(
+            String username, String providerName, int key) {
+        String deterministicKey =
+                createDeterministicKey(
+                        "Transaction" + (key != 0 ? key : "") + username + providerName);
+        String userDeterministicKey = createDeterministicKey(username + providerName);
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
@@ -100,7 +111,7 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public String getAccountName() {
-                return "Checking Account " + username;
+                return "Checking Account " + username + (key != 0 ? " " + key : "");
             }
 
             @Override
@@ -123,10 +134,18 @@ public class DemoAccountDefinitionGenerator {
 
     public static DemoTransactionAccount getDemoTransactionalAccountWithZeroBalance(
             String username, String providerName) {
-        String deterministicKey =
-                createDeterministicKey("Transaction with zero balance" + username + providerName);
-        String userDeterministicKey = createDeterministicKey(username + providerName);
+        return getDemoTransactionalAccountWithZeroBalance(username, providerName, 0);
+    }
 
+    public static DemoTransactionAccount getDemoTransactionalAccountWithZeroBalance(
+            String username, String providerName, int key) {
+        String deterministicKey =
+                createDeterministicKey(
+                        "Transaction with zero balance"
+                                + (key != 0 ? key : "")
+                                + username
+                                + providerName);
+        String userDeterministicKey = createDeterministicKey(username + providerName);
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
@@ -137,7 +156,10 @@ public class DemoAccountDefinitionGenerator {
 
             @Override
             public String getAccountName() {
-                return "Checking Account " + username + " zero balance";
+                return "Checking Account "
+                        + username
+                        + " zero balance"
+                        + (key != 0 ? " " + key : "");
             }
 
             @Override

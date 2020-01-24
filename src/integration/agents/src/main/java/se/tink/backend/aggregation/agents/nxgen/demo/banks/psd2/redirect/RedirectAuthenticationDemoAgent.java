@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
 
+import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authent
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoTransferExecutor;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
+import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoIdentityData;
@@ -202,9 +204,20 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public List<DemoTransactionAccount> getTransactionAccounts() {
-        return Collections.singletonList(
-                DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                        USERNAME, this.provider));
+        if (this.provider.matches(DemoConstants.UK_PROVIDERS_REGEX)) {
+            return Lists.newArrayList(
+                    DemoAccountDefinitionGenerator.getDemoTransactionalAccountWithZeroBalance(
+                            USERNAME, this.provider),
+                    DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
+                            USERNAME, this.provider, 0),
+                    DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
+                            USERNAME, this.provider, 1));
+
+        } else {
+            return Lists.newArrayList(
+                    DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
+                            USERNAME, this.provider));
+        }
     }
 
     @Override
