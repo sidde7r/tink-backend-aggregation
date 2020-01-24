@@ -1,0 +1,43 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "seb",
+    srcs = glob(["**/*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/seb",
+        "//src/integration/amount",
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/enums",
+        "//src/integration/lib",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/models",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:mocks",
+        "//src/integration/transfer:rpc",
+        "//src/libraries/account_identifier",
+        "//src/libraries/account_identifier:account_identifier_test",
+        "//src/libraries/date",
+        "//src/libraries/social_security_number:social_security_number_test",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:joda_time_joda_time",
+        "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito_mockito_core",
+    ],
+)
