@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
-import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.Uksortcodes;
-
 import com.google.common.collect.Lists;
 import java.util.List;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -10,8 +8,6 @@ import se.tink.libraries.account.AccountIdentifier;
 
 /** Deterministic account generator based on user-name and provider */
 public class DemoAccountDefinitionGenerator {
-
-    public static String ukProviderRegex = "^(?:uk|gb)-.*";
 
     private static String createDeterministicKey(String combination) {
         return Integer.toString(combination.hashCode());
@@ -38,35 +34,42 @@ public class DemoAccountDefinitionGenerator {
         return (double) (generateNumber(deterministicKey, digits)) / 100;
     }
 
-    private static String generateAccoutNumbers(String deterministicKey) {
+    private static String generateAccountNumbers(String deterministicKey) {
         return ("" + generateNumber(deterministicKey, 4))
                 + "-"
                 + ("" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 7));
     }
 
-    private static String generateAccoutNumbersUK(
+    private static String generateAccountNumbersUK(
             String userDeterministicKey, String deterministicKey) {
         Integer sortCode =
-                Uksortcodes.get(generateNumber(userDeterministicKey, 2) % Uksortcodes.size());
+                DemoConstants.UK_SORT_CODES.get(
+                        generateNumber(userDeterministicKey, 2)
+                                % DemoConstants.UK_SORT_CODES.size());
         return sortCode
                 + ("" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 3));
     }
 
     public static DemoSavingsAccount getDemoSavingsAccounts(String username, String providerName) {
+        return getDemoSavingsAccounts(username, providerName, 0);
+    }
 
-        String deterministicKey = createDeterministicKey("Savings" + username + providerName);
+    public static DemoSavingsAccount getDemoSavingsAccounts(
+            String username, String providerName, int key) {
+        String deterministicKey =
+                createDeterministicKey("Savings" + (key != 0 ? key : "") + username + providerName);
         String userDeterministicKey = createDeterministicKey(username + providerName);
         return new DemoSavingsAccount() {
             @Override
             public String getAccountId() {
-                if (providerName.matches(ukProviderRegex)) {
-                    return generateAccoutNumbersUK(userDeterministicKey, deterministicKey);
-                } else return generateAccoutNumbers(deterministicKey);
+                if (providerName.matches(DemoConstants.UK_PROVIDERS_REGEX)) {
+                    return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
+                } else return generateAccountNumbers(deterministicKey);
             }
 
             @Override
             public String getAccountName() {
-                return "Savings Account " + username;
+                return "Savings Account " + username + (key != 0 ? " " + key : "");
             }
 
             @Override
@@ -77,7 +80,7 @@ public class DemoAccountDefinitionGenerator {
             @Override
             public List<AccountIdentifier> getIdentifiers() {
                 AccountIdentifier.Type type = AccountIdentifier.Type.SE;
-                if (providerName.matches(ukProviderRegex)) {
+                if (providerName.matches(DemoConstants.UK_PROVIDERS_REGEX)) {
                     type = AccountIdentifier.Type.SORT_CODE;
                 }
                 AccountIdentifier identifier =
@@ -89,20 +92,26 @@ public class DemoAccountDefinitionGenerator {
 
     public static DemoTransactionAccount getDemoTransactionalAccount(
             String username, String providerName) {
-        String deterministicKey = createDeterministicKey("Transaction" + username + providerName);
-        String userDeterministicKey = createDeterministicKey(username + providerName);
+        return getDemoTransactionalAccount(username, providerName, 0);
+    }
 
+    public static DemoTransactionAccount getDemoTransactionalAccount(
+            String username, String providerName, int key) {
+        String deterministicKey =
+                createDeterministicKey(
+                        "Transaction" + (key != 0 ? key : "") + username + providerName);
+        String userDeterministicKey = createDeterministicKey(username + providerName);
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
-                if (providerName.matches(ukProviderRegex)) {
-                    return generateAccoutNumbersUK(userDeterministicKey, deterministicKey);
-                } else return generateAccoutNumbers(deterministicKey);
+                if (providerName.matches(DemoConstants.UK_PROVIDERS_REGEX)) {
+                    return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
+                } else return generateAccountNumbers(deterministicKey);
             }
 
             @Override
             public String getAccountName() {
-                return "Checking Account " + username;
+                return "Checking Account " + username + (key != 0 ? " " + key : "");
             }
 
             @Override
@@ -113,7 +122,7 @@ public class DemoAccountDefinitionGenerator {
             @Override
             public List<AccountIdentifier> getIdentifiers() {
                 AccountIdentifier.Type type = AccountIdentifier.Type.SE;
-                if (providerName.matches(ukProviderRegex)) {
+                if (providerName.matches(DemoConstants.UK_PROVIDERS_REGEX)) {
                     type = AccountIdentifier.Type.SORT_CODE;
                 }
                 AccountIdentifier identifier =
@@ -125,21 +134,32 @@ public class DemoAccountDefinitionGenerator {
 
     public static DemoTransactionAccount getDemoTransactionalAccountWithZeroBalance(
             String username, String providerName) {
-        String deterministicKey =
-                createDeterministicKey("Transaction with zero balance" + username + providerName);
-        String userDeterministicKey = createDeterministicKey(username + providerName);
+        return getDemoTransactionalAccountWithZeroBalance(username, providerName, 0);
+    }
 
+    public static DemoTransactionAccount getDemoTransactionalAccountWithZeroBalance(
+            String username, String providerName, int key) {
+        String deterministicKey =
+                createDeterministicKey(
+                        "Transaction with zero balance"
+                                + (key != 0 ? key : "")
+                                + username
+                                + providerName);
+        String userDeterministicKey = createDeterministicKey(username + providerName);
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
-                if (providerName.matches(ukProviderRegex)) {
-                    return generateAccoutNumbersUK(userDeterministicKey, deterministicKey);
-                } else return generateAccoutNumbers(deterministicKey);
+                if (providerName.matches(DemoConstants.UK_PROVIDERS_REGEX)) {
+                    return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
+                } else return generateAccountNumbers(deterministicKey);
             }
 
             @Override
             public String getAccountName() {
-                return "Checking Account " + username + " zero balance";
+                return "Checking Account "
+                        + username
+                        + " zero balance"
+                        + (key != 0 ? " " + key : "");
             }
 
             @Override
@@ -150,7 +170,7 @@ public class DemoAccountDefinitionGenerator {
             @Override
             public List<AccountIdentifier> getIdentifiers() {
                 AccountIdentifier.Type type = AccountIdentifier.Type.SE;
-                if (providerName.matches(ukProviderRegex)) {
+                if (providerName.matches(DemoConstants.UK_PROVIDERS_REGEX)) {
                     type = AccountIdentifier.Type.SORT_CODE;
                 }
                 AccountIdentifier identifier =
