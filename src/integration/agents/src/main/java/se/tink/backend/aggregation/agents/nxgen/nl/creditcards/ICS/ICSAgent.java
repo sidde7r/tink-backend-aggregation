@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSBankFailureFilter;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSRetryFilter;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -59,6 +61,9 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
         client.addFilter(
                 new RateLimitRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(
+                new ICSRetryFilter(HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new ICSBankFailureFilter());
         client.addFilter(new AccessExceededFilter());
         client.addFilter(new TimeoutFilter());
         client.addFilter(new BankServiceInternalErrorFilter());

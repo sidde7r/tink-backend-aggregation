@@ -102,6 +102,7 @@ public class ICSConstants {
         public static final String MISSING_TOKEN = "Cannot find OAuth token.";
         public static final String MISSING_STATE = "OAuth state cannot be null or empty.";
         public static final String MISSING_PERMISSIONS = "Did not receive all permissions";
+        public static final String STATUS_CODE_500 = "Status Code: 500";
     }
 
     public static class ErrorCode {
