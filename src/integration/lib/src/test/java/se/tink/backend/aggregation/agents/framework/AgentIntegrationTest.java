@@ -556,11 +556,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
     }
 
-    public NewAgentTestContext testRefresh(String credentialName) throws Exception {
-        initiateCredentials();
-        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
-
-        Agent agent;
+    private void readConfigurationFile() throws ConfigurationException, IOException {
         if (isUsingWireMock) {
             configuration = readConfiguration("etc/test.yml");
             configuration.getTestConfiguration().setMockServerPort(this.wireMockPort);
@@ -576,7 +572,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 throw new IllegalStateException(e);
             }
         }
-        agent = createAgent(credentialsRequest);
+    }
+
+    public NewAgentTestContext testRefresh(String credentialName) throws Exception {
+        initiateCredentials();
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        readConfigurationFile();
+        Agent agent = createAgent(credentialsRequest);
 
         try {
             login(agent, credentialsRequest);
@@ -685,7 +687,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     public void testGenericPayment(List<Payment> paymentList) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        readConfigurationFile();
         Agent agent = createAgent(credentialsRequest);
+
         try {
             login(agent, credentialsRequest);
             if (agent instanceof PaymentControllerable) {
@@ -711,6 +715,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     public void testGenericPaymentUKOB(List<Payment> paymentList) throws Exception {
         initiateCredentials();
+        readConfigurationFile();
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             // login(agent);
