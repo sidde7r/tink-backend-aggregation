@@ -245,6 +245,7 @@ java_test(
         "manual",
     ],
     runtime_deps = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/banks/seb",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/bankaustria",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/erstebank",
