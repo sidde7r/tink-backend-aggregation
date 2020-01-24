@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap;
 
 import com.google.common.collect.Maps;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
@@ -160,10 +160,6 @@ public class EncryptedMessageService {
             throw new IllegalStateException("MAC authentication failed");
         }
 
-        try {
-            return new String(EncodingUtils.decodeHexString(decryptedEMD), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(e.getMessage(), e);
-        }
+        return new String(EncodingUtils.decodeHexString(decryptedEMD), StandardCharsets.UTF_8);
     }
 }
