@@ -75,14 +75,14 @@ public class AutoAuthenticationController
 
     private boolean shouldDoManualAuthentication(final Credentials credentials) {
         if (isDebugEnabled) {
-            log.debug("forceAutoAuthentication status : ", forceAutoAuthentication());
-            log.debug("manualAuthenticatorType : ", manualAuthenticator.getType());
-            log.debug("credentialsTypes : ", credentials.getType());
-            log.debug("request create status : ", request.isCreate());
-            log.debug("requestUpdate status : ", request.isUpdate());
-            log.debug("requestType : ", request.getType());
+            log.debug("forceAutoAuthentication status: {}", forceAutoAuthentication());
+            log.debug("manualAuthenticatorType: {}", manualAuthenticator.getType());
+            log.debug("credentialsTypes: {}", credentials.getType());
+            log.debug("request create status: {}", request.isCreate());
+            log.debug("requestUpdate status: {}", request.isUpdate());
+            log.debug("requestType: {}", request.getType());
             log.debug(
-                    "credentials.forceAutoAuthentication status : ",
+                    "credentials.forceAutoAuthentication status: {}",
                     credentials.forceManualAuthentication());
         }
         return !forceAutoAuthentication()

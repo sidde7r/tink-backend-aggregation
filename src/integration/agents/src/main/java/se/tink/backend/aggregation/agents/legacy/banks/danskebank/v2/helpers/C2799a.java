@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Utilities for encoding and decoding the Base64 representation of binary data. See RFCs <a
@@ -409,12 +409,7 @@ public class C2799a {
      *     in output that adheres to RFC 2045.
      */
     public static String m12063b(byte[] input, int flags) {
-        try {
-            return new String(m12065c(input, flags), "US-ASCII");
-        } catch (UnsupportedEncodingException e) {
-            // US-ASCII is guaranteed to be available.
-            throw new AssertionError(e);
-        }
+        return new String(m12065c(input, flags), StandardCharsets.US_ASCII);
     }
 
     /**
@@ -427,12 +422,7 @@ public class C2799a {
      *     in output that adheres to RFC 2045.
      */
     public static String encodeToString(byte[] input, int offset, int len, int flags) {
-        try {
-            return new String(m12064b(input, offset, len, flags), "US-ASCII");
-        } catch (UnsupportedEncodingException e) {
-            // US-ASCII is guaranteed to be available.
-            throw new AssertionError(e);
-        }
+        return new String(m12064b(input, offset, len, flags), StandardCharsets.US_ASCII);
     }
 
     /**

@@ -30,7 +30,7 @@ public class RevolutAutoAuthenticator implements AutoAuthenticator {
             }
 
             log.error(
-                    "%s: Authorization failed with message \"%s\"",
+                    "{}: Authorization failed with message \"{}\"",
                     RevolutConstants.Tags.AUTHORIZATION_ERROR,
                     e.getResponse().getBody(ErrorResponse.class).getMessage(),
                     e);

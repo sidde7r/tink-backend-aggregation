@@ -19,7 +19,7 @@ public class N26Utils {
     private static Logger logger = LoggerFactory.getLogger(N26Utils.class);
 
     public static <T> Try<T> handleUnsupportedEncodingException(UnsupportedEncodingException ex) {
-        logger.error("Unable to encode {}", ex);
+        logger.error("Unable to encode", ex);
         return Try.failure(new IllegalStateException("Unable to encode ", ex));
     }
 

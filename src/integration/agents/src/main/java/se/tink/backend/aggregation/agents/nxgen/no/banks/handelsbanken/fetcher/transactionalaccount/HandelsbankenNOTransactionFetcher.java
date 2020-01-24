@@ -33,8 +33,9 @@ public class HandelsbankenNOTransactionFetcher
                         transactionUrlForAccount, numberOfTransactions, startIndex);
         if (response.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
             log.warn(
-                    "Traffic error during fetching transaction: %s: %s",
-                    response.getStatus(), response.getBody(String.class));
+                    "Traffic error during fetching transaction: {}: {}",
+                    response.getStatus(),
+                    response.getBody(String.class));
             return PaginatorResponseImpl.createEmpty();
         }
         TransactionFetchingResponse transactionFetchingResponse =

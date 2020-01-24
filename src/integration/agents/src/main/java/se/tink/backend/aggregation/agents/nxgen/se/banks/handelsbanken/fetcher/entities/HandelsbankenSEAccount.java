@@ -206,7 +206,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         try {
             return Optional.of(findLink(HandelsbankenConstants.URLS.Links.ACCOUNT_INFO));
         } catch (Exception e) {
-            LOG.info("Failed to find link for account info ", e.getMessage(), e);
+            LOG.info("Failed to find link for account info {}", e.getMessage(), e);
         }
 
         return Optional.empty();

@@ -33,7 +33,7 @@ public class DemoFileHandler {
                     generationConfig, new TypeReference<List<GeneratePurchaseBase>>() {});
         } catch (IOException e) {
             logger.info(
-                    "Could not read the demo data generation base file. Verify that '%s' is present",
+                    "Could not read the demo data generation base file. Verify that '{}' is present",
                     path);
         }
 

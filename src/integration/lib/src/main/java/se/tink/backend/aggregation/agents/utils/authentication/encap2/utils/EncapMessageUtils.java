@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.utils.authentication.encap2.utils;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -236,11 +236,7 @@ public class EncapMessageUtils {
     }
 
     private String hexDecodeEmd(String decryptedEmd) {
-        try {
-            return new String(EncodingUtils.decodeHexString(decryptedEmd), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(e.getMessage(), e);
-        }
+        return new String(EncodingUtils.decodeHexString(decryptedEmd), StandardCharsets.UTF_8);
     }
 
     private Map<String, String> parseResponseQuery(String responseQuery) {

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.utils.soap;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPException;
@@ -21,7 +22,7 @@ public class SoapParser {
         try {
             MessageFactory factory = MessageFactory.newInstance();
             final ByteArrayInputStream byteArrayInputStream =
-                    new ByteArrayInputStream(xml.getBytes("UTF-8"));
+                    new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
             return factory.createMessage(new MimeHeaders(), byteArrayInputStream);
         } catch (SOAPException | IOException e) {
             throw new IllegalStateException(e.getMessage(), e);

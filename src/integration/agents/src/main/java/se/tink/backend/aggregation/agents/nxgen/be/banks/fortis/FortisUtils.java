@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -55,11 +55,7 @@ public class FortisUtils {
             e.printStackTrace();
         }
         byte[] bArr = new byte[0];
-        try {
-            bArr = str.getBytes("iso-8859-1");
-        } catch (UnsupportedEncodingException e2) {
-            e2.printStackTrace();
-        }
+        bArr = str.getBytes(StandardCharsets.ISO_8859_1);
         messageDigest.update(bArr, 0, bArr.length);
         return m3275(messageDigest.digest());
     }
