@@ -366,10 +366,6 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                         QsealcAlg.EIDAS_JWT_RSA_SHA256,
                         eidasIdentity);
         String jwt = signer.getJWSToken(baseTokenString.getBytes());
-        // TODO: Remove it after nordea test TEMP to test Nordea qsealc signature
-        if ("neston-production".equals(eidasIdentity.getClusterId())) {
-            log.info("Got jwt token from neston {}", jwt);
-        }
         request.addHeader(SIGNATURE_HEADER_KEY, jwt);
     }
 
