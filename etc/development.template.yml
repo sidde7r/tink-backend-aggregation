@@ -222,6 +222,16 @@ agentsServiceConfiguration:
         transportKey: ''
         transportKeyId: ''
         transportKeyPassword: ''
+    banquedesavoie:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.10548.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.10548.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.10548.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
     bawag:
       tink:
         keystorePassword: '123456'
@@ -302,10 +312,56 @@ agentsServiceConfiguration:
         redirectUrl: 'https://127.0.0.1:7357/api/v1/thirdparty/callback'
         clientId: 'PSDSE-FINA-44059'
         qsealKeyUrl: "https://cdn.tink.se/eidas/tink.pem"
-    bpcegroup:
+    bpalsacelorrainechampagne:
       tink:
-        clientId: 53dc4681-3b81-4adb-9ec0-c01bfdbfa72b
-        clientSecret: fa6fb3ba-15c0-4754-8d0d-c3e7617297cf
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.14707.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.14707.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.14707.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    bpaquitainecentreatlantique:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.10907.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.10907.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.10907.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    bpauvergneetrhonealpes:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.16807.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.16807.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.16807.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    bpbourgognefranchecomte:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.10807.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.10807.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.10807.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    bpdunord:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.13507.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.13507.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.13507.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
     bper:
       tink:
         clientId: ''
@@ -325,6 +381,16 @@ agentsServiceConfiguration:
         clientSigningCertificate: ''
         clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bpgrandouest:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.13807.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.13807.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.13807.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
     bpm:
       tink:
         clientId: ''
@@ -334,12 +400,42 @@ agentsServiceConfiguration:
         aspspCode: '05034'
         aspspProductCode: 'IBP01'
         eidasQwac: Tink
+    bpmediterranee:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.14607.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.14607.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.14607.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    bpoccitane:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.17807.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.17807.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.17807.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
     bpost:
       tink:
         baseUrl: https://api.psd2.bpostbank.be
         certificateId: Tink
         clientId: PSDSE-FINA-44059
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bprivesdeparis:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.10207.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.10207.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.10207.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
     bpsondrio:
       tink:
         clientId: ''
@@ -349,6 +445,26 @@ agentsServiceConfiguration:
         aspspCode: '05696'
         aspspProductCode: 'BIR'
         eidasQwac: Tink
+    bpsud:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.16607.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.16607.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.16607.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    bpvaldefrance:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.18707.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.18707.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.18707.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
     buddybank-it:
       tink:
         baseUrl: https://api.buddybank.it
@@ -369,6 +485,156 @@ agentsServiceConfiguration:
         psd2ClientAuthToken: ''
         psd2InstallationKeyPair: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
+    caisseepargneaquitaine:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.13335.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.13335.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.13335.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargneauvergne:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.18715.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.18715.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.18715.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargnebretagne:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.14445.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.14445.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.14445.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargnebourgognefranchecomte:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.12135.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.12135.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.12135.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargnecoteazur:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.18315.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.18315.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.18315.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargnegrandesteurope:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.15135.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.15135.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.15135.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargneiledefrance:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.17515.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.17515.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.17515.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargnelanguedocroussillon:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.13485.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.13485.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.13485.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargneloirecentre:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.14505.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.14505.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.14505.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargneloiredromeardeche:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.14265.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.14265.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.14265.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargnemidipyrenees:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.13135.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.13135.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.13135.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargnenordfranceeurope:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.16275.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.16275.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.16275.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargnenormandie:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.11425.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.11425.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.11425.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargneprovencealpescorse:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.11315.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.11315.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.11315.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    caisseepargnerhonealpes:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.13825.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.13825.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.13825.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
     caixa-fr:
       tink:
         aspspCode: CGDFR
@@ -427,6 +693,26 @@ agentsServiceConfiguration:
         clientId: 6e0133d17c157d8ca4b40fd4997b308a
         keyId: dac579ef4ca6231e517fcc81af4a834a832a34df
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    cmmgrandouest:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.13807.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.13807.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.13807.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
+    cmmlittoraldusudouest:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.10907.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.10907.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.10907.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
     cofidis:
       tink:
         aspspCode: COF
@@ -752,6 +1038,16 @@ agentsServiceConfiguration:
         aspspCode: '01030'
         aspspProductCode: 'retail'
         eidasQwac: Tink
+    natixistradetreasuarysolutions:
+      tink:
+        clientId: PSDSE-FINA-44059
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        authorizeUrl: https://www.30007.live.api.89c3.com/stet/psd2/oauth/authorize
+        tokenUrl: https://www.30007.live.api.89c3.com/stet/psd2/oauth/token
+        baseUrl: https://www.30007.live.api.89c3.com/stet/psd2/v1
+        authScope: aisp
+        eidasQwac: Tink
+        keyId: ''
     nexi:
       tink:
         clientId: ''

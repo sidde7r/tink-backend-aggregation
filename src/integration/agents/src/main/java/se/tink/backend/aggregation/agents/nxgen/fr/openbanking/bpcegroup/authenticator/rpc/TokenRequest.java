@@ -1,32 +1,42 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceGroupConstants.FormKeys;
-import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
-public class TokenRequest {
-    private final String scope;
-    private final String grantType;
-    private final String cdetab;
-    private final String clientId;
-    private final String clientSecret;
+public class TokenRequest extends AbstractForm {
 
-    public TokenRequest(
-            String scope, String grantType, String cdetab, String clientId, String clientSecret) {
-        this.scope = scope;
-        this.grantType = grantType;
-        this.cdetab = cdetab;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
+    private TokenRequest(String redirectUri, String code, String clientId) {
+        put("client_id", clientId);
+        put("redirect_uri", redirectUri);
+        put("grant_type", "authorization_code");
+        put("code", code);
     }
 
-    public String toData() {
-        return Form.builder()
-                .put(FormKeys.CLIENT_ID, clientId)
-                .put(FormKeys.CLIENT_SECRET, clientSecret)
-                .put(FormKeys.GRANT_TYPE, grantType)
-                .put(FormKeys.CDETAB, cdetab)
-                .put(FormKeys.SCOPE, scope)
-                .build()
-                .serialize();
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private String redirectUri;
+        private String code;
+        private String clientId;
+
+        public Builder clientId(String clientId) {
+            this.clientId = clientId;
+            return this;
+        }
+
+        public Builder code(String code) {
+            this.code = code;
+            return this;
+        }
+
+        public Builder redirectUri(String redirectUri) {
+            this.redirectUri = redirectUri;
+            return this;
+        }
+
+        public TokenRequest build() {
+            return new TokenRequest(this.redirectUri, this.code, this.clientId);
+        }
     }
 }
