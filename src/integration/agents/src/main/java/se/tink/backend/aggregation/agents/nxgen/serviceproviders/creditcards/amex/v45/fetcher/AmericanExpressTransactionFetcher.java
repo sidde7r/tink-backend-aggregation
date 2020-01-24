@@ -88,7 +88,7 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
                                                                 card.getName())))
                         .findFirst()
                         .map(c -> c.getSortedIndex())
-                        .orElseGet(() -> -1);
+                        .orElse(-1);
 
         List<BillingInfoDetailsEntity> availableBilling;
         try {

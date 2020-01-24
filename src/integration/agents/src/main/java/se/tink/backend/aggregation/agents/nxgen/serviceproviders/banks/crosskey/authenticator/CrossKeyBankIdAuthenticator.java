@@ -99,7 +99,7 @@ public class CrossKeyBankIdAuthenticator
                                                         bankiIdResponse)));
 
         // Should never use orElseGet as we do use FAILED_UNKNOWN and log it before if occurs
-        return bankIdStatus.orElseGet(() -> BankIdStatus.FAILED_UNKNOWN);
+        return bankIdStatus.orElse(BankIdStatus.FAILED_UNKNOWN);
     }
 
     @Override
