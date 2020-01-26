@@ -4,9 +4,7 @@ junit_test(
     name = "evobanco",
     srcs = glob(["**/*.java"]),
     data = [
-        "//data:agent_unit_tests",
         "//data:aggregation_test",
-        "//data/test/agents/es/bankinter",
         "//etc:development",
     ],
     tags = [
