@@ -44,7 +44,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
 
-public final class IngBaseApiClient {
+public class IngBaseApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
@@ -254,13 +254,10 @@ public final class IngBaseApiClient {
     }
 
     private TokenResponse fetchToken(final String payload) {
-        return buildRequestWithSignature(Urls.TOKEN, Signature.HTTP_METHOD_POST, payload)
-                .addBearerToken(getApplicationTokenFromSession())
-                .body(payload, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class);
+        return new CertificateIsRevokedExceptionRequestRepeater(this, payload).execute();
     }
 
-    private RequestBuilder buildRequestWithSignature(
+    RequestBuilder buildRequestWithSignature(
             final String reqPath, final String httpMethod, final String payload) {
         final String reqId = Psd2Headers.getRequestId();
         final String date = getFormattedDate();
@@ -289,7 +286,7 @@ public final class IngBaseApiClient {
                 .header(HeaderKeys.X_ING_REQUEST_ID, reqId);
     }
 
-    private OAuth2Token getApplicationTokenFromSession() {
+    OAuth2Token getApplicationTokenFromSession() {
         return persistentStorage
                 .get(StorageKeys.APPLICATION_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
