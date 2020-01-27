@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.triodos.configuration;
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
@@ -11,9 +11,8 @@ import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 
 @JsonObject
-public class TriodosConfiguration implements BerlinGroupConfiguration {
+public class KbcConfiguration implements BerlinGroupConfiguration {
 
-    @JsonProperty @Secret private String apiKey;
     @JsonProperty @Secret private String psuIpAddress;
     @JsonProperty @Secret private String oauthBaseUrl;
     @JsonProperty @Secret private String baseUrl;
@@ -57,19 +56,12 @@ public class TriodosConfiguration implements BerlinGroupConfiguration {
         return baseUrl;
     }
 
+    @Override
     public String getPsuIpAddress() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(psuIpAddress),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "PsuIpAddress"));
 
         return psuIpAddress;
-    }
-
-    public String getApiKey() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(apiKey),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "ApiKey"));
-
-        return apiKey;
     }
 }
