@@ -92,12 +92,6 @@ public class BankdataHashMapDeserializer extends JsonDeserializer<String> {
         ObjectCodec objectCodec = jsonParser.getCodec();
         JsonNode node = objectCodec.readTree(jsonParser);
 
-        JsonNode contentNode = node.get("$");
-
-        if (contentNode == null) {
-            return null;
-        }
-
-        return contentNode;
+        return node.get("$");
     }
 }

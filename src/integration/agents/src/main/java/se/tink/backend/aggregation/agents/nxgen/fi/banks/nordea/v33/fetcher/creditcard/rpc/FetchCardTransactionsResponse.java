@@ -31,6 +31,6 @@ public class FetchCardTransactionsResponse implements PaginatorResponse {
     }
 
     private boolean isMoreTransactions() {
-        return size == 0 ? false : true;
+        return size != 0;
     }
 }

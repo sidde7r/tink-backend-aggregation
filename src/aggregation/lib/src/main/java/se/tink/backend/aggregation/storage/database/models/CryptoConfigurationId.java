@@ -44,10 +44,6 @@ public class CryptoConfigurationId implements Serializable {
             return false;
         }
 
-        if (keyId == 0) {
-            return false;
-        }
-
-        return true;
+        return keyId != 0;
     }
 }

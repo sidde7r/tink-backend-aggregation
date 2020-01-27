@@ -14,13 +14,13 @@ public class BankTransferListEntity extends TransferListEntity {
     public String TransferDate;
 
     @Override
-    @JsonIgnore(true)
+    @JsonIgnore
     public String getTransferDateString() {
         return TransferDate;
     }
 
     @Override
-    @JsonIgnore(true)
+    @JsonIgnore
     public AccountIdentifier.Type getDestinationType() {
         return AccountIdentifier.Type.SE;
     }
