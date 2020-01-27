@@ -61,6 +61,9 @@ data:
       {{- else }}
       url: jdbc:mysql://aggregation-db.internal.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.network:3306/tink?{{ $jdbcParams }}
       {{- end }}
+      {{- if eq "local" .Values.Cluster }}
+      generateDdl: true
+      {{- end }}
       showSql: false
       persistenceUnitName: tink-aggregation-api
       maxPoolSize: 30
