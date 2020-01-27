@@ -13,7 +13,7 @@ public class BbvaAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("es", "es-bbva-oauth2")
+                new AgentIntegrationTest.Builder("es", "es-bbva-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

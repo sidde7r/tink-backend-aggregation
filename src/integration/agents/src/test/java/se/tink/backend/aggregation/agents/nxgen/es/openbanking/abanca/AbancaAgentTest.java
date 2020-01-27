@@ -24,7 +24,7 @@ public class AbancaAgentTest {
         helper.before();
 
         builder =
-                new AgentIntegrationTest.Builder("es", "es-abanca-oauth2")
+                new AgentIntegrationTest.Builder("es", "es-abanca-ob")
                         .addCredentialField(
                                 Field.Key.USERNAME,
                                 helper.get(UsernamePasswordArgumentEnum.USERNAME))

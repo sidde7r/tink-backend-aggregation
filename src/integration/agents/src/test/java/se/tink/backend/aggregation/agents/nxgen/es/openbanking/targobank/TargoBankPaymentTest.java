@@ -22,7 +22,7 @@ public class TargoBankPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("es", "es-targobank-oauth2")
+                new AgentIntegrationTest.Builder("es", "es-targobank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
