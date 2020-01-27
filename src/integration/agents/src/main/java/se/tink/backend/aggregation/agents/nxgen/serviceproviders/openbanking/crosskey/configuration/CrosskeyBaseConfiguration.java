@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 public class CrosskeyBaseConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String clientId;
+    @JsonProperty @Secret private String clientSigningCertificateSerialNumber;
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty private List<String> scopes;
     @JsonProperty @SensitiveSecret private String clientSecret;
@@ -27,6 +28,15 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
+    }
+
+    public String getClientSigningCertificateSerialNumber() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientSigningCertificateSerialNumber),
+                String.format(
+                        ErrorMessages.INVALID_CONFIGURATION, "Signing Certificate Serial Number"));
+
+        return clientSigningCertificateSerialNumber;
     }
 
     public String getRedirectUrl() {
@@ -57,8 +67,8 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
 
     public String getxFapiFinancialId() {
         Preconditions.checkNotNull(
-            Strings.emptyToNull(xFapiFinancialId),
-            String.format(ErrorMessages.INVALID_CONFIGURATION, "xFapiFinancialId"));
+                Strings.emptyToNull(xFapiFinancialId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "xFapiFinancialId"));
 
         return xFapiFinancialId;
     }

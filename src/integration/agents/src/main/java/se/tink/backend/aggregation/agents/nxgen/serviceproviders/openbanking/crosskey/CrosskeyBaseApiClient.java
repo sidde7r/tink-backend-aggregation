@@ -217,7 +217,7 @@ public class CrosskeyBaseApiClient {
     private JwtPaymentConsentHeader getJwtHeader() {
         return new JwtPaymentConsentHeader(
                 OIDCValues.B_64,
-                getConfiguration().getSigningKeySerial(),
+                getConfiguration().getClientSigningCertificateSerialNumber(),
                 OIDCValues.ALG,
                 Arrays.asList(
                         CrosskeyBaseConstants.OIDCValues.B_64_STR,
