@@ -15,10 +15,7 @@ public enum HttpAuthenticationMethod {
     }
 
     public boolean isValid() {
-        if (method == null) {
-            return false;
-        }
-        return true;
+        return method != null;
     }
 
     @Override

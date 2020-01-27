@@ -19,6 +19,6 @@ public class CheckStatusResponse extends BelfiusResponse {
                                 .getOutputs()
                                 .get("DeviceRegistered");
 
-        return deviceRegistered != null && "Y".equalsIgnoreCase(deviceRegistered) ? true : false;
+        return "Y".equalsIgnoreCase(deviceRegistered);
     }
 }

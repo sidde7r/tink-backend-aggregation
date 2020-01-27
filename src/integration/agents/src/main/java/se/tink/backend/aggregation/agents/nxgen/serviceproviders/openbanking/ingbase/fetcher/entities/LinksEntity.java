@@ -22,6 +22,6 @@ public class LinksEntity {
     }
 
     public boolean hasNext() {
-        return next == null ? false : true;
+        return next != null;
     }
 }

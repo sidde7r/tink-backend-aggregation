@@ -16,10 +16,7 @@ public enum AuthenticationMethod {
     }
 
     public boolean isValid() {
-        if (method == null) {
-            return false;
-        }
-        return true;
+        return method != null;
     }
 
     @Override

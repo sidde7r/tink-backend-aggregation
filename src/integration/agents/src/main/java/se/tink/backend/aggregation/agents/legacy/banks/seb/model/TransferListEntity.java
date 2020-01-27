@@ -38,13 +38,13 @@ public abstract class TransferListEntity {
     @JsonProperty("MOTT_KONTO_NR")
     public String DestinationAccountNumber;
 
-    @JsonIgnore(true)
+    @JsonIgnore
     public abstract String getTransferDateString();
 
-    @JsonIgnore(true)
+    @JsonIgnore
     public abstract AccountIdentifier.Type getDestinationType();
 
-    @JsonIgnore(true)
+    @JsonIgnore
     public Date getTransferDate() throws ParseException {
         return DateUtils.flattenTime(
                 ThreadSafeDateFormat.FORMATTER_DAILY.parse(getTransferDateString()));
