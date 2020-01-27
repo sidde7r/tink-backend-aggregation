@@ -56,9 +56,7 @@ public class SantanderApiClient {
         if (matcher.find()) {
             return matcher.group(SantanderConstants.REGEX.FULL_MATCH_ONLY);
         } else {
-            logger.error(
-                    "Unable to find token with regex!",
-                    SantanderConstants.LOGTAG.SANTANDER_REGEX_PARSE_ERROR);
+            logger.error("Unable to find token with regex!");
             return null;
         }
     }

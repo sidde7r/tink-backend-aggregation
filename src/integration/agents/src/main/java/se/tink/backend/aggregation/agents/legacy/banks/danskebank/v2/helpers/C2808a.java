@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import org.json.JSONObject;
 
 public class C2808a {
@@ -27,10 +27,6 @@ public class C2808a {
     }
 
     public byte[] m12101b() {
-        try {
-            return this.f10337b.toString().getBytes("UTF8");
-        } catch (UnsupportedEncodingException e) {
-            return this.f10337b.toString().getBytes();
-        }
+        return this.f10337b.toString().getBytes(StandardCharsets.UTF_8);
     }
 }

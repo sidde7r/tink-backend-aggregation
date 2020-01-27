@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.encryption;
 
-import com.google.common.base.Charsets;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -40,21 +39,23 @@ public class MobileBankingEncryptionHelper {
                     BASE64_CODEC.decode(MobileBankingEncryptionHelper.FIRST_KEY_PART_ENCODED);
             String secondKeyWithFirstKeyLength =
                     SECOND_KEY_PART_ENCODED.substring(0, firstKey.length);
-            byte[] secondKey = reverse(secondKeyWithFirstKeyLength).getBytes(Charsets.US_ASCII);
+            byte[] secondKey =
+                    reverse(secondKeyWithFirstKeyLength).getBytes(StandardCharsets.US_ASCII);
             byte[] finalKey = xor(firstKey, secondKey);
 
             byte[] decodedKey =
-                    BASE64_CODEC.decode(new String(finalKey, Charsets.US_ASCII).getBytes("UTF-8"));
+                    BASE64_CODEC.decode(
+                            new String(finalKey, StandardCharsets.US_ASCII)
+                                    .getBytes(StandardCharsets.UTF_8));
             X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(decodedKey);
             PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
 
             cipher.init(Cipher.PUBLIC_KEY, publicKey);
 
-            byte[] encryptedTokenBytes = cipher.doFinal(token.getBytes("UTF-8"));
+            byte[] encryptedTokenBytes = cipher.doFinal(token.getBytes(StandardCharsets.UTF_8));
 
-            return new String(BASE64_CODEC.encode(encryptedTokenBytes), "UTF-8");
+            return new String(BASE64_CODEC.encode(encryptedTokenBytes), StandardCharsets.UTF_8);
         } catch (InvalidKeySpecException
-                | UnsupportedEncodingException
                 | IllegalBlockSizeException
                 | NoSuchProviderException
                 | NoSuchPaddingException

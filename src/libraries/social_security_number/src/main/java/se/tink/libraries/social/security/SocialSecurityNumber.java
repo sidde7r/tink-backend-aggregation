@@ -17,7 +17,7 @@ public class SocialSecurityNumber {
     public static class Sweden {
 
         private static final Pattern PATTERN_SWEDISH =
-                Pattern.compile("(19|20)?\\d{2}(0|1)\\d(0|1|2|3)\\d\\d{4}");
+                Pattern.compile("(19|20)?\\d{2}([01])\\d([0123])\\d\\d{4}");
         private String parsedSocialSecurityNumber = null; // yyyyMMddnnnn
         private String birth = null;
 
@@ -102,11 +102,6 @@ public class SocialSecurityNumber {
         /** @return YYYYMMDDNNNN */
         public String asString() {
             checkValidity();
-            return parsedSocialSecurityNumber;
-        }
-
-        /** @return YYYYMMDDNNNN */
-        public String asStringWithoutValidityCheck() {
             return parsedSocialSecurityNumber;
         }
 

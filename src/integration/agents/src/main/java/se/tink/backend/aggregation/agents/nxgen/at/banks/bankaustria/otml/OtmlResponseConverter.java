@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,7 +51,8 @@ public class OtmlResponseConverter {
     private Document parseDocument(String otmlDocument) {
         try {
             DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-            return documentBuilder.parse(new ByteArrayInputStream(otmlDocument.getBytes("UTF-8")));
+            return documentBuilder.parse(
+                    new ByteArrayInputStream(otmlDocument.getBytes(StandardCharsets.UTF_8)));
         } catch (ParserConfigurationException | IOException | SAXException e) {
             throw new IllegalStateException(e);
         }

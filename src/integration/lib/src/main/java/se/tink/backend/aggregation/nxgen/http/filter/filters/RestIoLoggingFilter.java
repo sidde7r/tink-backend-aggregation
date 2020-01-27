@@ -96,7 +96,6 @@ public class RestIoLoggingFilter extends Filter {
     }
 
     private static String censorHeaderValue(String key, String value) {
-        // do not output sensitive information in our logs
         if (HttpLoggingConstants.NON_SENSITIVE_HEADER_FIELDS.contains(key.toLowerCase())) {
             return "*** MASKED ***";
         }

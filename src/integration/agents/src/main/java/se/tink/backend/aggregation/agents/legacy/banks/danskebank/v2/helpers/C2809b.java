@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,11 +34,7 @@ public class C2809b {
     public static String m12106a(byte[] bArr) {
         String str;
         byte[] encodeBase64 = Base64.encodeBase64(bArr);
-        try {
-            str = new String(encodeBase64, "UTF8");
-        } catch (UnsupportedEncodingException e) {
-            str = new String(encodeBase64);
-        }
+        str = new String(encodeBase64, StandardCharsets.UTF_8);
         return C2809b.m12108b(str).replaceAll("=", "");
     }
 
@@ -49,11 +45,7 @@ public class C2809b {
     public static String m12107a(byte[] bArr, int i) {
         String str;
         byte[] c = C2799a.m12065c(bArr, i);
-        try {
-            str = new String(c, "UTF8");
-        } catch (UnsupportedEncodingException e) {
-            str = new String(c);
-        }
+        str = new String(c, StandardCharsets.UTF_8);
         return C2809b.m12108b(str);
     }
 
@@ -75,11 +67,7 @@ public class C2809b {
     public static JSONObject m12112d(String str) throws JSONException {
         String str2;
         byte[] c = C2809b.m12111c(str);
-        try {
-            str2 = new String(c, "UTF8");
-        } catch (UnsupportedEncodingException e) {
-            str2 = new String(c);
-        }
+        str2 = new String(c, StandardCharsets.UTF_8);
         return new JSONObject(str2);
     }
 

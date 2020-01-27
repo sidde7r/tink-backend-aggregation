@@ -61,10 +61,7 @@ public class ExpireSessionAgentWorkerCommand extends AgentWorkerCommand {
                 "Expiring session - Date now: {}, Session expiry date: {}", now, sessionExpiryDate);
         credentials.setStatus(CredentialsStatus.SESSION_EXPIRED);
         systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
-        log.info(
-                "Successfully sent request to update credentials status to SESSION_EXPIRED.",
-                now,
-                sessionExpiryDate);
+        log.info("Successfully sent request to update credentials status to SESSION_EXPIRED.");
 
         return AgentWorkerCommandResult.ABORT;
     }
