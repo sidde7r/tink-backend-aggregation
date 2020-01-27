@@ -27,9 +27,9 @@ public class EvoBancoCreditCardFetcher
     public Collection<CreditCardAccount> fetchAccounts() {
         GlobalPositionResponse globalPositionResponse = bankClient.globalPosition();
 
-        globalPositionResponse.handleReturnCode();
-
         if (globalPositionResponse != null) {
+            globalPositionResponse.handleReturnCode();
+
             AnswerEntityGlobalPositionResponse answer =
                     globalPositionResponse.getEeOGlobalbePosition().getAnswer();
 
