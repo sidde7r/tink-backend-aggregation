@@ -108,7 +108,7 @@ public class MobileBankingEncryptionHelper {
     }
 
     public static String substitute(String paramString, int paramInt, char paramChar) {
-        StringBuffer localStringBuffer = new StringBuffer(paramString);
+        StringBuilder localStringBuffer = new StringBuilder(paramString);
         localStringBuffer.setCharAt(paramInt, paramChar);
         return localStringBuffer.toString();
     }

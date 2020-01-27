@@ -82,7 +82,7 @@ public abstract class CredentialsRequest {
 
         ImmutableSortedMap<String, String> sortedFields =
                 ImmutableSortedMap.copyOf(credentials.getFields());
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         // Adding a Salt here to avoid dictionary attacks against Zookeeper locks.
         buffer.append(salt);
