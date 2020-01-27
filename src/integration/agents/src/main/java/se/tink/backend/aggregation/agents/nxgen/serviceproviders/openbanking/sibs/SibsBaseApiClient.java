@@ -34,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class SibsBaseApiClient {
 
     private static final String TRUE = "true";
-    private static final String PSU_IP_ADDRESS = "127.0.0.1";
+    private static final String PSU_IP_ADDRESS = "0.0.0.0";
     private static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern(PAGINATION_DATE_FORMAT);
@@ -44,15 +44,15 @@ public class SibsBaseApiClient {
     private SibsConfiguration configuration;
 
     /*
-    * TODO: remove this section after full AIS and PIS test:
-    // String requestTimestamp = new SimpleDateFormat(Formats.CONSENT_BODY_DATE_FORMAT, Locale.ENGLISH).format(new Date());
-    // .header(HeaderKeys.DATE, requestTimestamp)
-    * It was kept because sibs date header problems.
-    * Sibs might use different header patterns for different endpoints (even in same service)
-    * If Invalid Header shows verify if it's single or global call problem for:
+     * TODO: remove this section after full AIS and PIS test:
+     * String requestTimestamp = new SimpleDateFormat(Formats.CONSENT_BODY_DATE_FORMAT, Locale.ENGLISH).format(new Date());
+     * .header(HeaderKeys.DATE, requestTimestamp)
+     * It was kept because sibs date header problems.
+     * Sibs might use different header patterns for different endpoints (even in same service)
+     * If Invalid Header shows verify if it's single or global call problem for:
      * - global - change pattern in sign interceptor
      * - single - use code above to create date with correct pattern and add header (it won't be override)
-    */
+     */
     public SibsBaseApiClient(
             TinkHttpClient client, SibsUserState userState, boolean isRequestManual) {
         this.client = client;
