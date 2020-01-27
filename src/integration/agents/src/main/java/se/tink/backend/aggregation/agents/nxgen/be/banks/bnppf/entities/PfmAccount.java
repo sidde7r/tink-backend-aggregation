@@ -39,7 +39,7 @@ public class PfmAccount {
     }
 
     private String maskIban(String iban) {
-        StringBuffer buffer = new StringBuffer(iban.length());
+        StringBuilder buffer = new StringBuilder(iban.length());
         buffer.append(iban.substring(0, 2));
         for (int i = 0; i < iban.length() - 6; i++) {
             buffer.append("x");

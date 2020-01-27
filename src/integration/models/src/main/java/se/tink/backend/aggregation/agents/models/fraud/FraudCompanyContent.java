@@ -32,7 +32,7 @@ public class FraudCompanyContent extends FraudDetailsContent {
 
     @Override
     public String generateContentId() {
-        StringBuffer directorsBuffer = new StringBuffer();
+        StringBuilder directorsBuffer = new StringBuilder();
         if (directors != null) {
             for (FraudCompanyDirector director : directors) {
                 directorsBuffer.append(director.getName());

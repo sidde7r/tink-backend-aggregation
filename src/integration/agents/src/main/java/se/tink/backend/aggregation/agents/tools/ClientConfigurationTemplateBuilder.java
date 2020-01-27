@@ -215,7 +215,7 @@ public class ClientConfigurationTemplateBuilder {
             Field field, Map<String, String> fieldsDescriptionsAndExamples) {
         String fieldName = clientConfigurationMetaInfoHandler.fieldToFieldName.apply(field);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         if (includeDescriptions) {
             String fieldDescriptionKey = fieldName + "-description";

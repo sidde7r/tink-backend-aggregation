@@ -71,7 +71,7 @@ public final class SecretsNamesValidationResponse {
         if (valid) {
             return "Secrets names validated correctly.";
         } else {
-            StringBuffer sb = new StringBuffer("Secrets are wrong.\n");
+            StringBuilder sb = new StringBuilder("Secrets are wrong.\n");
             if (!invalidSecretsNames.isEmpty()) {
                 sb.append(
                         "The following secrets should not be present : "

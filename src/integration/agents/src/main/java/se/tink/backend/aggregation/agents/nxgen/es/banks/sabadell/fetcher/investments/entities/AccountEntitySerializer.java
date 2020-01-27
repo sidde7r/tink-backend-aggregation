@@ -51,7 +51,7 @@ public class AccountEntitySerializer extends StdSerializer<AccountEntity> {
         final String otherKeyPrefix = "[";
         final String keySuffix = "]";
 
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append(firstKeyPrefix);
         buffer.append(firstKey);
         buffer.append(keySuffix);
