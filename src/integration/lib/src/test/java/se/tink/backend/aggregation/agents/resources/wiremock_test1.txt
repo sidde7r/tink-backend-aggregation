@@ -1,0 +1,25 @@
+1 * Client out-bound request
+1 * 2020-01-20--20:48:04.915
+1 > POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
+1 > Accept: application/json
+1 > X-Aggregator: Tink Testing
+{"billingIndexList":[0],"sortedIndex":0}
+1 * Client in-bound response
+1 * 2020-01-20--20:48:05.719
+1 < 200
+1 < Content-Type: application/json;charset=utf-8
+1 < Cache-Control: private, no-store, no-cache, must-revalidate
+1 <
+{}
+2 * Client out-bound request
+2 * 2020-01-20--20:48:30.956
+2 > POST https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/extendSession
+2 > Accept: application/json
+2 > X-Aggregator: Tink Testing
+2 * Client in-bound response
+2 * 2020-01-20--20:48:31.523
+2 < 200
+2 < Content-Type: application/json;charset=utf-8
+2 < Cache-Control: private, no-store, no-cache, must-revalidate
+2 <
+{"extendSession":{"status":0}}
