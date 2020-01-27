@@ -41,6 +41,8 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapp
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.strategy.IntegrationWireMockTestAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.strategy.ProductionAgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
@@ -94,8 +96,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
 
-    private boolean isUsingWireMock = false;
-    private int wireMockPort;
+    private String wireMockServerHost;
 
     protected AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
@@ -111,8 +112,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
-        this.isUsingWireMock = builder.useWireMock();
-        if (this.isUsingWireMock) this.wireMockPort = builder.getWireMockPort();
+        this.wireMockServerHost = builder.getWireMockServerHost();
         this.clusterIdForSecretsService =
                 MoreObjects.firstNonNull(
                         builder.getClusterIdForSecretsService(),
@@ -208,7 +208,18 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     .addSensitiveValuesSetObservable(
                             agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
-            AgentFactory factory = new AgentFactory(configuration);
+
+            AgentFactory factory;
+            if (wireMockServerHost != null) {
+                factory =
+                        new AgentFactory(
+                                configuration,
+                                new IntegrationWireMockTestAgentStrategyFactory(
+                                        wireMockServerHost));
+
+            } else {
+                factory = new AgentFactory(configuration, new ProductionAgentStrategyFactory());
+            }
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
             return factory.create(cls, credentialsRequest, context);
@@ -557,9 +568,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     private void readConfigurationFile() throws ConfigurationException, IOException {
-        if (isUsingWireMock) {
+        if (wireMockServerHost != null) {
             configuration = readConfiguration("etc/test.yml");
-            configuration.getTestConfiguration().setMockServerPort(this.wireMockPort);
         } else {
             try {
                 configuration = readConfiguration("etc/development.yml");
@@ -775,8 +785,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String redirectUrl;
         private String clusterIdForSecretsService = null;
 
-        private boolean isUsingWireMock = false;
-        private int wireMockPort;
+        private String wireMockServerHost;
 
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
@@ -785,12 +794,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             this.provider.setCurrency(marketProviders.getCurrency());
         }
 
-        public boolean useWireMock() {
-            return this.isUsingWireMock;
-        }
-
-        public int getWireMockPort() {
-            return this.wireMockPort;
+        public String getWireMockServerHost() {
+            return this.wireMockServerHost;
         }
 
         private static String escapeMarket(String market) {
@@ -843,9 +848,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return this;
         }
 
-        public Builder useWireMock(int port) {
-            this.isUsingWireMock = true;
-            this.wireMockPort = port;
+        public Builder useWireMockServerHost(final String wireMockServerHost) {
+            this.wireMockServerHost = wireMockServerHost;
             return this;
         }
 

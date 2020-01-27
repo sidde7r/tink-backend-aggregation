@@ -7,11 +7,6 @@ agentsServiceConfiguration:
     port: 30787
     certificatesLocation: "development-staging"
     enabled: false
-  testConfiguration:
-    debugOutput: true
-    censorSensitiveHeaders: false
-    mockServer: true
-    mockURL: "localhost"
   featureFlags:
     esProxy: false
 

@@ -9,16 +9,19 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.strategy.AgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategy;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AgentFactory {
     private AgentsServiceConfiguration configuration;
+    private final AgentStrategyFactory agentStrategyFactory;
 
     @Inject
-    public AgentFactory(AgentsServiceConfiguration configuration) {
+    public AgentFactory(
+            AgentsServiceConfiguration configuration, AgentStrategyFactory agentStrategyFactory) {
         this.configuration = configuration;
+        this.agentStrategyFactory = agentStrategyFactory;
     }
 
     public static Class<? extends Agent> getAgentClass(Credentials credentials, Provider provider)
@@ -82,7 +85,7 @@ public class AgentFactory {
             agent =
                     (Agent)
                             agentConstructor.newInstance(
-                                    SubsequentGenerationAgentStrategyFactory.nxgen(
+                                    agentStrategyFactory.build(
                                             request, context, configuration.getSignatureKeyPair()));
 
         } else if (hasAgentsServiceConfigurationConstructor) {
