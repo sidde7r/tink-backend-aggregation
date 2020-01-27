@@ -30,7 +30,6 @@ import java.security.Security;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -42,6 +41,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.MediaType;
@@ -96,6 +96,7 @@ import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceAccountEntity
 import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceHoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InvestmentDataRequest;
+import se.tink.backend.aggregation.agents.banks.seb.model.IpsHoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.MatchableTransferRequestEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW2581;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW2582;
@@ -533,18 +534,18 @@ public class SEBApiAgent extends AbstractAgent
         SebResponse detailResponse =
                 postAsJSON(INSURANCE_DETAIL, investmentDataRequest, SebResponse.class);
 
-        List<InsuranceHoldingEntity> holdingsEntities =
+        List<InsuranceHoldingEntity> insuranceHoldingEntities =
                 detailResponse.d.VODB.getInsuranceHoldingEntities();
+        List<IpsHoldingEntity> ipsHoldingEntities = detailResponse.d.VODB.getIpsHoldingEntities();
 
-        List<Instrument> instruments = new ArrayList<>();
-
-        Optional.ofNullable(holdingsEntities)
-                .orElseGet(Collections::emptyList)
-                .forEach(
-                        holdingsEntity -> {
-                            Optional<Instrument> instrument = holdingsEntity.toInstrument();
-                            instrument.ifPresent(instruments::add);
-                        });
+        List<Instrument> instruments =
+                Stream.concat(
+                                insuranceHoldingEntities.stream()
+                                        .map(InsuranceHoldingEntity::toInstrument),
+                                ipsHoldingEntities.stream().map(IpsHoldingEntity::toInstrument))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
 
         return instruments;
     }

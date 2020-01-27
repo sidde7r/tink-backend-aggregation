@@ -1,10 +1,19 @@
 package se.tink.backend.aggregation.agents.banks.seb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IpsHoldingEntity {
+
+    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(IpsHoldingEntity.class);
+
     @JsonProperty("KONTO_NR")
     private String accountNumber;
 
@@ -40,6 +49,9 @@ public class IpsHoldingEntity {
 
     @JsonProperty("INB_TOT_BEL")
     private String totalAcquistionPrice;
+
+    @JsonProperty("VP_NR")
+    private String identifier;
 
     public String getAccountNumber() {
         return accountNumber;
@@ -135,5 +147,41 @@ public class IpsHoldingEntity {
 
     public void setTotalAcquistionPrice(String totalAcquistionPrice) {
         this.totalAcquistionPrice = totalAcquistionPrice;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    @JsonIgnore
+    public Optional<Instrument> toInstrument() {
+        if (quantity == 0) {
+            return Optional.empty();
+        }
+
+        Instrument instrument = new Instrument();
+
+        instrument.setUniqueIdentifier(getUniqueIdentifier());
+        instrument.setQuantity(quantity);
+        instrument.setName(name);
+        instrument.setType(Instrument.Type.FUND);
+        instrument.setRawType(name);
+        instrument.setAverageAcquisitionPrice(averageAcqusitionPrice);
+        instrument.setMarketValue(marketValue);
+        instrument.setPrice(marketValue);
+        instrument.setProfit(marketValue - averageAcqusitionPrice);
+        instrument.setCurrency(currency);
+
+        return Optional.of(instrument);
+    }
+
+    @JsonIgnore
+    private String getUniqueIdentifier() {
+        if (Strings.isNullOrEmpty(identifier)) {
+            log.warn("Fund number not present for instrument. Fund name set as unique identifier.");
+            return name.replaceAll(" ", "");
+        }
+
+        return identifier;
     }
 }
