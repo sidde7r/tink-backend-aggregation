@@ -2,8 +2,12 @@ package se.tink.backend.aggregation.agents.framework.wiremock.entities;
 
 import java.util.List;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import se.tink.libraries.pair.Pair;
 
+@EqualsAndHashCode
+@Getter
 public class HTTPRequest {
     private final String method;
     private final String url;
@@ -26,18 +30,6 @@ public class HTTPRequest {
         this.url = url;
         this.requestHeaders = requestHeaders;
         this.requestBody = null;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public List<Pair<String, String>> getRequestHeaders() {
-        return requestHeaders;
     }
 
     public Optional<String> getRequestBody() {

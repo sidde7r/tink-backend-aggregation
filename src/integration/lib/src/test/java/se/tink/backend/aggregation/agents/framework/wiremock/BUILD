@@ -20,9 +20,12 @@ java_library(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:junit_junit",
+        "//third_party:lombok_libs",
+        "//third_party:lombok_plugin",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
+        "@lombok//:org_projectlombok_lombok",
     ],
 )
