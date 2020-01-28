@@ -32,6 +32,7 @@ public class AccountEntity {
     @JsonProperty private String bban;
     @JsonProperty private String msisdn;
     @JsonProperty private String currency;
+    @JsonProperty private String ownerName;
     @JsonProperty private String name;
     @JsonProperty private String product;
     @JsonProperty private String cashAccountType;
@@ -82,6 +83,7 @@ public class AccountEntity {
                                 TransactionalAccountType.CHECKING)
                         .withBalance(BalanceModule.of(balance))
                         .withId(idModule)
+                        .addHolderName(ownerName)
                         .setApiIdentifier(resourceId);
 
         if (links != null) {
