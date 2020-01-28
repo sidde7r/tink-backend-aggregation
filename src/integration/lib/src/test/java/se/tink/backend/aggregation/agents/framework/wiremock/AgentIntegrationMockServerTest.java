@@ -38,12 +38,9 @@ public class AgentIntegrationMockServerTest {
     }
 
     private void buildMockServer(List<Pair<HTTPRequest, HTTPResponse>> pairs) {
-
         for (Pair<HTTPRequest, HTTPResponse> pair : pairs) {
-
             HTTPRequest request = pair.first;
             HTTPResponse response = pair.second;
-
             MappingBuilder builder;
             if (request.getMethod().equalsIgnoreCase("get")) {
                 builder = get(urlPathEqualTo(request.getUrl()));
@@ -54,22 +51,15 @@ public class AgentIntegrationMockServerTest {
                         "The following HTTP method cannot be handled by the test framework : "
                                 + request.getMethod());
             }
-
             request.getRequestHeaders().stream()
                     .forEach(header -> builder.withHeader(header.first, equalTo(header.second)));
-
             request.getRequestBody()
                     .ifPresent(body -> builder.withRequestBody(equalToJson(body, true, true)));
-
             ResponseDefinitionBuilder res = aResponse();
-
             response.getResponseHeaders().stream()
                     .forEach(header -> res.withHeader(header.first, header.second));
-
             res.withStatus(response.getStatusCode());
-
             response.getResponseBody().ifPresent(body -> res.withBody(body));
-
             builder.willReturn(res);
             wireMockRule.stubFor(builder);
         }

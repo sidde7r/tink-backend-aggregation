@@ -25,40 +25,31 @@ public class WiremockS3LogRequestResponseParser implements WiremockRequestRespon
     }
 
     public List<Pair<HTTPRequest, HTTPResponse>> parseRequestResponsePairs() {
-
         List<String> lines = Arrays.asList(fileContent.split("\n"));
-
-        List<Integer> requestStartIndices = findLineIndices(lines, "Client out-bound request");
-        List<Integer> responseStartIndices = findLineIndices(lines, "Client in-bound response");
-
+        List<Integer> requestStartIndices =
+                findLineIndicesContainingGivenExpression(lines, "Client out-bound request");
+        List<Integer> responseStartIndices =
+                findLineIndicesContainingGivenExpression(lines, "Client in-bound response");
         List<Pair<HTTPRequest, HTTPResponse>> pairs = new ArrayList<>();
         int totalPairAmount = requestStartIndices.size();
-
         for (int currentPairIndex = 0; currentPairIndex < totalPairAmount; currentPairIndex++) {
-
             final String requestHeaderPrefix = new Integer(currentPairIndex + 1).toString() + " >";
             final String responseHeaderPrefix = new Integer(currentPairIndex + 1).toString() + " <";
-
             List<String> requestLines =
                     lines.subList(
                             requestStartIndices.get(currentPairIndex) + 2,
                             responseStartIndices.get(currentPairIndex));
-
             HTTPRequest request = parseRequest(requestLines, requestHeaderPrefix, apiHost);
-
             int responseDataEndLine =
                     (currentPairIndex + 1) == requestStartIndices.size()
                             ? lines.size()
                             : requestStartIndices.get(currentPairIndex + 1);
-
             List<String> responseLines =
                     lines.subList(
                             responseStartIndices.get(currentPairIndex) + 2, responseDataEndLine);
-
             HTTPResponse response = parseResponse(responseLines, responseHeaderPrefix);
             pairs.add(new Pair<>(request, response));
         }
-
         return pairs;
     }
 
@@ -74,13 +65,10 @@ public class WiremockS3LogRequestResponseParser implements WiremockRequestRespon
         return fileContent;
     }
 
-    /**
-     * For a given List of String (lines), returns the list of indices where the line contains a
-     * substring given as a parameter (subStr)
-     */
-    private List<Integer> findLineIndices(List<String> lines, String subStr) {
+    private List<Integer> findLineIndicesContainingGivenExpression(
+            List<String> lines, String searchedExpression) {
         return lines.stream()
-                .filter(line -> line.contains(subStr))
+                .filter(line -> line.contains(searchedExpression))
                 .map(line -> lines.indexOf(line))
                 .collect(Collectors.toList());
     }
@@ -92,12 +80,9 @@ public class WiremockS3LogRequestResponseParser implements WiremockRequestRespon
         String requestURL = parseRequestURL(requestLines, requestHeaderPrefix).replace(host, "");
         List<Pair<String, String>> requestHeaders = parseHeaders(requestLines, requestHeaderPrefix);
         Optional<String> requestBody = parseBody(requestLines, requestHeaderPrefix);
-
-        if (requestBody.isPresent()) {
-            return new HTTPRequest(requestMethod, requestURL, requestHeaders, requestBody.get());
-        } else {
-            return new HTTPRequest(requestMethod, requestURL, requestHeaders);
-        }
+        return requestBody
+                .map(body -> new HTTPRequest(requestMethod, requestURL, requestHeaders, body))
+                .orElse(new HTTPRequest(requestMethod, requestURL, requestHeaders));
     }
 
     private HTTPResponse parseResponse(List<String> responseLines, String responseHeaderPrefix) {
@@ -106,12 +91,9 @@ public class WiremockS3LogRequestResponseParser implements WiremockRequestRespon
         List<Pair<String, String>> responseHeaders =
                 parseHeaders(responseLines, responseHeaderPrefix);
         Optional<String> responseBody = parseBody(responseLines, responseHeaderPrefix);
-
-        if (responseBody.isPresent()) {
-            return new HTTPResponse(responseHeaders, statusCode, responseBody.get());
-        } else {
-            return new HTTPResponse(responseHeaders, statusCode);
-        }
+        return responseBody
+                .map(body -> new HTTPResponse(responseHeaders, statusCode, body))
+                .orElse(new HTTPResponse(responseHeaders, statusCode));
     }
 
     private List<Pair<String, String>> parseHeaders(List<String> rawData, String redundantPrefix) {
