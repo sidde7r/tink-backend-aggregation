@@ -10,13 +10,13 @@ public final class LaBanquePostaleConstants {
         public static final String GET_TOKEN = "/token";
         public static final String FETCH_ACCOUNTS = "/accounts";
         public static final String FETCH_BALANCES = "/accounts/%s/balances";
+        public static final String FETCH_TRANSACTIONS = "/accounts/%s/transactions";
         public static final String PAYMENT_INITIATION = "/payment-requests";
         public static final String GET_PAYMENT = "/payment-requests/%s";
         public static final String CONFIRM_PAYMENT = "/payment-requests/%s/confirmation";
     }
 
     public static class StorageKeys {
-        public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
     }
 
