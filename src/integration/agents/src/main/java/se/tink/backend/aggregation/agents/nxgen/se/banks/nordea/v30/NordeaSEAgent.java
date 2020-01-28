@@ -17,9 +17,9 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.NordeaBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.NordeaBankIdAutostartAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.NordeaPasswordAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdAutostartResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaExecutorHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaPaymentExecutor;
@@ -103,10 +103,10 @@ public class NordeaSEAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BankIdAuthenticationController<BankIdResponse> bankIdAuthenticationController =
+        BankIdAuthenticationController<BankIdAutostartResponse> bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         context,
-                        new NordeaBankIdAuthenticator(apiClient, sessionStorage),
+                        new NordeaBankIdAutostartAuthenticator(apiClient, sessionStorage),
                         persistentStorage,
                         credentials);
 
@@ -232,6 +232,6 @@ public class NordeaSEAgent extends NextGenerationAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return new FetchIdentityDataResponse(
-                new NordeaSeIdentityDataFetcher(apiClient, credentials).fetchIdentityData());
+                new NordeaSeIdentityDataFetcher(apiClient).fetchIdentityData());
     }
 }

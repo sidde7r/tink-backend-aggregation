@@ -17,10 +17,24 @@ public class NordeaSEConstants {
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
             ImmutableMap.<String, String>builder()
                     .put(FormParams.AUTH_METHOD, AuthMethod.BANKID_SE)
-                    .put(FormParams.CLIENT_ID, "NDHMSE")
-                    .put(FormParams.COUNTRY, "SE")
+                    .put(FormParams.CLIENT_ID, FormParams.CLIENT_ID_VALUE)
+                    .put(FormParams.COUNTRY, FormParams.COUNTRY_VALUE)
                     .put(FormParams.GRANT_TYPE, "password")
-                    .put(FormParams.SCOPE, "ndf")
+                    .put(FormParams.SCOPE, TagValues.SCOPE_VALUE)
+                    .build();
+    public static final ImmutableMap<String, String> REQUEST_TOKEN_FORM =
+            ImmutableMap.<String, String>builder()
+                    .put(FormParams.AUTH_METHOD, AuthMethod.BANKID_SE)
+                    .put(FormParams.CLIENT_ID, TagValues.APPLICATION_ID)
+                    .put(FormParams.COUNTRY, FormParams.COUNTRY_VALUE)
+                    .put(FormParams.GRANT_TYPE, "authorization_code")
+                    .put(FormParams.REDIRECT_URI, TagValues.REDIRECT_URI)
+                    .put(FormParams.SCOPE, TagValues.SCOPE_VALUE)
+                    .build();
+
+    public static final ImmutableMap<String, String> REFRESH_TOKEN_FORM =
+            ImmutableMap.<String, String>builder()
+                    .put(FormParams.CLIENT_ID, FormParams.CLIENT_ID_VALUE)
                     .build();
 
     public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAP =
@@ -47,6 +61,10 @@ public class NordeaSEConstants {
     public static class Urls {
         public static final String BASE = "https://private.nordea.se/api/dbf/";
 
+        public static final URL LOGIN_BANKID_AUTOSTART =
+                new URL(BASE + ApiService.LOGIN_BANKID_AUTOSTART);
+        public static final URL FETCH_LOGIN_CODE = new URL(BASE + ApiService.FETCH_LOGIN_CODE);
+        public static final URL FETCH_ACCESS_TOKEN = new URL(BASE + ApiService.FETCH_ACCESS_TOKEN);
         public static final URL LOGIN_BANKID = new URL(BASE + ApiService.LOGIN_BANKID);
         public static final URL PASSWORD_TOKEN = new URL(BASE + ApiService.PASSWORD_TOKEN);
         public static final URL FETCH_ACCOUNTS = new URL(BASE + ApiService.FETCH_ACCOUNTS);
@@ -81,6 +99,11 @@ public class NordeaSEConstants {
     }
 
     public static class ApiService {
+        public static final String LOGIN_BANKID_AUTOSTART =
+                "ca/auth-sign-v3/bankidse/authentications/";
+        public static final String FETCH_LOGIN_CODE =
+                "ca/user-accounts-service-v1/user-accounts/primary/authorization";
+        public static final String FETCH_ACCESS_TOKEN = "ca/token-service-v3/oauth/token";
         public static final String LOGIN_BANKID =
                 "se/authentication-bankid-v1/security/oauth/token";
         public static final String PASSWORD_TOKEN = "ca/token-service-v3/oauth/token";
@@ -141,6 +164,8 @@ public class NordeaSEConstants {
         public static final String TOKEN_TYPE = "access_token";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CODE_VERIFIER = "code_verifier";
+        public static final String COUNTRY_VALUE = "SE";
+        public static final String CLIENT_ID_VALUE = "NDHMSE";
     }
 
     public static class IdTags {
@@ -155,12 +180,17 @@ public class NordeaSEConstants {
 
     public static class TagValues {
         public static final String APPLICATION_ID = "zrIIeWA0LqJHJJ0ZSZr1";
+        public static final String REDIRECT_URI = "com.nordea.mobilebank.se://auth-callback";
+        public static final String SCOPE_VALUE = "ndf";
     }
 
     public static class StorageKeys {
+        public static final String LOGIN_CODE = "login_code";
         public static final String ACCESS_TOKEN = "auth_token";
         public static final String TOKEN_TYPE = "token_type";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String ID_TOKEN = "id_token";
+        public static final String UH = "uh";
         public static final String SSN = "ssn";
         public static final String TOKEN_AUTH_METHOD = "auth_type";
         public static final String SENSITIVE_PAYLOAD_PASSWORD = "password";
@@ -173,6 +203,10 @@ public class NordeaSEConstants {
     }
 
     public static final class NordeaBankIdStatus {
+        public static final String BANKID_AUTOSTART_PENDING = "assignment_pending";
+        public static final String BANKID_AUTOSTART_SIGN_PENDING = "confirmation_pending";
+        public static final String BANKID_AUTOSTART_COMPLETED = "completed";
+        public static final String BANKID_AUTOSTART_CANCELLED = "cancelled";
         public static final String AGREEMENTS_UNAVAILABLE = "agreements_unavailable";
         public static final String EXTERNAL_AUTHENTICATION_REQUIRED =
                 "external_authentication_required";
