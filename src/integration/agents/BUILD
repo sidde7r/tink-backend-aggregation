@@ -515,6 +515,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/norwegian",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/alandsbanken",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/danskebank",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/entercard/coop",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/entercard/moregolf",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/entercard/remember",
