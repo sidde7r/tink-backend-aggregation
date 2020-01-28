@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AgreementEntity {
+
     private boolean isActive;
     private boolean isUnlocked;
 
