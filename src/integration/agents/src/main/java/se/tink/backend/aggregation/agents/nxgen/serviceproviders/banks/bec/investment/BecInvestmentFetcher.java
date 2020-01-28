@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.http.HttpStatus;
@@ -67,67 +68,74 @@ public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     }
 
     private List<Instrument> parseInstruments(DepositAccountEntity depositAccount) {
-        List<Instrument> instruments = new ArrayList<>();
-
         DepositDetailsResponse depositDetail =
                 apiClient.fetchDepositDetail(depositAccount.getUrlDetail());
-        depositDetail.getPortfolios().stream()
-                .filter(
-                        portfolioEntity -> {
-                            if (!portfolioEntity.isInstrumentTypeKnown()) {
-                                log.infoExtraLong(
-                                        String.format(
-                                                "Unknown paper type[%s]: %s, backend object: %s",
-                                                portfolioEntity.getDataType(),
-                                                portfolioEntity.getInstrumentsType(),
-                                                SerializationUtils.serializeToString(
-                                                        portfolioEntity)),
-                                        BecConstants.Log.INVESTMENT_PAPER_TYPE);
-                                return false;
-                            }
-                            return true;
-                        })
-                .forEach(
+
+        Map<Boolean, List<PortfolioEntity>> partitionKnownInstrumentType =
+                depositDetail.getPortfolios().stream()
+                        .collect(Collectors.partitioningBy(PortfolioEntity::isInstrumentTypeKnown));
+
+        partitionKnownInstrumentType.get(false).forEach(this::handleUnknownInstrumentType);
+
+        return partitionKnownInstrumentType.get(true).stream()
+                .flatMap(
                         portfolioEntity ->
-                                portfolioEntity
-                                        .getInstruments()
-                                        .forEach(
-                                                instrumentEntity -> {
-                                                    InstrumentDetailsEntity
-                                                            instrumentDetailsEntity =
-                                                                    apiClient
-                                                                            .fetchInstrumentDetails(
-                                                                                    instrumentEntity
-                                                                                            .getUrlDetail(),
-                                                                                    depositAccount
-                                                                                            .getAccountNo());
-
-                                                    instruments.add(
-                                                            buildInstrument(
-                                                                    portfolioEntity,
-                                                                    instrumentEntity,
-                                                                    instrumentDetailsEntity));
-                                                }));
-
-        return instruments;
+                                portfolioEntity.getInstruments().stream()
+                                        .map(
+                                                instrumentEntity ->
+                                                        buildTinkInstrument(
+                                                                portfolioEntity,
+                                                                instrumentEntity,
+                                                                depositAccount)))
+                .collect(Collectors.toList());
     }
 
-    private Instrument buildInstrument(
+    private void handleUnknownInstrumentType(PortfolioEntity portfolioEntity) {
+        log.infoExtraLong(
+                String.format(
+                        "Unknown paper type[%s]: %s, backend object: %s",
+                        portfolioEntity.getDataType(),
+                        portfolioEntity.getInstrumentsType(),
+                        SerializationUtils.serializeToString(portfolioEntity)),
+                BecConstants.Log.INVESTMENT_PAPER_TYPE);
+    }
+
+    private Instrument buildTinkInstrument(
             PortfolioEntity portfolioEntity,
             InstrumentEntity instrumentEntity,
-            InstrumentDetailsEntity instrumentDetailsEntity) {
+            DepositAccountEntity depositAccount) {
+
         Instrument instrument = new Instrument();
-        instrument.setUniqueIdentifier(instrumentDetailsEntity.getId());
+        instrument.setUniqueIdentifier(instrumentEntity.getId());
         instrument.setName(instrumentEntity.getPaperName());
         instrument.setQuantity(instrumentEntity.getNoOfPapers());
         instrument.setType(portfolioEntity.toTinkType());
         instrument.setRawType(portfolioEntity.getInstrumentsType());
         instrument.setPrice(instrumentEntity.getRate());
         instrument.setMarketValue(instrumentEntity.getRate() * instrumentEntity.getNoOfPapers());
-        instrument.setIsin(instrumentDetailsEntity.getIsinCode());
-        instrument.setMarketPlace(instrumentDetailsEntity.getMarket());
         instrument.setCurrency(instrumentEntity.getCurrency());
 
+        Optional<InstrumentDetailsEntity> instrumentDetailsEntity =
+                tryGatheringDetails(instrumentEntity.getUrlDetail(), depositAccount.getAccountNo());
+
+        instrumentDetailsEntity.ifPresent(
+                details -> {
+                    instrument.setIsin(details.getIsinCode());
+                    instrument.setMarketPlace(details.getMarket());
+                });
+
         return instrument;
+    }
+
+    private Optional<InstrumentDetailsEntity> tryGatheringDetails(
+            String url, String accountNumber) {
+        InstrumentDetailsEntity details = null;
+        try {
+            details = apiClient.fetchInstrumentDetails(url, accountNumber);
+        } catch (HttpResponseException exception) {
+            log.warn("Fetching investment details failed.", exception);
+        } finally {
+            return Optional.ofNullable(details);
+        }
     }
 }
