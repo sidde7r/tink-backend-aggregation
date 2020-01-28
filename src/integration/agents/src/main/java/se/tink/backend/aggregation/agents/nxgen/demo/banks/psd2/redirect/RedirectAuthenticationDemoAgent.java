@@ -204,7 +204,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public List<DemoTransactionAccount> getTransactionAccounts() {
-        if (this.provider.matches(DemoConstants.UK_PROVIDERS_REGEX)) {
+        if (this.provider.matches(DemoConstants.MARKET_REGEX.UK_PROVIDERS_REGEX)) {
             return Lists.newArrayList(
                     DemoAccountDefinitionGenerator.getDemoTransactionalAccountWithZeroBalance(
                             USERNAME, this.provider),

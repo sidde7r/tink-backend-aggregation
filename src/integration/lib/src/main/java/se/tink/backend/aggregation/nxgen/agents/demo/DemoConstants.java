@@ -34,9 +34,19 @@ public class DemoConstants {
         return bd.doubleValue();
     }
 
-    public static List<Integer> UK_SORT_CODES =
-            Arrays.asList(
-                    90128, 70436, 236972, 230580, 40004, 40075, 40026, 87199, 608371, 401276,
-                    231470, 202678, 83210, 774926, 110001, 166300, 609104, 606004);
-    public static String UK_PROVIDERS_REGEX = "^(?:uk|gb)-.*";
+    public static String IT_ACCOUNT_NUMBER_PREFIX = "IT60X";
+
+    public static class MARKET_CODES {
+        public static List<Integer> UK_SORT_CODES =
+                Arrays.asList(
+                        90128, 70436, 236972, 230580, 40004, 40075, 40026, 87199, 608371, 401276,
+                        231470, 202678, 83210, 774926, 110001, 166300, 609104, 606004);
+        public static List<Integer> IT_BANK_IDENTIFIERS = Arrays.asList(5428);
+        public static List<Integer> IT_BANK_ACCOUNT_IDENTIFIER = Arrays.asList(11101);
+    }
+
+    public static class MARKET_REGEX {
+        public static final String UK_PROVIDERS_REGEX = "^(?:uk|gb)-.*";
+        public static final String IT_PROVIDERS_REGEX = "^it-.*";
+    }
 }
