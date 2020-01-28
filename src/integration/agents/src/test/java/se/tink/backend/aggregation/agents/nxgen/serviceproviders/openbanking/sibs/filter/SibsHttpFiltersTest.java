@@ -32,11 +32,6 @@ public class SibsHttpFiltersTest {
             "{ \"httpCode\":\"429\", \"httpMessage\":\"Too Many Requests\", \"moreInformation\":\"Rate Limit exceeded\"\n"
                     + " * }";
 
-    private static final String FORMAT_ERROR_SIBS_MESSAGE =
-            "{\"transactionStatus\":\"RJCT\",\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"FORMAT_ERROR\",\"text\":\"Format\n"
-                    + " * of certain request fields are not matching the XS2A requirements. An explicit path to the\n"
-                    + " * corresponding field might be added in the return message.\"}]}";
-
     @Rule public ExpectedException thrown = ExpectedException.none();
 
     @Before
@@ -119,33 +114,6 @@ public class SibsHttpFiltersTest {
     @Test
     public void shouldPassIfErrorIsNot405ServiceInvalid() {
         Filter filter = new ServiceInvalidErrorFilter();
-        filter.setNext(stubFilter);
-
-        when(response.getStatus()).thenReturn(200);
-
-        filter.handle(request);
-    }
-
-    @Test
-    public void shouldThrowBankServiceExceptionWhenSibsReturns400FormatError() {
-        Filter filter = new FormatErrorErrorFilter();
-        filter.setNext(stubFilter);
-
-        int httpCode = 400;
-
-        when(response.getStatus()).thenReturn(httpCode);
-        when(response.getBody(String.class)).thenReturn(FORMAT_ERROR_SIBS_MESSAGE);
-
-        thrown.expect(BankServiceException.class);
-        thrown.expectMessage(
-                "Http status: " + httpCode + " Error body: " + FORMAT_ERROR_SIBS_MESSAGE);
-
-        filter.handle(request);
-    }
-
-    @Test
-    public void shouldPassIfErrorIsNot400FormatError() {
-        Filter filter = new FormatErrorErrorFilter();
         filter.setNext(stubFilter);
 
         when(response.getStatus()).thenReturn(200);
