@@ -92,7 +92,7 @@ public class CrosskeyBaseApiClient {
 
     private RequestBuilder createRequestInSession(URL url) {
         final String clientSecret = getConfiguration().getClientSecret();
-        final String xFapiFinancialId = getConfiguration().getXFapiFinancialId();
+        final String xFapiFinancialId = getConfiguration().getxFapiFinancialId();
 
         return createRequest(url)
                 .addBearerToken(getTokenFromSession())
@@ -103,7 +103,7 @@ public class CrosskeyBaseApiClient {
     private RequestBuilder createAuthorizationRequest(
             InitialTokenResponse clientCredentials, URL url) {
         final String clientSecret = getConfiguration().getClientSecret();
-        final String xFapiFinancialId = getConfiguration().getXFapiFinancialId();
+        final String xFapiFinancialId = getConfiguration().getxFapiFinancialId();
 
         return createRequest(url)
                 .addBearerToken(clientCredentials.toTinkToken())
@@ -217,7 +217,7 @@ public class CrosskeyBaseApiClient {
     private JwtPaymentConsentHeader getJwtHeader() {
         return new JwtPaymentConsentHeader(
                 OIDCValues.B_64,
-                getConfiguration().getSigningKeySerial(),
+                getConfiguration().getClientSigningCertificateSerialNumber(),
                 OIDCValues.ALG,
                 Arrays.asList(
                         CrosskeyBaseConstants.OIDCValues.B_64_STR,
@@ -227,7 +227,7 @@ public class CrosskeyBaseApiClient {
                 // -3 since it is sometimes rounds up to future..
                 Instant.now().getEpochSecond() - 3,
                 Urls.BASE_API_PREFIX
-                        + getConfiguration().getXFapiFinancialId()
+                        + getConfiguration().getxFapiFinancialId()
                         + Urls.BASE_API_POSTFIX,
                 getConfiguration().getClientId());
     }

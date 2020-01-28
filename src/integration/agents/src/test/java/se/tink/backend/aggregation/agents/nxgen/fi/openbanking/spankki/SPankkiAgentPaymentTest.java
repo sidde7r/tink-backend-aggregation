@@ -27,7 +27,7 @@ public class SPankkiAgentPaymentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("fi", "fi-spankki-oauth2")
+                new AgentIntegrationTest.Builder("fi", "fi-spankki-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)

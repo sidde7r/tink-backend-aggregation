@@ -13,7 +13,7 @@ public class TargoBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("es", "es-targobank-oauth2")
+                new AgentIntegrationTest.Builder("es", "es-targobank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

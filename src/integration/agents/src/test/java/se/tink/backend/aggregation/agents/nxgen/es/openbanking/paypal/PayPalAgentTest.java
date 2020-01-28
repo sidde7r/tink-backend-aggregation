@@ -13,7 +13,7 @@ public class PayPalAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("es", "es-paypal-oauth2")
+                new AgentIntegrationTest.Builder("es", "es-paypal-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

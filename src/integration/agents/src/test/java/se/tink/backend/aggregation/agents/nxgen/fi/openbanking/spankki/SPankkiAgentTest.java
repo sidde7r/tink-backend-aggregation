@@ -5,22 +5,18 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 
 public class SPankkiAgentTest {
 
     private AgentIntegrationTest.Builder builder;
-    private final ArgumentManager<SsnArgumentEnum> manager =
-            new ArgumentManager<>(SsnArgumentEnum.values());
 
     @Before
     public void setup() {
-        manager.before();
         builder =
-                new AgentIntegrationTest.Builder("fi", "fi-spankki-oauth2")
+                new AgentIntegrationTest.Builder("fi", "fi-spankki-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .setFinancialInstitutionId("s-pankki")
+                        .setFinancialInstitutionId("spankki")
                         .setAppId("tink")
                         .saveCredentialsAfter(false);
     }
