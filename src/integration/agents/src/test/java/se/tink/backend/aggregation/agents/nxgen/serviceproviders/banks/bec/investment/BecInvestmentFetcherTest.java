@@ -39,7 +39,6 @@ public class BecInvestmentFetcherTest {
 
         Collection<InvestmentAccount> investmentAccounts = investmentFetcher.fetchAccounts();
 
-
         int EXPECTED_NUM_OF_ACCOUNTS = 1;
         int EXPECTED_NUM_OF_PORTFOLIOS = 1;
         int EXPECTED_NUM_OF_INSTRUMENTS = 1;
@@ -146,8 +145,8 @@ public class BecInvestmentFetcherTest {
     private InstrumentDetailsEntity getInstrumentDetailsEntity() {
         return SerializationUtils.deserializeFromString(
                 "{\n"
-                        + "    \"isinCode\": \"DK0060816494\",\n"
-                        + "    \"market\": \"Fundcollect A/S\"\n"
+                        + "    \"isinCode\": \"DK12356\",\n"
+                        + "    \"market\": \"asdzxc A/S\"\n"
                         + "}",
                 InstrumentDetailsEntity.class);
     }
