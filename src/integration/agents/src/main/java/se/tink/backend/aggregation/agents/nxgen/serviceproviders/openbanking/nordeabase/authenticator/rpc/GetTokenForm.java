@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class GetTokenForm extends AbstractForm {
     private GetTokenForm(String grantType, String code, String redirectUri) {
-        put(NordeaBaseConstants.FormKeys.GRANT_TYPE, grantType);
         put(NordeaBaseConstants.FormKeys.CODE, code);
+        put(NordeaBaseConstants.FormKeys.GRANT_TYPE, grantType);
         if (!Strings.isNullOrEmpty(redirectUri)) {
             put(NordeaBaseConstants.FormKeys.REDIRECT_URI, redirectUri);
         }
