@@ -3,13 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.framework.AgentTestContext;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.filters.HandelsbankenSEContentTypeFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
@@ -17,15 +19,18 @@ import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-@Ignore
 public class HandelsbankenSEContentTypeFilterTest {
+
+    private final ArgumentManager<UsernameArgumentEnum> helper =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
 
     private HandelsbankenSEApiClient apiClient;
 
     @Before
     public void setUp() throws Exception {
+        helper.before();
         Credentials credentials = new Credentials();
-        credentials.setField(Field.Key.USERNAME, "199001010000");
+        credentials.setField(Field.Key.USERNAME, helper.get(UsernameArgumentEnum.USERNAME));
 
         AgentContext context = new AgentTestContext(credentials);
         TinkHttpClient client =
@@ -41,6 +46,11 @@ public class HandelsbankenSEContentTypeFilterTest {
         client.addFilter(new HandelsbankenSEContentTypeFilter());
 
         apiClient = new HandelsbankenSEApiClient(client, new HandelsbankenSEConfiguration());
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 
     @Test
