@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
+import se.tink.backend.aggregation.nxgen.agents.strategy.ProductionAgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -128,7 +129,8 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
             AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
                     this.CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
             this.configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
-            AgentFactory factory = new AgentFactory(this.configuration);
+            AgentFactory factory =
+                    new AgentFactory(this.configuration, new ProductionAgentStrategyFactory());
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(this.provider);
             return factory.create(cls, credentialsRequest, this.context);
         } catch (FileNotFoundException e) {

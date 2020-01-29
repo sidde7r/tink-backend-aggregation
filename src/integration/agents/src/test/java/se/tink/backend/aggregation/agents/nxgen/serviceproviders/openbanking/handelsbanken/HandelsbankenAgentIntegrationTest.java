@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
+import se.tink.backend.aggregation.nxgen.agents.strategy.ProductionAgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
@@ -181,7 +182,8 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
                             agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
 
-            AgentFactory factory = new AgentFactory(configuration);
+            AgentFactory factory =
+                    new AgentFactory(configuration, new ProductionAgentStrategyFactory());
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
             return factory.create(cls, credentialsRequest, context);

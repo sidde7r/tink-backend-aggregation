@@ -59,8 +59,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
@@ -149,7 +147,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     private HttpResponseStatusHandler responseStatusHandler;
 
     private TestConfiguration configuration;
-    private static final Logger log = LoggerFactory.getLogger(NextGenTinkHttpClient.class);
 
     private class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
@@ -273,22 +270,16 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         responseStatusHandler = new DefaultResponseStatusHandler();
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
-        if (configuration == null) {
-            debugOutputLoggingFilter =
-                    new RestIoLoggingFilter(printStream, this.logMasker, this.loggingMode);
-        } else {
-            this.logMasker.setCensorSensitiveHeaders(
-                    this.configuration.isCensorSensitiveHeadersEnabled());
-            if (this.configuration.isMockServer()) {
-                this.disableSslVerification();
-            }
-            debugOutputLoggingFilter =
-                    new RestIoLoggingFilter(
-                            printStream,
-                            this.logMasker,
-                            this.configuration.isCensorSensitiveHeadersEnabled(),
-                            this.loggingMode);
-        }
+
+        final boolean censorHeaders =
+                this.configuration == null || this.configuration.isCensorSensitiveHeadersEnabled();
+
+        this.logMasker.setCensorSensitiveHeaders(censorHeaders);
+
+        debugOutputLoggingFilter =
+                new RestIoLoggingFilter(
+                        printStream, this.logMasker, censorHeaders, this.loggingMode);
+
         addFilter(new SendRequestFilter());
     }
 
@@ -824,23 +815,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     }
 
     public RequestBuilder request(URL url) {
-        if (configuration != null && configuration.isMockServer()) {
-            try {
-                URI uri = new URI(url.toString());
-                uri =
-                        new URI(
-                                uri.getScheme().toLowerCase(Locale.US),
-                                configuration.getMockURL()
-                                        + ":"
-                                        + configuration.getMockServerPort(),
-                                uri.getPath(),
-                                uri.getQuery(),
-                                uri.getFragment());
-                url = new URL(uri.toString());
-            } catch (URISyntaxException e) {
-                throw new IllegalArgumentException(e);
-            }
-        }
         final RequestBuilder builder =
                 new NextGenRequestBuilder(
                         this.getFilters(),

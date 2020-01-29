@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.nxgen.agents.strategy.ProductionAgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
@@ -61,7 +62,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
             }
         }
 
-        factory = new AgentFactory(configuration);
+        factory = new AgentFactory(configuration, new ProductionAgentStrategyFactory());
     }
 
     protected Provider constructProvider() {
