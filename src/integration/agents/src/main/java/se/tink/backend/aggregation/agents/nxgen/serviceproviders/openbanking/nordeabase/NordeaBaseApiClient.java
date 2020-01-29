@@ -138,9 +138,9 @@ public class NordeaBaseApiClient implements TokenInterface {
     }
 
     public OAuth2Token getToken(GetTokenForm form) {
-        String body = SerializationUtils.serializeToString(form);
+        String body = form.getBodyValue();
         return createTokenRequest(body)
-                .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .body(body, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(GetTokenResponse.class)
                 .toTinkToken();
     }
