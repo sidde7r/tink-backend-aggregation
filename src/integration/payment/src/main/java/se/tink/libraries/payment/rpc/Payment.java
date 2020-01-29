@@ -107,6 +107,11 @@ public class Payment {
         return new ExactCurrencyAmount(new BigDecimal(amount.getValue()), amount.getCurrency());
     }
 
+    // TODO: This will be renamed to `getAmount` after we refactored every agent
+    public ExactCurrencyAmount getExactCurrencyAmountFromField() {
+        return exactCurrencyAmount;
+    }
+
     public UUID getId() {
         return id;
     }
