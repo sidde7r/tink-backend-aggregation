@@ -27,13 +27,13 @@ public class GetAccountsResponse {
                 .collect(Collectors.toList());
     }
 
-    public boolean ifNecessaryConsents() {
+    public boolean areConsentsNecessary() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
-                .map(AccountEntity::ifNecessaryConsents)
+                .map(AccountEntity::areConsentsNecessary)
                 .anyMatch(Boolean::booleanValue);
     }
 
-    public List<AccountIdEntity> getListOfNecessaryConstents() {
+    public List<AccountIdEntity> getListOfNecessaryConsents() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
                 .map(AccountEntity::getAccountId)
                 .collect(Collectors.toList());

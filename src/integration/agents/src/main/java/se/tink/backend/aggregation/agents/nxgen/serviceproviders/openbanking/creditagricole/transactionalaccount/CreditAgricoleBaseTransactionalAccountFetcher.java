@@ -24,8 +24,8 @@ public class CreditAgricoleBaseTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
 
-        if (getAccountsResponse.ifNecessaryConsents()) {
-            apiClient.putConsents(getAccountsResponse.getListOfNecessaryConstents());
+        if (getAccountsResponse.areConsentsNecessary()) {
+            apiClient.putConsents(getAccountsResponse.getListOfNecessaryConsents());
             getAccountsResponse = apiClient.getAccounts();
         }
 

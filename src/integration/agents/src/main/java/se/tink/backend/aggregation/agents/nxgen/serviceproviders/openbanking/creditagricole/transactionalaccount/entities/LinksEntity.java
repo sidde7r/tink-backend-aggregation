@@ -13,11 +13,11 @@ public class LinksEntity {
     private LinkDetailsEntity self;
     private LinkDetailsEntity transactions;
 
-    public boolean ifHasBallances() {
+    public boolean hasBalances() {
         return balances != null;
     }
 
-    public boolean ifHasTransactions() {
+    public boolean hasTransactions() {
         return transactions != null;
     }
 }
