@@ -20,7 +20,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private final AbstractExecutionThreadService service;
     private final SqsQueue sqsQueue;
     private QueueMessageAction queueMessageAction;
-    private final int WAIT_TIME_SECONDS = 1;
+    private final int WAIT_TIME_SECONDS = 2;
     private final int MAX_NUMBER_OF_MESSAGES = 1;
     private final int VISIBILITY_TIMEOUT_SECONDS = 300; // 5 minutes
     private static final Logger log = LoggerFactory.getLogger(SqsConsumer.class);
