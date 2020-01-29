@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.ChebancaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration.ChebancaConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaConsentAuthorizationController;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaConsentManualApproveController;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -100,13 +100,8 @@ public final class ChebancaAgent extends NextGenerationAgent
         final ChebancaTransactionalAccountFetcher accountFetcher =
                 new ChebancaTransactionalAccountFetcher(
                         apiClient,
-                        new ThirdPartyAppAuthenticationController<>(
-                                new ChebancaConsentAuthorizationController(
-                                        supplementalInformationHelper,
-                                        strongAuthenticationState,
-                                        persistentStorage),
-                                supplementalInformationHelper),
-                        credentials);
+                        new ChebancaConsentManualApproveController(
+                                supplementalInformationHelper, strongAuthenticationState));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

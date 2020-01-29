@@ -14,11 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.HttpResponseChecker;
@@ -35,7 +31,6 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.CustomerIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.GetBalancesResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -43,17 +38,12 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 public class ChebancaTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final ChebancaApiClient apiClient;
-    private final ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController;
-    private final Credentials credentials;
+    private final ChebancaConsentManualApproveController consentController;
 
     public ChebancaTransactionalAccountFetcher(
-            ChebancaApiClient apiClient,
-            ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController,
-            Credentials credentials) {
+            ChebancaApiClient apiClient, ChebancaConsentManualApproveController consentController) {
         this.apiClient = requireNonNull(apiClient);
-        this.thirdPartyAppAuthenticationController =
-                requireNonNull(thirdPartyAppAuthenticationController);
-        this.credentials = requireNonNull(credentials);
+        this.consentController = consentController;
     }
 
     @Override
@@ -88,13 +78,8 @@ public class ChebancaTransactionalAccountFetcher implements AccountFetcher<Trans
 
     private void processConsent(List<String> accountIds) {
         ConsentResponse consentResponse = createConsent(accountIds);
-        authorizeConsent(consentResponse);
-
-        try {
-            thirdPartyAppAuthenticationController.authenticate(credentials);
-        } catch (AuthenticationException | AuthorizationException e) {
-            throw new IllegalStateException(ErrorMessages.AUTHENTICATION_ERROR);
-        }
+        String scaRedirectUrl = authorizeConsent(consentResponse);
+        consentController.approveConsentByUser(scaRedirectUrl);
         confirmConsent(consentResponse);
     }
 
@@ -111,7 +96,7 @@ public class ChebancaTransactionalAccountFetcher implements AccountFetcher<Trans
         return httpResponse.getBody(ConsentResponse.class);
     }
 
-    private void authorizeConsent(ConsentResponse consentResponse) {
+    private String authorizeConsent(ConsentResponse consentResponse) {
         HttpResponse httpResponse =
                 apiClient.authorizeConsent(consentResponse.getResources().getResourceId());
 
@@ -120,9 +105,8 @@ public class ChebancaTransactionalAccountFetcher implements AccountFetcher<Trans
 
         ConsentAuthorizationResponse consentAuthorizationResponse =
                 httpResponse.getBody(ConsentAuthorizationResponse.class);
-        apiClient.save(
-                StorageKeys.AUTHORIZATION_URL,
-                consentAuthorizationResponse.getData().getScaRedirectURL());
+
+        return consentAuthorizationResponse.getData().getScaRedirectURL();
     }
 
     private void confirmConsent(ConsentResponse consentResponse) {
