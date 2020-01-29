@@ -56,9 +56,11 @@ public class BecAgent extends NextGenerationAgent
         BecConfiguration configuration =
                 getAgentConfigurationController()
                         .getAgentConfigurationFromK8s(INTEGRATION_NAME, BecConfiguration.class);
+
         BecSecurityHelper securityHelper =
                 BecSecurityHelper.getInstance(
                         configuration.getSigningCertificate(), configuration.getPublicKeySalt());
+
         this.apiClient =
                 new BecApiClient(
                         securityHelper,
