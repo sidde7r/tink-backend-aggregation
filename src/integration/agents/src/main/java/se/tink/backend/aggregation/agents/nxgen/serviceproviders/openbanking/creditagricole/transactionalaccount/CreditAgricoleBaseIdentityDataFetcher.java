@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount;
 
-import java.util.Collections;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.EndUserIdentityResponse;
@@ -17,7 +16,6 @@ public class CreditAgricoleBaseIdentityDataFetcher implements IdentityDataFetche
 
     @Override
     public IdentityData fetchIdentityData() {
-        apiClient.putConsents(Collections.emptyList());
         final EndUserIdentityResponse endUserIdentityResponse = apiClient.getEndUserIdentity();
         return IdentityData.builder()
                 .setFullName(endUserIdentityResponse.getConnectedPsu())
