@@ -667,6 +667,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     public void testBankTransferUK(Transfer transfer, boolean isUpdate) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        readConfigurationFile();
         Agent agent = createAgent(credentialsRequest);
         try {
             // login(agent, credentialsRequest);
