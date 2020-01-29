@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis;
 
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -14,6 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis.UkOpenBankingPisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.EndUserMessage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.Error;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.Step;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Pis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.DomesticPisConfig;
@@ -25,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -47,7 +51,6 @@ import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -189,13 +192,45 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             thirdPartyAppAuthenticationController.authenticate(credentials);
 
         } catch (AuthenticationException | AuthorizationException e) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Authentication error.")
-                    .setException(e)
-                    .build();
+            handlePaymentAuthorizationErrors(e);
         }
 
         return paymentAuthenticator.getPaymentResponse();
+    }
+
+    /**
+     * Handles errors of type access_denied, which according to openId documentation means that
+     * resource owner (end user) did not provide consent. If type is not access_denied throws a
+     * generic transfer failed exception. If a known error description exists, end user message is
+     * based on that. Otherwise throws a generic transfer cancelled exception.
+     */
+    private void handlePaymentAuthorizationErrors(AgentExceptionImpl e) {
+        OpenIdError openIdError = getOpenIdErrorOrThrowTransferFailedException(e);
+
+        String errorType = openIdError.getErrorType();
+        String errorMessage = openIdError.getErrorMessage();
+
+        if (!Error.ACCESS_DENIED.equalsIgnoreCase(errorType)) {
+            throw UkOpenBankingV31PisUtils.createFailedTransferException(e);
+        }
+
+        if (!Strings.isNullOrEmpty(errorMessage)) {
+            String endUserMessage = UkOpenBankingV31PisUtils.convertToEndUserMessage(errorMessage);
+            throw UkOpenBankingV31PisUtils.createCancelledTransferException(e, endUserMessage);
+        }
+
+        throw UkOpenBankingV31PisUtils.createCancelledTransferException(
+                e, EndUserMessage.PIS_AUTHORISATION_ACCESS_DENIED);
+    }
+
+    /**
+     * Returns an openIdError which contains information from the callback data. If not present
+     * throws a generic payment failed exception.
+     */
+    private OpenIdError getOpenIdErrorOrThrowTransferFailedException(AgentExceptionImpl e) {
+        return apiClient
+                .getOpenIdError()
+                .orElseThrow(() -> UkOpenBankingV31PisUtils.createFailedTransferException(e));
     }
 
     @Override
