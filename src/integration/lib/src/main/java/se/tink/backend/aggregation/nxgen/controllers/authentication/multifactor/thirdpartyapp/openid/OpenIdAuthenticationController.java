@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -360,6 +361,11 @@ public class OpenIdAuthenticationController
                     String.format(
                             "OpenId ACCESS_DENIED callback: %s",
                             SerializationUtils.serializeToString(callbackData)));
+
+            // Store error information to make it possible for agent to determine cause and
+            // give end user a proper error message.
+            apiClient.storeOpenIdError(OpenIdError.create(errorType, errorDescription.orElse("")));
+
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 

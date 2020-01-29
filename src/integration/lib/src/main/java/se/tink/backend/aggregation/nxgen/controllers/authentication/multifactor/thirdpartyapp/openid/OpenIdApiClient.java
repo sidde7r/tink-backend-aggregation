@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.ClientRegistration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.JsonWebKeySet;
@@ -37,6 +38,7 @@ public class OpenIdApiClient {
     private JsonWebKeySet cachedProviderKeys;
     private OpenIdAuthenticatedHttpFilter aisAuthFilter;
     private OpenIdAuthenticatedHttpFilter pisAuthFilter;
+    private OpenIdError openIdError;
     private static final AggregationLogger log = new AggregationLogger(OpenIdApiClient.class);
 
     public OpenIdApiClient(
@@ -274,6 +276,14 @@ public class OpenIdApiClient {
     public void instantiatePisAuthFilter(OAuth2Token token) {
         log.debug("Instantiating the Pis Auth Filter.");
         pisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, providerConfiguration, null, null);
+    }
+
+    public void storeOpenIdError(OpenIdError error) {
+        openIdError = error;
+    }
+
+    public Optional<OpenIdError> getOpenIdError() {
+        return Optional.ofNullable(openIdError);
     }
 
     public static String registerClient(
