@@ -1,15 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.configuration.SparkassenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenAccountsFetcher;
@@ -26,9 +22,10 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class SparkassenAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final SparkassenApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+
+    private final SparkassenPersistentStorage sparkassenPersistentStorage;
 
     public SparkassenAgent(
             CredentialsRequest request,
@@ -36,41 +33,32 @@ public final class SparkassenAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        List<String> payLoadValues = splitPayload(request.getProvider().getPayload());
-        apiClient =
-                new SparkassenApiClient(
-                        client, persistentStorage, credentials, payLoadValues.get(1));
-        clientName = payLoadValues.get(0);
-
+        sparkassenPersistentStorage = new SparkassenPersistentStorage(persistentStorage);
+        String bankCode = request.getProvider().getPayload();
+        apiClient = new SparkassenApiClient(client, credentials, bankCode);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         final SparkassenConfiguration sparkassenConfiguration = getClientConfiguration();
-
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
-
         apiClient.setConfiguration(sparkassenConfiguration);
     }
 
     protected SparkassenConfiguration getClientConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        SparkassenConstants.INTEGRATION_NAME,
-                        clientName,
-                        SparkassenConfiguration.class);
+                .getAgentConfiguration(SparkassenConfiguration.class);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-
-        final SparkassenAuthenticator sparkassenAuthenticator =
-                new SparkassenAuthenticator(apiClient, persistentStorage);
-
-        SparkassenAuthenticationController sparkassenAuthenticationController =
-                new SparkassenAuthenticationController(
-                        catalog, supplementalInformationHelper, sparkassenAuthenticator);
+        SparkassenAuthenticator sparkassenAuthenticator =
+                new SparkassenAuthenticator(
+                        catalog,
+                        supplementalInformationHelper,
+                        apiClient,
+                        sparkassenPersistentStorage);
 
         return new AutoAuthenticationController(
-                request, context, sparkassenAuthenticationController, sparkassenAuthenticator);
+                request, context, sparkassenAuthenticator, sparkassenAuthenticator);
     }
 
     @Override
@@ -97,8 +85,8 @@ public final class SparkassenAgent extends NextGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new SparkassenAccountsFetcher(apiClient),
-                new SparkassenTransactionsFetcher(apiClient));
+                new SparkassenAccountsFetcher(apiClient, sparkassenPersistentStorage),
+                new SparkassenTransactionsFetcher(apiClient, sparkassenPersistentStorage));
     }
 
     @Override
@@ -109,9 +97,5 @@ public final class SparkassenAgent extends NextGenerationAgent
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
-    }
-
-    private List<String> splitPayload(String payload) {
-        return Stream.of(payload.split(SparkassenConstants.REGEX)).collect(Collectors.toList());
     }
 }

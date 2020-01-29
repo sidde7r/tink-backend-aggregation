@@ -19,7 +19,7 @@ public class ScaMethodEntity {
         return authenticationType;
     }
 
-    public String toString() {
-        return "Name: " + name + ", Type: " + authenticationType;
+    public String getName() {
+        return name;
     }
 }

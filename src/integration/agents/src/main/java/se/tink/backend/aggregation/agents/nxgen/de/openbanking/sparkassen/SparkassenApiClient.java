@@ -1,64 +1,47 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
-import java.io.StringReader;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.PathVariables;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.XmlConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.AccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.IbanAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.PsuDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.InitAuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.InitAuthorizationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ScaStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.SelectAuthenticationMethodRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.SelectAuthenticationMethodResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.configuration.SparkassenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchTransactionsResponseWrapper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public final class SparkassenApiClient {
+public class SparkassenApiClient {
 
     private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
     private final Credentials credentials;
     private final String bankCode;
     private SparkassenConfiguration configuration;
 
-    public SparkassenApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            Credentials credentials,
-            String bankCode) {
-
+    public SparkassenApiClient(TinkHttpClient client, Credentials credentials, String bankCode) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
         this.credentials = credentials;
         this.bankCode = bankCode;
     }
@@ -73,42 +56,29 @@ public final class SparkassenApiClient {
     }
 
     private RequestBuilder createRequest(URL url) {
-
         if (url.get().contains("{" + PathVariables.BANK_CODE + "}")) {
             url = url.parameter(PathVariables.BANK_CODE, bankCode);
         }
-
-        url.parameter(PathVariables.BANK_CODE, bankCode);
-
-        return client.request(url.parameter(PathVariables.BANK_CODE, bankCode))
+        return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
     }
 
-    private RequestBuilder createRequestInSession(URL url) {
-
-        return createRequest(url)
-                .header(
-                        HeaderKeys.AUTHORIZATION,
-                        persistentStorage.get(StorageKeys.AUTHORIZATION_ID))
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
+    private RequestBuilder createRequestInSession(URL url, String consentId) {
+        return createRequest(url).header(HeaderKeys.CONSENT_ID, consentId);
     }
 
-    public ConsentResponse createConsent() {
-
-        List<AccountsEntity> ibans =
-                Stream.of(credentials.getField(CredentialKeys.IBAN).split(","))
+    public ConsentResponse createConsent(List<String> ibans) {
+        List<AccountsEntity> accountsEntities =
+                ibans.stream()
                         .map(String::trim)
                         .map(AccountsEntity::new)
                         .collect(Collectors.toList());
 
         ConsentRequest getConsentRequest =
                 new ConsentRequest(
-                        // If AllAccountsAccessEntity is used with a value of "allAccounts",
-                        // IBANs are not needed but the generated consent can only be used
-                        // for fetching a list of accounts
-                        new IbanAccessEntity(ibans, ibans),
+                        new IbanAccessEntity(accountsEntities, accountsEntities),
                         true,
                         LocalDate.now().plusDays(90).toString(),
                         FormValues.FREQUENCY_PER_DAY,
@@ -128,76 +98,56 @@ public final class SparkassenApiClient {
                         new InitAuthorizationRequest(new PsuDataEntity(password)));
     }
 
-    public SelectAuthenticationMethodResponse updateAuthorisationForScaMethod(String methodId) {
+    public SelectAuthenticationMethodResponse selectAuthorizationMethod(
+            String consentId, String authorizationId, String methodId) {
         return createRequest(
                         Urls.UPDATE_SCA_METHOD
-                                .parameter(
-                                        PathVariables.CONSENT_ID,
-                                        persistentStorage.get(StorageKeys.CONSENT_ID))
-                                .parameter(
-                                        PathVariables.AUTHORIZATION_ID,
-                                        persistentStorage.get(StorageKeys.AUTHORIZATION_ID)))
+                                .parameter(PathVariables.CONSENT_ID, consentId)
+                                .parameter(PathVariables.AUTHORIZATION_ID, authorizationId))
                 .put(
                         SelectAuthenticationMethodResponse.class,
                         new SelectAuthenticationMethodRequest(methodId));
     }
 
-    public ScaStatusResponse getAuthorisation(URL url) {
-        return createRequest(url).get(ScaStatusResponse.class);
-    }
-
-    public FinalizeAuthorizationResponse finalizeAuthorization(URL url, String otp) {
-        return createRequest(url)
+    public FinalizeAuthorizationResponse finalizeAuthorization(
+            String consentId, String authorizationId, String otp) {
+        return createRequest(
+                        Urls.FINALIZE_AUTHORIZATION
+                                .parameter(PathVariables.CONSENT_ID, consentId)
+                                .parameter(PathVariables.AUTHORIZATION_ID, authorizationId))
                 .put(FinalizeAuthorizationResponse.class, new FinalizeAuthorizationRequest(otp));
     }
 
-    public FetchAccountsResponse fetchAccounts() {
-        return createRequestInSession(SparkassenConstants.Urls.FETCH_ACCOUNTS)
+    public ConsentStatusResponse getConsentStatus(String consentId) {
+        return createRequest(
+                        Urls.CHECK_CONSENT_STATUS.parameter(PathVariables.CONSENT_ID, consentId))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .get(ConsentStatusResponse.class);
+    }
+
+    public FetchAccountsResponse fetchAccounts(String consentId) {
+        return createRequestInSession(SparkassenConstants.Urls.FETCH_ACCOUNTS, consentId)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .get(FetchAccountsResponse.class);
     }
 
-    public FetchBalancesResponse getAccountBalance(String accountId) {
+    public FetchBalancesResponse getAccountBalance(String consentId, String accountId) {
         return createRequestInSession(
-                        Urls.FETCH_BALANCES.parameter(PathVariables.ACCOUNT_ID, accountId))
+                        Urls.FETCH_BALANCES.parameter(PathVariables.ACCOUNT_ID, accountId),
+                        consentId)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .get(FetchBalancesResponse.class);
     }
 
-    public FetchTransactionsResponseWrapper fetchTransactions(String accountId) {
-        String xmlResponse =
-                createRequestInSession(
-                                Urls.FETCH_TRANSACTIONS
-                                        .parameter(PathVariables.ACCOUNT_ID, accountId)
-                                        .queryParam(
-                                                QueryKeys.DATE_FROM,
-                                                LocalDate.now().plusDays(90).toString())
-                                        .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH))
-                        .type(MediaType.APPLICATION_FORM_URLENCODED)
-                        .accept(MediaType.APPLICATION_XML)
-                        .get(String.class);
-
-        // Fix response for parser
-        xmlResponse = fixXmlResponse(xmlResponse);
-
-        try {
-            JAXBContext context = JAXBContext.newInstance(FetchTransactionsResponseWrapper.class);
-            Unmarshaller m = context.createUnmarshaller();
-            return (FetchTransactionsResponseWrapper) m.unmarshal(new StringReader(xmlResponse));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private String fixXmlResponse(String xmlResponse) {
-        xmlResponse =
-                XmlConstants.DOCUMENTS_OPEN
-                        + xmlResponse
-                                .replace(XmlConstants.VERSION_TAG, "")
-                                .replace(XmlConstants.XMLNS_ATRIBUTE, "")
-                                .replace(XmlConstants.XMLNS_ATRIBUTE_EXTENDED, "")
-                        + XmlConstants.DOCUMENTS_CLOSED;
-        return xmlResponse;
+    public String fetchTransactions(String consentId, String accountId, LocalDate startDate) {
+        return createRequestInSession(
+                        Urls.FETCH_TRANSACTIONS
+                                .parameter(PathVariables.ACCOUNT_ID, accountId)
+                                .queryParam(QueryKeys.DATE_FROM, startDate.toString())
+                                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH),
+                        consentId)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .accept(MediaType.APPLICATION_XML)
+                .get(String.class);
     }
 }
