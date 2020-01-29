@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -72,15 +73,15 @@ public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
                 apiClient.fetchDepositDetail(depositAccount.getUrlDetail());
 
         Map<Boolean, List<PortfolioEntity>> partitionKnownInstrumentType =
-                depositDetail.getPortfolios().stream()
+                ListUtils.emptyIfNull(depositDetail.getPortfolios()).stream()
                         .collect(Collectors.partitioningBy(PortfolioEntity::isInstrumentTypeKnown));
 
-        partitionKnownInstrumentType.get(false).forEach(this::handleUnknownInstrumentType);
+        partitionKnownInstrumentType.get(false).forEach(this::logUnknownInstrumentType);
 
         return partitionKnownInstrumentType.get(true).stream()
                 .flatMap(
                         portfolioEntity ->
-                                portfolioEntity.getInstruments().stream()
+                                ListUtils.emptyIfNull(portfolioEntity.getInstruments()).stream()
                                         .map(
                                                 instrumentEntity ->
                                                         buildTinkInstrument(
@@ -90,7 +91,7 @@ public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
                 .collect(Collectors.toList());
     }
 
-    private void handleUnknownInstrumentType(PortfolioEntity portfolioEntity) {
+    private void logUnknownInstrumentType(PortfolioEntity portfolioEntity) {
         log.infoExtraLong(
                 String.format(
                         "Unknown paper type[%s]: %s, backend object: %s",
