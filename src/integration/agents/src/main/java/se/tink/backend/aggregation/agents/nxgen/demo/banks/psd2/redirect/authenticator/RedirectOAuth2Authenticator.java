@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
-    private static final String REDIRECT_HOST = "https://cdn.tink.se/fake-bank/redirect.html";
+    private static final String REDIRECT_HOST = "https://cdn.tink.se/fake-bank/redirect-v2.html";
     private static final String CODE = "1234";
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
     private static final long THIRTY_DAYS_IN_SECONDS = 2592000;
