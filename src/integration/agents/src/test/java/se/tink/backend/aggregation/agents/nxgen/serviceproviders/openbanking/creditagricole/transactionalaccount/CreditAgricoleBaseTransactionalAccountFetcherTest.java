@@ -30,7 +30,7 @@ public class CreditAgricoleBaseTransactionalAccountFetcherTest {
                         new CreditAgricoleBaseTransactionalAccountFetcher(apiClient);
 
         when(apiClient.getAccounts()).thenReturn(accountsResponse);
-        when(accountsResponse.ifNecessaryConsents()).thenReturn(false);
+        when(accountsResponse.areConsentsNecessary()).thenReturn(false);
         when(accountsResponse.toTinkAccounts()).thenReturn(transactionalAccounts);
 
         // when
@@ -56,9 +56,9 @@ public class CreditAgricoleBaseTransactionalAccountFetcherTest {
                         new CreditAgricoleBaseTransactionalAccountFetcher(apiClient);
 
         when(apiClient.getAccounts()).thenReturn(accountsResponse);
-        when(accountsResponse.ifNecessaryConsents()).thenReturn(true);
+        when(accountsResponse.areConsentsNecessary()).thenReturn(true);
         when(accountsResponse.toTinkAccounts()).thenReturn(transactionalAccounts);
-        when(accountsResponse.getListOfNecessaryConstents()).thenReturn(listOfNecessaryConstents);
+        when(accountsResponse.getListOfNecessaryConsents()).thenReturn(listOfNecessaryConstents);
 
         doNothing().when(apiClient).putConsents(listOfNecessaryConstents);
 
