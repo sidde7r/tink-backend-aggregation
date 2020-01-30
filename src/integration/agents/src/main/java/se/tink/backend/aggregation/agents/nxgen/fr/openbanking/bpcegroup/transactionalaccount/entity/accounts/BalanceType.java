@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum BalanceType {
-    ACCOUNT("CLBD"),
+    ACCOUNTING("CLBD"),
     VALUE_DATE("VALU"),
     INSTANT("OTHR");
 

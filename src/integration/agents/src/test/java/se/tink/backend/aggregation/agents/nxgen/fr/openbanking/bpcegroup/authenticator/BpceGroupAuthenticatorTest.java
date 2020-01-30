@@ -12,8 +12,9 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceGroupApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -39,7 +40,9 @@ public class BpceGroupAuthenticatorTest {
         when(apiClientMock.exchangeAuthorizationToken(anyString())).thenReturn(getTokenResponse());
         when(apiClientMock.exchangeRefreshToken(anyString())).thenReturn(getTokenResponse());
 
-        bpceGroupAuthenticator = new BpceGroupAuthenticator(apiClientMock);
+        final BpceOAuth2TokenStorage oAuth2TokenStorageMock = mock(BpceOAuth2TokenStorage.class);
+
+        bpceGroupAuthenticator = new BpceGroupAuthenticator(apiClientMock, oAuth2TokenStorageMock);
     }
 
     @Test

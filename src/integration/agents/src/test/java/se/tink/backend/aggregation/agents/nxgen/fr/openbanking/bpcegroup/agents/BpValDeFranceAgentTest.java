@@ -16,7 +16,7 @@ public class BpValDeFranceAgentTest {
                 new AgentIntegrationTest.Builder("fr", "fr-bpvaldefrance-ob")
                         .setFinancialInstitutionId("bpvaldefrance")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
+                        .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true)
                         .expectLoggedIn(false);
     }

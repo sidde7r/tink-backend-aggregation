@@ -6,26 +6,36 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceGroupApiClient;
+import org.mockito.ArgumentCaptor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupSignatureHeaderGenerator;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.consent.ConsentDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.consent.CustomerConsent;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BpceGroupApiClientTest {
 
-    private static final String TOKEN_URL = "http://token-url";
+    private static final String SERVER_URL = "http://server-url";
+    private static final String TOKEN_URL = SERVER_URL + "/stet/psd2/oauth/token";
     private static final String EXCHANGE_CODE = "exchange_code";
     private static final String ACCESS_TOKEN = "1234";
     private static final String REFRESH_TOKEN = "2345";
     private static final String TOKEN_TYPE = "Bearer";
+    private static final String SIGNATURE = "beef";
+    private static final String RESOURCE_ID = "009988";
     private static final long TOKEN_EXPIRES_IN = 3600L;
 
     private BpceGroupApiClient bpceGroupApiClient;
@@ -37,27 +47,33 @@ public class BpceGroupApiClientTest {
         final BpceGroupConfiguration configurationMock = mock(BpceGroupConfiguration.class);
         when(configurationMock.getClientId()).thenReturn("cId");
         when(configurationMock.getRedirectUrl()).thenReturn("http://redirect-url");
-        when(configurationMock.getTokenUrl()).thenReturn(TOKEN_URL);
+        when(configurationMock.getServerUrl()).thenReturn(SERVER_URL);
 
         httpClientMock = mock(TinkHttpClient.class);
 
-        final SessionStorage sessionStorageMock = mock(SessionStorage.class);
-        final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator =
+        final BpceOAuth2TokenStorage bpceOAuth2TokenStorageMock =
+                mock(BpceOAuth2TokenStorage.class);
+        final OAuth2Token oAuth2TokenMock = mock(OAuth2Token.class);
+        when(bpceOAuth2TokenStorageMock.getToken()).thenReturn(oAuth2TokenMock);
+
+        final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGeneratorMock =
                 mock(BpceGroupSignatureHeaderGenerator.class);
+        when(bpceGroupSignatureHeaderGeneratorMock.buildSignatureHeader(any(), any(), anyString()))
+                .thenReturn(SIGNATURE);
 
         bpceGroupApiClient =
                 new BpceGroupApiClient(
                         httpClientMock,
-                        sessionStorageMock,
+                        bpceOAuth2TokenStorageMock,
                         configurationMock,
-                        bpceGroupSignatureHeaderGenerator);
+                        bpceGroupSignatureHeaderGeneratorMock);
     }
 
     @Test
     public void shouldExchangeAuthorizationToken() {
         // given
         final TokenResponse expectedTokenResponse = getTokenResponse();
-        setUpHttpClientMock(TOKEN_URL, expectedTokenResponse);
+        setUpHttpClientMockForAuth(TOKEN_URL, expectedTokenResponse);
 
         // when
         final TokenResponse returnedResponse =
@@ -71,7 +87,7 @@ public class BpceGroupApiClientTest {
     public void shouldExchangeRefreshToken() {
         // given
         final TokenResponse expectedTokenResponse = getTokenResponse();
-        setUpHttpClientMock(TOKEN_URL, expectedTokenResponse);
+        setUpHttpClientMockForAuth(TOKEN_URL, expectedTokenResponse);
 
         // when
         final TokenResponse returnedResponse =
@@ -81,7 +97,63 @@ public class BpceGroupApiClientTest {
         assertThat(returnedResponse).isEqualTo(expectedTokenResponse);
     }
 
-    private void setUpHttpClientMock(String url, Object response) {
+    @Test
+    public void shouldRecordCustomerConsent() {
+        // given
+        final ArgumentCaptor<CustomerConsent> customerConsentCaptor =
+                setUpHttpClientMockForConsentRequest();
+        final String accountId1 = "123";
+        final String accountId2 = "456";
+        final List<String> accountIds = ImmutableList.of(accountId1, accountId2);
+
+        // when
+        bpceGroupApiClient.recordCustomerConsent(accountIds);
+
+        // then
+        final List<ConsentDataEntity> consentDataEntityList =
+                ImmutableList.of(
+                        new ConsentDataEntity(accountId1), new ConsentDataEntity(accountId2));
+        final CustomerConsent expectedCustomerConsent =
+                CustomerConsent.builder()
+                        .balances(consentDataEntityList)
+                        .transactions(consentDataEntityList)
+                        .psuIdentity(true)
+                        .trustedBeneficiaries(true)
+                        .build();
+        final CustomerConsent capturedCustomerConsent = customerConsentCaptor.getValue();
+
+        assertThat(capturedCustomerConsent).isEqualTo(expectedCustomerConsent);
+    }
+
+    @Test
+    public void shouldFetchAccounts() {
+        // given
+        final String url = SERVER_URL + "/stet/psd2/v1/accounts";
+        final AccountsResponse expectedResponse = getAccountsResponse();
+        setUpHttpClientMockForApi(url, expectedResponse);
+
+        // when
+        final AccountsResponse actualResponse = bpceGroupApiClient.fetchAccounts();
+
+        // then
+        assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    public void shouldFetchBalances() {
+        // given
+        final String url = SERVER_URL + "/stet/psd2/v1/accounts/" + RESOURCE_ID + "/balances";
+        final BalancesResponse expectedResponse = getBalancesResponse();
+        setUpHttpClientMockForApi(url, expectedResponse);
+
+        // when
+        final BalancesResponse actualResponse = bpceGroupApiClient.fetchBalances(RESOURCE_ID);
+
+        // then
+        assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    private void setUpHttpClientMockForAuth(String urlString, Object response) {
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
         when(requestBuilderMock.body(any(), anyString())).thenReturn(requestBuilderMock);
         when(requestBuilderMock.accept(anyString())).thenReturn(requestBuilderMock);
@@ -92,7 +164,38 @@ public class BpceGroupApiClientTest {
         when(requestBuilderMock.post(any())).thenReturn(httpResponseMock);
         when(requestBuilderMock.post(any(), anyString())).thenReturn(httpResponseMock);
 
-        when(httpClientMock.request(new URL(url))).thenReturn(requestBuilderMock);
+        when(httpClientMock.request(new URL(urlString))).thenReturn(requestBuilderMock);
+    }
+
+    private void setUpHttpClientMockForApi(String urlString, Object response) {
+        final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
+        when(requestBuilderMock.body(any(), anyString())).thenReturn(requestBuilderMock);
+        when(requestBuilderMock.addBearerToken(any())).thenReturn(requestBuilderMock);
+        when(requestBuilderMock.header(anyString(), anyString())).thenReturn(requestBuilderMock);
+
+        when(requestBuilderMock.method(any(), any())).thenReturn(response);
+
+        final URL url = new URL(urlString);
+        when(requestBuilderMock.getUrl()).thenReturn(url);
+
+        when(httpClientMock.request(url)).thenReturn(requestBuilderMock);
+    }
+
+    private ArgumentCaptor<CustomerConsent> setUpHttpClientMockForConsentRequest() {
+        final ArgumentCaptor<CustomerConsent> customerConsentCaptor =
+                ArgumentCaptor.forClass(CustomerConsent.class);
+        final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
+        when(requestBuilderMock.body(customerConsentCaptor.capture(), anyString()))
+                .thenReturn(requestBuilderMock);
+        when(requestBuilderMock.addBearerToken(any())).thenReturn(requestBuilderMock);
+        when(requestBuilderMock.header(anyString(), anyString())).thenReturn(requestBuilderMock);
+
+        final URL url = new URL(SERVER_URL + "/stet/psd2/v1/consents");
+        when(requestBuilderMock.getUrl()).thenReturn(url);
+
+        when(httpClientMock.request(url)).thenReturn(requestBuilderMock);
+
+        return customerConsentCaptor;
     }
 
     private static TokenResponse getTokenResponse() {
@@ -114,5 +217,66 @@ public class BpceGroupApiClientTest {
                         + "\"state\":\"abc\"\n"
                         + "}",
                 TokenResponse.class);
+    }
+
+    private static AccountsResponse getAccountsResponse() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "\"accounts\": [\n"
+                        + "    {\n"
+                        + "      \"cashAccountType\": \"CACC\",\n"
+                        + "      \"accountId\": {\n"
+                        + "        \"iban\": \"FR7613807008043001965409135\"\n"
+                        + "      },\n"
+                        + "      \"resourceId\": \""
+                        + RESOURCE_ID
+                        + "\",\n"
+                        + "      \"product\": \"COMPTE COURANT\",\n"
+                        + "      \"_links\": {},\n"
+                        + "      \"usage\": \"ORGA\",\n"
+                        + "      \"psuStatus\": \"Account Holder\",\n"
+                        + "      \"name\": \"Account\",\n"
+                        + "      \"bicFi\": \"CCBPFRPPNAN\",\n"
+                        + "      \"currency\": \"EUR\",\n"
+                        + "      \"details\": \"det\"\n"
+                        + "    }\n"
+                        + "  ]\n"
+                        + "}",
+                AccountsResponse.class);
+    }
+
+    private static BalancesResponse getBalancesResponse() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "  \"balances\": [\n"
+                        + "    {\n"
+                        + "      \"balanceType\": \"VALU\",\n"
+                        + "      \"name\": \"Bal1\",\n"
+                        + "      \"balanceAmount\": {\n"
+                        + "        \"amount\": \"4321.95\",\n"
+                        + "        \"currency\": \"EUR\"\n"
+                        + "      },\n"
+                        + "      \"referenceDate\": \"2019-05-16\"\n"
+                        + "    },\n"
+                        + "    {\n"
+                        + "      \"balanceType\": \"CLBD\",\n"
+                        + "      \"name\": \"Bal2\",\n"
+                        + "      \"balanceAmount\": {\n"
+                        + "        \"amount\": \"4179.95\",\n"
+                        + "        \"currency\": \"EUR\"\n"
+                        + "      },\n"
+                        + "      \"referenceDate\": \"2019-05-15\"\n"
+                        + "    },\n"
+                        + "    {\n"
+                        + "      \"balanceType\": \"OTHR\",\n"
+                        + "      \"name\": \"Bal3\",\n"
+                        + "      \"balanceAmount\": {\n"
+                        + "        \"amount\": \"4348.95\",\n"
+                        + "        \"currency\": \"EUR\"\n"
+                        + "      }\n"
+                        + "    }\n"
+                        + "  ]\n"
+                        + "}",
+                BalancesResponse.class);
     }
 }

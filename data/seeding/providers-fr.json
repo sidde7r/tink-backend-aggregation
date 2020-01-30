@@ -498,7 +498,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "B.P Val de France",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -515,7 +515,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "B.P Bourgogne Franche Comté",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -532,7 +532,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "B.P AUvergne et Rhône-Alpes",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -549,7 +549,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "B.P RIves de Paris + BICS",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -566,7 +566,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "B.P du Nord",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -583,7 +583,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "B.P Sud",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -600,7 +600,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "B.P Aquitaine Centre Atlantique",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -617,7 +617,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "CMM Littoral du Sud Ouest",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -634,7 +634,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "B.P Alsace Lorraine Champagne",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -651,7 +651,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "B.P OCcitane",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -668,7 +668,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "B.P Grand Ouest",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -685,7 +685,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "CMM Grand Ouest",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -702,7 +702,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "B.P Méditerranée",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -719,7 +719,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Banque de Savoie",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -736,7 +736,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Provence Alpes Corse",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -753,7 +753,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Normandie",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -770,7 +770,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Bourgogne Franche-Comté",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -787,7 +787,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Bretagne-Pays De Loire",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -804,7 +804,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Midi-Pyrénées",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -821,7 +821,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Aquitaine Poitou-Charentes",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -838,7 +838,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Languedoc-Roussillon",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -855,7 +855,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Rhône Alpes",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -872,7 +872,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Loire Drôme Ardèche",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -889,7 +889,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Loire-Centre",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -906,7 +906,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Ile De France",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -923,7 +923,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Côte d'Azur",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -940,7 +940,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Auvergne et Limousin",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -957,7 +957,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Grand Est Europe",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -974,7 +974,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caisse d'Epargne Nord France Europe",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",
@@ -991,7 +991,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.bpcegroup.BpceGroupAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Natixis Trade & Tresuary Solutions",
             "fields": [],
             "financialInstitutionId": "dummyFinancialInstitutionId",

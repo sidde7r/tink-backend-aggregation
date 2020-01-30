@@ -1,27 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature;
 
+import java.net.URI;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceGroupHttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
 public class BpceGroupSignatureHeaderGenerator {
 
     private static final String ALGORITHM = "algorithm=\"rsa-sha256\"";
 
-    private final EidasProxyConfiguration eidasProxyConfiguration;
-    private final EidasIdentity eidasIdentity;
     private final BpceGroupConfiguration bpceGroupConfiguration;
+    private final BpceGroupRequestSigner bpceGroupRequestSigner;
 
-    public String buildSignatureHeader(String authorizationCode, String requestId) {
+    public String buildSignatureHeader(HttpMethod httpMethod, URL url, String requestId) {
+        final String targetRequest = buildTargetRequest(httpMethod, getPathForSignature(url));
+
         return String.format(
                 "%s,%s,%s,%s",
-                getKeyId(), ALGORITHM, getHeaders(), getSignature(authorizationCode, requestId));
+                getKeyId(), ALGORITHM, getHeaders(), getSignature(targetRequest, requestId));
     }
 
     private String getKeyId() {
@@ -30,27 +30,30 @@ public class BpceGroupSignatureHeaderGenerator {
 
     private String getHeaders() {
         return String.format(
-                "headers=\"%s %s\"",
-                HttpHeaders.AUTHORIZATION, BpceGroupHttpHeaders.X_REQUEST_ID.getName());
+                "headers=\"(request-target) %s\"",
+                BpceGroupHttpHeaders.X_REQUEST_ID.getName().toLowerCase());
     }
 
-    private String getSignature(String authorizationCode, String requestId) {
+    private String getSignature(String targetRequest, String requestId) {
         final String signatureString =
                 String.format(
-                        "%s: %s%s%s: %s",
-                        HttpHeaders.AUTHORIZATION,
-                        authorizationCode,
-                        System.lineSeparator(),
-                        BpceGroupHttpHeaders.X_REQUEST_ID.getName(),
+                        "(request-target): %s\n%s: %s",
+                        targetRequest,
+                        BpceGroupHttpHeaders.X_REQUEST_ID.getName().toLowerCase(),
                         requestId);
 
         return String.format(
-                "signature=\"%s\"",
-                QsealcSigner.build(
-                                eidasProxyConfiguration.toInternalConfig(),
-                                QsealcAlg.EIDAS_RSA_SHA256,
-                                eidasIdentity,
-                                bpceGroupConfiguration.getEidasQwac())
-                        .getSignatureBase64(signatureString.getBytes()));
+                "signature=\"%s\"", bpceGroupRequestSigner.getSignature(signatureString));
+    }
+
+    private static String buildTargetRequest(HttpMethod httpMethod, String path) {
+        return String.format("%s %s", httpMethod.name().toLowerCase(), path);
+    }
+
+    private static String getPathForSignature(URL url) {
+        final URI uri = url.toUri();
+        return Objects.nonNull(uri.getQuery())
+                ? String.format("%s?%s", uri.getPath(), uri.getQuery())
+                : uri.getPath();
     }
 }

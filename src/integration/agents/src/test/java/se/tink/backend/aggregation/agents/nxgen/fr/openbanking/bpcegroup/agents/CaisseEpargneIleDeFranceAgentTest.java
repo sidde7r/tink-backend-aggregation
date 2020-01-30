@@ -16,8 +16,8 @@ public class CaisseEpargneIleDeFranceAgentTest {
                 new AgentIntegrationTest.Builder("fr", "fr-caisseepargneiledefrance-ob")
                         .setFinancialInstitutionId("caisseepargneiledefrance")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true)
                         .expectLoggedIn(false);
     }
 

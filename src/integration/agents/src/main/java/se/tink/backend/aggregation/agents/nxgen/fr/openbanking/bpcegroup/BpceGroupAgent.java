@@ -5,11 +5,15 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.BpceGroupAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupRequestSigner;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupSignatureHeaderGenerator;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.converter.BpceGroupTransactionalAccountConverter;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -27,8 +31,9 @@ public final class BpceGroupAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final BpceGroupApiClient bpceGroupApiClient;
-    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final BpceOAuth2TokenStorage bpceOAuth2TokenStorage;
     private final StrongAuthenticationState strongAuthenticationState;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BpceGroupAgent(
             CredentialsRequest request,
@@ -40,10 +45,12 @@ public final class BpceGroupAgent extends NextGenerationAgent
         final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator =
                 createSignatureHeaderGenerator(agentsServiceConfiguration, bpceGroupConfiguration);
 
+        this.bpceOAuth2TokenStorage = new BpceOAuth2TokenStorage(this.persistentStorage);
+
         this.bpceGroupApiClient =
                 new BpceGroupApiClient(
                         this.client,
-                        this.sessionStorage,
+                        this.bpceOAuth2TokenStorage,
                         bpceGroupConfiguration,
                         bpceGroupSignatureHeaderGenerator);
 
@@ -60,7 +67,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new BpceGroupAuthenticator(bpceGroupApiClient),
+                        new BpceGroupAuthenticator(bpceGroupApiClient, bpceOAuth2TokenStorage),
                         credentials,
                         strongAuthenticationState);
 
@@ -101,10 +108,12 @@ public final class BpceGroupAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration,
             BpceGroupConfiguration bpceGroupConfiguration) {
 
+        final BpceGroupRequestSigner bpceGroupRequestSigner =
+                new BpceGroupRequestSigner(
+                        agentsServiceConfiguration.getEidasProxy(), getEidasIdentity());
+
         return new BpceGroupSignatureHeaderGenerator(
-                agentsServiceConfiguration.getEidasProxy(),
-                getEidasIdentity(),
-                bpceGroupConfiguration);
+                bpceGroupConfiguration, bpceGroupRequestSigner);
     }
 
     private BpceGroupConfiguration getClientConfiguration() {
@@ -113,8 +122,12 @@ public final class BpceGroupAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        final BpceGroupTransactionalAccountConverter bpceGroupTransactionalAccountConverter =
+                new BpceGroupTransactionalAccountConverter();
+
         final BpceGroupTransactionalAccountFetcher accountFetcher =
-                new BpceGroupTransactionalAccountFetcher(bpceGroupApiClient);
+                new BpceGroupTransactionalAccountFetcher(
+                        bpceGroupApiClient, bpceGroupTransactionalAccountConverter);
 
         final BpceGroupTransactionFetcher transactionFetcher =
                 new BpceGroupTransactionFetcher(bpceGroupApiClient);

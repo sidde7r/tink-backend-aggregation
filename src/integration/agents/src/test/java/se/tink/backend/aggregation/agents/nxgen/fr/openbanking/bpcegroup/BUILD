@@ -8,10 +8,6 @@ junit_test(
         "//data:cryptography_test",
         "//etc:development",
     ],
-    tags = [
-        "external",
-        "manual",
-    ],
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:net_bytebuddy_byte_buddy",
@@ -19,6 +15,7 @@ junit_test(
     ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/bpcegroup",
+        "//src/integration/amount",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
@@ -28,8 +25,10 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "@com_google_guava_guava//jar",
     ],
 )

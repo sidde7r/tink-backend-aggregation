@@ -17,7 +17,7 @@ public class CaisseEpargneLoireDromeArdecheAgentTest {
                         .setFinancialInstitutionId("caisseepargneloiredromeardeche")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .saveCredentialsAfter(true)
                         .expectLoggedIn(false);
     }
 

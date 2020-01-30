@@ -3,8 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authen
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceGroupApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class BpceGroupAuthenticator implements OAuth2Authenticator {
 
     private final BpceGroupApiClient bpceGroupApiClient;
+    private final BpceOAuth2TokenStorage bpceOAuth2TokenStorage;
 
     @Override
     public URL buildAuthorizeUrl(String state) {
@@ -36,7 +38,7 @@ public class BpceGroupAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        bpceGroupApiClient.storeAccessToken(accessToken);
+        bpceOAuth2TokenStorage.storeToken(accessToken);
     }
 
     private static OAuth2Token convertResponseToOAuthToken(TokenResponse response) {

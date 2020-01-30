@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceGroupApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.converter.BpceGroupTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
@@ -16,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class BpceGroupTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final BpceGroupApiClient bpceGroupApiClient;
+    private final BpceGroupTransactionalAccountConverter bpceGroupTransactionalAccountConverter;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
@@ -30,17 +34,34 @@ public class BpceGroupTransactionalAccountFetcher implements AccountFetcher<Tran
 
         bpceGroupApiClient.recordCustomerConsent(accountIds);
 
-        return getAccounts().stream()
-                .filter(AccountEntity::isTransactionalAccount)
-                .map(AccountEntity::toTinkAccount)
+        return accountEntities.stream()
+                .map(this::createTransactionalAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
+    private Optional<TransactionalAccount> createTransactionalAccount(AccountEntity accountEntity) {
+        final List<BalanceEntity> balances = getBalances(accountEntity.getResourceId());
+
+        return bpceGroupTransactionalAccountConverter.toTransactionalAccount(
+                accountEntity, balances);
+    }
+
     private List<AccountEntity> getAccounts() {
         return Optional.ofNullable(bpceGroupApiClient.fetchAccounts())
                 .map(AccountsResponse::getAccounts)
+                .map(
+                        account ->
+                                account.stream()
+                                        .filter(AccountEntity::isTransactionalAccount)
+                                        .collect(Collectors.toList()))
+                .orElseGet(Collections::emptyList);
+    }
+
+    private List<BalanceEntity> getBalances(String resourceId) {
+        return Optional.ofNullable(bpceGroupApiClient.fetchBalances(resourceId))
+                .map(BalancesResponse::getBalances)
                 .orElseGet(Collections::emptyList);
     }
 }
