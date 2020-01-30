@@ -1,22 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities;
 
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.BalanceTypes;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BalanceEntity {
-    public static final Amount defaultAmount = Amount.inEUR(0);
+
+    private static final String AVAILABLE = "available";
+    private static final String CLOSING_BOOKED = "closingBooked";
 
     private AmountEntity balanceAmount;
     private String balanceType;
-    private String referenceDate;
 
     public boolean isAvailableBalance() {
-        return balanceType.equalsIgnoreCase(BalanceTypes.AVAILABLE);
+        return balanceType.equalsIgnoreCase(AVAILABLE)
+                || balanceType.equalsIgnoreCase(CLOSING_BOOKED);
     }
 
-    public Amount getAmount() {
+    public ExactCurrencyAmount getAmount() {
         return balanceAmount.toAmount();
     }
 }

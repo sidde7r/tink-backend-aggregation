@@ -1,26 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca;
 
 import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.List;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class ChebancaConstants {
-
-    public enum HeadersToSign {
-        REQUEST_TARGET("(request-target)"),
-        DIGEST("Digest"),
-        TPP_REQUEST_ID("TPP-Request-ID"),
-        DATE("Date");
-        private String header;
-
-        HeadersToSign(String header) {
-            this.header = header;
-        }
-
-        public String getHeader() {
-            return header;
-        }
-    }
 
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
@@ -102,6 +88,8 @@ public final class ChebancaConstants {
         public static final String POST_METHOD = "post";
         public static final String PUT_METHOD = "put";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
+        public static final List<String> HEADERS_TO_SIGN =
+                Arrays.asList("(request-target)", "Digest", "TPP-Request-ID", "Date");
     }
 
     public static class HeaderValues {

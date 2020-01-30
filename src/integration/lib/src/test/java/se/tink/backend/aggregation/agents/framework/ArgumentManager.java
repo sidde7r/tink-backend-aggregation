@@ -111,7 +111,7 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum> & Arg
 
     public enum PsuIdArgumentEnum implements ArgumentManagerEnum {
         PSU_ID(true),
-        PSU_ID_TYPE;
+        PSU_ID_TYPE(true);
 
         private final boolean optional;
 

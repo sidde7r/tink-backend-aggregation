@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail;
+package se.tink.backend.aggregation.nxgen.http.header;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -6,13 +6,19 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public class SignatureHeaderGeneratorTest {
+    private static final String SIGNATURE_HEADER =
+            "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
+    private static final List<String> HEADERS_TO_SIGN =
+            Arrays.asList("(request-target)", "Digest", "TPP-Request-ID", "Date");
     private static final String applicationId = "1234";
     private static SignatureHeaderGenerator signatureGenerator;
 
@@ -20,7 +26,10 @@ public class SignatureHeaderGeneratorTest {
     public static void init() {
         QsealcSigner signer = mock(QsealcSigner.class);
         when(signer.getSignatureBase64(any())).thenReturn("abcdefghijklmnoprstuw");
-        signatureGenerator = new SignatureHeaderGenerator(applicationId, signer);
+
+        signatureGenerator =
+                new SignatureHeaderGenerator(
+                        SIGNATURE_HEADER, HEADERS_TO_SIGN, applicationId, signer);
     }
 
     @Test

@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities;
 
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@AllArgsConstructor
-public class AccessDetails {
+@Getter
+public class StartAuthorizationWithPsuAuthenticationEntity {
 
-    private String iban;
+    private String href;
 }

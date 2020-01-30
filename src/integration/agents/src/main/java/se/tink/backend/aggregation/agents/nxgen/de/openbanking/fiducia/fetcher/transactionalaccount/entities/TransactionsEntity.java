@@ -6,10 +6,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class TransactionsEntity {
 
     @JsonProperty("_links")
@@ -21,9 +27,5 @@ public class TransactionsEntity {
         return Optional.ofNullable(booked).orElse(Collections.emptyList()).stream()
                 .map(TransactionEntity::toBookedTransaction)
                 .collect(Collectors.toList());
-    }
-
-    public LinksEntity getLinks() {
-        return links;
     }
 }

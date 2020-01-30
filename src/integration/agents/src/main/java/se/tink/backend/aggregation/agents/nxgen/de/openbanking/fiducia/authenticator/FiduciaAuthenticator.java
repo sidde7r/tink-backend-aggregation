@@ -1,125 +1,73 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator;
 
-import java.security.interfaces.RSAPrivateKey;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.SignatureValues;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.Access;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.AccessDetails;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.PsuData;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.AuthorizeConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.CreateConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.CreateConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.JWTUtils;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.AuthorizationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class FiduciaAuthenticator implements Authenticator {
+public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
 
     private final FiduciaApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final FiduciaConfiguration configuration;
-    private final String iban;
-    private final String psuId;
-    private final String password;
-    private final String certificate;
-    private final String keyId;
-    private final RSAPrivateKey privateKey;
+    private final SessionStorage sessionStorage;
+    private final SupplementalInformationHelper supplementalInformationHelper;
 
     public FiduciaAuthenticator(
             FiduciaApiClient apiClient,
             PersistentStorage persistentStorage,
-            FiduciaConfiguration configuration,
-            String iban,
-            String psuId,
-            String password) {
+            SessionStorage sessionStorage,
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
-        this.iban = iban;
-        this.psuId = psuId;
-        this.password = password;
-
-        certificate = JWTUtils.readFile(configuration.getCertificatePath());
-        keyId = configuration.getKeyId();
-        privateKey = JWTUtils.getKey(configuration.getKeyPath());
+        this.sessionStorage = sessionStorage;
+        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
-    private FiduciaConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-    /*ToDo Add Metrics when flow is done*/
     @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        CreateConsentResponse createConsentResponse = createConsent();
-        persistentStorage.put(StorageKeys.CONSENT_ID, createConsentResponse.getConsentId());
-        authorizeConsent(createConsentResponse);
+    public void authenticate(Credentials credentials) throws SupplementalInfoException {
+        String psuId = credentials.getField(CredentialKeys.PSU_ID);
+        sessionStorage.put(StorageKeys.PSU_ID, psuId);
+
+        String consentId = apiClient.createConsent();
+
+        String password = credentials.getField(CredentialKeys.PASSWORD);
+        apiClient.authorizeConsent(consentId, password);
+
+        AuthorizationResponse authorizationResponse = apiClient.getAuthorizationId(consentId);
+
+        String otpCode = supplementalInformationHelper.waitForOtpInput();
+
+        apiClient.authorizeWithOtpCode(consentId, authorizationResponse, otpCode);
+
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
     }
 
-    private CreateConsentResponse createConsent() {
-        CreateConsentRequest createConsentRequest =
-                new CreateConsentRequest(
-                        new Access(
-                                Collections.singletonList(new AccessDetails(iban)),
-                                Collections.singletonList(new AccessDetails(iban))),
-                        FormValues.FREQUENCY_PER_DAY,
-                        FormValues.TRUE,
-                        FormValues.VALID_UNTIL,
-                        FormValues.FALSE);
-
-        String digest =
-                SignatureUtils.createDigest(
-                        SerializationUtils.serializeToString(createConsentRequest));
-        String date = SignatureUtils.getCurrentDateFormatted();
-
-        String reqId = String.valueOf(UUID.randomUUID());
-        String signature =
-                SignatureUtils.createSignature(
-                        privateKey,
-                        keyId,
-                        SignatureValues.HEADERS_WITH_PSU_ID,
-                        digest,
-                        reqId,
-                        date,
-                        psuId);
-
-        return apiClient.createConsent(
-                createConsentRequest, digest, certificate, signature, reqId, date, psuId);
+    @Override
+    public CredentialsTypes getType() {
+        return CredentialsTypes.PASSWORD;
     }
 
-    private void authorizeConsent(CreateConsentResponse createConsentResponse) {
+    @Override
+    public void autoAuthenticate() throws SessionException, LoginException, AuthorizationException {
+        String consentId =
+                persistentStorage
+                        .get(StorageKeys.CONSENT_ID, String.class)
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        AuthorizeConsentRequest authorizeConsentRequest =
-                new AuthorizeConsentRequest(new PsuData(password));
-        String digest2 =
-                SignatureUtils.createDigest(
-                        SerializationUtils.serializeToString(authorizeConsentRequest));
-        String date2 = SignatureUtils.getCurrentDateFormatted();
-        String reqId2 = String.valueOf(UUID.randomUUID());
-        String signature2 =
-                SignatureUtils.createSignature(
-                        privateKey, keyId, SignatureValues.HEADERS, digest2, reqId2, date2, null);
-
-        apiClient.authorizeConsent(
-                createConsentResponse,
-                digest2,
-                certificate,
-                signature2,
-                reqId2,
-                date2,
-                authorizeConsentRequest);
+        if (!apiClient.getConsentStatus(consentId).isAcceptedStatus()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 }
