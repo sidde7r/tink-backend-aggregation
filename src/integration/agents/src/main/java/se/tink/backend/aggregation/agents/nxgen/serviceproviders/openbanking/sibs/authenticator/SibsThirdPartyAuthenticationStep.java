@@ -76,8 +76,7 @@ public class SibsThirdPartyAuthenticationStep {
             throws AuthorizationException {
         boolean authFailed = false;
         try {
-            ConsentStatus consentStatus =
-                    consentStatusRetryer.call(() -> consentManager.getStatus());
+            ConsentStatus consentStatus = consentStatusRetryer.call(consentManager::getStatus);
             if (consentStatus.isAcceptedStatus()) {
                 authenticator.handleManualAuthenticationSuccess();
                 return;

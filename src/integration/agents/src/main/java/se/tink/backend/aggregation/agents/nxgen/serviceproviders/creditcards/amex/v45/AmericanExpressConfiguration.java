@@ -7,21 +7,21 @@ import se.tink.libraries.amount.Amount;
 
 public interface AmericanExpressConfiguration extends ClientConfiguration {
 
-    public String getAppId();
+    String getAppId();
 
-    public String getUserAgent();
+    String getUserAgent();
 
-    public String getFace();
+    String getFace();
 
-    public String getLocale();
+    String getLocale();
 
-    public String getClientVersion();
+    String getClientVersion();
 
     // == Credit Card Account ==
-    public String getBankId(CardEntity cardEntity);
+    String getBankId(CardEntity cardEntity);
 
-    public Amount toAmount(Double amount);
+    Amount toAmount(Double amount);
 
     // == Timeline Api ==
-    public TimelineRequest createTimelineRequest(Integer cardIndex);
+    TimelineRequest createTimelineRequest(Integer cardIndex);
 }

@@ -18,7 +18,7 @@ public interface MetricActionIface {
 
     void unavailable();
 
-    public enum Outcome {
+    enum Outcome {
         COMPLETED,
         FAILED,
         CANCELLED,
