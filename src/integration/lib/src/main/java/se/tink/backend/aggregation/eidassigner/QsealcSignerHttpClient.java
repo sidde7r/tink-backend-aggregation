@@ -13,7 +13,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
-import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
@@ -157,10 +156,10 @@ public class QsealcSignerHttpClient {
 
     private static class IdleConnectionMonitorThread extends Thread {
 
-        private final HttpClientConnectionManager connMgr;
+        private final PoolingHttpClientConnectionManager connMgr;
         private volatile AtomicBoolean shutdown = new AtomicBoolean(false);
 
-        IdleConnectionMonitorThread(HttpClientConnectionManager connMgr) {
+        IdleConnectionMonitorThread(PoolingHttpClientConnectionManager connMgr) {
             super();
             this.connMgr = connMgr;
         }
@@ -172,18 +171,9 @@ public class QsealcSignerHttpClient {
                     synchronized (this) {
                         wait(2000);
 
-                        long pendingNumber =
-                                ((PoolingHttpClientConnectionManager) connMgr)
-                                        .getTotalStats()
-                                        .getPending();
-                        long availableNumber =
-                                ((PoolingHttpClientConnectionManager) connMgr)
-                                        .getTotalStats()
-                                        .getAvailable();
-                        long leasedNumber =
-                                ((PoolingHttpClientConnectionManager) connMgr)
-                                        .getTotalStats()
-                                        .getLeased();
+                        long pendingNumber = connMgr.getTotalStats().getPending();
+                        long availableNumber = connMgr.getTotalStats().getAvailable();
+                        long leasedNumber = connMgr.getTotalStats().getLeased();
                         log.info(
                                 "Before Closing: pending {}, available {}, lease{}",
                                 pendingNumber,
@@ -191,18 +181,9 @@ public class QsealcSignerHttpClient {
                                 leasedNumber);
                         connMgr.closeExpiredConnections();
                         connMgr.closeIdleConnections(20, TimeUnit.SECONDS);
-                        long newPendingNumber =
-                                ((PoolingHttpClientConnectionManager) connMgr)
-                                        .getTotalStats()
-                                        .getPending();
-                        long newAvailableNumber =
-                                ((PoolingHttpClientConnectionManager) connMgr)
-                                        .getTotalStats()
-                                        .getAvailable();
-                        long newLeasedNumber =
-                                ((PoolingHttpClientConnectionManager) connMgr)
-                                        .getTotalStats()
-                                        .getLeased();
+                        long newPendingNumber = connMgr.getTotalStats().getPending();
+                        long newAvailableNumber = connMgr.getTotalStats().getAvailable();
+                        long newLeasedNumber = connMgr.getTotalStats().getLeased();
                         log.info(
                                 "After Closing: pending {}, available {}, lease{}",
                                 newPendingNumber,
