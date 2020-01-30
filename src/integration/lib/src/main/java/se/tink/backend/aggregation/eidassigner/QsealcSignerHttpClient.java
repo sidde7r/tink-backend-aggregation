@@ -170,9 +170,17 @@ public class QsealcSignerHttpClient {
             try {
                 while (!shutdown.get()) {
                     synchronized (this) {
-                        wait(5000);
+                        wait(2000);
+                        long pendingNumber = connectionManager.getTotalStats().getPending();
+                        long availableNumber = connectionManager.getTotalStats().getAvailable();
+                        long leasedNumber = connectionManager.getTotalStats().getLeased();
+                        log.info("Before Closing: pending {}, available {}, lease{}", pendingNumber, availableNumber, leasedNumber);
                         connMgr.closeExpiredConnections();
-                        connMgr.closeIdleConnections(60, TimeUnit.SECONDS);
+                        connMgr.closeIdleConnections(20, TimeUnit.SECONDS);
+                        pendingNumber = connectionManager.getTotalStats().getPending();
+                        availableNumber = connectionManager.getTotalStats().getAvailable();
+                        leasedNumber = connectionManager.getTotalStats().getLeased();
+                        log.info("After Closing: pending {}, available {}, lease{}", pendingNumber, availableNumber, leasedNumber);
                     }
                 }
             } catch (InterruptedException ex) {
