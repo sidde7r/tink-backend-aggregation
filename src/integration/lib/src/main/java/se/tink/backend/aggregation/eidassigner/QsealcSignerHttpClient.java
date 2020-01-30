@@ -191,23 +191,28 @@ public class QsealcSignerHttpClient {
                                 leasedNumber);
                         connMgr.closeExpiredConnections();
                         connMgr.closeIdleConnections(20, TimeUnit.SECONDS);
-                        pendingNumber =
+                        long newPendingNumber =
                                 ((PoolingHttpClientConnectionManager) connMgr)
                                         .getTotalStats()
                                         .getPending();
-                        availableNumber =
+                        long newAvailableNumber =
                                 ((PoolingHttpClientConnectionManager) connMgr)
                                         .getTotalStats()
                                         .getAvailable();
-                        leasedNumber =
+                        long newLeasedNumber =
                                 ((PoolingHttpClientConnectionManager) connMgr)
                                         .getTotalStats()
                                         .getLeased();
                         log.info(
                                 "After Closing: pending {}, available {}, lease{}",
-                                pendingNumber,
-                                availableNumber,
-                                leasedNumber);
+                                newPendingNumber,
+                                newAvailableNumber,
+                                newLeasedNumber);
+                        log.info(
+                                "Delta Closing: pending {}, available {}, lease{}",
+                                newPendingNumber - pendingNumber,
+                                newAvailableNumber - availableNumber,
+                                newLeasedNumber - leasedNumber);
                     }
                 }
             } catch (InterruptedException ex) {
