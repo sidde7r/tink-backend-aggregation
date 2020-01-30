@@ -66,14 +66,15 @@ spec:
 ### Market specific alerts for degrading logins and refreshes
 ### Keep them market separate since we might want to tweak the attempt limits
 ### depending on how much traffic we have on each market.
-    # SE
+    # SE - without Danske bank as it has known issues that often puts it below 90 %. See
+    # LoginSuccessRateLowWithAttemptLimitDanskebank below.
   - alert: LoginSuccessRateLowWithAttemptLimitSE
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE"}[30m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE"}[30m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE"}[30m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className) > 10
     for: 5m
     labels:
         severity: urgent
@@ -84,6 +85,26 @@ spec:
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes.
         tags: <{ $labels.className }>
+
+  # Danske bank specific alert as the integration has issues during login that won't be resolved
+  # without upgrading to nxgen agent. Has a threshold of 80% so we don't get unactionable alerts.
+  - alert: LoginSuccessRateLowWithAttemptLimitDanskebank
+    expr: |
+        # Successful/Cancelled attempts above 80%
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className) < 0.80)
+        # At least this many attempts.
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className) > 10
+    for: 5m
+    labels:
+      severity: urgent
+      who: integration
+    annotations:
+      description: Login success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
+        Investigate immediately.
+      summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        the last 30 minutes.
+      tags: <{ $labels.className }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitSE
     expr: |
