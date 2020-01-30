@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class DeutscheBankBEApiClient extends DeutscheBankApiClient {
 
     private final TinkHttpClient client;
-    private final SessionStorage sessionStorage;
     private final DeutscheBankConfiguration configuration;
 
     public DeutscheBankBEApiClient(
@@ -23,7 +22,6 @@ public class DeutscheBankBEApiClient extends DeutscheBankApiClient {
             DeutscheBankConfiguration configuration) {
         super(client, sessionStorage, configuration);
         this.client = client;
-        this.sessionStorage = sessionStorage;
         this.configuration = configuration;
     }
 
