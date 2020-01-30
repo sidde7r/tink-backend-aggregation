@@ -111,11 +111,7 @@ public final class BelfiusAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         BelfiusPaymentExecutor paymentExecutor =
                 new BelfiusPaymentExecutor(
-                        apiClient,
-                        sessionStorage,
-                        belfiusConfiguration,
-                        configuration,
-                        getEidasIdentity());
+                        apiClient, sessionStorage, configuration, getEidasIdentity());
 
         return Optional.of(
                 new BelfiusPaymentController(

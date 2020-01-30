@@ -90,7 +90,7 @@ public final class BelfiusApiClient {
     }
 
     public FetchTransactionsResponse fetchTransactionsForAccount(
-            Date fromDate, Date toDate, OAuth2Token oAuth2Token, String logicalId) {
+            Date toDate, OAuth2Token oAuth2Token, String logicalId) {
         final URL url =
                 new URL(configuration.getBaseUrl() + Urls.FETCH_TRANSACTIONS_PATH)
                         .parameter(StorageKeys.LOGICAL_ID, logicalId);

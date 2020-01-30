@@ -61,8 +61,7 @@ public class BelfiusTransactionalAccountFetcher
         try {
             return PaginatorResponseImpl.create(
                     apiClient
-                            .fetchTransactionsForAccount(
-                                    fromDate, toDate, getOauth2Token(), logicalId)
+                            .fetchTransactionsForAccount(toDate, getOauth2Token(), logicalId)
                             .toTinkTransactions());
         } catch (HttpResponseException e) {
             ErrorResponse response = e.getResponse().getBody(ErrorResponse.class);

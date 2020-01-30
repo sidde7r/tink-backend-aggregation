@@ -4,18 +4,19 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @JsonObject
 public class ArgentaConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String redirectUrl;
-    private String certificateId;
-    private String apiKey;
-    private String clientSigningCertificate;
-    private String psuIpAddress;
-    private String keyId;
+    @Secret private String clientId;
+    @Secret private String redirectUrl;
+    @Secret private String apiKey;
+    @Secret private String clientSigningCertificate;
+    @Secret private String psuIpAddress;
+    @SensitiveSecret private String keyId;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -31,14 +32,6 @@ public class ArgentaConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect url"));
 
         return redirectUrl;
-    }
-
-    public String getCertificateId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(certificateId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
-
-        return certificateId;
     }
 
     public String getApiKey() {

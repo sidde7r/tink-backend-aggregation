@@ -16,14 +16,12 @@ public final class CryptoUtils {
         SecureRandom sr = new SecureRandom();
         byte[] code = new byte[32];
         sr.nextBytes(code);
-        String codeVerifier = Base64.encodeBase64URLSafeString(code);
-
-        return codeVerifier;
+        return Base64.encodeBase64URLSafeString(code);
     }
 
     public static String getCodeChallenge(String codeVerifier) {
         byte[] bytes = codeVerifier.getBytes(StandardCharsets.US_ASCII);
-        MessageDigest md = null;
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
@@ -31,7 +29,6 @@ public final class CryptoUtils {
         }
         md.update(bytes, 0, bytes.length);
         byte[] digest = md.digest();
-
         return Base64.encodeBase64URLSafeString(digest);
     }
 }

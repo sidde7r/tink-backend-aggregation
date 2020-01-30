@@ -204,8 +204,7 @@ public final class ArgentaApiClient {
                 QsealcSigner.build(
                         agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        configuration.getCertificateId());
+                        eidasIdentity);
 
         String signedHeaders =
                 Arrays.stream(HeadersToSign.values())

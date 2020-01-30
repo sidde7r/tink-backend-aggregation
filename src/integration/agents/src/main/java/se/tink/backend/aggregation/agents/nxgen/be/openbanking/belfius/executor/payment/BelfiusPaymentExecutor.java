@@ -6,7 +6,6 @@ import java.util.Base64;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.entities.JwtHeader;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.entities.OriginAccount;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.entities.RemoteAccount;
@@ -32,17 +31,14 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class BelfiusPaymentExecutor implements PaymentExecutor {
     private BelfiusApiClient apiClient;
     private SessionStorage sessionStorage;
-    private BelfiusConfiguration belfiusConfiguration;
     private AgentsServiceConfiguration configuration;
     private EidasIdentity eidasIdentity;
 
     public BelfiusPaymentExecutor(
             BelfiusApiClient apiClient,
             SessionStorage sessionStorage,
-            BelfiusConfiguration belfiusConfiguration,
             AgentsServiceConfiguration configuration,
             EidasIdentity eidasIdentity) {
-        this.belfiusConfiguration = belfiusConfiguration;
         this.configuration = configuration;
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
