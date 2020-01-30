@@ -369,7 +369,6 @@ agentsServiceConfiguration:
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.13807.live.api.89c3.com
         authScope: aisp
-        eidasQwac: Tink
         keyId: ''
     bpm:
       tink:
