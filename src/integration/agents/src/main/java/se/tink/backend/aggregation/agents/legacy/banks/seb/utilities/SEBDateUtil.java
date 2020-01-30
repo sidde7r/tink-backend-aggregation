@@ -1,12 +1,21 @@
 package se.tink.backend.aggregation.agents.banks.seb.utilities;
 
 import com.google.common.base.Preconditions;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
-import se.tink.libraries.date.DateUtils;
+import java.util.Locale;
+import java.util.TimeZone;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class SEBDateUtil {
+
+    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
+    private static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
+    private static final CountryDateHelper dateHelper =
+            new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
+
     public static String nextPossibleTransferDate(Date now, boolean withinSEB) {
         Preconditions.checkNotNull(now);
 
@@ -50,7 +59,7 @@ public class SEBDateUtil {
 
     /** Cannot transfer on non-business days */
     private static void moveToNextBusinessDayIfNotBusinessDay(Calendar calendar) {
-        while (!DateUtils.isBusinessDay(calendar)) {
+        while (!dateHelper.isBusinessDay(calendar)) {
             moveToNextMidnight(calendar);
         }
     }

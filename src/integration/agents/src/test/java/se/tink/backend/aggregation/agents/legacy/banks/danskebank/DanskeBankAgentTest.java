@@ -1,11 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.danskebank;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.google.common.collect.ImmutableList;
 import java.util.Date;
 import java.util.List;
-import org.joda.time.DateTime;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -68,32 +65,6 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
     public void testFetchEInvoicesBankId() throws Exception {
         this.featureFlags = ImmutableList.of(FeatureFlags.TRANSFERS);
         fetchEInvoices(TestSSN.FH);
-    }
-
-    /** Requires unsigned incoming eInvoices at Danske */
-    @Test
-    public void testSignEInvoice() throws Exception {
-        this.featureFlags = ImmutableList.of(FeatureFlags.TRANSFERS);
-        List<Transfer> transfers = fetchEInvoices(TestSSN.FH);
-        assertThat(transfers.size()).isGreaterThan(0);
-
-        Transfer originalTransfer = transfers.get(0);
-
-        // Update with minimal change
-        Amount originalAmountPlus1SEK = Amount.inSEK(originalTransfer.getAmount().getValue() + 1);
-        Date originalDateMinus1Day =
-                DateUtils.getCurrentOrPreviousBusinessDay(
-                        new DateTime(originalTransfer.getDueDate()).minusDays(1).toDate());
-
-        Transfer transferToSign =
-                TransferMock.eInvoice()
-                        .createUpdateTransferFromOriginal(originalTransfer)
-                        .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
-                        .withAmount(originalAmountPlus1SEK)
-                        .withDueDate(originalDateMinus1Day)
-                        .build();
-
-        testUpdateTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transferToSign);
     }
 
     @Test

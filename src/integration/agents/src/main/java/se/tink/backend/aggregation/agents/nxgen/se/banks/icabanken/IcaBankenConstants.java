@@ -1,10 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken;
 
+import java.time.ZoneId;
+import java.util.Locale;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class IcaBankenConstants {
+
+    public static class Date {
+        public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
+        public static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
+    }
 
     public static final class Urls {
         public static final String HOST = "https://appserver.icabanken.se";
