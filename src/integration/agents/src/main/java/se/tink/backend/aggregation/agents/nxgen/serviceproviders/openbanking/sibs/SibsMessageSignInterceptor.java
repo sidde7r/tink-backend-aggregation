@@ -116,10 +116,7 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
     private String signMessage(String toSignString) {
         QsealcSigner signer =
                 QsealcSigner.build(
-                        eidasConf.toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        configuration.getCertificateId());
+                        eidasConf.toInternalConfig(), QsealcAlg.EIDAS_RSA_SHA256, eidasIdentity);
 
         return signer.getSignatureBase64(toSignString.getBytes());
     }
