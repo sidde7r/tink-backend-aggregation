@@ -1,5 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Collection;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
@@ -8,16 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transac
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import java.util.Collection;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class BpceGroupTransactionalAccountFetcherTest {
 
@@ -34,23 +33,27 @@ public class BpceGroupTransactionalAccountFetcherTest {
         bpceGroupApiClientMock = mock(BpceGroupApiClient.class);
         when(bpceGroupApiClientMock.fetchBalances(RESOURCE_ID)).thenReturn(getBalancesResponse());
 
-        bpceGroupTransactionalAccountConverterMock = mock(BpceGroupTransactionalAccountConverter.class);
+        bpceGroupTransactionalAccountConverterMock =
+                mock(BpceGroupTransactionalAccountConverter.class);
 
-        bpceGroupTransactionalAccountFetcher = new BpceGroupTransactionalAccountFetcher(bpceGroupApiClientMock, bpceGroupTransactionalAccountConverterMock);
+        bpceGroupTransactionalAccountFetcher =
+                new BpceGroupTransactionalAccountFetcher(
+                        bpceGroupApiClientMock, bpceGroupTransactionalAccountConverterMock);
     }
 
     @Test
     public void shouldFetchAccounts() {
-        //given
+        // given
         when(bpceGroupApiClientMock.fetchAccounts()).thenReturn(getAccountsResponse());
         final TransactionalAccount transactionalAccountMock = mock(TransactionalAccount.class);
         when(bpceGroupTransactionalAccountConverterMock.toTransactionalAccount(any(), any()))
                 .thenReturn(Optional.of(transactionalAccountMock));
 
-        //when
-        final Collection<TransactionalAccount> result = bpceGroupTransactionalAccountFetcher.fetchAccounts();
+        // when
+        final Collection<TransactionalAccount> result =
+                bpceGroupTransactionalAccountFetcher.fetchAccounts();
 
-        //then
+        // then
         verify(bpceGroupApiClientMock).fetchAccounts();
         verify(bpceGroupApiClientMock).recordCustomerConsent(any());
         verify(bpceGroupApiClientMock).fetchBalances(RESOURCE_ID);
@@ -59,13 +62,15 @@ public class BpceGroupTransactionalAccountFetcherTest {
 
     @Test
     public void shouldFetchNoAccountsIfOnlyNonTransactionalExist() {
-        //given
-        when(bpceGroupApiClientMock.fetchAccounts()).thenReturn(getAccountsResponseForCardAccount());
+        // given
+        when(bpceGroupApiClientMock.fetchAccounts())
+                .thenReturn(getAccountsResponseForCardAccount());
 
-        //when
-        final Collection<TransactionalAccount> result = bpceGroupTransactionalAccountFetcher.fetchAccounts();
+        // when
+        final Collection<TransactionalAccount> result =
+                bpceGroupTransactionalAccountFetcher.fetchAccounts();
 
-        //then
+        // then
         verify(bpceGroupApiClientMock).fetchAccounts();
         verify(bpceGroupApiClientMock, never()).recordCustomerConsent(any());
         verify(bpceGroupApiClientMock, never()).fetchBalances(RESOURCE_ID);

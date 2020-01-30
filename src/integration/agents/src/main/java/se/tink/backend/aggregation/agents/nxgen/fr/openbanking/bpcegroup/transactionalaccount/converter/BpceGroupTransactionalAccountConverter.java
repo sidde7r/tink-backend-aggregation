@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.converter;
 
+import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts.BalanceType;
@@ -11,12 +13,10 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-import java.util.List;
-import java.util.Optional;
-
 public class BpceGroupTransactionalAccountConverter {
 
-    public Optional<TransactionalAccount> toTransactionalAccount(AccountEntity accountEntity, List<BalanceEntity> balances) {
+    public Optional<TransactionalAccount> toTransactionalAccount(
+            AccountEntity accountEntity, List<BalanceEntity> balances) {
         final String iban = accountEntity.getIban();
 
         return TransactionalAccount.nxBuilder()
@@ -48,7 +48,8 @@ public class BpceGroupTransactionalAccountConverter {
         return iban.substring(iban.length() - 23);
     }
 
-    private static Optional<BalanceEntity> findBalanceByType(List<BalanceEntity> balances, BalanceType type) {
+    private static Optional<BalanceEntity> findBalanceByType(
+            List<BalanceEntity> balances, BalanceType type) {
         return balances.stream()
                 .filter(b -> type.getType().equalsIgnoreCase(b.getBalanceType()))
                 .findAny();

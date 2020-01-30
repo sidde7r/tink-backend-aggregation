@@ -118,11 +118,7 @@ public class BpceGroupApiClient {
         try {
             return getTransactionsBatch(resourceId, dateFrom, dateTo);
         } catch (HttpResponseException e) {
-            /* 204 means that there is no more transactions for given criteria, so empty response should be returned */
-            if (e.getResponse().getStatus() == 204) {
-                return new TransactionsResponse();
-            }
-            throw e;
+            return checkIfThereAreNoMoreTransactions(e);
         }
     }
 
@@ -180,5 +176,13 @@ public class BpceGroupApiClient {
                 .psuIdentity(true)
                 .trustedBeneficiaries(true)
                 .build();
+    }
+
+    private static TransactionsResponse checkIfThereAreNoMoreTransactions(HttpResponseException e) {
+        if (e.getResponse().getStatus() == 204) {
+            return new TransactionsResponse();
+        }
+
+        throw e;
     }
 }
