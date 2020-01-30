@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 public class SibsConfiguration implements ClientConfiguration {
 
     @Secret private String baseUrl;
-    @Secret private String certificateId;
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
     @Secret private String redirectUrl;
@@ -19,10 +18,6 @@ public class SibsConfiguration implements ClientConfiguration {
 
     public String getBaseUrl() {
         return baseUrl;
-    }
-
-    public String getCertificateId() {
-        return certificateId;
     }
 
     public String getClientId() {
