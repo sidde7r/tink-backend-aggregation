@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.CustomerIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.GetBalancesResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
@@ -29,8 +28,8 @@ public class ChebancaTransactionalAccountFetcherTest {
     private static final int SUCCESSFUL_RESPONSE_CODE = 200;
 
     private ChebancaApiClient apiClient;
-    private ThirdPartyAppAuthenticationController authenticationController =
-            mock(ThirdPartyAppAuthenticationController.class);
+    private ChebancaConsentManualApproveController consentController =
+            mock(ChebancaConsentManualApproveController.class);
     private Credentials credentials = new Credentials();
     private HttpResponse erroneousResponse = getErroneousResponse();
 
@@ -38,8 +37,7 @@ public class ChebancaTransactionalAccountFetcherTest {
     public void shouldReturnProperNumberOfAccounts() {
         // given
         ChebancaTransactionalAccountFetcher fetcher =
-                new ChebancaTransactionalAccountFetcher(
-                        apiClient, authenticationController, credentials);
+                new ChebancaTransactionalAccountFetcher(apiClient, consentController);
         // when
         Collection<TransactionalAccount> accounts = fetcher.fetchAccounts();
 
@@ -52,8 +50,7 @@ public class ChebancaTransactionalAccountFetcherTest {
         // given
         when(apiClient.createConsent(any())).thenReturn(erroneousResponse);
         ChebancaTransactionalAccountFetcher fetcher =
-                new ChebancaTransactionalAccountFetcher(
-                        apiClient, authenticationController, credentials);
+                new ChebancaTransactionalAccountFetcher(apiClient, consentController);
         // when
         Throwable thrown = catchThrowable(fetcher::fetchAccounts);
 
@@ -69,8 +66,7 @@ public class ChebancaTransactionalAccountFetcherTest {
         // given
         when(apiClient.authorizeConsent(any())).thenReturn(erroneousResponse);
         ChebancaTransactionalAccountFetcher fetcher =
-                new ChebancaTransactionalAccountFetcher(
-                        apiClient, authenticationController, credentials);
+                new ChebancaTransactionalAccountFetcher(apiClient, consentController);
         // when
         Throwable thrown = catchThrowable(fetcher::fetchAccounts);
 
@@ -86,8 +82,7 @@ public class ChebancaTransactionalAccountFetcherTest {
         // given
         when(apiClient.confirmConsent(any())).thenReturn(erroneousResponse);
         ChebancaTransactionalAccountFetcher fetcher =
-                new ChebancaTransactionalAccountFetcher(
-                        apiClient, authenticationController, credentials);
+                new ChebancaTransactionalAccountFetcher(apiClient, consentController);
         // when
         Throwable thrown = catchThrowable(fetcher::fetchAccounts);
 
@@ -103,8 +98,7 @@ public class ChebancaTransactionalAccountFetcherTest {
         // given
         when(apiClient.getCustomerId()).thenReturn(erroneousResponse);
         ChebancaTransactionalAccountFetcher fetcher =
-                new ChebancaTransactionalAccountFetcher(
-                        apiClient, authenticationController, credentials);
+                new ChebancaTransactionalAccountFetcher(apiClient, consentController);
         // when
         Throwable thrown = catchThrowable(fetcher::fetchAccounts);
 
@@ -120,8 +114,7 @@ public class ChebancaTransactionalAccountFetcherTest {
         // given
         when(apiClient.getBalances(any())).thenReturn(erroneousResponse);
         ChebancaTransactionalAccountFetcher fetcher =
-                new ChebancaTransactionalAccountFetcher(
-                        apiClient, authenticationController, credentials);
+                new ChebancaTransactionalAccountFetcher(apiClient, consentController);
         // when
         Throwable thrown = catchThrowable(fetcher::fetchAccounts);
 
@@ -137,8 +130,7 @@ public class ChebancaTransactionalAccountFetcherTest {
         // given
         when(apiClient.getAccounts()).thenReturn(erroneousResponse);
         ChebancaTransactionalAccountFetcher fetcher =
-                new ChebancaTransactionalAccountFetcher(
-                        apiClient, authenticationController, credentials);
+                new ChebancaTransactionalAccountFetcher(apiClient, consentController);
         // when
         Throwable thrown = catchThrowable(fetcher::fetchAccounts);
 
