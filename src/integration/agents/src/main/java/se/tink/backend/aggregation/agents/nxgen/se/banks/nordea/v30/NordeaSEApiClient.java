@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.cred
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.creditcard.rpc.FetchCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.rpc.FetchPaymentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.identitydata.rpc.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.investment.rpc.FetchInvestmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.rpc.FetchLoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.rpc.FetchLoanResponse;
@@ -215,6 +216,15 @@ public class NordeaSEApiClient {
                                 NordeaSEConstants.IdTags.LOAN_ID, accountId));
 
         return requestRefreshableGet(request, FetchLoanDetailsResponse.class);
+    }
+
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final RequestBuilder request =
+                httpClient
+                        .request(Urls.FETCH_IDENTITY_DATA)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
+
+        return requestRefreshableGet(request, FetchIdentityDataResponse.class);
     }
 
     public FetchPaymentsResponse fetchPayments() {

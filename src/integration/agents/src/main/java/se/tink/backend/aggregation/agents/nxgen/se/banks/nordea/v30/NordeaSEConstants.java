@@ -76,6 +76,8 @@ public class NordeaSEConstants {
         public static final URL FETCH_INVESTMENTS = new URL(BASE + ApiService.FETCH_INVESTMENTS);
         public static final URL FETCH_LOANS = new URL(BASE + ApiService.FETCH_LOANS);
         public static final URL FETCH_LOAN_DETAILS = new URL(BASE + ApiService.FETCH_LOAN_DETAILS);
+        public static final URL FETCH_IDENTITY_DATA =
+                new URL(BASE + ApiService.FETCH_IDENTITY_DATA);
         public static final URL FETCH_PAYMENTS = new URL(BASE + ApiService.FETCH_PAYMENTS);
         public static final URL FETCH_PAYMENT_DETAILS =
                 new URL(BASE + ApiService.FETCH_PAYMENTS_DETAILS);
@@ -116,6 +118,7 @@ public class NordeaSEConstants {
         public static final String FETCH_INVESTMENTS = "ca/savings-v1/savings/custodies";
         public static final String FETCH_LOANS = "ca/loans-v1/loans/";
         public static final String FETCH_LOAN_DETAILS = "ca/loans-v1/loans/{loanId}";
+        public static final String FETCH_IDENTITY_DATA = "se/customerinfo-v2/customers/info";
         public static final String FETCH_PAYMENTS = "se/payments-v2/payments/";
         public static final String FETCH_PAYMENTS_DETAILS = "se/payments-v2/payments/{paymentId}";
         public static final String FETCH_BENEFICIARIES = "ca/beneficiary-v1/beneficiaries";
