@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signat
 import java.net.URI;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceGroupHttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -30,17 +30,14 @@ public class BpceGroupSignatureHeaderGenerator {
 
     private String getHeaders() {
         return String.format(
-                "headers=\"(request-target) %s\"",
-                BpceGroupHttpHeaders.X_REQUEST_ID.getName().toLowerCase());
+                "headers=\"(request-target) %s\"", Psd2Headers.Keys.X_REQUEST_ID.toLowerCase());
     }
 
     private String getSignature(String targetRequest, String requestId) {
         final String signatureString =
                 String.format(
                         "(request-target): %s\n%s: %s",
-                        targetRequest,
-                        BpceGroupHttpHeaders.X_REQUEST_ID.getName().toLowerCase(),
-                        requestId);
+                        targetRequest, Psd2Headers.Keys.X_REQUEST_ID.toLowerCase(), requestId);
 
         return String.format(
                 "signature=\"%s\"", bpceGroupRequestSigner.getSignature(signatureString));

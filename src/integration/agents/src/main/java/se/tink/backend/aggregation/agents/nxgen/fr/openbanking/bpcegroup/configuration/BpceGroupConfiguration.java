@@ -12,6 +12,5 @@ public class BpceGroupConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @Secret private String redirectUrl;
     @Secret private String serverUrl;
-    @Secret private String authScope;
     @Secret private String keyId;
 }

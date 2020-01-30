@@ -7,7 +7,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceGroupHttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
@@ -19,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transac
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -52,7 +52,7 @@ public class BpceGroupApiClient {
                 .request(createUrl(AUTHORIZE_PATH))
                 .queryParam("client_id", bpceGroupConfiguration.getClientId())
                 .queryParam("response_type", "code")
-                .queryParam("scope", bpceGroupConfiguration.getAuthScope())
+                .queryParam("scope", "aisp")
                 .queryParam("redirect_uri", bpceGroupConfiguration.getRedirectUrl())
                 .queryParam("state", state)
                 .getUrl();
@@ -150,8 +150,8 @@ public class BpceGroupApiClient {
 
         return requestBuilder
                 .addBearerToken(token)
-                .header(BpceGroupHttpHeaders.SIGNATURE.getName(), signature)
-                .header(BpceGroupHttpHeaders.X_REQUEST_ID.getName(), requestId);
+                .header(Psd2Headers.Keys.SIGNATURE, signature)
+                .header(Psd2Headers.Keys.X_REQUEST_ID, requestId);
     }
 
     private URL createUrl(String path) {

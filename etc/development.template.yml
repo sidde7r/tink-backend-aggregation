@@ -227,7 +227,6 @@ agentsServiceConfiguration:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.10548.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     bawag:
       tink:
@@ -314,35 +313,30 @@ agentsServiceConfiguration:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.14707.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     bpaquitainecentreatlantique:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.10907.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     bpauvergneetrhonealpes:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.16807.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     bpbourgognefranchecomte:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.10807.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     bpdunord:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.13507.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     bper:
       tink:
@@ -368,7 +362,6 @@ agentsServiceConfiguration:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.13807.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     bpm:
       tink:
@@ -384,14 +377,12 @@ agentsServiceConfiguration:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.14607.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     bpoccitane:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.17807.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     bpost:
       tink:
@@ -404,7 +395,6 @@ agentsServiceConfiguration:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.10207.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     bpsondrio:
       tink:
@@ -420,14 +410,12 @@ agentsServiceConfiguration:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.16607.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     bpvaldefrance:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.18707.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     buddybank-it:
       tink:
@@ -454,105 +442,90 @@ agentsServiceConfiguration:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.13335.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargneauvergne:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.18715.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargnebretagne:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.14445.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargnebourgognefranchecomte:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.12135.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargnecoteazur:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.18315.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargnegrandesteurope:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.15135.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargneiledefrance:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.17515.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargnelanguedocroussillon:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.13485.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargneloirecentre:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.14505.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargneloiredromeardeche:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.14265.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargnemidipyrenees:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.13135.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargnenordfranceeurope:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.16275.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargnenormandie:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.11425.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargneprovencealpescorse:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.11315.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caisseepargnerhonealpes:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.13825.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     caixa-fr:
       tink:
@@ -617,14 +590,12 @@ agentsServiceConfiguration:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.13807.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     cmmlittoraldusudouest:
       tink:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.10907.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     cofidis:
       tink:
@@ -956,7 +927,6 @@ agentsServiceConfiguration:
         clientId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.30007.live.api.89c3.com
-        authScope: aisp
         keyId: ''
     nexi:
       tink:
