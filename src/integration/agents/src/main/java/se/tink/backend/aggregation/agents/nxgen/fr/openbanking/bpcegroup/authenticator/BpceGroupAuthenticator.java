@@ -1,30 +1,52 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator;
 
-import com.google.common.base.Preconditions;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceGroupApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceGroupConstants.StorageKeys;
+import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class BpceGroupAuthenticator implements Authenticator {
+@RequiredArgsConstructor
+public class BpceGroupAuthenticator implements OAuth2Authenticator {
 
-    private final BpceGroupApiClient apiClient;
-    private final PersistentStorage persistentStorage;
+    private final BpceGroupApiClient bpceGroupApiClient;
+    private final BpceOAuth2TokenStorage bpceOAuth2TokenStorage;
 
-    public BpceGroupAuthenticator(
-            BpceGroupApiClient apiClient, PersistentStorage persistentStorage) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
+    @Override
+    public URL buildAuthorizeUrl(String state) {
+        return bpceGroupApiClient.getAuthorizeUrl(state);
     }
 
     @Override
-    public void authenticate(Credentials credentials) {
-        TokenResponse tokenResponse = apiClient.authenticate();
+    public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
+        final TokenResponse tokenResponse = bpceGroupApiClient.exchangeAuthorizationToken(code);
 
-        persistentStorage.put(
-                StorageKeys.ACCESS_TOKEN,
-                Preconditions.checkNotNull(tokenResponse.getAccessToken()));
+        return convertResponseToOAuthToken(tokenResponse);
+    }
+
+    @Override
+    public OAuth2Token refreshAccessToken(String refreshToken)
+            throws SessionException, BankServiceException {
+        final TokenResponse tokenResponse = bpceGroupApiClient.exchangeRefreshToken(refreshToken);
+
+        return convertResponseToOAuthToken(tokenResponse);
+    }
+
+    @Override
+    public void useAccessToken(OAuth2Token accessToken) {
+        bpceOAuth2TokenStorage.storeToken(accessToken);
+    }
+
+    private static OAuth2Token convertResponseToOAuthToken(TokenResponse response) {
+
+        return OAuth2Token.create(
+                response.getTokenType(),
+                response.getAccessToken(),
+                response.getRefreshToken(),
+                response.getExpiresIn());
     }
 }

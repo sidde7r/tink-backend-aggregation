@@ -222,6 +222,12 @@ agentsServiceConfiguration:
         transportKey: ''
         transportKeyId: ''
         transportKeyPassword: ''
+    banquedesavoie:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.10548.live.api.89c3.com
+        keyId: ''
     bawag:
       tink:
         keystorePassword: '123456'
@@ -302,10 +308,36 @@ agentsServiceConfiguration:
         redirectUrl: 'https://127.0.0.1:7357/api/v1/thirdparty/callback'
         clientId: 'PSDSE-FINA-44059'
         qsealKeyUrl: "https://cdn.tink.se/eidas/tink.pem"
-    bpcegroup:
+    bpalsacelorrainechampagne:
       tink:
-        clientId: 53dc4681-3b81-4adb-9ec0-c01bfdbfa72b
-        clientSecret: fa6fb3ba-15c0-4754-8d0d-c3e7617297cf
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.14707.live.api.89c3.com
+        keyId: ''
+    bpaquitainecentreatlantique:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.10907.live.api.89c3.com
+        keyId: ''
+    bpauvergneetrhonealpes:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.16807.live.api.89c3.com
+        keyId: ''
+    bpbourgognefranchecomte:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.10807.live.api.89c3.com
+        keyId: ''
+    bpdunord:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.13507.live.api.89c3.com
+        keyId: ''
     bper:
       tink:
         clientId: ''
@@ -325,6 +357,12 @@ agentsServiceConfiguration:
         clientSigningCertificate: ''
         clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bpgrandouest:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.13807.live.api.89c3.com
+        keyId: ''
     bpm:
       tink:
         clientId: ''
@@ -334,12 +372,30 @@ agentsServiceConfiguration:
         aspspCode: '05034'
         aspspProductCode: 'IBP01'
         eidasQwac: Tink
+    bpmediterranee:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.14607.live.api.89c3.com
+        keyId: ''
+    bpoccitane:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.17807.live.api.89c3.com
+        keyId: ''
     bpost:
       tink:
         baseUrl: https://api.psd2.bpostbank.be
         certificateId: Tink
         clientId: PSDSE-FINA-44059
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    bprivesdeparis:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.10207.live.api.89c3.com
+        keyId: ''
     bpsondrio:
       tink:
         clientId: ''
@@ -349,6 +405,18 @@ agentsServiceConfiguration:
         aspspCode: '05696'
         aspspProductCode: 'BIR'
         eidasQwac: Tink
+    bpsud:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.16607.live.api.89c3.com
+        keyId: ''
+    bpvaldefrance:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.18707.live.api.89c3.com
+        keyId: ''
     buddybank-it:
       tink:
         baseUrl: https://api.buddybank.it
@@ -369,6 +437,96 @@ agentsServiceConfiguration:
         psd2ClientAuthToken: ''
         psd2InstallationKeyPair: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
+    caisseepargneaquitaine:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.13335.live.api.89c3.com
+        keyId: ''
+    caisseepargneauvergne:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.18715.live.api.89c3.com
+        keyId: ''
+    caisseepargnebretagne:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.14445.live.api.89c3.com
+        keyId: ''
+    caisseepargnebourgognefranchecomte:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.12135.live.api.89c3.com
+        keyId: ''
+    caisseepargnecoteazur:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.18315.live.api.89c3.com
+        keyId: ''
+    caisseepargnegrandesteurope:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.15135.live.api.89c3.com
+        keyId: ''
+    caisseepargneiledefrance:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.17515.live.api.89c3.com
+        keyId: ''
+    caisseepargnelanguedocroussillon:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.13485.live.api.89c3.com
+        keyId: ''
+    caisseepargneloirecentre:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.14505.live.api.89c3.com
+        keyId: ''
+    caisseepargneloiredromeardeche:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.14265.live.api.89c3.com
+        keyId: ''
+    caisseepargnemidipyrenees:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.13135.live.api.89c3.com
+        keyId: ''
+    caisseepargnenordfranceeurope:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.16275.live.api.89c3.com
+        keyId: ''
+    caisseepargnenormandie:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.11425.live.api.89c3.com
+        keyId: ''
+    caisseepargneprovencealpescorse:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.11315.live.api.89c3.com
+        keyId: ''
+    caisseepargnerhonealpes:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.13825.live.api.89c3.com
+        keyId: ''
     caixa-fr:
       tink:
         aspspCode: CGDFR
@@ -427,6 +585,18 @@ agentsServiceConfiguration:
         clientId: 6e0133d17c157d8ca4b40fd4997b308a
         keyId: dac579ef4ca6231e517fcc81af4a834a832a34df
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    cmmgrandouest:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.13807.live.api.89c3.com
+        keyId: ''
+    cmmlittoraldusudouest:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.10907.live.api.89c3.com
+        keyId: ''
     cofidis:
       tink:
         aspspCode: COF
@@ -752,6 +922,12 @@ agentsServiceConfiguration:
         aspspCode: '01030'
         aspspProductCode: 'retail'
         eidasQwac: Tink
+    natixistradetreasuarysolutions:
+      tink:
+        clientId: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        serverUrl: https://www.30007.live.api.89c3.com
+        keyId: ''
     nexi:
       tink:
         clientId: ''
