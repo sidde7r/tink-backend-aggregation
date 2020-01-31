@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public interface BankIdAuthenticator<T> {
@@ -14,6 +15,12 @@ public interface BankIdAuthenticator<T> {
                     AuthenticationException;
 
     BankIdStatus collect(T reference) throws AuthenticationException, AuthorizationException;
+
+    default T refreshAutostartToken()
+            throws BankIdException, BankServiceException, AuthorizationException,
+                    AuthenticationException {
+        throw BankIdError.TIMEOUT.exception();
+    }
 
     /**
      * For bankid authenticators built for PSD2 agents this should return the OAuth2Token retrieved
