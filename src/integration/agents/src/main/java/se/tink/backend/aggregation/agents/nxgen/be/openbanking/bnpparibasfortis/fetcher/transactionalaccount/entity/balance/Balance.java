@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.balance;
 
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.Accounts;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class Balance {
@@ -28,8 +29,8 @@ public class Balance {
         return Accounts.BALANCE_TYPE_OTHER.equalsIgnoreCase(balanceType);
     }
 
-    public Amount toTinkAmount() {
-        return new Amount(
-                balanceAmount.getCurrency(), Double.parseDouble(balanceAmount.getAmount()));
+    public ExactCurrencyAmount toTinkAmount() {
+        return new ExactCurrencyAmount(
+                new BigDecimal(balanceAmount.getAmount()), balanceAmount.getCurrency());
     }
 }
