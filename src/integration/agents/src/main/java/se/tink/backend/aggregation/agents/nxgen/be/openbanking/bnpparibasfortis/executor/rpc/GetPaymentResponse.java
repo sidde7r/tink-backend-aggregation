@@ -24,7 +24,7 @@ public class GetPaymentResponse {
                         .withType(getPaymentType())
                         .withStatus(getPaymentStatus())
                         .withCurrency(payment.getAmount().getCurrency())
-                        .withAmount(payment.getAmount().toTinkAmount())
+                        .withExactCurrencyAmount(payment.getAmount().toTinkAmount())
                         .withCreditor(payment.getCreditorAccount().toTinkCreditor())
                         .withDebtor(payment.getDebtorAccount().toTinkDebtor());
 

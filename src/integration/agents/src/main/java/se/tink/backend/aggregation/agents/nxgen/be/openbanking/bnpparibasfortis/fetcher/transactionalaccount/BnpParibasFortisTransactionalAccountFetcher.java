@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -34,6 +35,8 @@ public class BnpParibasFortisTransactionalAccountFetcher
         return apiClient.getAccounts().getAccounts().stream()
                 .filter(this::isCheckingAccount)
                 .map(acc -> acc.toTinkModel(apiClient.getBalanceForAccount(acc).getBalances()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

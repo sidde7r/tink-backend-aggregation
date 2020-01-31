@@ -1,14 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.entities;
 
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
     private String currency;
     private String amount;
+
+    public AmountEntity() {}
 
     public AmountEntity(String currency, String amount) {
         this.currency = currency;
@@ -21,17 +23,11 @@ public class AmountEntity {
                 String.valueOf(paymentRequest.getPayment().getAmount().getValue()));
     }
 
-    public Amount toTinkAmount() {
-        return Amount.valueOf(currency, Double.valueOf(doubleValue() * 100).longValue(), 2);
+    public ExactCurrencyAmount toTinkAmount() {
+        return new ExactCurrencyAmount(new BigDecimal(amount), currency);
     }
-
-    public AmountEntity() {}
 
     public String getCurrency() {
         return currency;
-    }
-
-    private double doubleValue() {
-        return StringUtils.parseAmount(amount);
     }
 }

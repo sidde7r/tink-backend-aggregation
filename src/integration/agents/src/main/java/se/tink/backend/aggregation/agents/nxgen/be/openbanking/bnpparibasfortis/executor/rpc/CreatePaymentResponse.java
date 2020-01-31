@@ -28,7 +28,7 @@ public class CreatePaymentResponse {
                         .withUniqueId(getPaymentId())
                         .withType(paymentType.getTinkPaymentType())
                         .withCurrency(amount.getCurrency())
-                        .withAmount(amount.toTinkAmount())
+                        .withExactCurrencyAmount(amount.toTinkAmount())
                         .withCreditor(creditor.toTinkCreditor())
                         .withDebtor(debtor.toTinkDebtor());
 
