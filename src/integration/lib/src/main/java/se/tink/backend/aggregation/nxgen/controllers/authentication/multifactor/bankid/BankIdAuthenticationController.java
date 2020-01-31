@@ -131,11 +131,15 @@ public class BankIdAuthenticationController<T>
         // done in each agent
         T reference = authenticator.init(ssn);
 
-        supplementalRequester.openBankId(
-                authenticator.getAutostartToken().orElse(null), waitOnBankId);
+        openBankId();
 
         poll(reference);
         authenticator.getAccessToken().ifPresent(token -> storeAccessToken(token, credentials));
+    }
+
+    private void openBankId() {
+        supplementalRequester.openBankId(
+                authenticator.getAutostartToken().orElse(null), waitOnBankId);
     }
 
     // throws exception unless the BankIdStatus was DONE
@@ -158,6 +162,10 @@ public class BankIdAuthenticationController<T>
                     throw BankIdError.NO_CLIENT.exception();
                 case TIMEOUT:
                     throw BankIdError.TIMEOUT.exception();
+                case EXPIRED_AUTOSTART_TOKEN:
+                    reference = authenticator.refreshAutostartToken();
+                    openBankId();
+                    break;
                 case INTERRUPTED:
                     throw BankIdError.INTERRUPTED.exception();
                 default:
