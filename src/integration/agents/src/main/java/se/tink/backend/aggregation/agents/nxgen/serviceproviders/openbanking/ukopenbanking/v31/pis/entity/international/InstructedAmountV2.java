@@ -15,7 +15,7 @@ public class InstructedAmountV2 {
     public InstructedAmountV2() {}
 
     public InstructedAmountV2(ExactCurrencyAmount amount) {
-        this.amount = amount.getStringValue();
+        this.amount = amount.getStringValue(AmountEntity.getValueFormat());
         this.currency = amount.getCurrencyCode();
     }
 

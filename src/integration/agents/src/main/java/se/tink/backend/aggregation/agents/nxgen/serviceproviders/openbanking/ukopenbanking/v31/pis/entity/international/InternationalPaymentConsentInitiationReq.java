@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.math.BigDecimal;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UkOpenBankingV31PisUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.CreditorAccount;
@@ -10,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
@@ -34,11 +32,7 @@ public class InternationalPaymentConsentInitiationReq {
         this.endToEndIdentification = endToEndIdentification;
         this.instructionIdentification = instructionIdentification;
         this.creditorAccount = new CreditorAccount(payment.getCreditor());
-        this.instructedAmount =
-                new InstructedAmount(
-                        new ExactCurrencyAmount(
-                                new BigDecimal(payment.getAmount().getValue()),
-                                payment.getAmount().getCurrency()));
+        this.instructedAmount = new InstructedAmount(payment.getExactCurrencyAmountFromField());
     }
 
     public PaymentResponse toPaymentResponse(String status, String consentId) {

@@ -66,7 +66,7 @@ public final class NordeaBaseConstants {
         public static final String GET_CORPORATE_ACCOUNTS = "/v2/accounts";
         public static final String GET_CORPORATE_TRANSACTIONS =
                 "/v2/accounts/{accountId}/transactions";
-        public static final String GET_TOKEN_DECOUPLED = "/v4/authorize-decoupled/token";
+        public static final String GET_TOKEN_DECOUPLED = "/token";
     }
 
     public static class StorageKeys {

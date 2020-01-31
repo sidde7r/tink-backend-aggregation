@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 import org.iban4j.IbanUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
@@ -16,6 +18,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public class Payment {
+    private static Logger log = LoggerFactory.getLogger(Payment.class);
     private static ImmutableList<String> sepaCountriesWithEur =
             ImmutableList.of(
                     "AT", "BE", "CY", "DE", "EE", "ES", "FI", "FR", "GR", "IE", "IT", "LT", "LU",
@@ -23,6 +26,8 @@ public class Payment {
     private Creditor creditor;
     private Debtor debtor;
     private Amount amount;
+    // TODO rename back to amount after removing `amount` field
+    private ExactCurrencyAmount exactCurrencyAmount;
     private LocalDate executionDate;
     private UUID id;
     private String uniqueId;
@@ -35,6 +40,7 @@ public class Payment {
         this.creditor = builder.creditor;
         this.debtor = builder.debtor;
         this.amount = builder.amount;
+        this.exactCurrencyAmount = builder.exactCurrencyAmount;
         this.executionDate = builder.executionDate;
         this.currency = builder.currency;
         this.type = builder.type;
@@ -58,6 +64,7 @@ public class Payment {
         return uniqueId;
     }
 
+    // TODO Double Check: This should return the currency value from exactCurrencyAmount?
     public String getCurrency() {
         return currency;
     }
@@ -71,11 +78,38 @@ public class Payment {
     }
 
     public Amount getAmount() {
+        if (exactCurrencyAmount == null) {
+            log.warn("exactCurrencyAmount shouldn't be null");
+        }
+
+        if (amount == null) {
+            log.warn("amount shouldn't be null");
+        }
+
+        if (exactCurrencyAmount != null) {
+            if (exactCurrencyAmount.getDoubleValue() == amount.doubleValue()
+                    && exactCurrencyAmount.getCurrencyCode().equals(amount.getCurrency())) {
+                log.info("Amount and ExactCurrencyAmount is the same!");
+            } else {
+                if (exactCurrencyAmount.getDoubleValue() != amount.doubleValue()) {
+                    log.warn("exactCurrencyAmount and amount values are not the same");
+                }
+
+                if (!exactCurrencyAmount.getCurrencyCode().equals(amount.getCurrency())) {
+                    log.warn("exactCurrencyAmount and amount currencies are not the same");
+                }
+            }
+        }
         return amount;
     }
 
     public ExactCurrencyAmount getExactCurrencyAmount() {
         return new ExactCurrencyAmount(new BigDecimal(amount.getValue()), amount.getCurrency());
+    }
+
+    // TODO: This will be renamed to `getAmount` after we refactored every agent
+    public ExactCurrencyAmount getExactCurrencyAmountFromField() {
+        return exactCurrencyAmount;
     }
 
     public UUID getId() {
@@ -150,6 +184,8 @@ public class Payment {
         private Creditor creditor;
         private Debtor debtor;
         private Amount amount;
+        // TODO rename back to amount after removing `amount` field
+        private ExactCurrencyAmount exactCurrencyAmount;
         private LocalDate executionDate;
         private String uniqueId;
         private PaymentStatus status = PaymentStatus.CREATED;
@@ -169,6 +205,8 @@ public class Payment {
 
         public Builder withAmount(Amount amount) {
             this.amount = amount;
+            this.exactCurrencyAmount =
+                    ExactCurrencyAmount.of(amount.doubleValue(), amount.getCurrency());
             return this;
         }
 
@@ -177,6 +215,7 @@ public class Payment {
                     new Amount(
                             exactCurrencyAmount.getCurrencyCode(),
                             exactCurrencyAmount.getDoubleValue());
+            this.exactCurrencyAmount = exactCurrencyAmount;
             return this;
         }
 
@@ -200,6 +239,8 @@ public class Payment {
             return this;
         }
 
+        // TODO Double Check: This should be removed since we have currency info in
+        // exactCurrencyAmount?
         public Builder withCurrency(String currency) {
             this.currency = currency;
             return this;

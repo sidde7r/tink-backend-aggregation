@@ -1,10 +1,12 @@
 package se.tink.libraries.amount;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.util.Locale;
 import org.junit.Test;
 
 public class ExactCurrencyAmountTest {
@@ -89,5 +91,20 @@ public class ExactCurrencyAmountTest {
         ExactCurrencyAmount b = ExactCurrencyAmount.of(BigDecimal.valueOf(45), "SEK");
 
         assertFalse(a.equals(b));
+    }
+
+    @Test
+    public void TestStringValueHasProperFormat() {
+        ExactCurrencyAmount value1 = ExactCurrencyAmount.of(new BigDecimal("1"), "GBP");
+        ExactCurrencyAmount value2 = ExactCurrencyAmount.of(new BigDecimal("1.00"), "GBP");
+        ExactCurrencyAmount value3 = ExactCurrencyAmount.of(new BigDecimal("1.1"), "GBP");
+        ExactCurrencyAmount value4 = ExactCurrencyAmount.of(new BigDecimal("100000"), "GBP");
+        ExactCurrencyAmount value5 = ExactCurrencyAmount.of(new BigDecimal("1.0123"), "GBP");
+
+        assertThat(value1.getStringValue(Locale.UK)).isEqualTo("1.00");
+        assertThat(value2.getStringValue(Locale.UK)).isEqualTo("1.00");
+        assertThat(value3.getStringValue(Locale.UK)).isEqualTo("1.10");
+        assertThat(value4.getStringValue(Locale.UK)).isEqualTo("100,000.00");
+        assertThat(value5.getStringValue(Locale.UK)).isEqualTo("1.01");
     }
 }
