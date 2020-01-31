@@ -2,6 +2,8 @@ package se.tink.libraries.amount;
 
 import com.google.common.base.Preconditions;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Objects;
 
 public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
@@ -30,8 +32,17 @@ public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
         return value.doubleValue();
     }
 
-    public String getStringValue() {
-        return Double.toString(getDoubleValue());
+    public String getStringValue(Locale locale) {
+        NumberFormat currencyInstance = NumberFormat.getCurrencyInstance(locale);
+        // You cannot suggest to improve this code by replacing the currency symbol e.g. "$"
+        // It doesn't work because currency symbol is dependent on your system locale.
+        // E.g. 5 US dollars, can yield both "$5" or "USD 5", depending on your system locale.
+        // And you don't want to change your system locale
+        return getStringValue(currencyInstance).replaceAll("[^0123456789.,()-]", "").trim();
+    }
+
+    public String getStringValue(NumberFormat currencyInstance) {
+        return currencyInstance.format(value);
     }
 
     public long getUnscaledValue() {
