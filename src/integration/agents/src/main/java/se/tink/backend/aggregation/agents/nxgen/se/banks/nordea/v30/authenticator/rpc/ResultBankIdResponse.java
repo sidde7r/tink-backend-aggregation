@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticat
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -16,7 +17,8 @@ public class ResultBankIdResponse {
     @JsonProperty("access_token")
     private String accessToken;
 
-    @JsonProperty private String scope;
+    @JsonProperty("id_token")
+    private String idToken;
 
     @JsonProperty("expires_in")
     private int expiresIn;
@@ -32,6 +34,10 @@ public class ResultBankIdResponse {
 
     @JsonProperty("agreement_id")
     private int agreementId;
+
+    private String scope;
+    // yes, this is a real field
+    private String uh;
 
     public String getRefreshToken() {
         return refreshToken;
@@ -72,7 +78,9 @@ public class ResultBankIdResponse {
     public void storeTokens(SessionStorage sessionStorage) {
         sessionStorage.put(NordeaSEConstants.StorageKeys.ACCESS_TOKEN, accessToken);
         sessionStorage.put(NordeaSEConstants.StorageKeys.REFRESH_TOKEN, refreshToken);
+        sessionStorage.put(StorageKeys.ID_TOKEN, idToken);
         sessionStorage.put(NordeaSEConstants.StorageKeys.TOKEN_TYPE, tokenType);
+        sessionStorage.put(StorageKeys.UH, uh);
         sessionStorage.put(
                 NordeaSEConstants.StorageKeys.TOKEN_AUTH_METHOD,
                 NordeaSEConstants.AuthMethod.BANKID_SE);

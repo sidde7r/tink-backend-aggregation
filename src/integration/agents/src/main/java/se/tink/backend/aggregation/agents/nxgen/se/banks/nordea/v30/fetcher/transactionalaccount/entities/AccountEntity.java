@@ -66,10 +66,6 @@ public class AccountEntity implements GeneralAccountEntity {
     @JsonProperty private String currency;
     @JsonProperty private List<AccountOwnerEntity> roles;
 
-    public List<AccountOwnerEntity> getRoles() {
-        return roles;
-    }
-
     @JsonIgnore
     public PermissionsEntity getPermissions() {
         return permissions;
@@ -199,11 +195,5 @@ public class AccountEntity implements GeneralAccountEntity {
     @JsonIgnore
     private String maskAccountNumber() {
         return "************" + accountNumber.substring(accountNumber.length() - 4);
-    }
-
-    @JsonIgnore
-    public boolean isPersonalAccount() {
-        // filtering business accounts
-        return !StringUtils.containsIgnoreCase(productName, ProductName.BUSINESS);
     }
 }

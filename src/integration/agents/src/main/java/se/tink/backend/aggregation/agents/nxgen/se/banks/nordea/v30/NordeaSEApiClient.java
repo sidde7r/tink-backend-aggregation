@@ -5,15 +5,20 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.FormParams;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.TagValues;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.AuthDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.AuthDeviceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdAutostartResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.ConfirmEnrollmentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.ConfirmEnrollmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.EnrollmentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.EnrollmentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.FetchCodeRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.InitBankIdAutostartRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.InitDeviceAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.PasswordTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.PasswordTokenResponse;
@@ -35,6 +40,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.cred
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.creditcard.rpc.FetchCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.rpc.FetchPaymentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.identitydata.rpc.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.investment.rpc.FetchInvestmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.rpc.FetchLoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.rpc.FetchLoanResponse;
@@ -60,6 +66,46 @@ public class NordeaSEApiClient {
         this.httpClient = httpClient;
         this.sessionStorage = sessionStorage;
         this.catalog = catalog;
+    }
+
+    public BankIdAutostartResponse initBankIdAutostart(
+            InitBankIdAutostartRequest initBankIdAutostartRequest) {
+        return httpClient
+                .request(Urls.LOGIN_BANKID_AUTOSTART)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(initBankIdAutostartRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(BankIdAutostartResponse.class);
+    }
+
+    public BankIdAutostartResponse pollBankIdAutostart(String sessionId) {
+        return httpClient
+                .request(Urls.LOGIN_BANKID_AUTOSTART.concat(sessionId))
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(BankIdAutostartResponse.class);
+    }
+
+    public BankIdAutostartResponse fetchLoginCode(FetchCodeRequest fetchCodeRequest) {
+        return httpClient
+                .request(Urls.FETCH_LOGIN_CODE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(fetchCodeRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(BankIdAutostartResponse.class);
+    }
+
+    public ResultBankIdResponse fetchAccessToken(String code, String codeVerifier) {
+        Form form = new Form(NordeaSEConstants.REQUEST_TOKEN_FORM);
+        form.put(FormParams.CODE, code);
+        form.put(FormParams.CODE_VERIFIER, codeVerifier);
+
+        return fetchAccessToken(form);
+    }
+
+    private ResultBankIdResponse fetchAccessToken(Form form) {
+        return httpClient
+                .request(Urls.FETCH_ACCESS_TOKEN)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .post(ResultBankIdResponse.class);
     }
 
     public BankIdResponse formInitBankIdLogin(String ssn) {
@@ -170,6 +216,15 @@ public class NordeaSEApiClient {
                                 NordeaSEConstants.IdTags.LOAN_ID, accountId));
 
         return requestRefreshableGet(request, FetchLoanDetailsResponse.class);
+    }
+
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final RequestBuilder request =
+                httpClient
+                        .request(Urls.FETCH_IDENTITY_DATA)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
+
+        return requestRefreshableGet(request, FetchIdentityDataResponse.class);
     }
 
     public FetchPaymentsResponse fetchPayments() {
@@ -417,14 +472,13 @@ public class NordeaSEApiClient {
     }
 
     private void refreshBankIdAccessToken(String refreshToken) {
-        Form formBuilder = new Form(NordeaSEConstants.DEFAULT_FORM_PARAMS);
-        formBuilder.put(
+        Form form = new Form(NordeaSEConstants.REFRESH_TOKEN_FORM);
+        form.put(
                 NordeaSEConstants.FormParams.GRANT_TYPE,
                 NordeaSEConstants.StorageKeys.REFRESH_TOKEN);
-        formBuilder.put(NordeaSEConstants.StorageKeys.REFRESH_TOKEN, refreshToken);
+        form.put(NordeaSEConstants.StorageKeys.REFRESH_TOKEN, refreshToken);
 
-        ResultBankIdResponse response = getBankIdAccessToken(formBuilder);
-        response.storeTokens(sessionStorage);
+        fetchAccessToken(form).storeTokens(sessionStorage);
     }
 
     public void logout() {
