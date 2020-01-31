@@ -52,8 +52,8 @@ public class BpceGroupTransactionalAccountFetcher implements AccountFetcher<Tran
         return Optional.ofNullable(bpceGroupApiClient.fetchAccounts())
                 .map(AccountsResponse::getAccounts)
                 .map(
-                        account ->
-                                account.stream()
+                        accounts ->
+                                accounts.stream()
                                         .filter(AccountEntity::isTransactionalAccount)
                                         .collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);

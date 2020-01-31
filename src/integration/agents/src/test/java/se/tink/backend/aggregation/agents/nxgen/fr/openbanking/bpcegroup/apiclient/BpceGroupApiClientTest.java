@@ -7,10 +7,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableList;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.RefreshRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupSignatureHeaderGenerator;
@@ -36,6 +41,8 @@ public class BpceGroupApiClientTest {
     private static final String TOKEN_TYPE = "Bearer";
     private static final String SIGNATURE = "beef";
     private static final String RESOURCE_ID = "009988";
+    private static final String CLIENT_ID = "cId";
+    private static final String REDIRECT_URL = "http://redirect-url";
     private static final long TOKEN_EXPIRES_IN = 3600L;
 
     private BpceGroupApiClient bpceGroupApiClient;
@@ -45,8 +52,8 @@ public class BpceGroupApiClientTest {
     @Before
     public void setUp() {
         final BpceGroupConfiguration configurationMock = mock(BpceGroupConfiguration.class);
-        when(configurationMock.getClientId()).thenReturn("cId");
-        when(configurationMock.getRedirectUrl()).thenReturn("http://redirect-url");
+        when(configurationMock.getClientId()).thenReturn(CLIENT_ID);
+        when(configurationMock.getRedirectUrl()).thenReturn(REDIRECT_URL);
         when(configurationMock.getServerUrl()).thenReturn(SERVER_URL);
 
         httpClientMock = mock(TinkHttpClient.class);
@@ -73,7 +80,12 @@ public class BpceGroupApiClientTest {
     public void shouldExchangeAuthorizationToken() {
         // given
         final TokenResponse expectedTokenResponse = getTokenResponse();
-        setUpHttpClientMockForAuth(TOKEN_URL, expectedTokenResponse);
+        final RequestBuilder requestBuilderMock =
+                setUpHttpClientMockForAuth(TOKEN_URL, expectedTokenResponse);
+        final ArgumentCaptor<TokenRequest> tokenRequestCaptor =
+                ArgumentCaptor.forClass(TokenRequest.class);
+        when(requestBuilderMock.body(tokenRequestCaptor.capture(), anyString()))
+                .thenReturn(requestBuilderMock);
 
         // when
         final TokenResponse returnedResponse =
@@ -81,13 +93,22 @@ public class BpceGroupApiClientTest {
 
         // then
         assertThat(returnedResponse).isEqualTo(expectedTokenResponse);
+
+        final String expectedTokenRequest = getTokenRequest();
+        final String actualTokenRequest = tokenRequestCaptor.getValue().getBodyValue();
+        assertThat(actualTokenRequest).isEqualTo(expectedTokenRequest);
     }
 
     @Test
     public void shouldExchangeRefreshToken() {
         // given
         final TokenResponse expectedTokenResponse = getTokenResponse();
-        setUpHttpClientMockForAuth(TOKEN_URL, expectedTokenResponse);
+        final RequestBuilder requestBuilderMock =
+                setUpHttpClientMockForAuth(TOKEN_URL, expectedTokenResponse);
+        final ArgumentCaptor<RefreshRequest> refreshRequestCaptor =
+                ArgumentCaptor.forClass(RefreshRequest.class);
+        when(requestBuilderMock.body(refreshRequestCaptor.capture(), anyString()))
+                .thenReturn(requestBuilderMock);
 
         // when
         final TokenResponse returnedResponse =
@@ -95,6 +116,10 @@ public class BpceGroupApiClientTest {
 
         // then
         assertThat(returnedResponse).isEqualTo(expectedTokenResponse);
+
+        final String expectedRefreshRequest = getRefreshRequest();
+        final String actualRefreshRequest = refreshRequestCaptor.getValue().getBodyValue();
+        assertThat(actualRefreshRequest).isEqualTo(expectedRefreshRequest);
     }
 
     @Test
@@ -153,9 +178,8 @@ public class BpceGroupApiClientTest {
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
 
-    private void setUpHttpClientMockForAuth(String urlString, Object response) {
+    private RequestBuilder setUpHttpClientMockForAuth(String urlString, Object response) {
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
-        when(requestBuilderMock.body(any(), anyString())).thenReturn(requestBuilderMock);
         when(requestBuilderMock.accept(anyString())).thenReturn(requestBuilderMock);
 
         final HttpResponse httpResponseMock = mock(HttpResponse.class);
@@ -165,6 +189,8 @@ public class BpceGroupApiClientTest {
         when(requestBuilderMock.post(any(), anyString())).thenReturn(httpResponseMock);
 
         when(httpClientMock.request(new URL(urlString))).thenReturn(requestBuilderMock);
+
+        return requestBuilderMock;
     }
 
     private void setUpHttpClientMockForApi(String urlString, Object response) {
@@ -196,6 +222,23 @@ public class BpceGroupApiClientTest {
         when(httpClientMock.request(url)).thenReturn(requestBuilderMock);
 
         return customerConsentCaptor;
+    }
+
+    private static String getTokenRequest() {
+        try {
+            return String.format(
+                    "client_id=%s&redirect_uri=%s&grant_type=authorization_code&code=%s",
+                    CLIENT_ID,
+                    URLEncoder.encode(REDIRECT_URL, StandardCharsets.UTF_8.toString()),
+                    EXCHANGE_CODE);
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private static String getRefreshRequest() {
+        return String.format(
+                "client_id=%s&grant_type=refresh_token&refresh_token=%s", CLIENT_ID, EXCHANGE_CODE);
     }
 
     private static TokenResponse getTokenResponse() {

@@ -61,7 +61,7 @@ public class BpceGroupTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void shouldFetchNoAccountsIfOnlyNonTransactionalExist() {
+    public void shouldFilterOutNonTransactionalAccounts() {
         // given
         when(bpceGroupApiClientMock.fetchAccounts())
                 .thenReturn(getAccountsResponseForCardAccount());

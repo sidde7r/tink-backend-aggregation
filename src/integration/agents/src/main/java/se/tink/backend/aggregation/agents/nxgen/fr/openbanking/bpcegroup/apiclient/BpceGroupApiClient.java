@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -126,10 +125,8 @@ public class BpceGroupApiClient {
             String resourceId, LocalDate dateFrom, LocalDate dateTo) {
 
         final RequestBuilder requestBuilder =
-                httpClient
-                        .request(createUrlForResource(BASE_PATH, ENDPOINT_TRANSACTIONS, resourceId))
-                        .queryParam("dateFrom", DateTimeFormatter.ISO_DATE.format(dateFrom))
-                        .queryParam("dateTo", DateTimeFormatter.ISO_DATE.format(dateTo));
+                httpClient.request(
+                        createUrlForResource(BASE_PATH, ENDPOINT_TRANSACTIONS, resourceId));
 
         return sendRequestAndGetResponse(
                 requestBuilder, HttpMethod.GET, TransactionsResponse.class);

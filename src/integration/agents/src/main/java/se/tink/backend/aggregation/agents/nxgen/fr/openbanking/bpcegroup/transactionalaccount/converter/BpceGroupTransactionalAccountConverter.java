@@ -26,7 +26,7 @@ public class BpceGroupTransactionalAccountConverter {
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
-                                .withAccountNumber(getAccountNumber(iban))
+                                .withAccountNumber(iban)
                                 .withAccountName(accountEntity.getName())
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
@@ -42,10 +42,6 @@ public class BpceGroupTransactionalAccountConverter {
                 .map(BalanceEntity::getBalanceAmount)
                 .map(AmountEntity::toTinkAmount)
                 .orElseThrow(() -> new IllegalStateException("No balance found"));
-    }
-
-    private static String getAccountNumber(String iban) {
-        return iban.substring(iban.length() - 23);
     }
 
     private static Optional<BalanceEntity> findBalanceByType(

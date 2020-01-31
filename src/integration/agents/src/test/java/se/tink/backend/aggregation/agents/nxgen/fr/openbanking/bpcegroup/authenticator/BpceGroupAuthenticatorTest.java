@@ -37,8 +37,9 @@ public class BpceGroupAuthenticatorTest {
     public void setUp() {
         apiClientMock = mock(BpceGroupApiClient.class);
 
-        when(apiClientMock.exchangeAuthorizationToken(anyString())).thenReturn(getTokenResponse());
-        when(apiClientMock.exchangeRefreshToken(anyString())).thenReturn(getTokenResponse());
+        when(apiClientMock.exchangeAuthorizationToken(EXCHANGE_CODE))
+                .thenReturn(getTokenResponse());
+        when(apiClientMock.exchangeRefreshToken(EXCHANGE_CODE)).thenReturn(getTokenResponse());
 
         final BpceOAuth2TokenStorage oAuth2TokenStorageMock = mock(BpceOAuth2TokenStorage.class);
 
