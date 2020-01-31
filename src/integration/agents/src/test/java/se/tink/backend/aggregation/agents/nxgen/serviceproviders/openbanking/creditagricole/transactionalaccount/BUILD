@@ -19,5 +19,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//third_party:org_hamcrest_hamcrest_library",
         "//third_party:org_mockito_mockito_core",
+        "@com_fasterxml_jackson_core_jackson_databind//jar",
     ],
 )
