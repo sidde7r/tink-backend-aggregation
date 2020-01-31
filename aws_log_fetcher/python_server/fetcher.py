@@ -56,8 +56,8 @@ async def run(cookie,
         len(unique_keys)) + " unique pair", payload)
 
     # Get the timestamps for the lower and upper limit of time range used in the query
-    gte = json.loads(query)["bool"]["must"][-1]["range"]["@timestamp"]["gte"]
-    lte = json.loads(query)["bool"]["must"][-1]["range"]["@timestamp"]["lte"]
+    gte = json.loads(query)["bool"]["filter"][-1]["range"]["@timestamp"]["gte"]
+    lte = json.loads(query)["bool"]["filter"][-1]["range"]["@timestamp"]["lte"]
 
     gte_date = datetime.strptime(gte, "%Y-%m-%dT%H:%M:%S.%fZ") - timedelta(minutes=10)
     lte_date = datetime.strptime(lte, "%Y-%m-%dT%H:%M:%S.%fZ") + timedelta(minutes=10)
@@ -102,7 +102,7 @@ async def run(cookie,
             if "AWS CLI" in log.message:
                 http_debug_log_link = log.message.split("AWS")[1].split("CLI: ")[1].strip()
                 status = log.message.split("\n")[0].split(":")[1].strip()
-                unique_file_name = status + "_" + log.requestId + "_" + log.providerName + ".log"
+                unique_file_name = status + "_" + log.requestId + "_" + log.credentialsId + "_" + log.providerName + ".log"
 
                 metadata.append({
                     "status": status,

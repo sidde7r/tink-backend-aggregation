@@ -1,4 +1,3 @@
-
 /*
 	The cookie that will be used in the request to ElasticSearch, in the beginning it is null,
 	When the browser will make a request to ElasticSearch, the extension will automatically catch

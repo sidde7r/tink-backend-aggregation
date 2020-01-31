@@ -5,8 +5,8 @@
 */
 let filter = {
 	urls: [
-		"https://kibana.aggregation-production.tink.network/elasticsearch/_msearch*",
-		"https://kibana.aggregation-staging.tink.network/elasticsearch/_msearch*",
+		"https://kibana.aggregation-production.tink.network/elasticsearch/logstash*/_search*",
+		"https://kibana.aggregation-staging.tink.network/elasticsearch/logstash*/_search*",
 	]
 };
 
@@ -111,7 +111,7 @@ filter,
 chrome.webRequest.onBeforeRequest.addListener(function(details) {
 
 	let payload = new TextDecoder("utf-8").decode(new Uint8Array(details.requestBody.raw[0].bytes));
-	let requestJson = JSON.parse(payload.split("\n")[1]);
+	let requestJson = JSON.parse(payload);
 	let queryJson = JSON.stringify(requestJson["query"]);
 
 	let data = {

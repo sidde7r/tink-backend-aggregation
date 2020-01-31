@@ -45,7 +45,7 @@ header = {
     "Content-Type": "application/x-ndjson",
     "Accept": "application/json, text/plain, */*",
     "cookie": "<cookie>",
-    "kbn-version": "7.3.2",
+    "kbn-version": "7.5.2",
     "origin": "https://kibana.aggregation-production.tink.network",
     "referer": "https://kibana.aggregation-production.tink.network/app/kibana",
     "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36"
