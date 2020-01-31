@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.BankIdAuthentication;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.DeviceAuthentication;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdRequest;
@@ -28,6 +30,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
     private final HandelsbankenSessionStorage sessionStorage;
     private int pollCount;
     private String autoStartToken;
+    private String lastWaitingResult;
 
     public HandelsbankenBankIdAuthenticator(
             HandelsbankenSEApiClient client,
@@ -43,11 +46,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
     @Override
     public InitBankIdResponse init(String ssn) throws BankIdException, AuthorizationException {
         pollCount = 0;
-        InitBankIdRequest initBankIdRequest =
-                new InitBankIdRequest().setBidDevice(DeviceAuthentication.DEVICE_ID);
-        InitBankIdResponse response = client.initToBank(initBankIdRequest);
-        autoStartToken = response.getAutoStartToken();
-        return response;
+        return refreshAutostartToken();
     }
 
     @Override
@@ -64,23 +63,42 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
 
         AuthenticateResponse authenticate = client.authenticate(initBankId);
         BankIdStatus bankIdStatus = authenticate.toBankIdStatus();
-        if (bankIdStatus == BankIdStatus.DONE) {
-            AuthorizeResponse authorize = client.authorize(authenticate);
+        switch (bankIdStatus) {
+            case DONE:
+                AuthorizeResponse authorize = client.authorize(authenticate);
 
-            new BankidAuthenticationValidator(credentials, authorize).validate();
+                new BankidAuthenticationValidator(credentials, authorize).validate();
 
-            ApplicationEntryPointResponse applicationEntryPoint =
-                    client.applicationEntryPoint(authorize);
+                ApplicationEntryPointResponse applicationEntryPoint =
+                        client.applicationEntryPoint(authorize);
 
-            persistentStorage.persist(authorize);
-            sessionStorage.persist(applicationEntryPoint);
-        } else if (bankIdStatus == BankIdStatus.WAITING) {
-            pollCount++;
-        } else if (bankIdStatus == BankIdStatus.TIMEOUT && pollCount < 10) {
-            return BankIdStatus.FAILED_UNKNOWN;
+                persistentStorage.persist(authorize);
+                sessionStorage.persist(applicationEntryPoint);
+                break;
+            case WAITING:
+                lastWaitingResult = authenticate.getResult();
+                pollCount++;
+                break;
+            case TIMEOUT:
+                if (pollCount < 10) {
+                    return BankIdStatus.FAILED_UNKNOWN;
+                }
+                if (BankIdAuthentication.NO_CLIENT.equals(lastWaitingResult)) {
+                    lastWaitingResult = null;
+                    return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+                }
+                break;
         }
-
         return bankIdStatus;
+    }
+
+    @Override
+    public InitBankIdResponse refreshAutostartToken() throws BankServiceException {
+        InitBankIdRequest initBankIdRequest =
+                new InitBankIdRequest().setBidDevice(DeviceAuthentication.DEVICE_ID);
+        InitBankIdResponse response = client.initToBank(initBankIdRequest);
+        autoStartToken = response.getAutoStartToken();
+        return response;
     }
 
     @Override

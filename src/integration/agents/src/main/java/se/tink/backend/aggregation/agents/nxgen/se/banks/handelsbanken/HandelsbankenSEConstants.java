@@ -51,6 +51,7 @@ public class HandelsbankenSEConstants {
         public static final String FAILED_UNKNOWN = "100";
         public static final String MUST_ACTIVATE = "MUST_ACTIVATE";
         public static final String DONE = "AUTHENTICATED";
+        public static final String NO_CLIENT = "NO_CLIENT_STARTED";
     }
 
     public static final class BankIdErrorMessages {
