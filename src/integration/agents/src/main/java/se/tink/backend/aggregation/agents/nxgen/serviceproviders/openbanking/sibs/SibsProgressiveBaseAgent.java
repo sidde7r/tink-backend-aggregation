@@ -47,7 +47,6 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
 
-    protected final String clientName;
     protected final SibsBaseApiClient apiClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -64,7 +63,6 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         userState = new SibsUserState(persistentStorage);
         setConfiguration(configuration);
         apiClient = new SibsBaseApiClient(client, userState, request.isManual());
-        clientName = request.getProvider().getPayload();
         apiClient.setConfiguration(getClientConfiguration());
         client.setMessageSignInterceptor(
                 new SibsMessageSignInterceptor(
