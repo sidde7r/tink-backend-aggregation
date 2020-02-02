@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "sign",
+    name = "authenticator",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
@@ -10,7 +10,6 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sibs",
-        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib",
