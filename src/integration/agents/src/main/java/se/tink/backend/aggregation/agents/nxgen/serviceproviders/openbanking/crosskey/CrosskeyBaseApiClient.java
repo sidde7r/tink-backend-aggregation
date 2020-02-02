@@ -54,6 +54,7 @@ public class CrosskeyBaseApiClient {
     private EidasIdentity eidasIdentity;
     private String baseAuthUrl;
     private String baseApiUrl;
+    private String xFapiFinancialId;
 
     public CrosskeyBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
@@ -74,14 +75,9 @@ public class CrosskeyBaseApiClient {
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
         this.client.setEidasProxy(eidasProxyConfiguration);
-
-        this.baseApiUrl =
-                String.format(
-                        "%s%s%s%s",
-                        Urls.HTTPS, Urls.BASE_API_PREFIX, xFapiFinancialId, Urls.BASE_API_POSTFIX);
-        this.baseAuthUrl =
-                String.format(
-                        "%s%s%s", Urls.BASE_AUTH__PREFIX, xFapiFinancialId, Urls.BASE_AUTH_POSTFIX);
+        this.baseApiUrl = getConfiguration().getBaseAPIUrl();
+        this.baseAuthUrl = getConfiguration().getBaseAuthUrl();
+        this.xFapiFinancialId = xFapiFinancialId;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -92,7 +88,6 @@ public class CrosskeyBaseApiClient {
 
     private RequestBuilder createRequestInSession(URL url) {
         final String clientSecret = getConfiguration().getClientSecret();
-        final String xFapiFinancialId = getConfiguration().getxFapiFinancialId();
 
         return createRequest(url)
                 .addBearerToken(getTokenFromSession())
@@ -103,7 +98,6 @@ public class CrosskeyBaseApiClient {
     private RequestBuilder createAuthorizationRequest(
             InitialTokenResponse clientCredentials, URL url) {
         final String clientSecret = getConfiguration().getClientSecret();
-        final String xFapiFinancialId = getConfiguration().getxFapiFinancialId();
 
         return createRequest(url)
                 .addBearerToken(clientCredentials.toTinkToken())
@@ -226,9 +220,7 @@ public class CrosskeyBaseApiClient {
                         OIDCValues.TAN),
                 // -3 since it is sometimes rounds up to future..
                 Instant.now().getEpochSecond() - 3,
-                Urls.BASE_API_PREFIX
-                        + getConfiguration().getxFapiFinancialId()
-                        + Urls.BASE_API_POSTFIX,
+                baseApiUrl,
                 getConfiguration().getClientId());
     }
 

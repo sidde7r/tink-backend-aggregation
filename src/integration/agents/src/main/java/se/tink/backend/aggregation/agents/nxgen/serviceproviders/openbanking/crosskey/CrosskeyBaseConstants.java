@@ -5,12 +5,6 @@ public abstract class CrosskeyBaseConstants {
     public static final String INTEGRATION_NAME = "crosskey";
 
     public static class Urls {
-        public static final String HTTPS = "https://";
-        public static final String BASE_API_PREFIX = "api.";
-        public static final String BASE_API_POSTFIX = ".fi";
-
-        public static final String BASE_AUTH__PREFIX = "https://openbanking.";
-        public static final String BASE_AUTH_POSTFIX = ".fi";
 
         public static final String TOKEN = "/oidc/v1.0/token";
         public static final String OAUTH = "/oidc/auth";
