@@ -2257,7 +2257,7 @@
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
-            "name": "se-resursbank-oauth2",
+            "name": "se-resursbank-ob",
             "passwordHelpText": null,
             "payload": "tink",
             "popular": true,
