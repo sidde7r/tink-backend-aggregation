@@ -2166,7 +2166,7 @@
             "accessType": "OPEN_BANKING",
             "className": "nxgen.se.openbanking.nordnet.NordnetAgent",
             "credentialsType": "PASSWORD",
-            "displayName": "Nordnet Bank (Sandbox)",
+            "displayName": "Nordnet Bank",
             "fields": [
                 {
                     "description": "Username",
@@ -2185,7 +2185,7 @@
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
-            "name": "se-nordnet-password",
+            "name": "se-nordnet-ob",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "payload": null,
             "popular": true,
