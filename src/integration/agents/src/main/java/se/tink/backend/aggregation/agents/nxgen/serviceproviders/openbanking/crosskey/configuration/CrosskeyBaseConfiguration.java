@@ -22,7 +22,6 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty private List<String> scopes;
     @JsonProperty @SensitiveSecret private String clientSecret;
-    @JsonProperty @AgentConfigParam private String xFapiFinancialId;
 
     public String getBaseAPIUrl() {
         Preconditions.checkNotNull(

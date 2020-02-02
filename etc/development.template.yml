@@ -64,27 +64,23 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     alandsbank-fi:
       tink:
-        baseAPIUrl: https://alandsbanken-fi-api-sandbox.crosskey.io
-        baseAuthUrl: https://alandsbanken-fi-sandbox.crosskey.io
+        baseAPIUrl: https://api.alandsbanken.fi
+        baseAuthUrl: https://open.alandsbanken.fi
         clientId: ''
-        clientKeyStorePassword: '123456'
-        clientKeyStorePath: data/test/cryptography/crosskey/client.p12
         clientSecret: ''
-        clientSigningCertificatePath: data/test/cryptography/crosskey/signing.cer
-        clientSigningKeyPath: data/test/cryptography/crosskey/signing.key
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        clientSigningCertificateSerialNumber: ''
+        scopes: ["AIS", "PIS"]
         xFapiFinancialId: alandsbanken-fi
     alandsbank-se:
       tink:
-        baseAPIUrl: https://alandsbanken-se-api-sandbox.crosskey.io
-        baseAuthUrl: https://alandsbanken-se-sandbox.crosskey.io
+        baseAPIUrl: https://api.alandsbanken.se
+        baseAuthUrl: https://open.alandsbanken.se
         clientId: ''
-        clientKeyStorePassword: '123456'
-        clientKeyStorePath: data/test/cryptography/crosskey/client.p12
         clientSecret: ''
-        clientSigningCertificatePath: data/test/cryptography/crosskey/signing.cer
-        clientSigningKeyPath: data/test/cryptography/crosskey/signing.key
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        clientSigningCertificateSerialNumber: ''
+        scopes: ["AIS", "PIS"]
         xFapiFinancialId: alandsbanken-se
     almbrand:
       tink:
@@ -1146,15 +1142,13 @@ agentsServiceConfiguration:
         redirectUri: https://127.0.0.1:7357/api/v1/thirdparty/callback
     spankki:
       tink:
-        baseAPIUrl: https://s-pankki-api-sandbox.crosskey.io
-        baseAuthUrl: https://s-pankki-sandbox.crosskey.io
+        baseAPIUrl: https://api.s-pankki.fi
+        baseAuthUrl: https://openbanking.s-pankki.f"
         clientId: ''
-        clientKeyStorePassword: '123456'
-        clientKeyStorePath: data/test/cryptography/crosskey/client.p12
         clientSecret: ''
-        clientSigningCertificatePath: data/test/cryptography/crosskey/signing.cer
-        clientSigningKeyPath: data/test/cryptography/crosskey/signing.key
-        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        redirectUrl:  https://127.0.0.1:7357/api/v1/thirdparty/callback
+        clientSigningCertificateSerialNumber: ''
+        scopes: ["AIS", "PIS"]
         xFapiFinancialId: s-pankki
     sparebank:
       tink:
