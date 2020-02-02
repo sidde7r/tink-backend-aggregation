@@ -22,7 +22,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:org_mockito_mockito_core",
