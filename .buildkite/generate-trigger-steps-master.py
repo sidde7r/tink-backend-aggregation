@@ -14,14 +14,6 @@ def pr_ids_from_commit_message(msg):
     return ",".join([s for s in [s.lstrip("#").strip() for s in firstline.split(" ")] if s.isdigit()])
 
 PROJECTS = {
-    'tink-backend-aggregation-agents': {
-        'chart': True,
-        'salt': False,
-        'branches': {
-            'aggregation-production': {'block': False},
-            'aggregation-staging': {'block': False},
-        },
-    },
     'tink-backend-aggregation-statuspage-providers-cronjob': {
         'chart': True,
         'salt': False,
@@ -33,6 +25,7 @@ PROJECTS = {
 
 RELEASE_TRAIN_CHARTS = [
     "tink-backend-aggregation",
+    "tink-backend-aggregation-agents",
     "tink-backend-integration",
     "tink-backend-notifying-aggregation-service-asserter",
     "tink-backend-aggregation-connectivity-cronjob",
