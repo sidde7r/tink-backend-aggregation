@@ -18,7 +18,7 @@ public class LansforsakringarAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-oauth2")
+                new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-ob")
                         .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
