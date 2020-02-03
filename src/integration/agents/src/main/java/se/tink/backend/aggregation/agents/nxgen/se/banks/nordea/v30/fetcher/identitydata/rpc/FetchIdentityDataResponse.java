@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.identitydata.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
@@ -39,6 +40,13 @@ public class FetchIdentityDataResponse {
     private boolean usResident;
 
     public IdentityData toTinkIdentityData() {
+        if (personId == null) {
+            return IdentityData.builder()
+                    .addFirstNameElement(firstName)
+                    .addSurnameElement(lastName)
+                    .setDateOfBirth(LocalDate.parse(birthDate))
+                    .build();
+        }
         return SeIdentityData.of(firstName, lastName, personId);
     }
 }
