@@ -13,6 +13,7 @@ junit_test(
         "manual",
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/volvofinans"],
     deps = [
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//third_party:org_mockito_mockito_core",
