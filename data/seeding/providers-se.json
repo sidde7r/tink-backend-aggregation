@@ -2221,7 +2221,7 @@
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
-            "name": "se-paypal-oauth2",
+            "name": "se-paypal-ob",
             "passwordHelpText": "Please authenticate to use this bank.",
             "payload": "tink",
             "popular": true,
