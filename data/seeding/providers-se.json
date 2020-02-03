@@ -1667,7 +1667,7 @@
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
-            "name": "se-alandsbanken-oauth2",
+            "name": "se-alandsbanken-ob",
             "passwordHelpText": null,
             "payload": "tink",
             "popular": true,
