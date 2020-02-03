@@ -13,7 +13,7 @@ public class SkandiaAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("se", "se-skandia-oauth2")
+                new AgentIntegrationTest.Builder("se", "se-skandia-ob")
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("skandia")
                         .loadCredentialsBefore(false)

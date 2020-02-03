@@ -13,10 +13,12 @@ public class PayPalAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("se", "se-paypal-oauth2")
-                        .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                new AgentIntegrationTest.Builder("se", "se-paypal-ob")
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("paypal")
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true)
+                        .expectLoggedIn(false);
     }
 
     @Test

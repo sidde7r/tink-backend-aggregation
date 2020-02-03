@@ -29,7 +29,7 @@ public class SebAgentPaymentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("se", "se-seb-oauth2")
+                new AgentIntegrationTest.Builder("se", "se-seb-ob")
                         .expectLoggedIn(true)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

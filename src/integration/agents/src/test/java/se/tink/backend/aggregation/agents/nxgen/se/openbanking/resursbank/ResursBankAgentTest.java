@@ -13,7 +13,7 @@ public class ResursBankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("se", "se-resursbank-oauth2")
+                new AgentIntegrationTest.Builder("se", "se-resursbank-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

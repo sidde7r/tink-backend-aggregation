@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 @Ignore
 public class SebAgentTest extends SebAgentBaseTest {
 
-    private static final String PROVIDER_NAME = "se-seb-oauth2";
+    private static final String PROVIDER_NAME = "se-seb-ob";
 
     private static final String MARKET = "se";
 

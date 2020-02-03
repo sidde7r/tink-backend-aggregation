@@ -1,21 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb;
 
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-@Ignore
 public class SebAgentTest {
-
     private AgentIntegrationTest.Builder builder;
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("se", "se-seb-oauth2")
+                new AgentIntegrationTest.Builder("se", "se-seb-ob")
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("seb")
+                        .setAppId("tink")
+                        .expectLoggedIn(false);
     }
 
     @Test
