@@ -51,7 +51,9 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                                 SibsAccountReferenceEntity.fromDebtor(paymentRequest.getPayment()))
                         .withInstructedAmount(
                                 SibsAmountEntity.of(
-                                        paymentRequest.getPayment().getExactCurrencyAmount()))
+                                        paymentRequest
+                                                .getPayment()
+                                                .getExactCurrencyAmountFromField()))
                         /*
                             PIS requirements is to provide payee name during payment initiation. Currently Tink
                             implementation doesn't allow to provide this name from the user. Temporary solution
