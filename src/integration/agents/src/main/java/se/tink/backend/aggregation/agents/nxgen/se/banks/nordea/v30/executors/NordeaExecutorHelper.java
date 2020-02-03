@@ -228,6 +228,13 @@ public class NordeaExecutorHelper {
                 if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
                     throw ErrorResponse.bankIdAlreadyInProgressError(e);
                 }
+
+                ErrorResponse error = ErrorResponse.of(e);
+                if (error.isInvalidAccessToken()) {
+                    // We've polled long enough for access token to be invalid, considered timeout
+                    throw ErrorResponse.bankIdTimedOut();
+                }
+
                 log.error(e.getMessage(), e);
                 throw ErrorResponse.signTransferFailedError();
             }
