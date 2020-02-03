@@ -14,13 +14,6 @@ def pr_ids_from_commit_message(msg):
     return ",".join([s for s in [s.lstrip("#").strip() for s in firstline.split(" ")] if s.isdigit()])
 
 PROJECTS = {
-    'tink-backend-aggregation': {
-        'chart': True,
-        'salt': False,
-        'branches': {
-            'aggregation-production': {'block': True},
-        },
-    },
     'tink-backend-aggregation-agents': {
         'chart': True,
         'salt': False,
