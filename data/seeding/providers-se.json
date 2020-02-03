@@ -2398,7 +2398,7 @@
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
-            "name": "se-seb-oauth2",
+            "name": "se-seb-ob",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
             "payload": null,
             "popular": true,

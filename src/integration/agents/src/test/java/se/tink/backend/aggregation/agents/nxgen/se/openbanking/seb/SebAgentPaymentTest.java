@@ -24,7 +24,7 @@ public class SebAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("se", "se-seb-oauth2")
+                new AgentIntegrationTest.Builder("se", "se-seb-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);

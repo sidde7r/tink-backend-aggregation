@@ -13,7 +13,7 @@ public class SebAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("se", "se-seb-oauth2")
+                new AgentIntegrationTest.Builder("se", "se-seb-ob")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
