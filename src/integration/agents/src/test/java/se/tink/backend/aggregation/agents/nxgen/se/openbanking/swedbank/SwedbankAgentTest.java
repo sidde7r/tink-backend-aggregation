@@ -16,6 +16,7 @@ public class SwedbankAgentTest {
                 new AgentIntegrationTest.Builder("se", "se-swedbank-ob")
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("swedbank")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
