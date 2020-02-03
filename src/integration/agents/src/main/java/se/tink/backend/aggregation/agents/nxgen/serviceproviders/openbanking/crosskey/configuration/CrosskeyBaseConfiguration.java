@@ -15,12 +15,27 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @JsonObject
 public class CrosskeyBaseConfiguration implements ClientConfiguration {
 
+    @JsonProperty @Secret private String baseAPIUrl;
+    @JsonProperty @Secret private String baseAuthUrl;
     @JsonProperty @Secret private String clientId;
     @JsonProperty @Secret private String clientSigningCertificateSerialNumber;
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty private List<String> scopes;
     @JsonProperty @SensitiveSecret private String clientSecret;
-    @JsonProperty @AgentConfigParam private String xFapiFinancialId;
+
+    public String getBaseAPIUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(baseAPIUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base API Url"));
+        return baseAPIUrl;
+    }
+
+    public String getBaseAuthUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(baseAuthUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base Auth Url"));
+        return baseAuthUrl;
+    }
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -52,24 +67,16 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
                 scopes, String.format(ErrorMessages.INVALID_CONFIGURATION, "scopes"));
         Preconditions.checkArgument(
                 !Iterables.isEmpty(scopes),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "scopes"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Scopes"));
 
         return scopes;
     }
 
     public String getClientSecret() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(clientId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
+                Strings.emptyToNull(clientSecret),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Secret"));
 
         return clientSecret;
-    }
-
-    public String getxFapiFinancialId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(xFapiFinancialId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "xFapiFinancialId"));
-
-        return xFapiFinancialId;
     }
 }
