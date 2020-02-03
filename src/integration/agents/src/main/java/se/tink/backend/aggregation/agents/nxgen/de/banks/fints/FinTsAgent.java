@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.authenticator.FinTsAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.session.FinTsSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -37,10 +36,12 @@ public final class FinTsAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         String[] payload = request.getProvider().getPayload().split(" ");
+        String blz = payload[0];
+        String endpoint = payload[1];
         FinTsConfiguration configuration =
                 new se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConfiguration(
-                        payload[0],
-                        payload[1],
+                        blz,
+                        endpoint,
                         request.getCredentials().getField(Field.Key.USERNAME),
                         request.getCredentials().getField(Field.Key.PASSWORD));
 
@@ -54,15 +55,6 @@ public final class FinTsAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new FinTsInvestmentFetcher(apiClient));
-
-        FinTsIntegrationConfiguration finTsIntegrationConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfigurationFromK8s(
-                                FinTsConstants.INTEGRATION_NAME,
-                                FinTsIntegrationConfiguration.class);
-
-        this.persistentStorage.put(
-                FinTsConstants.Storage.REG_NUMBER, finTsIntegrationConfiguration.getRegNumber());
     }
 
     @Override

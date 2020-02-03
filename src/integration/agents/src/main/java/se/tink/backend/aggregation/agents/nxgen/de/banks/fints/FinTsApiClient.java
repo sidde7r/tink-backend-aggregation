@@ -90,7 +90,7 @@ public class FinTsApiClient {
     private FinTsRequest getMessageSync() {
         HKIDN segIdentification =
                 new HKIDN(3, configuration.getBlz(), configuration.getUsername(), "0");
-        HKVVB segPrepare = new HKVVB(4, persistStorage.get(FinTsConstants.Storage.REG_NUMBER));
+        HKVVB segPrepare = new HKVVB(4);
         HKSYN segSync = new HKSYN(5);
         this.messageNumber = 1;
         return new FinTsRequest(
@@ -106,7 +106,7 @@ public class FinTsApiClient {
     private FinTsRequest getMessageInit() {
         HKIDN segIdentification =
                 new HKIDN(3, configuration.getBlz(), configuration.getUsername(), this.systemId);
-        HKVVB segPrepare = new HKVVB(4, persistStorage.get(FinTsConstants.Storage.REG_NUMBER));
+        HKVVB segPrepare = new HKVVB(4);
 
         return new FinTsRequest(
                 configuration,

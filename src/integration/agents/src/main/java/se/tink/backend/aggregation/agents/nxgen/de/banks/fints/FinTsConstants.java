@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 public class FinTsConstants {
     public static final String INTEGRATION_NAME = "fints";
     public static final String CURRENCY = "EUR";
-    public static final String TINK_FINTS_REGISTERATION = "9DA0690B610D90C2CD37E262F";
+    public static final String TINK_REGISTERED_PRODUCT_ID =
+            "DCF3902F7888F5A831EA0F1D6"; // TODO we may want to add this as a secret
 
     public static class StatusCode {
         public static final String SUCCESS = "0020";
@@ -132,9 +133,5 @@ public class FinTsConstants {
                 LogTag.from("#fints_cannot_fetch_balance");
         public static final LogTag ERROR_CANNOT_FETCH_ACCOUNT_TRANSACTIONS =
                 LogTag.from("#fints_cannot_fetch_transactions");
-    }
-
-    public static class Storage {
-        public static final String REG_NUMBER = "regNumber";
     }
 }
