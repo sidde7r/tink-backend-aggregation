@@ -2325,7 +2325,7 @@
             ],
             "financialInstitutionId": "sbab",
             "multiFactor": false,
-            "name": "se-sbab-oauth2",
+            "name": "se-sbab-ob",
             "passwordHelpText": null,
             "payload": "tink",
             "popular": true,

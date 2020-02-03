@@ -45,7 +45,7 @@ public class SbabAgentPaymentTest {
         creditorDebtorManager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("SE", "se-sbab-oauth2")
+                new AgentIntegrationTest.Builder("SE", "se-sbab-ob")
                         .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                         .loadCredentialsBefore(
                                 Boolean.parseBoolean(

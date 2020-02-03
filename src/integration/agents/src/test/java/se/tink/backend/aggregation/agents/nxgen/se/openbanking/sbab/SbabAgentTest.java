@@ -22,7 +22,7 @@ public class SbabAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("se", "se-sbab-oauth2")
+                new AgentIntegrationTest.Builder("se", "se-sbab-ob")
                         .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
