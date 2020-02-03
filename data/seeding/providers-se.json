@@ -2777,7 +2777,7 @@
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
-            "name": "se-volvofinans-oauth2",
+            "name": "se-volvofinans-ob",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
             "payload": "tink",
             "popular": true,

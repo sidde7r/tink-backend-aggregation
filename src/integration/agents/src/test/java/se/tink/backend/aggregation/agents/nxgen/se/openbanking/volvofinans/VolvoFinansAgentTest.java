@@ -13,7 +13,7 @@ public class VolvoFinansAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("se", "se-volvofinans-oauth2")
+                new AgentIntegrationTest.Builder("se", "se-volvofinans-ob")
                         .loadCredentialsBefore(false)
                         .setFinancialInstitutionId("volvofinans")
                         .setAppId("tink")
