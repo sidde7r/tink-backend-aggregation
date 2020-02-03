@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transa
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.rpc.TransactionalDetailsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -115,7 +116,7 @@ public class IberCajaApiClient {
             if (response.getNumber() != 0) {
                 return false;
             }
-        } catch (HttpResponseException e) {
+        } catch (HttpResponseException | HttpClientException e) {
             return false;
         }
 
