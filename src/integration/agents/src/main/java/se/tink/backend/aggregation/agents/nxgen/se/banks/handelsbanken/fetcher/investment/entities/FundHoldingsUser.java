@@ -60,7 +60,8 @@ public class FundHoldingsUser {
                 .collect(
                         Collectors.toMap(
                                 SimpleEntry<String, String>::getKey,
-                                SimpleEntry<String, String>::getValue));
+                                SimpleEntry<String, String>::getValue,
+                                ((oldVal, newVal) -> oldVal)));
     }
 
     public InvestmentAccount toAccount(CustodyAccount custodyAccount) {
