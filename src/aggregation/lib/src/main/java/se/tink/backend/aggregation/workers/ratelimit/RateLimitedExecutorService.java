@@ -46,7 +46,7 @@ public class RateLimitedExecutorService implements Managed {
                                                         "fraud.CreditSafeAgent", 0.1,
                                                         "abnamro.ics.IcsAgent", 8.,
                                                         "other.CSNAgent", 0.1),
-                                                new DefaultProviderRateLimiterFactory(0.5)))));
+                                                new DefaultProviderRateLimiterFactory(0.1)))));
 
         log.info(String.format("Rate limiter factory on initialization: %s", rateLimiterFactory));
     }
