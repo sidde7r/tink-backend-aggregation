@@ -20,6 +20,8 @@ public class LansforsakringarAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-ob")
                         .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
+                        .setFinancialInstitutionId("lansforsakringar")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
