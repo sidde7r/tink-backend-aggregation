@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.SabadellAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.InitiateSessionRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.SabadellCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.SabadellCreditCardTransactionFetcher;
@@ -22,9 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.SabadellLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.SabadellAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.SabadellTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.filter.SabadellBankServiceErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.session.SabadellSessionHandler;
-import se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -37,7 +34,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SabadellAgent extends NextGenerationAgent
@@ -56,7 +52,6 @@ public class SabadellAgent extends NextGenerationAgent
     public SabadellAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        configureHttpClient(client);
         this.apiClient = new SabadellApiClient(client);
 
         this.investmentRefreshController =
@@ -75,12 +70,6 @@ public class SabadellAgent extends NextGenerationAgent
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.addMessageWriter(
-                new NoEscapeOfBackslashMessageBodyWriter(InitiateSessionRequestEntity.class));
-        client.addFilter(new SabadellBankServiceErrorFilter());
     }
 
     @Override

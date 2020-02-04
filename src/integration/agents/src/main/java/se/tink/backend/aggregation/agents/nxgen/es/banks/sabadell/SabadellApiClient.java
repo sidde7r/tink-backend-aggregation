@@ -24,15 +24,23 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transa
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SabadellApiClient {
     private final TinkHttpClient client;
+    private final Filter bankServiceErrorFilter;
 
     public SabadellApiClient(TinkHttpClient client) {
         this.client = client;
+        client.addMessageWriter(
+                new NoEscapeOfBackslashMessageBodyWriter(InitiateSessionRequestEntity.class));
+        bankServiceErrorFilter = new BankServiceInternalErrorFilter();
+        client.addFilter(bankServiceErrorFilter);
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -47,6 +55,7 @@ public class SabadellApiClient {
                 InitiateSessionRequestEntity.build(username, password);
 
         return createRequest(SabadellConstants.Urls.INITIATE_SESSION)
+                .removeFilter(bankServiceErrorFilter)
                 .post(SessionResponse.class, requestEntity);
     }
 
@@ -98,6 +107,7 @@ public class SabadellApiClient {
                 .queryParam(
                         SabadellConstants.QueryParamPairs.ORDER_DESC.getKey(),
                         SabadellConstants.QueryParamPairs.ORDER_DESC.getValue())
+                .removeFilter(bankServiceErrorFilter)
                 .get(LoansResponse.class);
     }
 
