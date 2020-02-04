@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.agents.framework.assertions.entities.AccountT
 import se.tink.backend.aggregation.agents.framework.assertions.entities.TransactionTestEntity;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
-public class AgentContractEntitiesAsserter {
+public class AgentContractEntitiesAsserts {
 
-    public void compareAccounts(List<Account> expected, List<Account> given) {
+    public static void compareAccounts(List<Account> expected, List<Account> given) {
         List<AccountTestEntity> expectedAccounts =
                 expected.stream().map(a -> new AccountTestEntity(a)).collect(Collectors.toList());
 
@@ -25,7 +25,7 @@ public class AgentContractEntitiesAsserter {
         assertThat(expectedAccounts).isEqualTo(givenAccounts);
     }
 
-    public void compareTransactions(List<Transaction> expected, List<Transaction> given) {
+    public static void compareTransactions(List<Transaction> expected, List<Transaction> given) {
         List<TransactionTestEntity> expectedTransactions =
                 expected.stream()
                         .map(a -> new TransactionTestEntity(a))
