@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.accounts;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -11,6 +12,9 @@ public class AccountEntity {
     private AccountId accountId;
     private String resourceId;
     private String product;
+
+    @JsonProperty("_links")
+    private NavigationLinksEntity links;
 
     private String usage;
     private String psuStatus;

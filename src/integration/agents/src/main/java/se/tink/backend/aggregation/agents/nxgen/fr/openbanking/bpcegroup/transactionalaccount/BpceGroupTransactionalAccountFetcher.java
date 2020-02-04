@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transa
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -23,16 +24,16 @@ public class BpceGroupTransactionalAccountFetcher implements AccountFetcher<Tran
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        final List<AccountEntity> accountEntities = getAccounts();
+        final List<AccountEntity> accountEntitiesFirstCallResult = getAccounts();
 
-        if (accountEntities.isEmpty()) {
+        if (accountEntitiesFirstCallResult.isEmpty()) {
             return Collections.emptyList();
         }
 
-        final List<String> accountIds =
-                accountEntities.stream().map(AccountEntity::getIban).collect(Collectors.toList());
-
-        bpceGroupApiClient.recordCustomerConsent(accountIds);
+        final List<AccountEntity> accountEntities =
+                isConsentCallNeeded(accountEntitiesFirstCallResult)
+                        ? recordConsentAndRefetchAccounts(accountEntitiesFirstCallResult)
+                        : accountEntitiesFirstCallResult;
 
         return accountEntities.stream()
                 .map(this::createTransactionalAccount)
@@ -63,5 +64,31 @@ public class BpceGroupTransactionalAccountFetcher implements AccountFetcher<Tran
         return Optional.ofNullable(bpceGroupApiClient.fetchBalances(resourceId))
                 .map(BalancesResponse::getBalances)
                 .orElseGet(Collections::emptyList);
+    }
+
+    private List<AccountEntity> recordConsentAndRefetchAccounts(
+            List<AccountEntity> accountEntities) {
+        recordCustomerConsent(accountEntities);
+
+        return getAccounts();
+    }
+
+    private void recordCustomerConsent(List<AccountEntity> accountEntities) {
+        final List<String> accountIds =
+                accountEntities.stream().map(AccountEntity::getIban).collect(Collectors.toList());
+
+        bpceGroupApiClient.recordCustomerConsent(accountIds);
+    }
+
+    private static boolean isConsentCallNeeded(List<AccountEntity> accountEntities) {
+        return accountEntities.stream()
+                .anyMatch(BpceGroupTransactionalAccountFetcher::doesAccountLackConsentedData);
+    }
+
+    private static boolean doesAccountLackConsentedData(AccountEntity accountEntity) {
+        return Objects.isNull(accountEntity.getResourceId())
+                || Objects.isNull(accountEntity.getLinks())
+                || Objects.isNull(accountEntity.getLinks().getBalances())
+                || Objects.isNull(accountEntity.getLinks().getTransactions());
     }
 }
