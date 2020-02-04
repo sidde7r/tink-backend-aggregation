@@ -14,7 +14,7 @@ public class LansforsakringarConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
     @AgentConfigParam private String redirectUrl;
-    private String eidasQwac;
+    @Secret private String eidasQwac;
 
     public String getClientId() {
         Preconditions.checkNotNull(
