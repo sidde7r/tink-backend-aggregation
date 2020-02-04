@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -49,7 +49,7 @@ public class BankofScotlandAgentTest {
     private List<Payment> createMockedDomesticPayment() {
 
         List<Payment> payments = new ArrayList<>();
-        Amount amount = Amount.valueOf("GBP", 100, 2);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "GBP");
         LocalDate executionDate = LocalDate.now();
         String currency = "GBP";
 
@@ -64,7 +64,7 @@ public class BankofScotlandAgentTest {
                                 new Debtor(
                                         AccountIdentifier.create(
                                                 Type.SORT_CODE, SOURCE_IDENTIFIER)))
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
                         .withReference(new Reference("TRANSFER", "test Tink"))
