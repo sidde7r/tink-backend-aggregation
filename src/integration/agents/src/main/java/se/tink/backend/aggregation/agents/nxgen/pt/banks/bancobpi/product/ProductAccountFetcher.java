@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.BancoBpiClientApi;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiProductData;
 
 public class ProductAccountFetcher {

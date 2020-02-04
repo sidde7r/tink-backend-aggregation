@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -18,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.SetupAccessPinRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.SetupAccessPinResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;

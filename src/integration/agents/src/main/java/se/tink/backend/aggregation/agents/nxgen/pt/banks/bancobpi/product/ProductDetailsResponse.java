@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.common.RequestException;
 
 public class ProductDetailsResponse {
 
