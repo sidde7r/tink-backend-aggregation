@@ -304,7 +304,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/demo/openbanking/demofinancialinstitution",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/bankdatadk",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/danskebank",
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyske/authenticator",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/jyske",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/nordea",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/sdc",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/openbanking/almbrand",

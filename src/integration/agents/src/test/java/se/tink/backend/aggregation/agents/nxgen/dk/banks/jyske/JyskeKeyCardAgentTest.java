@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-public class JyskeAgentTest {
+public class JyskeKeyCardAgentTest {
 
     private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
             new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
