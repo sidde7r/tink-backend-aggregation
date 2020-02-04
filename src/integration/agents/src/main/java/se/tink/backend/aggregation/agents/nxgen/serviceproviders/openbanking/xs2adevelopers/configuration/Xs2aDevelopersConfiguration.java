@@ -15,7 +15,7 @@ public class Xs2aDevelopersConfiguration implements ClientConfiguration {
     @JsonProperty @Secret private String clientId;
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String baseUrl;
-    private String certificateId;
+    @JsonProperty @Secret private String certificateId;
 
     public String getClientId() {
         Preconditions.checkNotNull(
