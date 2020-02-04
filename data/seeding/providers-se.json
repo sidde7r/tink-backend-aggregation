@@ -1947,7 +1947,7 @@
             "financialInstitutionId": "6fc0e59bc4c35a3a8e42cee139afe63c",
             "financialInstitutionName": "Länsförsäkringar",
             "multiFactor": false,
-            "name": "se-lansforsakringar-oauth2",
+            "name": "se-lansforsakringar-ob",
             "passwordHelpText": null,
             "payload": "tink",
             "popular": true,

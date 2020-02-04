@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class PendingEntity {
 
+    private String bookingDate;
     private DebtorAccountEntity debtorAccount;
     private String entryReference;
+    private String remittanceInformationUnstructured;
     private BalanceAmountEntity transactionAmount;
     private Date transactionDate;
 
@@ -16,7 +18,7 @@ public class PendingEntity {
         return Transaction.builder()
                 .setAmount(transactionAmount.toAmount())
                 .setDate(transactionDate)
-                .setDescription(entryReference)
+                .setDescription(remittanceInformationUnstructured)
                 .setPending(true)
                 .build();
     }

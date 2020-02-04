@@ -23,7 +23,7 @@ public class LansforsakringarAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-oauth2")
+                new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
