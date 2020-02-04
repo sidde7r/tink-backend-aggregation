@@ -16,7 +16,6 @@ public class BelfiusConfiguration implements ClientConfiguration {
     @JsonProperty @Secret private String clientId;
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String baseUrl;
-    private String certificateId;
     @JsonProperty @SensitiveSecret private String clientSecret;
 
     public String getClientId() {
@@ -41,14 +40,6 @@ public class BelfiusConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Base url"));
 
         return baseUrl;
-    }
-
-    public String getCertificateId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(certificateId),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
-
-        return certificateId;
     }
 
     public String getClientSecret() {
