@@ -33,31 +33,7 @@ public abstract class NextGenerationAgent extends SubsequentGenerationAgent<Auth
 
     protected NextGenerationAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
-        SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProvider(request, supplementalRequester, credentials);
-        this.supplementalInformationController =
-                supplementalInformationProvider.getSupplementalInformationController();
-        this.supplementalInformationHelper =
-                supplementalInformationProvider.getSupplementalInformationHelper();
-        this.providerSessionCacheController =
-                new ProviderSessionCacheController(providerSessionCacheContext);
-    }
-
-    protected NextGenerationAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            boolean useLegacyTinkHttpClient) {
-        super(SubsequentGenerationAgentStrategyFactory.legacy(request, context, signatureKeyPair));
-        SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProvider(request, supplementalRequester, credentials);
-        this.supplementalInformationController =
-                supplementalInformationProvider.getSupplementalInformationController();
-        this.supplementalInformationHelper =
-                supplementalInformationProvider.getSupplementalInformationHelper();
-        this.providerSessionCacheController =
-                new ProviderSessionCacheController(providerSessionCacheContext);
+        this(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
     }
 
     protected abstract Authenticator constructAuthenticator();

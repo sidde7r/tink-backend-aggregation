@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -84,7 +85,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             SignatureKeyPair signatureKeyPair,
             UkOpenBankingAisConfig aisConfig,
             boolean disableSslVerification) {
-        super(request, context, signatureKeyPair, true);
+        super(SubsequentGenerationAgentStrategyFactory.legacy(request, context, signatureKeyPair));
         this.disableSslVerification = disableSslVerification;
 
         tinkProvider = request.getProvider();
