@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "authenticator",
+    name = "jyske",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
