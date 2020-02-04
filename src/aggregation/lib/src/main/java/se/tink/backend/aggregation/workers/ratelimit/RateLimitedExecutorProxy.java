@@ -82,7 +82,7 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
         InstrumentedRunnable instrumentedRunnable =
                 new InstrumentedRunnable(
                         metricRegistry,
-                        "rate-limitter",
+                        "rate_limiter",
                         metricLabels,
                         new RateLimitedRunnable(Preconditions.checkNotNull(command)));
 
