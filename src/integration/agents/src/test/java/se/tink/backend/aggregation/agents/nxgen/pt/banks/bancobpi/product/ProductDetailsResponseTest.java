@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.common.RequestException;
 
 public class ProductDetailsResponseTest {
 

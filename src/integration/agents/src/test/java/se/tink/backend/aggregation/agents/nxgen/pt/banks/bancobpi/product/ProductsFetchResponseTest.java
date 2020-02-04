@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.RequestException;
+import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiProductData;
 
 public class ProductsFetchResponseTest {

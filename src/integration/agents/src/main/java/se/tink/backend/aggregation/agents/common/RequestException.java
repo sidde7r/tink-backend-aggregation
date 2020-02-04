@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common;
+package se.tink.backend.aggregation.agents.common;
 
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentBaseError;
 
