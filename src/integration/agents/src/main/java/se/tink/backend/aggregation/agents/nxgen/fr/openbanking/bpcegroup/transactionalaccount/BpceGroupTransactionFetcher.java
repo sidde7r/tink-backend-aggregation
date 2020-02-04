@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transa
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collections;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
@@ -19,9 +18,6 @@ public class BpceGroupTransactionFetcher implements TransactionDatePaginator<Tra
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
         final String resourceId = account.getApiIdentifier();
-        final String iban = account.getIdModule().getUniqueId();
-
-        bpceGroupApiClient.recordCustomerConsent(Collections.singletonList(iban));
 
         return bpceGroupApiClient.getTransactions(
                 resourceId, convertDateToLocalDate(fromDate), convertDateToLocalDate(toDate));

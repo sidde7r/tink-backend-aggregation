@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transa
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -56,7 +58,7 @@ public class BpceGroupTransactionFetcherTest {
 
         // then
         verify(bpceGroupApiClientMock).getTransactions(RESOURCE_ID, DATE_FROM, DATE_TO);
-        verify(bpceGroupApiClientMock).recordCustomerConsent(any());
+        verify(bpceGroupApiClientMock, never()).recordCustomerConsent(any());
         assertThat(response).isNotNull();
         assertThat(response.getTinkTransactions()).hasSize(1);
     }
