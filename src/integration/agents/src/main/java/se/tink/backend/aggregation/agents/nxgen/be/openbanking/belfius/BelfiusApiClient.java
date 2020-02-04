@@ -46,11 +46,9 @@ public final class BelfiusApiClient {
     }
 
     private RequestBuilder createRequest(URL url) {
-
         return client.request(url)
                 .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
-                .header(HeaderKeys.ACCEPT, HeaderValues.ACCEPT)
-                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.FORCE);
+                .header(HeaderKeys.ACCEPT, HeaderValues.ACCEPT);
     }
 
     private RequestBuilder createRequestInSession(URL url) {

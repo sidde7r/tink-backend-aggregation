@@ -37,6 +37,7 @@ public final class CreditAgricoleBaseConstants {
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String STATE = "STATE";
+        public static final String IS_INITIAL_FETCH = "isInitialFetch";
     }
 
     public static class HeaderKeys {

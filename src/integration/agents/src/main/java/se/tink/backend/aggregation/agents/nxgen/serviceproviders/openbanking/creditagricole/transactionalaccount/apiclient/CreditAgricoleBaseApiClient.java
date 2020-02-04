@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
@@ -49,7 +50,9 @@ public class CreditAgricoleBaseApiClient {
     }
 
     public TokenResponse getToken(final String code) {
-        return TokenUtils.get(getConfiguration(), client, code);
+        TokenResponse response = TokenUtils.get(getConfiguration(), client, code);
+        setInitialFetchState(true);
+        return response;
     }
 
     public OAuth2Token refreshToken(final String refreshToken) {
@@ -57,6 +60,7 @@ public class CreditAgricoleBaseApiClient {
                 TokenUtils.refresh(getConfiguration(), client, refreshToken);
         final OAuth2Token oAuth2Token = tokenResponse.toTinkToken();
         setTokenToSession(oAuth2Token);
+        setInitialFetchState(false);
         return oAuth2Token;
     }
 
@@ -89,5 +93,9 @@ public class CreditAgricoleBaseApiClient {
 
     private void setTokenToSession(OAuth2Token token) {
         persistentStorage.put(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, token);
+    }
+
+    private void setInitialFetchState(Boolean isInitialFetch) {
+        persistentStorage.put(StorageKeys.IS_INITIAL_FETCH, isInitialFetch);
     }
 }
