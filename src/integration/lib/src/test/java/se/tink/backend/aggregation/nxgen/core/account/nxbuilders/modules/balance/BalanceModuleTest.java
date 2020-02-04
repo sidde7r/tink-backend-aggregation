@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balanc
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -56,6 +57,14 @@ public class BalanceModuleTest {
                 .build();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void negativeCreditLimit() {
+        BalanceModule.builder()
+                .withBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(20), "SEK"))
+                .setCreditLimit(ExactCurrencyAmount.of(BigDecimal.valueOf(-10_000), "SEK"))
+                .build();
+    }
+
     @Test
     public void successfulBuild() {
         Amount bal = Amount.inDKK(25_506.32);
@@ -79,17 +88,23 @@ public class BalanceModuleTest {
         assertEquals("DKK", balance.getBalance().getCurrency());
         assertEquals("DKK", balance.getAvailableCredit().get().getCurrency());
         assertEquals(0.0265, balance.getInterestRate().get(), 0);
+        assertNull(balance.getExactCreditLimit());
+        assertNull(balance.getExactAvailableBalance());
     }
 
     @Test
     public void successfulBuildWithExactCurrencyAmount() {
         ExactCurrencyAmount bal = ExactCurrencyAmount.of(BigDecimal.valueOf(25506.32), "DKK");
         ExactCurrencyAmount credit = ExactCurrencyAmount.of(BigDecimal.valueOf(9473.27), "DKK");
+        ExactCurrencyAmount availableBalance = ExactCurrencyAmount.of(25_006.32, "DKK");
+        ExactCurrencyAmount creditLimit = ExactCurrencyAmount.of(10_000d, "DKK");
 
         BalanceModule balance =
                 BalanceModule.builder()
                         .withBalance(bal)
                         .setAvailableCredit(credit)
+                        .setAvailableBalance(availableBalance)
+                        .setCreditLimit(creditLimit)
                         .setInterestRate(0.0265)
                         .build();
 
@@ -100,5 +115,9 @@ public class BalanceModuleTest {
         assertEquals("DKK", balance.getBalance().getCurrency());
         assertEquals("DKK", balance.getAvailableCredit().get().getCurrency());
         assertEquals(0.0265, balance.getInterestRate().get(), 0);
+        assertEquals(25_006.32, balance.getExactAvailableBalance().getDoubleValue(), 0);
+        assertEquals("DKK", balance.getExactAvailableBalance().getCurrencyCode());
+        assertEquals(10_000d, balance.getExactCreditLimit().getDoubleValue(), 0);
+        assertEquals("DKK", balance.getExactCreditLimit().getCurrencyCode());
     }
 }
