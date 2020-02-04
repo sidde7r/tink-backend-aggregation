@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -55,6 +56,12 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
 
         this.client.addFilter(new BankServiceInternalErrorFilter());
         this.client.addFilter(new TimeoutFilter());
+
+        if (handelsbankenBaseConfiguration.getClientId() != null) {
+            context.getLogMasker()
+                    .addAgentWhitelistedValues(
+                            ImmutableSet.of(handelsbankenBaseConfiguration.getClientId()));
+        }
     }
 
     @Override
