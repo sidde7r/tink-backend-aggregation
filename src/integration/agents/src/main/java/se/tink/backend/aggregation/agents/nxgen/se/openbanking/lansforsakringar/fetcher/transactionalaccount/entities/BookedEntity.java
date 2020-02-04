@@ -18,7 +18,7 @@ public class BookedEntity {
         return Transaction.builder()
                 .setAmount(transactionAmount.toAmount())
                 .setDate(transactionDate)
-                .setDescription(entryReference)
+                .setDescription(remittanceInformationUnstructured)
                 .setPending(false)
                 .build();
     }
