@@ -31,7 +31,7 @@ public class SibsAccountReferenceEntityTest {
     public void init() {
         when(payment.getCreditor()).thenReturn(creditor);
         when(payment.getDebtor()).thenReturn(debtor);
-        when(payment.getExactCurrencyAmount())
+        when(payment.getExactCurrencyAmountFromField())
                 .thenReturn(new ExactCurrencyAmount(new BigDecimal("1.0"), "EUR"));
         when(creditor.getAccountIdentifierType()).thenReturn(AccountIdentifier.Type.IBAN);
         when(debtor.getAccountIdentifierType()).thenReturn(AccountIdentifier.Type.IBAN);
