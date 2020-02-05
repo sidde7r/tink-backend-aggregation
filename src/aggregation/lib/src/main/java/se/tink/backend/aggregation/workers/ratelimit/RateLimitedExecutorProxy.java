@@ -15,13 +15,14 @@ import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.RunnableMdcWrapper;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.metrics.types.histograms.Histogram;
 
 public class RateLimitedExecutorProxy extends AbstractExecutorService {
     private final MetricRegistry metricRegistry;
     private final MetricId.MetricLabels metricLabels;
 
     public interface RateLimiter {
-        void acquire();
+        double acquire();
     }
 
     public static class RateLimiters {
@@ -35,14 +36,18 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
     public class RateLimitedRunnable implements Runnable {
 
         private final Runnable actualRunnable;
+        private final Histogram acquireTime;
 
-        private RateLimitedRunnable(Runnable actualRunnable) {
+        private RateLimitedRunnable(Runnable actualRunnable, MetricRegistry metricRegistry) {
             this.actualRunnable = RunnableMdcWrapper.wrap(actualRunnable);
+            this.acquireTime =
+                    metricRegistry.histogram(MetricId.newId("rate_limited_runnable_acquire_time"));
         }
 
         @Override
         public void run() {
-            rateLimiter.get().acquire();
+            double acquireTime = rateLimiter.get().acquire();
+            this.acquireTime.update(acquireTime);
             delegate.execute(actualRunnable);
         }
     }
@@ -84,7 +89,8 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
                         metricRegistry,
                         "rate_limiter",
                         metricLabels,
-                        new RateLimitedRunnable(Preconditions.checkNotNull(command)));
+                        new RateLimitedRunnable(
+                                Preconditions.checkNotNull(command), metricRegistry));
 
         rateLimitedExecutorService.execute(instrumentedRunnable);
         instrumentedRunnable.submitted();

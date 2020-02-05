@@ -61,12 +61,13 @@ public class RateLimitedExecutorProxyTest {
         }
 
         @Override
-        public void acquire() {
+        public double acquire() {
             if (lastAquire == null) {
                 lastAquire = System.nanoTime();
             } else {
                 this.fakeNow += Math.max(0, minimumNanosPerAcquire - DURATION_SINCE_LAST_ACQUIRE);
             }
+            return 0.0;
         }
 
         @Override
