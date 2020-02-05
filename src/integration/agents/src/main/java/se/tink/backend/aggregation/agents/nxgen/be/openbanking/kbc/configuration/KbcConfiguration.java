@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.annotations.SensitiveSecret;
 public class KbcConfiguration implements BerlinGroupConfiguration {
 
     @JsonProperty @Secret private String psuIpAddress;
-    @JsonProperty @Secret private String oauthBaseUrl;
     @JsonProperty @Secret private String baseUrl;
     @JsonProperty @Secret private String clientId;
     @JsonProperty @SensitiveSecret private String clientSecret;
