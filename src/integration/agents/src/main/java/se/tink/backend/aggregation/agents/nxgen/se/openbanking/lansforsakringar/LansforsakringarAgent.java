@@ -29,7 +29,6 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
     private final LansforsakringarApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private LansforsakringarConfiguration lansforsakringarConfiguration;
 
     public LansforsakringarAgent(
             CredentialsRequest request,
@@ -43,15 +42,11 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
-        lansforsakringarConfiguration =
+        final LansforsakringarConfiguration lansforsakringarConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfigurationFromK8s(
-                                LansforsakringarConstants.Market.INTEGRATION_NAME,
-                                request.getProvider().getPayload(),
-                                LansforsakringarConfiguration.class);
-
-        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+                        .getAgentConfiguration(LansforsakringarConfiguration.class);
         apiClient.setConfiguration(lansforsakringarConfiguration);
+        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 
     @Override
