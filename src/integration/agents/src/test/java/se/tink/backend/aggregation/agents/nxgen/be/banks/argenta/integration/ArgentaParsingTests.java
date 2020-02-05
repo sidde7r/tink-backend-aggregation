@@ -26,14 +26,14 @@ public class ArgentaParsingTests {
         Assert.assertEquals(3, argentaAccountResponse.getAccounts().size());
 
         TransactionalAccount checkingAccount =
-                argentaAccountResponse.getAccounts().get(0).toTransactionalAccount();
+                argentaAccountResponse.getAccounts().get(0).toTransactionalAccount().get();
         Assert.assertEquals("Balance", Amount.inEUR(1891.98), checkingAccount.getBalance());
         Assert.assertEquals("BE78973136067186", checkingAccount.getAccountNumber());
         Assert.assertEquals("1#01", checkingAccount.getApiIdentifier());
         Assert.assertEquals(AccountTypes.CHECKING, checkingAccount.getType());
 
         TransactionalAccount savingsAccount =
-                argentaAccountResponse.getAccounts().get(2).toTransactionalAccount();
+                argentaAccountResponse.getAccounts().get(2).toTransactionalAccount().get();
         Assert.assertEquals(AccountTypes.SAVINGS, savingsAccount.getType());
     }
 

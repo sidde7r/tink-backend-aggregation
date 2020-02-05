@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.entity;
 
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class ArgentaAccount {
@@ -16,19 +20,29 @@ public class ArgentaAccount {
     private double balance;
     private String currency;
 
-    public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(getAccountType(), iban, getBalance())
+    public Optional<TransactionalAccount> toTransactionalAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(getAccountType())
+                .withInferredAccountFlags()
+                .withBalance(BalanceModule.of(getBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(alias)
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
                 .setBankIdentifier(id)
-                .setAccountNumber(iban)
-                .setName(alias)
                 .build();
     }
 
-    private Amount getBalance() {
-        return currency != null ? new Amount(currency, balance) : Amount.inEUR(balance);
+    private ExactCurrencyAmount getBalance() {
+        return currency != null
+                ? ExactCurrencyAmount.of(balance, currency)
+                : ExactCurrencyAmount.of(balance, "EUR");
     }
 
-    private AccountTypes getAccountType() {
-        return ArgentaConstants.ACCOUNT_TYPE_MAPPER.translate(type).orElse(AccountTypes.OTHER);
+    private TransactionalAccountType getAccountType() {
+        return ArgentaConstants.ACCOUNT_TYPE_MAPPER.translate(type).orElse(null);
     }
 }

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transa
 
 import java.util.ArrayList;
 import java.util.Collection;
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.entity.ArgentaAccount;
@@ -33,10 +33,8 @@ public class ArgentaTransactionalAccountFetcher implements AccountFetcher<Transa
 
             response.getAccounts().stream()
                     .map(ArgentaAccount::toTransactionalAccount)
-                    .filter(
-                            account ->
-                                    account.getType().equals(AccountTypes.CHECKING)
-                                            || account.getType().equals(AccountTypes.SAVINGS))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .forEach(accounts::add);
 
         } while (page != 0);

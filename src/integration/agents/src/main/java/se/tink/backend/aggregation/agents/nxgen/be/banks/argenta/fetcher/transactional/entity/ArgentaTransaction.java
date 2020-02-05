@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class ArgentaTransaction {
@@ -51,9 +51,9 @@ public class ArgentaTransaction {
         return tinkDescription;
     }
 
-    private Amount getAmount() {
-        if (currency != null) return new Amount(currency, amount);
-        return Amount.inEUR(amount);
+    private ExactCurrencyAmount getAmount() {
+        String currencySymbol = currency != null ? currency : "EUR";
+        return ExactCurrencyAmount.of(amount, currencySymbol);
     }
 
     private Date getDate() {

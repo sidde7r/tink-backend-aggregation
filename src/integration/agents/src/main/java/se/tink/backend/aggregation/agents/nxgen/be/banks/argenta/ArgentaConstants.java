@@ -1,17 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
 
 import com.google.common.collect.ImmutableMap;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class ArgentaConstants {
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "CHECKING")
-                    .put(AccountTypes.SAVINGS, "SAVINGS", "ESAVINGS")
+    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<TransactionalAccountType>builder()
+                    .put(TransactionalAccountType.CHECKING, "CHECKING")
+                    .put(TransactionalAccountType.SAVINGS, "SAVINGS", "ESAVINGS")
                     .build();
 
     public static final class Url {
