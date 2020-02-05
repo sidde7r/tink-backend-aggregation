@@ -31,7 +31,12 @@ public class SupplementalFieldsAuthenticationStepTest {
         // given
         Field field = Mockito.mock(Field.class);
         SupplementalFieldsAuthenticationStep objectUnderTest =
-                new SupplementalFieldsAuthenticationStep("stepId", (values) -> {}, field);
+                new SupplementalFieldsAuthenticationStep(
+                        "stepId",
+                        (values) -> {
+                            return AuthenticationStepResponse.executeNextStep();
+                        },
+                        field);
         // when
         AuthenticationStepResponse result = objectUnderTest.execute(authenticationRequest);
         // then

@@ -29,10 +29,7 @@ import se.tink.backend.aggregation.agents.standalone.mapper.providers.CommonExte
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.impl.MockCommonExternalParametersProvider;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.constants.MarketCode;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.*;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
@@ -158,7 +155,7 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
                 TimeUnit.MINUTES);
     }
 
-    private void processCallbackData(final Map<String, String> callbackData) {
+    private AuthenticationStepResponse processCallbackData(final Map<String, String> callbackData) {
         try {
             String consentId =
                     persistentStorage.get(GenericAgentConstants.PersistentStorageKey.CONSENT_ID);
@@ -177,6 +174,7 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
         } catch (ExecutionException | RetryException e) {
             logger.warn("Authorization failed, consents status is not accepted.", e);
         }
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private LinkedList<? extends AuthenticationStep> buildAuthenticationSteps(

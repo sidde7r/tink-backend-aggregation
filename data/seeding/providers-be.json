@@ -445,6 +445,60 @@
             "type": "BANK"
         },
         {
+            "accessType": "OTHER",
+            "backgroundRefreshEnabled": true,
+            "backgroundRefreshMaxFrequency": 1,
+            "className": "nxgen.be.banks.bpost.BPostBankAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "BPost Bank",
+            "fields": [
+                {
+                    "description": "Email address",
+                    "immutable": false,
+                    "name": "email",
+                    "minLength": 4
+                },
+                {
+                    "description": "Subscription number",
+                    "immutable": false,
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "^[0-9]{10}$",
+                    "patternError": "Please enter your 10 digit subscription number.",
+                    "sensitive": true
+                }
+            ],
+            "financialInstitutionId": "0df5af8e4bf84df686a9b4a07fc205bf",
+            "financialInstitutionName": "BPostBank",
+            "multiFactor": true,
+            "name": "be-bpost-cardreader",
+            "passwordHelpText": "In order to authenticate yourself you will need your BPost card reader.",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "supplementalFields": [
+                {
+                    "description": "Challenge code",
+                    "helpText": "1. Insert your bank card into the card reader.\nPress 'M1'.\n2. Enter the 8 digit sign code.\nPress 'Ok'.\n3. Enter your PIN.\nPress 'OK'.\n4. Enter the response code from the card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodedescription"
+                },
+                {
+                    "description": "Response code, 8 digits.",
+                    "immutable": false,
+                    "masked": false,
+                    "name": "signcodeinput",
+                    "numeric": true,
+                    "pattern": "^[0-9]{8}$",
+                    "patternError": "Please enter your 8 digit response code from your card reader."
+                }
+            ],
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.be.openbanking.crelan.CrelanAgent",
             "credentialsType": "PASSWORD",

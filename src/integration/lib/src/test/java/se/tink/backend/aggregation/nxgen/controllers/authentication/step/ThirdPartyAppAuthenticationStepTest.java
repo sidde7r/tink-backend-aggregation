@@ -35,7 +35,11 @@ public class ThirdPartyAppAuthenticationStepTest {
                 .thenReturn(waitRequest);
         ThirdPartyAppAuthenticationStep objectUnderTest =
                 new ThirdPartyAppAuthenticationStep(
-                        "stepId", thirdPartyAppRequestParamsProvider, (callbackData) -> {});
+                        "stepId",
+                        thirdPartyAppRequestParamsProvider,
+                        (callbackData) -> {
+                            return AuthenticationStepResponse.executeNextStep();
+                        });
         // when
         AuthenticationStepResponse result =
                 objectUnderTest.execute(new AuthenticationRequest(Mockito.mock(Credentials.class)));
@@ -57,7 +61,12 @@ public class ThirdPartyAppAuthenticationStepTest {
         // given
         ThirdPartyAppAuthenticationStep objectUnderTest =
                 new ThirdPartyAppAuthenticationStep(
-                        "stepId", payload, waitRequest, (callbackData) -> {});
+                        "stepId",
+                        payload,
+                        waitRequest,
+                        (callbackData) -> {
+                            return AuthenticationStepResponse.executeNextStep();
+                        });
         // when
         AuthenticationStepResponse result =
                 objectUnderTest.execute(new AuthenticationRequest(Mockito.mock(Credentials.class)));

@@ -8,15 +8,7 @@ import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.AuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.ConfirmPinByOtpRequest;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.LoginRequest;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.LoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.ModuleVersionRequest;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.PinAuthenticationRequest;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.PinAuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.SetupAccessPinRequest;
-import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.SetupAccessPinResponse;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request.*;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
@@ -83,12 +75,14 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
         }
     }
 
-    private void processOtp(final String otpCode) throws AuthenticationException {
+    private AuthenticationStepResponse processOtp(final String otpCode)
+            throws AuthenticationException {
         try {
             AuthenticationResponse response =
                     callLoginRequest(new ConfirmPinByOtpRequest(entityManager, otpCode));
             handleResponse(response, LoginError.NOT_SUPPORTED);
             authContext.finishDeviceActivation();
+            return AuthenticationStepResponse.executeNextStep();
         } catch (LoginException ex) {
             authContext.clearAuthData();
             throw ex;
@@ -104,12 +98,14 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
         authContext.setSessionCSRFToken(response.getCsrfToken());
     }
 
-    private void processAccessPinSetup(final String accessPin) throws AuthenticationException {
+    private AuthenticationStepResponse processAccessPinSetup(final String accessPin)
+            throws AuthenticationException {
         authContext.setAccessPin(accessPin);
         SetupAccessPinRequest request = new SetupAccessPinRequest(authContext);
         SetupAccessPinResponse response = callLoginRequest(request);
         handleResponse(response, LoginError.NOT_SUPPORTED);
         authContext.setMobileChallengeRequestedToken(response.getMobileChallengeRequestedToken());
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private AuthenticationStepResponse processModuleVersionGetting() throws LoginException {

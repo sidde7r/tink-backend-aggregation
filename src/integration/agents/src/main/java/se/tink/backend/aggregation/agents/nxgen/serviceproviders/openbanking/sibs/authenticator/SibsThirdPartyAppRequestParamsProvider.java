@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppRequestParamsProvider;
@@ -51,13 +52,14 @@ public class SibsThirdPartyAppRequestParamsProvider implements ThirdPartyAppRequ
                 .build();
     }
 
-    void processThirdPartyCallback(Map<String, String> callbackData) throws AuthorizationException {
+    AuthenticationStepResponse processThirdPartyCallback(Map<String, String> callbackData)
+            throws AuthorizationException {
         boolean authFailed = false;
         try {
             ConsentStatus consentStatus = consentStatusRetryer.call(consentManager::getStatus);
             if (consentStatus.isAcceptedStatus()) {
                 authenticator.handleManualAuthenticationSuccess();
-                return;
+                return AuthenticationStepResponse.executeNextStep();
             } else {
                 authFailed = true;
             }
@@ -71,6 +73,7 @@ public class SibsThirdPartyAppRequestParamsProvider implements ThirdPartyAppRequ
                     AuthorizationError.UNAUTHORIZED,
                     "Authorization failed, consents status is not accepted.");
         }
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     @Override
