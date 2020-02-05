@@ -9,6 +9,8 @@ java_library(
     data = [],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/account:enums",
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/models",
         "//src/libraries/metrics:registry",

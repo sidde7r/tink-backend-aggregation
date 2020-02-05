@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.creditcards.amex.v62;
 
+import static se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts.compareAccounts;
+import static se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts.compareTransactions;
+import static se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts.createAccount;
+import static se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts.createTransaction;
+
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
@@ -11,75 +14,18 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
-import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.utils.wiremock.WiremockS3LogRequestResponseParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.libraries.account.enums.AccountExclusion;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class AmericanExpressV62UKMockServerAgentTest extends AgentIntegrationMockServerTest {
 
     private String USERNAME = "testUser";
     private String PASSWORD = "testPassword";
-
-    private Account createAccount(
-            String accountNumber,
-            double availableCredit,
-            double balance,
-            String currencyCode,
-            String bankId,
-            String name,
-            AccountTypes accountType,
-            String holderName) {
-
-        Account account = new Account();
-        account.setAccountNumber(accountNumber);
-        account.setAccountExclusion(AccountExclusion.NONE);
-        account.setExactAvailableCredit(
-                new ExactCurrencyAmount(new BigDecimal(availableCredit), currencyCode));
-        account.setExactBalance(new ExactCurrencyAmount(new BigDecimal(balance), currencyCode));
-        account.setCurrencyCode(currencyCode);
-        account.setBankId(bankId);
-        account.setExcluded(false);
-        account.setFavored(false);
-        account.setName(name);
-        account.setOwnership(1.0);
-        account.setType(accountType);
-        account.setUserModifiedExcluded(false);
-        account.setUserModifiedName(false);
-        account.setUserModifiedType(false);
-        account.setIdentifiers(new ArrayList<>());
-        account.setClosed(false);
-        account.setHolderName(holderName);
-        account.setFlags(new ArrayList<>());
-        account.setAvailableCredit(availableCredit);
-        account.setBalance(balance);
-        return account;
-    }
-
-    private Transaction createTransaction(
-            String accountId,
-            double amount,
-            long date,
-            String description,
-            boolean pending,
-            boolean upcoming,
-            TransactionTypes type) {
-
-        Transaction transaction = new Transaction();
-        transaction.setAccountId(accountId);
-        transaction.setAmount(amount);
-        transaction.setDate(new Date(date));
-        transaction.setDescription(description);
-        transaction.setPending(pending);
-        transaction.setType(type);
-        transaction.setUpcoming(upcoming);
-        return transaction;
-    }
 
     @Test
     public void testRefresh() throws Exception {
@@ -165,8 +111,8 @@ public final class AmericanExpressV62UKMockServerAgentTest extends AgentIntegrat
         List<Account> givenAccounts = context.getUpdatedAccounts();
 
         // Then
-        AgentContractEntitiesAsserts.compareAccounts(expectedAccounts, givenAccounts);
-        AgentContractEntitiesAsserts.compareTransactions(expectedTransactions, givenTransactions);
+        compareAccounts(expectedAccounts, givenAccounts);
+        compareTransactions(expectedTransactions, givenTransactions);
     }
 
     @Test
@@ -216,7 +162,7 @@ public final class AmericanExpressV62UKMockServerAgentTest extends AgentIntegrat
         List<Account> givenAccounts = context.getUpdatedAccounts();
 
         // Then
-        AgentContractEntitiesAsserts.compareAccounts(expectedAccounts, givenAccounts);
-        AgentContractEntitiesAsserts.compareTransactions(expectedTransactions, givenTransactions);
+        compareAccounts(expectedAccounts, givenAccounts);
+        compareTransactions(expectedTransactions, givenTransactions);
     }
 }
