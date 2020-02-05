@@ -64,14 +64,13 @@ public final class ProgressiveAuthAgentTest {
         class LoginStep implements AuthenticationStep {
 
             @Override
-            public Optional<SupplementInformationRequester> execute(
-                    final AuthenticationRequest request) {
+            public AuthenticationStepResponse execute(final AuthenticationRequest request) {
 
                 // Unless the following is true, the authenticator would throw INCORRECT_CREDENTIALS
                 Assert.assertEquals(1, request.getUserInputsAsList().size());
                 Assert.assertEquals("133700", request.getUserInputsAsList().get(0));
 
-                return Optional.empty();
+                return AuthenticationStepResponse.executeNextStep();
             }
         }
 

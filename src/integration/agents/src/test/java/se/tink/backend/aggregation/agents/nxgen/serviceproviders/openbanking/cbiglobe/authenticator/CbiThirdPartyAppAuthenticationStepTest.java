@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
-import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -17,7 +16,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 
 public class CbiThirdPartyAppAuthenticationStepTest {
@@ -55,11 +54,11 @@ public class CbiThirdPartyAppAuthenticationStepTest {
                         .withCallbackData(Collections.emptyMap());
 
         // when
-        Optional<SupplementInformationRequester> result = step.execute(request);
+        AuthenticationStepResponse result = step.execute(request);
 
         // then
-        assertThat(result.isPresent()).isTrue();
-        assertThat(result.get().getSupplementalWaitRequest()).isNotNull();
+        assertThat(result.getSupplementInformationRequester().get().getSupplementalWaitRequest())
+                .isNotNull();
         verify(thirdPartyAppRequestParamsProvider, times(1)).getPayload();
         verify(strongAuthenticationState, times(1)).getSupplementalKey();
     }
@@ -73,11 +72,11 @@ public class CbiThirdPartyAppAuthenticationStepTest {
                         .withCallbackData(ImmutableMap.of(QueryKeys.CODE, "asd"));
 
         // when
-        Optional<SupplementInformationRequester> result = step.execute(request);
+        AuthenticationStepResponse result = step.execute(request);
 
         // then
-        assertThat(result.isPresent()).isTrue();
-        assertThat(result.get().getSupplementalWaitRequest()).isNotNull();
+        assertThat(result.getSupplementInformationRequester().get().getSupplementalWaitRequest())
+                .isNotNull();
         verify(thirdPartyAppRequestParamsProvider, times(0)).getPayload();
         verify(strongAuthenticationState, times(1)).getSupplementalKey();
     }
@@ -93,10 +92,9 @@ public class CbiThirdPartyAppAuthenticationStepTest {
         when(consentManager.isConsentAccepted()).thenReturn(true);
 
         // when
-        Optional<SupplementInformationRequester> result = step.execute(request);
+        AuthenticationStepResponse result = step.execute(request);
 
         // then
-        assertThat(result.isPresent()).isFalse();
         verify(thirdPartyAppRequestParamsProvider, times(0)).getPayload();
         verify(strongAuthenticationState, times(0)).getSupplementalKey();
         verify(consentManager, times(1)).isConsentAccepted();

@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -21,7 +20,7 @@ public class SibsThirdPartyAuthenticationStepTest {
     private ConsentManager consentManager;
     private StrongAuthenticationState strongAuthenticationState;
     private SibsAuthenticator authenticator;
-    private ThirdPartyAppAuthenticationStep objectUnderTest;
+    private SibsThirdPartyAppRequestParamsProvider objectUnderTest;
     private Map<String, String> callbackData = new HashMap<>();
     private AuthenticationRequest authenticationRequest;
 
@@ -32,7 +31,7 @@ public class SibsThirdPartyAuthenticationStepTest {
         strongAuthenticationState = Mockito.mock(StrongAuthenticationState.class);
         authenticator = Mockito.mock(SibsAuthenticator.class);
         objectUnderTest =
-                SibsThirdPartyAuthenticationStep.create(
+                new SibsThirdPartyAppRequestParamsProvider(
                         consentManager, authenticator, strongAuthenticationState);
         callbackData.put("key", "value");
         authenticationRequest = new AuthenticationRequest(Mockito.mock(Credentials.class));
@@ -45,7 +44,7 @@ public class SibsThirdPartyAuthenticationStepTest {
         Mockito.when(consentManager.getStatus()).thenReturn(ConsentStatus.ACTC);
         authenticationRequest.withCallbackData(ImmutableMap.copyOf(callbackData));
         // when
-        objectUnderTest.execute(authenticationRequest);
+        objectUnderTest.processThirdPartyCallback(new HashMap<>());
         // then
         Mockito.verify(authenticator).handleManualAuthenticationSuccess();
     }
@@ -57,7 +56,7 @@ public class SibsThirdPartyAuthenticationStepTest {
         Mockito.when(consentManager.getStatus()).thenReturn(ConsentStatus.RJCT);
         authenticationRequest.withCallbackData(ImmutableMap.copyOf(callbackData));
         // when
-        objectUnderTest.execute(authenticationRequest);
+        objectUnderTest.processThirdPartyCallback(new HashMap<>());
         // then
         Mockito.verify(authenticator).handleManualAuthenticationFailure();
     }

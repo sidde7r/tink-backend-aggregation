@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator;
 
-import java.util.Optional;
 import java.util.UUID;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
@@ -17,7 +16,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.mo
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.InitializeRegistrationDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 
 final class FinalStep implements AuthenticationStep {
 
@@ -30,7 +29,7 @@ final class FinalStep implements AuthenticationStep {
     }
 
     @Override
-    public Optional<SupplementInformationRequester> execute(final AuthenticationRequest request)
+    public AuthenticationStepResponse execute(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         final Credentials credentials = request.getCredentials();
 
@@ -126,6 +125,6 @@ final class FinalStep implements AuthenticationStep {
 
         AxaCommonAuthenticator.authenticate(apiClient, storage);
 
-        return Optional.empty();
+        return AuthenticationStepResponse.executeNextStep();
     }
 }

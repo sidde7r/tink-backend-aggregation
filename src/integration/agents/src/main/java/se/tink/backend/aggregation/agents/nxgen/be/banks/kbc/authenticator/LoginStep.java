@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator;
 
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -11,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -34,7 +34,7 @@ final class LoginStep implements AuthenticationStep {
     }
 
     @Override
-    public Optional<SupplementInformationRequester> execute(final AuthenticationRequest request)
+    public AuthenticationStepResponse execute(final AuthenticationRequest request)
             throws LoginException, AuthorizationException {
         final Credentials credentials = request.getCredentials();
 
@@ -48,7 +48,7 @@ final class LoginStep implements AuthenticationStep {
 
         String challengeCode = apiClient.challenge(cipherKey);
 
-        return Optional.of(
+        return AuthenticationStepResponse.requestForSupplementInformation(
                 new SupplementInformationRequester.Builder()
                         .withFields(
                                 supplementalInformationFormer.formChallengeResponseFields(

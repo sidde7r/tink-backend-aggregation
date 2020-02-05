@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator.rpc.ConsentScaResponse;
@@ -8,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 
 public class CreateAccountsConsentScaAuthenticationStep implements AuthenticationStep {
@@ -27,7 +26,7 @@ public class CreateAccountsConsentScaAuthenticationStep implements Authenticatio
     }
 
     @Override
-    public Optional<SupplementInformationRequester> execute(AuthenticationRequest request)
+    public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         ConsentScaResponse consentResponse =
                 (ConsentScaResponse)
@@ -35,6 +34,6 @@ public class CreateAccountsConsentScaAuthenticationStep implements Authenticatio
 
         userState.saveScaMethods(consentResponse.getScaMethods());
 
-        return Optional.empty();
+        return AuthenticationStepResponse.executeNextStep();
     }
 }

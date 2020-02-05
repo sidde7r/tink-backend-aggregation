@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.step;
 
-import java.util.Optional;
 import java.util.Random;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 
-public class PinCodeGeneratorAuthenticationStep implements AuthenticationStep {
+public class PinCodeGeneratorAuthenticationStep extends AbstractAuthenticationStep {
 
     private static final int DEFAULT_LENGTH = 4;
     private final int length;
@@ -26,7 +24,7 @@ public class PinCodeGeneratorAuthenticationStep implements AuthenticationStep {
     }
 
     @Override
-    public Optional<SupplementInformationRequester> execute(AuthenticationRequest request)
+    public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         Random random = new Random();
         StringBuilder pin = new StringBuilder();
@@ -34,6 +32,6 @@ public class PinCodeGeneratorAuthenticationStep implements AuthenticationStep {
             pin.append(random.nextInt(10));
         }
         callbackProcessor.process(pin.toString());
-        return Optional.empty();
+        return AuthenticationStepResponse.executeNextStep();
     }
 }

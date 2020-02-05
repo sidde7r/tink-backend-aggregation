@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
-import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -9,40 +8,74 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 
 public abstract class StatelessProgressiveAuthenticator implements AuthenticationControllerType {
 
+    private AuthenticationStep currentStep;
+
     public SteppableAuthenticationResponse processAuthentication(
             final SteppableAuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        List<? extends AuthenticationStep> stepsToProcess = findAndExtractStepsToProcess(request);
-        for (AuthenticationStep step : stepsToProcess) {
-            Optional<SupplementInformationRequester> response = step.execute(request.getPayload());
-            request.clearManualStepCallbackData();
-            if (response.isPresent()) {
+        Optional<AuthenticationStep> stepToExecute = determineStepToExecute(request);
+        while (stepToExecute.isPresent()) {
+            currentStep = stepToExecute.get();
+            AuthenticationStepResponse stepResponse = executeStep(request);
+            if (stepResponse.isAuthenticationFinished()) {
+                break;
+            } else if (stepResponse.getSupplementInformationRequester().isPresent()) {
                 return SteppableAuthenticationResponse.intermediateResponse(
-                        step.getIdentifier(), response.get());
+                        currentStep.getIdentifier(),
+                        stepResponse.getSupplementInformationRequester().get());
             }
+            stepToExecute = determineStepToExecute(stepResponse);
         }
         return SteppableAuthenticationResponse.finalResponse();
     }
 
-    private List<? extends AuthenticationStep> findAndExtractStepsToProcess(
-            final SteppableAuthenticationRequest request)
+    private AuthenticationStepResponse executeStep(SteppableAuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        List<? extends AuthenticationStep> authSteps = Lists.newArrayList(authenticationSteps());
-        if (request.getStepIdentifier().isPresent()) {
-            for (int i = 0; i < authSteps.size(); i++) {
-                if (authSteps.get(i).getIdentifier().equals(request.getStepIdentifier().get())) {
-                    return authSteps.subList(i, authSteps.size());
-                }
-            }
-            throw new IllegalStateException(
-                    "Step with identifier ["
-                            + request.getStepIdentifier().get()
-                            + "] doesn't exist");
+        AuthenticationStepResponse response = currentStep.execute(request.getPayload());
+        request.clearManualStepCallbackData();
+        return response;
+    }
+
+    private Optional<AuthenticationStep> determineStepToExecute(
+            SteppableAuthenticationRequest steppableAuthenticationRequest) {
+        if (steppableAuthenticationRequest.getStepIdentifier().isPresent()) {
+            return Optional.of(
+                    getStepById(steppableAuthenticationRequest.getStepIdentifier().get()));
         } else {
-            return authSteps;
+            return authenticationSteps().isEmpty()
+                    ? Optional.empty()
+                    : Optional.of(authenticationSteps().get(0));
         }
     }
 
-    public abstract Iterable<? extends AuthenticationStep> authenticationSteps()
-            throws AuthenticationException, AuthorizationException;
+    private Optional<AuthenticationStep> determineStepToExecute(
+            AuthenticationStepResponse response) {
+        if (response.getNextStepId().isPresent()) {
+            return Optional.of(getStepById(response.getNextStepId().get()));
+        } else {
+            return getStepNextToCurrent();
+        }
+    }
+
+    private AuthenticationStep getStepById(String stepId) {
+        List<? extends AuthenticationStep> authSteps = authenticationSteps();
+        return authSteps.stream()
+                .filter(s -> s.getIdentifier().equals(stepId))
+                .findAny()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Step with identifier [" + stepId + "] doesn't exist"));
+    }
+
+    private Optional<AuthenticationStep> getStepNextToCurrent() {
+        List<? extends AuthenticationStep> authSteps = authenticationSteps();
+        int currentStepId = authSteps.indexOf(currentStep);
+        if (currentStepId < authSteps.size() - 1) {
+            return Optional.of(authSteps.get(currentStepId + 1));
+        }
+        return Optional.empty();
+    }
+
+    public abstract List<? extends AuthenticationStep> authenticationSteps();
 }

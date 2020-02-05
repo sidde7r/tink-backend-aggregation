@@ -147,7 +147,8 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
 
         AuthenticationStep step = authenticationSteps.poll();
         return SteppableAuthenticationResponse.intermediateResponse(
-                step.getIdentifier(), step.execute(request.getPayload()).get());
+                step.getIdentifier(),
+                step.execute(request.getPayload()).getSupplementInformationRequester().get());
     }
 
     private SupplementalWaitRequest buildSupplementalWaitRequest() {
@@ -184,13 +185,17 @@ public class GenericAgent implements Agent, ProgressiveAuthAgent, RefreshCheckin
 
         ThirdPartyAppAuthenticationStep openThirdPartyApp =
                 new ThirdPartyAppAuthenticationStep(
+                        "sibsThirdPartyAuthStep",
                         authenticationService.login(request, persistentStorage),
                         buildSupplementalWaitRequest(),
                         this::processCallbackData);
 
         ThirdPartyAppAuthenticationStep waitForResponse =
                 new ThirdPartyAppAuthenticationStep(
-                        null, buildSupplementalWaitRequest(), this::processCallbackData);
+                        "sibsThirdPartyWaitAuthStep",
+                        null,
+                        buildSupplementalWaitRequest(),
+                        this::processCallbackData);
 
         linkedList.add(openThirdPartyApp);
         linkedList.add(waitForResponse);

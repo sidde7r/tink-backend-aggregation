@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 
 final class PostRedirectStep implements AuthenticationStep {
 
@@ -16,11 +15,11 @@ final class PostRedirectStep implements AuthenticationStep {
     }
 
     @Override
-    public Optional<SupplementInformationRequester> execute(final AuthenticationRequest request)
+    public AuthenticationStepResponse execute(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
         authenticator.collect(request.getCallbackData());
 
-        return Optional.empty();
+        return AuthenticationStepResponse.executeNextStep();
     }
 }

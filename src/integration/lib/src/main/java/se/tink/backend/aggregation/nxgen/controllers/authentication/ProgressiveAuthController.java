@@ -58,7 +58,8 @@ public final class ProgressiveAuthController {
             final AuthenticationStep upcomingStep =
                     authenticationSteps.get(authenticationSteps.indexOf(stepToExecute) + 1);
             return SteppableAuthenticationResponse.intermediateResponse(
-                    upcomingStep.getIdentifier(), stepToExecute.execute(loadedRequest).get());
+                    upcomingStep.getIdentifier(),
+                    stepToExecute.execute(loadedRequest).getSupplementInformationRequester().get());
         }
     }
 

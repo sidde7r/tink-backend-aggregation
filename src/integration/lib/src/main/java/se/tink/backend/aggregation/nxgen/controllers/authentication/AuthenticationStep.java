@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 
@@ -18,7 +17,7 @@ public interface AuthenticationStep {
      * @throws AuthenticationException
      * @throws AuthorizationException
      */
-    Optional<SupplementInformationRequester> execute(AuthenticationRequest request)
+    AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException;
 
     default String getIdentifier() {
