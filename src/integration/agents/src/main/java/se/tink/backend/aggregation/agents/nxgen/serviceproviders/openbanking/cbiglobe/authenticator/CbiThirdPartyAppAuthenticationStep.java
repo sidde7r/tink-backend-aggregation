@@ -57,16 +57,18 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
     }
 
     private void processThirdPartyCallback() throws AuthorizationException {
-        try {
-            if (consentManager.isConsentAccepted()) {
-                userState.finishManualAuthenticationStep();
-            } else {
-                throw new SessionException(SessionError.SESSION_EXPIRED);
+        if (consentType.equals(ConsentType.BALANCE_TRANSACTION)) {
+            try {
+                if (consentManager.isConsentAccepted()) {
+                    userState.finishManualAuthenticationStep();
+                } else {
+                    throw new SessionException(SessionError.SESSION_EXPIRED);
+                }
+            } catch (SessionException e) {
+                throw new AuthorizationException(
+                        AuthorizationError.UNAUTHORIZED,
+                        "Authorization failed, consents status is not accepted.");
             }
-        } catch (SessionException e) {
-            throw new AuthorizationException(
-                    AuthorizationError.UNAUTHORIZED,
-                    "Authorization failed, consents status is not accepted.");
         }
     }
 
