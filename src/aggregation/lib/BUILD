@@ -47,6 +47,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/bnpparibasfortis",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/bpost",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/crelan",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/deutschebank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/ing",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/kbc",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/commerzbank",

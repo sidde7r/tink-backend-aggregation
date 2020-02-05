@@ -6,7 +6,6 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 
@@ -16,8 +15,6 @@ public class DeutscheBankBEAgentTest {
             new ArgumentManager<>(UsernameArgumentEnum.values());
     private final ArgumentManager<IbanArgumentEnum> ibanManager =
             new ArgumentManager<>(IbanArgumentEnum.values());
-    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> loadBeforeSaveAfterManager =
-            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -29,7 +26,6 @@ public class DeutscheBankBEAgentTest {
     public void setup() {
         usernameManager.before();
         ibanManager.before();
-        loadBeforeSaveAfterManager.before();
         builder =
                 new AgentIntegrationTest.Builder("be", "be-deutschebank-ob")
                         .addCredentialField(
@@ -40,14 +36,8 @@ public class DeutscheBankBEAgentTest {
                         .setFinancialInstitutionId("deutschebank-be")
                         .setAppId("tink")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(
-                                Boolean.parseBoolean(
-                                        loadBeforeSaveAfterManager.get(
-                                                LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
-                        .saveCredentialsAfter(
-                                Boolean.parseBoolean(
-                                        loadBeforeSaveAfterManager.get(
-                                                LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)));
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test
