@@ -16,6 +16,8 @@ public class NordeaNoAgentTest {
                 new AgentIntegrationTest.Builder("NO", "no-nordea-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
+                        .setFinancialInstitutionId("nordea")
+                        .setAppId("tink")
                         .saveCredentialsAfter(false);
     }
 
