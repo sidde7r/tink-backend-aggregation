@@ -20,10 +20,7 @@ public class TransactionalAccount extends Account {
     private TransactionalAccountType accountType;
 
     TransactionalAccount(TransactionalAccountBuilder builder, BalanceModule balanceModule) {
-        super(
-                builder,
-                balanceModule.getExactBalance(),
-                balanceModule.getExactAvaliableCredit().orElse(null));
+        super(builder, balanceModule);
         this.accountType = builder.getTransactionalType();
     }
 
