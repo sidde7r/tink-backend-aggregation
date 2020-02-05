@@ -177,7 +177,6 @@ public class ArgentaApiClient {
     private <T> T getRequestWithAuthorization(Class<T> responseClass, RequestBuilder request) {
         setAuthorization(request);
         HttpResponse response = request.get(HttpResponse.class);
-        storeAuthorization(response);
         return response.getBody(responseClass);
     }
 

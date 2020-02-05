@@ -140,8 +140,7 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
         persistentStorage.setNewCredential(true);
         StartAuthResponse startAuthResponse = startAuth(cardNumber, deviceToken, false);
         persistentStorage.storeDeviceId(deviceToken);
-        ValidateAuthResponse validateAuthResponse = validateDevice(startAuthResponse, cardNumber);
-        return validateAuthResponse;
+        return validateDevice(startAuthResponse, cardNumber);
     }
 
     private ValidateAuthResponse validatePin(StartAuthResponse startAuthResponse, String cardNumber)
