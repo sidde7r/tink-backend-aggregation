@@ -46,9 +46,11 @@ If you run into problems try deleting both the service and the deployment:
 kubectl delete deployment.apps/coordination
 kubectl delete deployment.apps/cache
 kubectl delete deployment.apps/aggregationdb
+kubectl delete deployment.apps/providerdb
 kubectl delete service -n default coordination
 kubectl delete service -n default cache
 kubectl delete service -n default aggregationdb
+kubectl delete service -n default providerdb
 ```
 
 ## Running aggregation locally
