@@ -63,7 +63,24 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
                 .setPending(isPending)
                 .setPayload(
                         TransactionPayloadTypes.DETAILS, transaction.getRaboTransactionTypeName())
+                .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL,
+                        getCounterPartyName(transaction))
+                .setPayload(
+                        TransactionPayloadTypes.TRANSFER_PROVIDER,
+                        transaction.getInitiatingPartyName())
+                .setPayload(TransactionPayloadTypes.MESSAGE, getRemittanceInformation(transaction))
                 .build();
+    }
+
+    private static String getCounterPartyName(TransactionItem transaction) {
+        String counterPartyName =
+                Stream.of(transaction.getCreditorName(), transaction.getDebtorName())
+                        .filter(Objects::nonNull)
+                        .filter(s -> !s.isEmpty())
+                        .findFirst()
+                        .orElse("");
+        return counterPartyName;
     }
 
     private static String createDescription(final TransactionItem transaction) {
@@ -76,6 +93,16 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
+    }
+
+    private static String getRemittanceInformation(final TransactionItem transaction) {
+        return Stream.of(
+                        transaction.getRemittanceInformationStructured(),
+                        transaction.getRemittanceInformationUnstructured())
+                .filter(Objects::nonNull)
+                .filter(r -> !r.isEmpty())
+                .findFirst()
+                .orElse("");
     }
 
     @JsonIgnore
