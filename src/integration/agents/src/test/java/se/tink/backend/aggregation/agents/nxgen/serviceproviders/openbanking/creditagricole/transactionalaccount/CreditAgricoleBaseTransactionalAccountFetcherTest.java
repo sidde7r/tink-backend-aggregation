@@ -177,7 +177,7 @@ public class CreditAgricoleBaseTransactionalAccountFetcherTest {
 
         // then
         verify(apiClient, times(1))
-                .getTransactions(account.getApiIdentifier(), toDate("2019-11-03"), toDate);
+                .getTransactions(account.getApiIdentifier(), toDate("2019-11-04"), toDate);
         assertTrue(response.canFetchMore().isPresent());
         assertFalse(response.canFetchMore().get());
     }

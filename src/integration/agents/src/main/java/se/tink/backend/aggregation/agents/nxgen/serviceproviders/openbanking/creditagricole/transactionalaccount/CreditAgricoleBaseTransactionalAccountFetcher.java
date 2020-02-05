@@ -59,7 +59,7 @@ public class CreditAgricoleBaseTransactionalAccountFetcher
         return PaginatorResponseImpl.create(
                 apiClient
                         .getTransactions(
-                                account.getApiIdentifier(), DateUtils.addDays(toDate, -90), toDate)
+                                account.getApiIdentifier(), DateUtils.addDays(toDate, -89), toDate)
                         .getTinkTransactions(),
                 false);
     }
