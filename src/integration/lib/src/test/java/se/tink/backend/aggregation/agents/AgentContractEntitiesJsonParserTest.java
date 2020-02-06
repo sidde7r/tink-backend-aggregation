@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.framework.assertions.utils.ResourceFil
 
 public class AgentContractEntitiesJsonParserTest {
 
-    ResourceFileReader reader = new ResourceFileReader();
+    private ResourceFileReader reader = new ResourceFileReader();
 
     @Test
     public void testContractJsonParsing() {

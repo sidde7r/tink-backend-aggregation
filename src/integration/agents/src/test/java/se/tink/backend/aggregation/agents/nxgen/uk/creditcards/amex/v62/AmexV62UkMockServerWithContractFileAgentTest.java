@@ -23,7 +23,6 @@ public final class AmexV62UkMockServerWithContractFileAgentTest
 
     @Test
     public void testRefreshWithJSONContractFile() throws Exception {
-
         // Given
         prepareMockServer(
                 new WiremockS3LogRequestResponseParser(

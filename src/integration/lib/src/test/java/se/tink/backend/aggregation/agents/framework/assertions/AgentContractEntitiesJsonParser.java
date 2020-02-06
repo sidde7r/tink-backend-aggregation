@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentCon
 public class AgentContractEntitiesJsonParser {
 
     public AgentContractEntity parse(String jsonContent) {
-
         try {
             return new ObjectMapper().readValue(jsonContent, AgentContractEntity.class);
         } catch (IOException e) {

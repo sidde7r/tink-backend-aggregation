@@ -14,20 +14,17 @@ import java.util.List;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class AccountDeserialiser extends JsonDeserializer<List<Account>> {
+public class AccountDeserializer extends JsonDeserializer<List<Account>> {
+
     @Override
     public List<Account> deserialize(
             JsonParser jsonParser, DeserializationContext deserializationContext)
             throws IOException, JsonProcessingException {
-
         final JsonNode rawList = jsonParser.getCodec().readTree(jsonParser);
-
         final List<Account> entities = new ArrayList<>();
-
         if (rawList.isNull()) {
             return null;
         }
-
         for (JsonNode rawNode : rawList) {
             JsonNode exactBalance = rawNode.get("exactBalance");
             JsonNode exactAvailableCredit = rawNode.get("exactAvailableCredit");
@@ -45,7 +42,6 @@ public class AccountDeserialiser extends JsonDeserializer<List<Account>> {
                             exactAvailableCredit.get("currencyCode").asText()));
             entities.add(account);
         }
-
         return entities;
     }
 }
