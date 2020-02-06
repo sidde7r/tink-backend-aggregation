@@ -92,7 +92,7 @@ public class AccountEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(getAccountNumber())
                                 .withAccountNumber(getAccountNumber())
-                                .withAccountName(getAccountName())
+                                .withAccountName(Strings.nullToEmpty(getAccountName()))
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 Type.PAYMENT_CARD_NUMBER, maskedPan))
