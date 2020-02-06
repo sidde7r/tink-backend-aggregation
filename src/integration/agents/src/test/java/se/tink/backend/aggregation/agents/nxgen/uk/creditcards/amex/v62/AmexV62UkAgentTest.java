@@ -6,7 +6,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 @Ignore
-public class AmericanExpressV62UKAgentTest {
+public class AmexV62UkAgentTest {
 
     private final String USERNAME = "";
     private final String PASSWORD = "";
