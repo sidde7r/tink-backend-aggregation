@@ -4,6 +4,7 @@ import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
+import com.google.common.util.concurrent.RateLimiter;
 import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
 import java.util.List;
@@ -39,7 +40,13 @@ public class SqsConsumer implements Managed, QueueConsumer {
                     @Override
                     protected void run() {
                         try {
+                            // Ensure that we consume a maximum of two queue messages a second.
+                            // Production rate will be way higher than this, leading to a long tail
+                            // of the background refresh. Observed peak individual pods before this
+                            // change has been noted to be around 5 consumptions/second.
+                            RateLimiter rateLimiter = RateLimiter.create(2);
                             while (running.get()) {
+                                rateLimiter.acquire();
                                 ReceiveMessageRequest request = createReceiveMessagesRequest();
                                 List<Message> messages = readMessagesFromQueue(request);
 
