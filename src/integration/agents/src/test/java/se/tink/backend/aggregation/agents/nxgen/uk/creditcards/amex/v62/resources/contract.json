@@ -2,6 +2,14 @@
   "accounts": [
     {
       "accountNumber": "XXX-11111",
+      "exactAvailableCredit": {
+        "currencyCode": "GBP",
+        "value": 0.0
+      },
+      "exactBalance": {
+        "currencyCode": "GBP",
+        "value": 0.0
+      },
       "accountExclusion": "NONE",
       "currencyCode": "GBP",
       "bankId": "XXX11111",
