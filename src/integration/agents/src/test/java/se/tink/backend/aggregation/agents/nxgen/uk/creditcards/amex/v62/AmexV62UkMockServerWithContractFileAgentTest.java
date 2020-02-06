@@ -9,7 +9,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
-import se.tink.backend.aggregation.agents.framework.assertions.AgentContractFileParser;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.utils.wiremock.WiremockS3LogRequestResponseParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
@@ -33,8 +33,10 @@ public final class AmexV62UkMockServerWithContractFileAgentTest
                                 "resources/mock.txt"),
                         "https://global.americanexpress.com"));
 
+        AgentContractEntitiesJsonFileParser contractParser =
+                new AgentContractEntitiesJsonFileParser();
         AgentContractEntity expected =
-                AgentContractFileParser.parseAgentContractFile(
+                contractParser.parseContractOnBasisOfFile(
                         String.format(
                                 "%s/%s",
                                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62",
