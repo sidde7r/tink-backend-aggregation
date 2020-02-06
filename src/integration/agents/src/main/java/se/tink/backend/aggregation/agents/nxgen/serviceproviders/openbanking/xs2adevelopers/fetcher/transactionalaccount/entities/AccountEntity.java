@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -17,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -40,14 +38,6 @@ public class AccountEntity {
 
     public LinksEntity getLinks() {
         return links;
-    }
-
-    public String getAccountType() {
-        if (accountType == null) {
-            return cashAccountType;
-        } else {
-            return accountType;
-        }
     }
 
     @JsonIgnore
@@ -114,21 +104,11 @@ public class AccountEntity {
                 .build();
     }
 
-    @JsonIgnore
-    private ExactCurrencyAmount getAvailableBalance() {
-        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
-                .filter(BalanceEntity::isAvailableBalance)
-                .map(BalanceEntity::toAmount)
-                .findFirst()
-                .orElse(BalanceEntity.DEFAULT);
-    }
-
     public String getResourceId() {
         return resourceId;
     }
 
     private String getAccountNumber() {
-
         if (!Strings.isNullOrEmpty(iban)) {
             return iban;
         } else if (!Strings.isNullOrEmpty(maskedPan)) {
@@ -138,11 +118,11 @@ public class AccountEntity {
     }
 
     private String getAccountName() {
-        if (!Strings.isNullOrEmpty(name)) {
-            return name;
-        } else {
-            return accountType;
-        }
+        return !Strings.isNullOrEmpty(name) ? name : getAccountType();
+    }
+
+    private String getAccountType() {
+        return accountType != null ? accountType : cashAccountType;
     }
 
     public void setBalance(List<BalanceEntity> balances) {
