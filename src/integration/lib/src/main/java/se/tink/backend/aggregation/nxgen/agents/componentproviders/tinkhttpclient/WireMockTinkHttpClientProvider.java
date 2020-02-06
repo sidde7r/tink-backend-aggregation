@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.agents.strategy;
+package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.CompositeAgentContext;
@@ -10,21 +10,15 @@ import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IntegrationWireMockTestAgentStrategy implements SubsequentGenerationAgentStrategy {
+public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvider {
 
     private final TinkHttpClient tinkHttpClient;
-    private final CredentialsRequest credentialsRequest;
-    private final CompositeAgentContext context;
-    private final SuperAbstractAgentStrategy superAbstractAgentStrategy;
 
-    public IntegrationWireMockTestAgentStrategy(
+    public WireMockTinkHttpClientProvider(
             final CredentialsRequest credentialsRequest,
             final CompositeAgentContext context,
             final SignatureKeyPair signatureKeyPair,
             final String wireMockServerHost) {
-
-        this.credentialsRequest = credentialsRequest;
-        this.context = context;
 
         final TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
@@ -46,28 +40,10 @@ public class IntegrationWireMockTestAgentStrategy implements SubsequentGeneratio
 
         this.tinkHttpClient =
                 new IntegrationWireMockTestTinkHttpClient(httpClient, wireMockServerHost);
-
-        this.superAbstractAgentStrategy =
-                new DefaultSuperAbstractAgentStrategy(credentialsRequest, context);
     }
 
     @Override
     public TinkHttpClient getTinkHttpClient() {
         return tinkHttpClient;
-    }
-
-    @Override
-    public CredentialsRequest getCredentialsRequest() {
-        return credentialsRequest;
-    }
-
-    @Override
-    public CompositeAgentContext getContext() {
-        return context;
-    }
-
-    @Override
-    public SuperAbstractAgentStrategy getSuperAbstractAgentStrategy() {
-        return superAbstractAgentStrategy;
     }
 }

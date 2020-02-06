@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ModuleDepe
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.UserInteractionMultiStepsProcess;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -25,7 +25,7 @@ public class IngAgent extends SubsequentGenerationAgent<IngAuthenticator>
 
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
+        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
         initializeAgentDependencies(new IngModuleDependenciesRegistration());
     }
 
@@ -34,7 +34,7 @@ public class IngAgent extends SubsequentGenerationAgent<IngAuthenticator>
             CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair) {
-        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
+        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
         initializeAgentDependencies(moduleDependenciesRegistration);
     }
 

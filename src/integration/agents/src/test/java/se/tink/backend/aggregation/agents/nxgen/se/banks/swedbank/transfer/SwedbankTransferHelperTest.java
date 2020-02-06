@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.ConfirmTransferResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelperImpl;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -23,7 +24,7 @@ public class SwedbankTransferHelperTest {
     public void before() {
         AgentContext context = Mockito.mock(AgentContext.class);
         SupplementalInformationHelper supplementalInformationHelper =
-                Mockito.mock(SupplementalInformationHelper.class);
+                Mockito.mock(SupplementalInformationHelperImpl.class);
         Catalog catalog = Mockito.mock(Catalog.class);
         SwedbankDefaultApiClient apiClient = Mockito.mock(SwedbankDefaultApiClient.class);
         boolean isBankId = true;

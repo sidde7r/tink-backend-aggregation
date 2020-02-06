@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
@@ -236,7 +237,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private Map<String, String> askSupplementalInformation(Field... fields)
             throws SupplementalInfoException {
         SupplementalInformationController supplementalInformationController =
-                new SupplementalInformationController(context, request.getCredentials());
+                new SupplementalInformationControllerImpl(context, request.getCredentials());
 
         return supplementalInformationController.askSupplementalInformation(fields);
     }

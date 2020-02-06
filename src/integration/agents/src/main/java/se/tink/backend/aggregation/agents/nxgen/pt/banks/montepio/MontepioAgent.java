@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.loans.MontepioLoansFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -42,7 +42,7 @@ public class MontepioAgent extends SubsequentProgressiveGenerationAgent
 
     public MontepioAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
+        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
         this.apiClient = new MontepioApiClient(client, sessionStorage);
         this.transactionalAccountRefreshController = constructAccountRefreshController();
         this.investmentRefreshController = constructInvestmentRefreshController();

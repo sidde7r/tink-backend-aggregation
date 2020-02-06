@@ -25,8 +25,12 @@ import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderConfigurationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.S3StorageConfiguration;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
-import se.tink.backend.aggregation.nxgen.agents.strategy.AgentStrategyFactory;
-import se.tink.backend.aggregation.nxgen.agents.strategy.ProductionAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.TinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.FakeCreditSafeService;
 import se.tink.backend.aggregation.resources.FakeProviderConfigurationService;
@@ -154,7 +158,10 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(AggregationServiceConfiguration.class).toInstance(configuration);
         bind(AgentsServiceConfiguration.class)
                 .toInstance(configuration.getAgentsServiceConfiguration());
-        bind(AgentStrategyFactory.class).to(ProductionAgentStrategyFactory.class);
+        bind(TinkHttpClientProviderFactory.class).to(NextGenTinkHttpClientProviderFactory.class);
+        bind(SupplementalInformationProviderFactory.class)
+                .to(SupplementalInformationProviderFactoryImpl.class);
+        bind(AgentContextProviderFactory.class).to(AgentContextProviderFactoryImpl.class);
         bind(TppSecretsServiceConfiguration.class)
                 .toInstance(
                         configuration

@@ -4,8 +4,8 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategy;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -19,21 +19,20 @@ public abstract class NextGenerationAgent extends SubsequentGenerationAgent<Auth
     protected final ProviderSessionCacheController providerSessionCacheController;
     private Authenticator authenticator;
 
-    protected NextGenerationAgent(SubsequentGenerationAgentStrategy agentStrategy) {
-        super(agentStrategy);
-        SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProvider(request, supplementalRequester, credentials);
+    protected NextGenerationAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         this.supplementalInformationController =
-                supplementalInformationProvider.getSupplementalInformationController();
-        this.supplementalInformationHelper =
-                supplementalInformationProvider.getSupplementalInformationHelper();
+                componentProvider.getSupplementalInformationController();
+        this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
         this.providerSessionCacheController =
                 new ProviderSessionCacheController(providerSessionCacheContext);
     }
 
+    /** @deprecated Use AgentComponentProvider constructor instead */
+    @Deprecated
     protected NextGenerationAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        this(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
+        this(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
     }
 
     protected abstract Authenticator constructAuthenticator();

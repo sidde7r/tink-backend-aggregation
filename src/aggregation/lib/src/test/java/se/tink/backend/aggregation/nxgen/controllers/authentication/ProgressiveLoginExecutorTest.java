@@ -13,6 +13,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 
 public class ProgressiveLoginExecutorTest {
 
@@ -24,7 +25,8 @@ public class ProgressiveLoginExecutorTest {
     @Before
     public void init() {
         agent = Mockito.mock(ProgressiveAuthAgent.class);
-        supplementalInformationController = Mockito.mock(SupplementalInformationController.class);
+        supplementalInformationController =
+                Mockito.mock(SupplementalInformationControllerImpl.class);
         credentials = Mockito.mock(Credentials.class);
         objectUnderTest = new ProgressiveLoginExecutor(supplementalInformationController, agent);
     }

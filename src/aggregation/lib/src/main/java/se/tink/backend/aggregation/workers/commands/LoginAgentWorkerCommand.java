@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -81,7 +82,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         this.credentials = request.getCredentials();
         this.user = request.getUser();
         this.supplementalInformationController =
-                new SupplementalInformationController(context, request.getCredentials());
+                new SupplementalInformationControllerImpl(context, request.getCredentials());
         this.loginAgentEventProducer = loginAgentEventProducer;
         this.startTime = System.nanoTime();
     }

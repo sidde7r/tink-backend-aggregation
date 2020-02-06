@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.banks.isp;
 
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategy;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
@@ -10,8 +10,8 @@ public class IspAgent extends SubsequentProgressiveGenerationAgent implements Pr
 
     private final IspApiClient apiClient;
 
-    public IspAgent(SubsequentGenerationAgentStrategy strategy) {
-        super(strategy);
+    public IspAgent(final AgentComponentProvider componentProvider) {
+        super(componentProvider);
         applyFilters();
         apiClient = new IspApiClient(client, this.sessionStorage, this.persistentStorage);
     }

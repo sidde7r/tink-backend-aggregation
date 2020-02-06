@@ -25,8 +25,9 @@ import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestina
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.SupplementalInformationProvider;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -58,7 +59,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
             AgentContext context,
             AgentsServiceConfiguration configuration) {
         super(
-                SubsequentGenerationAgentStrategyFactory.nxgen(
+                ProductionAgentComponentProvider.create(
                         request, context, configuration.getSignatureKeyPair()));
         userState = new SibsUserState(persistentStorage);
         setConfiguration(configuration);
@@ -141,7 +142,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
     @Override
     public Optional<PaymentController> constructPaymentController() {
         SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProvider(request, supplementalRequester, credentials);
+                new SupplementalInformationProviderImpl(supplementalRequester, request);
         SignPaymentStrategy signPaymentStrategy =
                 SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(
                         apiClient,

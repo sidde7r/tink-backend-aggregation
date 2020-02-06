@@ -15,8 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.SupplementalInformationProvider;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -41,7 +42,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
 
     public CbiGlobeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
+        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
 
         temporaryStorage = new TemporaryStorage();
         apiClient = getApiClient(request.isManual());
@@ -135,8 +136,10 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProvider(request, supplementalRequester, credentials);
+
+        final SupplementalInformationProvider supplementalInformationProvider =
+                new SupplementalInformationProviderImpl(supplementalRequester, request);
+
         CbiGlobePaymentExecutor paymentExecutor =
                 new CbiGlobePaymentExecutor(
                         apiClient,

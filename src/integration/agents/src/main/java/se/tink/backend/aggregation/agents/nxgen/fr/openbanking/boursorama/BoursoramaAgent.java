@@ -18,7 +18,10 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.LegacyTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -44,8 +47,11 @@ public class BoursoramaAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(
-                SubsequentGenerationAgentStrategyFactory.legacy(
-                        request, context, agentsServiceConfiguration.getSignatureKeyPair()));
+                new AgentComponentProvider(
+                        new LegacyTinkHttpClientProvider(
+                                request, context, agentsServiceConfiguration.getSignatureKeyPair()),
+                        new SupplementalInformationProviderImpl(context, request),
+                        new AgentContextProviderImpl(request, context)));
 
         BoursoramaConfiguration agentConfiguration = getAgentConfiguration();
 

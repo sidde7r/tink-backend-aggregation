@@ -41,8 +41,11 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapp
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.strategy.IntegrationWireMockTestAgentStrategyFactory;
-import se.tink.backend.aggregation.nxgen.agents.strategy.ProductionAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.MockSupplementalInformationProviderFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.WireMockTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
@@ -56,6 +59,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
@@ -128,7 +132,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         provider);
 
         this.supplementalInformationController =
-                new SupplementalInformationController(context, credential);
+                new SupplementalInformationControllerImpl(context, credential);
     }
 
     private boolean loadCredentials() {
@@ -211,14 +215,22 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
             AgentFactory factory;
             if (wireMockServerHost != null) {
+                // Provide AgentFactory with mocked http client and supplemental information.
                 factory =
                         new AgentFactory(
                                 configuration,
-                                new IntegrationWireMockTestAgentStrategyFactory(
-                                        wireMockServerHost));
+                                new WireMockTinkHttpClientProviderFactory(wireMockServerHost),
+                                new MockSupplementalInformationProviderFactory(),
+                                new AgentContextProviderFactoryImpl());
 
             } else {
-                factory = new AgentFactory(configuration, new ProductionAgentStrategyFactory());
+                // Provide AgentFactory with 'production' components.
+                factory =
+                        new AgentFactory(
+                                configuration,
+                                new NextGenTinkHttpClientProviderFactory(),
+                                new SupplementalInformationProviderFactoryImpl(),
+                                new AgentContextProviderFactoryImpl());
             }
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);

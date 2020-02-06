@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication.BPostBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.entity.BPostBankEntityManager;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategy;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
@@ -15,8 +15,8 @@ public class BPostBankAgent extends SubsequentProgressiveGenerationAgent {
     private BPostBankAuthenticator authenticator;
     private BPostBankApiClient apiClient;
 
-    public BPostBankAgent(SubsequentGenerationAgentStrategy strategy) {
-        super(strategy);
+    public BPostBankAgent(final AgentComponentProvider componentProvider) {
+        super(componentProvider);
         apiClient = new BPostBankApiClient(client);
     }
 

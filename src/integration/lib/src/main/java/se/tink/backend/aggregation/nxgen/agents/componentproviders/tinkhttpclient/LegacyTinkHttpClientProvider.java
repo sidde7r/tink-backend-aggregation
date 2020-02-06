@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.agents.strategy;
+package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -7,26 +7,17 @@ import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-/**
- * A strategy for SubsequentGenerationAgent which binds TinkHttpClient to LegacyTinkHttpClient.
- *
- * @deprecated It is recommended to make your agent use NextGenTinkHttpClient instead.
- */
+/** @deprecated LegacyTinkHttpClient is to be replaced with NextGenTinkHttpClient. */
 @Deprecated
-public final class LegacySubsequentGenerationAgentStrategy
-        implements SubsequentGenerationAgentStrategy {
+public final class LegacyTinkHttpClientProvider implements TinkHttpClientProvider {
 
-    private final CredentialsRequest credentialsRequest;
-    private final AgentContext context;
     private final TinkHttpClient tinkHttpClient;
-    private final SuperAbstractAgentStrategy superAbstractAgentStrategy;
 
-    LegacySubsequentGenerationAgentStrategy(
+    public LegacyTinkHttpClientProvider(
             final CredentialsRequest credentialsRequest,
             final AgentContext context,
             final SignatureKeyPair signatureKeyPair) {
-        this.credentialsRequest = credentialsRequest;
-        this.context = context;
+
         tinkHttpClient =
                 new LegacyTinkHttpClient(
                         context.getAggregatorInfo(),
@@ -36,27 +27,10 @@ public final class LegacySubsequentGenerationAgentStrategy
                         credentialsRequest.getProvider(),
                         context.getLogMasker(),
                         LogMasker.shouldLog(credentialsRequest.getProvider()));
-        superAbstractAgentStrategy =
-                new DefaultSuperAbstractAgentStrategy(credentialsRequest, context);
     }
 
     @Override
     public TinkHttpClient getTinkHttpClient() {
         return tinkHttpClient;
-    }
-
-    @Override
-    public CredentialsRequest getCredentialsRequest() {
-        return credentialsRequest;
-    }
-
-    @Override
-    public AgentContext getContext() {
-        return context;
-    }
-
-    @Override
-    public SuperAbstractAgentStrategy getSuperAbstractAgentStrategy() {
-        return superAbstractAgentStrategy;
     }
 }

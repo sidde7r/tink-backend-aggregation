@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.AxaTransact
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.AxaSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
@@ -42,7 +42,7 @@ public final class AxaAgent
 
     public AxaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
+        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
         configureHttpClient(client);
         this.apiClient = new AxaApiClient(client);
         this.storage = makeStorage();

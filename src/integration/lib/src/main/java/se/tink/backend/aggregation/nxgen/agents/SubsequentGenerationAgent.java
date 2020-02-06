@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategy;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -59,8 +59,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     private SessionController sessionController;
     private PaymentController paymentController;
 
-    protected SubsequentGenerationAgent(final SubsequentGenerationAgentStrategy strategy) {
-        super(strategy.getSuperAbstractAgentStrategy());
+    protected SubsequentGenerationAgent(final AgentComponentProvider componentProvider) {
+        super(componentProvider);
         this.catalog = context.getCatalog();
         this.persistentStorage = new PersistentStorage();
         this.sessionStorage = new SessionStorage();
@@ -76,7 +76,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         MarketCode.valueOf(request.getProvider().getMarket()),
                         request.getProvider().getCurrency(),
                         request.getUser());
-        this.client = strategy.getTinkHttpClient();
+        this.client = componentProvider.getTinkHttpClient();
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();
         }
