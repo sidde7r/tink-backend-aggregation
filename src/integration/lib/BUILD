@@ -143,7 +143,7 @@ java_library(
 filegroup(
     name = "test_files",
     srcs = glob(
-        include = ["src/test/java/se/tink/backend/aggregation/agents/resources/*.txt"],
+        include = ["src/test/java/se/tink/backend/aggregation/agents/resources/*"],
     ),
     visibility = ["//visibility:public"],
 )
@@ -197,6 +197,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/masker",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/models",
         "//src/integration/payment:enums",

@@ -1,0 +1,78 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "XXX-11111",
+            "exactAvailableCredit": {
+                "currencyCode": "GBP",
+                "value": 0.0
+            },
+            "exactBalance": {
+                "currencyCode": "GBP",
+                "value": 0.0
+            },
+            "accountExclusion": "NONE",
+            "currencyCode": "GBP",
+            "bankId": "XXX11111",
+            "excluded": false,
+            "favored": false,
+            "name": "American Express Basic Card - 11111",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "flags": "[]",
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "MR M LASTNAME",
+            "availableCredit": 0.0,
+            "balance": 0.0
+        }
+    ],
+    "transactions": [
+        {
+            "accountId": "fabc330b9f804c7ca6c2a21c3fd255ae",
+            "amount": -403.25,
+            "date": 1552561200000,
+            "description": "interesting transaction",
+            "originalAmount": 0.0,
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "accountId": "fabc330b9f804c7ca6c2a21c3fd255ae",
+            "amount": -64.84,
+            "date": 1553770800000,
+            "description": "good transaction",
+            "originalAmount": 0.0,
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "accountId": "fabc330b9f804c7ca6c2a21c3fd255ae",
+            "amount": 64.84,
+            "date": 1554285600000,
+            "description": "PAYMENT RECEIVED - THANK YOU",
+            "originalAmount": 0.0,
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "accountId": "fabc330b9f804c7ca6c2a21c3fd255ae",
+            "amount": 551.4,
+            "date": 1553511600000,
+            "description": "PAYMENT RECEIVED - THANK YOU",
+            "originalAmount": 0.0,
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        }
+    ]
+}
