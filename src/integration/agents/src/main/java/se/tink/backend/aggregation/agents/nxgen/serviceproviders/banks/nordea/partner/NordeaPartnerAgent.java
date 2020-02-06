@@ -49,8 +49,10 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                 getAgentConfigurationController()
                         .getAgentConfigurationFromK8s(
                                 NordeaPartnerConstants.INTEGRATION_NAME,
+                                context.getClusterId(),
                                 NordeaPartnerConfiguration.class);
-        NordeaPartnerKeystore keystore = new NordeaPartnerKeystore(nordeaConfiguration);
+        NordeaPartnerKeystore keystore =
+                new NordeaPartnerKeystore(nordeaConfiguration, context.getClusterId());
         jweHelper = new NordeaPartnerJweHelper(keystore, nordeaConfiguration);
 
         apiClient.setConfiguration(nordeaConfiguration);

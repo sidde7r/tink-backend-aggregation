@@ -51,7 +51,7 @@ public class NordeaPartnerConstants {
 
     public static class Keystore {
         public static final String KEYSTORE_PATH =
-                "data/agents/serviceprovider/nordea/partner/TinkKeystore.jks";
+                "data/agents/serviceprovider/nordea/partner/{clusterId}.jks";
         public static final String SIGNING_KEY_ALIAS = "tinksign";
     }
 }

@@ -117,11 +117,30 @@ data:
 
         {{- if $agentsConfig.nordeapartner }}
         nordeapartner:
-          partnerId: "{{ $agentsConfig.nordeapartner.partnerId }}"
-          baseUrl: "{{ $agentsConfig.nordeapartner.baseUrl }}"
-          nordeaEncryptionPublicKey: "{{ $agentsConfig.nordeapartner.nordeaEncryptionPublicKey }}"
-          keyId: "{{ $agentsConfig.nordeapartner.keyId }}"
-          partnerKeystorePassword: "NORDEA_PARTNER_KEYSTOREPASSWORD"
+          {{- if $agentsConfig.nordeapartner.test }}
+          neston-staging:
+            partnerId: "{{ $agentsConfig.nordeapartner.test.partnerId }}"
+            baseUrl: "{{ $agentsConfig.nordeapartner.test.baseUrl }}"
+            nordeaEncryptionPublicKey: "{{ $agentsConfig.nordeapartner.test.nordeaEncryptionPublicKey }}"
+            keyId: "{{ $agentsConfig.nordeapartner.test.keyId }}"
+            partnerKeystorePassword: "NORDEA_PARTNER_TEST_KEYSTOREPASSWORD"
+          {{- end }}
+          {{- if $agentsConfig.nordeapartner.preprod }}
+          neston-preprod:
+            partnerId: "{{ $agentsConfig.nordeapartner.preprod.partnerId }}"
+            baseUrl: "{{ $agentsConfig.nordeapartner.preprod.baseUrl }}"
+            nordeaEncryptionPublicKey: "{{ $agentsConfig.nordeapartner.preprod.nordeaEncryptionPublicKey }}"
+            keyId: "{{ $agentsConfig.nordeapartner.preprod.keyId }}"
+            partnerKeystorePassword: "NORDEA_PARTNER_PREPROD_KEYSTOREPASSWORD"
+          {{- end }}
+          {{- if $agentsConfig.nordeapartner.prod }}
+          neston-production:
+            partnerId: "{{ $agentsConfig.nordeapartner.prod.partnerId }}"
+            baseUrl: "{{ $agentsConfig.nordeapartner.prod.baseUrl }}"
+            nordeaEncryptionPublicKey: "{{ $agentsConfig.nordeapartner.prod.nordeaEncryptionPublicKey }}"
+            keyId: "{{ $agentsConfig.nordeapartner.prod.keyId }}"
+            partnerKeystorePassword: "NORDEA_PARTNER_PROD_KEYSTOREPASSWORD"
+          {{- end }}
         {{- end }}
 
         {{- if $agentsConfig.dnb }}

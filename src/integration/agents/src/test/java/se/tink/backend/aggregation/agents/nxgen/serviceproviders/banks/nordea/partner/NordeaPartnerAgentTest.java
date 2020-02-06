@@ -28,6 +28,7 @@ public class NordeaPartnerAgentTest {
                 .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
+                .setClusterId("neston-staging")
                 .build()
                 .testRefresh();
     }
