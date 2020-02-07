@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.FormKeys;
-import se.tink.backend.aggregation.nxgen.http.Form;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public class TokenRequest {
     private String grantType;

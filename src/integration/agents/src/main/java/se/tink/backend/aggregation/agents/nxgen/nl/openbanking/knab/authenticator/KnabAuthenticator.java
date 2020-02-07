@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticat
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.authenticator.rpc.ConsentResponse;

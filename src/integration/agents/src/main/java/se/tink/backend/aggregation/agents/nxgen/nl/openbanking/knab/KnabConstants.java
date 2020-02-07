@@ -83,7 +83,6 @@ public final class KnabConstants {
         public static final String BOOKED = "booked";
     }
 
-
     public static class FormKeys {
         public static final String GRANT_TYPE = "grant_type";
         public static final String CODE = "code";
