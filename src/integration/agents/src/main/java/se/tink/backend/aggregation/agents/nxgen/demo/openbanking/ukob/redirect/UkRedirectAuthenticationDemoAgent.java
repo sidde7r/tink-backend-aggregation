@@ -1,6 +1,5 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
+package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.ukob.redirect;
 
-import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,15 +17,14 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.executor.transfer.PasswordDemoTransferExecutor;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.CreditCard;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.IdentityData;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.InvestmentAccounts;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.LoanAccount;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectOAuth2Authenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.ukob.redirect.UkRedirectAuthenticationDemoAgentConstants.CreditCard;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.ukob.redirect.UkRedirectAuthenticationDemoAgentConstants.IdentityData;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.ukob.redirect.UkRedirectAuthenticationDemoAgentConstants.InvestmentAccounts;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.ukob.redirect.UkRedirectAuthenticationDemoAgentConstants.LoanAccount;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.ukob.redirect.authenticator.UkRedirectOAuth2Authenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.ukob.redirect.pis.UkRedirectDemoPaymentExecutor;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
-import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoIdentityData;
@@ -34,57 +32,28 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
-public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
+public class UkRedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         implements RefreshTransferDestinationExecutor {
     private static final String USERNAME = "tink";
 
     private String provider;
     private boolean redirectToOxfordStaging;
 
-    public RedirectAuthenticationDemoAgent(
+    public UkRedirectAuthenticationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         this.provider = request.getProvider().getName();
         this.redirectToOxfordStaging = Objects.equals("oxford-staging", context.getClusterId());
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        // Note: It's on purpose that this agent does not use the
-        // AgentConfigurationController to get the callbackUri/redirectUri.
-        // This is only for customers to test the callbackUri without
-        // having to configure it etc.
-        String callbackUri = request.getCallbackUri();
-
-        RedirectOAuth2Authenticator redirectOAuth2Authenticator =
-                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri);
-
-        final OAuth2AuthenticationController controller =
-                new OAuth2AuthenticationController(
-                        persistentStorage,
-                        supplementalInformationHelper,
-                        redirectOAuth2Authenticator,
-                        credentials,
-                        strongAuthenticationState);
-
-        return new AutoAuthenticationController(
-                request,
-                context,
-                new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
-                controller);
     }
 
     @Override
@@ -103,11 +72,34 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
     }
 
     @Override
-    protected Optional<TransferController> constructTransferController() {
-        PasswordDemoTransferExecutor transferExecutor =
-                new PasswordDemoTransferExecutor(credentials, supplementalRequester);
+    public Optional<PaymentController> constructPaymentController() {
+        String callbackUri = request.getCallbackUri();
 
-        return Optional.of(new TransferController(null, transferExecutor, null, null));
+        UkRedirectOAuth2Authenticator redirectOAuth2Authenticator =
+                new UkRedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri);
+
+        OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        redirectOAuth2Authenticator,
+                        credentials,
+                        strongAuthenticationState);
+
+        ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController =
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper);
+
+        UkRedirectDemoPaymentExecutor paymentExecutor =
+                new UkRedirectDemoPaymentExecutor(
+                        credentials,
+                        supplementalRequester,
+                        controller,
+                        supplementalInformationHelper,
+                        thirdPartyAppAuthenticationController,
+                        strongAuthenticationState);
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
     @Override
@@ -120,12 +112,12 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
             @Override
             public String getName() {
-                return InvestmentAccounts.ACCOUNTNAME;
+                return "SmallInvestment";
             }
 
             @Override
             public double getAccountBalance() {
-                return InvestmentAccounts.ACCOUNTBALANCE;
+                return 4563;
             }
         };
     }
@@ -182,20 +174,9 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public List<DemoTransactionAccount> getTransactionAccounts() {
-        if (this.provider.matches(DemoConstants.MARKET_REGEX.UK_PROVIDERS_REGEX)) {
-            return Lists.newArrayList(
-                    DemoAccountDefinitionGenerator.getDemoTransactionalAccountWithZeroBalance(
-                            USERNAME, this.provider),
-                    DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                            USERNAME, this.provider, 0),
-                    DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                            USERNAME, this.provider, 1));
-
-        } else {
-            return Lists.newArrayList(
-                    DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                            USERNAME, this.provider));
-        }
+        return Collections.singletonList(
+                DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
+                        USERNAME, this.provider));
     }
 
     @Override
