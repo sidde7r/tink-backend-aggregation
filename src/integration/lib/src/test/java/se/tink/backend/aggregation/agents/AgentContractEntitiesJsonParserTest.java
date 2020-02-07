@@ -17,7 +17,7 @@ public class AgentContractEntitiesJsonParserTest {
                         String.format(
                                 "%s/%s",
                                 "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/resources",
-                                "contract_test.json"));
+                                "agent-contract.json"));
 
         AgentContractEntitiesJsonParser parser = new AgentContractEntitiesJsonParser();
         AgentContractEntity entity = parser.parse(jsonContent);

@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.Rule;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
-import se.tink.backend.aggregation.agents.framework.wiremock.utils.WiremockRequestResponseParser;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.RequestResponseParser;
 import se.tink.libraries.pair.Pair;
 
 public class AgentIntegrationMockServerTest {
@@ -24,13 +24,13 @@ public class AgentIntegrationMockServerTest {
     public WireMockRule wireMockRule =
             new WireMockRule(WireMockConfiguration.options().dynamicPort().dynamicHttpsPort());
 
-    private WiremockRequestResponseParser parser;
+    private RequestResponseParser parser;
 
     public int getWireMockPort() {
         return wireMockRule.httpsPort();
     }
 
-    public void prepareMockServer(WiremockRequestResponseParser parser) {
+    public void prepareMockServer(RequestResponseParser parser) {
         // TODO: Reset stub here
         // wireMockRule.reset();
         List<Pair<HTTPRequest, HTTPResponse>> data = parser.parseRequestResponsePairs();
