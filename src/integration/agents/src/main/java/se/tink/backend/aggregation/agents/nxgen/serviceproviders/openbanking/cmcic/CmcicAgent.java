@@ -33,7 +33,6 @@ public abstract class CmcicAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
-    private final String clientName;
     private final CmcicApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CmcicConfiguration cmcicConfiguration;
@@ -47,9 +46,6 @@ public abstract class CmcicAgent extends NextGenerationAgent
                 getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
 
         apiClient = new CmcicApiClient(client, persistentStorage, sessionStorage);
-
-        clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(apiClient);
     }
@@ -84,14 +80,12 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         credentials,
                         strongAuthenticationState);
 
-        AutoAuthenticationController autoAuthenticationController =
-                new AutoAuthenticationController(
-                        request,
-                        systemUpdater,
-                        new ThirdPartyAppAuthenticationController<>(
-                                controller, supplementalInformationHelper),
-                        controller);
-        return autoAuthenticationController;
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
