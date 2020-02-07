@@ -61,7 +61,7 @@ public class HandelsbankenSELoan {
         return findLoanInformationWith(SELoanSegment::amortization)
                 .map(SELoanProperty::asAmortizationValue)
                 .map(Amount::inSEK)
-                .orElse(null);
+                .orElse(Amount.inSEK(0));
     }
 
     private boolean multipleApplicantValue() {
