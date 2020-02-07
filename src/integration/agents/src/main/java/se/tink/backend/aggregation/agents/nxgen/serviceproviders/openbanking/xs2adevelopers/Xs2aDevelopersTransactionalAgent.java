@@ -25,7 +25,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    protected final String clientName;
     protected final TransactionalAccountRefreshController transactionalAccountRefreshController;
     protected Xs2aDevelopersApiClient apiClient;
 
@@ -34,7 +33,6 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         super(request, context, signatureKeyPair);
 
         apiClient = new Xs2aDevelopersApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
