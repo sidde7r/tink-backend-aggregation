@@ -233,13 +233,10 @@ public final class ArgentaApiClient {
     }
 
     private Map<String, Object> getHeaders(String requestId, String digest) {
-
-        return new HashMap<String, Object>() {
-            {
-                put(HeaderKeys.DIGEST, digest);
-                put(HeaderKeys.X_REQUEST_ID, requestId);
-            }
-        };
+        Map<String, Object> headers = new HashMap<>();
+        headers.put(HeaderKeys.DIGEST, digest);
+        headers.put(HeaderKeys.X_REQUEST_ID, requestId);
+        return headers;
     }
 
     public OAuth2Token exchangeRefreshToken(String refreshToken) {
