@@ -28,7 +28,7 @@ public class NemIdIFrameController {
     private static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
     private static final By ERROR_MESSAGE = By.cssSelector("p.error");
     private static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
-    static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
+    private static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
     private static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
     private static final By IFRAME = By.tagName("iframe");
 
@@ -41,7 +41,7 @@ public class NemIdIFrameController {
         this.webdriverHelper = new WebdriverHelper();
     }
 
-    public void clickLogin() {
+    private void clickLogin() {
         webdriverHelper.clickButton(SUBMIT_BUTTON);
     }
 
@@ -76,7 +76,6 @@ public class NemIdIFrameController {
 
             setUserName(username);
             setPassword(password);
-
             clickLogin();
             webdriverHelper.lookForErrorAndThrowIfFound();
 
@@ -89,14 +88,17 @@ public class NemIdIFrameController {
         }
     }
 
-    void pollNemidApp() {
-
+    private void sleepFor5s() {
         try {
-            // TODO: change this to check if page is still loading
             Thread.sleep(5000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
+    }
+
+    private void pollNemidApp() {
+        // TODO: change this to check if page is still loading
+        sleepFor5s();
         webdriverHelper.clickButton(NEMID_APP_BUTTON);
     }
 
