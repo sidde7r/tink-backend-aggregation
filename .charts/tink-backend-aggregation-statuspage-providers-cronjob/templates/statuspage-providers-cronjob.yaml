@@ -28,7 +28,7 @@ spec:
             fsGroup: 65535
           containers:
           - name: tests
-            image: gcr.io/tink-containers/tink-backend-aggregation-statuspage-providers-cronjob:{{ .Files.Get "tink-versions/tink-backend-aggregation-statuspage-providers-cronjob.txt" | default "latest" }}
+            image: gcr.io/tink-containers/tink-backend-aggregation-statuspage-providers-cronjob:{{ .Values.Version | default "latest" }}
             imagePullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
