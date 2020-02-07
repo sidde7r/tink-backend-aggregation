@@ -88,18 +88,18 @@ public class NemIdIFrameController {
         }
     }
 
+    private void pollNemidApp() {
+        // TODO: change this to check if page is still loading
+        sleepFor5s();
+        webdriverHelper.clickButton(NEMID_APP_BUTTON);
+    }
+
     private void sleepFor5s() {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-    }
-
-    private void pollNemidApp() {
-        // TODO: change this to check if page is still loading
-        sleepFor5s();
-        webdriverHelper.clickButton(NEMID_APP_BUTTON);
     }
 
     private String collectToken() throws AuthenticationException, AuthorizationException {
