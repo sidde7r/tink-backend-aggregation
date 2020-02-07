@@ -130,15 +130,14 @@ public class WebdriverHelper {
                     .timeouts()
                     .setScriptTimeout(PHANTOMJS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             LOGGER.error("Could not create PhantomJS WebDriver", e);
-            e.printStackTrace();
             driver.quit();
-            try {
-                throw e;
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
+            throw e;
+        } catch (InterruptedException e) {
+            LOGGER.error("Could not create PhantomJS WebDriver", e);
+            driver.quit();
+            Thread.currentThread().interrupt();
         }
         return driver;
     }
@@ -216,7 +215,7 @@ public class WebdriverHelper {
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
 
             Optional<WebElement> element = waitForElement(iframe);
@@ -267,10 +266,11 @@ public class WebdriverHelper {
         return elements.stream().filter(WebElement::isDisplayed);
     }
 
-    public void waitSomeMillis(long waitTime) {
+    private void waitSomeMillis(long waitTime) {
         try {
             Thread.sleep(waitTime);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
