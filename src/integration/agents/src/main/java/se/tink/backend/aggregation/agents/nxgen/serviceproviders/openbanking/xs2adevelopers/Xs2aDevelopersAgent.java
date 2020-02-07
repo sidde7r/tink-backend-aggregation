@@ -17,8 +17,6 @@ public abstract class Xs2aDevelopersAgent extends Xs2aDevelopersTransactionalAge
 
     private final CreditCardRefreshController creditCardRefreshController;
 
-    protected Xs2aDevelopersApiClient apiClient;
-
     protected Xs2aDevelopersAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
