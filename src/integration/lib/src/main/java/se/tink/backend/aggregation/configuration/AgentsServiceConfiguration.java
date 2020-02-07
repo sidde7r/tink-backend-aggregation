@@ -126,6 +126,6 @@ public class AgentsServiceConfiguration {
                         .collect(Collectors.toList());
         Preconditions.checkArgument(
                 countryKeys.size() > 0, "No proxies configured for country '%s'", country);
-        return countryProxies.get(countryKeys.get(seed % countryKeys.size()));
+        return countryProxies.get(countryKeys.get(Math.abs(seed) % countryKeys.size()));
     }
 }
