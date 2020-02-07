@@ -242,6 +242,8 @@ public class TransactionalAccountBuilderTest {
                                 BalanceModule.builder()
                                         .withBalance(Amount.inEUR(579.3))
                                         .setAvailableCredit(Amount.inEUR(420.7))
+                                        .setAvailableBalance(ExactCurrencyAmount.of(529.3, "EUR"))
+                                        .setCreditLimit(ExactCurrencyAmount.of(1000.0, "EUR"))
                                         .setInterestRate(0.00155)
                                         .build())
                         .withId(
@@ -279,6 +281,12 @@ public class TransactionalAccountBuilderTest {
         assertEquals("EUR", account.getBalance().getCurrency());
         assertNotNull(account.getAvailableCredit());
         assertEquals(420.7, account.getAvailableCredit().getValue(), 0);
+        assertNotNull(account.getExactAvailableBalance());
+        assertEquals(529.3, account.getExactAvailableBalance().getDoubleValue(), 0);
+        assertEquals("EUR", account.getExactAvailableBalance().getCurrencyCode());
+        assertNotNull(account.getExactCreditLimit());
+        assertEquals(1000.0, account.getExactCreditLimit().getDoubleValue(), 0);
+        assertEquals("EUR", account.getExactCreditLimit().getCurrencyCode());
 
         assertTrue(storage.isPresent());
         assertEquals("TestString", storage.get().x);

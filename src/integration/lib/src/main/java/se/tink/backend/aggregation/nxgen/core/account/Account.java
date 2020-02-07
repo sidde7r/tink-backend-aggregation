@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BuildStep;
@@ -50,9 +51,19 @@ public abstract class Account {
     protected TemporaryStorage temporaryStorage;
     protected Set<AccountFlag> accountFlags;
     protected ExactCurrencyAmount exactBalance;
+    protected ExactCurrencyAmount exactAvailableBalance;
     protected ExactCurrencyAmount exactAvailableCredit;
+    protected ExactCurrencyAmount exactCreditLimit;
     protected Map<String, String> payload;
 
+    protected Account(AccountBuilder<? extends Account, ?> builder, BalanceModule balanceModule) {
+        this(
+                builder,
+                balanceModule.getExactBalance(),
+                balanceModule.getExactAvaliableCredit().orElse(null));
+        this.exactAvailableBalance = balanceModule.getExactAvailableBalance();
+        this.exactCreditLimit = balanceModule.getExactCreditLimit();
+    }
     // Exists for interoperability only, do not ever use
     protected Account(
             AccountBuilder<? extends Account, ?> builder,
@@ -189,6 +200,14 @@ public abstract class Account {
 
     public ExactCurrencyAmount getExactAvailableCredit() {
         return exactAvailableCredit;
+    }
+
+    public ExactCurrencyAmount getExactAvailableBalance() {
+        return exactAvailableBalance;
+    }
+
+    public ExactCurrencyAmount getExactCreditLimit() {
+        return exactCreditLimit;
     }
 
     public List<AccountIdentifier> getIdentifiers() {
