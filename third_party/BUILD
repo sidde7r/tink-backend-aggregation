@@ -997,6 +997,15 @@ java_library(
 )
 
 java_library(
+    name = "org_apache_zookeeper_zookeeper",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@org_apache_zookeeper_zookeeper//jar",
+    ],
+    runtime_deps = [],
+)
+
+java_library(
     name = "org_apache_curator_curator_client",
     visibility = ["//visibility:public"],
     exports = [

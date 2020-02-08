@@ -43,6 +43,25 @@ java_binary(
     ],
 )
 
+java_binary(
+    name = "bin_decoupled",
+    args = [
+        "server",
+        "$(location :decoupled_config.out)",
+    ],
+    data = [
+        ":decoupled_config.out",
+        "//data",
+    ],
+    main_class = "se.tink.backend.aggregation.AggregationServiceContainer",
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//src/aggregation/service",
+        "//src/libraries/console_json_logger",
+        "//third_party:mysql_mysql_connector_java",
+    ],
+)
+
 genrule(
     name = "bin_deploy",
     # Implicitly built, see: https://docs.bazel.build/versions/master/be/java.html#java_binary_implicit_outputs
@@ -76,6 +95,11 @@ container_image(
 templated_file(
     name = "development_config",
     template = "development-minikube.yaml",
+)
+
+templated_file(
+    name = "decoupled_config",
+    template = "development-decoupled.yaml",
 )
 
 pkg_tar(

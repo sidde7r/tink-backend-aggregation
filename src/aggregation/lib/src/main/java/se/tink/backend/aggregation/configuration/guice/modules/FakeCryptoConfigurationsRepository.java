@@ -1,0 +1,160 @@
+package se.tink.backend.aggregation.configuration.guice.modules;
+
+import java.util.Collections;
+import java.util.List;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
+import se.tink.backend.aggregation.storage.database.models.CryptoConfigurationId;
+import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
+
+public class FakeCryptoConfigurationsRepository implements CryptoConfigurationsRepository {
+
+    private final AggregationServiceConfiguration configuration;
+
+    public FakeCryptoConfigurationsRepository(AggregationServiceConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
+    @Override
+    public List<CryptoConfiguration> findByCryptoConfigurationIdClientName(String clientName) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public CryptoConfiguration findByCryptoConfigurationId(CryptoConfigurationId cryptoId) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<CryptoConfiguration> findAll() {
+        System.out.println("hoy DummyCryptoConfigurationsRepository.findAll");
+        return Collections.singletonList(
+                configuration.getDevelopmentConfiguration().getCryptoConfiguration());
+    }
+
+    @Override
+    public List<CryptoConfiguration> findAll(Sort sort) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Page<CryptoConfiguration> findAll(Pageable pageable) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<CryptoConfiguration> findAll(Iterable<CryptoConfigurationId> iterable) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public long count() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void delete(CryptoConfigurationId cryptoConfigurationId) {
+
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void delete(CryptoConfiguration cryptoConfiguration) {
+
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void delete(Iterable<? extends CryptoConfiguration> iterable) {
+
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void deleteAll() {
+
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public <S extends CryptoConfiguration> S save(S s) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public <S extends CryptoConfiguration> List<S> save(Iterable<S> iterable) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public CryptoConfiguration findOne(CryptoConfigurationId cryptoConfigurationId) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public boolean exists(CryptoConfigurationId cryptoConfigurationId) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void flush() {
+
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public <S extends CryptoConfiguration> S saveAndFlush(S s) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void deleteInBatch(Iterable<CryptoConfiguration> iterable) {
+
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public void deleteAllInBatch() {
+
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public CryptoConfiguration getOne(CryptoConfigurationId cryptoConfigurationId) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public <S extends CryptoConfiguration> S findOne(Example<S> example) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public <S extends CryptoConfiguration> List<S> findAll(Example<S> example) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public <S extends CryptoConfiguration> List<S> findAll(Example<S> example, Sort sort) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public <S extends CryptoConfiguration> Page<S> findAll(Example<S> example, Pageable pageable) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public <S extends CryptoConfiguration> long count(Example<S> example) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public <S extends CryptoConfiguration> boolean exists(Example<S> example) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+}

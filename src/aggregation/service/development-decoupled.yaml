@@ -1,0 +1,131 @@
+server:
+  shutdownGracePeriod: 30s
+  applicationConnectors:
+    - type: http
+      port: 9095
+    - type: https
+      port: 9105
+      keyStorePath: data/security/developer.keystore
+      keyStorePassword: changeme
+      certAlias: developer.internal.tink.se
+      trustStorePath: data/security/TinkCA.truststore
+      trustStorePassword: changeme
+      # Validation disabled since Dropwizard/Jetty tries to check revocation of our homebrewed certs, which fails.
+      validateCerts: false
+  adminConnectors:
+    - type: http
+      port: 8095
+
+developmentMode: false
+decoupledMode: true
+
+developmentConfiguration:
+  clusterConfiguration:
+    clusterId: local-development
+    host: http://localhost:9098
+    apiToken: devtoken
+    base64encodedclientcert: ""
+    disablerequestcompression: false
+
+  aggregatorConfiguration:
+    aggregatorId: 00000000-0000-0000-0000-000000000000
+    aggregatorInfo: Tink (+https://www.tink.se/; noc@tink.se)
+
+  clientConfiguration:
+    clientName: local-development
+    aggregatorId: 00000000-0000-0000-0000-000000000000
+    apiClientKey: 00000000-0000-0000-0000-000000000000
+    clusterId: local-development
+
+  cryptoConfiguration:
+    cryptoConfigurationId:
+      clientName: local-development
+      keyId: 1
+    base64encodedkey: 'QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE='
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  username: tink
+  password: tink
+  url: jdbc:mysql://$STABLE_AGGREGATIONDB_HOSTPORT/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+  showSql: false
+  persistenceUnitName: tink-aggregation-api
+  generateDdl: true
+
+coordination:
+  hosts: $STABLE_COORDINATION_HOSTPORT
+
+cache:
+  hosts: $STABLE_CACHE_HOSTPORT
+  enabled: true
+
+agentsServiceConfiguration:
+  integrations:
+    sbab:
+      signBaseUrl: https://secure.sbab.se
+    demoFinancialInstitution:
+      mobilebanking:
+        baseUrl: http://localhost:9271/mobilebanking
+      openbanking:
+        baseUrl: http://localhost:9271/openbanking
+    collector:
+      collectorSubscriptionKey: ASK_JOHANNES
+  creditsafe:
+    username: TINKTESTIN
+    password: cU7356rwx
+  excludedDebugClusters:
+    excludedClusters:
+    - local-development
+  signatureKeyPair:
+    privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
+    publicKeyPath: "data/test/cryptography/public_rsa_key.pub"
+
+sqsQueueConfiguration:
+  enabled: false
+  url: http://localhost:4576/
+  region: local
+  awsAccessKeyId: foobar
+  awsSecretKey: foobar
+  queueName: queue
+
+s3StorageConfiguration:
+  enabled: false
+  url: http://localhost:4572
+  region: local
+  agentDebugBucketName: local-agent-debug-bucket
+
+logging:
+  level: INFO
+  loggers:
+    se.tink: TRACE
+    se.tink.org.eclipse: INFO
+    org.hibernate: WARN
+  appenders:
+    - type: console
+      threshold: ALL
+      timeZone: Europe/Stockholm
+      logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread] R:%X{requestId} C:%X{clusterId} UID:%X{userId} CID:%X{credentialsId} P:%X{providerName} A:%X{agentName} %blue(%logger) %message%n%xException'
+    - type: file
+      threshold: INFO
+      currentLogFilename: /usr/share/tink-backend-aggregation/log/tink-backend-aggregation.log
+      archive: true
+      archivedLogFilenamePattern: /usr/share/tink-backend-aggregation/log/tink-backend-aggregation-%d.log.gz
+      archivedFileCount: 5
+      timeZone: Europe/Stockholm
+      logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
+
+isMultiClientDevelopment: false
+
+provisionClientsConfig:
+  clients:
+    provision-job-testing:
+      aggregatorIdentifier: "Provision Job Testing"
+    provisioning-job2-testing:
+      aggregatorIdentifier: "Local provisioning"
+
+providerConfigurationServiceConfiguration:
+  host: https://provider-configuration-api.provider-configuration.svc.cluster.local
+  pinnedCertificates:
+    - CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390
+  port: 9048
+  enabled: true
