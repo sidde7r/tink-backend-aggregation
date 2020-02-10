@@ -39,7 +39,7 @@ public class BuddybankApiClient extends UnicreditBaseApiClient {
                                 new URL(getConfiguration().getRedirectUrl())
                                         .queryParam(HeaderKeys.STATE, state)
                                         .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
-                        .header(HeaderKeys.TPP_REDIRECT_PREFERED, true) // true for redirect auth
+                        .header(HeaderKeys.TPP_REDIRECT_PREFERED, true)
                         .post(BuddybankCreateConsentResponse.class, getConsentRequest());
 
         persistentStorage.put(

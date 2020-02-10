@@ -44,7 +44,17 @@ public class BuddybankAuthenticationController implements Authenticator {
     }
 
     private void displayVerificationCode(Credentials credentials, String psuMessage) {
-        Field field = Field.builder().immutable(true).name("name").description(psuMessage).build();
+        Field field =
+                Field.builder()
+                        .immutable(true)
+                        .description("Status")
+                        .value("Waiting for bank consent")
+                        .name("name")
+                        .helpText(
+                                String.format(
+                                        "Message from the bank: %s Follow the instructions and continue by clicking update.",
+                                        psuMessage))
+                        .build();
 
         credentials.setSupplementalInformation(
                 SerializationUtils.serializeToString(Collections.singletonList(field)));
