@@ -130,7 +130,7 @@ public final class ArgentaApiClient {
         ConsentRequest consentRequest =
                 new ConsentRequest(
                         LocalDate.now().plusDays(FormValues.NUMBER_OF_VALID_DAYS).toString(),
-                        false,
+                        true,
                         new ConsentRequestAccessEntity(ibans),
                         4);
 
@@ -144,10 +144,10 @@ public final class ArgentaApiClient {
         ScaSelectionRequest scaSelectionRequest = new ScaSelectionRequest(authenticationMethodId);
 
         createRequest(
-                        new URL(selectAuthenticationMethodUrl),
+                        new URL(Urls.BASE_API_URL + selectAuthenticationMethodUrl),
                         SerializationUtils.serializeToString(scaSelectionRequest))
                 .type(HeaderValues.JSON_UTF_8)
-                .patch(String.class, scaSelectionRequest);
+                .put(String.class, scaSelectionRequest);
     }
 
     public OAuth2Token exchangeAuthorizationCode(String code) {
