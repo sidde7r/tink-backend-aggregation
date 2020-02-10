@@ -20,7 +20,7 @@ junit_test(
         "//third_party:io_netty_netty_resolver",
         "//third_party:io_netty_netty_tcnative_boringssl_static",
         "//third_party:junit_junit",
-        "//third_party:org_mockito3_mockito_core",
+        "//third_party:org_mockito_mockito_core",
         "//third_party/grpc",
         "@com_salesforce_servicelibs_grpc_testing_contrib",
     ],
