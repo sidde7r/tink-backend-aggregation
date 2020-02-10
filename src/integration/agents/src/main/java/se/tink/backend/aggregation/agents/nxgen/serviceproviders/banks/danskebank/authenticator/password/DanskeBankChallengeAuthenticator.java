@@ -457,7 +457,7 @@ public class DanskeBankChallengeAuthenticator
                             dynamicLogonJavascript, username, password));
 
             this.finalizePackage =
-                    driver.findElement(By.tagName("body")).getAttribute("finalizePackage");
+                    driver.findElement(By.tagName("body")).getAttribute("logonPackage");
 
             // Finalize authentication
             try {

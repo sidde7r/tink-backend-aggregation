@@ -25,12 +25,12 @@ public final class DanskeBankJavascriptStringFormatter {
             String dynamicLogonJavascript, String username, String password) {
         String javascriptString =
                 "var e = %s;\n"
-                        + "var nt = new Function(\"eval(\" + JSON.stringify(e) + \"); return {\\n                  performLogonServiceCode_v2: performLogonServiceCode_v2,\\n                  init: (typeof init === 'function' ? init : function () {}),\\n                  cleanup: (typeof cleanup === 'function' ? cleanup : function () {})\\n                 };\")();\n"
-                        + "function getFinalizePackage(finalizePackage, failMethod) {\n"
-                        + "    document.body.setAttribute(\"finalizePackage\", JSON.stringify(finalizePackage))"
+                        + "var nt = new Function(\"eval(\" + JSON.stringify(e) + \"); return {performLogonServiceCode_v2: performLogonServiceCode_v2, init: (typeof init === 'function' ? init : function () {}), cleanup: (typeof cleanup === 'function' ? cleanup : function () {}) };\")();\n"
+                        + "function successCallback(logonPackage) {\n"
+                        + "    document.body.setAttribute(\"logonPackage\", JSON.stringify(logonPackage));"
                         + "}\n"
-                        + "function failMethod(arg1) {}\n"
-                        + "nt.performLogonServiceCode_v2(\"%s\", \"%s\", getFinalizePackage, failMethod);";
+                        + "function failCallback(arg1) {}\n"
+                        + "nt.performLogonServiceCode_v2(\"%s\", \"%s\", successCallback, failCallback);";
 
         return String.format(javascriptString, dynamicLogonJavascript, username, password);
     }

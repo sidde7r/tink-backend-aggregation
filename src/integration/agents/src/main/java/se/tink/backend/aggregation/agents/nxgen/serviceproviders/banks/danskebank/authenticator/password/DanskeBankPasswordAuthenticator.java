@@ -78,7 +78,7 @@ public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {
 
             // Set the finalize package which will be used during finalization of the login
             this.finalizePackage =
-                    driver.findElement(By.tagName("body")).getAttribute("finalizePackage");
+                    driver.findElement(By.tagName("body")).getAttribute("logonPackage");
 
             // Finalize authentication
             finalizeAuthentication();
