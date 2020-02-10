@@ -25,7 +25,7 @@ junit_test(
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
-        "//third_party:org_mockito3_mockito_core",
+        "//third_party:org_mockito_mockito_core",
         "@tink_backend//src/libraries/i18n",
     ],
 )

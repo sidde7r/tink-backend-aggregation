@@ -17,8 +17,6 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     runtime_deps = [
         "//third_party:asm_asm",
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
     ],
     deps = [
         "//src/libraries/i18n",

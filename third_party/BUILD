@@ -1312,14 +1312,6 @@ java_library(
 )
 
 java_library(
-    name = "org_mockito_mockito_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_mockito_mockito_core//jar",
-    ],
-)
-
-java_library(
     name = "org_modelmapper_modelmapper",
     visibility = ["//visibility:public"],
     exports = [
@@ -1807,10 +1799,10 @@ java_library(
 )
 
 java_library(
-    name = "org_mockito3_mockito_core",
+    name = "org_mockito_mockito_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_mockito3_mockito_core//jar",
+        "@org_mockito_mockito_core//jar",
     ],
     runtime_deps = [
         "@net_bytebuddy_byte_buddy//jar",

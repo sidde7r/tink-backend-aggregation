@@ -13,10 +13,6 @@ junit_test(
         "manual",
     ],
     visibility = ["//visibility:public"],
-    runtime_deps = [
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
-    ],
     deps = [
         "//src/integration/amount",
         "//src/integration/api",
