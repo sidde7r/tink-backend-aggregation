@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
 import com.google.common.base.Strings;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import org.json.JSONObject;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
@@ -41,30 +44,32 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class DanskeBankApiClient {
     private static final AggregationLogger log = new AggregationLogger(DanskeBankApiClient.class);
 
+    private final Credentials credentials;
     protected final TinkHttpClient client;
     protected final DanskeBankConfiguration configuration;
     protected final DanskeBankConstants constants;
     private ListAccountsResponse accounts;
 
-    protected DanskeBankApiClient(TinkHttpClient client, DanskeBankConfiguration configuration) {
-        this.client = client;
-        this.configuration = configuration;
+    protected DanskeBankApiClient(
+            TinkHttpClient client, DanskeBankConfiguration configuration, Credentials credentials) {
         /**
          * By default we inject DanskeBankConstants object to use default endpoints. However for DK
          * we need to inject a custom constants object because we want to use a different host
          * (different endpoints). For this reason, we implemented a second constructor which allows
          * us to do so.
          */
-        this.constants = new DanskeBankConstants();
+        this(client, configuration, new DanskeBankConstants(), credentials);
     }
 
     protected DanskeBankApiClient(
             TinkHttpClient client,
             DanskeBankConfiguration configuration,
-            DanskeBankConstants constants) {
+            DanskeBankConstants constants,
+            Credentials credentials) {
         this.client = client;
         this.configuration = configuration;
         this.constants = constants;
+        this.credentials = credentials;
     }
 
     public void addPersistentHeader(String key, String value) {
@@ -89,13 +94,33 @@ public class DanskeBankApiClient {
         return postRequest(url, String.class, request);
     }
 
+    private void handlePersistentAuthHeader(HttpResponse response) {
+        MultivaluedMap<String, String> headers = response.getHeaders();
+        if (!headers.containsKey(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH)) {
+            return;
+        }
+
+        String persistentAuth =
+                headers.getFirst(DanskeBankConstants.DanskeRequestHeaders.PERSISTENT_AUTH);
+        if (Strings.isNullOrEmpty(persistentAuth)) {
+            return;
+        }
+
+        // Store tokens in sensitive payload, so it will be masked from logs
+        this.credentials.setSensitivePayload(
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
+
+        this.addPersistentHeader(
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION, persistentAuth);
+    }
+
     public FinalizeAuthenticationResponse finalizeAuthentication(
             FinalizeAuthenticationRequest request) throws LoginException {
-
-        String response;
-
+        HttpResponse response;
         try {
-            response = postRequest(constants.getFinalizeAuthenticationUrl(), request);
+            response =
+                    postRequest(
+                            constants.getFinalizeAuthenticationUrl(), HttpResponse.class, request);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == 401) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(e);
@@ -103,11 +128,10 @@ public class DanskeBankApiClient {
             throw e;
         }
 
-        FinalizeAuthenticationResponse parsedResponse =
-                DanskeBankDeserializer.convertStringToObject(
-                        response, FinalizeAuthenticationResponse.class);
-
-        return parsedResponse;
+        handlePersistentAuthHeader(response);
+        String responseBody = response.getBody(String.class);
+        return DanskeBankDeserializer.convertStringToObject(
+                responseBody, FinalizeAuthenticationResponse.class);
     }
 
     public ListAccountsResponse listAccounts(ListAccountsRequest request) {
@@ -175,9 +199,12 @@ public class DanskeBankApiClient {
                     configuration.getStepUpTokenKey(), stepUpTokenValue.replaceAll("\"", ""));
         }
 
-        String response = requestBuilder.post(String.class, request);
+        HttpResponse response = requestBuilder.post(HttpResponse.class, request);
+        // Assign persistent auth header if available.
+        handlePersistentAuthHeader(response);
 
-        return DanskeBankDeserializer.convertStringToObject(response, BindDeviceResponse.class);
+        String responseBody = response.getBody(String.class);
+        return DanskeBankDeserializer.convertStringToObject(responseBody, BindDeviceResponse.class);
     }
 
     public HttpResponse collectDynamicChallengeJavascript() {

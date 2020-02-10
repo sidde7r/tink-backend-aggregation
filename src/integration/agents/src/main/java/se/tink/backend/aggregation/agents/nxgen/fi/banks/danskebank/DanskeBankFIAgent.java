@@ -27,7 +27,8 @@ public class DanskeBankFIAgent extends DanskeBankAgent implements RefreshIdentit
     @Override
     protected DanskeBankApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
-        return new DanskeBankFIApiClient(client, (DanskeBankFIConfiguration) configuration);
+        return new DanskeBankFIApiClient(
+                client, (DanskeBankFIConfiguration) configuration, credentials);
     }
 
     @Override
