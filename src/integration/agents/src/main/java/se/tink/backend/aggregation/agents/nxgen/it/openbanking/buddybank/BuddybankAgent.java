@@ -35,7 +35,8 @@ public class BuddybankAgent extends UnicreditBaseAgent {
     protected Authenticator constructAuthenticator() {
         return new BuddybankAuthenticationController(
                 new BuddybankAuthenticator((BuddybankApiClient) apiClient),
-                strongAuthenticationState);
+                strongAuthenticationState,
+                supplementalRequester);
     }
 
     @Override
