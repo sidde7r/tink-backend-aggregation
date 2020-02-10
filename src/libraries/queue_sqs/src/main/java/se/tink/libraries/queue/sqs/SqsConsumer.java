@@ -40,11 +40,12 @@ public class SqsConsumer implements Managed, QueueConsumer {
                     @Override
                     protected void run() {
                         try {
-                            // Ensure that we consume a maximum of two queue messages a second.
+                            // Ensure that we consume a maximum certain maximum of queue messages a
+                            // second.
                             // Production rate will be way higher than this, leading to a long tail
                             // of the background refresh. Observed peak individual pods before this
                             // change has been noted to be around 5 consumptions/second.
-                            RateLimiter rateLimiter = RateLimiter.create(2);
+                            RateLimiter rateLimiter = RateLimiter.create(0.1);
                             while (running.get()) {
                                 rateLimiter.acquire();
                                 ReceiveMessageRequest request = createReceiveMessagesRequest();
