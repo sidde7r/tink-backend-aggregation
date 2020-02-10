@@ -1,9 +1,5 @@
-package se.tink.backend.aggregation.agents.framework.utils.wiremock;
+package se.tink.backend.aggregation.agents.framework.wiremock.utils;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,19 +7,19 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
-import se.tink.backend.aggregation.agents.framework.wiremock.utils.WiremockRequestResponseParser;
 import se.tink.libraries.pair.Pair;
 
-public class WiremockS3LogRequestResponseParser implements WiremockRequestResponseParser {
+public class S3FileParser implements RequestResponseParser {
 
     private final String fileContent;
     private final String apiHost;
 
-    public WiremockS3LogRequestResponseParser(String s3FilePath, String apiHost) {
-        this.fileContent = readFile(s3FilePath);
+    public S3FileParser(String s3FilePath, String apiHost) {
+        this.fileContent = new ResourceFileReader().read(s3FilePath);
         this.apiHost = apiHost;
     }
 
+    @Override
     public List<Pair<HTTPRequest, HTTPResponse>> parseRequestResponsePairs() {
         List<String> lines = Arrays.asList(fileContent.split("\n"));
         List<Integer> requestStartIndices =
@@ -51,18 +47,6 @@ public class WiremockS3LogRequestResponseParser implements WiremockRequestRespon
             pairs.add(new Pair<>(request, response));
         }
         return pairs;
-    }
-
-    private String readFile(String filePath) {
-        String fileContent;
-        try {
-            fileContent =
-                    new String(
-                            Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8.name());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return fileContent;
     }
 
     private List<Integer> findLineIndicesContainingGivenExpression(
@@ -97,7 +81,7 @@ public class WiremockS3LogRequestResponseParser implements WiremockRequestRespon
     }
 
     private List<Pair<String, String>> parseHeaders(List<String> rawData, String redundantPrefix) {
-        /** Starting from second line, we have response headers */
+        /* Starting from second line, we have response headers */
         return rawData.subList(1, rawData.size()).stream()
                 .filter(line -> line.startsWith(redundantPrefix))
                 .map(line -> line.substring(redundantPrefix.length()).trim())
@@ -113,7 +97,7 @@ public class WiremockS3LogRequestResponseParser implements WiremockRequestRespon
     }
 
     private Optional<String> parseBody(List<String> rawData, String redundantPrefix) {
-        /**
+        /*
          * Starting from second line, we check a line which does not contain "redundantPrefix" if
          * there is such line, it contains the body
          */

@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.S3FileParser;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
 public class AmexV62UkMockServerWithContractFileAgentTest extends AgentIntegrationMockServerTest {
@@ -23,12 +24,11 @@ public class AmexV62UkMockServerWithContractFileAgentTest extends AgentIntegrati
     public void testRefreshWithJSONContractFile() throws Exception {
         // Given
         prepareMockServer(
-                new se.tink.backend.aggregation.agents.framework.utils.wiremock
-                        .WiremockS3LogRequestResponseParser(
+                new S3FileParser(
                         String.format(
                                 "%s/%s",
                                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62",
-                                "resources/mock.txt"),
+                                "resources/amex-refresh-traffic.s3"),
                         "https://global.americanexpress.com"));
 
         AgentContractEntitiesJsonFileParser contractParser =
@@ -38,7 +38,7 @@ public class AmexV62UkMockServerWithContractFileAgentTest extends AgentIntegrati
                         String.format(
                                 "%s/%s",
                                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62",
-                                "resources/contract.json"));
+                                "resources/agent-contract.json"));
 
         List<Account> expectedAccounts = expected.getAccounts();
         List<Transaction> expectedTransactions = expected.getTransactions();

@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPReques
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
 import se.tink.libraries.pair.Pair;
 
-public interface WiremockRequestResponseParser {
+public interface RequestResponseParser {
 
     List<Pair<HTTPRequest, HTTPResponse>> parseRequestResponsePairs();
 }

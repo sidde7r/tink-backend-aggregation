@@ -1,0 +1,28 @@
+# Some comments to inform users, one can write here what dummy user name and password
+# should be used or basically just write the purose of this file etc
+
+REQUEST 1
+POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"billingIndexList":[0],"sortedIndex":0}
+
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+Cache-Control: private, no-store, no-cache, must-revalidate
+
+{}
+
+REQUEST 2
+POST https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/extendSession
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+Cache-Control: private, no-store, no-cache, must-revalidate
+
+{"extendSession":{"status":0}}

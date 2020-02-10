@@ -13,8 +13,8 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
-import se.tink.backend.aggregation.agents.framework.utils.wiremock.WiremockS3LogRequestResponseParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 
@@ -28,11 +28,11 @@ public final class AmexV62UkMockServerAgentTest extends AgentIntegrationMockServ
 
         // Given
         prepareMockServer(
-                new WiremockS3LogRequestResponseParser(
+                new AapFileParser(
                         String.format(
                                 "%s/%s",
                                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62",
-                                "resources/mock.txt"),
+                                "resources/amex-refresh-traffic.aap"),
                         "https://global.americanexpress.com"));
 
         Account account =
