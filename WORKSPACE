@@ -1826,12 +1826,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_mockito_mockito_core",
-    artifact = "org.mockito:mockito-core:2.2.22",
-    sha1 = "3e50bf8784e32843a6f6d5d84ceecd8536cb979c",
-)
-
-maven_jar(
     name = "org_assertj_assertj_core",
     artifact = "org.assertj:assertj-core:2.2.0",
     sha1 = "edd59795b236afc790dd161e7e3677757b06f2e7",
@@ -1947,8 +1941,8 @@ maven_jar(
 
 maven_jar(
     name = "org_objenesis_objenesis",
-    artifact = "org.objenesis:objenesis:2.4",
-    sha1 = "2916b6c96b50c5b3ec4452ed99401db745aabb27",
+    artifact = "org.objenesis:objenesis:2.6",
+    sha1 = "639033469776fd37c08358c6b92a4761feb2af4b",
 )
 
 maven_jar(
@@ -2255,7 +2249,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_mockito3_mockito_core",
+    name = "org_mockito_mockito_core",
     artifact = "org.mockito:mockito-core:3.0.0",
     sha1 = "15fd0225cb1858f6922f44776b1577ac26739279",
 )
