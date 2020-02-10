@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Currency;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.loan.parsers.NumMonthBoundParser;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.validators.BankIdValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.InterestDeserializer;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class HandelsbankenSELoan {
@@ -57,11 +59,11 @@ public class HandelsbankenSELoan {
                 .orElse(null);
     }
 
-    private Amount monthlyAmortization() {
+    private ExactCurrencyAmount monthlyAmortization() {
         return findLoanInformationWith(SELoanSegment::amortization)
                 .map(SELoanProperty::asAmortizationValue)
-                .map(Amount::inSEK)
-                .orElse(Amount.inSEK(0));
+                .map(amount -> ExactCurrencyAmount.of(amount, Currency.SEK))
+                .orElse(null);
     }
 
     private boolean multipleApplicantValue() {
