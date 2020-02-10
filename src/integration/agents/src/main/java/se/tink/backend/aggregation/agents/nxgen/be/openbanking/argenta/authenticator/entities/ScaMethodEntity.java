@@ -8,8 +8,8 @@ public class ScaMethodEntity {
 
     private String authenticationType;
     private String authenticationMethodId;
-    private DataEntity name;
-    private DataEntity explanation;
+    private String name;
+    private String explanation;
 
     public String getAuthenticationMethodId() {
         return authenticationMethodId;
