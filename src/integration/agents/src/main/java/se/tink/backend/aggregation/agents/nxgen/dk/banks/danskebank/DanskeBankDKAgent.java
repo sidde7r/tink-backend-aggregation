@@ -35,21 +35,13 @@ public class DanskeBankDKAgent extends DanskeBankAgent
                 RefreshSavingsAccountsExecutor {
 
     private static final int DK_MAX_CONSECUTIVE_EMPTY_PAGES = 8;
-    private static final String INTEGRATION_NAME = "danskebank-dk";
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public DanskeBankDKAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(
-                request,
-                context,
-                signatureKeyPair,
-                context.getAgentConfigurationController()
-                        .getAgentConfigurationFromK8s(
-                                INTEGRATION_NAME, DanskeBankDKConfiguration.class));
-
+        super(request, context, signatureKeyPair, new DanskeBankDKConfiguration());
         // DK fetches loans at a separate loan endpoint
         this.loanRefreshController =
                 new LoanRefreshController(
