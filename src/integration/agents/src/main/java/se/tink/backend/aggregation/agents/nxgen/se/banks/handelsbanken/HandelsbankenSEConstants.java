@@ -18,6 +18,10 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class HandelsbankenSEConstants {
 
+    public static final class Currency {
+        public static String SEK = "SEK";
+    }
+
     public static final class QueryParams {
         public static final String IS_CARD = "isCard";
         public static final String FROM = "from";
