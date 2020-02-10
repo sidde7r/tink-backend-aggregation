@@ -5,12 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 
 public class IngAgentTest {
 
-    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> manager =
-            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -20,17 +17,12 @@ public class IngAgentTest {
 
     @Before
     public void setup() {
-        manager.before();
         builder =
                 new AgentIntegrationTest.Builder("be", "be-ing-ob")
                         .setFinancialInstitutionId("ing")
                         .setAppId("tink")
-                        .loadCredentialsBefore(
-                                Boolean.parseBoolean(
-                                        manager.get(LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
-                        .saveCredentialsAfter(
-                                Boolean.parseBoolean(
-                                        manager.get(LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)))
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
 
