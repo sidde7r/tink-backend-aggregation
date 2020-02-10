@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31AisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.Urls.V31;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.Urls;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -25,8 +25,8 @@ public class MonzoV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 new UkOpenBankingV31AisConfiguration.Builder()
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.WELL_KNOWN_URL)
+                        .withApiBaseURL(Urls.AIS_API_URL)
+                        .withWellKnownURL(Urls.WELL_KNOWN_URL)
                         .withIdentityDataURL(PartyEndpoints.IDENTITY_DATA_ENDPOINT_PARTY)
                         .withAdditionalPermission(
                                 PartyEndpoints.partyEndpointsPermissionMap.get(
@@ -37,7 +37,7 @@ public class MonzoV31Agent extends UkOpenBankingBaseAgent {
     public MonzoV31Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, aisConfig);
-        pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
+        pisConfig = new UkOpenBankingV31PisConfiguration(Urls.PIS_API_URL);
     }
 
     @Override
