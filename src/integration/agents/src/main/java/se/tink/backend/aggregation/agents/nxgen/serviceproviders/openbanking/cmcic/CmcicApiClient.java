@@ -7,8 +7,9 @@ import java.util.Optional;
 import java.util.TimeZone;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.QueryKeys;
@@ -17,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.AuthorizationCodeTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.ClientCredentialsTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.RefreshTokenTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
@@ -37,43 +37,21 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@RequiredArgsConstructor
 public class CmcicApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
-    private CmcicConfiguration configuration;
-    private EidasProxyConfiguration eidasProxyConfiguration;
-    private EidasIdentity eidasIdentity;
-
-    public CmcicApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            SessionStorage sessionStorage) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.sessionStorage = sessionStorage;
-    }
-
-    private CmcicConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    protected void setConfiguration(
-            CmcicConfiguration configuration,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity) {
-        this.configuration = configuration;
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.eidasIdentity = eidasIdentity;
-        client.setEidasProxy(eidasProxyConfiguration);
-    }
+    private final CmcicConfiguration configuration;
+    private final EidasProxyConfiguration eidasProxyConfiguration;
+    private final EidasIdentity eidasIdentity;
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
@@ -106,7 +84,7 @@ public class CmcicApiClient {
 
         String signatureHeaderValue =
                 SignatureUtil.getSignatureHeaderValue(
-                        getConfiguration().getKeyId(),
+                        configuration.getKeyId(),
                         httpMethod.name(),
                         requestUrl.toUri(),
                         date,
@@ -136,7 +114,7 @@ public class CmcicApiClient {
 
         String signatureHeaderValue =
                 SignatureUtil.getSignatureHeaderValue(
-                        getConfiguration().getKeyId(),
+                        configuration.getKeyId(),
                         httpMethod.name(),
                         requestUrl.toUri(),
                         date,
@@ -185,8 +163,8 @@ public class CmcicApiClient {
     }
 
     public FetchAccountsResponse fetchAccounts() {
-        String baseUrl = getConfiguration().getBaseUrl();
-        String basePath = getConfiguration().getBasePath();
+        String baseUrl = configuration.getBaseUrl();
+        String basePath = configuration.getBasePath();
 
         return createAispRequestInSession(
                         new URL(baseUrl), basePath + Urls.FETCH_ACCOUNTS_PATH, HttpMethod.GET)
@@ -194,8 +172,8 @@ public class CmcicApiClient {
     }
 
     public FetchTransactionsResponse fetchTransactions(TransactionalAccount account, URL nextUrl) {
-        URL baseUrl = new URL(getConfiguration().getBaseUrl());
-        String basePath = getConfiguration().getBasePath();
+        URL baseUrl = new URL(configuration.getBaseUrl());
+        String basePath = configuration.getBasePath();
 
         String path =
                 Optional.ofNullable(nextUrl)
@@ -219,8 +197,8 @@ public class CmcicApiClient {
     public HalPaymentRequestCreation makePayment(
             PaymentRequestResourceEntity paymentRequestResourceEntity) {
 
-        String baseUrl = getConfiguration().getBaseUrl();
-        String basePath = getConfiguration().getBasePath();
+        String baseUrl = configuration.getBaseUrl();
+        String basePath = configuration.getBasePath();
 
         String body = SerializationUtils.serializeToString(paymentRequestResourceEntity);
 
@@ -240,43 +218,31 @@ public class CmcicApiClient {
         return executeTokenRequest(request);
     }
 
-    public OAuth2Token getPispToken() {
-        final ClientCredentialsTokenRequest request =
-                new ClientCredentialsTokenRequest(
-                        getConfiguration().getClientId(),
-                        FormValues.CLIENT_CREDENTIALS,
-                        FormValues.PISP);
-        return executeTokenRequest(request);
-    }
-
-    public OAuth2Token refreshToken(String refreshToken) {
+    public OAuth2Token refreshToken(String refreshToken) throws SessionException {
         final RefreshTokenTokenRequest request =
                 new RefreshTokenTokenRequest(
-                        getConfiguration().getClientId(), refreshToken, FormValues.REFRESH_TOKEN);
-        return executeTokenRequest(request);
+                        configuration.getClientId(), refreshToken, FormValues.REFRESH_TOKEN);
+        return executeTokenRequestAndCheckTokenNotExpired(request);
     }
 
     private OAuth2Token executeTokenRequest(AbstractForm request) {
-        String baseUrl = getConfiguration().getBaseUrl();
-        String basePath = getConfiguration().getBasePath();
-        final URL baseApiUrl = new URL(baseUrl + basePath);
+        final URL tokenUrl = getTokenUrl();
+        final TokenResponse tokenResponse = getTokenResponse(request, tokenUrl);
 
-        final URL tokenUrl = baseApiUrl.concat(Urls.TOKEN_PATH);
-        final TokenResponse tokenResponse =
-                createRequest(tokenUrl)
-                        .body(request, MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(TokenResponse.class);
+        return createOAuth2Token(tokenResponse);
+    }
 
-        return OAuth2Token.create(
-                tokenResponse.getTokenType().toString(),
-                tokenResponse.getAccessToken(),
-                tokenResponse.getRefreshToken(),
-                tokenResponse.getExpiresIn());
+    private OAuth2Token executeTokenRequestAndCheckTokenNotExpired(AbstractForm request)
+            throws SessionException {
+        final URL tokenUrl = getTokenUrl();
+        final TokenResponse tokenResponse = getTokenResponseAndCheckTokenExpired(request, tokenUrl);
+
+        return createOAuth2Token(tokenResponse);
     }
 
     public HalPaymentRequestEntity fetchPayment(String uniqueId) {
-        String baseUrl = getConfiguration().getBaseUrl();
-        String basePath = getConfiguration().getBasePath();
+        String baseUrl = configuration.getBaseUrl();
+        String basePath = configuration.getBasePath();
 
         return createPispRequestInSession(
                         new URL(baseUrl),
@@ -294,11 +260,52 @@ public class CmcicApiClient {
     }
 
     public EndUserIdentityResponse getEndUserIdentity() {
-        String baseUrl = getConfiguration().getBaseUrl();
-        String basePath = getConfiguration().getBasePath();
+        String baseUrl = configuration.getBaseUrl();
+        String basePath = configuration.getBasePath();
 
         return createAispRequestInSession(
                         new URL(baseUrl), basePath + Urls.FETCH_END_USER_IDENTITY, HttpMethod.GET)
                 .get(EndUserIdentityResponse.class);
+    }
+
+    private TokenResponse getTokenResponse(AbstractForm request, URL tokenUrl) {
+        return createRequest(tokenUrl)
+                .body(request, MediaType.APPLICATION_FORM_URLENCODED)
+                .post(TokenResponse.class);
+    }
+
+    private TokenResponse getTokenResponseAndCheckTokenExpired(AbstractForm request, URL tokenUrl)
+            throws SessionException {
+        try {
+            return createRequest(tokenUrl)
+                    .body(request, MediaType.APPLICATION_FORM_URLENCODED)
+                    .post(TokenResponse.class);
+        } catch (HttpResponseException ex) {
+            if (hasRefreshTokenExpired(ex)) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    private URL getTokenUrl() {
+        final String baseUrl = configuration.getBaseUrl();
+        final String basePath = configuration.getBasePath();
+        final URL baseApiUrl = new URL(baseUrl + basePath);
+
+        return baseApiUrl.concat(Urls.TOKEN_PATH);
+    }
+
+    private static OAuth2Token createOAuth2Token(TokenResponse tokenResponse) {
+        return OAuth2Token.create(
+                tokenResponse.getTokenType().toString(),
+                tokenResponse.getAccessToken(),
+                tokenResponse.getRefreshToken(),
+                tokenResponse.getExpiresIn());
+    }
+
+    private static boolean hasRefreshTokenExpired(HttpResponseException ex) {
+        return ex.getMessage().toLowerCase().contains("refresh token has expired");
     }
 }

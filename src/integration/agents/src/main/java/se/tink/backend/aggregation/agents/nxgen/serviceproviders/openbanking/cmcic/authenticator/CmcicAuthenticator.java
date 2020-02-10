@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator;
 
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -28,7 +29,7 @@ public class CmcicAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken) {
+    public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException {
         OAuth2Token accessToken = apiClient.refreshToken(refreshToken);
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
         return accessToken;
