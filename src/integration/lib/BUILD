@@ -163,8 +163,6 @@ junit_test(
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:ch_qos_logback_logback_classic",
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
     ],
     deps = [
         "//src/integration/account:enums",
