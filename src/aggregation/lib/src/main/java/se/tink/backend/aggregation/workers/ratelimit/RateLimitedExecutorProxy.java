@@ -48,7 +48,7 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
         public void run() {
             double acquireTime = rateLimiter.get().acquire();
             this.acquireTime.update(acquireTime);
-            actualRunnable.run();
+            delegate.execute(actualRunnable);
         }
     }
 
