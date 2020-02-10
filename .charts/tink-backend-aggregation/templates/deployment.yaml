@@ -141,11 +141,23 @@ spec:
               name: aggregation-secrets
               key: fints-reg-number
               optional: true
-        - name: NORDEA_PARTNER_KEYSTOREPASSWORD
+        - name: NORDEA_PARTNER_TEST_KEYSTOREPASSWORD
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
-              key: nordea-partner-keystore-password
+              key: nordea-partner-test-keystore-password
+              optional: true
+        - name: NORDEA_PARTNER_PREPROD_KEYSTOREPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: nordea-partner-preprod-keystore-password
+              optional: true
+        - name: NORDEA_PARTNER_PROD_KEYSTOREPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: nordea-partner-prod-keystore-password
               optional: true
         - name: ABN_STAGING_BANKING_HOST
           valueFrom:

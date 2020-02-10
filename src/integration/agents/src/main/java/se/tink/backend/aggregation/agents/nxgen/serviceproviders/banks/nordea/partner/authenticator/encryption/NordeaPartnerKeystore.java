@@ -22,24 +22,27 @@ public class NordeaPartnerKeystore {
     private RSAPublicKey nordeaEncryptionPublicKey;
     private RSAPrivateKey tinkSigningKey;
 
-    public NordeaPartnerKeystore(NordeaPartnerConfiguration configuration) {
-        this.loadFrom(configuration);
+    public NordeaPartnerKeystore(NordeaPartnerConfiguration configuration, String clusterId) {
+        this.loadFrom(configuration, clusterId);
     }
 
-    private void loadFrom(NordeaPartnerConfiguration configuration) {
+    private void loadFrom(NordeaPartnerConfiguration configuration, String clusterId) {
         Preconditions.checkNotNull(configuration, "Agent configuration is missing!");
         nordeaEncryptionPublicKey =
                 getPubKeyFromBase64(configuration.getNordeaEncryptionPublicKey());
 
         KeyStore keystore =
                 loadKeyStore(
-                        NordeaPartnerConstants.Keystore.KEYSTORE_PATH,
-                        configuration.getPartnerKeystorePassword());
+                        getKeystorePath(clusterId), configuration.getPartnerKeystorePassword());
         tinkSigningKey =
                 getPrivateKeyFromKeystore(
                         keystore,
                         NordeaPartnerConstants.Keystore.SIGNING_KEY_ALIAS,
                         configuration.getPartnerKeystorePassword());
+    }
+
+    private String getKeystorePath(String clusterId) {
+        return NordeaPartnerConstants.Keystore.KEYSTORE_PATH.replace("{clusterId}", clusterId);
     }
 
     private KeyStore loadKeyStore(String keyStorePath, String password) {
