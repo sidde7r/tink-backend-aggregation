@@ -107,13 +107,13 @@ public class SpankkiConstants {
 
     public static class Request {
         public static final String CLIENT_INFO_APP_NAME = "SBank2.0";
-        public static final String CLIENT_INFO_APP_VERSION = "2.3.0.2";
+        public static final String CLIENT_INFO_APP_VERSION = "2.4.2.4";
         public static final String CLIENT_INFO_LANG = "sv";
     }
 
     public static class Headers {
         public static final String X_SMOB_KEY = "X-smob";
-        public static final String SPANKKI_USER_AGENT = "spankki/2.3.0";
+        public static final String SPANKKI_USER_AGENT = "spankki/2.4.2";
     }
 
     public static class QueryKeys {
