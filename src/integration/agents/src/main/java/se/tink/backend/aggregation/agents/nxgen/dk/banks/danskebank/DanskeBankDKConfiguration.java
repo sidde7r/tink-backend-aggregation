@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.Map;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
-import se.tink.backend.aggregation.annotations.Secret;
 
 public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "en-GB";
@@ -21,9 +19,9 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String APP_VERSION_HEADER = "MobileBank ios DK 285229706";
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
-
-    @JsonProperty @Secret private String clientId;
-    @JsonProperty @Secret private String clientSecret;
+    private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
+    private static final String CLIENT_SECRET =
+            "jj08kJWrwFQDLqaxlMAt9ZxGA6WeiEMrk39L9BmkXUkBgZs1w8";
 
     @Override
     public String getAppVersionHeader() {
@@ -32,12 +30,12 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
 
     @Override
     public String getClientId() {
-        return clientId;
+        return CLIENT_ID;
     }
 
     @Override
     public String getClientSecret() {
-        return clientSecret;
+        return CLIENT_SECRET;
     }
 
     @Override
