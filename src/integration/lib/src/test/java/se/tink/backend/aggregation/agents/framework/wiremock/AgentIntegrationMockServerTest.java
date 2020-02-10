@@ -22,7 +22,7 @@ public class AgentIntegrationMockServerTest {
 
     @Rule
     public WireMockRule wireMockRule =
-            new WireMockRule(WireMockConfiguration.options().dynamicHttpsPort());
+            new WireMockRule(WireMockConfiguration.options().dynamicPort().dynamicHttpsPort());
 
     private WiremockRequestResponseParser parser;
 
