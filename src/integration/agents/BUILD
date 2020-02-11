@@ -123,7 +123,6 @@ java_library(
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:xerces_xercesImpl",
-        "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
         "@selenium//:org_seleniumhq_selenium_selenium_firefox_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
