@@ -34,7 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.PaymentDocument;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.JWTUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.XmlUtils;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.XmlConverter;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -119,7 +119,7 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
 
         PaymentDocument document =
                 new PaymentDocument(new CstmrCdtTrfInitn(groupHeader, paymentInfo));
-        String body = XmlUtils.convertToXml(document);
+        String body = XmlConverter.convertToXml(document);
 
         String digest = SignatureUtils.createDigest(body);
         String date = SignatureUtils.getCurrentDateFormatted();

@@ -1,19 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities;
 
 import java.util.Date;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionEntity {
 
     private Date bookingDate;
-    private String proprietaryBankTransactionCode;
     private String remittanceInformationUnstructured;
     private AmountEntity transactionAmount;
-    private String valueDate;
 
-    public Transaction toBookedTransaction() {
+    Transaction toBookedTransaction() {
         return Transaction.builder()
                 .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)

@@ -11,49 +11,71 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.FiduciaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.header.SignatureHeaderGenerator;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class FiduciaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final FiduciaApiClient apiClient;
-    private TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public FiduciaAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        apiClient = new FiduciaApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
+        this.apiClient =
+                new FiduciaApiClient(
+                        client,
+                        persistentStorage,
+                        sessionStorage,
+                        getClientConfiguration(),
+                        createSignatureHeaderGenerator(agentsServiceConfiguration));
 
-        apiClient.setConfiguration(getClientConfiguration());
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    private SignatureHeaderGenerator createSignatureHeaderGenerator(
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        return new SignatureHeaderGenerator(
+                FiduciaConstants.SIGNATURE_HEADER,
+                FiduciaConstants.HEADERS_TO_SIGN,
+                getClientConfiguration().getKeyId(),
+                QsealcSigner.build(
+                        agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        getEidasIdentity()));
     }
 
     protected FiduciaConfiguration getClientConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        FiduciaConstants.INTEGRATION_NAME, clientName, FiduciaConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(FiduciaConfiguration.class);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new FiduciaAuthenticator(
-                apiClient,
-                persistentStorage,
-                getClientConfiguration(),
-                credentials.getField(CredentialKeys.IBAN),
-                credentials.getField(CredentialKeys.PSU_ID),
-                credentials.getField(CredentialKeys.PASSWORD));
+        FiduciaAuthenticator fiduciaAuthenticator =
+                new FiduciaAuthenticator(
+                        apiClient,
+                        persistentStorage,
+                        sessionStorage,
+                        supplementalInformationHelper);
+
+        return new AutoAuthenticationController(
+                request, context, fiduciaAuthenticator, fiduciaAuthenticator);
     }
 
     @Override
@@ -78,7 +100,7 @@ public final class FiduciaAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final FiduciaTransactionalAccountFetcher accountFetcher =
-                new FiduciaTransactionalAccountFetcher(apiClient, getClientConfiguration());
+                new FiduciaTransactionalAccountFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

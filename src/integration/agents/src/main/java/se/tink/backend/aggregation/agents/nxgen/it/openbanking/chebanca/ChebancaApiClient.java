@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenti
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration.ChebancaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.ChebancaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.QsealcSignerProvider;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.TransactionRequestURLBuilder;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.ConfirmConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.ConsentRequest;
@@ -24,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.Strong
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.header.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -170,6 +170,8 @@ public class ChebancaApiClient {
         return new ChebancaRequestBuilder(
                 client,
                 new SignatureHeaderGenerator(
+                        ChebancaConstants.HeaderValues.SIGNATURE_HEADER,
+                        HeaderKeys.HEADERS_TO_SIGN,
                         chebancaConfig.getApplicationId(),
                         QsealcSignerProvider.getQsealcSigner(
                                 config.getEidasProxy(),

@@ -5,5 +5,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LinksEntity {
 
-    private LinkDetailsEntity startAuthorisationWithPsuAuthentication;
+    private StartAuthorizationWithPsuAuthenticationEntity startAuthorisationWithPsuAuthentication;
+
+    public String getHref() {
+        return startAuthorisationWithPsuAuthentication.getHref();
+    }
 }

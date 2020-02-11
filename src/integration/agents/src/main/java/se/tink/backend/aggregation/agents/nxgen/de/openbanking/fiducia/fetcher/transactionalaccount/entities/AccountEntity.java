@@ -3,16 +3,22 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountEntity {
 
-    private String currency;
     private String iban;
     private String resourceId;
     private List<BalanceEntity> balances;
@@ -25,22 +31,27 @@ public class AccountEntity {
         this.balances = balances;
     }
 
-    public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(iban)
-                .setBalance(getAvailableBalance())
-                .setAlias(iban)
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+    public Optional<TransactionalAccount> toTinkAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withInferredAccountFlags()
+                .withBalance(BalanceModule.of(getAvailableBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(iban)
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
                 .setApiIdentifier(resourceId)
                 .build();
     }
 
-    private Amount getAvailableBalance() {
+    private ExactCurrencyAmount getAvailableBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(BalanceEntity::isAvailableBalance)
                 .map(BalanceEntity::getAmount)
                 .findFirst()
-                .orElse(BalanceEntity.defaultAmount);
+                .orElseThrow(() -> new IllegalStateException("Couldn't find balance!"));
     }
 }

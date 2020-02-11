@@ -1,9 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class LinkDetailsEntity {
+@Getter
+public class ChosenScaMethod {
 
-    private String href;
+    private String name;
+
+    private String authenticationType;
+
+    private String authenticationMethodId;
 }

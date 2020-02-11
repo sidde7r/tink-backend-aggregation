@@ -2,12 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils;
 
 import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.PaymentDocument;
 
-public final class XmlUtils {
-    private XmlUtils() {
+public final class XmlConverter {
+
+    private static final String XML_MARSHAL_EXCEPTION = "Object can't be serialized to XML";
+
+    private XmlConverter() {
         throw new AssertionError();
     }
 
@@ -21,8 +24,8 @@ public final class XmlUtils {
             marshaller.marshal(document, sw);
 
             return sw.toString();
-        } catch (Exception e) {
-            throw new IllegalStateException(ErrorMessages.XML_MARSHAL_EXCEPTION);
+        } catch (JAXBException e) {
+            throw new IllegalArgumentException(XML_MARSHAL_EXCEPTION);
         }
     }
 }

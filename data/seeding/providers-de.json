@@ -11860,6 +11860,15 @@
                     "sensitive": true
                 }
             ],
+            "supplementalFields": [
+              {
+                "description": "OTP",
+                "helpText": "Please enter OTP code",
+                "immutable": true,
+                "masked": false,
+                "name": "otpinput"
+              }
+            ],
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
