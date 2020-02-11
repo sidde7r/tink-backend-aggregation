@@ -21,6 +21,17 @@ public final class DanskeBankJavascriptStringFormatter {
         return String.format(javascriptString, dynamicBankIdJavascript, ssn);
     }
 
+    public static String createNOBankIdJavascript(String dynamicJavascript) {
+        String javascriptFmt =
+                "var e = %s;"
+                        + "var nt = new Function(\"eval(\" + JSON.stringify(e) + \"); return {initBankIdLogon: initBankIdLogon};\")();"
+                        + "function successCallback(logonPackage) { document.body.setAttribute(\"logonPackage\", logonPackage); }\n"
+                        + "function failCallback(arg1) { }\n"
+                        + "nt.initBankIdLogon(successCallback, failCallback, 'nemidBox');";
+
+        return String.format(javascriptFmt, dynamicJavascript);
+    }
+
     public static String createLoginJavascript(
             String dynamicLogonJavascript, String username, String password) {
         String javascriptString =
