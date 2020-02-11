@@ -2,7 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "sparkassen",
-    srcs = glob(["*.java"]),
+    srcs = glob(["agent/*.java"]),
     data = [
         "//data:aggregation_test",
         "//data:cryptography_test",
@@ -19,5 +19,35 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
+    ],
+)
+
+junit_test(
+    name = "sparkassen_unit_tests",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["agent/**/*.java"],
+    ),
+    tags = [
+        "external",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/account:enums",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/sparkassen",
+        "//src/integration/amount",
+        "//src/integration/api",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/libraries/account_identifier",
+        "//src/libraries/i18n",
+        "//src/libraries/serialization",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_iban4j_iban4j",
+        "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
     ],
 )

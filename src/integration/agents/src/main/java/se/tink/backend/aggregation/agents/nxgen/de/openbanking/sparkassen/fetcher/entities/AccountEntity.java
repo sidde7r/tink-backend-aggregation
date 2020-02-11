@@ -1,14 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
 public class AccountEntity {
@@ -16,6 +9,9 @@ public class AccountEntity {
     private String iban;
     private String currency;
     private String product;
+    private String ownerName;
+    private String name;
+    private String cashAccountType;
 
     @JsonProperty("_links")
     private LinksEntity links;
@@ -24,25 +20,27 @@ public class AccountEntity {
         return resourceId;
     }
 
-    public Optional<TransactionalAccount> toTinkAcount(
-            FetchBalancesResponse fetchBalancesResponse) {
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(fetchBalancesResponse.getAvailableBalance(currency)))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(resourceId)
-                                .withAccountName("")
-                                .addIdentifier(new IbanIdentifier(iban))
-                                .build())
-                .setApiIdentifier(resourceId)
-                .setBankIdentifier(resourceId)
-                .build();
+    public String getIban() {
+        return iban;
     }
 
-    public LinksEntity getLinks() {
-        return links;
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCashAccountType() {
+        return cashAccountType;
     }
 }

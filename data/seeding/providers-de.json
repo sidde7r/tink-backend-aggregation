@@ -27550,7 +27550,7 @@
             "multiFactor": false,
             "name": "de-sparkassen-ob",
             "passwordHelpText": "Please authenticate yourself.",
-            "payload": "tink,70150000",
+            "payload": "75050000",
             "popular": true,
             "status": "ENABLED",
             "supplementalFields": [
