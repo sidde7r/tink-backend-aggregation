@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import static org.mockito.Mockito.mock;
+
 import java.util.Collections;
 import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
@@ -19,6 +20,7 @@ public class RefreshCommandChainEventTriggerCommandTest {
 
     private Credentials validCredentials;
     private String appId;
+    private String correlationId;
     private CredentialsEventProducer credentialsEventProducer;
     private String clusterId;
     private boolean manual;
@@ -26,9 +28,10 @@ public class RefreshCommandChainEventTriggerCommandTest {
 
     @Before
     public void setup() {
-        this.credentialsEventProducer = Mockito.mock(CredentialsEventProducer.class);
+        this.credentialsEventProducer = mock(CredentialsEventProducer.class);
         this.validCredentials = buildValidCredentials();
         this.appId = UUIDUtils.generateUUID();
+        this.correlationId = UUIDUtils.generateUUID();
         this.clusterId = "clusterId";
         this.manual = true;
         this.refreshableItems = Collections.emptySet();
@@ -39,6 +42,7 @@ public class RefreshCommandChainEventTriggerCommandTest {
         RefreshCommandChainEventTriggerCommand refreshCommandChainEventTriggerCommand =
                 new RefreshCommandChainEventTriggerCommand(
                         credentialsEventProducer,
+                        correlationId,
                         validCredentials,
                         appId,
                         refreshableItems,

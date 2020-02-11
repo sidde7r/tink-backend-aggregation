@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.uuid.UUIDUtils;
 
 public class RefreshCommandChainEventTriggerCommand extends AgentWorkerCommand {
     private final Credentials credentials;
@@ -19,6 +18,7 @@ public class RefreshCommandChainEventTriggerCommand extends AgentWorkerCommand {
 
     public RefreshCommandChainEventTriggerCommand(
             CredentialsEventProducer credentialsEventProducer,
+            String correlationId,
             Credentials credentials,
             String appId,
             Set<RefreshableItem> refreshableItems,
@@ -27,7 +27,7 @@ public class RefreshCommandChainEventTriggerCommand extends AgentWorkerCommand {
         this.credentialsEventProducer = credentialsEventProducer;
         this.credentials = credentials;
         this.appId = appId;
-        this.correlationId = UUIDUtils.generateUUID();
+        this.correlationId = correlationId;
         this.refreshableItems = refreshableItems;
         this.manual = manual;
         this.clusterId = clusterId;

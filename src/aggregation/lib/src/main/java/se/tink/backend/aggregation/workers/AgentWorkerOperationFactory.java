@@ -77,6 +77,7 @@ import se.tink.libraries.credentials.service.MigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
@@ -274,6 +275,15 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
+        /*
+           TODO: When we want this correlationID to be consistent among the whole chain
+           (which covers the whole Tink system), instead of us creating a UUID here, we would
+           probably want to fetch it from RefreshInformationRequest object and put it in
+           AgentWorkerCommandContext object. The same thing repeats in other places in this class
+        */
+
+        final String correlationId = UUIDUtils.generateUUID();
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -286,7 +296,9 @@ public class AgentWorkerOperationFactory {
                         providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
-                        clientInfo.getAppId());
+                        clientInfo.getAppId(),
+                        correlationId);
+
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -298,6 +310,7 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new RefreshCommandChainEventTriggerCommand(
                         credentialsEventProducer,
+                        context.getCorrelationId(),
                         request.getCredentials(),
                         clientInfo.getAppId(),
                         request.getItemsToRefresh(),
@@ -378,6 +391,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
+        final String correlationId = UUIDUtils.generateUUID();
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -390,7 +405,8 @@ public class AgentWorkerOperationFactory {
                         providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
-                        clientInfo.getAppId());
+                        clientInfo.getAppId(),
+                        correlationId);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
@@ -448,6 +464,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
+        final String correlationId = UUIDUtils.generateUUID();
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -460,7 +478,8 @@ public class AgentWorkerOperationFactory {
                         providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
-                        clientInfo.getAppId());
+                        clientInfo.getAppId(),
+                        correlationId);
 
         if (request.isSkipRefresh()) {
             return createOperationExecuteTransferWithoutRefresh(
@@ -511,6 +530,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
+        final String correlationId = UUIDUtils.generateUUID();
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -523,7 +544,8 @@ public class AgentWorkerOperationFactory {
                         providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
-                        clientInfo.getAppId());
+                        clientInfo.getAppId(),
+                        correlationId);
         context.setWhitelistRefresh(true);
 
         String operationName = "execute-whitelisted-transfer";
@@ -656,6 +678,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
+        final String correlationId = UUIDUtils.generateUUID();
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -668,7 +692,8 @@ public class AgentWorkerOperationFactory {
                         providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
-                        clientInfo.getAppId());
+                        clientInfo.getAppId(),
+                        correlationId);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -691,6 +716,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
+        final String correlationId = UUIDUtils.generateUUID();
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -703,7 +730,8 @@ public class AgentWorkerOperationFactory {
                         providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
-                        clientInfo.getAppId());
+                        clientInfo.getAppId(),
+                        correlationId);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -725,6 +753,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
+        final String correlationId = UUIDUtils.generateUUID();
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -737,7 +767,8 @@ public class AgentWorkerOperationFactory {
                         providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
-                        clientInfo.getAppId());
+                        clientInfo.getAppId(),
+                        correlationId);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
         CredentialsCrypto credentialsCrypto =
@@ -773,6 +804,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
+        final String correlationId = UUIDUtils.generateUUID();
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -785,7 +818,8 @@ public class AgentWorkerOperationFactory {
                         providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
-                        clientInfo.getAppId());
+                        clientInfo.getAppId(),
+                        correlationId);
 
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -846,6 +880,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
+        final String correlationId = UUIDUtils.generateUUID();
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -858,7 +894,8 @@ public class AgentWorkerOperationFactory {
                         providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
-                        clientInfo.getAppId());
+                        clientInfo.getAppId(),
+                        correlationId);
 
         context.setWhitelistRefresh(true);
         CryptoWrapper cryptoWrapper =
@@ -946,6 +983,9 @@ public class AgentWorkerOperationFactory {
 
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
+
+        final String correlationId = UUIDUtils.generateUUID();
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -958,7 +998,8 @@ public class AgentWorkerOperationFactory {
                         providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
-                        clientInfo.getAppId());
+                        clientInfo.getAppId(),
+                        correlationId);
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
@@ -1093,6 +1134,8 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
+        final String correlationId = UUIDUtils.generateUUID();
+
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -1105,7 +1148,8 @@ public class AgentWorkerOperationFactory {
                         providerSessionCacheController,
                         controllerWrapper,
                         clientInfo.getClusterId(),
-                        clientInfo.getAppId());
+                        clientInfo.getAppId(),
+                        correlationId);
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
