@@ -279,7 +279,8 @@ public class Field {
         ACCESS_PIN("accesspininput"),
         ACCESS_PIN_CONFIRMATION("confirmaccesspininput"),
         EMAIL("email"),
-        IBAN("iban");
+        IBAN("iban"),
+        BANKID_PASSWORD("bankid-password");
 
         private final String fieldKey;
 
