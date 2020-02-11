@@ -13,7 +13,7 @@ final class HsbcConstants {
             public static final String WELL_KNOWN_URL =
                     "https://developer.hsbc.com/.well-known/openid-configuration";
             public static final String APP_TO_APP_AUTH_URL =
-                    "https://openbanking.hsbc.com/open-banking/personal/v1.1/authorize";
+                    "https://openbanking.hsbc.com/open-banking/v1.1/authorize";
         }
     }
 }
