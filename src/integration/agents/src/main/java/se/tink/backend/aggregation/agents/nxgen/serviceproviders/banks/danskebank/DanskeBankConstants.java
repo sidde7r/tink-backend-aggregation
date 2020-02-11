@@ -182,7 +182,9 @@ public class DanskeBankConstants {
 
     public static class SecuritySystem {
         public static final String SERVICE_CODE_SC = "SC";
+        public static final String SERVICE_CODE_NS = "NS";
         public static final String SERVICE_CODE_JS = "JS";
+        public static final String SERVICE_CODE_BD = "BD";
         public static final String CHALLENGE_INVALID = "INVALID";
     }
 

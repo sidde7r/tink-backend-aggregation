@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
@@ -18,10 +19,16 @@ public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
     private static final String MARKET_CODE = "NO";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
     private static final String CLIENT_SECRET =
-            "38EhwxUTUYq1KTTbMvfEahKQY3TtXrlifHjwveFBUaqwIgwZ2t";
-    private static final String APP_VERSION_HEADER = "MobileBank ios NO 285229708";
+            "jj08kJWrwFQDLqaxlMAt9ZxGA6WeiEMrk39L9BmkXUkBgZs1w8";
+    private static final String APP_VERSION_HEADER = "MobileBank ios NO 11407";
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
+    private static final String USER_AGENT =
+            "nymobilbanknodanskebank/2020.1 (com.danskebank.mobilebank3no; build:11407; iOS 13.3; NO)";
+
+    public String getUserAgent() {
+        return USER_AGENT;
+    }
 
     @Override
     public String getAppVersionHeader() {
@@ -131,5 +138,10 @@ public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
     @Override
     public String getSecuritySystem() {
         return DanskeBankConstants.SecuritySystem.SERVICE_CODE_SC;
+    }
+
+    @Override
+    public Optional<String> getBindDeviceSecuritySystem() {
+        return Optional.of(DanskeBankConstants.SecuritySystem.SERVICE_CODE_BD);
     }
 }
