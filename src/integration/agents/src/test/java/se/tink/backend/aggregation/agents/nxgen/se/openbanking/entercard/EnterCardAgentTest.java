@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.CredentialKeys;
 
-public class EnterCardBaseAgentTest {
+public class EnterCardAgentTest {
     private final ArgumentManager<SsnArgumentEnum> manager =
             new ArgumentManager<>(SsnArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
@@ -25,14 +25,13 @@ public class EnterCardBaseAgentTest {
 
     public AgentIntegrationTest createTestAgent(final String providerName) {
         return new AgentIntegrationTest.Builder("se", providerName)
-                        .addCredentialField(
-                                CredentialKeys.SSN, manager.get(SsnArgumentEnum.SSN))
-                        .setFinancialInstitutionId("entercard")
-                        .setAppId("tink")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false)
-                        .build();
+                .addCredentialField(CredentialKeys.SSN, manager.get(SsnArgumentEnum.SSN))
+                .setFinancialInstitutionId("entercard")
+                .setAppId("tink")
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .expectLoggedIn(false)
+                .build();
     }
 
     @Test
