@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.configuration.guice.modules;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
@@ -103,7 +102,7 @@ public class AggregationDecoupledModule extends AbstractModule {
     @Override
     protected void configure() {
         // AggregationCommonModule
-        bind(CacheClient.class).toProvider(FakeCacheProvider.class).in(Scopes.SINGLETON);
+        bind(CacheClient.class).toInstance(new FakeCacheClient());
 
         bind(LockFactory.class).in(Scopes.SINGLETON);
         bind(MeterFactory.class).in(Scopes.SINGLETON);
@@ -273,13 +272,5 @@ public class AggregationDecoupledModule extends AbstractModule {
     @Named("clientConfigurationByName")
     public Map<String, ClientConfiguration> providerClientConfigurationByName() {
         return Collections.emptyMap();
-    }
-
-    private static class FakeCacheProvider implements Provider<CacheClient> {
-
-        @Override
-        public CacheClient get() {
-            return new FakeCacheClient();
-        }
     }
 }
