@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -39,13 +38,25 @@ public abstract class CmcicAgent extends NextGenerationAgent
     private final CmcicIdentityDataFetcher cmcicIdentityDataFetcher;
 
     public CmcicAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
+        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         cmcicConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
 
-        apiClient = new CmcicApiClient(client, persistentStorage, sessionStorage);
+        apiClient =
+                new CmcicApiClient(
+                        client,
+                        persistentStorage,
+                        sessionStorage,
+                        cmcicConfiguration,
+                        agentsServiceConfiguration.getEidasProxy(),
+                        getEidasIdentity());
+
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(apiClient);
     }
@@ -60,14 +71,6 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         sessionStorage,
                         strongAuthenticationState));
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
-        apiClient.setConfiguration(
-                cmcicConfiguration, configuration.getEidasProxy(), getEidasIdentity());
     }
 
     @Override
