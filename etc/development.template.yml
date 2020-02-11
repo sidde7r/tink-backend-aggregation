@@ -821,7 +821,6 @@ agentsServiceConfiguration:
         baseUrl: https://api.ing.com
         certificateId: Tink
         clientCertificate: ''
-        clientCertificateSerial: ''
         redirectUrl: https://localhost:7357/api/v1/thirdparty/callback
     isp:
       tink:
