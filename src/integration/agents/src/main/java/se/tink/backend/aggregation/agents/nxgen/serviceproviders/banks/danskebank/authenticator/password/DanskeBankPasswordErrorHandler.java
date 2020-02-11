@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class DanskeBankPasswordErrorHandler {
 
-    static void throwError(HttpResponseException hre)
+    public static void throwError(HttpResponseException hre)
             throws AuthenticationException, AuthorizationException {
         HttpResponse response = hre.getResponse();
         if (response.getStatus() == 503) {
