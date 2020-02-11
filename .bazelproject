@@ -22,5 +22,6 @@ java_language_level: 8
 
 import_run_configurations:
   tink_ide_settings/run/Minikube-Server__Aggregation.xml
+  tink_ide_settings/run/Run_Aggregation_Decoupled.xml
   tink_ide_settings/run/All_Tests.xml
   tink_ide_settings/run/Most_Tests.xml

@@ -12,6 +12,9 @@ public class AggregationModuleFactory {
 
     public static ImmutableList<Module> build(
             AggregationServiceConfiguration configuration, Environment environment) {
+        if (configuration.isDecoupledMode()) {
+            return ImmutableList.of(new AggregationDecoupledModule(configuration, environment));
+        }
         if (configuration.isDevelopmentMode()) {
             return buildForDevelopment(configuration, environment).build();
         }

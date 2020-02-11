@@ -60,6 +60,18 @@ steps:
       queue: v4
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
+  - command: .buildkite/run-system-tests.sh
+    plugins:
+      docker-compose#v3.0.3:
+        run: app
+        config: docker/docker-compose.bazel.yml
+    branches: '!master'
+    name: ':junit: System tests'
+    timeout_in_minutes: 30
+    agents:
+      queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
+
   - wait
 
   - name: ':docker: tink-backend-aggregation'

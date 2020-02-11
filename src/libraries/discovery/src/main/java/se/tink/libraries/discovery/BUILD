@@ -13,6 +13,7 @@ java_library(
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_apache_curator_curator_x_discovery",
+        "//third_party:org_apache_zookeeper_zookeeper",
         "//third_party:org_slf4j_slf4j_api",
     ],
 )

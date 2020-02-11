@@ -23,6 +23,8 @@ public class AggregationServiceConfiguration extends Configuration {
 
     @JsonProperty private boolean developmentMode = false;
 
+    @JsonProperty private boolean decoupledMode = false;
+
     @JsonProperty private PrometheusConfiguration prometheus = new PrometheusConfiguration();
 
     @JsonProperty private SqsQueueConfiguration sqsQueueConfiguration = new SqsQueueConfiguration();
@@ -62,6 +64,14 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public DatabaseConfiguration getDatabase() {
         return database;
+    }
+
+    /**
+     * If true, the service will be run with all external services (including mysql, memcached etc.)
+     * faked away. Takes precedence over Development Mode.
+     */
+    public boolean isDecoupledMode() {
+        return decoupledMode;
     }
 
     public boolean isDevelopmentMode() {
