@@ -7,7 +7,8 @@ public class AibConstants {
         class V31 {
             public static final String AIS_API_URL =
                     "https://apis.aibgb.co.uk/api/open-banking/v3.1/aisp";
-            public static final String PIS_API_URL = "";
+            public static final String PIS_API_URL =
+                    "https://apis.aibgb.co.uk/api/open-banking/v3.1/pisp";
             public static final String WELL_KNOWN_URL =
                     "https://openapi.aibgb.co.uk/endpoints/v2/retail/.well-known/openid-configuration";
         }
