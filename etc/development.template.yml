@@ -573,6 +573,13 @@ agentsServiceConfiguration:
         clientSigningCertificate: ''
         clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    chebanca:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        certificateId: ''
+        applicationId: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     cic:
       tink:
         authBaseUrl: https://www.cic.fr/oauth2/en/banque/oauth2_authorization.aspx
@@ -818,7 +825,6 @@ agentsServiceConfiguration:
         baseUrl: https://api.ing.com
         certificateId: Tink
         clientCertificate: ''
-        clientCertificateSerial: ''
         redirectUrl: https://localhost:7357/api/v1/thirdparty/callback
     isp:
       tink:

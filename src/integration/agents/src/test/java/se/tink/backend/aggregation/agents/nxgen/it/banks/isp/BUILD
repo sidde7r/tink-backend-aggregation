@@ -16,7 +16,6 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/banks/isp",
-        "//src/integration/api",
         "//third_party:org_assertj_assertj_core",
     ],
 )
@@ -26,6 +25,7 @@ junit_test(
     srcs = glob(["agent/**/*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:cryptography_test",
         "//etc:development",
     ],
     tags = [
@@ -33,8 +33,8 @@ junit_test(
         "manual",
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/banks/isp"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/banks/isp",
         "//src/integration/api",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//third_party:org_assertj_assertj_core",
