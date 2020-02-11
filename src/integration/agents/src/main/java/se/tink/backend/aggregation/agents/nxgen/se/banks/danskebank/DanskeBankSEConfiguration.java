@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 
@@ -117,5 +118,11 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     @Override
     public String getSecuritySystem() {
         return SECURITY_SYSTEM; // Bank ID Security system
+    }
+
+    @Override
+    public Optional<String> getBindDeviceSecuritySystem() {
+        // No SecuritySystem on `bindDevice`.
+        return Optional.empty();
     }
 }

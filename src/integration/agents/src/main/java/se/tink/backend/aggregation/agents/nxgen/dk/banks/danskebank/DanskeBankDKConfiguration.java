@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
@@ -127,5 +128,11 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     @Override
     public String getSecuritySystem() {
         return DanskeBankConstants.SecuritySystem.SERVICE_CODE_SC;
+    }
+
+    @Override
+    public Optional<String> getBindDeviceSecuritySystem() {
+        // No SecuritySystem on `bindDevice`.
+        return Optional.empty();
     }
 }

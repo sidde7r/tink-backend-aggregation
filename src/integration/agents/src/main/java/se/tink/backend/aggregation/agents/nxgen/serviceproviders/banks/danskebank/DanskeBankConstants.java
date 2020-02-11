@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
+import com.google.common.base.Strings;
 import java.text.MessageFormat;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -41,8 +42,11 @@ public class DanskeBankConstants {
         return getBaseUrl() + "/devicebind/check";
     }
 
-    public String getDeviceBindBindUrl() {
-        return getBaseUrl() + "/devicebind/bind";
+    public String getDeviceBindBindUrl(String secSystemCode) {
+        if (Strings.isNullOrEmpty(secSystemCode)) {
+            return getBaseUrl() + "/devicebind/bind";
+        }
+        return getBaseUrl() + String.format("/devicebind/bind?secsystem=%s", secSystemCode);
     }
 
     public String getDeviceListOtpUrl() {

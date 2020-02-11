@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
@@ -39,4 +40,6 @@ public interface DanskeBankConfiguration extends ClientConfiguration {
     String getDeviceSerialNumberKey();
 
     String getSecuritySystem();
+
+    Optional<String> getBindDeviceSecuritySystem();
 }

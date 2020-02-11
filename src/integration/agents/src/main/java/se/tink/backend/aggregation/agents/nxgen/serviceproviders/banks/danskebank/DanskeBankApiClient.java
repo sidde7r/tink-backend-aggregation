@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
 import com.google.common.base.Strings;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import org.json.JSONObject;
 import se.tink.backend.agents.rpc.Credentials;
@@ -190,8 +189,9 @@ public class DanskeBankApiClient {
     }
 
     public BindDeviceResponse bindDevice(String stepUpTokenValue, BindDeviceRequest request) {
+        String secSystem = configuration.getBindDeviceSecuritySystem().orElse("");
         RequestBuilder requestBuilder =
-                client.request(constants.getDeviceBindBindUrl())
+                client.request(constants.getDeviceBindBindUrl(secSystem))
                         .header("Referer", configuration.getAppReferer());
 
         if (!Strings.isNullOrEmpty(stepUpTokenValue)) {
