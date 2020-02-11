@@ -1,10 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
-import java.security.PrivateKey;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -39,8 +36,6 @@ public final class StarlingAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StarlingAgent.class);
-    private final String clientName;
     private final StarlingApiClient apiClient;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -48,13 +43,10 @@ public final class StarlingAgent extends NextGenerationAgent
     private ClientConfigurationEntity aisConfiguration;
     private ClientConfigurationEntity pisConfiguration;
     private String redirectUrl;
-    private String signingKeyUid;
-    private PrivateKey signingKey;
 
     public StarlingAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        clientName = request.getProvider().getPayload();
         apiClient = new StarlingApiClient(client, persistentStorage);
 
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
@@ -67,13 +59,6 @@ public final class StarlingAgent extends NextGenerationAgent
         aisConfiguration = starlingConfiguration.getAisConfiguration();
         pisConfiguration = starlingConfiguration.getPisConfiguration();
         redirectUrl = starlingConfiguration.getRedirectUrl();
-
-        /*
-        TODO: enable these when starting to work on PIS
-
-        signingKeyUid = starlingConfiguration.getKeyUid();
-        signingKey = starlingConfiguration.getSigningKey();
-        */
     }
 
     @Override
@@ -143,7 +128,6 @@ public final class StarlingAgent extends NextGenerationAgent
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        LOGGER.info("Creating TransferController");
         return Optional.of(
                 new TransferController(
                         null,
@@ -151,8 +135,6 @@ public final class StarlingAgent extends NextGenerationAgent
                                 apiClient,
                                 pisConfiguration,
                                 redirectUrl,
-                                signingKeyUid,
-                                signingKey,
                                 credentials,
                                 strongAuthenticationState,
                                 supplementalInformationHelper),
