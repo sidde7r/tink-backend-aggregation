@@ -82,6 +82,12 @@ import se.tink.libraries.queue.sqs.QueueMessageAction;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.service.version.VersionInformation;
 
+/**
+ * A singular place for all the Guice bindings necessary to start up and make calls to the
+ * Aggregation service without failures. By default, the aggregation service has a dependency on
+ * many extra services and resources that would require setting up a complete Kubernetes cluster.
+ * These have here been replaced with fake implementations.
+ */
 public class AggregationDecoupledModule extends AbstractModule {
     private static final Logger log = LoggerFactory.getLogger(AggregationDecoupledModule.class);
 
