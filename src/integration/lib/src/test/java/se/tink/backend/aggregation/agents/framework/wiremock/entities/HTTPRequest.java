@@ -35,4 +35,24 @@ public class HTTPRequest {
     public Optional<String> getRequestBody() {
         return Optional.ofNullable(requestBody);
     }
+
+    public Optional<String> getContentType() {
+
+        return requestHeaders.stream()
+                .filter((p) -> p.first.equalsIgnoreCase("content-type"))
+                .findAny()
+                .map(p -> p.second);
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public List<Pair<String, String>> getRequestHeaders() {
+        return requestHeaders;
+    }
 }
