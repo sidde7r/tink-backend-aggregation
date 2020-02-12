@@ -18,39 +18,33 @@ public class AapFileParserTest {
         // Construct the list of expected result
         final List<Pair<String, String>> expectedRequestHeaders =
                 Arrays.asList(
-                        new Pair[] {
-                            new Pair<>("Accept", "application/json"),
-                            new Pair<>("X-Aggregator", "Tink Testing")
-                        });
+                        new Pair<>("Accept", "application/json"),
+                        new Pair<>("X-Aggregator", "Tink Testing"));
 
         final List<Pair<String, String>> expectedResponseHeaders =
                 Arrays.asList(
-                        new Pair[] {
-                            new Pair<>("Content-Type", "application/json;charset=utf-8"),
-                            new Pair<>(
-                                    "Cache-Control", "private, no-store, no-cache, must-revalidate")
-                        });
+                        new Pair<>("Content-Type", "application/json;charset=utf-8"),
+                        new Pair<>(
+                                "Cache-Control", "private, no-store, no-cache, must-revalidate"));
 
         List<Pair<HTTPRequest, HTTPResponse>> expectedResult =
                 Arrays.asList(
-                        new Pair[] {
-                            new Pair<>(
-                                    new HTTPRequest(
-                                            "POST",
-                                            "/mobileone/msl/services/transactions/v1/getDetails",
-                                            expectedRequestHeaders,
-                                            "{\"billingIndexList\":[0],\"sortedIndex\":0}"),
-                                    new HTTPResponse(expectedResponseHeaders, 200, "{}")),
-                            new Pair<>(
-                                    new HTTPRequest(
-                                            "POST",
-                                            "/mobileone/msl/services/accountservicing/v1/extendSession",
-                                            expectedRequestHeaders),
-                                    new HTTPResponse(
-                                            expectedResponseHeaders,
-                                            200,
-                                            "{\"extendSession\":{\"status\":0}}")),
-                        });
+                        new Pair<>(
+                                new HTTPRequest(
+                                        "POST",
+                                        "/mobileone/msl/services/transactions/v1/getDetails",
+                                        expectedRequestHeaders,
+                                        "{\"billingIndexList\":[0],\"sortedIndex\":0}"),
+                                new HTTPResponse(expectedResponseHeaders, 200, "{}")),
+                        new Pair<>(
+                                new HTTPRequest(
+                                        "POST",
+                                        "/mobileone/msl/services/accountservicing/v1/extendSession",
+                                        expectedRequestHeaders),
+                                new HTTPResponse(
+                                        expectedResponseHeaders,
+                                        200,
+                                        "{\"extendSession\":{\"status\":0}}")));
 
         AapFileParser parser =
                 new AapFileParser(
