@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.RefreshMetricNameFactory;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
@@ -163,6 +164,22 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
         agentDataAvailabilityTrackerClient.sendIdentityData(
                 agentName, provider, market, context.getAggregationIdentityData());
+
+        IdentityDataSerializer serializer =
+                new IdentityDataSerializer(context.getAggregationIdentityData());
+
+        serializer
+                .buildList()
+                .forEach(
+                        entry ->
+                                dataTrackerEventProducer.sendDataTrackerEvent(
+                                        context.getRequest().getCredentials().getProviderName(),
+                                        context.getCorrelationId(),
+                                        entry.getName(),
+                                        !entry.getValue().equalsIgnoreCase("null"),
+                                        context.getAppId(),
+                                        context.getClusterId(),
+                                        context.getRequest().getCredentials().getUserId()));
     }
 
     @Override
