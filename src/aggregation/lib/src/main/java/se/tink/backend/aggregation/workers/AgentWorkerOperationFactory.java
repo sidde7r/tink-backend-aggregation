@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
+import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
@@ -91,6 +92,7 @@ public class AgentWorkerOperationFactory {
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final AgentDebugStorageHandler agentDebugStorageHandler;
     private final CredentialsEventProducer credentialsEventProducer;
+    private final DataTrackerEventProducer dataTrackerEventProducer;
     // States
     private AgentWorkerOperationState agentWorkerOperationState;
     private CircuitBreakerAgentWorkerCommandState circuitBreakAgentWorkerCommandState;
@@ -124,6 +126,7 @@ public class AgentWorkerOperationFactory {
             CuratorFramework coordinationClient,
             AgentsServiceConfiguration agentsServiceConfiguration,
             CredentialsEventProducer credentialsEventProducer,
+            DataTrackerEventProducer dataTrackerEventProducer,
             AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             ManagedTppSecretsServiceClient tppSecretsServiceClient) {
         this.cacheClient = cacheClient;
@@ -148,6 +151,7 @@ public class AgentWorkerOperationFactory {
         this.coordinationClient = coordinationClient;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
         this.credentialsEventProducer = credentialsEventProducer;
+        this.dataTrackerEventProducer = dataTrackerEventProducer;
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.tppSecretsServiceClient = tppSecretsServiceClient;
     }
@@ -229,7 +233,8 @@ public class AgentWorkerOperationFactory {
                     new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
                             createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient));
+                            agentDataAvailabilityTrackerClient,
+                            dataTrackerEventProducer));
         }
 
         for (RefreshableItem item : nonAccountItems) {
@@ -238,7 +243,8 @@ public class AgentWorkerOperationFactory {
                             context,
                             item,
                             createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient));
+                            agentDataAvailabilityTrackerClient,
+                            dataTrackerEventProducer));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -254,7 +260,8 @@ public class AgentWorkerOperationFactory {
                     new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
                             createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient));
+                            agentDataAvailabilityTrackerClient,
+                            dataTrackerEventProducer));
         }
 
         return commands;
@@ -857,7 +864,8 @@ public class AgentWorkerOperationFactory {
                                 context,
                                 item,
                                 createCommandMetricState(request),
-                                agentDataAvailabilityTrackerClient));
+                                agentDataAvailabilityTrackerClient,
+                                dataTrackerEventProducer));
             }
         }
 
@@ -1108,7 +1116,8 @@ public class AgentWorkerOperationFactory {
                     new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
                             createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient));
+                            agentDataAvailabilityTrackerClient,
+                            dataTrackerEventProducer));
         }
 
         // Add all refreshable items that aren't accounts to refresh them.
@@ -1121,7 +1130,8 @@ public class AgentWorkerOperationFactory {
                                                 context,
                                                 item,
                                                 createCommandMetricState(request),
-                                                agentDataAvailabilityTrackerClient)));
+                                                agentDataAvailabilityTrackerClient,
+                                                dataTrackerEventProducer)));
         // === END REFRESHING ===
         return commands.build();
     }

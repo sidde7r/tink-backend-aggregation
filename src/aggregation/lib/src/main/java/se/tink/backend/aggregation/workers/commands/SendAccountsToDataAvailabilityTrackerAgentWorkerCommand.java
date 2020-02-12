@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -27,6 +28,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private final AgentWorkerCommandMetricState metrics;
 
     private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
+    private final DataTrackerEventProducer dataTrackerEventProducer;
 
     private final String agentName;
     private final String provider;
@@ -35,11 +37,12 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     public SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
             AgentWorkerCommandContext context,
             AgentWorkerCommandMetricState metrics,
-            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient) {
+            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
+            DataTrackerEventProducer dataTrackerEventProducer) {
         this.context = context;
         this.metrics = metrics.init(this);
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
-
+        this.dataTrackerEventProducer = dataTrackerEventProducer;
         CredentialsRequest request = context.getRequest();
 
         this.agentName = request.getProvider().getClassName();

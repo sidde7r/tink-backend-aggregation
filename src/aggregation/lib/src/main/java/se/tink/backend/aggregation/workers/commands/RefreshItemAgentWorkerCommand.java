@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -40,6 +41,8 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private final RefreshableItem item;
     private final AgentWorkerCommandMetricState metrics;
     private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
+    private final DataTrackerEventProducer dataTrackerEventProducer;
+
     private final String agentName;
     private final String provider;
     private final String market;
@@ -48,11 +51,14 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             AgentWorkerCommandContext context,
             RefreshableItem item,
             AgentWorkerCommandMetricState metrics,
-            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient) {
+            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
+            DataTrackerEventProducer dataTrackerEventProducer) {
         this.context = context;
         this.item = item;
         this.metrics = metrics.init(this);
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
+        this.dataTrackerEventProducer = dataTrackerEventProducer;
+
         CredentialsRequest request = context.getRequest();
 
         this.agentName = request.getProvider().getClassName();
