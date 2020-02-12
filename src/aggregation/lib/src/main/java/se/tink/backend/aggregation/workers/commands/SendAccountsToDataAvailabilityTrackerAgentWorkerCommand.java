@@ -16,8 +16,6 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.LoanTrackingSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.PortfolioTrackingSerializer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.pair.Pair;
@@ -98,19 +96,8 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
         final Account account = pair.first;
         final AccountFeatures features = pair.second;
 
-        AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
-
-        if (features.getPortfolios() != null) {
-            features.getPortfolios().stream()
-                    .map(PortfolioTrackingSerializer::new)
-                    .forEach(e -> serializer.addChild("portfolios", e));
-        }
-
-        if (features.getLoans() != null) {
-            features.getLoans().stream()
-                    .map(LoanTrackingSerializer::new)
-                    .forEach(e -> serializer.addChild("loans", e));
-        }
+        AccountTrackingSerializer serializer =
+                agentDataAvailabilityTrackerClient.serializeAccount(account, features);
 
         serializer
                 .buildList()

@@ -128,13 +128,8 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         }
     }
 
-    public void sendAccount(
-            final String agent,
-            final String provider,
-            final String market,
-            final Account account,
-            final AccountFeatures features) {
-
+    public AccountTrackingSerializer serializeAccount(
+            final Account account, final AccountFeatures features) {
         AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
 
         if (features.getPortfolios() != null) {
@@ -149,11 +144,23 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
                     .forEach(e -> serializer.addChild("loans", e));
         }
 
+        return serializer;
+    }
+
+    public void sendAccount(
+            final String agent,
+            final String provider,
+            final String market,
+            final Account account,
+            final AccountFeatures features) {
+
         TrackAccountRequest.Builder requestBuilder =
                 TrackAccountRequest.newBuilder()
                         .setAgent(agent)
                         .setProvider(provider)
                         .setMarket(market);
+
+        AccountTrackingSerializer serializer = serializeAccount(account, features);
 
         // TODO: Unwrapped serialization such that builder.setAll can be used instead of loop
         serializer
@@ -167,19 +174,23 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
         accountDeque.add(requestBuilder.build());
     }
 
+    public IdentityDataSerializer serializeIdentityData(final IdentityData identityData) {
+        return new IdentityDataSerializer(identityData);
+    }
+
     public void sendIdentityData(
             final String agent,
             final String provider,
             final String market,
             final IdentityData identityData) {
 
-        IdentityDataSerializer serializer = new IdentityDataSerializer(identityData);
-
         TrackAccountRequest.Builder requestBuilder =
                 TrackAccountRequest.newBuilder()
                         .setAgent(agent)
                         .setProvider(provider)
                         .setMarket(market);
+
+        IdentityDataSerializer serializer = serializeIdentityData(identityData);
 
         serializer
                 .buildList()

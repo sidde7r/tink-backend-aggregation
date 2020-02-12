@@ -2,6 +2,9 @@ package se.tink.backend.integration.agent_data_availability_tracker.client;
 
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
+import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
 
 public class AgentDataAvailabilityTrackerClientMockImpl
         implements AgentDataAvailabilityTrackerClient {
@@ -24,6 +27,17 @@ public class AgentDataAvailabilityTrackerClientMockImpl
             final String market,
             final se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
                     identityData) {}
+
+    @Override
+    public AccountTrackingSerializer serializeAccount(
+            final Account account, final AccountFeatures features) {
+        return null;
+    }
+
+    @Override
+    public IdentityDataSerializer serializeIdentityData(final IdentityData identityData) {
+        return null;
+    }
 
     @Override
     public void endStreamBlocking() throws InterruptedException {}

@@ -166,7 +166,8 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 agentName, provider, market, context.getAggregationIdentityData());
 
         IdentityDataSerializer serializer =
-                new IdentityDataSerializer(context.getAggregationIdentityData());
+                agentDataAvailabilityTrackerClient.serializeIdentityData(
+                        context.getAggregationIdentityData());
 
         serializer
                 .buildList()
