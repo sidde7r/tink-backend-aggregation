@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
@@ -72,10 +73,7 @@ public final class FinecoBankAuthenticator
                         strongAuthenticationState.getSupplementalKey(),
                         ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                         TimeUnit.MINUTES)
-                .orElseThrow(
-                        () ->
-                                new IllegalMonitorStateException(
-                                        "No supplemental info found in api response"));
+                .orElseThrow(() -> new AuthorizationException(AuthorizationError.UNAUTHORIZED));
 
         for (int i = 0;
                 i < FormValues.MAX_POLLS_COUNTER && !finecoAuthenticator.getApprovedConsent();
