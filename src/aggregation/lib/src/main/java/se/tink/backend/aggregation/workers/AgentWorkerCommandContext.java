@@ -66,6 +66,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     protected long timePutOnQueue;
     protected AgentsServiceConfiguration agentsServiceConfiguration;
     protected List<String> uniqueIdOfUserSelectedAccounts;
+    protected final String correlationId;
 
     public AgentWorkerCommandContext(
             CredentialsRequest request,
@@ -77,7 +78,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
             ProviderSessionCacheController providerSessionCacheController,
             ControllerWrapper controllerWrapper,
             String clusterId,
-            String appId) {
+            String appId,
+            String correlationId) {
         super(
                 request,
                 metricRegistry,
@@ -91,6 +93,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
+        this.correlationId = correlationId;
 
         Provider provider = request.getProvider();
 
@@ -179,6 +182,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         processAccountsRequest.setUserId(request.getUser().getId());
 
         controllerWrapper.processAccounts(processAccountsRequest);
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
     }
 
     public CuratorFramework getCoordinationClient() {
