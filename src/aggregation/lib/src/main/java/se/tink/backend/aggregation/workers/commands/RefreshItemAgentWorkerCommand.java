@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.RefreshMetricNameFactory;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
@@ -40,6 +42,8 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private final RefreshableItem item;
     private final AgentWorkerCommandMetricState metrics;
     private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
+    private final DataTrackerEventProducer dataTrackerEventProducer;
+
     private final String agentName;
     private final String provider;
     private final String market;
@@ -48,11 +52,14 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             AgentWorkerCommandContext context,
             RefreshableItem item,
             AgentWorkerCommandMetricState metrics,
-            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient) {
+            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
+            DataTrackerEventProducer dataTrackerEventProducer) {
         this.context = context;
         this.item = item;
         this.metrics = metrics.init(this);
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
+        this.dataTrackerEventProducer = dataTrackerEventProducer;
+
         CredentialsRequest request = context.getRequest();
 
         this.agentName = request.getProvider().getClassName();
@@ -157,6 +164,23 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
         agentDataAvailabilityTrackerClient.sendIdentityData(
                 agentName, provider, market, context.getAggregationIdentityData());
+
+        IdentityDataSerializer serializer =
+                agentDataAvailabilityTrackerClient.serializeIdentityData(
+                        context.getAggregationIdentityData());
+
+        serializer
+                .buildList()
+                .forEach(
+                        entry ->
+                                dataTrackerEventProducer.sendDataTrackerEvent(
+                                        context.getRequest().getCredentials().getProviderName(),
+                                        context.getCorrelationId(),
+                                        entry.getName(),
+                                        !entry.getValue().equalsIgnoreCase("null"),
+                                        context.getAppId(),
+                                        context.getClusterId(),
+                                        context.getRequest().getCredentials().getUserId()));
     }
 
     @Override
