@@ -5,6 +5,8 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
@@ -13,8 +15,12 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.LoanTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.PortfolioTrackingSerializer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.pair.Pair;
 
 public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends AgentWorkerCommand
         implements MetricsCommand {
@@ -66,14 +72,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                 if (!Strings.isNullOrEmpty(market)) {
 
                     context.getCachedAccountsWithFeatures()
-                            .forEach(
-                                    pair ->
-                                            agentDataAvailabilityTrackerClient.sendAccount(
-                                                    agentName,
-                                                    provider,
-                                                    market,
-                                                    pair.first,
-                                                    pair.second));
+                            .forEach(pair -> processForDataTracker(pair));
 
                     action.completed();
                 } else {
@@ -90,6 +89,41 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
         }
 
         return AgentWorkerCommandResult.CONTINUE;
+    }
+
+    private void processForDataTracker(Pair<Account, AccountFeatures> pair) {
+        agentDataAvailabilityTrackerClient.sendAccount(
+                agentName, provider, market, pair.first, pair.second);
+
+        final Account account = pair.first;
+        final AccountFeatures features = pair.second;
+
+        AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
+
+        if (features.getPortfolios() != null) {
+            features.getPortfolios().stream()
+                    .map(PortfolioTrackingSerializer::new)
+                    .forEach(e -> serializer.addChild("portfolios", e));
+        }
+
+        if (features.getLoans() != null) {
+            features.getLoans().stream()
+                    .map(LoanTrackingSerializer::new)
+                    .forEach(e -> serializer.addChild("loans", e));
+        }
+
+        serializer
+                .buildList()
+                .forEach(
+                        entry ->
+                                dataTrackerEventProducer.sendDataTrackerEvent(
+                                        context.getRequest().getCredentials().getProviderName(),
+                                        context.getCorrelationId(),
+                                        entry.getName(),
+                                        !entry.getValue().equalsIgnoreCase("null"),
+                                        context.getAppId(),
+                                        context.getClusterId(),
+                                        context.getRequest().getCredentials().getUserId()));
     }
 
     @Override
