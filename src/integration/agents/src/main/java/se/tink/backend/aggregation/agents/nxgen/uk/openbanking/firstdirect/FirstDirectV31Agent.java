@@ -28,7 +28,6 @@ public class FirstDirectV31Agent extends UkOpenBankingBaseAgent {
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.WELL_KNOWN_URL)
                         .withIdentityDataURL(PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)
-                        .withAppToAppURL(V31.APP_TO_APP_AUTH_URL)
                         .withAdditionalPermission(
                                 PartyEndpoints.partyEndpointsPermissionMap.get(
                                         PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY))
@@ -61,8 +60,7 @@ public class FirstDirectV31Agent extends UkOpenBankingBaseAgent {
                         apiClient,
                         supplementalInformationHelper,
                         credentials,
-                        strongAuthenticationState,
-                        aisConfig.getAppToAppURL());
+                        strongAuthenticationState);
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }
