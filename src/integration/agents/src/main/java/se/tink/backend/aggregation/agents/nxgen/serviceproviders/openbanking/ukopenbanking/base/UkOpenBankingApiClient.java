@@ -200,7 +200,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         jwtHeaders.put(
                 HEADERS.CRIT, Arrays.asList(HEADERS.B64, HEADERS.IAT, HEADERS.ISS).toString());
 
-        return signer.sign(Algorithm.PS256, jwtHeaders, payloadClaims, true);
+        return signer.sign(Algorithm.RS256, jwtHeaders, payloadClaims, true);
     }
 
     private String createPs256Signature(Map<String, Object> payloadClaims) {
@@ -215,7 +215,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 HEADERS.CRIT,
                 Arrays.asList(HEADERS.B64, HEADERS.IAT, HEADERS.ISS, HEADERS.TAN).toString());
 
-        return signer.sign(Algorithm.RS256, jwtHeaders, payloadClaims, true);
+        return signer.sign(Algorithm.PS256, jwtHeaders, payloadClaims, true);
     }
 
     public <T> T createDomesticPaymentConsent(
