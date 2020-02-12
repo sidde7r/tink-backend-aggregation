@@ -16,8 +16,6 @@ java_library(
         "//data:tesseract_training_set",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -139,10 +137,6 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@com_sun_jersey_jersey_client//jar",
         "@io_reactivex_rxjava3_rxjava",
-        "@selenium//:com_codeborne_phantomjsdriver",
-        "@selenium//:org_seleniumhq_selenium_selenium_api",
-        "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
-        "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
     ],
 )
 

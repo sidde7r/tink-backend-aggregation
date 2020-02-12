@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils.selenium;
+package se.tink.libraries.selenium;
 
 import com.google.common.base.Strings;
 import java.io.File;
