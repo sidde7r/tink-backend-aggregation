@@ -18,7 +18,6 @@ public class FiduciaConfiguration implements ClientConfiguration {
     private String certificateId;
     private String certificate;
     private String tppId;
-    private String serverUrl;
 
     public String getTppId() {
         Preconditions.checkNotNull(
@@ -60,11 +59,5 @@ public class FiduciaConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(redirectUrl),
                 String.format(INVALID_CONFIGURATION, "Redirect URL"));
         return redirectUrl;
-    }
-
-    public String getServerUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(serverUrl), String.format(INVALID_CONFIGURATION, "Server URL"));
-        return serverUrl;
     }
 }

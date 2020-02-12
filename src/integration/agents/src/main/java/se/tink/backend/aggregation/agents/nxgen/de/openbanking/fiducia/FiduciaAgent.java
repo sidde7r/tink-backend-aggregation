@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.FiduciaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.FiduciaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -37,13 +38,15 @@ public final class FiduciaAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        this.apiClient =
-                new FiduciaApiClient(
+        String serverUrl = request.getProvider().getPayload();
+        FiduciaRequestBuilder fiduciaRequestBuilder =
+                new FiduciaRequestBuilder(
                         client,
-                        persistentStorage,
                         sessionStorage,
                         getClientConfiguration(),
                         createSignatureHeaderGenerator(agentsServiceConfiguration));
+
+        this.apiClient = new FiduciaApiClient(persistentStorage, serverUrl, fiduciaRequestBuilder);
 
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
