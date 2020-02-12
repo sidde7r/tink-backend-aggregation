@@ -58,13 +58,9 @@ public class Xs2aDevelopersApiClient {
     }
 
     protected RequestBuilder createRequest(URL url) {
-
-        RequestBuilder result =
-                client.request(url)
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .type(MediaType.APPLICATION_JSON);
-
-        return result;
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .type(MediaType.APPLICATION_JSON);
     }
 
     private RequestBuilder createRequestInSession(URL url) {

@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bpost.fetcher.tr
 
 import java.util.Collection;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bpost.BpostConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
@@ -16,6 +15,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class BpostTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
+
+    private static final int TRANSACTION_FETCHING_RETRY_LIMIT = 15;
 
     private final Xs2aDevelopersTransactionalAccountFetcher
             xs2aDevelopersTransactionalAccountFetcher;
@@ -45,7 +46,7 @@ public class BpostTransactionalAccountFetcher
                 return PaginatorResponseImpl.createEmpty(false);
             } else if (e.getResponse().getStatus() == Transactions.ERROR_CODE_INTERNAL_SERVER) {
                 ++counter;
-                if (counter < BpostConstants.TRANSACTION_FETCHING_RETRY_LIMIT) {
+                if (counter < TRANSACTION_FETCHING_RETRY_LIMIT) {
                     return PaginatorResponseImpl.createEmpty(true);
                 } else {
                     return PaginatorResponseImpl.createEmpty(false);

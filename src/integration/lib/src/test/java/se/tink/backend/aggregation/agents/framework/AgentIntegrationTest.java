@@ -636,10 +636,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         final LogMasker logMasker = context.getLogMasker();
         final String maskedLog = logMasker.mask(context.getLogOutputStream().toString());
 
-        System.out.println("");
+        System.out.println();
         System.out.println("===== MASKED DEBUG LOG =====");
         System.out.println(maskedLog);
-        System.out.println("");
+        System.out.println();
     }
 
     private void testBankTransfer(Transfer transfer, boolean isUpdate) throws Exception {
