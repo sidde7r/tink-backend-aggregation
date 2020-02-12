@@ -140,11 +140,9 @@ public final class ArgentaApiClient {
 
     public void selectAuthenticationMethod(
             String selectAuthenticationMethodUrl, String authenticationMethodId) {
-
         ScaSelectionRequest scaSelectionRequest = new ScaSelectionRequest(authenticationMethodId);
-
         createRequest(
-                        new URL(Urls.BASE_API_URL + selectAuthenticationMethodUrl),
+                        new URL(Urls.BASE_BERLIN_GROUP + selectAuthenticationMethodUrl),
                         SerializationUtils.serializeToString(scaSelectionRequest))
                 .type(HeaderValues.JSON_UTF_8)
                 .put(String.class, scaSelectionRequest);
