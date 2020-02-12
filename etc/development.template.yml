@@ -762,7 +762,6 @@ agentsServiceConfiguration:
         certificate: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
         tppId: SE-FINA-44059
-        serverUrl: https://www.raiba-muc-sued.de/services_xs2a
     findomestic:
       tink:
         clientId: ''

@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.CreateConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.FiduciaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.AuthorizePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.CreatePaymentResponse;
@@ -28,11 +27,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.header.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class FiduciaApiClient {
@@ -60,29 +56,16 @@ public class FiduciaApiClient {
     private static final String AUTHORISATION_ID = "authorisationId";
 
     private final PersistentStorage persistentStorage;
-    private final FiduciaConfiguration fiduciaConfiguration;
+    private final String serverUrl;
     private final FiduciaRequestBuilder fiduciaRequestBuilder;
 
     FiduciaApiClient(
-            TinkHttpClient client,
             PersistentStorage persistentStorage,
-            SessionStorage sessionStorage,
-            FiduciaConfiguration fiduciaConfiguration,
-            SignatureHeaderGenerator signatureHeaderGenerator) {
+            String serverUrl,
+            FiduciaRequestBuilder fiduciaRequestBuilder) {
         this.persistentStorage = persistentStorage;
-        this.fiduciaConfiguration = fiduciaConfiguration;
-        this.fiduciaRequestBuilder =
-                createRequestBuilder(
-                        client, sessionStorage, fiduciaConfiguration, signatureHeaderGenerator);
-    }
-
-    private FiduciaRequestBuilder createRequestBuilder(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            FiduciaConfiguration fiduciaConfiguration,
-            SignatureHeaderGenerator signatureHeaderGenerator) {
-        return new FiduciaRequestBuilder(
-                client, sessionStorage, fiduciaConfiguration, signatureHeaderGenerator);
+        this.serverUrl = serverUrl;
+        this.fiduciaRequestBuilder = fiduciaRequestBuilder;
     }
 
     public String createConsent() {
@@ -242,6 +225,6 @@ public class FiduciaApiClient {
     }
 
     private URL createUrl(String path) {
-        return new URL(String.format("%s%s", fiduciaConfiguration.getServerUrl(), path));
+        return new URL(String.format("%s%s", serverUrl, path));
     }
 }
