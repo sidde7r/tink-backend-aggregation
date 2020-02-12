@@ -30,4 +30,12 @@ public class HTTPResponse {
     public Optional<String> getResponseBody() {
         return Optional.ofNullable(responseBody);
     }
+
+    public List<Pair<String, String>> getResponseHeaders() {
+        return responseHeaders;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
 }
