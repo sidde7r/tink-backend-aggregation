@@ -1,11 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.creditcards.amex.v62;
 
-import static se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts.compareAccounts;
-import static se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts.compareTransactions;
-import static se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts.createAccount;
-import static se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts.createTransaction;
-
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
@@ -13,6 +9,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.models.Transaction;
@@ -20,8 +17,8 @@ import se.tink.backend.aggregation.agents.models.TransactionTypes;
 
 public final class AmexV62UkMockServerAgentTest extends AgentIntegrationMockServerTest {
 
-    private String USERNAME = "testUser";
-    private String PASSWORD = "testPassword";
+    private final String USERNAME = "testUser";
+    private final String PASSWORD = "testPassword";
 
     @Test
     public void testRefresh() throws Exception {
@@ -29,14 +26,11 @@ public final class AmexV62UkMockServerAgentTest extends AgentIntegrationMockServ
         // Given
         prepareMockServer(
                 new AapFileParser(
-                        String.format(
-                                "%s/%s",
-                                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62",
-                                "resources/amex-refresh-traffic.aap"),
+                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.aap",
                         "https://global.americanexpress.com"));
 
         Account account =
-                createAccount(
+                AgentContractEntitiesAsserts.createAccount(
                         "XXX-11111",
                         0,
                         0,
@@ -46,51 +40,50 @@ public final class AmexV62UkMockServerAgentTest extends AgentIntegrationMockServ
                         AccountTypes.CREDIT_CARD,
                         "MR M LASTNAME");
 
-        List<Account> expectedAccounts = Arrays.asList(new Account[] {account});
+        List<Account> expectedAccounts = Collections.singletonList(account);
 
         Transaction transaction1 =
-                createTransaction(
+                AgentContractEntitiesAsserts.createTransaction(
                         "fabc330b9f804c7ca6c2a21c3fd255ae",
                         -403.25,
-                        1552561200000l,
+                        1552561200000L,
                         "interesting transaction",
                         false,
                         false,
                         TransactionTypes.DEFAULT);
 
         Transaction transaction2 =
-                createTransaction(
+                AgentContractEntitiesAsserts.createTransaction(
                         "fabc330b9f804c7ca6c2a21c3fd255ae",
                         -64.84,
-                        1553770800000l,
+                        1553770800000L,
                         "good transaction",
                         false,
                         false,
                         TransactionTypes.DEFAULT);
 
         Transaction transaction3 =
-                createTransaction(
+                AgentContractEntitiesAsserts.createTransaction(
                         "fabc330b9f804c7ca6c2a21c3fd255ae",
                         64.84,
-                        1554285600000l,
+                        1554285600000L,
                         "PAYMENT RECEIVED - THANK YOU",
                         false,
                         false,
                         TransactionTypes.DEFAULT);
 
         Transaction transaction4 =
-                createTransaction(
+                AgentContractEntitiesAsserts.createTransaction(
                         "fabc330b9f804c7ca6c2a21c3fd255ae",
                         551.4,
-                        1553511600000l,
+                        1553511600000L,
                         "PAYMENT RECEIVED - THANK YOU",
                         false,
                         false,
                         TransactionTypes.DEFAULT);
 
         List<Transaction> expectedTransactions =
-                Arrays.asList(
-                        new Transaction[] {transaction1, transaction2, transaction3, transaction4});
+                Arrays.asList(transaction1, transaction2, transaction3, transaction4);
 
         // When
         NewAgentTestContext context =
@@ -107,7 +100,7 @@ public final class AmexV62UkMockServerAgentTest extends AgentIntegrationMockServ
         List<Account> givenAccounts = context.getUpdatedAccounts();
 
         // Then
-        compareAccounts(expectedAccounts, givenAccounts);
-        compareTransactions(expectedTransactions, givenTransactions);
+        AgentContractEntitiesAsserts.compareAccounts(expectedAccounts, givenAccounts);
+        AgentContractEntitiesAsserts.compareTransactions(expectedTransactions, givenTransactions);
     }
 }
