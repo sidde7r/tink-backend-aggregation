@@ -31,12 +31,12 @@ public class AgentDataAvailabilityTrackerClientMockImpl
     @Override
     public AccountTrackingSerializer serializeAccount(
             final Account account, final AccountFeatures features) {
-        return null;
+        return new AccountTrackingSerializer(new Account());
     }
 
     @Override
     public IdentityDataSerializer serializeIdentityData(final IdentityData identityData) {
-        return null;
+        return new IdentityDataSerializer(new IdentityData());
     }
 
     @Override

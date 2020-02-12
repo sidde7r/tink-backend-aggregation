@@ -18,7 +18,6 @@ import se.tink.backend.integration.agent_data_availability_tracker.client.AgentD
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
-import se.tink.libraries.pair.Pair;
 
 public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends AgentWorkerCommand
         implements MetricsCommand {
@@ -70,7 +69,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                 if (!Strings.isNullOrEmpty(market)) {
 
                     context.getCachedAccountsWithFeatures()
-                            .forEach(pair -> processForDataTracker(pair));
+                            .forEach(pair -> processForDataTracker(pair.first, pair.second));
 
                     action.completed();
                 } else {
@@ -89,12 +88,9 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
         return AgentWorkerCommandResult.CONTINUE;
     }
 
-    private void processForDataTracker(Pair<Account, AccountFeatures> pair) {
+    private void processForDataTracker(final Account account, final AccountFeatures features) {
         agentDataAvailabilityTrackerClient.sendAccount(
-                agentName, provider, market, pair.first, pair.second);
-
-        final Account account = pair.first;
-        final AccountFeatures features = pair.second;
+                agentName, provider, market, account, features);
 
         AccountTrackingSerializer serializer =
                 agentDataAvailabilityTrackerClient.serializeAccount(account, features);
