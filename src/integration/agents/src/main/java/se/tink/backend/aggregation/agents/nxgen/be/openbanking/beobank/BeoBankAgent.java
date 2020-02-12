@@ -6,6 +6,9 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BeoBankAgent extends CmcicAgent {
+
+    private static final String INTEGRATION_NAME = "beobank";
+
     public BeoBankAgent(
             CredentialsRequest request,
             AgentContext context,
@@ -15,6 +18,6 @@ public class BeoBankAgent extends CmcicAgent {
 
     @Override
     protected String getIntegrationName() {
-        return BeoBankConstants.INTEGRATION_NAME;
+        return INTEGRATION_NAME;
     }
 }

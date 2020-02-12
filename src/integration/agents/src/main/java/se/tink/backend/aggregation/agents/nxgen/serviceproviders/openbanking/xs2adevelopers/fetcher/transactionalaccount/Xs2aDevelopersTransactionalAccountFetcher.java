@@ -28,9 +28,7 @@ public class Xs2aDevelopersTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-
         GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
-
         return getAccountsResponse.getAccountList().stream()
                 .map(this::transformAccount)
                 .filter(Optional::isPresent)
