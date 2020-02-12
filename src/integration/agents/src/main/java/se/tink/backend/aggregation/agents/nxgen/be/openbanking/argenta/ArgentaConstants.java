@@ -21,6 +21,7 @@ public final class ArgentaConstants {
 
     public static class Urls {
         public static final String BASE_API_URL = "https://api.payments.argenta.be";
+        public static final String BASE_BERLIN_GROUP = BASE_API_URL + "/berlingroup";
         public static final String BASE_AUTH_URL = "https://login.payments.argenta.be";
         public static final URL AUTHORIZATION = new URL(BASE_AUTH_URL + Endpoints.AUTHORIZATION);
         public static final URL CONSENT = new URL(BASE_API_URL + Endpoints.CONSENT);
