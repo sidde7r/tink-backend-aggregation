@@ -2,6 +2,7 @@
 1 * 2020-01-20--20:48:01.195
 1 > POST https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/initialization
 1 > Accept: application/json
+1 > Content-Type: application/json
 1 > charset: UTF-8
 1 > x-axp-clienttype: iPhone
 1 > x-axp-devicemodel: iPhone8,1
@@ -37,6 +38,7 @@
 2 * 2020-01-20--20:48:01.999
 2 > POST https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/initialization
 2 > Accept: application/json
+2 > Content-Type: application/json
 2 > charset: UTF-8
 2 > x-axp-clienttype: iPhone
 2 > x-axp-devicemodel: iPhone8,1
@@ -72,6 +74,7 @@
 3 * 2020-01-20--20:48:02.321
 3 > POST https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/loginsummary
 3 > Accept: application/json
+3 > Content-Type: application/json
 3 > charset: UTF-8
 3 > x-axp-clienttype: iPhone
 3 > x-axp-devicemodel: iPhone8,1
@@ -107,6 +110,7 @@
 4 * 2020-01-20--20:48:03.926
 4 > POST https://global.americanexpress.com/mobileone/msl/services/timeline/v1/timelineDetail
 4 > Accept: application/json
+4 > Content-Type: application/json
 4 > charset: UTF-8
 4 > x-axp-clienttype: iPhone
 4 > x-axp-devicemodel: iPhone8,1
@@ -146,6 +150,7 @@
 5 * 2020-01-20--20:48:04.915
 5 > POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 5 > Accept: application/json
+5 > Content-Type: application/json
 5 > charset: UTF-8
 5 > x-axp-clienttype: iPhone
 5 > x-axp-devicemodel: iPhone8,1
@@ -185,6 +190,7 @@
 6 * 2020-01-20--20:48:05.729
 6 > POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 6 > Accept: application/json
+6 > Content-Type: application/json
 6 > charset: UTF-8
 6 > x-axp-clienttype: iPhone
 6 > x-axp-devicemodel: iPhone8,1
@@ -224,6 +230,7 @@
 7 * 2020-01-20--20:48:11.171
 7 > POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 7 > Accept: application/json
+7 > Content-Type: application/json
 7 > charset: UTF-8
 7 > x-axp-clienttype: iPhone
 7 > x-axp-devicemodel: iPhone8,1
@@ -263,6 +270,7 @@
 8 * 2020-01-20--20:48:12.382
 8 > POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 8 > Accept: application/json
+8 > Content-Type: application/json
 8 > charset: UTF-8
 8 > x-axp-clienttype: iPhone
 8 > x-axp-devicemodel: iPhone8,1
@@ -302,6 +310,7 @@
 9 * 2020-01-20--20:48:14.239
 9 > POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 9 > Accept: application/json
+9 > Content-Type: application/json
 9 > charset: UTF-8
 9 > x-axp-clienttype: iPhone
 9 > x-axp-devicemodel: iPhone8,1
@@ -341,6 +350,7 @@
 10 * 2020-01-20--20:48:15.382
 10 > POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 10 > Accept: application/json
+10 > Content-Type: application/json
 10 > charset: UTF-8
 10 > x-axp-clienttype: iPhone
 10 > x-axp-devicemodel: iPhone8,1
@@ -381,6 +391,7 @@
 11 * 2020-01-20--20:48:30.956
 11 > POST https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/extendSession
 11 > Accept: application/json
+11 > Content-Type: application/json
 11 > charset: UTF-8
 11 > x-axp-clienttype: iPhone
 11 > x-axp-devicemodel: iPhone8,1
