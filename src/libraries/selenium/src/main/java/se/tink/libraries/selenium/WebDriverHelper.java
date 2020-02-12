@@ -75,7 +75,7 @@ public class WebDriverHelper {
         try {
             Thread.sleep(waitTime);
         } catch (InterruptedException e) {
-            // NOOP
+            Thread.currentThread().interrupt();
         }
     }
 
