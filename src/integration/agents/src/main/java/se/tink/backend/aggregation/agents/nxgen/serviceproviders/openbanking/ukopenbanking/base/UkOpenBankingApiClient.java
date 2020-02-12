@@ -197,10 +197,9 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         jwtHeaders.put(HEADERS.B64, false);
         jwtHeaders.put(HEADERS.IAT, new Date().getTime() - 1000);
         jwtHeaders.put(HEADERS.ISS, softwareStatement.getSoftwareId());
-        jwtHeaders.put(
-                HEADERS.CRIT, Arrays.asList(HEADERS.B64, HEADERS.IAT, HEADERS.ISS).toString());
+        jwtHeaders.put(HEADERS.CRIT, Arrays.asList(HEADERS.B64, HEADERS.IAT, HEADERS.ISS));
 
-        return signer.sign(Algorithm.PS256, jwtHeaders, payloadClaims, true);
+        return signer.sign(Algorithm.RS256, jwtHeaders, payloadClaims, true);
     }
 
     private String createPs256Signature(Map<String, Object> payloadClaims) {
@@ -212,10 +211,9 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         jwtHeaders.put(HEADERS.ISS, TINK_UKOPENBANKING_ORGID);
         jwtHeaders.put(HEADERS.TAN, UKOB_TAN);
         jwtHeaders.put(
-                HEADERS.CRIT,
-                Arrays.asList(HEADERS.B64, HEADERS.IAT, HEADERS.ISS, HEADERS.TAN).toString());
+                HEADERS.CRIT, Arrays.asList(HEADERS.B64, HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
 
-        return signer.sign(Algorithm.RS256, jwtHeaders, payloadClaims, true);
+        return signer.sign(Algorithm.PS256, jwtHeaders, payloadClaims, true);
     }
 
     public <T> T createDomesticPaymentConsent(
