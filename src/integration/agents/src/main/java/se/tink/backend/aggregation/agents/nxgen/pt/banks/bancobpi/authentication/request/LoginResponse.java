@@ -6,9 +6,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.http.cookie.Cookie;
+import javax.ws.rs.core.NewCookie;
 import se.tink.backend.aggregation.agents.common.RequestException;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class LoginResponse extends AuthenticationResponse {
 
@@ -17,13 +17,12 @@ public class LoginResponse extends AuthenticationResponse {
 
     private String csrfToken;
 
-    LoginResponse(final String rawJsonResponse, final TinkHttpClient httpClient)
-            throws RequestException {
-        super(rawJsonResponse);
-        csrfToken = extractCSRFTokenFromCookies(httpClient.getCookies());
+    LoginResponse(final HttpResponse response) throws RequestException {
+        super(response.getBody(String.class));
+        csrfToken = extractCSRFTokenFromCookies(response.getCookies());
     }
 
-    String extractCSRFTokenFromCookies(final List<Cookie> cookies) throws RequestException {
+    String extractCSRFTokenFromCookies(final List<NewCookie> cookies) throws RequestException {
         String cookieValue =
                 cookies.stream()
                         .filter(c -> c.getName().equals(CSRF_TOKEN_COOKIE))

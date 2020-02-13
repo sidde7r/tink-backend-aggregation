@@ -66,7 +66,7 @@ public class TransactionsFetchRequestTest {
                         entityManager, fetchingUUID, pageNo, transactionalAccount);
         ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
         // when
-        objectUnderTest.withBody(httpClient, requestBuilder);
+        objectUnderTest.withBody(requestBuilder);
         // then
         Mockito.verify(requestBuilder).body(stringArgumentCaptor.capture());
         JSONObject body = new JSONObject(stringArgumentCaptor.getValue());

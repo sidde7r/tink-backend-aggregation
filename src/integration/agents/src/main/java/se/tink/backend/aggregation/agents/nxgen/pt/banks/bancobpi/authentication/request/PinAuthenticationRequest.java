@@ -4,8 +4,8 @@ import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAccountsContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class PinAuthenticationRequest extends DefaultRequest<PinAuthenticationResponse> {
 
@@ -23,13 +23,7 @@ public class PinAuthenticationRequest extends DefaultRequest<PinAuthenticationRe
     }
 
     @Override
-    protected RequestBuilder withSpecificHeaders(
-            TinkHttpClient httpClient, RequestBuilder requestBuilder) {
-        return requestBuilder;
-    }
-
-    @Override
-    public RequestBuilder withBody(TinkHttpClient httpClient, RequestBuilder requestBuilder) {
+    public RequestBuilder withBody(RequestBuilder requestBuilder) {
         return requestBuilder.body(
                 String.format(
                         BODY_TEMPLATE,
@@ -40,9 +34,9 @@ public class PinAuthenticationRequest extends DefaultRequest<PinAuthenticationRe
     }
 
     @Override
-    public PinAuthenticationResponse execute(
-            RequestBuilder requestBuilder, TinkHttpClient httpClient) throws RequestException {
+    public PinAuthenticationResponse execute(RequestBuilder requestBuilder)
+            throws RequestException {
         return new PinAuthenticationResponse(
-                requestBuilder.post(String.class), httpClient, bancoBpiAccountsContext);
+                requestBuilder.post(HttpResponse.class), bancoBpiAccountsContext);
     }
 }

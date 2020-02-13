@@ -11,8 +11,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 
 public class DefaultRequestTest {
 
-    private static final String SPECIFIC_HEADER_NAME = "specificHeaderName";
-    private static final String SPECIFIC_HEADER_VALUE = "specificHeaderValue";
     private static final String CSRF_TOKEN = "token";
     private static final String DEVICE_UUID = "deviceUUID";
     private static final String URL = "http://localhost";
@@ -30,7 +28,7 @@ public class DefaultRequestTest {
     }
 
     @Test
-    public void withHeadersShouldPutMandatoryAndSpecificHeaders() throws RequestException {
+    public void withHeadersShouldPutHeaders() throws RequestException {
         // given
         TestDefaultRequest objectUnderTest = new TestDefaultRequest(userState, URL);
         RequestBuilder requestBuilder = Mockito.mock(RequestBuilder.class);
@@ -38,15 +36,12 @@ public class DefaultRequestTest {
                 .thenReturn(requestBuilder);
         Mockito.when(requestBuilder.header(HEADER_DEVICE_UUID, DEVICE_UUID))
                 .thenReturn(requestBuilder);
-        Mockito.when(requestBuilder.header(SPECIFIC_HEADER_NAME, SPECIFIC_HEADER_VALUE))
-                .thenReturn(requestBuilder);
         // when
-        RequestBuilder result = objectUnderTest.withHeaders(httpClient, requestBuilder);
+        RequestBuilder result = objectUnderTest.withHeaders(requestBuilder);
         // then
         Assert.assertEquals(requestBuilder, result);
         Mockito.verify(requestBuilder).header(HEADER_CSRF_TOKEN, CSRF_TOKEN);
         Mockito.verify(requestBuilder).header(HEADER_DEVICE_UUID, DEVICE_UUID);
-        Mockito.verify(requestBuilder).header(SPECIFIC_HEADER_NAME, SPECIFIC_HEADER_VALUE);
     }
 
     @Test
@@ -68,19 +63,12 @@ public class DefaultRequestTest {
         }
 
         @Override
-        protected RequestBuilder withSpecificHeaders(
-                TinkHttpClient httpClient, RequestBuilder requestBuilder) {
-            return requestBuilder.header(SPECIFIC_HEADER_NAME, SPECIFIC_HEADER_VALUE);
-        }
-
-        @Override
-        public RequestBuilder withBody(TinkHttpClient httpClient, RequestBuilder requestBuilder) {
+        public RequestBuilder withBody(RequestBuilder requestBuilder) {
             return null;
         }
 
         @Override
-        public Object execute(RequestBuilder requestBuilder, TinkHttpClient httpClient)
-                throws RequestException {
+        public Object execute(RequestBuilder requestBuilder) throws RequestException {
             return null;
         }
     }

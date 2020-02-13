@@ -12,7 +12,6 @@ import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.TransactionalAccountBaseInfo;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
 public class TransactionalAccountBalanceRequestTest {
@@ -24,14 +23,12 @@ public class TransactionalAccountBalanceRequestTest {
 
     private static final String MODULE_VERSION = "moduleVersion1234567890";
     private BancoBpiAuthContext authContext;
-    private TinkHttpClient httpClient;
     private RequestBuilder requestBuilder;
 
     @Before
     public void init() {
         authContext = Mockito.mock(BancoBpiAuthContext.class);
         Mockito.when(authContext.getModuleVersion()).thenReturn(MODULE_VERSION);
-        httpClient = Mockito.mock(TinkHttpClient.class);
         requestBuilder = Mockito.mock(RequestBuilder.class);
     }
 
@@ -52,7 +49,7 @@ public class TransactionalAccountBalanceRequestTest {
         // when
         RequestBuilder result =
                 new TransactionalAccountBalanceRequest(authContext, accountBaseInfo)
-                        .withBody(httpClient, requestBuilder);
+                        .withBody(requestBuilder);
         // then
         Mockito.verify(requestBuilder).body(stringArgumentCaptor.capture());
         JSONObject body = new JSONObject(stringArgumentCaptor.getValue());
@@ -81,7 +78,7 @@ public class TransactionalAccountBalanceRequestTest {
         // when
         BigDecimal result =
                 new TransactionalAccountBalanceRequest(authContext, accountBaseInfo)
-                        .execute(requestBuilder, httpClient);
+                        .execute(requestBuilder);
         // then
         Assert.assertEquals(new BigDecimal("321.74"), result);
     }
@@ -95,7 +92,7 @@ public class TransactionalAccountBalanceRequestTest {
         // when
         BigDecimal result =
                 new TransactionalAccountBalanceRequest(authContext, accountBaseInfo)
-                        .execute(requestBuilder, httpClient);
+                        .execute(requestBuilder);
         // then
     }
 }

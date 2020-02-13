@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.request;
 
 import com.google.common.collect.Lists;
-import org.apache.http.cookie.Cookie;
+import javax.ws.rs.core.NewCookie;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class LoginRequestTest {
 
@@ -25,7 +25,6 @@ public class LoginRequestTest {
     private static final String PASSWORD = "testPassword";
     private static final String DEVICE_UUID = "12345";
 
-    private TinkHttpClient httpClient;
     private RequestBuilder requestBuilder;
     private LoginRequest objectUnderTest;
 
@@ -34,7 +33,6 @@ public class LoginRequestTest {
         BancoBpiAuthContext authContext = Mockito.mock(BancoBpiAuthContext.class);
         Mockito.when(authContext.getModuleVersion()).thenReturn("gS+lXxFxC_wWYvNlPJM_Qw");
         Mockito.when(authContext.getDeviceUUID()).thenReturn(DEVICE_UUID);
-        httpClient = Mockito.mock(TinkHttpClient.class);
         requestBuilder = Mockito.mock(RequestBuilder.class);
         objectUnderTest = new LoginRequest(authContext, USERNAME, PASSWORD);
     }
@@ -45,7 +43,7 @@ public class LoginRequestTest {
         RequestBuilder expectedRequestBuilder = Mockito.mock(RequestBuilder.class);
         Mockito.when(requestBuilder.body(REQUEST_EXPECTED)).thenReturn(expectedRequestBuilder);
         // when
-        RequestBuilder result = objectUnderTest.withBody(httpClient, requestBuilder);
+        RequestBuilder result = objectUnderTest.withBody(requestBuilder);
         // then
         Assert.assertEquals(expectedRequestBuilder, result);
     }
@@ -53,15 +51,17 @@ public class LoginRequestTest {
     @Test
     public void executeShouldReturnCorrectResponse() throws RequestException {
         // given
-        Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_CORRECT);
-        Cookie cookie = Mockito.mock(Cookie.class);
+        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
+        Mockito.when(httpResponse.getBody(String.class)).thenReturn(RESPONSE_CORRECT);
+        Mockito.when(requestBuilder.post(HttpResponse.class)).thenReturn(httpResponse);
+        NewCookie cookie = Mockito.mock(NewCookie.class);
         Mockito.when(cookie.getName()).thenReturn("nr2LB_BPIParticulares");
         Mockito.when(cookie.getValue())
                 .thenReturn(
                         "crf%3dZ%2fQLQRJ71kPfSpIPm%2bwQD5HlenI%3d%3buid%3d531646%3bunm%3d7791041");
-        Mockito.when(httpClient.getCookies()).thenReturn(Lists.newArrayList(cookie));
+        Mockito.when(httpResponse.getCookies()).thenReturn(Lists.newArrayList(cookie));
         // when
-        LoginResponse result = objectUnderTest.execute(requestBuilder, httpClient);
+        LoginResponse result = objectUnderTest.execute(requestBuilder);
         // then
         Assert.assertTrue(result.isSuccess());
         Assert.assertEquals("Z/QLQRJ71kPfSpIPm+wQD5HlenI=", result.getCsrfToken());
@@ -70,15 +70,17 @@ public class LoginRequestTest {
     @Test
     public void executeShouldReturnFailedResponse() throws RequestException {
         // given
-        Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_INCORRECT);
-        Cookie cookie = Mockito.mock(Cookie.class);
+        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
+        Mockito.when(httpResponse.getBody(String.class)).thenReturn(RESPONSE_INCORRECT);
+        Mockito.when(requestBuilder.post(HttpResponse.class)).thenReturn(httpResponse);
+        NewCookie cookie = Mockito.mock(NewCookie.class);
         Mockito.when(cookie.getName()).thenReturn("nr2LB_BPIParticulares");
         Mockito.when(cookie.getValue())
                 .thenReturn(
                         "crf%3dZ%2fQLQRJ71kPfSpIPm%2bwQD5HlenI%3d%3buid%3d531646%3bunm%3d7791041");
-        Mockito.when(httpClient.getCookies()).thenReturn(Lists.newArrayList(cookie));
+        Mockito.when(httpResponse.getCookies()).thenReturn(Lists.newArrayList(cookie));
         // when
-        LoginResponse result = objectUnderTest.execute(requestBuilder, httpClient);
+        LoginResponse result = objectUnderTest.execute(requestBuilder);
         // then
         Assert.assertFalse(result.isSuccess());
         Assert.assertEquals("CIPL_0001", result.getCode());
@@ -87,8 +89,10 @@ public class LoginRequestTest {
     @Test(expected = RequestException.class)
     public void executeShouldThrowLoginException() throws RequestException {
         // given
-        Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_UNEXPECTED);
+        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
+        Mockito.when(httpResponse.getBody(String.class)).thenReturn(RESPONSE_UNEXPECTED);
+        Mockito.when(requestBuilder.post(HttpResponse.class)).thenReturn(httpResponse);
         // when
-        objectUnderTest.execute(requestBuilder, httpClient);
+        objectUnderTest.execute(requestBuilder);
     }
 }

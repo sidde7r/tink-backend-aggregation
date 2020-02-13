@@ -48,7 +48,7 @@ public class TransactionsFetchRequestTest {
         TransactionsFetchRequest objectUnderTest =
                 new TransactionsFetchRequest(entityManager, account, 1, "");
         // when
-        objectUnderTest.withBody(httpClient, requestBuilder);
+        objectUnderTest.withBody(requestBuilder);
         // then
         Mockito.verify(requestBuilder).body(stringArgumentCaptor.capture());
         JSONObject body = new JSONObject(stringArgumentCaptor.getValue());
