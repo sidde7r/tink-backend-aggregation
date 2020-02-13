@@ -12,10 +12,10 @@ spec:
   - alert: TransferSuccessRateLow
     expr: |
         # Failed attempts above 25%
-        (sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', status=~"FAILED"}[30m])) by (provider)
-            / sum(increase(tink_transfer_count_total{transfer_type='bank-transfer'}[30m])) by (provider) > 0.25)
+        (sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', status=~"FAILED", provider_type!~"test"}[30m])) by (provider)
+            / sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', provider_type!~"test"}[30m])) by (provider) > 0.25)
         # At least this many attempts.
-        and sum(increase(tink_transfer_count_total{transfer_type='bank-transfer'}[30m])) by (provider) > 2
+        and sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', provider_type!~"test"}[30m])) by (provider) > 2
     for: 5m
     labels:
         severity: urgent
@@ -30,10 +30,10 @@ spec:
   - alert: PaymentSuccessRateLow
     expr: |
         # Failed attempts above 25%
-        (sum(increase(tink_transfer_count_total{transfer_type='payment', status=~"FAILED"}[30m])) by (provider)
-            / sum(increase(tink_transfer_count_total{transfer_type='payment'}[30m])) by (provider) > 0.25)
+        (sum(increase(tink_transfer_count_total{transfer_type='payment', status=~"FAILED", provider_type!~"test"}[30m])) by (provider)
+            / sum(increase(tink_transfer_count_total{transfer_type='payment', provider_type!~"test"}[30m])) by (provider) > 0.25)
         # At least this many attempts.
-        and sum(increase(tink_transfer_count_total{transfer_type='payment'}[30m])) by (provider) > 2
+        and sum(increase(tink_transfer_count_total{transfer_type='payment', provider_type!~"test"}[30m])) by (provider) > 2
     for: 5m
     labels:
         severity: urgent
@@ -48,10 +48,10 @@ spec:
   - alert: EInvoiceSuccessRateLow
     expr: |
         # Failed attempts above 10%
-        (sum(increase(tink_transfer_count_total{transfer_type='einvoice', status=~"FAILED"}[30m])) by (provider)
-            / sum(increase(tink_transfer_count_total{transfer_type='einvoice'}[30m])) by (provider) > 0.1)
+        (sum(increase(tink_transfer_count_total{transfer_type='einvoice', status=~"FAILED", provider_type!~"test"}[30m])) by (provider)
+            / sum(increase(tink_transfer_count_total{transfer_type='einvoice', provider_type!~"test"}[30m])) by (provider) > 0.1)
         # At least this many attempts.
-        and sum(increase(tink_transfer_count_total{transfer_type='einvoice'}[30m])) by (provider) > 2
+        and sum(increase(tink_transfer_count_total{transfer_type='einvoice', provider_type!~"test"}[30m])) by (provider) > 2
     for: 5m
     labels:
         severity: urgent
