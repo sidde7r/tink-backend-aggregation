@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.MobileChallengeRequestedToken;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
 public class ConfirmPinByOtpRequest extends DefaultRequest<AuthenticationResponse> {
@@ -26,7 +25,7 @@ public class ConfirmPinByOtpRequest extends DefaultRequest<AuthenticationRespons
     }
 
     @Override
-    public RequestBuilder withBody(TinkHttpClient httpClient, RequestBuilder requestBuilder) {
+    public RequestBuilder withBody(RequestBuilder requestBuilder) {
         return requestBuilder.body(
                 String.format(
                         BODY_TEMPLATE,
@@ -43,15 +42,7 @@ public class ConfirmPinByOtpRequest extends DefaultRequest<AuthenticationRespons
     }
 
     @Override
-    public AuthenticationResponse execute(
-            RequestBuilder requestBuilder, final TinkHttpClient httpClient)
-            throws RequestException {
+    public AuthenticationResponse execute(RequestBuilder requestBuilder) throws RequestException {
         return new AuthenticationResponse(requestBuilder.post(String.class));
-    }
-
-    @Override
-    protected RequestBuilder withSpecificHeaders(
-            TinkHttpClient httpClient, RequestBuilder requestBuilder) {
-        return requestBuilder;
     }
 }

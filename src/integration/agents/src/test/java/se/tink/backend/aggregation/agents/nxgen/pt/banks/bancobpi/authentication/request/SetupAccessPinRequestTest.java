@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
 public class SetupAccessPinRequestTest {
@@ -24,14 +23,12 @@ public class SetupAccessPinRequestTest {
     private static final String MODULE_VERSION = "gS+lXxFxC_wWYvNlPJM_Qw";
     private BancoBpiAuthContext authContext;
     private RequestBuilder requestBuilder;
-    private TinkHttpClient httpClient;
     private SetupAccessPinRequest objectUnderTest;
 
     @Before
     public void init() {
         initAuthContext();
         requestBuilder = Mockito.mock(RequestBuilder.class);
-        httpClient = Mockito.mock(TinkHttpClient.class);
         objectUnderTest = new SetupAccessPinRequest(authContext);
     }
 
@@ -49,7 +46,7 @@ public class SetupAccessPinRequestTest {
         RequestBuilder expectedRequestBuider = Mockito.mock(RequestBuilder.class);
         Mockito.when(requestBuilder.body(REQUEST)).thenReturn(expectedRequestBuider);
         // when
-        RequestBuilder result = objectUnderTest.withBody(httpClient, requestBuilder);
+        RequestBuilder result = objectUnderTest.withBody(requestBuilder);
         // then
         Assert.assertEquals(expectedRequestBuider, result);
     }
@@ -59,7 +56,7 @@ public class SetupAccessPinRequestTest {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_CORRECT);
         // when
-        SetupAccessPinResponse result = objectUnderTest.execute(requestBuilder, httpClient);
+        SetupAccessPinResponse result = objectUnderTest.execute(requestBuilder);
         // then
         Assert.assertTrue(result.isSuccess());
         Assert.assertEquals("44257566", result.getMobileChallengeRequestedToken().getId());
@@ -80,7 +77,7 @@ public class SetupAccessPinRequestTest {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_INCORRECT);
         // when
-        SetupAccessPinResponse result = objectUnderTest.execute(requestBuilder, httpClient);
+        SetupAccessPinResponse result = objectUnderTest.execute(requestBuilder);
         // then
         Assert.assertFalse(result.isSuccess());
         Assert.assertEquals("CIPL_0052", result.getCode());
@@ -91,6 +88,6 @@ public class SetupAccessPinRequestTest {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_UNEXPECTED);
         // when
-        objectUnderTest.execute(requestBuilder, httpClient);
+        objectUnderTest.execute(requestBuilder);
     }
 }

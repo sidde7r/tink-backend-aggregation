@@ -23,23 +23,16 @@ public abstract class DefaultRequest<RESPONSE> implements Request<RESPONSE> {
     }
 
     @Override
-    public RequestBuilder withHeaders(
-            final TinkHttpClient httpClient, final RequestBuilder requestBuilder)
-            throws RequestException {
-        return withSpecificHeaders(
-                httpClient,
-                requestBuilder
-                        .header(HEADER_CSRF_TOKEN, getCsrfToken())
-                        .header(HEADER_DEVICE_UUID, getDeviceUUID()));
+    public RequestBuilder withHeaders(final RequestBuilder requestBuilder) throws RequestException {
+        return requestBuilder
+                .header(HEADER_CSRF_TOKEN, getCsrfToken())
+                .header(HEADER_DEVICE_UUID, getDeviceUUID());
     }
 
     @Override
     public RequestBuilder withUrl(final TinkHttpClient httpClient) {
         return httpClient.request(url);
     }
-
-    protected abstract RequestBuilder withSpecificHeaders(
-            final TinkHttpClient httpClient, final RequestBuilder requestBuilder);
 
     public String getCsrfToken() {
         return csrfToken;

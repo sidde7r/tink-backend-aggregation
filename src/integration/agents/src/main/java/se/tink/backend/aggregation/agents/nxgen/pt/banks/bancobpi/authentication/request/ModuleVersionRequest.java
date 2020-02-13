@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
 public class ModuleVersionRequest extends DefaultRequest<String> {
@@ -24,26 +23,19 @@ public class ModuleVersionRequest extends DefaultRequest<String> {
     }
 
     @Override
-    public RequestBuilder withHeaders(TinkHttpClient httpClient, RequestBuilder requestBuilder) {
+    public RequestBuilder withHeaders(RequestBuilder requestBuilder) {
         return getDeviceUUID() != null
                 ? requestBuilder.cookie(HEADER_OS_VISITOR, getDeviceUUID())
                 : requestBuilder;
     }
 
     @Override
-    protected RequestBuilder withSpecificHeaders(
-            TinkHttpClient httpClient, RequestBuilder requestBuilder) {
+    public RequestBuilder withBody(RequestBuilder requestBuilder) {
         return requestBuilder;
     }
 
     @Override
-    public RequestBuilder withBody(TinkHttpClient httpClient, RequestBuilder requestBuilder) {
-        return requestBuilder;
-    }
-
-    @Override
-    public String execute(RequestBuilder requestBuilder, TinkHttpClient httpClient)
-            throws RequestException {
+    public String execute(RequestBuilder requestBuilder) throws RequestException {
         return extractModuleVersion(requestBuilder.get(String.class));
     }
 

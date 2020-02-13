@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.TransactionalAccountBaseInfo;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
 public class TransactionalAccountBalanceRequest extends DefaultRequest<BigDecimal> {
@@ -30,21 +29,14 @@ public class TransactionalAccountBalanceRequest extends DefaultRequest<BigDecima
     }
 
     @Override
-    protected RequestBuilder withSpecificHeaders(
-            TinkHttpClient httpClient, RequestBuilder requestBuilder) {
-        return requestBuilder;
-    }
-
-    @Override
-    public RequestBuilder withBody(TinkHttpClient httpClient, RequestBuilder requestBuilder) {
+    public RequestBuilder withBody(RequestBuilder requestBuilder) {
         String accountParamsJson = gson.toJson(new CarouselStructure(accountBaseInfo));
         return requestBuilder.body(
                 String.format(BODY_TEMPLATE, getModuleVersion(), accountParamsJson));
     }
 
     @Override
-    public BigDecimal execute(RequestBuilder requestBuilder, TinkHttpClient httpClient)
-            throws RequestException {
+    public BigDecimal execute(RequestBuilder requestBuilder) throws RequestException {
         return new BigDecimal(extractBalance(requestBuilder.post(String.class)));
     }
 

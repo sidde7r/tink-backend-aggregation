@@ -6,18 +6,16 @@ import org.json.JSONObject;
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAccountsContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.TransactionalAccountBaseInfo;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class PinAuthenticationResponse extends LoginResponse {
 
     private BancoBpiAccountsContext bancoBpiAccountsContext;
 
     PinAuthenticationResponse(
-            String rawJsonResponse,
-            TinkHttpClient httpClient,
-            BancoBpiAccountsContext bancoBpiAccountsContext)
+            HttpResponse httpResponse, BancoBpiAccountsContext bancoBpiAccountsContext)
             throws RequestException {
-        super(rawJsonResponse, httpClient);
+        super(httpResponse);
         this.bancoBpiAccountsContext = bancoBpiAccountsContext;
         extractTransactionalAccountBaseInfo();
     }
