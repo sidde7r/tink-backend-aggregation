@@ -75,8 +75,7 @@ public class NorwegianAgent extends NextGenerationAgent implements RefreshChecki
         return QsealcSigner.build(
                 agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
                 QsealcAlg.EIDAS_RSA_SHA256,
-                getEidasIdentity(),
-                norwegianConfiguration.getEidasQwac());
+                getEidasIdentity());
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
