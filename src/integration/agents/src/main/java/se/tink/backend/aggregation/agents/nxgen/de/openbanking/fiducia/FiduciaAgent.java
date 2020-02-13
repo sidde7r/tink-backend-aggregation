@@ -65,7 +65,9 @@ public final class FiduciaAgent extends NextGenerationAgent
     }
 
     protected FiduciaConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(FiduciaConfiguration.class);
+        return getAgentConfigurationController()
+                .getAgentConfiguration(FiduciaConfiguration.class)
+                .validateConfig();
     }
 
     @Override

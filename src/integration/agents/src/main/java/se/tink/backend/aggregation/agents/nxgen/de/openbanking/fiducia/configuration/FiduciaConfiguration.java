@@ -1,63 +1,33 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration;
 
-import com.google.common.base.Preconditions;
+import static java.util.Objects.requireNonNull;
+
 import com.google.common.base.Strings;
+import lombok.Getter;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @JsonObject
+@Getter
 public class FiduciaConfiguration implements ClientConfiguration {
 
-    private static final String INVALID_CONFIGURATION =
-            "Invalid Configuration: %s cannot be empty or null";
+    @Secret private String keyId;
+    @Secret private String keyPath;
+    @Secret private String certificatePath;
+    @Secret private String certificate;
+    @Secret private String tppId;
+    @AgentConfigParam private String redirectUrl;
 
-    private String keyId;
-    private String keyPath;
-    private String certificatePath;
-    private String redirectUrl;
-    private String certificateId;
-    private String certificate;
-    private String tppId;
+    public FiduciaConfiguration validateConfig() {
+        requireNonNull(Strings.emptyToNull(keyId));
+        requireNonNull(Strings.emptyToNull(keyPath));
+        requireNonNull(Strings.emptyToNull(certificatePath));
+        requireNonNull(Strings.emptyToNull(certificate));
+        requireNonNull(Strings.emptyToNull(tppId));
+        requireNonNull(Strings.emptyToNull(redirectUrl));
 
-    public String getTppId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(tppId), String.format(INVALID_CONFIGURATION, "TPP-ID"));
-        return tppId;
-    }
-
-    public String getKeyId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(keyId), String.format(INVALID_CONFIGURATION, "Key ID"));
-
-        return keyId;
-    }
-
-    public String getKeyPath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(keyPath), String.format(INVALID_CONFIGURATION, "Key Path"));
-
-        return keyPath;
-    }
-
-    public String getCertificatePath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(certificatePath),
-                String.format(INVALID_CONFIGURATION, "Certificate Path"));
-
-        return certificatePath;
-    }
-
-    public String getCertificate() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(certificate),
-                String.format(INVALID_CONFIGURATION, "Certificate"));
-        return certificate;
-    }
-
-    public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(INVALID_CONFIGURATION, "Redirect URL"));
-        return redirectUrl;
+        return this;
     }
 }

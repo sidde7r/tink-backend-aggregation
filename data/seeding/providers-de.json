@@ -11842,12 +11842,7 @@
             "displayName": "Raiffeisenbank München-Süd eG",
             "fields": [
                 {
-                    "description": "iban",
-                    "immutable": true,
-                    "name": "iban"
-                },
-                {
-                    "description": "Psu ID",
+                    "description": "PSU ID",
                     "immutable": true,
                     "name": "psu-id"
                 },
@@ -11872,7 +11867,7 @@
             "financialInstitutionId": "9a38fd46559f4133a0fa1943ab77dafe",
             "financialInstitutionName": "Raiffeisenbank",
             "groupDisplayName": "Raiffeisenbank",
-            "multiFactor": false,
+            "multiFactor": true,
             "name": "de-raiffeisenbank-munchen-sud-ob",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
             "payload": "https://www.raiba-muc-sued.de/services_xs2a",
