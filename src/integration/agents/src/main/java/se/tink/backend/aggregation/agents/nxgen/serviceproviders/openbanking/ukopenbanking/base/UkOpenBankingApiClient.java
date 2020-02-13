@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants.ACCOUNT_PERMISSIONS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.MONZO_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TINK_UKOPENBANKING_ORGID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.UKOB_TAN;
 
@@ -207,7 +208,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         // Refer : https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1112670669/W007
         // remove this check once this wavier times out
         // Monzo organization ID check
-        if ("001580000103U9RAAU".equals(providerConfiguration.getOrganizationId())) {
+        if (MONZO_ORG_ID.equals(providerConfiguration.getOrganizationId())) {
             return createPs256SignatureWithoutB64Header(payloadClaims);
         } else {
             return createPs256SignatureWithB64Header(payloadClaims);
@@ -220,7 +221,12 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
         jwtHeaders.put(HEADERS.B64, false);
         jwtHeaders.put(HEADERS.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
-        jwtHeaders.put(HEADERS.ISS, TINK_UKOPENBANKING_ORGID);
+        jwtHeaders.put(
+                HEADERS.ISS,
+                new StringBuilder(TINK_UKOPENBANKING_ORGID)
+                        .append("/")
+                        .append(softwareStatement.getSoftwareId())
+                        .toString());
         jwtHeaders.put(HEADERS.TAN, UKOB_TAN);
         jwtHeaders.put(
                 HEADERS.CRIT, Arrays.asList(HEADERS.B64, HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
