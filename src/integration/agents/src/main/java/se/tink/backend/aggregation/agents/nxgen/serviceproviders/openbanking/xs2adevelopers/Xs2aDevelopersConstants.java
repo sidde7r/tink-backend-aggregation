@@ -18,6 +18,7 @@ public final class Xs2aDevelopersConstants {
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "SAC",
                             "CACC",
+                            "CASH",
                             "start2bank zichtrekening",
                             "0-Euro-Konto Vorteil",
                             "b.compact account",
