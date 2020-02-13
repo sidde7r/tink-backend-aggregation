@@ -10,7 +10,7 @@ public class NorwegianAgentTest {
 
         new AgentIntegrationTest.Builder("no", "no-norwegian-ob")
                 .expectLoggedIn(false)
-                .loadCredentialsBefore(true)
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .setFinancialInstitutionId("norwegian")
                 .setAppId("tink")

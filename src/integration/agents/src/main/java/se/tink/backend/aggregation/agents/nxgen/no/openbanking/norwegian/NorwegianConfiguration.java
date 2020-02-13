@@ -12,24 +12,8 @@ public class NorwegianConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
     @AgentConfigParam private String redirectUrl;
-    @Secret private String eidasQwac;
     @Secret private String keyId;
     @Secret private String tokenUrl;
-
-    public NorwegianConfiguration(
-            String clientId,
-            String clientSecret,
-            String redirectUrl,
-            String eidasQwac,
-            String keyId,
-            String tokenUrl) {
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.redirectUrl = redirectUrl;
-        this.eidasQwac = eidasQwac;
-        this.keyId = keyId;
-        this.tokenUrl = tokenUrl;
-    }
 
     public NorwegianConfiguration() {}
 
@@ -43,10 +27,6 @@ public class NorwegianConfiguration implements ClientConfiguration {
 
     public String getRedirectUrl() {
         return redirectUrl;
-    }
-
-    public String getEidasQwac() {
-        return eidasQwac;
     }
 
     public String getKeyId() {
