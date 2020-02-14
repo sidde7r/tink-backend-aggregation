@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.joda.time.DateTime;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -55,6 +57,13 @@ public class TransactionsEntity {
                                         .setAmount(createAmount(movement))
                                         .setDescription(createDescription(movement))
                                         .setDate(createDate(movement))
+                                        .setPayload(
+                                                TransactionPayloadTypes
+                                                        .TRANSFER_ACCOUNT_NAME_EXTERNAL,
+                                                getCounterPartyName(movement))
+                                        .setPayload(
+                                                TransactionPayloadTypes.MESSAGE,
+                                                movement.getRemittanceInformationUnstructured())
                                         .build())
                 .collect(Collectors.toList());
     }
@@ -94,5 +103,13 @@ public class TransactionsEntity {
             return String.join(" ", words);
         }
         throw new IllegalStateException("Couldn't find description");
+    }
+
+    private static String getCounterPartyName(final BookedEntity movement) {
+        return Stream.of(movement.getCreditorName(), movement.getDebtorName())
+                .filter(Objects::nonNull)
+                .filter(s -> !s.isEmpty())
+                .findFirst()
+                .orElse("");
     }
 }
