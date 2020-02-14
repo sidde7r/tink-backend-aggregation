@@ -84,6 +84,18 @@ public class TransactionEntity {
                 .setAmount(transactionAmount.toAmount())
                 .setDate(date)
                 .setPayload(TransactionPayloadTypes.DETAILS, transactionType)
+                .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL,
+                        getCounterPartyName())
+                .setPayload(TransactionPayloadTypes.MESSAGE, remittanceInformationUnstructured)
                 .build();
+    }
+
+    private String getCounterPartyName() {
+        return Stream.of(creditorName, debtorName)
+                .filter(Objects::nonNull)
+                .filter(s -> !s.isEmpty())
+                .findFirst()
+                .orElse("");
     }
 }

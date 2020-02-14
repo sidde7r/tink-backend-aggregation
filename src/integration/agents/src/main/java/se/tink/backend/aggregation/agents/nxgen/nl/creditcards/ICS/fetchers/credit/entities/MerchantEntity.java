@@ -10,4 +10,12 @@ public class MerchantEntity {
 
     @JsonProperty("MerchantCategoryCodeDescription")
     private String merchantCategoryCodeDescription;
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public String getMerchantCategoryCodeDescription() {
+        return merchantCategoryCodeDescription;
+    }
 }
