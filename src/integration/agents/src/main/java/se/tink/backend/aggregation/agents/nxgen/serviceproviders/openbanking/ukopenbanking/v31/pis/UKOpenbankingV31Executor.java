@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis;
 
-import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
@@ -17,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis.UkOpenBankingPisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.EndUserMessage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.Error;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.Step;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Pis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.DomesticPisConfig;
@@ -27,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.error.OpenIdError;
@@ -207,10 +206,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     }
 
     /**
-     * Handles errors of type access_denied, which according to openId documentation means that
-     * resource owner (end user) did not provide consent. If type is not access_denied throws a
-     * generic transfer failed exception. If a known error description exists, end user message is
-     * based on that. Otherwise throws a generic transfer cancelled exception.
+     * Handles known types of openID errors. If openID error type is not known a generic transfer
+     * failed exception is thrown.
      */
     private void handlePaymentAuthorizationErrors(AgentExceptionImpl e) {
         OpenIdError openIdError = getOpenIdErrorOrThrowTransferFailedException(e);
@@ -218,17 +215,12 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         String errorType = openIdError.getErrorType();
         String errorMessage = openIdError.getErrorMessage();
 
-        if (!Error.ACCESS_DENIED.equalsIgnoreCase(errorType)) {
-            throw UkOpenBankingV31PisUtils.createFailedTransferException(e);
-        }
-
-        if (!Strings.isNullOrEmpty(errorMessage)) {
+        if (isKnownOpenIdError(errorType)) {
             String endUserMessage = UkOpenBankingV31PisUtils.convertToEndUserMessage(errorMessage);
             throw UkOpenBankingV31PisUtils.createCancelledTransferException(e, endUserMessage);
         }
 
-        throw UkOpenBankingV31PisUtils.createCancelledTransferException(
-                e, EndUserMessage.PIS_AUTHORISATION_ACCESS_DENIED);
+        throw UkOpenBankingV31PisUtils.createFailedTransferException(e);
     }
 
     /**
@@ -239,6 +231,16 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         return apiClient
                 .getOpenIdError()
                 .orElseThrow(() -> UkOpenBankingV31PisUtils.createFailedTransferException(e));
+    }
+
+    /**
+     * Currently known errors are access_denied and login_required. According to openId
+     * documentation access_denied means that resource owner (end user) did not provide consent.
+     * login_required means that user didn't authenticate at all.
+     */
+    private boolean isKnownOpenIdError(String errorType) {
+        return OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
+                || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType);
     }
 
     @Override

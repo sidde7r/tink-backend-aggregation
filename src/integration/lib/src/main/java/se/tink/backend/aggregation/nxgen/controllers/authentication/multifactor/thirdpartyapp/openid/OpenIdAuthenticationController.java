@@ -357,11 +357,12 @@ public class OpenIdAuthenticationController
         }
 
         String errorType = error.get();
-        if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)) {
+        if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
+                || OpenIdConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(errorType)) {
             logger.info(
-                    String.format(
-                            "OpenId ACCESS_DENIED callback: %s",
-                            SerializationUtils.serializeToString(callbackData)));
+                    "OpenId {} callback: {}",
+                    errorType,
+                    SerializationUtils.serializeToString(callbackData));
 
             // Store error information to make it possible for agent to determine cause and
             // give end user a proper error message.
