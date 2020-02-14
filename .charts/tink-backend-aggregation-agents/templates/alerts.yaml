@@ -11,55 +11,19 @@ spec:
 
   - alert: TransferSuccessRateLow
     expr: |
-        # Failed attempts above 25%
-        (sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', status=~"FAILED", provider_type!~"test"}[30m])) by (provider)
-            / sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', provider_type!~"test"}[30m])) by (provider) > 0.25)
-        # At least this many attempts.
-        and sum(increase(tink_transfer_count_total{transfer_type='bank-transfer', provider_type!~"test"}[30m])) by (provider) > 2
+      # Successful/Cancelled/Unavailable transfer outcomes below 75%
+      (sum by(provider) (increase(tink_agent_transfer_total{provider_type!="test", outcome=~"completed|cancelled|unavailable"}[30m]))
+        / sum by(provider) (increase(tink_agent_transfer_total{provider_type!="test"}[30m]))) < 0.75
+      # # At least this many attempts
+      and sum by(provider) (increase(tink_agent_transfer_total{provider_type!="test"}[30m])) > 2
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
-        description: Transfers failing more than 25% ( <{ $value }> ) for the last 30 minutes.
+        description: Transfer success rate is below 75% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
-        summary: Transfers failing more than 25% ( <{ $value }> ) for <{ $labels.provider }>
-            the last 30 minutes.
-        tags: <{ $labels.provider }>
-
-  - alert: PaymentSuccessRateLow
-    expr: |
-        # Failed attempts above 25%
-        (sum(increase(tink_transfer_count_total{transfer_type='payment', status=~"FAILED", provider_type!~"test"}[30m])) by (provider)
-            / sum(increase(tink_transfer_count_total{transfer_type='payment', provider_type!~"test"}[30m])) by (provider) > 0.25)
-        # At least this many attempts.
-        and sum(increase(tink_transfer_count_total{transfer_type='payment', provider_type!~"test"}[30m])) by (provider) > 2
-    for: 5m
-    labels:
-        severity: urgent
-        who: integration
-    annotations:
-        description: Payments failing more than 25% ( <{ $value }> ) for the last 30 minutes.
-            Investigate immediately.
-        summary: Payments failing more than 25% ( <{ $value }> ) for <{ $labels.provider }>
-            the last 30 minutes.
-        tags: <{ $labels.provider }>
-        
-  - alert: EInvoiceSuccessRateLow
-    expr: |
-        # Failed attempts above 10%
-        (sum(increase(tink_transfer_count_total{transfer_type='einvoice', status=~"FAILED", provider_type!~"test"}[30m])) by (provider)
-            / sum(increase(tink_transfer_count_total{transfer_type='einvoice', provider_type!~"test"}[30m])) by (provider) > 0.1)
-        # At least this many attempts.
-        and sum(increase(tink_transfer_count_total{transfer_type='einvoice', provider_type!~"test"}[30m])) by (provider) > 2
-    for: 5m
-    labels:
-        severity: urgent
-        who: integration
-    annotations:
-        description: EInvoice failing more than 10% ( <{ $value }> ) for the last 30 minutes.
-            Investigate immediately.
-        summary: EInvoice failing more than 10% ( <{ $value }> ) for <{ $labels.provider }>
+        summary: Transfer success rate is below 75% ( <{ $value }> ) for <{ $labels.provider }>
             the last 30 minutes.
         tags: <{ $labels.provider }>
 
