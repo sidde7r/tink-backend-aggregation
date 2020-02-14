@@ -58,15 +58,12 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62",
     ],
     deps = [
-        "//src/integration/account:enums",
-        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
         "//src/integration/models",
-        "@org_assertj_assertj_core//jar",
     ],
 )
 
@@ -97,13 +94,10 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62",
     ],
     deps = [
-        "//src/integration/account:enums",
-        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/models",
-        "@org_assertj_assertj_core//jar",
     ],
 )
