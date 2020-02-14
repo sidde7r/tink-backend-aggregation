@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
@@ -34,6 +35,7 @@ public class AccountEntity {
     private String msisdn;
     private String name;
     private String resourceId;
+    private String product;
     private List<BalanceEntity> balances;
 
     public LinksEntity getLinks() {
@@ -122,7 +124,7 @@ public class AccountEntity {
     }
 
     private String getAccountType() {
-        return accountType != null ? accountType : cashAccountType;
+        return ObjectUtils.firstNonNull(accountType, cashAccountType, product);
     }
 
     public void setBalance(List<BalanceEntity> balances) {
