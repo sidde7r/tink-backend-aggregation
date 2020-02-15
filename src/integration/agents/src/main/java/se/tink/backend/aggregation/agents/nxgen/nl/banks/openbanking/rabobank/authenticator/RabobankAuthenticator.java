@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.Ra
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
@@ -97,14 +98,20 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
         try {
             return apiClient.refreshAccessToken(request).toOauthToken();
         } catch (final HttpResponseException exception) {
+            // TODO Debug purpose
+            if (exception.getResponse().getBody(String.class).contains("invalid_grant")) {
+                final OAuth2Token oAuth2Token = RabobankUtils.getOauthToken(persistentStorage);
+                logger.info(
+                        "Invalid refresh token {}, Is token expire? {}",
+                        oAuth2Token.getRefreshToken(),
+                        oAuth2Token.hasRefreshExpire());
+            }
             throw SessionError.SESSION_EXPIRED.exception(exception);
         }
     }
 
     @Override
-    public void useAccessToken(final OAuth2Token accessToken) {
-        persistentStorage.put(StorageKey.OAUTH_TOKEN, accessToken);
-    }
+    public void useAccessToken(final OAuth2Token accessToken) {}
 
     private String getConsentId(String scope) {
         String consentId = null;
