@@ -102,7 +102,9 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public void useAccessToken(final OAuth2Token accessToken) {}
+    public void useAccessToken(final OAuth2Token accessToken) {
+        persistentStorage.put(StorageKey.OAUTH_TOKEN, accessToken);
+    }
 
     private String getConsentId(String scope) {
         String consentId = null;
