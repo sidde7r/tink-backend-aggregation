@@ -21,8 +21,7 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Transfer success rate is below 75% ( <{ $value }> ) for the last 30 minutes.
-            Investigate immediately.
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
         summary: Transfer success rate is below 75% ( <{ $value }> ) for <{ $labels.provider }>
             the last 30 minutes.
         tags: <{ $labels.provider }>
@@ -44,11 +43,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last 30 minutes.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   # Danske bank specific alert as the integration has issues during login that won't be resolved
   # without upgrading to nxgen agent. Has a threshold of 80% so we don't get unactionable alerts.
@@ -64,11 +62,10 @@ spec:
       severity: urgent
       who: integration
     annotations:
-      description: Login success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
-        Investigate immediately.
-      summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+      description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+      summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes.
-      tags: <{ $labels.className }>
+      tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitSE
     expr: |
@@ -82,11 +79,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last 30 minutes.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
       # BE
   - alert: LoginSuccessRateLowWithAttemptLimitBE
@@ -101,11 +97,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitBE
     expr: |
@@ -119,11 +114,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
     # GB
   - alert: LoginSuccessRateLowWithAttemptLimitGB
@@ -138,11 +132,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitGB
     expr: |
@@ -156,11 +149,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
     # AT
   - alert: LoginSuccessRateLowWithAttemptLimitAT
@@ -175,11 +167,10 @@ spec:
         severity: ping
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitAT
     expr: |
@@ -193,11 +184,10 @@ spec:
         severity: ping
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
     # DE
   - alert: LoginSuccessRateLowWithAttemptLimitDE
@@ -212,11 +202,10 @@ spec:
         severity: ping
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitDE
     expr: |
@@ -230,11 +219,10 @@ spec:
         severity: ping
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
     # DK
   - alert: LoginSuccessRateLowWithAttemptLimitDK
@@ -249,11 +237,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitDK
     expr: |
@@ -267,11 +254,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
     # ES
   - alert: LoginSuccessRateLowWithAttemptLimitES
@@ -286,11 +272,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitES
     expr: |
@@ -304,11 +289,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
     # FI
   - alert: LoginSuccessRateLowWithAttemptLimitFI
@@ -323,11 +307,10 @@ spec:
         severity: ping
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitFI
     expr: |
@@ -341,11 +324,10 @@ spec:
         severity: ping
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
     # FR
   - alert: LoginSuccessRateLowWithAttemptLimitFR
@@ -360,11 +342,10 @@ spec:
         severity: ping
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitFR
     expr: |
@@ -378,11 +359,10 @@ spec:
         severity: ping
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
     # NL
   - alert: LoginSuccessRateLowWithAttemptLimitNL
@@ -397,11 +377,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitNL
     expr: |
@@ -415,11 +394,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last 30 minutes.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
     # NO
   - alert: LoginSuccessRateLowWithAttemptLimitNO
@@ -434,11 +412,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitNO
     expr: |
@@ -452,11 +429,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
     # PT
   - alert: LoginSuccessRateLowWithAttemptLimitPT
@@ -471,11 +447,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> ) ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitPT
     expr: |
@@ -489,11 +464,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last 30 minutes.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last 30 minutes.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
     # IT
   - alert: LoginSuccessRateLowWithAttemptLimitIT
@@ -508,11 +482,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Login success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last 30 minutes.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitIT
     expr: |
@@ -526,11 +499,10 @@ spec:
         severity: urgent
         who: integration
     annotations:
-        description: Refresh success rate is below 90% ( <{ $value }> ) for the last hour.
-            Investigate immediately.
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }>
+        description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
-        tags: <{ $labels.className }>
+        tags: <{ $labels.className }> , <{ $labels.provider }>
 
 ### Bank side failures
   - alert: BankServerUnavailableForLogin
