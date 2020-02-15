@@ -60,7 +60,8 @@ public class TokenResponse {
 
     public OAuth2Token toOauthToken() {
 
-        logger.info("Got new refresh token " + refreshToken);
+        // TODO Temporary log below for debugging purpose
+        logger.info("Got new refresh token {} expires in {}", refreshToken, refreshTokenExpiresIn);
         return OAuth2Token.create(
                 getTokenType(),
                 getAccessToken(),
