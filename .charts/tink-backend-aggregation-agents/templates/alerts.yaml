@@ -22,6 +22,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Transfer success rate is below 75% ( <{ $value }> ) for <{ $labels.provider }>
             the last 30 minutes.
         tags: <{ $labels.provider }>
@@ -34,16 +35,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitSE
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className!~"banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider) > 10
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last 30 minutes.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -53,16 +55,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitDanskebank
     expr: |
         # Successful/Cancelled attempts above 80%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className) < 0.80)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider) < 0.80)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", className="banks.danskebank.v2.DanskeBankV2Agent"}[30m])) by (action,className,provider) > 10
     for: 5m
     labels:
       severity: urgent
       who: integration
     annotations:
       description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+          https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
       summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes.
       tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -80,6 +83,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last 30 minutes.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -88,16 +92,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitBE
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="BE"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="BE"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[60m])) by (action,className,provider) > 5
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -115,6 +120,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -123,16 +129,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitGB
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="GB"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="GB"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[60m])) by (action,className,provider) > 5
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -150,6 +157,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -158,16 +166,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitAT
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="AT"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="AT"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="AT"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="AT"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="AT"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="AT"}[60m])) by (action,className,provider) > 5
     for: 5m
     labels:
         severity: ping
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -185,6 +194,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -193,16 +203,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitDE
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="DE"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DE"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="DE"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DE"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DE"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DE"}[60m])) by (action,className,provider) > 5
     for: 5m
     labels:
         severity: ping
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -220,6 +231,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -228,16 +240,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitDK
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="DK"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="DK"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[60m])) by (action,className,provider) > 5
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -255,6 +268,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -263,16 +277,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitES
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="ES"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="ES"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[60m])) by (action,className,provider) > 5
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -290,6 +305,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -298,16 +314,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitFI
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="FI"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="FI"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI"}[60m])) by (action,className,provider) > 5
     for: 5m
     labels:
         severity: ping
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -325,6 +342,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -333,16 +351,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitFR
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="FR"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FR"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="FR"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FR"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FR"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FR"}[60m])) by (action,className,provider) > 5
     for: 5m
     labels:
         severity: ping
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -360,6 +379,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -368,16 +388,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitNL
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="NL"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="NL"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL"}[60m])) by (action,className,provider) > 10
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -395,6 +416,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last 30 minutes.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -403,16 +425,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitNO
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="NO"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="NO"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[60m])) by (action,className,provider) > 5
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -430,6 +453,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -438,16 +462,17 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitPT
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="PT"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="PT"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="PT"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="PT"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="PT"}[60m])) by (action,className) > 10
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="PT"}[60m])) by (action,className,provider) > 10
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> ) ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -465,6 +490,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last 30 minutes.
         tags: <{ $labels.className }> , <{ $labels.provider }>
@@ -473,18 +499,19 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitIT
     expr: |
         # Successful/Cancelled attempts above 90%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="IT"}[60m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="IT"}[60m])) by (action,className) < 0.90)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="IT"}[60m])) by (action,className,provider)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="IT"}[60m])) by (action,className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="IT"}[60m])) by (action,className) > 5
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="IT"}[60m])) by (action,className,provider) > 5
     for: 5m
     labels:
         severity: urgent
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-            the last 30 minutes.
+            the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
 
   - alert: RefreshSuccessRateLowWithAttemptLimitIT
@@ -500,6 +527,7 @@ spec:
         who: integration
     annotations:
         description: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:lucene,query:'doc.mdc.providerName:%22<{$labels.provider}>%22%20AND%20doc.level:ERROR'),sort:!(!('@timestamp',desc)))
+            https://grafana:global-production:tink:network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
             the last hour.
         tags: <{ $labels.className }> , <{ $labels.provider }>
