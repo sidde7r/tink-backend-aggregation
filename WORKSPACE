@@ -79,7 +79,7 @@ git_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "0f44f39200a72effe48679c58d568a035cb02290",
+    commit = "92d2e6c7adca04e074ab3351ba8a9404244f6765",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1572535216 +0000",
 )
@@ -2444,14 +2444,6 @@ http_archive(
 )
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")
-
-load("@tink_backend//third_party/maven:deps.bzl", "maven_deps")
-
-maven_deps("@tink_backend//third_party/maven:maven_install.json")
-
-load("@maven//:defs.bzl", "pinned_maven_install")
-
-pinned_maven_install()
 
 maven_install(
     name = "java_uuid_generator",
