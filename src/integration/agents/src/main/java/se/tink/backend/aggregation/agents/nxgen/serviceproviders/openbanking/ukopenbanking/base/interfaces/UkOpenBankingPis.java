@@ -13,7 +13,7 @@ public interface UkOpenBankingPis {
     // I.e. the user MUST pick the source account him/her self in the bank's consent flow.
     boolean mustNotHaveSourceAccountSpecified();
 
-    PaymentResponse getBankTransferIntentId(
+    PaymentResponse setupPaymentOrderConsent(
             UkOpenBankingApiClient apiClient, PaymentRequest paymentRequest)
             throws TransferExecutionException;
 

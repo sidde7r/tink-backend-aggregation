@@ -37,7 +37,7 @@ public class UkOpenBankingV31Pis implements UkOpenBankingPis {
     }
 
     @Override
-    public PaymentResponse getBankTransferIntentId(
+    public PaymentResponse setupPaymentOrderConsent(
             UkOpenBankingApiClient apiClient, PaymentRequest paymentRequest)
             throws TransferExecutionException {
 

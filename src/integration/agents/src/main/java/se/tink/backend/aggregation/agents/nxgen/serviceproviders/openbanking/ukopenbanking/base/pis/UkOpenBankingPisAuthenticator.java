@@ -49,7 +49,7 @@ public class UkOpenBankingPisAuthenticator implements OpenIdAuthenticator {
     public URL decorateAuthorizeUrl(
             URL authorizeUrl, String state, String nonce, String callbackUri) {
 
-        paymentResponse = ukOpenBankingPis.getBankTransferIntentId(apiClient, paymentRequest);
+        paymentResponse = ukOpenBankingPis.setupPaymentOrderConsent(apiClient, paymentRequest);
         intentId = paymentResponse.getStorage().get("consentId");
 
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
