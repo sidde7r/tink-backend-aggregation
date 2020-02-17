@@ -5,7 +5,7 @@ steps:
     command: .buildkite/run-unit-tests.sh
     timeout_in_minutes: 30
     agents:
-      queue: v4
+      queue: default
     plugins:
       docker-compose#v3.0.3:
         run: "app"
@@ -17,7 +17,7 @@ steps:
     command: .buildkite/run-code-coverage.sh
     timeout_in_minutes: 30
     agents:
-      queue: v4
+      queue: default
     plugins:
       docker-compose#v3.0.3:
         run: "app"
@@ -29,7 +29,7 @@ steps:
     command: /go/bin/kubernetes-generator --mode lint --repo .
     timeout_in_minutes: 10
     agents:
-      queue: v4
+      queue: default
     plugins:
       docker#v2.0.0:
         image: gcr.io/tink-containers/kubernetes-generator:latest
@@ -45,7 +45,7 @@ steps:
     name: ':bazel: Check BUILD style'
     timeout_in_minutes: 10
     agents:
-      queue: v4
+      queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - command: .buildkite/check-java-style.sh
@@ -57,7 +57,7 @@ steps:
     name: ':java: Check Java style'
     timeout_in_minutes: 30
     agents:
-      queue: v4
+      queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - command: .buildkite/run-system-tests.sh
@@ -69,7 +69,7 @@ steps:
     name: ':junit: System tests'
     timeout_in_minutes: 30
     agents:
-      queue: v4
+      queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - wait
@@ -83,7 +83,7 @@ steps:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
     agents:
-      queue: v4
+      queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ':docker: tink-backend-integration'
@@ -95,7 +95,7 @@ steps:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
     agents:
-      queue: v4
+      queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ':docker: tink-backend-aggregation-statuspage-providers-cronjob'
@@ -107,7 +107,7 @@ steps:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
     agents:
-      queue: v4
+      queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ':docker: tink-backend-notifying-aggregation-service-asserter'
@@ -119,7 +119,7 @@ steps:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
     agents:
-      queue: v4
+      queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - wait
@@ -128,5 +128,5 @@ steps:
     branches: 'master'
     command: .buildkite/generate-trigger-steps-master.py | buildkite-agent pipeline upload
     agents:
-      queue: v4
+      queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
