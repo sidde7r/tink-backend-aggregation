@@ -92,6 +92,26 @@ container_image(
     workdir = "/usr/share/tink-backend-aggregation",
 )
 
+container_image(
+    name = "aggregation_decoupled_image",
+    base = "@openjdk_jdk8//image",
+    cmd = [
+        "java",
+        "-jar",
+        "aggregation_service.jar",
+        "server",
+        "development-decoupled.yaml",
+    ],
+    tags = ["manual"],
+    tars = [
+        ":bin_tar",
+        ":data_tar",
+        ":config_tar",
+    ],
+    visibility = ["//visibility:public"],
+    workdir = "/usr/share/tink-backend-aggregation",
+)
+
 templated_file(
     name = "development_config",
     template = "development-minikube.yaml",
@@ -115,6 +135,15 @@ pkg_tar(
 pkg_tar(
     name = "bin_tar",
     srcs = [":bin_deploy"],
+    mode = "0444",
+    package_dir = "/usr/share/tink-backend-aggregation",
+    tags = ["manual"],
+    visibility = ["//docker:__pkg__"],
+)
+
+pkg_tar(
+    name = "config_tar",
+    srcs = [":development-decoupled.yaml"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation",
     tags = ["manual"],
