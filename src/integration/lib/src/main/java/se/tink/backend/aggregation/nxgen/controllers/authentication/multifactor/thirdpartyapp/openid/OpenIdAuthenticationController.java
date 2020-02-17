@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -268,7 +269,7 @@ public class OpenIdAuthenticationController
                                 strongAuthenticationStateSupplementalKey,
                                 ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
-                        .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
+                        .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
 
         handleErrors(callbackData);
 

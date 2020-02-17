@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.cre
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -55,6 +57,9 @@ public class TransactionEntity {
     @JsonProperty("TransactionInformation")
     private String transactionInformation;
 
+    @JsonProperty("MerchantDetails")
+    private MerchantEntity merchantDetails;
+
     private boolean isDebit() {
         return ICSConstants.Transaction.DEBIT.equalsIgnoreCase(creditDebitIndicator);
     }
@@ -84,6 +89,21 @@ public class TransactionEntity {
                 .setAmount(toTinkAmount())
                 .setDescription(transactionInformation)
                 .setDate(toTransactionDate())
+                .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL, getMerchantName())
+                .setPayload(TransactionPayloadTypes.MESSAGE, getMerchantCategoryCodeDescription())
                 .build();
+    }
+
+    private String getMerchantCategoryCodeDescription() {
+        return Optional.ofNullable(merchantDetails)
+                .map(MerchantEntity::getMerchantCategoryCodeDescription)
+                .orElse("N/A");
+    }
+
+    private String getMerchantName() {
+        return Optional.ofNullable(merchantDetails)
+                .map(MerchantEntity::getMerchantName)
+                .orElse("N/A");
     }
 }

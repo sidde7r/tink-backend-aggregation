@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -192,6 +193,13 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             thirdPartyAppAuthenticationController.authenticate(credentials);
 
         } catch (AuthenticationException | AuthorizationException e) {
+
+            if (e.getError() instanceof ThirdPartyAppError
+                    && ThirdPartyAppError.TIMED_OUT.equals(e.getError())) {
+                throw UkOpenBankingV31PisUtils.createCancelledTransferException(
+                        e, EndUserMessage.PIS_AUTHORISATION_TIMEOUT);
+            }
+
             handlePaymentAuthorizationErrors(e);
         }
 

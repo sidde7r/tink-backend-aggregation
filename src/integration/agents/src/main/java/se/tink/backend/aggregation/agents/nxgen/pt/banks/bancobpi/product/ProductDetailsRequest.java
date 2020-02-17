@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiProductData;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
 public class ProductDetailsRequest extends DefaultRequest<ProductDetailsResponse> {
@@ -26,13 +25,7 @@ public class ProductDetailsRequest extends DefaultRequest<ProductDetailsResponse
     }
 
     @Override
-    protected RequestBuilder withSpecificHeaders(
-            TinkHttpClient httpClient, RequestBuilder requestBuilder) {
-        return requestBuilder;
-    }
-
-    @Override
-    public RequestBuilder withBody(TinkHttpClient httpClient, RequestBuilder requestBuilder) {
+    public RequestBuilder withBody(RequestBuilder requestBuilder) {
         return requestBuilder.body(
                 String.format(
                         BODY_TEMPLATE,
@@ -46,8 +39,7 @@ public class ProductDetailsRequest extends DefaultRequest<ProductDetailsResponse
     }
 
     @Override
-    public ProductDetailsResponse execute(RequestBuilder requestBuilder, TinkHttpClient httpClient)
-            throws RequestException {
+    public ProductDetailsResponse execute(RequestBuilder requestBuilder) throws RequestException {
         return new ProductDetailsResponse(requestBuilder.post(String.class));
     }
 }

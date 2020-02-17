@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authenticatio
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class LoginRequest extends DefaultRequest<LoginResponse> {
 
@@ -24,24 +24,15 @@ public class LoginRequest extends DefaultRequest<LoginResponse> {
     }
 
     @Override
-    protected RequestBuilder withSpecificHeaders(
-            final TinkHttpClient httpClient, final RequestBuilder requestBuilder) {
-        return requestBuilder;
-    }
-
-    @Override
-    public RequestBuilder withBody(
-            final TinkHttpClient httpClient, final RequestBuilder requestBuilder) {
+    public RequestBuilder withBody(final RequestBuilder requestBuilder) {
         return requestBuilder.body(
                 String.format(
                         BODY_TEMPLATE, getModuleVersion(), username, password, getDeviceUUID()));
     }
 
     @Override
-    public LoginResponse execute(
-            final RequestBuilder requestBuilder, final TinkHttpClient httpClient)
-            throws RequestException {
-        return new LoginResponse(requestBuilder.post(String.class), httpClient);
+    public LoginResponse execute(final RequestBuilder requestBuilder) throws RequestException {
+        return new LoginResponse(requestBuilder.post(HttpResponse.class));
     }
 
     @Override

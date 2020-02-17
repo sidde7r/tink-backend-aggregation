@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.Default
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.TransactionalAccountBaseInfo;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
 public class TransactionsFetchRequest extends DefaultRequest<TransactionsFetchResponse> {
@@ -39,13 +38,7 @@ public class TransactionsFetchRequest extends DefaultRequest<TransactionsFetchRe
     }
 
     @Override
-    protected RequestBuilder withSpecificHeaders(
-            TinkHttpClient httpClient, RequestBuilder requestBuilder) {
-        return requestBuilder;
-    }
-
-    @Override
-    public RequestBuilder withBody(TinkHttpClient httpClient, RequestBuilder requestBuilder) {
+    public RequestBuilder withBody(RequestBuilder requestBuilder) {
         return requestBuilder.body(
                 String.format(
                         BODY_TEMPLATE,
@@ -58,8 +51,8 @@ public class TransactionsFetchRequest extends DefaultRequest<TransactionsFetchRe
     }
 
     @Override
-    public TransactionsFetchResponse execute(
-            RequestBuilder requestBuilder, TinkHttpClient httpClient) throws RequestException {
+    public TransactionsFetchResponse execute(RequestBuilder requestBuilder)
+            throws RequestException {
         return new TransactionsFetchResponse(requestBuilder.post(String.class));
     }
 }

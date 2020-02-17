@@ -87,43 +87,12 @@ public final class RabobankApiClient {
         final String clientId = rabobankConfiguration.getClientId();
         final String clientSecret = rabobankConfiguration.getClientSecret();
 
-        debugPost(rabobankConfiguration.getUrls().getOauth2TokenUrl(), clientId, clientSecret);
-
         return client.request(rabobankConfiguration.getUrls().getOauth2TokenUrl())
                 .body(request.serialize())
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .addBasicAuth(clientId, clientSecret)
                 .post(TokenResponse.class);
-    }
-
-    // TODO Remove when MIYAG-737 is resolved
-    private static void debugPost(final URL url, final String clientId, final String clientSecret) {
-
-        if (clientId == null) {
-            logger.info("Rabobank post MIYAG-737 : {} : client ID was missing", url);
-        } else if (clientSecret == null) {
-            logger.info("Rabobank post MIYAG-737 : {} : client secret was missing", url);
-        } else {
-            logger.info("Rabobank post MIYAG-737 : {} : client ID and secret are present", url);
-        }
-    }
-
-    // TODO Remove when MIYAG-737 is resolved
-    private static void debugBuildRequest(
-            final URL url, final OAuth2Token oauth2Token, final PersistentStorage storage) {
-
-        if (oauth2Token == null) {
-            logger.info(
-                    "Rabobank buildRequest MIYAG-737 : {} : Authorization token was NULL, persistentStorage was {}",
-                    url,
-                    storage);
-        } else {
-            logger.info(
-                    "Rabobank buildRequest MIYAG-737 : {} : Authorization: {}",
-                    url,
-                    oauth2Token.toAuthorizeHeader());
-        }
     }
 
     private RequestBuilder buildRequest(
@@ -139,8 +108,6 @@ public final class RabobankApiClient {
         final RequestBuilder builder;
 
         final OAuth2Token oAuth2Token = RabobankUtils.getOauthToken(persistentStorage);
-
-        debugBuildRequest(url, oAuth2Token, persistentStorage);
 
         builder =
                 client.request(url)

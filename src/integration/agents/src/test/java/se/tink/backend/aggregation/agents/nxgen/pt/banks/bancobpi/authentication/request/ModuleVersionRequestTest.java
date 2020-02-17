@@ -34,7 +34,7 @@ public class ModuleVersionRequestTest {
                 .thenReturn("{\"versionToken\": \"" + versionToken + "\"}");
         objectUnderTest = new ModuleVersionRequest(userState);
         // when
-        String result = objectUnderTest.execute(requestBuilder, tinkHttpClient);
+        String result = objectUnderTest.execute(requestBuilder);
         // then
         Assert.assertEquals(versionToken, result);
     }
@@ -46,7 +46,7 @@ public class ModuleVersionRequestTest {
         Mockito.when(requestBuilder.get(String.class)).thenReturn("{}");
         objectUnderTest = new ModuleVersionRequest(userState);
         // when
-        String result = objectUnderTest.execute(requestBuilder, tinkHttpClient);
+        String result = objectUnderTest.execute(requestBuilder);
         // then
         // exception should be thrown
     }
@@ -60,7 +60,7 @@ public class ModuleVersionRequestTest {
         Mockito.when(userState.getDeviceUUID()).thenReturn(osVisitor);
         objectUnderTest = new ModuleVersionRequest(userState);
         // when
-        objectUnderTest.withHeaders(tinkHttpClient, requestBuilder);
+        objectUnderTest.withHeaders(requestBuilder);
         // then
         Mockito.verify(requestBuilder).cookie(HEADER_OS_VISITOR, osVisitor);
     }
@@ -73,7 +73,7 @@ public class ModuleVersionRequestTest {
         Mockito.when(userState.getDeviceUUID()).thenReturn(null);
         objectUnderTest = new ModuleVersionRequest(userState);
         // when
-        objectUnderTest.withHeaders(tinkHttpClient, requestBuilder);
+        objectUnderTest.withHeaders(requestBuilder);
         // then
         Mockito.verify(requestBuilder, Mockito.never())
                 .cookie(Mockito.eq(HEADER_OS_VISITOR), Mockito.any());

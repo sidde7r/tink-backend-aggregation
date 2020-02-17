@@ -55,7 +55,7 @@ public class ProductDetailsRequestTest {
         Mockito.when(productData.getNumber()).thenReturn("number");
         ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
         // when
-        objectUnderTest.withBody(httpClient, requestBuilder);
+        objectUnderTest.withBody(requestBuilder);
         // then
         Mockito.verify(requestBuilder).body(stringArgumentCaptor.capture());
         JSONObject body = new JSONObject(stringArgumentCaptor.getValue());
@@ -79,7 +79,7 @@ public class ProductDetailsRequestTest {
         Mockito.when(requestBuilder.post(String.class))
                 .thenReturn(ProductDetailsResponseTest.RESPONSE_EXPECTED);
         // when
-        ProductDetailsResponse response = objectUnderTest.execute(requestBuilder, httpClient);
+        ProductDetailsResponse response = objectUnderTest.execute(requestBuilder);
         // then
         Assert.assertEquals(LocalDate.parse("2047-04-04"), response.getFinalDate());
         Assert.assertEquals(LocalDate.parse("2007-04-03"), response.getInitialDate());

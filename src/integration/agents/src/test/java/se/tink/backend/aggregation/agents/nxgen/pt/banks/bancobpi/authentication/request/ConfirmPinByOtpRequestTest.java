@@ -85,7 +85,7 @@ public class ConfirmPinByOtpRequestTest {
         RequestBuilder expectedResponseBuilder = Mockito.mock(RequestBuilder.class);
         Mockito.when(requestBuilder.body(REQUEST)).thenReturn(expectedResponseBuilder);
         // when
-        RequestBuilder result = objectUnderTest.withBody(httpClient, requestBuilder);
+        RequestBuilder result = objectUnderTest.withBody(requestBuilder);
         // then
         Assert.assertEquals(expectedResponseBuilder, result);
     }
@@ -95,7 +95,7 @@ public class ConfirmPinByOtpRequestTest {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_CORRECT);
         // when
-        AuthenticationResponse result = objectUnderTest.execute(requestBuilder, httpClient);
+        AuthenticationResponse result = objectUnderTest.execute(requestBuilder);
         // then
         Assert.assertTrue(result.isSuccess());
     }
@@ -105,7 +105,7 @@ public class ConfirmPinByOtpRequestTest {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_INCORRECT);
         // when
-        AuthenticationResponse result = objectUnderTest.execute(requestBuilder, httpClient);
+        AuthenticationResponse result = objectUnderTest.execute(requestBuilder);
         // then
         Assert.assertFalse(result.isSuccess());
         Assert.assertEquals("CIPL_0001", result.getCode());
@@ -116,6 +116,6 @@ public class ConfirmPinByOtpRequestTest {
         // given
         Mockito.when(requestBuilder.post(String.class)).thenReturn(RESPONSE_UNEXPECTED);
         // when
-        objectUnderTest.execute(requestBuilder, httpClient);
+        objectUnderTest.execute(requestBuilder);
     }
 }

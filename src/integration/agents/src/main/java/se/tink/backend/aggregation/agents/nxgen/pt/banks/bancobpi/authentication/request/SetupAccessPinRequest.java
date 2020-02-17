@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authenticatio
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.common.DefaultRequest;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiAuthContext;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
 public class SetupAccessPinRequest extends DefaultRequest<SetupAccessPinResponse> {
@@ -21,21 +20,13 @@ public class SetupAccessPinRequest extends DefaultRequest<SetupAccessPinResponse
     }
 
     @Override
-    protected RequestBuilder withSpecificHeaders(
-            TinkHttpClient httpClient, RequestBuilder requestBuilder) {
-        return requestBuilder;
-    }
-
-    @Override
-    public RequestBuilder withBody(TinkHttpClient httpClient, RequestBuilder requestBuilder) {
+    public RequestBuilder withBody(RequestBuilder requestBuilder) {
         return requestBuilder.body(
                 String.format(BODY_TEMPLATE, getModuleVersion(), pin, getDeviceUUID()));
     }
 
     @Override
-    public SetupAccessPinResponse execute(
-            RequestBuilder requestBuilder, final TinkHttpClient httpClient)
-            throws RequestException {
+    public SetupAccessPinResponse execute(RequestBuilder requestBuilder) throws RequestException {
         return new SetupAccessPinResponse(requestBuilder.post(String.class));
     }
 }
