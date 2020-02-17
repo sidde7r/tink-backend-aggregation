@@ -134,13 +134,13 @@ public class HandelsbankenSEConstants {
             this.type = type;
         }
 
-        public static Instrument.Type asType(String type) {
+        public static InstrumentType asType(String type) {
             for (InstrumentType instrumentType : values()) {
                 if (instrumentType.rawType.equalsIgnoreCase(type)) {
-                    return instrumentType.type;
+                    return instrumentType;
                 }
             }
-            return OTHER.type;
+            return OTHER;
         }
     }
 
