@@ -145,4 +145,24 @@ eval $(minikube docker-env) && bazel run //docker:aggregation_image && \
     --cluster local --environment development | kubectl apply -f -
 ```
 
+### Without Minikube
+It is possible to run the Aggregation service as a standalone process, without setting up a
+Kubernetes cluster. Note that this means that many of the dependencies are replaced with fake
+implementations.
 
+Running directly:
+```bash
+$ bazel run //src/aggregation/service:bin_decoupled
+
+$ curl http://localhost:9095/aggregation/ping/
+pong
+```
+
+Or in a Docker container:
+```bash
+$ bazel run //src/aggregation/service:aggregation_decoupled_image
+$ docker run -p 9095:9095 bazel/src/aggregation/service:aggregation_decoupled_image
+
+$ curl http://localhost:9095/aggregation/ping/
+pong
+```
