@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.SparkassenAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.configuration.SparkassenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenTransactionsFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -38,14 +37,7 @@ public final class SparkassenAgent extends NextGenerationAgent
         apiClient = new SparkassenApiClient(client, credentials, bankCode);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
-        final SparkassenConfiguration sparkassenConfiguration = getClientConfiguration();
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
-        apiClient.setConfiguration(sparkassenConfiguration);
-    }
-
-    protected SparkassenConfiguration getClientConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfiguration(SparkassenConfiguration.class);
     }
 
     @Override

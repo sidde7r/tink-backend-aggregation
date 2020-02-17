@@ -2,12 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.PathVariables;
@@ -26,7 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.InitAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.SelectAuthenticationMethodRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.SelectAuthenticationMethodResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.configuration.SparkassenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -38,21 +35,11 @@ public class SparkassenApiClient {
     private final TinkHttpClient client;
     private final Credentials credentials;
     private final String bankCode;
-    private SparkassenConfiguration configuration;
 
     public SparkassenApiClient(TinkHttpClient client, Credentials credentials, String bankCode) {
         this.client = client;
         this.credentials = credentials;
         this.bankCode = bankCode;
-    }
-
-    private SparkassenConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    protected void setConfiguration(SparkassenConfiguration configuration) {
-        this.configuration = configuration;
     }
 
     private RequestBuilder createRequest(URL url) {
