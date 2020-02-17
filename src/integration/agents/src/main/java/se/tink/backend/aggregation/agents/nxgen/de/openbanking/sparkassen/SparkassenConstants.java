@@ -64,8 +64,4 @@ public final class SparkassenConstants {
     public static class FormValues {
         public static final int FREQUENCY_PER_DAY = 4;
     }
-
-    public static class CredentialKeys {
-        public static final String IBAN = "IBAN";
-    }
 }

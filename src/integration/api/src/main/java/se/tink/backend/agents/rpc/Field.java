@@ -278,7 +278,8 @@ public class Field {
         SIGN_FOR_TRANSFER_INPUT("signfortransferinput"),
         ACCESS_PIN("accesspininput"),
         ACCESS_PIN_CONFIRMATION("confirmaccesspininput"),
-        EMAIL("email");
+        EMAIL("email"),
+        IBAN("iban");
 
         private final String fieldKey;
 

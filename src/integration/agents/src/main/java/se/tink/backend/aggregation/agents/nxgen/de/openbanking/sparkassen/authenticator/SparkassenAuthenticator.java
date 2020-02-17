@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail.FieldBuilder;
@@ -107,12 +106,12 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
                 String.format(
                         "Authentication method not implemented for CredentialsType: %s",
                         credentials.getType()));
-        validateCredentialPresent(credentials, Field.Key.USERNAME.getFieldKey());
-        validateCredentialPresent(credentials, Field.Key.PASSWORD.getFieldKey());
-        validateCredentialPresent(credentials, CredentialKeys.IBAN);
+        validateCredentialPresent(credentials, Field.Key.USERNAME);
+        validateCredentialPresent(credentials, Field.Key.PASSWORD);
+        validateCredentialPresent(credentials, Field.Key.IBAN);
     }
 
-    private void validateCredentialPresent(Credentials credentials, String key)
+    private void validateCredentialPresent(Credentials credentials, Field.Key key)
             throws LoginException {
         if (Strings.isNullOrEmpty(credentials.getField(key))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
@@ -120,7 +119,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     }
 
     private List<String> getIbansList(Credentials credentials) {
-        return Arrays.asList(credentials.getField(CredentialKeys.IBAN).split(","));
+        return Arrays.asList(credentials.getField(Field.Key.IBAN).split(","));
     }
 
     private ConsentResponse initializeProcess(List<String> ibans) {

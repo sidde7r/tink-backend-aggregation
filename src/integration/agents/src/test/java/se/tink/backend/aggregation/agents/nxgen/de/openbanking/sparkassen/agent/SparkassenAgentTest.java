@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.CredentialKeys;
 
 public class SparkassenAgentTest {
     private final ArgumentManager<IbanArgumentEnum> ibanManager =
@@ -29,8 +28,7 @@ public class SparkassenAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("de", "de-sparkassen-ob")
-                        .addCredentialField(
-                                CredentialKeys.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
+                        .addCredentialField(Field.Key.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
                         .addCredentialField(
                                 Field.Key.USERNAME,
                                 usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))

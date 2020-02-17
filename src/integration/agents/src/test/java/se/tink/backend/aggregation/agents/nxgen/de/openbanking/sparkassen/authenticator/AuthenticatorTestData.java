@@ -7,7 +7,6 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
@@ -32,7 +31,7 @@ class AuthenticatorTestData {
         OK_CREDENTIALS.setType(CredentialsTypes.PASSWORD);
         OK_CREDENTIALS.setField(Field.Key.USERNAME, OK_USERNAME);
         OK_CREDENTIALS.setField(Field.Key.PASSWORD, OK_PASSWORD);
-        OK_CREDENTIALS.setField(SparkassenConstants.CredentialKeys.IBAN, "1234,5678");
+        OK_CREDENTIALS.setField(Field.Key.IBAN, "1234,5678");
         SUPPLEMENTAL_RESPONSE_OK.put("otpValue", TEST_OTP);
         SUPPLEMENTAL_RESPONSE_OK.put("chosenScaMethod", "1");
     }
