@@ -73,10 +73,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitSE
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE"}[30m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="SE"}[30m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE"}[30m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="SE"}[30m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="SE"}[30m])) by (className) > 50
+        and sum(increase(tink_agent_refresh_total{market="SE"}[30m])) by (className,provider) > 50
     for: 5m
     labels:
         severity: urgent
@@ -110,10 +110,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitBE
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="BE"}[60m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="BE"}[60m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="BE"}[60m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="BE"}[60m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="BE"}[60m])) by (className) > 10
+        and sum(increase(tink_agent_refresh_total{market="BE"}[60m])) by (className,provider) > 10
     for: 5m
     labels:
         severity: urgent
@@ -147,10 +147,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitGB
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="GB"}[60m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="GB"}[60m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="GB"}[60m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="GB"}[60m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="GB"}[60m])) by (className) > 10
+        and sum(increase(tink_agent_refresh_total{market="GB"}[60m])) by (className,provider) > 10
     for: 5m
     labels:
         severity: urgent
@@ -184,10 +184,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitAT
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="AT"}[60m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="AT"}[60m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="AT"}[60m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="AT"}[60m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="AT"}[60m])) by (className) > 10
+        and sum(increase(tink_agent_refresh_total{market="AT"}[60m])) by (className,provider) > 10
     for: 5m
     labels:
         severity: ping
@@ -221,10 +221,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitDE
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="DE"}[60m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="DE"}[60m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="DE"}[60m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="DE"}[60m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="DE"}[60m])) by (className) > 10
+        and sum(increase(tink_agent_refresh_total{market="DE"}[60m])) by (className,provider) > 10
     for: 5m
     labels:
         severity: ping
@@ -258,10 +258,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitDK
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="DK"}[60m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="DK"}[60m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="DK"}[60m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="DK"}[60m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="DK"}[60m])) by (className) > 10
+        and sum(increase(tink_agent_refresh_total{market="DK"}[60m])) by (className,provider) > 10
     for: 5m
     labels:
         severity: urgent
@@ -295,10 +295,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitES
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="ES"}[60m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="ES"}[60m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="ES"}[60m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="ES"}[60m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="ES"}[60m])) by (className) > 10
+        and sum(increase(tink_agent_refresh_total{market="ES"}[60m])) by (className,provider) > 10
     for: 5m
     labels:
         severity: urgent
@@ -332,10 +332,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitFI
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI"}[60m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="FI"}[60m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI"}[60m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="FI"}[60m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="FI"}[60m])) by (className) > 10
+        and sum(increase(tink_agent_refresh_total{market="FI"}[60m])) by (className,provider) > 10
     for: 5m
     labels:
         severity: ping
@@ -369,10 +369,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitFR
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FR"}[60m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="FR"}[60m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FR"}[60m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="FR"}[60m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="FR"}[60m])) by (className) > 10
+        and sum(increase(tink_agent_refresh_total{market="FR"}[60m])) by (className,provider) > 10
     for: 5m
     labels:
         severity: ping
@@ -406,10 +406,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitNL
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL"}[30m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="NL"}[30m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL"}[30m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="NL"}[30m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="NL"}[30m])) by (className) > 50
+        and sum(increase(tink_agent_refresh_total{market="NL"}[30m])) by (className,provider) > 50
     for: 5m
     labels:
         severity: urgent
@@ -443,10 +443,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitNO
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NO"}[60m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="NO"}[60m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NO"}[60m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="NO"}[60m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="NO"}[60m])) by (className) > 10
+        and sum(increase(tink_agent_refresh_total{market="NO"}[60m])) by (className,provider) > 10
     for: 5m
     labels:
         severity: urgent
@@ -480,10 +480,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitPT
     expr: |
       # Successful attempts above 90%
-      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="PT"}[30m])) by (className)
-          / sum(increase(tink_agent_refresh_total{market="PT"}[30m])) by (className) < 0.90)
+      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="PT"}[30m])) by (className,provider)
+          / sum(increase(tink_agent_refresh_total{market="PT"}[30m])) by (className,provider) < 0.90)
       # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="PT"}[30m])) by (className) > 50
+        and sum(increase(tink_agent_refresh_total{market="PT"}[30m])) by (className,provider) > 50
     for: 5m
     labels:
         severity: urgent
@@ -517,10 +517,10 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitIT
     expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="IT"}[60m])) by (className)
-            / sum(increase(tink_agent_refresh_total{market="IT"}[60m])) by (className) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="IT"}[60m])) by (className,provider)
+            / sum(increase(tink_agent_refresh_total{market="IT"}[60m])) by (className,provider) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="IT"}[60m])) by (className) > 10
+        and sum(increase(tink_agent_refresh_total{market="IT"}[60m])) by (className,provider) > 10
     for: 5m
     labels:
         severity: urgent
