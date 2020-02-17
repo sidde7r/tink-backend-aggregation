@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis;
 
+import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,10 @@ public class UkOpenBankingV31PisUtils {
 
     static String convertToEndUserMessage(String errorMessageFromBank) {
 
+        if (Strings.isNullOrEmpty(errorMessageFromBank)) {
+            return EndUserMessage.PAYMENT_NOT_AUTHORISED_BY_USER;
+        }
+
         if (StringUtils.containsIgnoreCase(errorMessageFromBank, "cancelled")) {
             return EndUserMessage.PIS_AUTHORISATION_CANCELLED;
         }
@@ -42,7 +47,7 @@ public class UkOpenBankingV31PisUtils {
         log.warn(
                 "Unknown error message from bank during payment authorisation: {}",
                 errorMessageFromBank);
-        return EndUserMessage.PIS_AUTHORISATION_ACCESS_DENIED;
+        return EndUserMessage.PAYMENT_NOT_AUTHORISED_BY_USER;
     }
 
     static TransferExecutionException createCancelledTransferException(

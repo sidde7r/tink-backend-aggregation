@@ -92,7 +92,7 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
 
         // Generic message for when we don't get an error description with details of why the
         // payment wasn't authorised.
-        public static final String PIS_AUTHORISATION_ACCESS_DENIED =
+        public static final String PAYMENT_NOT_AUTHORISED_BY_USER =
                 "Payment was not authorised. Please try again.";
     }
 
