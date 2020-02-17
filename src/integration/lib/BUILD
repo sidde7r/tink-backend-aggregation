@@ -180,7 +180,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
-        #        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/password/dk/nemid/v2:nemid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
@@ -267,8 +266,6 @@ junit_test(
         "//third_party:pl_pragmatists_junitparams",
         "//third_party:zxing-qrcode",
         "@io_reactivex_rxjava3_rxjava",
-        #        "@selenium//:com_codeborne_phantomjsdriver",
-        #        "@selenium//:org_seleniumhq_selenium_selenium_api",
     ],
 )
 
