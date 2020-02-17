@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 
 public class NemIdIFrameControllerTest {
+
     private static final long PHANTOMJS_TIMEOUT_SECONDS = 30L;
     private static final String USERNAME = "--- SAMPLE USERNAME ---";
     private static final String PASSWORD = "--- SAMPLE PASSWORD ---";
@@ -69,6 +70,7 @@ public class NemIdIFrameControllerTest {
         given(driver.manage().timeouts()).willReturn(timeouts);
 
         webdriverHelper = mock(WebdriverHelper.class);
+
         given(webdriverHelper.constructWebDriver(PHANTOMJS_TIMEOUT_SECONDS)).willReturn(driver);
 
         inOrder = Mockito.inOrder(webdriverHelper, driver, targetLocator, timeouts, sleeper);
