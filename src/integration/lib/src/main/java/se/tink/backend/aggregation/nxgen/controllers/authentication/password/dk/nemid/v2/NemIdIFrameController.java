@@ -1,29 +1,32 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
+import java.util.Base64;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.ErrorStrings;
 
 // Temporarily renaming this to V2. V1 will be removed once the Nordea DK update is finished
 public class NemIdIFrameController {
 
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(NemIdIFrameController.class);
-    private static final Pattern PATTERN_INCORRECT_CREDENTIALS =
-            Pattern.compile("^incorrect (user|password).*");
-    private static final long WAIT_FOR_INIT_MILLIS = 1000;
-    private static final long WAIT_FOR_RENDER_MILLIS = 5000;
-    private static final long PHANTOMJS_TIMEOUT_SECONDS = 30;
+    // NemId Javascript Client Integration for mobile:
+    // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Integration%20-%20Mobile.pdf
+
+    private static final ImmutableList<Pattern> INCORRECT_CREDENTIALS_ERROR_PATTERNS =
+            ImmutableList.<Pattern>builder()
+                    .add(
+                            Pattern.compile("^incorrect (user|password).*"),
+                            Pattern.compile("^fejl (bruger|adgangskode).*"))
+                    .build();
 
     private static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
     private static final By ERROR_MESSAGE = By.cssSelector("p.error");
@@ -31,140 +34,183 @@ public class NemIdIFrameController {
     private static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
     private static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
     private static final By IFRAME = By.tagName("iframe");
+    private static final By OTP_ICON = By.className("otp__icon-phone-pulse");
 
     private static final By NEMID_APP_BUTTON = By.cssSelector("button.button--submit");
 
-    private WebDriver driver;
+    private static final long PHANTOMJS_TIMEOUT_SECONDS = 30;
+
     private final WebdriverHelper webdriverHelper;
+    private final Sleeper sleeper;
 
     public NemIdIFrameController() {
-        this.webdriverHelper = new WebdriverHelper();
+        this(new WebdriverHelper(), new Sleeper());
     }
 
-    private void clickLogin() {
-        webdriverHelper.clickButton(SUBMIT_BUTTON);
+    NemIdIFrameController(final WebdriverHelper webdriverHelper, final Sleeper sleeper) {
+        this.webdriverHelper = webdriverHelper;
+        this.sleeper = sleeper;
     }
 
     String doLoginWith(String username, String password, NemIdParametersV2 nemIdParameters)
-            throws AuthenticationException, AuthorizationException {
+            throws AuthenticationException {
+        WebDriver driver = webdriverHelper.constructWebDriver(PHANTOMJS_TIMEOUT_SECONDS);
         try {
-            driver = webdriverHelper.constructWebDriver();
+            // this will setup browser with values specific to nemid page, like current url, etc.
+            driver.get(nemIdParameters.getInitialUrl().get());
 
-            // The base URL MUST be `https://applet.danid.dk`. This is a hack to make it work,
-            // phantomjs/selenium does
-            // not have features for this. I expect we'd have to recompile phantomjs to accommodate
-            // this feature.
-            // How it works:
-            //  1. Make a normal request to the base url
-            //  2. Inject JavaScript code to replace the html contents (base64 encoded in order to
-            // avoid string escaping)
-            //  3. The new contents will execute and we can go forward
+            // inject nemId form into iframe
+            instantiateIFrameWithNemIdForm(driver, nemIdParameters);
 
-            webdriverHelper.initBrowser(nemIdParameters.getInitialUrl());
+            // provide credentials and submit
+            setUserName(driver, username);
+            setPassword(driver, password);
+            clickLogin(driver);
 
-            /*
-            // 2 - Inject javascript to do magic
-            injectJavascript(nemIdParameters);
+            // validate response
+            validateCredentials(driver);
 
-            Thread.sleep(5000);
-             */
+            // credentials are valid let's ask for 2nd factor
+            pollNemidApp(driver);
 
-            // 3 - check all javascript executions are done
-            // switchToIframe();
-            webdriverHelper.switchToIframeAndExecuteJavascript(
-                    IFRAME, USERNAME_INPUT, nemIdParameters);
+            // wait some time for user's 2nd factor and token
+            waitForNemidToken(driver);
 
-            setUserName(username);
-            setPassword(password);
-            clickLogin();
-            webdriverHelper.lookForErrorAndThrowIfFound();
-
-            pollNemidApp();
-
-            return collectToken();
-
-        } catch (Exception e) {
-            throw e;
+            return collectToken(driver);
+        } finally {
+            driver.quit();
         }
     }
 
-    private void pollNemidApp() {
-        // TODO: change this to check if page is still loading
-        sleepFor5s();
-        webdriverHelper.clickButton(NEMID_APP_BUTTON);
-    }
+    private void instantiateIFrameWithNemIdForm(
+            WebDriver driver, NemIdParametersV2 nemIdParameters) {
+        // create initial html to inject
+        String html = String.format(NemIdConstantsV2.BASE_HTML, nemIdParameters.getNemIdElements());
+        String b64Html = Base64.getEncoder().encodeToString(html.getBytes());
 
-    private void sleepFor5s() {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        if (!isNemIdInitialized(driver, b64Html)) {
+            throw new IllegalStateException("Can't instantiate iframe element with NemId form.");
         }
     }
 
-    private String collectToken() throws AuthenticationException, AuthorizationException {
-        // Try to get the token/errors multiple times. It (both token or error) might not have
-        // loaded yet.
+    private boolean isNemIdInitialized(WebDriver driver, String b64Html) {
+        for (int i = 0; i < 5; i++) {
+            driver.switchTo().defaultContent();
 
+            ((JavascriptExecutor) driver)
+                    .executeScript("document.write(atob(\"" + b64Html + "\"));");
+
+            sleeper.sleepFor(5_000);
+
+            Optional<WebElement> element = webdriverHelper.waitForElement(driver, IFRAME);
+
+            if (element.isPresent()) {
+                driver.switchTo().frame(element.get());
+                if (webdriverHelper.waitForElement(driver, USERNAME_INPUT).isPresent()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void validateCredentials(WebDriver driver) throws LoginException {
+        boolean isValid = false;
+        // don't wait for rendering if element is misisng
+        driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+
+        for (int i = 0; i < 20; i++) {
+            checkForErrorMessage(driver);
+            if (isApproveWithKeyAppPageRendered(driver)) {
+                isValid = true;
+                break;
+            }
+            sleeper.sleepFor(1_000);
+        }
+
+        // set back wait for rendering elements
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+        if (!isValid) {
+            throw new IllegalStateException("Can't validate NemId credentials.");
+        }
+    }
+
+    private void checkForErrorMessage(WebDriver driver) throws LoginException {
+        Optional<String> errorText =
+                webdriverHelper
+                        .waitForElement(driver, ERROR_MESSAGE)
+                        .map(WebElement::getText)
+                        .filter(e -> !e.isEmpty());
+        if (errorText.isPresent()) {
+            throwError(errorText.get());
+        }
+    }
+
+    private boolean isApproveWithKeyAppPageRendered(WebDriver driver) {
+        Optional<WebElement> otpIconPhone = webdriverHelper.waitForElement(driver, OTP_ICON);
+        return otpIconPhone.isPresent();
+    }
+
+    private void waitForNemidToken(WebDriver driver) {
+        boolean isNemIdApproved = false;
+        for (int i = 0; i < 60; i++) {
+
+            Optional<WebElement> otpIconPhone = webdriverHelper.waitForElement(driver, OTP_ICON);
+            if (!otpIconPhone.isPresent()) {
+                isNemIdApproved = true;
+                break;
+            }
+            sleeper.sleepFor(1_000);
+        }
+
+        if (!isNemIdApproved) {
+            throw new IllegalStateException("NemID request was not approved.");
+        }
+    }
+
+    private String collectToken(WebDriver driver) {
         driver.switchTo().defaultContent();
         for (int i = 0; i < 7; i++) {
-            Optional<String> nemIdToken = getNemIdToken();
+            Optional<String> nemIdToken = getNemIdToken(driver);
 
             if (nemIdToken.isPresent()) {
                 return nemIdToken.get();
             }
-
-            try {
-                webdriverHelper.switchToIframe(IFRAME, USERNAME_INPUT);
-                if (driver.getPageSource().contains(ErrorStrings.INVALID_CREDENTIALS)) {
-                    driver.switchTo().defaultContent();
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
-                } else if (driver.getPageSource().contains(ErrorStrings.NEMID_NOT_ACTIVATED)) {
-                    driver.switchTo().defaultContent();
-                    throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
-                }
-                driver.switchTo().defaultContent();
-            } catch (IllegalStateException ex) {
-                // If we cannot find iframe, switchToIframe method throws IllegalStateException
-                // in this case we just want to try again so we do not throw exception
-            }
         }
-
-        // We will only reach this state if we could not find the nemId token -> something went
-        // wrong in the authentication.
-        throw new IllegalStateException("[nemid] Could not find nemId token.");
+        throw new IllegalStateException("Could not find nemId token.");
     }
 
-    public void throwError(String errorText) throws LoginException {
-        // Seen errors:
-        // - "Incorrect user ID or password. Enter user ID and password. Changed your password
-        // recently, perhaps?"
-        // - "Incorrect password."
+    private void throwError(String errorText) throws LoginException {
         String err = errorText.toLowerCase();
 
-        Matcher matcher = PATTERN_INCORRECT_CREDENTIALS.matcher(err);
-        if (matcher.matches()) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        if (INCORRECT_CREDENTIALS_ERROR_PATTERNS.stream()
+                .map(p -> p.matcher(err))
+                .anyMatch(Matcher::matches)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception(err);
         }
 
-        throw new IllegalStateException(
-                String.format("[nemid] Unknown login error '%s'.", errorText));
+        throw new IllegalStateException(String.format("Unknown login error '%s'.", errorText));
     }
 
-    private void setUserName(String username) {
-        webdriverHelper.setValueToElement(username, USERNAME_INPUT);
+    private void setUserName(WebDriver driver, String username) {
+        webdriverHelper.setValueToElement(driver, username, USERNAME_INPUT);
     }
 
-    private void setPassword(String password) {
-        webdriverHelper.setValueToElement(password, PASSWORD_INPUT);
+    private void setPassword(WebDriver driver, String password) {
+        webdriverHelper.setValueToElement(driver, password, PASSWORD_INPUT);
     }
 
-    private Optional<String> getNemIdToken() {
-        Optional<WebElement> tokenElement = webdriverHelper.waitForElement(NEMID_TOKEN);
+    private void clickLogin(WebDriver driver) {
+        webdriverHelper.clickButton(driver, SUBMIT_BUTTON);
+    }
 
-        if (!tokenElement.isPresent()) {
-            return Optional.empty();
-        }
-        return Optional.ofNullable(Strings.emptyToNull(tokenElement.get().getText()));
+    private void pollNemidApp(WebDriver driver) {
+        webdriverHelper.clickButton(driver, NEMID_APP_BUTTON);
+    }
+
+    private Optional<String> getNemIdToken(WebDriver driver) {
+        Optional<WebElement> tokenElement = webdriverHelper.waitForElement(driver, NEMID_TOKEN);
+        return tokenElement.map(webElement -> Strings.emptyToNull(webElement.getText()));
     }
 }

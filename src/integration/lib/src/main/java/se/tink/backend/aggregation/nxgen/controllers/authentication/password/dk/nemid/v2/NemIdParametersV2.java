@@ -10,16 +10,16 @@ public class NemIdParametersV2 {
         this(nemIdElements, NemIdConstantsV2.BASE_URL);
     }
 
-    public NemIdParametersV2(String nemIdElements, URL initialUrl) {
+    private NemIdParametersV2(String nemIdElements, URL initialUrl) {
         this.nemIdElements = nemIdElements;
         this.initialUrl = initialUrl;
     }
 
-    public String getNemIdElements() {
+    String getNemIdElements() {
         return nemIdElements;
     }
 
-    public URL getInitialUrl() {
+    URL getInitialUrl() {
         return initialUrl;
     }
 }
