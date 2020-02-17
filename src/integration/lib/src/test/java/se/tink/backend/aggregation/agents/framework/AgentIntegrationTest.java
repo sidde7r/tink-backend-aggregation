@@ -101,6 +101,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private Boolean requestFlagUpdate;
 
     private String wireMockServerHost;
+    private final Map<String, String> mockCallbackData;
 
     protected AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
@@ -117,6 +118,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
         this.wireMockServerHost = builder.getWireMockServerHost();
+        this.mockCallbackData = builder.getMockSupplementalCallbackData();
         this.clusterIdForSecretsService =
                 MoreObjects.firstNonNull(
                         builder.getClusterIdForSecretsService(),
@@ -220,7 +222,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         new AgentFactory(
                                 configuration,
                                 new WireMockTinkHttpClientProviderFactory(wireMockServerHost),
-                                new MockSupplementalInformationProviderFactory(),
+                                new MockSupplementalInformationProviderFactory(mockCallbackData),
                                 new AgentContextProviderFactoryImpl());
 
             } else {
@@ -799,6 +801,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String clusterIdForSecretsService = null;
 
         private String wireMockServerHost;
+        private Map<String, String> mockCallbackData;
 
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
@@ -864,6 +867,16 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         public Builder useWireMockServerHost(final String wireMockServerHost) {
             this.wireMockServerHost = wireMockServerHost;
             return this;
+        }
+
+        public Builder withMockSupplementalCallbackData(
+                final Map<String, String> mockCallbackData) {
+            this.mockCallbackData = mockCallbackData;
+            return this;
+        }
+
+        public Map<String, String> getMockSupplementalCallbackData() {
+            return mockCallbackData;
         }
 
         public Credentials getCredential() {

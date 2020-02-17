@@ -25,14 +25,14 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
     protected final MetricContext metricContext;
     protected final CredentialsRequest request;
 
-    protected SuperAbstractAgent(final AgentContextProvider componentProvider) {
-        this.request = componentProvider.getCredentialsRequest();
-        this.context = componentProvider.getContext();
-        this.agentAggregatorIdentifier = componentProvider.getAgentAggregatorIdentifier();
-        this.supplementalRequester = componentProvider.getSupplementalRequester();
-        this.providerSessionCacheContext = componentProvider.getProviderSessionCacheContext();
-        this.systemUpdater = componentProvider.getSystemUpdater();
-        this.metricContext = componentProvider.getMetricContext();
+    protected SuperAbstractAgent(final AgentContextProvider agentContextProvider) {
+        this.request = agentContextProvider.getCredentialsRequest();
+        this.context = agentContextProvider.getContext();
+        this.agentAggregatorIdentifier = agentContextProvider.getAgentAggregatorIdentifier();
+        this.supplementalRequester = agentContextProvider.getSupplementalRequester();
+        this.providerSessionCacheContext = agentContextProvider.getProviderSessionCacheContext();
+        this.systemUpdater = agentContextProvider.getSystemUpdater();
+        this.metricContext = agentContextProvider.getMetricContext();
     }
 
     public final AggregatorInfo getAggregatorInfo() {
