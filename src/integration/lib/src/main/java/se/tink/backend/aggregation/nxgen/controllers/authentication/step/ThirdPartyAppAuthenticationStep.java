@@ -45,8 +45,7 @@ public class ThirdPartyAppAuthenticationStep extends AbstractAuthenticationStep 
                             .withSupplementalWaitRequest(getSupplementalWaitRequest())
                             .build());
         }
-        callbackProcessor.process(request.getCallbackData());
-        return AuthenticationStepResponse.executeNextStep();
+        return callbackProcessor.process(request.getCallbackData());
     }
 
     public ThirdPartyAppAuthenticationPayload getPayload() {

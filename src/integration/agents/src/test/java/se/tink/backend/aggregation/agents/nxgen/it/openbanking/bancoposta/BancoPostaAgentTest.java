@@ -15,8 +15,8 @@ public class BancoPostaAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-bancoposta-oauth2")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true)
                         .setFinancialInstitutionId("bancoposta")
                         .setAppId("tink");
     }

@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementIn
 
 public class SupplementalFieldsAuthenticationStep extends AbstractAuthenticationStep {
 
-    private final List<Field> fields = new LinkedList<>();
+    protected final List<Field> fields = new LinkedList<>();
     private CallbackProcessorMultiData callbackProcessor;
     private CallbackProcessorMultiDataAndCredentials callbackProcessorCredentials;
 

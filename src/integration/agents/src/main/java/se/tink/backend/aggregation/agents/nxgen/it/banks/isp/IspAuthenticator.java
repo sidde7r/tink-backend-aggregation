@@ -97,11 +97,12 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
         return AuthenticationStepResponse.executeNextStep();
     }
 
-    void processOtp(String otp) throws LoginException {
+    AuthenticationStepResponse processOtp(String otp) throws LoginException {
         RegisterDevice2Response registerDevice2Response = apiClient.registerDevice2(otp);
         if (!OK_RESPONSE_CODE.equals(registerDevice2Response.getExitCode())) {
             throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
         }
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     AuthenticationStepResponse registerDevice3() {
