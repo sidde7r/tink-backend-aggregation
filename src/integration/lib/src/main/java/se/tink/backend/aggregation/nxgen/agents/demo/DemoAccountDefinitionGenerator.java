@@ -4,7 +4,9 @@ import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET
 import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET_REGEX;
 
 import com.google.common.collect.Lists;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.libraries.account.AccountIdentifier;
@@ -151,6 +153,24 @@ public class DemoAccountDefinitionGenerator {
             }
 
             @Override
+            public Optional<Double> getAvailableBalance() {
+                return Optional.of(
+                        BigDecimal.valueOf(getBalance() * 0.9)
+                                .setScale(2, BigDecimal.ROUND_HALF_UP)
+                                .doubleValue());
+            }
+
+            @Override
+            public Optional<Double> getCreditLimit() {
+                int val = generateNumber(deterministicKey, 1);
+                if (val > 5) {
+                    return Optional.empty();
+                } else {
+                    return Optional.of(val * 1000.0);
+                }
+            }
+
+            @Override
             public List<AccountIdentifier> getIdentifiers() {
                 AccountIdentifier.Type type = AccountIdentifier.Type.SE;
                 if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
@@ -203,6 +223,11 @@ public class DemoAccountDefinitionGenerator {
             @Override
             public double getBalance() {
                 return 0.00;
+            }
+
+            @Override
+            public Optional<Double> getAvailableBalance() {
+                return Optional.of(0.0);
             }
 
             @Override
