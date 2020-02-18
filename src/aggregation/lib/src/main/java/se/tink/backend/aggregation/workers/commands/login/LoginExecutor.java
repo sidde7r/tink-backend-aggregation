@@ -10,10 +10,12 @@ import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -114,6 +116,14 @@ public class LoginExecutor {
                             SessionError.SESSION_ALREADY_ACTIVE,
                             LoginResultReason.SESSION_ERROR_SESSION_ALREADY_ACTIVE)
                     .build();
+
+    private static final ImmutableMap<SupplementalInfoError, LoginResultReason>
+            SUPPLEMENTAL_INFORMATION_ERROR_MAPPER =
+                    ImmutableMap.<SupplementalInfoError, LoginResultReason>builder()
+                            .put(
+                                    SupplementalInfoError.NO_VALID_CODE,
+                                    LoginResultReason.SUPPLEMENTAL_INFO_ERROR_NO_VALID_CODE)
+                            .build();
 
     public LoginExecutor(
             final StatusUpdater statusUpdater,
@@ -217,6 +227,11 @@ public class LoginExecutor {
             SessionError error = ((SessionException) ex).getError();
             LoginResultReason reason = SESSION_ERROR_MAPPER.get(error);
             emitLoginResultEvent(reason != null ? reason : LoginResultReason.SESSION_ERROR_UNKNOWN);
+        } else if (ex instanceof SupplementalInfoException) {
+            SupplementalInfoError error = ((SupplementalInfoException) ex).getError();
+            LoginResultReason reason = SUPPLEMENTAL_INFORMATION_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(
+                    reason != null ? reason : LoginResultReason.SUPPLEMENTAL_INFO_ERROR_UNKNOWN);
         } else {
             emitLoginResultEvent(LoginResultReason.UNKNOWN_ERROR);
         }
