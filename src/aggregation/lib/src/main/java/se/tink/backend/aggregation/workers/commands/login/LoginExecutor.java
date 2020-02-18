@@ -7,11 +7,13 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -125,6 +127,26 @@ public class LoginExecutor {
                                     LoginResultReason.SUPPLEMENTAL_INFO_ERROR_NO_VALID_CODE)
                             .build();
 
+    private static final ImmutableMap<AuthorizationError, LoginResultReason>
+            AUTHORIZATION_ERROR_MAPPER =
+                    ImmutableMap.<AuthorizationError, LoginResultReason>builder()
+                            .put(
+                                    AuthorizationError.UNAUTHORIZED,
+                                    LoginResultReason.AUTHORIZATION_ERROR_UNAUTHORIZED)
+                            .put(
+                                    AuthorizationError.NO_VALID_PROFILE,
+                                    LoginResultReason.AUTHORIZATION_ERROR_NO_VALID_PROFILE)
+                            .put(
+                                    AuthorizationError.ACCOUNT_BLOCKED,
+                                    LoginResultReason.AUTHORIZATION_ERROR_ACCOUNT_BLOCKED)
+                            .put(
+                                    AuthorizationError.DEVICE_LIMIT_REACHED,
+                                    LoginResultReason.AUTHORIZATION_ERROR_DEVICE_LIMIT_REACHED)
+                            .put(
+                                    AuthorizationError.REACH_MAXIMUM_TRIES,
+                                    LoginResultReason.AUTHORIZATION_ERROR_REACH_MAXIMUM_TRIES)
+                            .build();
+
     public LoginExecutor(
             final StatusUpdater statusUpdater,
             final AgentWorkerCommandContext context,
@@ -232,6 +254,11 @@ public class LoginExecutor {
             LoginResultReason reason = SUPPLEMENTAL_INFORMATION_ERROR_MAPPER.get(error);
             emitLoginResultEvent(
                     reason != null ? reason : LoginResultReason.SUPPLEMENTAL_INFO_ERROR_UNKNOWN);
+        } else if (ex instanceof AuthorizationException) {
+            AuthorizationError error = ((AuthorizationException) ex).getError();
+            LoginResultReason reason = AUTHORIZATION_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(
+                    reason != null ? reason : LoginResultReason.AUTHORIZATION_ERROR_UNKNOWN);
         } else {
             emitLoginResultEvent(LoginResultReason.UNKNOWN_ERROR);
         }
