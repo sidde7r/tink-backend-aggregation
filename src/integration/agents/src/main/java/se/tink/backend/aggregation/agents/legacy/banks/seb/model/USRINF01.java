@@ -25,4 +25,8 @@ public class USRINF01 {
 
     @JsonProperty("STATUS")
     public String STATUS;
+
+    // 12-digit personnummer
+    @JsonProperty("SEB_BID_USERID12")
+    public String bankIdUserId;
 }
