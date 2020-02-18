@@ -9,9 +9,11 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -102,6 +104,16 @@ public class LoginExecutor {
                                     ThirdPartyAppError.ALREADY_IN_PROGRESS,
                                     LoginResultReason.THIRD_PARTY_APP_ERROR_ALREADY_IN_PROGRESS)
                             .build();
+
+    private static final ImmutableMap<SessionError, LoginResultReason> SESSION_ERROR_MAPPER =
+            ImmutableMap.<SessionError, LoginResultReason>builder()
+                    .put(
+                            SessionError.SESSION_EXPIRED,
+                            LoginResultReason.SESSION_ERROR_SESSION_EXPIRED)
+                    .put(
+                            SessionError.SESSION_ALREADY_ACTIVE,
+                            LoginResultReason.SESSION_ERROR_SESSION_ALREADY_ACTIVE)
+                    .build();
 
     public LoginExecutor(
             final StatusUpdater statusUpdater,
@@ -201,6 +213,10 @@ public class LoginExecutor {
             LoginResultReason reason = THIRD_PARTY_APP_ERROR_MAPPER.get(error);
             emitLoginResultEvent(
                     reason != null ? reason : LoginResultReason.THIRD_PARTY_APP_ERROR_UNKNOWN);
+        } else if (ex instanceof SessionException) {
+            SessionError error = ((SessionException) ex).getError();
+            LoginResultReason reason = SESSION_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(reason != null ? reason : LoginResultReason.SESSION_ERROR_UNKNOWN);
         } else {
             emitLoginResultEvent(LoginResultReason.UNKNOWN_ERROR);
         }
