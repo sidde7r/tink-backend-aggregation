@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
@@ -38,6 +39,7 @@ public class LoginAgentWorkerCommandTest {
     private MetricAction metricAction;
     private MetricAction metricActionLoginType;
     private MetricAction metricActionIsLoggedIn;
+    private LoginAgentEventProducer loginAgentEventProducer;
 
     @Before
     public void init() {
@@ -53,8 +55,10 @@ public class LoginAgentWorkerCommandTest {
         metricAction = Mockito.mock(MetricAction.class);
         metricActionLoginType = Mockito.mock(MetricAction.class);
         metricActionIsLoggedIn = Mockito.mock(MetricAction.class);
+        loginAgentEventProducer = Mockito.mock(LoginAgentEventProducer.class);
 
-        objectUnderTest = new LoginAgentWorkerCommand(context, state, metrics);
+        objectUnderTest =
+                new LoginAgentWorkerCommand(context, state, metrics, loginAgentEventProducer);
     }
 
     @Test

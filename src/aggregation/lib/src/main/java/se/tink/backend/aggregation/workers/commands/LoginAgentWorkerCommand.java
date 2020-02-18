@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -61,13 +62,15 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     private final User user;
     private Agent agent;
     private final SupplementalInformationController supplementalInformationController;
+    private final LoginAgentEventProducer loginAgentEventProducer;
 
     private InterProcessSemaphoreMutex lock;
 
     public LoginAgentWorkerCommand(
             AgentWorkerCommandContext context,
             LoginAgentWorkerCommandState state,
-            AgentWorkerCommandMetricState metrics) {
+            AgentWorkerCommandMetricState metrics,
+            LoginAgentEventProducer loginAgentEventProducer) {
         final CredentialsRequest request = context.getRequest();
         this.context = context;
         this.statusUpdater = context;
@@ -77,6 +80,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         this.user = request.getUser();
         this.supplementalInformationController =
                 new SupplementalInformationController(context, request.getCredentials());
+        this.loginAgentEventProducer = loginAgentEventProducer;
     }
 
     @Override
