@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.MetricActionComposite;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResultReason;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.core.MetricId;
@@ -65,6 +66,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     private final LoginAgentEventProducer loginAgentEventProducer;
 
     private InterProcessSemaphoreMutex lock;
+    private final long startTime;
 
     public LoginAgentWorkerCommand(
             AgentWorkerCommandContext context,
@@ -81,11 +83,27 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         this.supplementalInformationController =
                 new SupplementalInformationController(context, request.getCredentials());
         this.loginAgentEventProducer = loginAgentEventProducer;
+        this.startTime = System.nanoTime();
     }
 
     @Override
     public String getMetricName() {
         return MetricName.METRIC;
+    }
+
+    private void emitLoginResultEvent(LoginResultReason reason) {
+
+        long finishTime = System.nanoTime();
+        long elapsedTime = finishTime - startTime;
+
+        loginAgentEventProducer.sendLoginCompletedEvent(
+                context.getRequest().getCredentials().getProviderName(),
+                context.getCorrelationId(),
+                reason,
+                elapsedTime,
+                context.getAppId(),
+                context.getClusterId(),
+                context.getRequest().getCredentials().getUserId());
     }
 
     @Override
@@ -104,7 +122,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                                 .getString(
                                         "Invalid credentials status. Update the credentials before retrying the operation."));
                 result = AgentWorkerCommandResult.ABORT;
-
+                emitLoginResultEvent(LoginResultReason.CREDENTIALS_NOT_UPDATED_FOR_TRANSFER);
             } else {
                 Optional<Boolean> loggedIn = isLoggedIn();
                 if (!loggedIn.isPresent()) {
@@ -115,6 +133,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                     // If this is a BankID credentials, we need to take a lock around the login
                     // method.
                     result = AgentWorkerCommandResult.ABORT;
+                    emitLoginResultEvent(LoginResultReason.COULD_NOT_ACQUIRE_LOCK_FOR_BANKID_LOGIN);
                 } else {
                     result = login();
                 }
@@ -162,13 +181,12 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
                 log.info("We're already logged in. Moving along.");
-
+                emitLoginResultEvent(LoginResultReason.ALREADY_LOGGED_IN);
                 result = Boolean.TRUE;
             } else {
                 timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
                 log.debug("We're not logged in. Clear Session and Login in again.");
-
                 persistentAgent.clearLoginSession();
             }
         } catch (BankServiceException e) {
@@ -176,9 +194,14 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             action.unavailable();
             statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
             // couldn't determine isLoggedIn or not, return ABORT
+            emitLoginResultEvent(
+                    LoginResultReason
+                            .CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_BANK_SERVICE_ERROR);
             return Optional.empty();
         } catch (Exception e) {
             action.failed();
+            emitLoginResultEvent(
+                    LoginResultReason.CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_ERROR);
             throw e;
         } finally {
             stopCommandContexts(loadPersistentSessionTimerContexts);
@@ -212,7 +235,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                     statusUpdater.updateStatus(CredentialsStatus.UNCHANGED);
                     log.warn("Login failed due not able to acquire lock");
                     action.failed();
-
                     return false;
                 }
 
