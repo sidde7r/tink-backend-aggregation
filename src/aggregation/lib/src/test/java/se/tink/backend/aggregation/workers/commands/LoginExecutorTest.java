@@ -80,7 +80,7 @@ public class LoginExecutorTest {
 
         final FakeEventProducerServiceClient producerClient = new FakeEventProducerServiceClient();
         final LoginAgentEventProducer loginAgentEventProducer =
-                new LoginAgentEventProducer(producerClient);
+                new LoginAgentEventProducer(producerClient, true);
 
         LoginExecutor executor =
                 new LoginExecutor(
