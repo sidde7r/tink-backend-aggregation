@@ -263,7 +263,12 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 state.getTimerContexts(state.LOGIN_TIMER_NAME, credentials.getType());
 
         try {
-            return new LoginExecutor(statusUpdater, context, supplementalInformationController)
+            return new LoginExecutor(
+                            statusUpdater,
+                            context,
+                            supplementalInformationController,
+                            loginAgentEventProducer,
+                            startTime)
                     .executeLogin(
                             agent,
                             createLoginMetricAction(),
