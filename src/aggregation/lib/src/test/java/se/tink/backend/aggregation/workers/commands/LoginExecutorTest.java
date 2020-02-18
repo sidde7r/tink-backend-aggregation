@@ -59,11 +59,13 @@ public class LoginExecutorTest {
     public void init() throws Exception {}
 
     @Test
-    public void shouldEmitIncorrectCredentialsError() throws Exception {
+    public void eventProducerServiceShouldEmitProperEventWhenAgentGetsLoginError()
+            throws Exception {
 
-        AgentWorkerCommandContext context = Mockito.mock(AgentWorkerCommandContext.class);
-        CredentialsRequest request = Mockito.mock(CredentialsRequest.class);
-        Credentials credentials = Mockito.mock(Credentials.class);
+        // given
+        final AgentWorkerCommandContext context = Mockito.mock(AgentWorkerCommandContext.class);
+        final CredentialsRequest request = Mockito.mock(CredentialsRequest.class);
+        final Credentials credentials = Mockito.mock(Credentials.class);
 
         Mockito.when(context.getRequest()).thenReturn(request);
         Mockito.when(request.getCredentials()).thenReturn(credentials);
@@ -75,14 +77,18 @@ public class LoginExecutorTest {
         Mockito.when(context.getAppId()).thenReturn("dummy-app-id");
         Mockito.when(context.getClusterId()).thenReturn("dummy-cluster-id");
 
-        Agent agent = Mockito.mock(NextGenerationAgent.class);
+        final Agent agent = Mockito.mock(NextGenerationAgent.class);
         Mockito.doThrow(LoginError.INCORRECT_CREDENTIALS.exception()).when(agent).login();
 
         final FakeEventProducerServiceClient producerClient = new FakeEventProducerServiceClient();
         final LoginAgentEventProducer loginAgentEventProducer =
                 new LoginAgentEventProducer(producerClient, true);
 
-        LoginExecutor executor =
+        final BankIdLoginExceptionHandler handler = Mockito.mock(BankIdLoginExceptionHandler.class);
+        Mockito.when(handler.handleLoginException(Mockito.any(), Mockito.any()))
+                .thenReturn(Optional.of(AgentWorkerCommandResult.ABORT));
+
+        final LoginExecutor executor =
                 new LoginExecutor(
                         Mockito.mock(StatusUpdater.class),
                         context,
@@ -90,18 +96,15 @@ public class LoginExecutorTest {
                         loginAgentEventProducer,
                         0);
 
-        BankIdLoginExceptionHandler handler = Mockito.mock(BankIdLoginExceptionHandler.class);
-        Mockito.when(handler.handleLoginException(Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.of(AgentWorkerCommandResult.ABORT));
-
         Field field = LoginExecutor.class.getDeclaredField("loginExceptionHandlerChain");
-
         field.setAccessible(true);
         field.set(executor, Collections.singletonList(handler));
 
+        // when
         executor.executeLogin(
                 agent, Mockito.mock(MetricActionIface.class), Mockito.mock(Credentials.class));
 
+        // then
         Assert.assertEquals(
                 LoginResultReason.LOGIN_ERROR_INCORRECT_CREDENTIALS,
                 producerClient.getPostedData().unpack(AgentLoginCompletedEvent.class).getReason());
