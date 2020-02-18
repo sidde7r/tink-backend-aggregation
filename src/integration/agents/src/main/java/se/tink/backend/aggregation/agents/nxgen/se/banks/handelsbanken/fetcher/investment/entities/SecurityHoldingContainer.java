@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 
 @JsonObject
 public class SecurityHoldingContainer {
@@ -11,7 +11,7 @@ public class SecurityHoldingContainer {
     private SecurityHoldingIdentifier identifier;
     private String name;
 
-    public Optional<Instrument> toInstrument() {
+    public Optional<InstrumentModule> toInstrumentModule() {
         if (holdingDetail == null || holdingDetail.hasNoValue()) {
             return Optional.empty();
         }
@@ -19,12 +19,7 @@ public class SecurityHoldingContainer {
             return Optional.empty();
         }
 
-        Instrument tinkInstrument = new Instrument();
-        tinkInstrument.setType(identifier.getTinkType());
-        tinkInstrument.setRawType(identifier.getType());
-        tinkInstrument.setName(name);
-
-        return Optional.of(holdingDetail.applyTo(tinkInstrument));
+        return Optional.of(holdingDetail.applyTo(identifier, name));
     }
 
     @VisibleForTesting

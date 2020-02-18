@@ -2,9 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 
 @JsonObject
 public class CustodyHoldings {
@@ -16,28 +17,26 @@ public class CustodyHoldings {
     private HandelsbankenPerformance performance;
     private SecurityIdentifier securityIdentifier;
 
-    public Instrument applyTo(Instrument instrument) {
-        if (holdingQuantity == null || securityIdentifier == null) {
-            return instrument;
-        }
+    public InstrumentModule applyTo(SecurityHoldingIdentifier identifier, String name) {
 
         String isin = securityIdentifier.getIsinCode();
         String market = securityIdentifier.getMarket();
 
-        instrument.setIsin(isin);
-        instrument.setMarketPlace(market);
-        instrument.setUniqueIdentifier(isin + market);
-        instrument.setCurrency(securityIdentifier.getCurrency());
-        instrument.setQuantity(holdingQuantity.asDouble().orElse(null));
-        instrument.setAverageAcquisitionPrice(
-                HandelsbankenAmount.asDoubleOrElseNull(averagePurchasePrice));
-        instrument.setMarketValue(HandelsbankenAmount.asDoubleOrElseNull(marketValue));
-        instrument.setPrice(HandelsbankenAmount.asDoubleOrElseNull(marketPrice));
-        instrument.setProfit(
-                Optional.ofNullable(performance)
-                        .flatMap(HandelsbankenPerformance::asDouble)
-                        .orElse(null));
-        return instrument;
+        return InstrumentModule.builder()
+                .withType(identifier.getTinkType())
+                .withId(InstrumentIdModule.of(isin, market, name, isin))
+                .withMarketPrice(HandelsbankenAmount.asDoubleOrElseNull(marketPrice))
+                .withMarketValue(HandelsbankenAmount.asDoubleOrElseNull(marketValue))
+                .withAverageAcquisitionPrice(
+                        HandelsbankenAmount.asDoubleOrElseNull(averagePurchasePrice))
+                .withCurrency(securityIdentifier.getCurrency())
+                .withQuantity(holdingQuantity.asDouble().orElse(null))
+                .withProfit(
+                        Optional.ofNullable(performance)
+                                .flatMap(HandelsbankenPerformance::asDouble)
+                                .orElse(null))
+                .setRawType(identifier.getType())
+                .build();
     }
 
     public boolean hasNoValue() {

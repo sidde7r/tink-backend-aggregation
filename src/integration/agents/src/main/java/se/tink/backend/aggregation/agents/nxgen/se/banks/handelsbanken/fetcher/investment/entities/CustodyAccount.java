@@ -75,6 +75,10 @@ public class CustodyAccount extends BaseResponse {
         return type;
     }
 
+    public HandelsbankenAmount getMarketValue() {
+        return marketValue;
+    }
+
     @JsonIgnore
     public Amount getTinkAmount() {
         return Optional.ofNullable(marketValue)

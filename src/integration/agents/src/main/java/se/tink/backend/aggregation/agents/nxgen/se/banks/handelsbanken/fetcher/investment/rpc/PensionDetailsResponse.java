@@ -7,16 +7,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Currency;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.CustodyAccount;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionFund;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionSummary;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class PensionDetailsResponse extends BaseResponse {
@@ -29,30 +34,42 @@ public class PensionDetailsResponse extends BaseResponse {
     public InvestmentAccount toInvestmentAccount(
             HandelsbankenSEApiClient client, CustodyAccount custodyAccount) {
 
-        return InvestmentAccount.builder(custodyAccount.getCustodyAccountNumber())
-                .setAccountNumber(custodyAccount.getCustodyAccountNumber())
-                .setName(pensionName)
-                .setCashBalance(Amount.inSEK(0))
-                .setPortfolios(Collections.singletonList(toPortfolio(client, custodyAccount)))
+        final String identifer = custodyAccount.getCustodyAccountNumber();
+
+        return InvestmentAccount.nxBuilder()
+                .withPortfolios(
+                        Collections.singletonList(toPortfolioModule(client, custodyAccount)))
+                .withCashBalance(ExactCurrencyAmount.of(0.0, Currency.SEK))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(identifer)
+                                .withAccountNumber(identifer)
+                                .withAccountName(pensionName)
+                                .addIdentifier(AccountIdentifier.create(Type.TINK, identifer))
+                                .build())
                 .build();
     }
 
-    private Portfolio toPortfolio(HandelsbankenSEApiClient client, CustodyAccount custodyAccount) {
-        Portfolio portfolio = new Portfolio();
+    private PortfolioModule toPortfolioModule(
+            HandelsbankenSEApiClient client, CustodyAccount custodyAccount) {
 
-        portfolio.setUniqueIdentifier(custodyAccount.getCustodyAccountNumber());
-        portfolio.setType(getPortfolioType());
-        Amount totalValue = custodyAccount.getTinkAmount();
-        portfolio.setTotalValue(totalValue.getValue());
-        portfolio.setTotalProfit(getTotalProfit(totalValue));
-        portfolio.setInstruments(getInstruments(client));
-        return portfolio;
+        final String identifer = custodyAccount.getCustodyAccountNumber();
+        final Double totalValue = custodyAccount.getMarketValue().getAmount();
+
+        return PortfolioModule.builder()
+                .withType(getPortfolioType())
+                .withUniqueIdentifier(identifer)
+                .withCashValue(0)
+                .withTotalProfit(getTotalProfit(totalValue))
+                .withTotalValue(totalValue)
+                .withInstruments(getInstrumentModules(client))
+                .build();
     }
 
-    private Portfolio.Type getPortfolioType() {
+    private PortfolioType getPortfolioType() {
         if (Strings.isNullOrEmpty(pensionName)) {
             LOGGER.warn("Handelsbanken pension name not present.");
-            return Portfolio.Type.OTHER;
+            return PortfolioType.OTHER;
         }
 
         if (!pensionName
@@ -60,20 +77,20 @@ public class PensionDetailsResponse extends BaseResponse {
                 .startsWith(HandelsbankenSEConstants.Investments.KF_TYPE_PREFIX)) {
 
             LOGGER.warn("Handelsbanken unknown kapital portfolio type: {}", pensionName);
-            return Portfolio.Type.OTHER;
+            return PortfolioType.OTHER;
         }
 
-        return Portfolio.Type.KF;
+        return PortfolioType.KF;
     }
 
-    private double getTotalProfit(Amount totalValue) {
-        return totalValue.getValue()
+    private double getTotalProfit(Double totalValue) {
+        return totalValue
                 - Optional.ofNullable(summary)
                         .flatMap(HandelsbankenSEPensionSummary::toPaymentsMade)
                         .orElse(0d);
     }
 
-    private List<Instrument> getInstruments(HandelsbankenSEApiClient client) {
+    private List<InstrumentModule> getInstrumentModules(HandelsbankenSEApiClient client) {
         return Optional.ofNullable(funds)
                 .map(
                         funds ->
@@ -85,10 +102,10 @@ public class PensionDetailsResponse extends BaseResponse {
                 .orElseGet(Collections::emptyList);
     }
 
-    private Optional<Instrument> parseInstrument(
+    private Optional<InstrumentModule> parseInstrument(
             HandelsbankenSEApiClient client, HandelsbankenSEPensionFund fund) {
         return client.fundHoldingDetail(fund)
-                .flatMap(HandelsbankenSEFundAccountHoldingDetail::toInstrument);
+                .flatMap(HandelsbankenSEFundAccountHoldingDetail::toInstrumentModule);
     }
 
     @Override

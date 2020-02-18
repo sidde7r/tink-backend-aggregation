@@ -8,11 +8,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 
 public class SecurityHoldingContainerTest {
 
-    private Optional<Instrument> actual;
+    private Optional<InstrumentModule> actual;
     private CustodyHoldings holdingDetail;
     private Quantity holdingQuantity;
     private Double quantityValue;
@@ -95,6 +95,6 @@ public class SecurityHoldingContainerTest {
         if (holdingQuantity != null) {
             holdingQuantity.setQuantityFormatted(quantityValue);
         }
-        actual = securityHoldingContainer.toInstrument();
+        actual = securityHoldingContainer.toInstrumentModule();
     }
 }

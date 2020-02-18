@@ -6,16 +6,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Currency;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenPerformance;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.SecurityHoldingList;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 
 public class CustodyAccountResponse extends BaseResponse {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustodyAccountResponse.class);
@@ -31,11 +36,19 @@ public class CustodyAccountResponse extends BaseResponse {
     private List<SecurityHoldingList> holdingLists;
 
     public InvestmentAccount toInvestmentAccount(HandelsbankenSEApiClient client) {
-        return InvestmentAccount.builder(custodyAccountNumber)
-                .setAccountNumber(getAccountNumberBasedOnInvestmentType())
-                .setName(title)
-                .setCashBalance(Amount.inSEK(0))
-                .setPortfolios(Collections.singletonList(toPortfolio(client)))
+
+        return InvestmentAccount.nxBuilder()
+                .withPortfolios(Collections.singletonList(toPortfolioModule(client)))
+                .withZeroCashBalance(Currency.SEK)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getAccountNumberBasedOnInvestmentType())
+                                .withAccountNumber(getAccountNumberBasedOnInvestmentType())
+                                .withAccountName(title)
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                Type.TINK, getAccountNumberBasedOnInvestmentType()))
+                                .build())
                 .build();
     }
 
@@ -47,28 +60,28 @@ public class CustodyAccountResponse extends BaseResponse {
         return Portfolio.Type.ISK.equals(toType()) ? iskAccountNumber : custodyAccountNumber;
     }
 
-    private Portfolio toPortfolio(HandelsbankenSEApiClient client) {
-        Portfolio portfolio = new Portfolio();
+    private PortfolioModule toPortfolioModule(HandelsbankenSEApiClient client) {
 
-        portfolio.setRawType(type);
-        portfolio.setType(toType());
-        portfolio.setTotalProfit(
-                Optional.ofNullable(performance)
-                        .flatMap(HandelsbankenPerformance::asDouble)
-                        .orElse(null));
-        portfolio.setTotalValue(toMarketValue());
-        portfolio.setUniqueIdentifier(getAccountNumberBasedOnInvestmentType());
-        portfolio.setInstruments(toInstruments(client));
-
-        return portfolio;
+        return PortfolioModule.builder()
+                .withType(PortfolioType.ISK) // TODO
+                .withUniqueIdentifier(getAccountNumberBasedOnInvestmentType())
+                .withCashValue(toMarketValue())
+                .withTotalProfit(
+                        Optional.ofNullable(performance)
+                                .flatMap(HandelsbankenPerformance::asDouble)
+                                .orElse(null))
+                .withTotalValue(toMarketValue())
+                .withInstruments(toInstrumentModules(client))
+                .setRawType(type)
+                .build();
     }
 
-    private List<Instrument> toInstruments(HandelsbankenSEApiClient client) {
+    private List<InstrumentModule> toInstrumentModules(HandelsbankenSEApiClient client) {
         if (holdingLists == null) {
             return Collections.emptyList();
         }
         return holdingLists.stream()
-                .flatMap(securityHoldingList -> securityHoldingList.toInstruments(client))
+                .flatMap(securityHoldingList -> securityHoldingList.toInstrumentModules(client))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

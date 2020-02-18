@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.HandelsbankenSEFundAccountHoldingDetail;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class HandelsbankenSEFundAccountHoldingDetailTest {
@@ -451,9 +451,9 @@ public class HandelsbankenSEFundAccountHoldingDetailTest {
         HandelsbankenSEFundAccountHoldingDetail details =
                 SerializationUtils.deserializeFromString(
                         holdingResponse, HandelsbankenSEFundAccountHoldingDetail.class);
-        Optional<Instrument> instrument = details.toInstrument();
+        Optional<InstrumentModule> instrument = details.toInstrumentModule();
         assertTrue(instrument.isPresent());
-        assertEquals(new Double(182.2448904028436), instrument.get().getQuantity());
+        assertEquals(new Double(182.2448904028436), Optional.of(instrument.get().getQuantity()));
     }
 
     @Test
@@ -461,8 +461,8 @@ public class HandelsbankenSEFundAccountHoldingDetailTest {
         HandelsbankenSEFundAccountHoldingDetail details =
                 SerializationUtils.deserializeFromString(
                         holdingResponse2, HandelsbankenSEFundAccountHoldingDetail.class);
-        Optional<Instrument> instrument = details.toInstrument();
+        Optional<InstrumentModule> instrument = details.toInstrumentModule();
         assertTrue(instrument.isPresent());
-        assertEquals(new Double(0.47569984403158033), instrument.get().getQuantity());
+        assertEquals(new Double(0.47569984403158033), Optional.of(instrument.get().getQuantity()));
     }
 }

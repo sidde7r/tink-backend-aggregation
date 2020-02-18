@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEFundDetails;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 
 public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
 
@@ -15,42 +17,45 @@ public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
     private HandelsbankenAmount marketValue;
     private HandelsbankenAmount averageValueOfCost;
 
-    public Optional<Instrument> toInstrument() {
+    public Optional<InstrumentModule> toInstrumentModule() {
         return Optional.ofNullable(marketValue)
                 .map(HandelsbankenAmount::asDouble)
                 .filter(marketValue -> marketValue != 0d)
                 .map(
                         extractedMarketValue -> {
-                            Instrument instrument = new Instrument();
-                            instrument.setMarketValue(extractedMarketValue);
-                            instrument.setCurrency(this.marketValue.getCurrency());
-                            Optional<HandelsbankenSEFundDetails> details =
+                            final Optional<HandelsbankenSEFundDetails> details =
                                     Optional.ofNullable(this.fundDetails);
-                            String isin =
+                            final String name =
+                                    details.map(HandelsbankenSEFundDetails::getName).orElse(null);
+                            final String isin =
                                     Optional.ofNullable(this.isin)
                                             .orElse(
                                                     details.map(HandelsbankenSEFundDetails::getIsin)
                                                             .orElse(null));
-                            if (totalChange != null) {
-                                instrument.setProfit(totalChange.asDouble());
-                            }
-                            String marketPlace =
+                            final String marketPlace =
                                     details.map(HandelsbankenSEFundDetails::getExternalFundId)
                                             .orElse(null);
-                            instrument.setIsin(isin);
-                            instrument.setMarketPlace(marketPlace);
-                            instrument.setUniqueIdentifier(isin + marketPlace);
-                            instrument.setName(
-                                    details.map(HandelsbankenSEFundDetails::getName).orElse(null));
-                            instrument.setAverageAcquisitionPrice(
-                                    HandelsbankenAmount.asDoubleOrElseNull(averageValueOfCost));
-                            instrument.setQuantity(
-                                    details.flatMap(HandelsbankenSEFundDetails::parseNavAmount)
-                                            .filter(navAmount -> navAmount != 0d)
-                                            .map(navAmount -> extractedMarketValue / navAmount)
-                                            .orElse(null));
-                            instrument.setType(Instrument.Type.FUND);
-                            return instrument;
+                            return InstrumentModule.builder()
+                                    .withType(InstrumentType.FUND)
+                                    .withId(InstrumentIdModule.of(isin, marketPlace, name, isin))
+                                    .withMarketPrice(0.0)
+                                    .withMarketValue(extractedMarketValue)
+                                    .withAverageAcquisitionPrice(
+                                            HandelsbankenAmount.asDoubleOrElseNull(
+                                                    averageValueOfCost))
+                                    .withCurrency(this.marketValue.getCurrency())
+                                    .withQuantity(
+                                            details.flatMap(
+                                                            HandelsbankenSEFundDetails
+                                                                    ::parseNavAmount)
+                                                    .filter(navAmount -> navAmount != 0d)
+                                                    .map(
+                                                            navAmount ->
+                                                                    extractedMarketValue
+                                                                            / navAmount)
+                                                    .orElse(null))
+                                    .withProfit(totalChange.asDouble())
+                                    .build();
                         });
     }
 }
