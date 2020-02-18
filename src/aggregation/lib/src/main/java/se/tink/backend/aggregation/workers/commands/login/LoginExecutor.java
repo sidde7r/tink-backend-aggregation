@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -147,6 +149,38 @@ public class LoginExecutor {
                                     LoginResultReason.AUTHORIZATION_ERROR_REACH_MAXIMUM_TRIES)
                             .build();
 
+    private static final ImmutableMap<BankServiceError, LoginResultReason>
+            BANK_SERVICE_ERROR_MAPPER =
+                    ImmutableMap.<BankServiceError, LoginResultReason>builder()
+                            .put(
+                                    BankServiceError.NO_BANK_SERVICE,
+                                    LoginResultReason.BANK_SERVICE_ERROR_NO_BANK_SERVICE)
+                            .put(
+                                    BankServiceError.BANK_SIDE_FAILURE,
+                                    LoginResultReason.BANK_SERVICE_ERROR_BANK_SIDE_FAILURE)
+                            .put(
+                                    BankServiceError.ACCESS_EXCEEDED,
+                                    LoginResultReason.BANK_SERVICE_ERROR_ACCESS_EXCEEDED)
+                            .put(
+                                    BankServiceError.CONSENT_EXPIRED,
+                                    LoginResultReason.BANK_SERVICE_ERROR_CONSENT_EXPIRED)
+                            .put(
+                                    BankServiceError.CONSENT_INVALID,
+                                    LoginResultReason.BANK_SERVICE_ERROR_CONSENT_INVALID)
+                            .put(
+                                    BankServiceError.CONSENT_REVOKED_BY_USER,
+                                    LoginResultReason.BANK_SERVICE_ERROR_CONSENT_REVOKED_BY_USER)
+                            .put(
+                                    BankServiceError.CONSENT_REVOKED,
+                                    LoginResultReason.BANK_SERVICE_ERROR_CONSENT_REVOKED)
+                            .put(
+                                    BankServiceError.MULTIPLE_LOGIN,
+                                    LoginResultReason.BANK_SERVICE_ERROR_MULTIPLE_LOGIN)
+                            .put(
+                                    BankServiceError.SESSION_TERMINATED,
+                                    LoginResultReason.BANK_SERVICE_ERROR_SESSION_TERMINATED)
+                            .build();
+
     public LoginExecutor(
             final StatusUpdater statusUpdater,
             final AgentWorkerCommandContext context,
@@ -259,6 +293,11 @@ public class LoginExecutor {
             LoginResultReason reason = AUTHORIZATION_ERROR_MAPPER.get(error);
             emitLoginResultEvent(
                     reason != null ? reason : LoginResultReason.AUTHORIZATION_ERROR_UNKNOWN);
+        } else if (ex instanceof BankServiceException) {
+            BankServiceError error = ((BankServiceException) ex).getError();
+            LoginResultReason reason = BANK_SERVICE_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(
+                    reason != null ? reason : LoginResultReason.BANK_SERVICE_ERROR_UNKNOWN);
         } else {
             emitLoginResultEvent(LoginResultReason.UNKNOWN_ERROR);
         }
