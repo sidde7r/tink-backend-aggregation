@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import java.util.Objects;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +133,24 @@ public class AggregationControllerAggregationClient {
 
     public Response updateCredentials(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
+        if (Objects.equals(request.getCredentials().getProviderName(), "nl-rabobank-oauth2")) {
+            return updateCredentialsInsistently(hostConfiguration, request);
+        }
         return getUpdateService(hostConfiguration).updateCredentials(request);
+    }
+
+    /** AAP-112: Retry mechanism to mitigate failing refresh token behavior for Rabobank. */
+    private Response updateCredentialsInsistently(
+            HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
+        try {
+            return getUpdateService(hostConfiguration).updateCredentials(request);
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus() >= 500) {
+                // Give it one more chance!
+                return getUpdateService(hostConfiguration).updateCredentials(request);
+            }
+            throw e;
+        }
     }
 
     public Response updateSignableOperation(
