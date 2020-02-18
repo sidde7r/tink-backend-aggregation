@@ -7,7 +7,9 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -24,7 +26,7 @@ public class LoginExecutor {
     private long loginWorkerStartTimestamp;
     private AgentWorkerCommandContext context;
 
-    private static final ImmutableMap<LoginError, LoginResultReason> loginErrorMapper =
+    private static final ImmutableMap<LoginError, LoginResultReason> LOGIN_ERROR_MAPPER =
             ImmutableMap.<LoginError, LoginResultReason>builder()
                     .put(LoginError.NOT_CUSTOMER, LoginResultReason.LOGIN_ERROR_NOT_CUSTOMER)
                     .put(LoginError.NOT_SUPPORTED, LoginResultReason.LOGIN_ERROR_NOT_SUPPORTED)
@@ -58,6 +60,31 @@ public class LoginExecutor {
                     .put(
                             LoginError.PASSWORD_CHANGED,
                             LoginResultReason.LOGIN_ERROR_PASSWORD_CHANGED)
+                    .build();
+
+    private static final ImmutableMap<BankIdError, LoginResultReason> BANKID_ERROR_MAPPER =
+            ImmutableMap.<BankIdError, LoginResultReason>builder()
+                    .put(BankIdError.CANCELLED, LoginResultReason.BANKID_ERROR_CANCELLED)
+                    .put(BankIdError.TIMEOUT, LoginResultReason.BANKID_ERROR_TIMEOUT)
+                    .put(BankIdError.NO_CLIENT, LoginResultReason.BANKID_ERROR_NO_CLIENT)
+                    .put(
+                            BankIdError.ALREADY_IN_PROGRESS,
+                            LoginResultReason.BANKID_ERROR_ALREADY_IN_PROGRESS)
+                    .put(BankIdError.INTERRUPTED, LoginResultReason.BANKID_ERROR_INTERRUPTED)
+                    .put(
+                            BankIdError.USER_VALIDATION_ERROR,
+                            LoginResultReason.BANKID_ERROR_USER_VALIDATION_ERROR)
+                    .put(
+                            BankIdError.AUTHORIZATION_REQUIRED,
+                            LoginResultReason.BANKID_ERROR_AUTHORIZATION_REQUIRED)
+                    .put(
+                            BankIdError.BANK_ID_UNAUTHORIZED_ISSUER,
+                            LoginResultReason.BANKID_ERROR_BANK_ID_UNAUTHORIZED_ISSUER)
+                    .put(BankIdError.BLOCKED, LoginResultReason.BANKID_ERROR_BLOCKED)
+                    .put(
+                            BankIdError.INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE,
+                            LoginResultReason
+                                    .BANKID_ERROR_INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE)
                     .build();
 
     public LoginExecutor(
@@ -147,8 +174,14 @@ public class LoginExecutor {
         // We emit proper login event that contains the proper reason for the error here
         if (ex instanceof LoginException) {
             LoginError error = ((LoginException) ex).getError();
-            LoginResultReason reason = loginErrorMapper.get(error);
+            LoginResultReason reason = LOGIN_ERROR_MAPPER.get(error);
             emitLoginResultEvent(reason != null ? reason : LoginResultReason.LOGIN_ERROR_UNKNOWN);
+        } else if (ex instanceof BankIdException) {
+            BankIdError error = ((BankIdException) ex).getError();
+            LoginResultReason reason = BANKID_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(reason != null ? reason : LoginResultReason.BANKID_ERROR_UNKNOWN);
+        } else {
+            emitLoginResultEvent(LoginResultReason.UNKNOWN_ERROR);
         }
 
         for (LoginExceptionHandler loginExceptionHandler : loginExceptionHandlerChain) {
