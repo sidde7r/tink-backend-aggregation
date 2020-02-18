@@ -14,9 +14,7 @@ public class SebConstants {
     public static class Urls {
         public static final String BASE = "https://mp.seb.se";
 
-        public static final URL FETCH_AUTOSTART_TOKEN =
-                new URL(BASE.concat(Endpoints.FETCH_AUTOSTART_TOKEN));
-        public static final URL COLLECT_BANKID = new URL(BASE.concat(Endpoints.COLLECT_BANKID));
+        public static final URL AUTHENTICATE = new URL(BASE.concat(Endpoints.AUTHENTICATIONS));
         public static final URL INITIATE_SESSION = new URL(BASE.concat(Endpoints.INITIATE_SESSION));
         public static final URL ACTIVATE_SESSION = new URL(BASE.concat(Endpoints.ACTIVATE_SESSION));
         public static final URL LIST_ACCOUNTS = new URL(BASE.concat(Endpoints.LIST_ACCOUNTS));
@@ -39,9 +37,7 @@ public class SebConstants {
     }
 
     public static class Endpoints {
-        public static final String FETCH_AUTOSTART_TOKEN = "/nauth2/Authentication/api/v1/bid/auth";
-        public static final String COLLECT_BANKID = "/nauth2/Authentication/api/v1/bid/";
-
+        public static final String AUTHENTICATIONS = "/auth/bid/v2/authentications";
         private static final String API_BASE = "/1000/ServiceFactory/PC_BANK/";
         public static final String LIST_INVESTMENT_ACCOUNTS =
                 API_BASE + "Tl_forsakringLista11Enga01.asmx/Execute";
@@ -71,6 +67,7 @@ public class SebConstants {
 
     public static class HeaderKeys {
         public static final String X_SEB_UUID = "x-seb-uuid";
+        public static final String X_SEB_CSRF = "x-seb-csrf";
     }
 
     public static class RequestBody {
@@ -79,15 +76,11 @@ public class SebConstants {
 
     public static class LoginCodes {
         // Strings for status comparison when logging in with BankID.
-        public static final String START_BANKID = "RFA1";
-        public static final String ALREADY_IN_PROGRESS = "RFA3";
-        public static final String USER_CANCELLED = "RFA6";
-        public static final String NO_CLIENT = "RFA8";
-        public static final String USER_SIGN = "RFA9";
-        public static final String AUTHENTICATED = "RFA100";
-        public static final String AUTHORIZATION_REQUIRED = "RFA101";
-        public static final String WAITING_FOR_BANKID = "RFA15A";
-        public static final String COLLECT_BANKID = "RFA102";
+        public static final String STATUS_COMPLETE = "complete";
+        public static final String STATUS_PENDING = "pending";
+        public static final String STATUS_FAILED = "failed";
+        public static final String HINT_FAILED = "start_failed";
+        public static final String HINT_CANCELLED = "user_cancel";
     }
 
     public static class InitResult {
