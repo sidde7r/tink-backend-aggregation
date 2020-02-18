@@ -143,10 +143,12 @@ public class AggregationControllerAggregationClient {
     private Response updateCredentialsInsistently(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
         try {
+            log.info("Trying to update credentials insistently...");
             return getUpdateService(hostConfiguration).updateCredentials(request);
         } catch (UniformInterfaceException e) {
+            log.warn("Attempt to update credentials insistently failed");
             if (e.getResponse().getStatus() >= 500) {
-                // Give it one more chance!
+                log.info("Retrying to update credentials insistently...");
                 return getUpdateService(hostConfiguration).updateCredentials(request);
             }
             throw e;
