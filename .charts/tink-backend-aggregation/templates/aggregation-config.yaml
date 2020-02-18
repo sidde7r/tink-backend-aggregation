@@ -91,6 +91,10 @@ data:
 
     isMultiClientDevelopment: false
 
+    {{ if .Values.sendDataTrackingEvents }}
+    sendDataTrackingEvents: {{ .Values.sendDataTrackingEvents }}
+    {{ end }}
+
     {{- if .Values.clients }}
     provisionClientsConfig:
       clients:{{ .Values.clients | toYaml | trimSuffix "\n" | nindent 8 }}

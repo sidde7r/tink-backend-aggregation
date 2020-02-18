@@ -52,7 +52,8 @@ public final class DataTrackerEventProducerTest {
         // given
         final FakeEventProducerServiceClient producerClient = new FakeEventProducerServiceClient();
 
-        final DataTrackerEventProducer producer = new DataTrackerEventProducer(producerClient);
+        final DataTrackerEventProducer producer =
+                new DataTrackerEventProducer(producerClient, true);
 
         final String providerName = "hoy";
         final String correlationId = "hoy";
