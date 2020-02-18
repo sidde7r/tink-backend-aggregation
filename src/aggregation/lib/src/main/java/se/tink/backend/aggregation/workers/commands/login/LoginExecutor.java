@@ -9,8 +9,10 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
@@ -86,6 +88,20 @@ public class LoginExecutor {
                             LoginResultReason
                                     .BANKID_ERROR_INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE)
                     .build();
+
+    private static final ImmutableMap<ThirdPartyAppError, LoginResultReason>
+            THIRD_PARTY_APP_ERROR_MAPPER =
+                    ImmutableMap.<ThirdPartyAppError, LoginResultReason>builder()
+                            .put(
+                                    ThirdPartyAppError.CANCELLED,
+                                    LoginResultReason.THIRD_PARTY_APP_ERROR_CANCELLED)
+                            .put(
+                                    ThirdPartyAppError.TIMED_OUT,
+                                    LoginResultReason.THIRD_PARTY_APP_ERROR_TIMED_OUT)
+                            .put(
+                                    ThirdPartyAppError.ALREADY_IN_PROGRESS,
+                                    LoginResultReason.THIRD_PARTY_APP_ERROR_ALREADY_IN_PROGRESS)
+                            .build();
 
     public LoginExecutor(
             final StatusUpdater statusUpdater,
@@ -180,6 +196,11 @@ public class LoginExecutor {
             BankIdError error = ((BankIdException) ex).getError();
             LoginResultReason reason = BANKID_ERROR_MAPPER.get(error);
             emitLoginResultEvent(reason != null ? reason : LoginResultReason.BANKID_ERROR_UNKNOWN);
+        } else if (ex instanceof ThirdPartyAppException) {
+            ThirdPartyAppError error = ((ThirdPartyAppException) ex).getError();
+            LoginResultReason reason = THIRD_PARTY_APP_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(
+                    reason != null ? reason : LoginResultReason.THIRD_PARTY_APP_ERROR_UNKNOWN);
         } else {
             emitLoginResultEvent(LoginResultReason.UNKNOWN_ERROR);
         }
