@@ -5,7 +5,6 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -196,10 +195,10 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             if (e.getError() instanceof ThirdPartyAppError
                     && ThirdPartyAppError.TIMED_OUT.equals(e.getError())) {
                 throw UkOpenBankingV31PisUtils.createCancelledTransferException(
-                        e, EndUserMessage.PIS_AUTHORISATION_TIMEOUT);
+                        EndUserMessage.PIS_AUTHORISATION_TIMEOUT);
             }
 
-            handlePaymentAuthorizationErrors(e);
+            handlePaymentAuthorizationErrors();
         }
 
         return paymentAuthenticator.getPaymentResponse();
@@ -209,28 +208,28 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
      * Handles known types of openID errors. If openID error type is not known a generic transfer
      * failed exception is thrown.
      */
-    private void handlePaymentAuthorizationErrors(AgentExceptionImpl e) {
-        OpenIdError openIdError = getOpenIdErrorOrThrowTransferFailedException(e);
+    private void handlePaymentAuthorizationErrors() {
+        OpenIdError openIdError = getOpenIdErrorOrThrowTransferFailedException();
 
         String errorType = openIdError.getErrorType();
         String errorMessage = openIdError.getErrorMessage();
 
         if (isKnownOpenIdError(errorType)) {
             String endUserMessage = UkOpenBankingV31PisUtils.convertToEndUserMessage(errorMessage);
-            throw UkOpenBankingV31PisUtils.createCancelledTransferException(e, endUserMessage);
+            throw UkOpenBankingV31PisUtils.createCancelledTransferException(endUserMessage);
         }
 
-        throw UkOpenBankingV31PisUtils.createFailedTransferException(e);
+        throw UkOpenBankingV31PisUtils.createFailedTransferException();
     }
 
     /**
      * Returns an openIdError which contains information from the callback data. If not present
      * throws a generic payment failed exception.
      */
-    private OpenIdError getOpenIdErrorOrThrowTransferFailedException(AgentExceptionImpl e) {
+    private OpenIdError getOpenIdErrorOrThrowTransferFailedException() {
         return apiClient
                 .getOpenIdError()
-                .orElseThrow(() -> UkOpenBankingV31PisUtils.createFailedTransferException(e));
+                .orElseThrow(UkOpenBankingV31PisUtils::createFailedTransferException);
     }
 
     /**

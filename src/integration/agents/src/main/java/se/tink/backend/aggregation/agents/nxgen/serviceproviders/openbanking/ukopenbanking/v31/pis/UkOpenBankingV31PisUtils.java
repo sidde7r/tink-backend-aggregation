@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentExceptionImpl;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.EndUserMessage;
 import se.tink.libraries.payment.rpc.Reference;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -50,21 +49,18 @@ public class UkOpenBankingV31PisUtils {
         return EndUserMessage.PAYMENT_NOT_AUTHORISED_BY_USER;
     }
 
-    static TransferExecutionException createCancelledTransferException(
-            AgentExceptionImpl e, String endUserMessage) {
+    static TransferExecutionException createCancelledTransferException(String endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage("Payment cancelled - user did not authorise payment.")
                 .setEndUserMessage(endUserMessage)
-                .setException(e)
                 .build();
     }
 
-    static TransferExecutionException createFailedTransferException(AgentExceptionImpl e) {
+    static TransferExecutionException createFailedTransferException() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(
                         "Payment failed - authorisation of payment failed, needs further investigation.")
                 .setEndUserMessage("Authorisation of payment failed.")
-                .setException(e)
                 .build();
     }
 }
