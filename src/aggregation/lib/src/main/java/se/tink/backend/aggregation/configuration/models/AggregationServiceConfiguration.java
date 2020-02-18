@@ -46,6 +46,8 @@ public class AggregationServiceConfiguration extends Configuration {
     private ProviderConfigurationServiceConfiguration providerConfigurationServiceConfiguration =
             new ProviderConfigurationServiceConfiguration();
 
+    @JsonProperty private boolean sendDataTrackingEvents = false;
+
     public AgentsServiceConfiguration getAgentsServiceConfiguration() {
         return agentsServiceConfiguration;
     }
@@ -113,5 +115,9 @@ public class AggregationServiceConfiguration extends Configuration {
     public ProviderConfigurationServiceConfiguration
             getProviderConfigurationServiceConfiguration() {
         return providerConfigurationServiceConfiguration;
+    }
+
+    public boolean isSendDataTrackingEvents() {
+        return sendDataTrackingEvents;
     }
 }

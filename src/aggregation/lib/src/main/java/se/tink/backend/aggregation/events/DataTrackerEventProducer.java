@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.events;
 import com.google.protobuf.Any;
 import java.time.Instant;
 import javax.inject.Inject;
+import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto.DataTrackerEvent;
@@ -12,12 +13,15 @@ import se.tink.libraries.serialization.proto.utils.ProtobufTypeUtil;
 public class DataTrackerEventProducer {
 
     private final EventProducerServiceClient eventProducerServiceClient;
-    private final boolean enabled = false;
+    private final boolean enabled;
     private static final Logger log = LoggerFactory.getLogger(DataTrackerEventProducer.class);
 
     @Inject
-    public DataTrackerEventProducer(EventProducerServiceClient eventProducerServiceClient) {
+    public DataTrackerEventProducer(
+            EventProducerServiceClient eventProducerServiceClient,
+            @Named("sendDataTrackingEvents") boolean sendDataTrackingEvents) {
         this.eventProducerServiceClient = eventProducerServiceClient;
+        this.enabled = sendDataTrackingEvents;
     }
 
     public void sendDataTrackerEvent(
