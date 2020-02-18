@@ -22,6 +22,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.error.NemIdError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -181,6 +183,11 @@ public class LoginExecutor {
                                     LoginResultReason.BANK_SERVICE_ERROR_SESSION_TERMINATED)
                             .build();
 
+    private static final ImmutableMap<NemIdError, LoginResultReason> NEM_ID_ERROR_MAPPER =
+            ImmutableMap.<NemIdError, LoginResultReason>builder()
+                    .put(NemIdError.INTERRUPTED, LoginResultReason.NEMID_ERROR_INTERRUPTED)
+                    .build();
+
     public LoginExecutor(
             final StatusUpdater statusUpdater,
             final AgentWorkerCommandContext context,
@@ -298,6 +305,10 @@ public class LoginExecutor {
             LoginResultReason reason = BANK_SERVICE_ERROR_MAPPER.get(error);
             emitLoginResultEvent(
                     reason != null ? reason : LoginResultReason.BANK_SERVICE_ERROR_UNKNOWN);
+        } else if (ex instanceof NemIdException) {
+            NemIdError error = ((NemIdException) ex).getError();
+            LoginResultReason reason = NEM_ID_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(reason != null ? reason : LoginResultReason.NEMID_ERROR_UNKNOWN);
         } else {
             emitLoginResultEvent(LoginResultReason.UNKNOWN_ERROR);
         }
