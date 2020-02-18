@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -36,12 +38,11 @@ public class DemoAccountFactory {
                                 .withType(TransactionalAccountType.CHECKING)
                                 .withoutFlags()
                                 .withBalance(
-                                        BalanceModule.of(
-                                                ExactCurrencyAmount.of(
-                                                        DemoConstants.getSekToCurrencyConverter(
-                                                                currency,
-                                                                transactionAccount.getBalance()),
-                                                        currency)))
+                                        getBalanceModule(
+                                                currency,
+                                                transactionAccount.getBalance(),
+                                                transactionAccount.getCreditLimit(),
+                                                transactionAccount.getAvailableBalance()))
                                 .withId(
                                         getIdModule(
                                                 transactionAccount.getIdentifiers(),
@@ -59,13 +60,11 @@ public class DemoAccountFactory {
                             .withType(TransactionalAccountType.SAVINGS)
                             .withoutFlags()
                             .withBalance(
-                                    BalanceModule.of(
-                                            ExactCurrencyAmount.of(
-                                                    DemoConstants.getSekToCurrencyConverter(
-                                                            currency,
-                                                            savingsAccountDefinition
-                                                                    .getAccountBalance()),
-                                                    currency)))
+                                    getBalanceModule(
+                                            currency,
+                                            savingsAccountDefinition.getAccountBalance(),
+                                            savingsAccountDefinition.getCreditLimit(),
+                                            savingsAccountDefinition.getAvailableBalance()))
                             .withId(
                                     getIdModule(
                                             savingsAccountDefinition.getIdentifiers(),
@@ -79,6 +78,34 @@ public class DemoAccountFactory {
         return accounts;
     }
 
+    private static BalanceModule getBalanceModule(
+            String currency,
+            double accountBalance,
+            Optional<Double> creditLimit,
+            Optional<Double> availableBalance) {
+        BalanceBuilderStep builder =
+                BalanceModule.builder()
+                        .withBalance(
+                                ExactCurrencyAmount.of(
+                                        DemoConstants.getSekToCurrencyConverter(
+                                                currency, accountBalance),
+                                        currency));
+        creditLimit.ifPresent(
+                limit ->
+                        builder.setCreditLimit(
+                                ExactCurrencyAmount.of(
+                                        DemoConstants.getSekToCurrencyConverter(currency, limit),
+                                        currency)));
+        availableBalance.ifPresent(
+                available ->
+                        builder.setAvailableBalance(
+                                ExactCurrencyAmount.of(
+                                        DemoConstants.getSekToCurrencyConverter(
+                                                currency, available),
+                                        currency)));
+        return builder.build();
+    }
+
     private static IdModule getIdModule(
             List<AccountIdentifier> identifiers, String accountId, String accountName) {
         IdBuildStep idBuilder =
@@ -87,9 +114,12 @@ public class DemoAccountFactory {
                         .withAccountNumber(accountId)
                         .withAccountName(accountName)
                         .addIdentifier(identifiers.get(0));
-        // add the rest of identifiers
-        for (int i = 1; i < identifiers.size(); i++) {
-            idBuilder = idBuilder.addIdentifier(identifiers.get(i));
+
+        if (identifiers.size() > 1) {
+            // add the rest of identifiers
+            for (int i = 1; i < identifiers.size(); i++) {
+                idBuilder = idBuilder.addIdentifier(identifiers.get(i));
+            }
         }
         return idBuilder.build();
     }
