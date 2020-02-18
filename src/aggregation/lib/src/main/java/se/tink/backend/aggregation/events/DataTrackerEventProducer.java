@@ -12,6 +12,7 @@ import se.tink.libraries.serialization.proto.utils.ProtobufTypeUtil;
 public class DataTrackerEventProducer {
 
     private final EventProducerServiceClient eventProducerServiceClient;
+    private final boolean enabled = false;
     private static final Logger log = LoggerFactory.getLogger(DataTrackerEventProducer.class);
 
     @Inject
@@ -28,6 +29,10 @@ public class DataTrackerEventProducer {
             String clusterId,
             String userId) {
         try {
+            if (!enabled) {
+                return;
+            }
+
             DataTrackerEvent event =
                     DataTrackerEvent.newBuilder()
                             .setTimestamp(ProtobufTypeUtil.toProtobufTimestamp(Instant.now()))
