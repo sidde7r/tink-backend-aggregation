@@ -4,6 +4,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/danskebank",
+        "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/identity_data",
         "//src/integration/lib",

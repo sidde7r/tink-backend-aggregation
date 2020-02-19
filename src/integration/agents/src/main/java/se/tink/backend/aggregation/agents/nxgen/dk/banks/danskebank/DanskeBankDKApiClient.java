@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -7,8 +8,10 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class DanskeBankDKApiClient extends DanskeBankApiClient {
     protected DanskeBankDKApiClient(
-            TinkHttpClient client, DanskeBankDKConfiguration configuration) {
-        super(client, configuration);
+            TinkHttpClient client,
+            DanskeBankDKConfiguration configuration,
+            Credentials credentials) {
+        super(client, configuration, credentials);
     }
 
     @Override

@@ -24,7 +24,8 @@ public class DanskeBankSEAgent extends DanskeBankAgent {
     @Override
     protected DanskeBankApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
-        return new DanskeBankSEApiClient(client, (DanskeBankSEConfiguration) configuration);
+        return new DanskeBankSEApiClient(
+                client, (DanskeBankSEConfiguration) configuration, credentials);
     }
 
     protected void configureHttpClient(TinkHttpClient client) {

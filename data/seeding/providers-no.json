@@ -899,6 +899,14 @@
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter a valid PIN code",
                     "sensitive": true
+                },
+                {
+                    "description": "BankId password",
+                    "masked": true,
+                    "minLength": 4,
+                    "name": "bankid-password",
+                    "numeric": false,
+                    "sensitive": true
                 }
             ],
             "financialInstitutionId": "dummyId",

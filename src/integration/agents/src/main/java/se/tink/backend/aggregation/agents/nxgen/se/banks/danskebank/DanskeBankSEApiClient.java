@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.InitRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.InitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid.rpc.PollRequest;
@@ -9,8 +10,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class DanskeBankSEApiClient extends DanskeBankApiClient {
-    DanskeBankSEApiClient(TinkHttpClient client, DanskeBankSEConfiguration configuration) {
-        super(client, configuration);
+    DanskeBankSEApiClient(
+            TinkHttpClient client,
+            DanskeBankSEConfiguration configuration,
+            Credentials credentials) {
+        super(client, configuration, credentials);
     }
 
     public InitResponse initiateBankIdLogin(String logonPackage) {

@@ -533,7 +533,6 @@ java_library(
         "//third_party:org_xerial_snappy_snappy_java",
         "@com_sun_jersey_jersey_client//jar",
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
-        "@selenium//:com_codeborne_phantomjsdriver",
         "@tink_backend//src/libraries/endpoint_configuration/src/main/java/se/tink/libraries/endpoints/dropwizard",
         "@tink_backend//src/libraries/endpoint_configuration/src/main/java/se/tink/libraries/endpoints/model",
         "@tink_backend//src/libraries/event_producer_service_client",
