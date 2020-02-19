@@ -64,6 +64,7 @@ debugLogFrequencyPercent: 100
 
 eventProducerServiceConfiguration:
   url: event-producer-service.internal.staging.aggregation.tink.network
+sendDataTrackingEvents: true
 
 featureFlags:
   esProxy: true
