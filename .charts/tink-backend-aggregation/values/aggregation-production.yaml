@@ -431,7 +431,7 @@ tppSecretsServiceConfiguration:
 debugLogFrequencyPercent: 100
 
 eventProducerServiceConfiguration:
-  url: event-producer-service.event-producer-service:443
+  url: event-producer-service.internal.production.aggregation.tink.network
 
 featureFlags:
   esProxy: true
