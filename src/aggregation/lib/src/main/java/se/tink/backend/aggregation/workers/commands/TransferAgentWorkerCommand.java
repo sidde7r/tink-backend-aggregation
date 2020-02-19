@@ -193,11 +193,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             return AgentWorkerCommandResult.ABORT;
         } catch (CreditorValidationException e) {
-            metricAction.unavailable();
+            metricAction.cancelled();
             log.info(
                     transfer,
                     String.format(
-                            "Could not execute transfer due to creditor validation failure. %s",
+                            "Could not execute payment due to creditor validation failure. %s",
                             e.getMessage()));
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
@@ -207,42 +207,42 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             return AgentWorkerCommandResult.ABORT;
         } catch (DateValidationException e) {
-            metricAction.unavailable();
+            metricAction.cancelled();
 
             log.info(
                     transfer,
                     String.format(
-                            "Could not execute transfer due to date validation failure. %s",
+                            "Could not execute payment due to date validation failure. %s",
                             e.getMessage()));
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("Could not validate the date you entered for the transfer."));
+                    catalog.getString("Could not validate the date you entered for the payment."));
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
         } catch (InsufficientFundsException e) {
-            metricAction.unavailable();
+            metricAction.cancelled();
 
             log.info(
                     transfer,
                     String.format(
-                            "Could not execute transfer due insufficient funds. %s",
+                            "Could not execute payment due insufficient funds. %s",
                             e.getMessage()));
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("Could not execute transfer due insufficient funds."));
+                    catalog.getString("Could not execute payment due insufficient funds."));
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
         } catch (DebtorValidationException e) {
-            metricAction.unavailable();
+            metricAction.cancelled();
 
             log.info(
                     transfer,
                     String.format(
-                            "Could not execute transfer due to debtor validation failure. %s",
+                            "Could not execute payment due to debtor validation failure. %s",
                             e.getMessage()));
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
@@ -253,64 +253,64 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             return AgentWorkerCommandResult.ABORT;
         } catch (ReferenceValidationException e) {
-            metricAction.unavailable();
+            metricAction.cancelled();
 
             log.info(
                     transfer,
                     String.format(
-                            "Could not execute transfer due to reference validation failure. %s",
+                            "Could not execute payment due to reference validation failure. %s",
                             e.getMessage()));
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("The reference you provided for the transfer is not valid."));
+                    catalog.getString("The reference you provided for the payment is not valid."));
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
         } catch (PaymentAuthenticationException e) {
-            metricAction.unavailable();
+            metricAction.cancelled();
 
             log.info(
                     transfer,
                     String.format(
-                            "Could not execute transfer due to payment authentication failure. %s",
+                            "Could not execute payment due to payment authentication failure. %s",
                             e.getMessage()));
 
-            signableOperation.setStatus(SignableOperationStatuses.FAILED);
+            signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(catalog.getString("Payment authentication failed."));
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
         } catch (PaymentAuthorizationException e) {
-            metricAction.unavailable();
+            metricAction.cancelled();
 
             log.info(
                     transfer,
                     String.format(
-                            "Could not execute transfer due to payment authorization failure. %s",
+                            "Could not execute payment due to authorization failure. %s",
                             e.getMessage()));
 
-            signableOperation.setStatus(SignableOperationStatuses.FAILED);
+            signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(catalog.getString("Payment authorization failed."));
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
         } catch (PaymentValidationException e) {
-            metricAction.unavailable();
+            metricAction.cancelled();
 
             log.info(
                     transfer,
                     String.format(
-                            "Could not execute transfer due to payment validation failure. %s",
+                            "Could not execute payment due to validation failure. %s",
                             e.getMessage()));
 
-            signableOperation.setStatus(SignableOperationStatuses.FAILED);
+            signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(catalog.getString("Payment validation failed."));
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
         } catch (PaymentException e) {
-            metricAction.unavailable();
+            metricAction.failed();
 
             log.info(
                     transfer,
