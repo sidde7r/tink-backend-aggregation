@@ -89,6 +89,8 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
                 "Authorisation of payment timed out. Please try again.";
         public static final String PIS_AUTHORISATION_FAILED_USER_ERROR =
                 "Authorisation of payment failed. Please try again.";
+        public static final String PAYMENT_REJECTED_BY_BANK =
+                "The payment was rejected by the bank.";
 
         // Generic message for when we don't get an error description with details of why the
         // payment wasn't authorised.
@@ -139,5 +141,9 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
 
     public static class Error {
         public static final String ACCESS_DENIED = "access_denied";
+    }
+
+    public static class PaymentStatusCode {
+        public static final String AWAITING_AUTHORISATION = "AwaitingAuthorisation";
     }
 }

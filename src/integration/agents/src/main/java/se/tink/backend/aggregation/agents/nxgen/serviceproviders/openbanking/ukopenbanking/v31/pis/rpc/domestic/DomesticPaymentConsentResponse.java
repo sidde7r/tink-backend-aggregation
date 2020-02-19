@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.DomesticPaymentConsentResponseData;
@@ -17,7 +18,16 @@ public class DomesticPaymentConsentResponse {
     private Links links;
     private DomesticPaymentConsentResponseData data;
 
+    public DomesticPaymentConsentResponseData getData() {
+        return data;
+    }
+
     public PaymentResponse toTinkPaymentResponse() {
         return data.toTinkPaymentResponse();
+    }
+
+    @JsonIgnore
+    public boolean hasStatusAwaitingAuthorisation() {
+        return data.hasStatusAwaitingAuthorisation();
     }
 }
