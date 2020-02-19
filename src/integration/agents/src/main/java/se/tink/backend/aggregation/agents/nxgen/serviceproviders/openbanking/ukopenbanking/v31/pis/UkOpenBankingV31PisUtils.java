@@ -51,7 +51,7 @@ public class UkOpenBankingV31PisUtils {
 
     static TransferExecutionException createCancelledTransferException(String endUserMessage) {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage("Payment cancelled - user did not authorise payment.")
+                .setMessage(endUserMessage)
                 .setEndUserMessage(endUserMessage)
                 .build();
     }

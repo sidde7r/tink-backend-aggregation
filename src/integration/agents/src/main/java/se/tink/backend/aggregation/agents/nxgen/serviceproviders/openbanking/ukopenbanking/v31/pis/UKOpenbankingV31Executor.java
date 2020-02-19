@@ -340,6 +340,14 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                                 endToEndIdentification,
                                 instructionIdentification);
 
+        // Should be handled on a higher level than here, but don't want to pollute the
+        // payment controller with TransferExecutionException usage. Ticket PAY2-188 will
+        // address handling the REJECTED status, then we can remove the logic from here.
+        if (PaymentStatus.REJECTED.equals(paymentResponse.getPayment().getStatus())) {
+            throw UkOpenBankingV31PisUtils.createCancelledTransferException(
+                    EndUserMessage.PAYMENT_REJECTED_BY_BANK);
+        }
+
         return new PaymentMultiStepResponse(
                 paymentResponse, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
     }

@@ -41,11 +41,6 @@ public class UkOpenBankingV31Pis implements UkOpenBankingPis {
             UkOpenBankingApiClient apiClient, PaymentRequest paymentRequest)
             throws TransferExecutionException {
 
-        // TODO: Currently we only support domestic transfers. In the future, we need to detect if
-        // the payment is domestic or international and support both of them.
-
-        // TODO: What to do with commented-out fields below?
-
         DomesticPaymentConsentRequest consentRequest =
                 new DomesticPaymentConsentRequest(paymentRequest.getPayment());
 
@@ -55,18 +50,16 @@ public class UkOpenBankingV31Pis implements UkOpenBankingPis {
                         consentRequest,
                         DomesticPaymentConsentResponse.class);
 
+        // Our flow has hardcoded a SCA redirect after this request so we can only continue if
+        // the status is AwaitingAuthorisation.
+        if (!consentResponse.hasStatusAwaitingAuthorisation()) {
+            throw new IllegalStateException(
+                    String.format(
+                            "Consent resource status was %s, expected status AwaitingAuthorisation.",
+                            consentResponse.getData().getStatus()));
+        }
+
         return consentResponse.toTinkPaymentResponse();
-
-        // TODO: Do we need to go check the status of the consent (see below)?
-
-        /*
-           Step 6: Get Payment-Order/Consent Status
-
-           The PISP can check the status of the payment-order consent
-           (with the ConsentId) or payment-order resource (with the
-           payment-order resource identifier). This is carried out by making a
-           GET request to the payment-order consent or payment-order resource.
-        */
     }
 
     @Override
