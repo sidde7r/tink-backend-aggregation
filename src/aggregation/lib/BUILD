@@ -532,6 +532,7 @@ java_library(
         "//third_party:org_springframework_spring_expression",
         "//third_party:org_xerial_snappy_snappy_java",
         "@com_sun_jersey_jersey_client//jar",
+        "@com_tink_api_grpc//event_producer_service:event_producer_service_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@tink_backend//src/libraries/endpoint_configuration/src/main/java/se/tink/libraries/endpoints/dropwizard",
         "@tink_backend//src/libraries/endpoint_configuration/src/main/java/se/tink/libraries/endpoints/model",
