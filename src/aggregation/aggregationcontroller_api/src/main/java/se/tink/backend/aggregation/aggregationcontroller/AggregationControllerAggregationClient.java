@@ -5,13 +5,13 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.UniformInterfaceException;
 import java.util.Objects;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.utils.jersey.filter.JerseyTimeoutRetryFilter;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.AggregationControllerService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.CredentialsService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.IdentityAggregatorService;
@@ -42,6 +42,8 @@ public class AggregationControllerAggregationClient {
     private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
             ImmutableSet.of("oxford-staging", "oxford-production");
 
+    private boolean isRetryEnabled = false;
+
     @Inject
     public AggregationControllerAggregationClient() {}
 
@@ -56,6 +58,12 @@ public class AggregationControllerAggregationClient {
                         hostConfiguration.getClientCert(),
                         EMPTY_PASSWORD,
                         hostConfiguration.isDisablerequestcompression());
+
+        if (isRetryEnabled) {
+            log.info("Adding retry filter for AggregationController client");
+            client.addFilter(new JerseyTimeoutRetryFilter(5, 1000));
+        }
+
         JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 
         return WebResourceFactory.newResource(
@@ -134,25 +142,11 @@ public class AggregationControllerAggregationClient {
     public Response updateCredentials(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
         if (Objects.equals(request.getCredentials().getProviderName(), "nl-rabobank-oauth2")) {
-            return updateCredentialsInsistently(hostConfiguration, request);
+            // AAP-121: Retry mechanism to mitigate failing refresh token behavior for Rabobank
+            log.info("Enabling retries for Aggregation Controller client");
+            isRetryEnabled = true;
         }
         return getUpdateService(hostConfiguration).updateCredentials(request);
-    }
-
-    /** AAP-112: Retry mechanism to mitigate failing refresh token behavior for Rabobank. */
-    private Response updateCredentialsInsistently(
-            HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
-        try {
-            log.info("Trying to update credentials insistently...");
-            return getUpdateService(hostConfiguration).updateCredentials(request);
-        } catch (UniformInterfaceException e) {
-            log.warn("Attempt to update credentials insistently failed");
-            if (e.getResponse().getStatus() >= 500) {
-                log.info("Retrying to update credentials insistently...");
-                return getUpdateService(hostConfiguration).updateCredentials(request);
-            }
-            throw e;
-        }
     }
 
     public Response updateSignableOperation(

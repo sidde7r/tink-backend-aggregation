@@ -10,6 +10,7 @@ java_library(
         "//src/integration/api",
         "//src/integration/credentials:rpc",
         "//src/integration/enums",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/jersey/filter",
         "//src/integration/models",
         "//src/integration/signableoperation:rpc",
         "//src/integration/transfer:rpc",
