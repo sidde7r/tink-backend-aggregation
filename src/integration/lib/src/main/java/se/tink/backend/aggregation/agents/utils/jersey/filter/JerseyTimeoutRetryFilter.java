@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils.jersey;
+package se.tink.backend.aggregation.agents.utils.jersey.filter;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.ClientHandlerException;
