@@ -8,6 +8,8 @@ import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,6 +21,7 @@ import org.mockito.internal.util.collections.Sets;
 import se.tink.backend.eventproducerservice.grpc.EventAck;
 import se.tink.backend.eventproducerservice.grpc.PostEventRequest;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
+import se.tink.libraries.pair.Pair;
 
 public final class DataTrackerEventProducerTest {
 
@@ -63,9 +66,11 @@ public final class DataTrackerEventProducerTest {
         final String clusterId = "hoy";
         final String userId = "hoy";
 
+        List<Pair<String, Boolean>> data =
+                Collections.singletonList(new Pair<>(fieldName, hasValue));
+
         // when
-        producer.sendDataTrackerEvent(
-                providerName, correlationId, fieldName, hasValue, appId, clusterId, userId);
+        producer.sendDataTrackerEvent(providerName, correlationId, data, appId, clusterId, userId);
 
         final Map<FieldDescriptor, Object> fields = producerClient.getPostedData().getAllFields();
         final Set<String> keys =

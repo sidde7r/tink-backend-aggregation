@@ -6,6 +6,7 @@ junit_test(
     deps = [
         "//src/aggregation/lib",
         "//src/integration/api",
+        "//src/libraries/pair",
         "//src/libraries/uuid",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_protobuf_protobuf_java",

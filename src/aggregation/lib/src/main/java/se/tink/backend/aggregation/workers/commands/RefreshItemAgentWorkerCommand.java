@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.client.serial
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.pair.Pair;
 
 public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
     private static final Logger log = LoggerFactory.getLogger(RefreshItemAgentWorkerCommand.class);
@@ -169,18 +171,25 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 agentDataAvailabilityTrackerClient.serializeIdentityData(
                         context.getAggregationIdentityData());
 
+        List<Pair<String, Boolean>> eventData = new ArrayList<>();
+
         serializer
                 .buildList()
                 .forEach(
-                        entry ->
-                                dataTrackerEventProducer.sendDataTrackerEvent(
-                                        context.getRequest().getCredentials().getProviderName(),
-                                        context.getCorrelationId(),
-                                        entry.getName(),
-                                        !entry.getValue().equalsIgnoreCase("null"),
-                                        context.getAppId(),
-                                        context.getClusterId(),
-                                        context.getRequest().getCredentials().getUserId()));
+                        entry -> {
+                            eventData.add(
+                                    new Pair<String, Boolean>(
+                                            entry.getName(),
+                                            !entry.getValue().equalsIgnoreCase("null")));
+                        });
+
+        dataTrackerEventProducer.sendDataTrackerEvent(
+                context.getRequest().getCredentials().getProviderName(),
+                context.getCorrelationId(),
+                eventData,
+                context.getAppId(),
+                context.getClusterId(),
+                context.getRequest().getCredentials().getUserId());
     }
 
     @Override
