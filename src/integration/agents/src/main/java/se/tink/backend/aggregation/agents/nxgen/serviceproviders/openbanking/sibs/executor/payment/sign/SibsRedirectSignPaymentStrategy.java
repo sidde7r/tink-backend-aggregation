@@ -5,6 +5,8 @@ import com.github.rholder.retry.Retryer;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Storage;
@@ -66,7 +68,8 @@ public class SibsRedirectSignPaymentStrategy extends AbstractSibsSignPaymentStra
                         paymentMultiStepRequest.getStorage().get(Storage.STATE));
 
         if (!response.isPresent()) {
-            throw new PaymentException("SCA time-out.");
+            throw new PaymentAuthorizationException(
+                    "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception());
         }
     }
 }

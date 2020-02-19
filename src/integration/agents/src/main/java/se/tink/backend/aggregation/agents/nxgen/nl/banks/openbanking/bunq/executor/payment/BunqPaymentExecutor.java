@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqConstants;
@@ -134,9 +137,11 @@ public class BunqPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
     private String mapDebtorAccountToAccountId(Debtor debtor) throws PaymentException {
         if (debtor.getAccountIdentifierType() != Type.IBAN) {
-            throw new PaymentException(
+            throw new DebtorValidationException(
                     "Unsupported debtor account identifier type : "
-                            + debtor.getAccountIdentifierType().toString());
+                            + debtor.getAccountIdentifierType().toString(),
+                    "",
+                    new IllegalArgumentException("Unsupported debtor account identifier type"));
         }
 
         BunqTransactionalAccountFetcher accountFetcher =
@@ -184,6 +189,8 @@ public class BunqPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                     return status;
             }
         }
-        throw new PaymentException("Please confirm the draft-payment request with Bunq App!");
+        throw new PaymentAuthorizationException(
+                "The draft-payment request was not authorized in the Bunq App",
+                ThirdPartyAppError.TIMED_OUT.exception());
     }
 }

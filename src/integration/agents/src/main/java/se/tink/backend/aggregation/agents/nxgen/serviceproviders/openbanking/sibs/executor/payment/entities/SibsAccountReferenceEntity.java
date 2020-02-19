@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.function.Supplier;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -73,7 +74,8 @@ public class SibsAccountReferenceEntity {
 
     public static SibsAccountReferenceEntity of(
             Supplier<AccountIdentifier.Type> accountTypeSupplier,
-            Supplier<String> accountNumberSupplier) {
+            Supplier<String> accountNumberSupplier)
+            throws PaymentValidationException {
         SibsAccountReferenceEntity are = new SibsAccountReferenceEntity();
         switch (accountTypeSupplier.get()) {
             case IBAN:
@@ -86,7 +88,9 @@ public class SibsAccountReferenceEntity {
                 are.setMsisdn(accountNumberSupplier.get());
                 break;
             default:
-                throw new RuntimeException("Not supported payment type");
+                throw new PaymentValidationException(
+                        String.format("Not supported payment type: %s", accountTypeSupplier.get()),
+                        "");
         }
 
         return are;
@@ -120,13 +124,15 @@ public class SibsAccountReferenceEntity {
         return debtor;
     }
 
-    public static SibsAccountReferenceEntity fromCreditor(Payment payment) {
+    public static SibsAccountReferenceEntity fromCreditor(Payment payment)
+            throws PaymentValidationException {
         return SibsAccountReferenceEntity.of(
                 () -> payment.getCreditor().getAccountIdentifierType(),
                 () -> payment.getCreditor().getAccountNumber());
     }
 
-    public static SibsAccountReferenceEntity fromDebtor(Payment payment) {
+    public static SibsAccountReferenceEntity fromDebtor(Payment payment)
+            throws PaymentValidationException {
         return SibsAccountReferenceEntity.of(
                 () -> payment.getDebtor().getAccountIdentifierType(),
                 () -> payment.getDebtor().getAccountNumber());
