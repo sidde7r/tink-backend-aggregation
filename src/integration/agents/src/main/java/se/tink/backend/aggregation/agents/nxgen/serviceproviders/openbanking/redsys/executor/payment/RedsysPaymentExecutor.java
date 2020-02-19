@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Links;
@@ -60,9 +62,16 @@ public class RedsysPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     }
 
     private PaymentProduct paymentProductForPayment(Payment payment) throws PaymentException {
-        if ((payment.getCreditor().getAccountIdentifierType() != Type.IBAN)
-                || (payment.getDebtor().getAccountIdentifierType() != Type.IBAN)) {
-            throw new PaymentException("Account types must be IBAN.");
+        String errorMessage = "Account type must be IBAN.";
+
+        if ((payment.getCreditor().getAccountIdentifierType() != Type.IBAN)) {
+            throw new CreditorValidationException(
+                    errorMessage, "", new IllegalArgumentException(errorMessage));
+        }
+
+        if (payment.getDebtor().getAccountIdentifierType() != Type.IBAN) {
+            throw new DebtorValidationException(
+                    errorMessage, "", new IllegalArgumentException(errorMessage));
         }
         if (payment.isSepa()) {
             return PaymentProduct.SEPA_INSTANT_TRANSFER;

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants;
@@ -124,7 +126,8 @@ public class EnterCardBasePaymentExecutor implements PaymentExecutor, FetchableP
                                 strongAuthenticationState.getSupplementalKey());
 
                 if (!response.isPresent()) {
-                    throw new PaymentException("SCA time-out.");
+                    throw new PaymentAuthorizationException(
+                            "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception());
                 }
 
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;

@@ -6,6 +6,8 @@ import org.apache.commons.lang.NotImplementedException;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
@@ -60,9 +62,13 @@ public class CrossKeyPaymentExecutor implements PaymentExecutor, FetchablePaymen
         try {
             controller.authenticate(credentials);
         } catch (AuthenticationException e) {
-            throw new PaymentException(ErrorMessages.NOT_AUTHENTICATED);
+            throw new PaymentAuthorizationException(
+                    ErrorMessages.NOT_AUTHENTICATED,
+                    ThirdPartyAppError.AUTHENTICATION_ERROR.exception());
         } catch (AuthorizationException e) {
-            throw new PaymentException(ErrorMessages.NOT_AUTHORIZED);
+            throw new PaymentAuthorizationException(
+                    ErrorMessages.NOT_AUTHORIZED,
+                    ThirdPartyAppError.AUTHENTICATION_ERROR.exception());
         }
 
         CrosskeyPaymentDetails paymentResponse = apiClient.makePayment(consentDetails);
