@@ -7,7 +7,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent;
-import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResultReason;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
 import se.tink.libraries.serialization.proto.utils.ProtobufTypeUtil;
 
@@ -28,8 +28,8 @@ public class LoginAgentEventProducer {
     public void sendLoginCompletedEvent(
             String providerName,
             String correlationId,
-            LoginResultReason reason,
-            float elapsedTime,
+            LoginResult result,
+            long elapsedTime,
             String appId,
             String clusterId,
             String userId) {
@@ -44,7 +44,7 @@ public class LoginAgentEventProducer {
                             .setTimestamp(ProtobufTypeUtil.toProtobufTimestamp(Instant.now()))
                             .setProviderName(providerName)
                             .setCorrelationId(correlationId)
-                            .setReason(reason)
+                            .setResult(result)
                             .setElapsedTime(elapsedTime)
                             .setAppId(appId)
                             .setClusterId(clusterId)

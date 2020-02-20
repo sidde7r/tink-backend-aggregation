@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.eventproducerservice.grpc.EventAck;
 import se.tink.backend.eventproducerservice.grpc.PostEventRequest;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent;
-import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResultReason;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
 
@@ -106,7 +106,7 @@ public class LoginExecutorTest {
 
         // then
         Assert.assertEquals(
-                LoginResultReason.LOGIN_ERROR_INCORRECT_CREDENTIALS,
-                producerClient.getPostedData().unpack(AgentLoginCompletedEvent.class).getReason());
+                LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS,
+                producerClient.getPostedData().unpack(AgentLoginCompletedEvent.class).getResult());
     }
 }
