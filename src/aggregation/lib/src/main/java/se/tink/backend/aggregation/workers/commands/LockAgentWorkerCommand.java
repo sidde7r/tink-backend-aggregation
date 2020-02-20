@@ -10,6 +10,9 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+/*
+   LockAgentWorkerCommand ensures exclusive access to the credentials in the current request
+*/
 public class LockAgentWorkerCommand extends AgentWorkerCommand {
     private static final Logger log = LoggerFactory.getLogger(LockAgentWorkerCommand.class);
     private static final String LOCK_FORMAT =
@@ -18,9 +21,11 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
     private InterProcessLock lock;
     private AgentWorkerCommandContext context;
     private boolean hasAcquiredLock;
+    private final String operation;
 
-    public LockAgentWorkerCommand(AgentWorkerCommandContext context) {
+    public LockAgentWorkerCommand(AgentWorkerCommandContext context, String operation) {
         this.context = context;
+        this.operation = operation;
     }
 
     @Override
@@ -37,12 +42,16 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
 
         hasAcquiredLock = lock.acquire(5, TimeUnit.SECONDS);
 
-        if (!hasAcquiredLock) {
-            log.info("Could not acquire lock for user: {} credentials: {}", userId, credentialsId);
-            return AgentWorkerCommandResult.REJECT;
-        }
+        log.info(
+                "Lock(user: {} credentials: {}) is {} for operation: {}",
+                userId,
+                credentialsId,
+                hasAcquiredLock ? "acquired" : "NOT acquired",
+                operation);
 
-        return AgentWorkerCommandResult.CONTINUE;
+        return hasAcquiredLock
+                ? AgentWorkerCommandResult.CONTINUE
+                : AgentWorkerCommandResult.REJECT;
     }
 
     @Override

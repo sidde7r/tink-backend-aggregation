@@ -337,7 +337,7 @@ public class AgentWorkerOperationFactory {
                         request.getProvider()));
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new LockAgentWorkerCommand(context, metricsName));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -433,7 +433,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new LockAgentWorkerCommand(context, metricsName));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -602,7 +602,7 @@ public class AgentWorkerOperationFactory {
                         request.getCredentials(),
                         request.getProvider()),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
-                new LockAgentWorkerCommand(context),
+                new LockAgentWorkerCommand(context, operationName),
                 new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo),
@@ -666,7 +666,7 @@ public class AgentWorkerOperationFactory {
                         request.getCredentials(),
                         request.getProvider()),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
-                new LockAgentWorkerCommand(context),
+                new LockAgentWorkerCommand(context, operationName),
                 new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
                 new UpdateCredentialsStatusAgentWorkerCommand(
                         controllerWrapper,
@@ -723,13 +723,13 @@ public class AgentWorkerOperationFactory {
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ClearSensitiveInformationCommand(context));
-        commands.add(
-                new LockAgentWorkerCommand(
-                        context)); // acquire lock to avoid encryption/decryption race conditions
+        String operation = "create-credentials";
+        // acquire lock to avoid encryption/decryption race conditions
+        commands.add(new LockAgentWorkerCommand(context, operation));
         commands.add(new EncryptCredentialsWorkerCommand(context, false, credentialsCrypto));
 
         return new AgentWorkerOperation(
-                agentWorkerOperationState, "create-credentials", request, commands, context);
+                agentWorkerOperationState, operation, request, commands, context);
     }
 
     public AgentWorkerOperation createOperationUpdate(
@@ -760,13 +760,13 @@ public class AgentWorkerOperationFactory {
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ClearSensitiveInformationCommand(context));
-        commands.add(
-                new LockAgentWorkerCommand(
-                        context)); // acquire lock to avoid encryption/decryption race conditions
+        String operation = "update-credentials";
+        // acquire lock to avoid encryption/decryption race conditions
+        commands.add(new LockAgentWorkerCommand(context, operation));
         commands.add(new EncryptCredentialsWorkerCommand(context, false, credentialsCrypto));
 
         return new AgentWorkerOperation(
-                agentWorkerOperationState, "update-credentials", request, commands, context);
+                agentWorkerOperationState, operation, request, commands, context);
     }
 
     public AgentWorkerOperation createOperationKeepAlive(
@@ -797,14 +797,15 @@ public class AgentWorkerOperationFactory {
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
-        commands.add(new LockAgentWorkerCommand(context));
+        String operation = "keep-alive";
+        commands.add(new LockAgentWorkerCommand(context, operation));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
-                        context, "keep-alive", reportMetricsAgentWorkerCommandState));
+                        context, operation, reportMetricsAgentWorkerCommandState));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
@@ -817,7 +818,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new KeepAliveAgentWorkerCommand(context));
 
         return new AgentWorkerOperation(
-                agentWorkerOperationState, "keep-alive", request, commands, context);
+                agentWorkerOperationState, operation, request, commands, context);
     }
 
     public AgentWorkerOperation createOperationReEncryptCredentials(
@@ -845,9 +846,10 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
+        String operation = "reencrypt-credentials";
         ImmutableList<AgentWorkerCommand> commands =
                 ImmutableList.of(
-                        new LockAgentWorkerCommand(context),
+                        new LockAgentWorkerCommand(context, operation),
                         new DecryptCredentialsWorkerCommand(
                                 context,
                                 new CredentialsCrypto(
@@ -858,7 +860,7 @@ public class AgentWorkerOperationFactory {
                                         cacheClient, controllerWrapper, cryptoWrapper)));
 
         return new AgentWorkerOperation(
-                agentWorkerOperationState, "reencrypt-credentials", request, commands, context);
+                agentWorkerOperationState, operation, request, commands, context);
     }
 
     // for each account type,
@@ -938,7 +940,7 @@ public class AgentWorkerOperationFactory {
                         request.getProvider()));
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new LockAgentWorkerCommand(context, metricsName));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
@@ -1037,7 +1039,7 @@ public class AgentWorkerOperationFactory {
                         request.getProvider()));
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new LockAgentWorkerCommand(context, operationMetricName));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -1188,7 +1190,7 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = "batch-migrate";
 
-        commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new LockAgentWorkerCommand(context, metricsName));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
