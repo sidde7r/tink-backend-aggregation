@@ -219,7 +219,9 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
 
         NettyChannelBuilder channelBuilder = NettyChannelBuilder.forAddress(host, port);
 
-        if (!Strings.isNullOrEmpty(caPath)) {
+        if (Strings.isNullOrEmpty(caPath)) {
+            channelBuilder.usePlaintext();
+        } else {
             SslContext sslContext =
                     GrpcSslContexts.forClient().trustManager(new File(caPath)).build();
 
