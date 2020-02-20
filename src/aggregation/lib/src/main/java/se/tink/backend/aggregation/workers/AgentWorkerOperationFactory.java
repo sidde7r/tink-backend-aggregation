@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
+import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
@@ -93,6 +94,8 @@ public class AgentWorkerOperationFactory {
     private final AgentDebugStorageHandler agentDebugStorageHandler;
     private final CredentialsEventProducer credentialsEventProducer;
     private final DataTrackerEventProducer dataTrackerEventProducer;
+    private final LoginAgentEventProducer loginAgentEventProducer;
+
     // States
     private AgentWorkerOperationState agentWorkerOperationState;
     private CircuitBreakerAgentWorkerCommandState circuitBreakAgentWorkerCommandState;
@@ -127,6 +130,7 @@ public class AgentWorkerOperationFactory {
             AgentsServiceConfiguration agentsServiceConfiguration,
             CredentialsEventProducer credentialsEventProducer,
             DataTrackerEventProducer dataTrackerEventProducer,
+            LoginAgentEventProducer loginAgentEventProducer,
             AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             ManagedTppSecretsServiceClient tppSecretsServiceClient) {
         this.cacheClient = cacheClient;
@@ -152,6 +156,7 @@ public class AgentWorkerOperationFactory {
         this.agentsServiceConfiguration = agentsServiceConfiguration;
         this.credentialsEventProducer = credentialsEventProducer;
         this.dataTrackerEventProducer = dataTrackerEventProducer;
+        this.loginAgentEventProducer = loginAgentEventProducer;
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.tppSecretsServiceClient = tppSecretsServiceClient;
     }
@@ -375,7 +380,10 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
                 new LoginAgentWorkerCommand(
-                        context, loginAgentWorkerCommandState, createCommandMetricState(request)));
+                        context,
+                        loginAgentWorkerCommandState,
+                        createCommandMetricState(request),
+                        loginAgentEventProducer));
         commands.addAll(
                 createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
@@ -458,7 +466,10 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
                 new LoginAgentWorkerCommand(
-                        context, loginAgentWorkerCommandState, createCommandMetricState(request)));
+                        context,
+                        loginAgentWorkerCommandState,
+                        createCommandMetricState(request),
+                        loginAgentEventProducer));
 
         log.debug("Created Authenticate operation for credential");
         return new AgentWorkerOperation(
@@ -627,7 +638,10 @@ public class AgentWorkerOperationFactory {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
                 new LoginAgentWorkerCommand(
-                        context, loginAgentWorkerCommandState, createCommandMetricState(request)),
+                        context,
+                        loginAgentWorkerCommandState,
+                        createCommandMetricState(request),
+                        loginAgentEventProducer),
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request)));
     }
@@ -963,7 +977,10 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
                 new LoginAgentWorkerCommand(
-                        context, loginAgentWorkerCommandState, createCommandMetricState(request)));
+                        context,
+                        loginAgentWorkerCommandState,
+                        createCommandMetricState(request),
+                        loginAgentEventProducer));
         commands.addAll(
                 createWhitelistRefreshableItemsCommands(
                         request, context, request.getItemsToRefresh(), controllerWrapper));
@@ -1062,7 +1079,10 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
                 new LoginAgentWorkerCommand(
-                        context, loginAgentWorkerCommandState, createCommandMetricState(request)));
+                        context,
+                        loginAgentWorkerCommandState,
+                        createCommandMetricState(request),
+                        loginAgentEventProducer));
         commands.addAll(
                 createWhitelistRefreshableItemsCommands(
                         request, context, request.getItemsToRefresh(), controllerWrapper));

@@ -44,6 +44,9 @@ public class AggregationConfigurationModule extends AbstractModule {
         bindConstant()
                 .annotatedWith(Names.named("sendDataTrackingEvents"))
                 .to(configuration.isSendDataTrackingEvents());
+        bindConstant()
+                .annotatedWith(Names.named("sendAgentLoginCompletedEvents"))
+                .to(configuration.isSendAgentLoginCompletedEvents());
 
         bind(CacheConfiguration.class)
                 .toProvider(Providers.of(configuration.getCacheConfiguration()));

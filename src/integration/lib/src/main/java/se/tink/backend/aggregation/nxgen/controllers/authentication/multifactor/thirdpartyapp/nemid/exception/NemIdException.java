@@ -1,34 +1,33 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception;
 
 import se.tink.backend.aggregation.agents.exceptions.MultiFactorAuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentBaseError;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.error.NemIdError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class NemIdException extends MultiFactorAuthenticationException {
 
-    public NemIdException(AgentError error) {
+    public NemIdException(NemIdError error) {
         super(error);
     }
 
-    public NemIdException(AgentError error, Throwable cause) {
+    public NemIdException(NemIdError error, Throwable cause) {
         super(error, cause);
     }
 
-    public NemIdException(AgentError error, LocalizableKey userMessage) {
+    public NemIdException(NemIdError error, LocalizableKey userMessage) {
         super(error, userMessage);
     }
 
-    public NemIdException(AgentError error, LocalizableKey userMessage, Throwable cause) {
+    public NemIdException(NemIdError error, LocalizableKey userMessage, Throwable cause) {
         super(error, userMessage, cause);
     }
 
-    public NemIdException(AgentError error, String internalMessage) {
+    public NemIdException(NemIdError error, String internalMessage) {
         super(error, internalMessage);
     }
 
     @Override
-    public AgentBaseError getError() {
-        return null;
+    public NemIdError getError() {
+        return getError(NemIdError.class);
     }
 }
