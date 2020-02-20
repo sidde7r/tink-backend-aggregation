@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -62,6 +63,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -82,6 +84,7 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants.SystemCode;
 import se.tink.backend.aggregation.agents.banks.seb.model.AccountEntity;
+import se.tink.backend.aggregation.agents.banks.seb.model.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.banks.seb.model.DepotEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.EInvoiceListEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.ExternalAccount;
@@ -89,8 +92,6 @@ import se.tink.backend.aggregation.agents.banks.seb.model.FundAccountEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.GenericRequest;
 import se.tink.backend.aggregation.agents.banks.seb.model.GiroEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.HoldingEntity;
-import se.tink.backend.aggregation.agents.banks.seb.model.InitiateBankIdRequest;
-import se.tink.backend.aggregation.agents.banks.seb.model.InitiateBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.seb.model.InitiateRequest;
 import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceAccountEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceEntity;
@@ -123,7 +124,6 @@ import se.tink.backend.aggregation.agents.banks.seb.model.UpcomingTransactionEnt
 import se.tink.backend.aggregation.agents.banks.seb.model.UserCredentials;
 import se.tink.backend.aggregation.agents.banks.seb.model.UserCredentialsRequestEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.VODB;
-import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBBankIdLoginUtils;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -187,7 +187,7 @@ public class SEBApiAgent extends AbstractAgent
 
     private static final String BASE_URL = "https://mp.seb.se";
     private static final String API_URL = "/1000/ServiceFactory/PC_BANK/";
-    private static final String AUTH_URL = "/nauth2/Authentication/api/v1/bid/";
+    private static final String AUTH_URL = "/auth/bid/v2/authentications";
 
     private static final String INTERNAL_TRANSFER_URL =
             API_URL + "PC_BankKolla_Ny02Overfor03.asmx/Execute";
@@ -231,8 +231,6 @@ public class SEBApiAgent extends AbstractAgent
     private static final String INSURANCE_DETAIL =
             API_URL + "PC_BankHamta11Savingsvarde01.asmx/Execute";
 
-    private static final String INITIATE_BANKID_URL = AUTH_URL + "auth";
-    private static final String COLLECT_BANKID_STRING_FORMAT_URL = AUTH_URL + "%s";
     private static final String INITIATE_SESSION_URL =
             API_URL + "PC_BankInit11Session01.asmx/Execute";
 
@@ -251,7 +249,8 @@ public class SEBApiAgent extends AbstractAgent
     private static final String FIND_BG_URL = API_URL + "PC_BankHamta01BG_nummer01.asmx/Execute";
     private static final String FIND_PG_URL = API_URL + "PC_BankHamta01VerPG01.asmx/Execute";
 
-    private static final String SEB_REFERER_BANKID_LOGIN = "/masp/mbid";
+    private static final String CSRF_HEADER = "x-seb-csrf";
+    private static final String UUID_HEADER = "x-seb-uuid";
 
     private static final int KTO_FUNK_KOD_FOR_DEPOT_ID_MAPPING_TO_ACCOUNT_NUMBER = 3;
 
@@ -295,6 +294,7 @@ public class SEBApiAgent extends AbstractAgent
     private final Credentials credentials;
     private final Catalog catalog;
     private final TransferMessageFormatter transferMessageFormatter;
+    private final String sebUUID;
 
     // cache
     private Map<AccountEntity, Account> accountEntityAccountMap = null;
@@ -305,6 +305,7 @@ public class SEBApiAgent extends AbstractAgent
 
         credentials = request.getCredentials();
         client = createClient();
+        sebUUID = UUID.randomUUID().toString().toUpperCase();
         catalog = context.getCatalog();
         transferMessageFormatter =
                 new TransferMessageFormatter(
@@ -797,73 +798,46 @@ public class SEBApiAgent extends AbstractAgent
         }
     }
 
-    private void loginWithBankId() throws BankIdException {
-        InitiateBankIdRequest initiateBankIdRequest = new InitiateBankIdRequest();
-        initiateBankIdRequest.setUid(credentials.getField(Field.Key.USERNAME));
-        initiateBankIdRequest.setSebReferer(SEB_REFERER_BANKID_LOGIN);
-        InitiateBankIdResponse initiateBankIdResponse =
-                resource(INITIATE_BANKID_URL)
-                        .type(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .post(InitiateBankIdResponse.class, initiateBankIdRequest);
+    private String initiateBankId() {
+        log.info("Initiating BankID");
+        final ClientResponse response =
+                resource(AUTH_URL).accept(MediaType.APPLICATION_JSON).post(ClientResponse.class);
 
-        final String rfa = initiateBankIdResponse.getRfa().toLowerCase();
-        final String status = initiateBankIdResponse.getStatus().toLowerCase();
-
-        if (Objects.equal(rfa, SEBBankIdLoginUtils.COLLECT_BANKID)) {
-            // noop
-        } else if (Objects.equal(rfa, SEBBankIdLoginUtils.ALREADY_IN_PROGRESS)) {
-            throw BankIdError.ALREADY_IN_PROGRESS.exception();
-        } else if (Objects.equal(status, SEBBankIdLoginUtils.ALREADY_IN_PROGRESS_STATUS)
-                && rfa.isEmpty()) {
-            log.warn(
-                    String.format(
-                            "#login-already-in-progress-empty-rfa-e0 - Rfa: %s, Status: %s, Message: %s",
-                            rfa, status, initiateBankIdResponse.getMessage()));
-            throw BankIdError.ALREADY_IN_PROGRESS.exception();
-        } else {
-            throw new IllegalStateException(
-                    String.format(
-                            "#login-refactoring - Rfa: %s, Status: %s, Message: %s",
-                            rfa, status, initiateBankIdResponse.getMessage()));
-        }
-
-        supplementalRequester.openBankId(null, false);
-
-        collectBankId(initiateBankIdResponse);
+        final AuthenticationResponse authenticationResponse =
+                response.getEntity(AuthenticationResponse.class);
+        supplementalRequester.openBankId(authenticationResponse.getAutoStartToken(), false);
+        return response.getHeaders().getFirst(CSRF_HEADER);
     }
 
-    private void collectBankId(InitiateBankIdResponse bankIdResponse) throws BankIdException {
+    private void collectBankId(String csrfToken) throws BankIdException {
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            bankIdResponse =
-                    resource(
-                                    String.format(
-                                            COLLECT_BANKID_STRING_FORMAT_URL,
-                                            bankIdResponse.getNextRequest().getUri()))
-                            .post(InitiateBankIdResponse.class);
+            final ClientResponse response =
+                    resource(AUTH_URL)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .type(MediaType.APPLICATION_JSON)
+                            .header(CSRF_HEADER, csrfToken)
+                            .get(ClientResponse.class);
+            csrfToken = response.getHeaders().getFirst(CSRF_HEADER);
 
-            switch (bankIdResponse.getRfa().toLowerCase()) {
-                case SEBBankIdLoginUtils.START_BANKID:
-                case SEBBankIdLoginUtils.USER_SIGN:
-                    break;
-                case SEBBankIdLoginUtils.ALREADY_IN_PROGRESS:
-                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
-                case SEBBankIdLoginUtils.USER_CANCELLED:
-                    throw BankIdError.CANCELLED.exception();
-                case SEBBankIdLoginUtils.NO_CLIENT:
-                    throw BankIdError.NO_CLIENT.exception();
-                case SEBBankIdLoginUtils.AUTHENTICATED:
+            final AuthenticationResponse authenticationResponse =
+                    response.getEntity(AuthenticationResponse.class);
+            final BankIdStatus status = authenticationResponse.toBankIdStatus();
+            log.info("BankID " + status.toString());
+            switch (status) {
+                case DONE:
                     return;
-                case SEBBankIdLoginUtils.AUTHORIZATION_REQUIRED:
-                    throw BankIdError.AUTHORIZATION_REQUIRED.exception(
-                            UserMessage.MUST_AUTHORIZE_BANKID.getKey());
-                default:
+                case WAITING:
+                    break;
+                case CANCELLED:
+                    throw BankIdError.CANCELLED.exception();
+                case FAILED_UNKNOWN:
                     throw new IllegalStateException(
-                            String.format(
-                                    "#login-refactoring - Rfa: %s, Status: %s, Message: %s",
-                                    bankIdResponse.getRfa(),
-                                    bankIdResponse.getStatus(),
-                                    bankIdResponse.getMessage()));
+                            "Unhandled BankID response: " + response.getEntity(String.class));
+                case EXPIRED_AUTOSTART_TOKEN:
+                    csrfToken = initiateBankId();
+                    break;
+                default:
+                    throw new IllegalStateException("Unhandled BankIdStatus: " + status.toString());
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
@@ -1152,7 +1126,8 @@ public class SEBApiAgent extends AbstractAgent
     public boolean login() throws AuthenticationException, AuthorizationException {
         switch (credentials.getType()) {
             case MOBILE_BANKID:
-                loginWithBankId();
+                final String csrfToken = initiateBankId();
+                collectBankId(csrfToken);
                 break;
             default:
                 throw new IllegalStateException("Credentials type not implemented.");
@@ -1166,14 +1141,20 @@ public class SEBApiAgent extends AbstractAgent
         userName = userinfo.USER_NAME;
         Preconditions.checkNotNull(customerId);
         Preconditions.checkNotNull(userId);
-        checkLoggedInCustomerId(customerId);
+        checkLoggedInCustomerId(customerId, userinfo.bankIdUserId);
 
         return true;
     }
 
-    // Make sure the user always logs in to the same login to not mistakenly suddenly get the wrong
-    // transactions.
-    private void checkLoggedInCustomerId(String bankCustomerId) throws LoginException {
+    // Make sure the user always logs in to the same login, and that it matches the provided SSN
+    // to not mistakenly suddenly get the wrong transactions.
+    private void checkLoggedInCustomerId(String bankCustomerId, String loggedInSsn)
+            throws LoginException {
+        final String credentialsSsn = credentials.getField(Field.Key.USERNAME);
+        if (!credentialsSsn.equalsIgnoreCase(loggedInSsn)) {
+            throw LoginError.NOT_CUSTOMER.exception(UserMessage.WRONG_BANKID.getKey());
+        }
+
         final String customerIdString = bankCustomerId;
         final String previousCustomerId = credentials.getPayload();
         if (previousCustomerId != null) {
@@ -1706,7 +1687,8 @@ public class SEBApiAgent extends AbstractAgent
 
     private Builder resource(String url) {
         return client.resource(BASE_URL + url)
-                .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT);
+                .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
+                .header(UUID_HEADER, sebUUID);
     }
 
     @Override
