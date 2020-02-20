@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -42,5 +43,5 @@ public interface BankIdAuthenticator<T> {
      * @param refreshToken
      * @return An Optional containing the OAuth2Token or Optional.empty()
      */
-    Optional<OAuth2Token> refreshAccessToken(final String refreshToken);
+    Optional<OAuth2Token> refreshAccessToken(final String refreshToken) throws SessionException;
 }
