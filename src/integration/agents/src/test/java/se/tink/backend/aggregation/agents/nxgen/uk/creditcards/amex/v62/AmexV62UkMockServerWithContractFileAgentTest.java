@@ -10,7 +10,9 @@ import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEnti
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
-import se.tink.backend.aggregation.agents.framework.wiremock.utils.S3FileParser;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.S3LogFormatAdapter;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
 public class AmexV62UkMockServerWithContractFileAgentTest extends AgentIntegrationMockServerTest {
@@ -22,9 +24,12 @@ public class AmexV62UkMockServerWithContractFileAgentTest extends AgentIntegrati
     public void testRefreshWithJSONContractFile() throws Exception {
         // Given
         prepareMockServer(
-                new S3FileParser(
-                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.s3",
-                        "https://global.americanexpress.com"));
+                new AapFileParser(
+                        new S3LogFormatAdapter()
+                                .toMockFileFormat(
+                                        new ResourceFileReader()
+                                                .read(
+                                                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.s3"))));
 
         AgentContractEntitiesJsonFileParser contractParser =
                 new AgentContractEntitiesJsonFileParser();

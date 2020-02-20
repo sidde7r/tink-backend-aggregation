@@ -1,0 +1,14 @@
+java_library(
+    name = "parsingoperations",
+    srcs = glob(
+        ["*.java"],
+    ),
+    data = [
+    ],
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+    ],
+    deps = [
+        "//third_party:com_google_guava_guava",
+    ],
+)

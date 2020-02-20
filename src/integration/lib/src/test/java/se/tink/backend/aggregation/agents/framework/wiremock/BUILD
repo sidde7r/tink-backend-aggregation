@@ -10,6 +10,9 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules/parsingoperations",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules/predicates",
         "//src/libraries/metrics:registry",
         "//src/libraries/pair",
         "//src/libraries/strings",
