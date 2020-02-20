@@ -2391,8 +2391,9 @@
         },
         {
             "accessType": "OPEN_BANKING",
+            "authenticationFlow": "DECOUPLED",
             "className": "nxgen.se.openbanking.sebopenbanking.SebAgent",
-            "credentialsType": "THIRD_PARTY_APP",
+            "credentialsType": "MOBILE_BANKID",
             "displayName": "SEB",
             "fields": [],
             "financialInstitutionId": "dummyId",
