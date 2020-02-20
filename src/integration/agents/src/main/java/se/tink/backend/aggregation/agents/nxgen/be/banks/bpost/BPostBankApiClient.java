@@ -1,13 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost;
 
+import java.util.List;
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication.BPostBankAuthContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication.request.*;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication.request.dto.LoginResponseDTO;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication.request.dto.RegistrationResponseDTO;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.product.account.AccountTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.product.account.BPostBankAccountsResponseDTO;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.product.account.BPostBankTransactionDTO;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.product.account.TransactionalAccountRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.entity.BPostBankAuthContext;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -73,6 +79,28 @@ public class BPostBankApiClient {
         } catch (RequestException ex) {
             throw mapToAuthenticationException(ex, LoginError.NOT_SUPPORTED);
         }
+    }
+
+    public void initModel() throws AuthenticationException {
+        try {
+            new InitModelRequest().call(httpClient);
+        } catch (RequestException ex) {
+            throw mapToAuthenticationException(ex, LoginError.NOT_SUPPORTED);
+        }
+    }
+
+    public BPostBankAccountsResponseDTO fetchAccounts(BPostBankAuthContext authContext)
+            throws RequestException {
+        return new TransactionalAccountRequest(authContext).call(httpClient);
+    }
+
+    public List<BPostBankTransactionDTO> fetchAccountTransactions(
+            TransactionalAccount account, int page, int pageSize, BPostBankAuthContext authContext)
+            throws RequestException {
+        int first = page * pageSize - pageSize;
+        int last = page * pageSize;
+        return new AccountTransactionsRequest(authContext, first, last, account.getAccountNumber())
+                .call(httpClient);
     }
 
     private AuthenticationException mapToAuthenticationException(

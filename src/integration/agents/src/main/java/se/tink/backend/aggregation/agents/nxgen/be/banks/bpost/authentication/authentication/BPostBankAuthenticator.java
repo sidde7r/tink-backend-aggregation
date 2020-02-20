@@ -5,6 +5,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.BPostBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication.request.dto.LoginResponseDTO;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.entity.BPostBankAuthContext;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
