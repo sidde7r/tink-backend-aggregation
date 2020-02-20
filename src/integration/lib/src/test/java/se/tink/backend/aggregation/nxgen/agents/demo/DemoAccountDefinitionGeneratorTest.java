@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
+import com.google.common.collect.Lists;
 import java.net.URI;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,10 +30,42 @@ public class DemoAccountDefinitionGeneratorTest {
                 transactionalAccountAccounts.getAccountName().equals("Checking Account Tink"));
         Assert.assertTrue(
                 transactionalAccountAccounts.getIdentifiers().contains(expectedIdentifier));
+
+        Assert.assertTrue(transactionalAccountAccounts.getAvailableBalance().isPresent());
+        Assert.assertEquals(
+                556.88, transactionalAccountAccounts.getAvailableBalance().get(), 0.001);
+
+        Assert.assertTrue(transactionalAccountAccounts.getCreditLimit().isPresent());
+        Assert.assertEquals(4000.0, transactionalAccountAccounts.getCreditLimit().get(), 0.001);
     }
 
     @Test
-    public void TestGenerateDeterministicTransactionalAccountAccounts() {
+    public void TestGenerateDeterministicTransactionalAccountZeroBalance() {
+        DemoTransactionAccount transactionalAccountAccounts =
+                DemoAccountDefinitionGenerator.getDemoTransactionalAccountWithZeroBalance(
+                        testUserName, testProvider);
+
+        SwedishIdentifier expectedRecipientAccount = new SwedishIdentifier("5472-684005458320");
+        AccountIdentifier expectedIdentifier =
+                AccountIdentifier.create(URI.create(expectedRecipientAccount.toUriAsString()));
+
+        Assert.assertEquals(0.0, transactionalAccountAccounts.getBalance(), 0.00);
+        Assert.assertEquals("5472-684005458320", transactionalAccountAccounts.getAccountId());
+        Assert.assertEquals(
+                "Checking Account Tink zero balance",
+                transactionalAccountAccounts.getAccountName());
+        Assert.assertEquals(
+                Lists.newArrayList(expectedIdentifier),
+                transactionalAccountAccounts.getIdentifiers());
+
+        Assert.assertTrue(transactionalAccountAccounts.getAvailableBalance().isPresent());
+        Assert.assertEquals(0.0, transactionalAccountAccounts.getAvailableBalance().get(), 0.00);
+
+        Assert.assertFalse(transactionalAccountAccounts.getCreditLimit().isPresent());
+    }
+
+    @Test
+    public void TestGenerateDeterministicSavingsAccount() {
         DemoSavingsAccount savingsAccount =
                 DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider);
 
