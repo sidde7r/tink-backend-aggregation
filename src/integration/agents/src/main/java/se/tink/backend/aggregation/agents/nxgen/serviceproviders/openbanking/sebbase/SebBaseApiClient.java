@@ -7,6 +7,8 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.httpclient.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenResponse;
@@ -38,6 +40,14 @@ public abstract class SebBaseApiClient {
     }
 
     public abstract RequestBuilder getAuthorizeUrl();
+
+    public abstract AuthResponse initBankId();
+
+    public abstract AuthResponse collectBankId(String csrfToken);
+
+    public abstract AuthorizeResponse getAuthorization(String clientId, String redirectUri);
+
+    public abstract AuthorizeResponse postAuthorization(final String requestForm);
 
     public abstract OAuth2Token getToken(TokenRequest request);
 

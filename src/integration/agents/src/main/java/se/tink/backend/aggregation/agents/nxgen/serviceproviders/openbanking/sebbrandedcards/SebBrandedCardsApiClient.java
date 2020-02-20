@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountResponse;
@@ -28,6 +30,26 @@ public class SebBrandedCardsApiClient extends SebBaseApiClient {
     public RequestBuilder getAuthorizeUrl() {
         return client.request(new URL(SebBrandedCardsConstants.Urls.AUTH))
                 .queryParam(SebBrandedCardsConstants.QueryKey.BRAND_ID, brandId);
+    }
+
+    @Override
+    public AuthResponse initBankId() {
+        return null;
+    }
+
+    @Override
+    public AuthResponse collectBankId(String csrfToken) {
+        return null;
+    }
+
+    @Override
+    public AuthorizeResponse getAuthorization(String clientId, String redirectUri) {
+        return null;
+    }
+
+    @Override
+    public AuthorizeResponse postAuthorization(String requestForm) {
+        return null;
     }
 
     @Override
