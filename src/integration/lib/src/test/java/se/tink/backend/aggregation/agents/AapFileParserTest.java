@@ -8,6 +8,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.libraries.pair.Pair;
 
 public class AapFileParserTest {
@@ -46,13 +47,12 @@ public class AapFileParserTest {
                                         200,
                                         "{\"extendSession\":{\"status\":0}}")));
 
-        AapFileParser parser =
-                new AapFileParser(
-                        String.format(
-                                "%s/%s",
-                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/resources",
-                                "amex-refresh-traffic.aap"),
-                        "https://global.americanexpress.com");
+        final String fileContent =
+                new ResourceFileReader()
+                        .read(
+                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/resources/amex-refresh-traffic.aap");
+
+        AapFileParser parser = new AapFileParser(fileContent);
 
         List<Pair<HTTPRequest, HTTPResponse>> pairs = parser.parseRequestResponsePairs();
         assertThat(pairs).isEqualTo(expectedResult);

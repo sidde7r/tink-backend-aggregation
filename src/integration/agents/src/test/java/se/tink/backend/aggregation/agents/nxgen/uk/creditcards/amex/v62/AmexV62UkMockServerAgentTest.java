@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 
@@ -26,8 +27,9 @@ public final class AmexV62UkMockServerAgentTest extends AgentIntegrationMockServ
         // Given
         prepareMockServer(
                 new AapFileParser(
-                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.aap",
-                        "https://global.americanexpress.com"));
+                        new ResourceFileReader()
+                                .read(
+                                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.aap")));
 
         Account account =
                 AgentContractEntitiesAsserts.createAccount(
