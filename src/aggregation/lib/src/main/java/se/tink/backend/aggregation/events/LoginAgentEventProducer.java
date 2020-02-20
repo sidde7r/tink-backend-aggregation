@@ -45,7 +45,7 @@ public class LoginAgentEventProducer {
                             .setProviderName(providerName)
                             .setCorrelationId(correlationId)
                             .setResult(result)
-                            .setElapsedTime(elapsedTime)
+                            .setPassedTime(elapsedTime)
                             .setAppId(appId)
                             .setClusterId(clusterId)
                             .setUserId(userId)
