@@ -162,7 +162,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "92d2e6c7adca04e074ab3351ba8a9404244f6765",
+    commit = "b12fb587e44b6e2a3744063c11df04c32c6b7691",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1572535216 +0000",
 )
@@ -2484,14 +2484,6 @@ maven_jar(
 
 ### === END === Java Spark dependencies
 
-# GRPC/Protobuf rules
-http_archive(
-    name = "build_stack_rules_proto",
-    sha256 = "8a9cf001e3ba5c97d45ed8eb09985f15355df4bbe2dc6dd4844cccfe71f17d3e",
-    strip_prefix = "rules_proto-9e68c7eb1e36bd08e9afebc094883ebc4debdb09",
-    urls = ["https://github.com/stackb/rules_proto/archive/9e68c7eb1e36bd08e9afebc094883ebc4debdb09.tar.gz"],
-)
-
 # Newer version than what's loaded by @io_grpc_grpc_java grpc_java_repositories()
 http_archive(
     name = "com_google_protobuf_javalite",
@@ -2527,6 +2519,13 @@ http_archive(
 )
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")
+load("@tink_backend//third_party/maven:deps.bzl", "maven_deps")
+
+maven_deps("@tink_backend//third_party/maven:maven_install.json")
+
+load("@maven//:defs.bzl", "pinned_maven_install")
+
+pinned_maven_install()
 
 maven_install(
     name = "java_uuid_generator",

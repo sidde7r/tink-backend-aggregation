@@ -9,6 +9,8 @@ java_library(
         "//src/integration/agent_data_availability_tracker/client:serialization",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client/configuration",
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
+        "//src/integration/agent_data_availability_tracker/proto",
+        "//src/integration/agent_data_availability_tracker/proto:java_proto",
         "//src/integration/agent_data_availability_tracker/proto:lib",
         "//src/integration/api",
         "//src/integration/lib:annotations",
