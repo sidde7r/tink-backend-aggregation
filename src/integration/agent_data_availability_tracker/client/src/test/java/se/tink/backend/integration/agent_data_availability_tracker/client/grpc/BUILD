@@ -7,6 +7,7 @@ junit_test(
     deps = [
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
+        "//src/integration/agent_data_availability_tracker/proto:java_proto",
         "//src/integration/agent_data_availability_tracker/proto:lib",
         "//src/integration/api",
         "//src/integration/models",
@@ -19,5 +20,6 @@ junit_test(
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "@io_grpc_grpc_java//api",
+        "@io_grpc_grpc_java//stub",
     ],
 )
