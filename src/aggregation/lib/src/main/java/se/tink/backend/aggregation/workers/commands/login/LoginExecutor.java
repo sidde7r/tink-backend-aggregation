@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
-import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResultReason;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 
 public class LoginExecutor {
 
@@ -38,154 +38,145 @@ public class LoginExecutor {
     private long loginWorkerStartTimestamp;
     private AgentWorkerCommandContext context;
 
-    private static final ImmutableMap<LoginError, LoginResultReason> LOGIN_ERROR_MAPPER =
-            ImmutableMap.<LoginError, LoginResultReason>builder()
-                    .put(LoginError.NOT_CUSTOMER, LoginResultReason.LOGIN_ERROR_NOT_CUSTOMER)
-                    .put(LoginError.NOT_SUPPORTED, LoginResultReason.LOGIN_ERROR_NOT_SUPPORTED)
+    private static final ImmutableMap<LoginError, LoginResult> LOGIN_ERROR_MAPPER =
+            ImmutableMap.<LoginError, LoginResult>builder()
+                    .put(LoginError.NOT_CUSTOMER, LoginResult.LOGIN_ERROR_NOT_CUSTOMER)
+                    .put(LoginError.NOT_SUPPORTED, LoginResult.LOGIN_ERROR_NOT_SUPPORTED)
                     .put(
                             LoginError.INCORRECT_CREDENTIALS,
-                            LoginResultReason.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
                     .put(
                             LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT,
-                            LoginResultReason.LOGIN_ERROR_INCORRECT_CREDENTIALS_LAST_ATTEMPT)
+                            LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS_LAST_ATTEMPT)
                     .put(
                             LoginError.INCORRECT_CHALLENGE_RESPONSE,
-                            LoginResultReason.LOGIN_ERROR_INCORRECT_CHALLENGE_RESPONSE)
+                            LoginResult.LOGIN_ERROR_INCORRECT_CHALLENGE_RESPONSE)
                     .put(
                             LoginError.CREDENTIALS_VERIFICATION_ERROR,
-                            LoginResultReason.LOGIN_ERROR_CREDENTIALS_VERIFICATION_ERROR)
-                    .put(
-                            LoginError.WRONG_PHONENUMBER,
-                            LoginResultReason.LOGIN_ERROR_WRONG_PHONE_NUMBER)
+                            LoginResult.LOGIN_ERROR_CREDENTIALS_VERIFICATION_ERROR)
+                    .put(LoginError.WRONG_PHONENUMBER, LoginResult.LOGIN_ERROR_WRONG_PHONE_NUMBER)
                     .put(
                             LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE,
-                            LoginResultReason.LOGIN_ERROR_WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE)
+                            LoginResult.LOGIN_ERROR_WRONG_PHONE_NUMBER_OR_INACTIVATED_SERVICE)
                     .put(
                             LoginError.ERROR_WITH_MOBILE_OPERATOR,
-                            LoginResultReason.LOGIN_ERROR_ERROR_WITH_MOBILE_OPERATOR)
+                            LoginResult.LOGIN_ERROR_ERROR_WITH_MOBILE_OPERATOR)
                     .put(
                             LoginError.REGISTER_DEVICE_ERROR,
-                            LoginResultReason.LOGIN_ERROR_REGISTER_DEVICE_ERROR)
+                            LoginResult.LOGIN_ERROR_REGISTER_DEVICE_ERROR)
                     .put(
                             LoginError.NO_ACCESS_TO_MOBILE_BANKING,
-                            LoginResultReason.LOGIN_ERROR_NO_ACCESS_TO_MOBILE_BANKING)
-                    .put(
-                            LoginError.PASSWORD_CHANGED,
-                            LoginResultReason.LOGIN_ERROR_PASSWORD_CHANGED)
+                            LoginResult.LOGIN_ERROR_NO_ACCESS_TO_MOBILE_BANKING)
+                    .put(LoginError.PASSWORD_CHANGED, LoginResult.LOGIN_ERROR_PASSWORD_CHANGED)
                     .build();
 
-    private static final ImmutableMap<BankIdError, LoginResultReason> BANKID_ERROR_MAPPER =
-            ImmutableMap.<BankIdError, LoginResultReason>builder()
-                    .put(BankIdError.CANCELLED, LoginResultReason.BANKID_ERROR_CANCELLED)
-                    .put(BankIdError.TIMEOUT, LoginResultReason.BANKID_ERROR_TIMEOUT)
-                    .put(BankIdError.NO_CLIENT, LoginResultReason.BANKID_ERROR_NO_CLIENT)
+    private static final ImmutableMap<BankIdError, LoginResult> BANKID_ERROR_MAPPER =
+            ImmutableMap.<BankIdError, LoginResult>builder()
+                    .put(BankIdError.CANCELLED, LoginResult.BANKID_ERROR_CANCELLED)
+                    .put(BankIdError.TIMEOUT, LoginResult.BANKID_ERROR_TIMEOUT)
+                    .put(BankIdError.NO_CLIENT, LoginResult.BANKID_ERROR_NO_CLIENT)
                     .put(
                             BankIdError.ALREADY_IN_PROGRESS,
-                            LoginResultReason.BANKID_ERROR_ALREADY_IN_PROGRESS)
-                    .put(BankIdError.INTERRUPTED, LoginResultReason.BANKID_ERROR_INTERRUPTED)
+                            LoginResult.BANKID_ERROR_ALREADY_IN_PROGRESS)
+                    .put(BankIdError.INTERRUPTED, LoginResult.BANKID_ERROR_INTERRUPTED)
                     .put(
                             BankIdError.USER_VALIDATION_ERROR,
-                            LoginResultReason.BANKID_ERROR_USER_VALIDATION_ERROR)
+                            LoginResult.BANKID_ERROR_USER_VALIDATION_ERROR)
                     .put(
                             BankIdError.AUTHORIZATION_REQUIRED,
-                            LoginResultReason.BANKID_ERROR_AUTHORIZATION_REQUIRED)
+                            LoginResult.BANKID_ERROR_AUTHORIZATION_REQUIRED)
                     .put(
                             BankIdError.BANK_ID_UNAUTHORIZED_ISSUER,
-                            LoginResultReason.BANKID_ERROR_BANK_ID_UNAUTHORIZED_ISSUER)
-                    .put(BankIdError.BLOCKED, LoginResultReason.BANKID_ERROR_BLOCKED)
+                            LoginResult.BANKID_ERROR_BANK_ID_UNAUTHORIZED_ISSUER)
+                    .put(BankIdError.BLOCKED, LoginResult.BANKID_ERROR_BLOCKED)
                     .put(
                             BankIdError.INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE,
-                            LoginResultReason
-                                    .BANKID_ERROR_INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE)
+                            LoginResult.BANKID_ERROR_INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE)
                     .build();
 
-    private static final ImmutableMap<ThirdPartyAppError, LoginResultReason>
+    private static final ImmutableMap<ThirdPartyAppError, LoginResult>
             THIRD_PARTY_APP_ERROR_MAPPER =
-                    ImmutableMap.<ThirdPartyAppError, LoginResultReason>builder()
+                    ImmutableMap.<ThirdPartyAppError, LoginResult>builder()
                             .put(
                                     ThirdPartyAppError.CANCELLED,
-                                    LoginResultReason.THIRD_PARTY_APP_ERROR_CANCELLED)
+                                    LoginResult.THIRD_PARTY_APP_ERROR_CANCELLED)
                             .put(
                                     ThirdPartyAppError.TIMED_OUT,
-                                    LoginResultReason.THIRD_PARTY_APP_ERROR_TIMED_OUT)
+                                    LoginResult.THIRD_PARTY_APP_ERROR_TIMED_OUT)
                             .put(
                                     ThirdPartyAppError.ALREADY_IN_PROGRESS,
-                                    LoginResultReason.THIRD_PARTY_APP_ERROR_ALREADY_IN_PROGRESS)
+                                    LoginResult.THIRD_PARTY_APP_ERROR_ALREADY_IN_PROGRESS)
                             .build();
 
-    private static final ImmutableMap<SessionError, LoginResultReason> SESSION_ERROR_MAPPER =
-            ImmutableMap.<SessionError, LoginResultReason>builder()
-                    .put(
-                            SessionError.SESSION_EXPIRED,
-                            LoginResultReason.SESSION_ERROR_SESSION_EXPIRED)
+    private static final ImmutableMap<SessionError, LoginResult> SESSION_ERROR_MAPPER =
+            ImmutableMap.<SessionError, LoginResult>builder()
+                    .put(SessionError.SESSION_EXPIRED, LoginResult.SESSION_ERROR_SESSION_EXPIRED)
                     .put(
                             SessionError.SESSION_ALREADY_ACTIVE,
-                            LoginResultReason.SESSION_ERROR_SESSION_ALREADY_ACTIVE)
+                            LoginResult.SESSION_ERROR_SESSION_ALREADY_ACTIVE)
                     .build();
 
-    private static final ImmutableMap<SupplementalInfoError, LoginResultReason>
+    private static final ImmutableMap<SupplementalInfoError, LoginResult>
             SUPPLEMENTAL_INFORMATION_ERROR_MAPPER =
-                    ImmutableMap.<SupplementalInfoError, LoginResultReason>builder()
+                    ImmutableMap.<SupplementalInfoError, LoginResult>builder()
                             .put(
                                     SupplementalInfoError.NO_VALID_CODE,
-                                    LoginResultReason.SUPPLEMENTAL_INFO_ERROR_NO_VALID_CODE)
+                                    LoginResult.SUPPLEMENTAL_INFO_ERROR_NO_VALID_CODE)
                             .build();
 
-    private static final ImmutableMap<AuthorizationError, LoginResultReason>
-            AUTHORIZATION_ERROR_MAPPER =
-                    ImmutableMap.<AuthorizationError, LoginResultReason>builder()
-                            .put(
-                                    AuthorizationError.UNAUTHORIZED,
-                                    LoginResultReason.AUTHORIZATION_ERROR_UNAUTHORIZED)
-                            .put(
-                                    AuthorizationError.NO_VALID_PROFILE,
-                                    LoginResultReason.AUTHORIZATION_ERROR_NO_VALID_PROFILE)
-                            .put(
-                                    AuthorizationError.ACCOUNT_BLOCKED,
-                                    LoginResultReason.AUTHORIZATION_ERROR_ACCOUNT_BLOCKED)
-                            .put(
-                                    AuthorizationError.DEVICE_LIMIT_REACHED,
-                                    LoginResultReason.AUTHORIZATION_ERROR_DEVICE_LIMIT_REACHED)
-                            .put(
-                                    AuthorizationError.REACH_MAXIMUM_TRIES,
-                                    LoginResultReason.AUTHORIZATION_ERROR_REACH_MAXIMUM_TRIES)
-                            .build();
+    private static final ImmutableMap<AuthorizationError, LoginResult> AUTHORIZATION_ERROR_MAPPER =
+            ImmutableMap.<AuthorizationError, LoginResult>builder()
+                    .put(
+                            AuthorizationError.UNAUTHORIZED,
+                            LoginResult.AUTHORIZATION_ERROR_UNAUTHORIZED)
+                    .put(
+                            AuthorizationError.NO_VALID_PROFILE,
+                            LoginResult.AUTHORIZATION_ERROR_NO_VALID_PROFILE)
+                    .put(
+                            AuthorizationError.ACCOUNT_BLOCKED,
+                            LoginResult.AUTHORIZATION_ERROR_ACCOUNT_BLOCKED)
+                    .put(
+                            AuthorizationError.DEVICE_LIMIT_REACHED,
+                            LoginResult.AUTHORIZATION_ERROR_DEVICE_LIMIT_REACHED)
+                    .put(
+                            AuthorizationError.REACH_MAXIMUM_TRIES,
+                            LoginResult.AUTHORIZATION_ERROR_REACH_MAXIMUM_TRIES)
+                    .build();
 
-    private static final ImmutableMap<BankServiceError, LoginResultReason>
-            BANK_SERVICE_ERROR_MAPPER =
-                    ImmutableMap.<BankServiceError, LoginResultReason>builder()
-                            .put(
-                                    BankServiceError.NO_BANK_SERVICE,
-                                    LoginResultReason.BANK_SERVICE_ERROR_NO_BANK_SERVICE)
-                            .put(
-                                    BankServiceError.BANK_SIDE_FAILURE,
-                                    LoginResultReason.BANK_SERVICE_ERROR_BANK_SIDE_FAILURE)
-                            .put(
-                                    BankServiceError.ACCESS_EXCEEDED,
-                                    LoginResultReason.BANK_SERVICE_ERROR_ACCESS_EXCEEDED)
-                            .put(
-                                    BankServiceError.CONSENT_EXPIRED,
-                                    LoginResultReason.BANK_SERVICE_ERROR_CONSENT_EXPIRED)
-                            .put(
-                                    BankServiceError.CONSENT_INVALID,
-                                    LoginResultReason.BANK_SERVICE_ERROR_CONSENT_INVALID)
-                            .put(
-                                    BankServiceError.CONSENT_REVOKED_BY_USER,
-                                    LoginResultReason.BANK_SERVICE_ERROR_CONSENT_REVOKED_BY_USER)
-                            .put(
-                                    BankServiceError.CONSENT_REVOKED,
-                                    LoginResultReason.BANK_SERVICE_ERROR_CONSENT_REVOKED)
-                            .put(
-                                    BankServiceError.MULTIPLE_LOGIN,
-                                    LoginResultReason.BANK_SERVICE_ERROR_MULTIPLE_LOGIN)
-                            .put(
-                                    BankServiceError.SESSION_TERMINATED,
-                                    LoginResultReason.BANK_SERVICE_ERROR_SESSION_TERMINATED)
-                            .build();
+    private static final ImmutableMap<BankServiceError, LoginResult> BANK_SERVICE_ERROR_MAPPER =
+            ImmutableMap.<BankServiceError, LoginResult>builder()
+                    .put(
+                            BankServiceError.NO_BANK_SERVICE,
+                            LoginResult.BANK_SERVICE_ERROR_NO_BANK_SERVICE)
+                    .put(
+                            BankServiceError.BANK_SIDE_FAILURE,
+                            LoginResult.BANK_SERVICE_ERROR_BANK_SIDE_FAILURE)
+                    .put(
+                            BankServiceError.ACCESS_EXCEEDED,
+                            LoginResult.BANK_SERVICE_ERROR_ACCESS_EXCEEDED)
+                    .put(
+                            BankServiceError.CONSENT_EXPIRED,
+                            LoginResult.BANK_SERVICE_ERROR_CONSENT_EXPIRED)
+                    .put(
+                            BankServiceError.CONSENT_INVALID,
+                            LoginResult.BANK_SERVICE_ERROR_CONSENT_INVALID)
+                    .put(
+                            BankServiceError.CONSENT_REVOKED_BY_USER,
+                            LoginResult.BANK_SERVICE_ERROR_CONSENT_REVOKED_BY_USER)
+                    .put(
+                            BankServiceError.CONSENT_REVOKED,
+                            LoginResult.BANK_SERVICE_ERROR_CONSENT_REVOKED)
+                    .put(
+                            BankServiceError.MULTIPLE_LOGIN,
+                            LoginResult.BANK_SERVICE_ERROR_MULTIPLE_LOGIN)
+                    .put(
+                            BankServiceError.SESSION_TERMINATED,
+                            LoginResult.BANK_SERVICE_ERROR_SESSION_TERMINATED)
+                    .build();
 
-    private static final ImmutableMap<NemIdError, LoginResultReason> NEM_ID_ERROR_MAPPER =
-            ImmutableMap.<NemIdError, LoginResultReason>builder()
-                    .put(NemIdError.INTERRUPTED, LoginResultReason.NEMID_ERROR_INTERRUPTED)
+    private static final ImmutableMap<NemIdError, LoginResult> NEM_ID_ERROR_MAPPER =
+            ImmutableMap.<NemIdError, LoginResult>builder()
+                    .put(NemIdError.INTERRUPTED, LoginResult.NEMID_ERROR_INTERRUPTED)
                     .build();
 
     public LoginExecutor(
@@ -201,7 +192,7 @@ public class LoginExecutor {
         this.context = context;
     }
 
-    private void emitLoginResultEvent(LoginResultReason reason) {
+    private void emitLoginResultEvent(LoginResult reason) {
 
         long finishTime = System.nanoTime();
         long elapsedTime = finishTime - this.loginWorkerStartTimestamp;
@@ -254,7 +245,7 @@ public class LoginExecutor {
             if (result.isPresent()) {
                 switch (result.get()) {
                     case CONTINUE:
-                        emitLoginResultEvent(LoginResultReason.SUCCESSFUL_LOGIN);
+                        emitLoginResultEvent(LoginResult.SUCCESSFUL_LOGIN);
                         break;
                     case ABORT:
                         // TODO: Send a dedicated event here (USER_ABORT)
@@ -275,42 +266,40 @@ public class LoginExecutor {
         // We emit proper login event that contains the proper reason for the error here
         if (ex instanceof LoginException) {
             LoginError error = ((LoginException) ex).getError();
-            LoginResultReason reason = LOGIN_ERROR_MAPPER.get(error);
-            emitLoginResultEvent(reason != null ? reason : LoginResultReason.LOGIN_ERROR_UNKNOWN);
+            LoginResult reason = LOGIN_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(reason != null ? reason : LoginResult.LOGIN_ERROR_UNKNOWN);
         } else if (ex instanceof BankIdException) {
             BankIdError error = ((BankIdException) ex).getError();
-            LoginResultReason reason = BANKID_ERROR_MAPPER.get(error);
-            emitLoginResultEvent(reason != null ? reason : LoginResultReason.BANKID_ERROR_UNKNOWN);
+            LoginResult reason = BANKID_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(reason != null ? reason : LoginResult.BANKID_ERROR_UNKNOWN);
         } else if (ex instanceof ThirdPartyAppException) {
             ThirdPartyAppError error = ((ThirdPartyAppException) ex).getError();
-            LoginResultReason reason = THIRD_PARTY_APP_ERROR_MAPPER.get(error);
+            LoginResult reason = THIRD_PARTY_APP_ERROR_MAPPER.get(error);
             emitLoginResultEvent(
-                    reason != null ? reason : LoginResultReason.THIRD_PARTY_APP_ERROR_UNKNOWN);
+                    reason != null ? reason : LoginResult.THIRD_PARTY_APP_ERROR_UNKNOWN);
         } else if (ex instanceof SessionException) {
             SessionError error = ((SessionException) ex).getError();
-            LoginResultReason reason = SESSION_ERROR_MAPPER.get(error);
-            emitLoginResultEvent(reason != null ? reason : LoginResultReason.SESSION_ERROR_UNKNOWN);
+            LoginResult reason = SESSION_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(reason != null ? reason : LoginResult.SESSION_ERROR_UNKNOWN);
         } else if (ex instanceof SupplementalInfoException) {
             SupplementalInfoError error = ((SupplementalInfoException) ex).getError();
-            LoginResultReason reason = SUPPLEMENTAL_INFORMATION_ERROR_MAPPER.get(error);
+            LoginResult reason = SUPPLEMENTAL_INFORMATION_ERROR_MAPPER.get(error);
             emitLoginResultEvent(
-                    reason != null ? reason : LoginResultReason.SUPPLEMENTAL_INFO_ERROR_UNKNOWN);
+                    reason != null ? reason : LoginResult.SUPPLEMENTAL_INFO_ERROR_UNKNOWN);
         } else if (ex instanceof AuthorizationException) {
             AuthorizationError error = ((AuthorizationException) ex).getError();
-            LoginResultReason reason = AUTHORIZATION_ERROR_MAPPER.get(error);
-            emitLoginResultEvent(
-                    reason != null ? reason : LoginResultReason.AUTHORIZATION_ERROR_UNKNOWN);
+            LoginResult reason = AUTHORIZATION_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(reason != null ? reason : LoginResult.AUTHORIZATION_ERROR_UNKNOWN);
         } else if (ex instanceof BankServiceException) {
             BankServiceError error = ((BankServiceException) ex).getError();
-            LoginResultReason reason = BANK_SERVICE_ERROR_MAPPER.get(error);
-            emitLoginResultEvent(
-                    reason != null ? reason : LoginResultReason.BANK_SERVICE_ERROR_UNKNOWN);
+            LoginResult reason = BANK_SERVICE_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(reason != null ? reason : LoginResult.BANK_SERVICE_ERROR_UNKNOWN);
         } else if (ex instanceof NemIdException) {
             NemIdError error = ((NemIdException) ex).getError();
-            LoginResultReason reason = NEM_ID_ERROR_MAPPER.get(error);
-            emitLoginResultEvent(reason != null ? reason : LoginResultReason.NEMID_ERROR_UNKNOWN);
+            LoginResult reason = NEM_ID_ERROR_MAPPER.get(error);
+            emitLoginResultEvent(reason != null ? reason : LoginResult.NEMID_ERROR_UNKNOWN);
         } else {
-            emitLoginResultEvent(LoginResultReason.UNKNOWN_ERROR);
+            emitLoginResultEvent(LoginResult.UNKNOWN_ERROR);
         }
 
         for (LoginExceptionHandler loginExceptionHandler : loginExceptionHandlerChain) {
