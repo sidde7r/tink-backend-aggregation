@@ -9,19 +9,28 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.strategy.AgentStrategyFactory;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategy;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.TinkHttpClientProviderFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AgentFactory {
     private AgentsServiceConfiguration configuration;
-    private final AgentStrategyFactory agentStrategyFactory;
+    private final TinkHttpClientProviderFactory tinkHttpClientProviderFactory;
+    private final SupplementalInformationProviderFactory supplementalInformationProviderFactory;
+    private final AgentContextProviderFactory agentContextProviderFactory;
 
     @Inject
     public AgentFactory(
-            AgentsServiceConfiguration configuration, AgentStrategyFactory agentStrategyFactory) {
+            AgentsServiceConfiguration configuration,
+            TinkHttpClientProviderFactory tinkHttpClientProviderFactory,
+            SupplementalInformationProviderFactory supplementalInformationProviderFactory,
+            AgentContextProviderFactory agentContextProviderFactory) {
         this.configuration = configuration;
-        this.agentStrategyFactory = agentStrategyFactory;
+        this.tinkHttpClientProviderFactory = tinkHttpClientProviderFactory;
+        this.supplementalInformationProviderFactory = supplementalInformationProviderFactory;
+        this.agentContextProviderFactory = agentContextProviderFactory;
     }
 
     public static Class<? extends Agent> getAgentClass(Credentials credentials, Provider provider)
@@ -49,15 +58,15 @@ public class AgentFactory {
     }
 
     /**
-     * @return An agent constructed using its {@link SubsequentGenerationAgentStrategy } constructor
-     *     or, if it doesn't exist, its {@link AgentsServiceConfiguration } constructor or, if it
-     *     doesn't exist, its {@link SignatureKeyPair } constructor.
+     * @return An agent constructed using its {@link AgentComponentProvider } constructor or, if it
+     *     doesn't exist, its {@link AgentsServiceConfiguration } constructor or, if it doesn't
+     *     exist, its {@link SignatureKeyPair } constructor.
      */
     public Agent create(
             Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context)
             throws Exception {
 
-        final Class<?>[] strategyParameterList = {SubsequentGenerationAgentStrategy.class};
+        final Class<?>[] strategyParameterList = {AgentComponentProvider.class};
 
         final Class<?>[] agentsServiceConfigurationParameterList = {
             CredentialsRequest.class, AgentContext.class, AgentsServiceConfiguration.class
@@ -80,13 +89,22 @@ public class AgentFactory {
 
         if (hasStrategyConstructor) {
             Constructor<?> agentConstructor =
-                    agentClass.getConstructor(SubsequentGenerationAgentStrategy.class);
+                    agentClass.getConstructor(AgentComponentProvider.class);
 
             agent =
                     (Agent)
                             agentConstructor.newInstance(
-                                    agentStrategyFactory.build(
-                                            request, context, configuration.getSignatureKeyPair()));
+                                    new AgentComponentProvider(
+                                            tinkHttpClientProviderFactory
+                                                    .createTinkHttpClientProvider(
+                                                            request,
+                                                            context,
+                                                            configuration.getSignatureKeyPair()),
+                                            supplementalInformationProviderFactory
+                                                    .createSupplementalInformationProvider(
+                                                            context, request),
+                                            agentContextProviderFactory.createAgentContextProvider(
+                                                    request, context)));
 
         } else if (hasAgentsServiceConfigurationConstructor) {
             Constructor<?> agentConstructor =

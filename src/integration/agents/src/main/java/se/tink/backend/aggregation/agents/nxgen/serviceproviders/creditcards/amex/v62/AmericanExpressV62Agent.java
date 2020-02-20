@@ -18,8 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategy;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -43,9 +43,8 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
 
     protected AmericanExpressV62Agent(
-            SubsequentGenerationAgentStrategy agentStrategy,
-            AmericanExpressV62Configuration config) {
-        super(agentStrategy);
+            AgentComponentProvider componentProvider, AmericanExpressV62Configuration config) {
+        super(componentProvider);
 
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         this.client.addFilter(new NoHttpResponseErrorFilter());
@@ -71,9 +70,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
             AmericanExpressV62Configuration config) {
-        this(
-                SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair),
-                config);
+        this(ProductionAgentComponentProvider.create(request, context, signatureKeyPair), config);
     }
 
     @Override

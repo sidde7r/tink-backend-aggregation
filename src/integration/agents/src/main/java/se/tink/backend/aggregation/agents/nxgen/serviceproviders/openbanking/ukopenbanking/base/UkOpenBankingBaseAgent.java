@@ -28,6 +28,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.LegacyTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -84,7 +88,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             SignatureKeyPair signatureKeyPair,
             UkOpenBankingAisConfig aisConfig,
             boolean disableSslVerification) {
-        super(request, context, signatureKeyPair, true);
+        super(
+                new AgentComponentProvider(
+                        new LegacyTinkHttpClientProvider(request, context, signatureKeyPair),
+                        new SupplementalInformationProviderImpl(context, request),
+                        new AgentContextProviderImpl(request, context)));
         this.disableSslVerification = disableSslVerification;
 
         tinkProvider = request.getProvider();

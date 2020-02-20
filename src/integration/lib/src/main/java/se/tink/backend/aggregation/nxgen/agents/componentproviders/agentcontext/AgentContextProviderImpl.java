@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.agents.strategy;
+package se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext;
 
 import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
@@ -8,13 +8,13 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class DefaultSuperAbstractAgentStrategy implements SuperAbstractAgentStrategy {
+public final class AgentContextProviderImpl implements AgentContextProvider {
 
     private final CredentialsRequest credentialsRequest;
     private final CompositeAgentContext context;
 
-    public DefaultSuperAbstractAgentStrategy(
-            final CredentialsRequest credentialsRequest, final CompositeAgentContext context) {
+    public AgentContextProviderImpl(
+            CredentialsRequest credentialsRequest, CompositeAgentContext context) {
         this.credentialsRequest = credentialsRequest;
         this.context = context;
     }
@@ -30,17 +30,7 @@ public final class DefaultSuperAbstractAgentStrategy implements SuperAbstractAge
     }
 
     @Override
-    public AgentAggregatorIdentifier getAgentAggregatorIdentifier() {
-        return context;
-    }
-
-    @Override
-    public SupplementalRequester getSupplementalRequester() {
-        return context;
-    }
-
-    @Override
-    public ProviderSessionCacheContext getProviderSessionCacheContext() {
+    public MetricContext getMetricContext() {
         return context;
     }
 
@@ -50,7 +40,17 @@ public final class DefaultSuperAbstractAgentStrategy implements SuperAbstractAge
     }
 
     @Override
-    public MetricContext getMetricContext() {
+    public AgentAggregatorIdentifier getAgentAggregatorIdentifier() {
+        return context;
+    }
+
+    @Override
+    public ProviderSessionCacheContext getProviderSessionCacheContext() {
+        return context;
+    }
+
+    @Override
+    public SupplementalRequester getSupplementalRequester() {
         return context;
     }
 }

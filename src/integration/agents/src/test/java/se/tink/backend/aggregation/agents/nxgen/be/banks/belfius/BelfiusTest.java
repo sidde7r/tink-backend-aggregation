@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelperImpl;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -22,7 +23,7 @@ public class BelfiusTest {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     protected final SupplementalInformationController supplementalInformation =
-            mock(SupplementalInformationController.class);
+            mock(SupplementalInformationControllerImpl.class);
     protected BelfiusApiClient apiClient;
     protected BelfiusSessionStorage sessionStorage;
 
@@ -43,7 +44,7 @@ public class BelfiusTest {
                 credentials,
                 persistentStorage,
                 sessionStorage,
-                new SupplementalInformationHelper(provider, supplementalInformation),
+                new SupplementalInformationHelperImpl(provider, supplementalInformation),
                 "Tink");
     }
 

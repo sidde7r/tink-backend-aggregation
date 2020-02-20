@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Santa
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.SantanderTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SubsequentGenerationAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -57,7 +57,7 @@ public class SantanderAgent extends SubsequentGenerationAgent<PasswordAuthentica
 
     public SantanderAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(SubsequentGenerationAgentStrategyFactory.nxgen(request, context, signatureKeyPair));
+        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
 
         apiClient = new SantanderApiClient(client, sessionStorage);
         authenticator =

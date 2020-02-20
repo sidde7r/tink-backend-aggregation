@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankPersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -39,7 +40,7 @@ public class OpBankAuthenticationChallengerTest {
         client = mock(OpBankApiClient.class);
         AgentContext context = mock(AgentContext.class);
         SupplementalInformationController supplementalInformationController =
-                new SupplementalInformationController(context, credentials);
+                new SupplementalInformationControllerImpl(context, credentials);
         authenticationChallenger =
                 new OpAuthenticator(client, persistentStorage, credentials, sessionStorage);
 

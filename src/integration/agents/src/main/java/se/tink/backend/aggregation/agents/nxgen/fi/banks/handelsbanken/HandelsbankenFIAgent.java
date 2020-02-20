@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class HandelsbankenFIAgent
@@ -65,7 +65,7 @@ public class HandelsbankenFIAgent
                     new HandelsbankenFICardDeviceAuthenticator(
                             bankClient,
                             handelsbankenPersistentStorage,
-                            new SupplementalInformationController(
+                            new SupplementalInformationControllerImpl(
                                     this.supplementalRequester, this.credentials),
                             handelsbankenConfiguration,
                             new HandelsbankenAutoAuthenticator(

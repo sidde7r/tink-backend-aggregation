@@ -31,7 +31,9 @@ import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
-import se.tink.backend.aggregation.nxgen.agents.strategy.ProductionAgentStrategyFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -42,6 +44,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
@@ -90,7 +93,7 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
                         "",
                         provider);
         this.supplementalInformationController =
-                new SupplementalInformationController(this.context, this.credential);
+                new SupplementalInformationControllerImpl(this.context, this.credential);
         agentTestServerClient = AgentTestServerClient.getInstance();
     }
 
@@ -129,8 +132,14 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
             AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
                     this.CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
             this.configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
+
+            // Provide AgentFactory with 'production' components.
             AgentFactory factory =
-                    new AgentFactory(this.configuration, new ProductionAgentStrategyFactory());
+                    new AgentFactory(
+                            this.configuration,
+                            new NextGenTinkHttpClientProviderFactory(),
+                            new SupplementalInformationProviderFactoryImpl(),
+                            new AgentContextProviderFactoryImpl());
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(this.provider);
             return factory.create(cls, credentialsRequest, this.context);
         } catch (FileNotFoundException e) {

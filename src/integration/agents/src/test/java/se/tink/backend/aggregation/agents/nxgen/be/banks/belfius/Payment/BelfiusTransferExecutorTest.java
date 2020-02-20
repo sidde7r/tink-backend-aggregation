@@ -18,7 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.Belfiu
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferExecutor;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelperImpl;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -33,7 +34,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
     }
 
     protected final SupplementalInformationController supplementalInformationController =
-            mock(SupplementalInformationController.class);
+            mock(SupplementalInformationControllerImpl.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private final CountryDateHelper belgianDateHelper =
@@ -84,7 +85,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
                         apiClient,
                         sessionStorage,
                         new Catalog(new Locale("fr", "BE")),
-                        new SupplementalInformationHelper(
+                        new SupplementalInformationHelperImpl(
                                 provider, supplementalInformationController));
 
         bte.executeTransfer(t);
@@ -119,7 +120,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
                         apiClient,
                         sessionStorage,
                         new Catalog(new Locale("fr", "BE")),
-                        new SupplementalInformationHelper(
+                        new SupplementalInformationHelperImpl(
                                 provider, supplementalInformationController));
 
         bte.executeTransfer(t);
@@ -154,7 +155,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
                         apiClient,
                         sessionStorage,
                         new Catalog(new Locale("fr", "BE")),
-                        new SupplementalInformationHelper(
+                        new SupplementalInformationHelperImpl(
                                 provider, supplementalInformationController));
 
         bte.executeTransfer(t);

@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.nxgen.agents.strategy.SuperAbstractAgentStrategy;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -25,14 +25,14 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
     protected final MetricContext metricContext;
     protected final CredentialsRequest request;
 
-    protected SuperAbstractAgent(final SuperAbstractAgentStrategy strategy) {
-        this.request = strategy.getCredentialsRequest();
-        this.context = strategy.getContext();
-        this.agentAggregatorIdentifier = strategy.getAgentAggregatorIdentifier();
-        this.supplementalRequester = strategy.getSupplementalRequester();
-        this.providerSessionCacheContext = strategy.getProviderSessionCacheContext();
-        this.systemUpdater = strategy.getSystemUpdater();
-        this.metricContext = strategy.getMetricContext();
+    protected SuperAbstractAgent(final AgentContextProvider agentContextProvider) {
+        this.request = agentContextProvider.getCredentialsRequest();
+        this.context = agentContextProvider.getContext();
+        this.agentAggregatorIdentifier = agentContextProvider.getAgentAggregatorIdentifier();
+        this.supplementalRequester = agentContextProvider.getSupplementalRequester();
+        this.providerSessionCacheContext = agentContextProvider.getProviderSessionCacheContext();
+        this.systemUpdater = agentContextProvider.getSystemUpdater();
+        this.metricContext = agentContextProvider.getMetricContext();
     }
 
     public final AggregatorInfo getAggregatorInfo() {

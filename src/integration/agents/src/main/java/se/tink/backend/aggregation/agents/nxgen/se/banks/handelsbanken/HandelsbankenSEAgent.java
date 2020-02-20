@@ -51,7 +51,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
@@ -115,7 +115,7 @@ public class HandelsbankenSEAgent
                     new HandelsbankenSECardDeviceAuthenticator(
                             bankClient,
                             handelsbankenPersistentStorage,
-                            new SupplementalInformationController(
+                            new SupplementalInformationControllerImpl(
                                     supplementalRequester, credentials),
                             handelsbankenConfiguration,
                             autoAuthenticator),
