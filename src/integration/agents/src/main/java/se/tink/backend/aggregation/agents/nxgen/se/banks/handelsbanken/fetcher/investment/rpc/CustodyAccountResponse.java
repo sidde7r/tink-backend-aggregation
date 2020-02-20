@@ -69,7 +69,7 @@ public class CustodyAccountResponse extends BaseResponse {
                 .withTotalProfit(
                         Optional.ofNullable(performance)
                                 .flatMap(HandelsbankenPerformance::asDouble)
-                                .orElse(null))
+                                .orElse(0.0))
                 .withTotalValue(toMarketValue())
                 .withInstruments(toInstrumentModules(client))
                 .setRawType(type)
