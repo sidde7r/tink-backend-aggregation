@@ -656,7 +656,7 @@ agentsServiceConfiguration:
         clientSigningKeyPath: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     creditsafe:
-      password: cU7356rwx
+      password: changeme
       username: TINKTESTIN
     crelan:
       tink:
