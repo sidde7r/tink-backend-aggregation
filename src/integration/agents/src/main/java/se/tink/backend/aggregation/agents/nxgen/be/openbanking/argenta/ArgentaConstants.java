@@ -78,6 +78,7 @@ public final class ArgentaConstants {
         public static final String API_KEY = "apiKey";
         public static final String CERTIFICATE = "tpp-signature-certificate";
         public static final String CONSENT_ID = "Consent-Id";
+        public static final String PSU_ID_ADDRESS = "psu-ip-address";
     }
 
     public static class HeaderValues {
