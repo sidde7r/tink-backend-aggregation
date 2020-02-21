@@ -39,30 +39,22 @@ public class SebApiClient {
     }
 
     public AuthenticationResponse initiateBankId() {
-        final HttpResponse response =
+        return AuthenticationResponse.fromHttpResponse(
                 httpClient
                         .request(Urls.AUTHENTICATE)
                         .header(HeaderKeys.X_SEB_UUID, sebUUID)
                         .accept(MediaType.APPLICATION_JSON)
                         .type(MediaType.APPLICATION_JSON)
-                        .post(HttpResponse.class);
-
-        // Get csrf token from header in response and inject it into the response
-        final String csrfToken = response.getHeaders().getFirst(HeaderKeys.X_SEB_CSRF);
-        return response.getBody(AuthenticationResponse.class).withCsrfToken(csrfToken);
+                        .post(HttpResponse.class));
     }
 
     public AuthenticationResponse collectBankId(final String csrfToken) {
-        final HttpResponse response =
+        return AuthenticationResponse.fromHttpResponse(
                 httpClient
                         .request(Urls.AUTHENTICATE)
                         .header(HeaderKeys.X_SEB_UUID, sebUUID)
                         .header(HeaderKeys.X_SEB_CSRF, csrfToken)
-                        .get(HttpResponse.class);
-
-        // Get csrf token from header in response and inject it into the response
-        final String newCsrfToken = response.getHeaders().getFirst(HeaderKeys.X_SEB_CSRF);
-        return response.getBody(AuthenticationResponse.class).withCsrfToken(newCsrfToken);
+                        .get(HttpResponse.class));
     }
 
     private Response post(URL url, Request request) {

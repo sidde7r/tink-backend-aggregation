@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.HeaderKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 @JsonObject
 public class AuthenticationResponse {
@@ -25,17 +27,18 @@ public class AuthenticationResponse {
         return csrfToken;
     }
 
-    @JsonIgnore
-    public AuthenticationResponse withCsrfToken(String csrfToken) {
-        this.csrfToken = csrfToken;
-        return this;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public String getHintCode() {
         return hintCode;
+    }
+
+    public static AuthenticationResponse fromHttpResponse(HttpResponse response) {
+        AuthenticationResponse authenticationResponse =
+                response.getBody(AuthenticationResponse.class);
+        authenticationResponse.csrfToken = response.getHeaders().getFirst(HeaderKeys.X_SEB_CSRF);
+        return authenticationResponse;
     }
 }
