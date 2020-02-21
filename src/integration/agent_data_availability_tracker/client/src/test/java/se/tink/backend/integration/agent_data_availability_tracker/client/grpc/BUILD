@@ -7,8 +7,8 @@ junit_test(
     deps = [
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
+        "//src/integration/agent_data_availability_tracker/proto:java_grpc",
         "//src/integration/agent_data_availability_tracker/proto:java_proto",
-        "//src/integration/agent_data_availability_tracker/proto:lib",
         "//src/integration/api",
         "//src/integration/models",
         "//third_party:com_google_guava_guava",
