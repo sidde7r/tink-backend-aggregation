@@ -44,8 +44,8 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     private final int port;
     private final String caPath;
 
-    @Inject
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
+    @Inject
     public AgentDataAvailabilityTrackerClientImpl(
             AgentDataAvailabilityTrackerConfiguration configuration) {
         this(configuration.getHost(), configuration.getPort(), configuration.getCaPath());
