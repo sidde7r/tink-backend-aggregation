@@ -11,21 +11,25 @@ import se.tink.libraries.pair.Pair;
 
 public class AapFileParser implements RequestResponseParser {
 
-    private final String fileContent;
-    private final String apiHost;
+    // Matches everything up until the third '/' in url.
+    private static final String HTTP_HOST_REGEX = "^.*//[^/]+";
 
-    public AapFileParser(String wiremockFilePath, String apiHost) {
-        this.fileContent = new ResourceFileReader().read(wiremockFilePath);
-        this.apiHost = apiHost;
+    private final List<String> lines;
+
+    public AapFileParser(String rawFileContent) {
+        this.lines =
+                new ArrayList<>(Arrays.asList(rawFileContent.split("\n")))
+                        .stream()
+                                .filter(line -> !line.startsWith("#"))
+                                .collect(Collectors.toList());
+    }
+
+    public AapFileParser(List<String> lines) {
+        this.lines = lines;
     }
 
     @Override
     public List<Pair<HTTPRequest, HTTPResponse>> parseRequestResponsePairs() {
-        List<String> lines =
-                new ArrayList<>(Arrays.asList(fileContent.split("\n")))
-                        .stream()
-                                .filter(line -> !line.startsWith("#"))
-                                .collect(Collectors.toList());
 
         List<Integer> requestStartIndices =
                 findLineIndicesContainingGivenExpression(lines, "REQUEST");
@@ -38,7 +42,7 @@ public class AapFileParser implements RequestResponseParser {
                     lines.subList(
                             requestStartIndices.get(currentPairIndex) + 1,
                             responseStartIndices.get(currentPairIndex));
-            HTTPRequest request = parseRequest(requestLines, apiHost);
+            HTTPRequest request = parseRequest(requestLines);
             int responseDataEndLine =
                     (currentPairIndex + 1) == requestStartIndices.size()
                             ? lines.size()
@@ -60,10 +64,10 @@ public class AapFileParser implements RequestResponseParser {
                 .collect(Collectors.toList());
     }
 
-    private HTTPRequest parseRequest(List<String> requestLines, String host) {
+    private HTTPRequest parseRequest(List<String> requestLines) {
 
         String requestMethod = parseRequestMethod(requestLines);
-        String requestURL = parseRequestURL(requestLines).replace(host, "");
+        String requestURL = removeHost(parseRequestURL(requestLines));
         List<Pair<String, String>> requestHeaders = parseHeaders(requestLines);
         Optional<String> requestBody = parseBody(requestLines);
         return requestBody
@@ -87,13 +91,14 @@ public class AapFileParser implements RequestResponseParser {
          */
         int firstEmptyLineIndex = rawData.indexOf("");
         return rawData.subList(1, firstEmptyLineIndex).stream()
-                .map(header -> parseHeader(header))
+                .map(this::parseHeader)
                 .collect(Collectors.toList());
     }
 
     private Pair<String, String> parseHeader(String header) {
-        String key = header.substring(0, header.lastIndexOf(":")).trim();
-        String value = header.substring(header.lastIndexOf(":") + 1).trim();
+        final int deliminatorIndex = header.indexOf(":");
+        String key = header.substring(0, deliminatorIndex).trim();
+        String value = header.substring(deliminatorIndex + 1).trim();
         return new Pair<>(key, value);
     }
 
@@ -118,5 +123,9 @@ public class AapFileParser implements RequestResponseParser {
 
     private Integer parseStatusCode(List<String> rawData) {
         return new Integer(rawData.get(0).trim());
+    }
+
+    private String removeHost(final String url) {
+        return url.replaceFirst(HTTP_HOST_REGEX, "");
     }
 }
