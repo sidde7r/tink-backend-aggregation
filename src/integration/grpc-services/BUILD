@@ -19,8 +19,8 @@ java_library(
         "//src/libraries/metrics:prometheus",
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",  # TODO: remove this dependency
+        "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
-        "@com_google_guava_guava//jar",
         "@io_grpc_grpc_java//api",
         "@io_grpc_grpc_java//stub",
     ],
