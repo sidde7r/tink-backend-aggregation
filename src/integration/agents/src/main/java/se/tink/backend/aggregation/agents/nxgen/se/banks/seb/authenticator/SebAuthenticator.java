@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.LoginCodes;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.UserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.rpc.AuthenticationResponse;
@@ -32,7 +32,7 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
     private final SebSessionStorage sessionStorage;
     private String autoStartToken;
     private String csrfToken;
-    private String ssn = null;
+    private String ssn;
 
     public SebAuthenticator(SebApiClient apiClient, SebSessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -63,26 +63,17 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
         final AuthenticationResponse response = apiClient.collectBankId(csrfToken);
         csrfToken = response.getCsrfToken();
 
-        switch (response.getStatus().toLowerCase()) {
-            case LoginCodes.STATUS_COMPLETE:
-                activateSession();
-                return BankIdStatus.DONE;
-            case LoginCodes.STATUS_PENDING:
-                return BankIdStatus.WAITING;
-            case LoginCodes.STATUS_FAILED:
-                switch (Strings.nullToEmpty(response.getHintCode()).toLowerCase()) {
-                    case LoginCodes.HINT_FAILED:
-                        return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
-                    case LoginCodes.HINT_CANCELLED:
-                        return BankIdStatus.CANCELLED;
-                    default:
-                        LOG.warn("Unhandled BankID hint: " + response.getHintCode());
-                        return BankIdStatus.FAILED_UNKNOWN;
-                }
-            default:
-                LOG.warn("Unhandled BankID status: " + response.getStatus());
-                return BankIdStatus.FAILED_UNKNOWN;
+        final BankIdStatus status =
+                Authentication.statusMapper.translate(response.getStatus().toLowerCase()).get();
+        if (status == BankIdStatus.DONE) {
+            activateSession();
+        } else if (status == BankIdStatus.FAILED_UNKNOWN) {
+            return Authentication.hintCodeMapper
+                    .translate(Strings.nullToEmpty(response.getHintCode()).toLowerCase())
+                    .get();
         }
+
+        return status;
     }
 
     @Override

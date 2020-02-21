@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -70,17 +72,22 @@ public class SebConstants {
         public static final String X_SEB_CSRF = "x-seb-csrf";
     }
 
-    public static class RequestBody {
-        public static final String SEB_REFERER_VALUE = "/masp/mbid";
-    }
+    public static class Authentication {
+        public static final GenericTypeMapper<BankIdStatus, String> statusMapper =
+                GenericTypeMapper.<BankIdStatus, String>genericBuilder()
+                        .put(BankIdStatus.DONE, "complete")
+                        .put(BankIdStatus.WAITING, "pending")
+                        .put(BankIdStatus.FAILED_UNKNOWN, "failed")
+                        .setDefaultTranslationValue(BankIdStatus.FAILED_UNKNOWN)
+                        .build();
 
-    public static class LoginCodes {
-        // Strings for status comparison when logging in with BankID.
-        public static final String STATUS_COMPLETE = "complete";
-        public static final String STATUS_PENDING = "pending";
-        public static final String STATUS_FAILED = "failed";
-        public static final String HINT_FAILED = "start_failed";
-        public static final String HINT_CANCELLED = "user_cancel";
+        public static final GenericTypeMapper<BankIdStatus, String> hintCodeMapper =
+                GenericTypeMapper.<BankIdStatus, String>genericBuilder()
+                        .put(BankIdStatus.TIMEOUT, "expired_transaction")
+                        .put(BankIdStatus.EXPIRED_AUTOSTART_TOKEN, "start_failed")
+                        .put(BankIdStatus.CANCELLED, "cancelled", "user_cancel")
+                        .setDefaultTranslationValue(BankIdStatus.FAILED_UNKNOWN)
+                        .build();
     }
 
     public static class InitResult {
