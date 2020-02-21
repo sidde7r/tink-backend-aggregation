@@ -12,10 +12,6 @@ public final class ArgentaConstants {
     }
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String INVALID_SCA_METHOD = "The chosen SCA method is not valid";
     }
 
@@ -26,7 +22,6 @@ public final class ArgentaConstants {
         public static final URL AUTHORIZATION = new URL(BASE_AUTH_URL + Endpoints.AUTHORIZATION);
         public static final URL CONSENT = new URL(BASE_API_URL + Endpoints.CONSENT);
         public static final URL TOKEN = new URL(BASE_API_URL + Endpoints.TOKEN);
-
         public static final URL ACCOUNTS = new URL(BASE_API_URL + Endpoints.ACCOUNTS);
         public static final URL BALANCES = new URL(BASE_API_URL + Endpoints.BALANCES);
         public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
@@ -83,7 +78,6 @@ public final class ArgentaConstants {
         public static final String API_KEY = "apiKey";
         public static final String CERTIFICATE = "tpp-signature-certificate";
         public static final String CONSENT_ID = "Consent-Id";
-        public static final String PSU_ID_ADDRESS = "psu-ip-address";
     }
 
     public static class HeaderValues {

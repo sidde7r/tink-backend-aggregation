@@ -92,7 +92,6 @@ public final class ArgentaApiClient {
                 .headers(headers)
                 .header(HeaderKeys.API_KEY, configuration.getApiKey())
                 .header(HeaderKeys.CERTIFICATE, configuration.getClientSigningCertificate())
-                .header(HeaderKeys.PSU_ID_ADDRESS, configuration.getPsuIpAddress())
                 .header(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
     }
 
