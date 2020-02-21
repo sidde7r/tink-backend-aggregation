@@ -21,8 +21,27 @@ public class Payment {
     private static Logger log = LoggerFactory.getLogger(Payment.class);
     private static ImmutableList<String> sepaCountriesWithEur =
             ImmutableList.of(
-                    "AT", "BE", "CY", "DE", "EE", "ES", "FI", "FR", "GR", "IE", "IT", "LT", "LU",
-                    "LV", "MT", "NL", "PT", "SI", "SK");
+                    "AT",
+                    "BE",
+                    "CY",
+                    "DE",
+                    "EE",
+                    "ES",
+                    "FI",
+                    "FR",
+                    "GR",
+                    "IE",
+                    "IT",
+                    "LT",
+                    "LU",
+                    "LV",
+                    "MT",
+                    "NL",
+                    "PT",
+                    "SI",
+                    "SK",
+                    // This is temporary fix for pt-caixa-ob, I am working on a better solution
+                    "GB");
     private Creditor creditor;
     private Debtor debtor;
     private Amount amount;
