@@ -71,7 +71,7 @@ public final class ArgentaConstants {
     public static class QueryValues {
         public static final String S256 = "S256";
         public static final String CODE = "code";
-        public static final String SCOPE = "ais:%s";
+        public static final String SCOPE = "AIS:%s";
         public static final String BOTH = "both";
     }
 
