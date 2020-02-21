@@ -15,7 +15,7 @@ java_proto_library(
 )
 
 java_grpc_library(
-    name = "lib",
+    name = "java_grpc",
     srcs = [":proto"],
     visibility = ["//visibility:public"],
     deps = [":java_proto"],
