@@ -1,7 +1,7 @@
 load("@io_grpc_grpc_java//:java_grpc_library.bzl", "java_grpc_library")
 
 java_grpc_library(
-    name = "tink-grpc-integration",
+    name = "java_grpc",
     srcs = [":integration-proto"],
     visibility = ["//visibility:public"],
     deps = [

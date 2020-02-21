@@ -4,8 +4,8 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/grpc-services/proto:integration-proto",
+        "//src/integration/grpc-services/proto:java_grpc",
         "//src/integration/grpc-services/proto:java_proto",
-        "//src/integration/grpc-services/proto:tink-grpc-integration",
         "//src/integration/lib",  # TODO: remove this dependency
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",
