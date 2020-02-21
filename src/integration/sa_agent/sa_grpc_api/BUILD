@@ -1,7 +1,7 @@
 load("@io_grpc_grpc_java//:java_grpc_library.bzl", "java_grpc_library")
 
 java_grpc_library(
-    name = "sa-grpc-api",
+    name = "java_grpc",
     srcs = [":sa-agent-grpc-api-proto"],
     visibility = ["//visibility:public"],
     deps = [
