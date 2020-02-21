@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.abnamro.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -8,6 +9,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -319,7 +321,8 @@ public class IBSubscriptionClient extends IBClient {
         return Optional.of(subscriptionResponse);
     }
 
-    public List<PfmContractEntity> getContracts(String bcNumber) throws SubscriptionException {
+    public List<PfmContractEntity> getContracts(String bcNumber)
+            throws SubscriptionException, IOException {
         Preconditions.checkArgument(
                 !Strings.isNullOrEmpty(bcNumber), "BcNumber must not be null or empty");
 
@@ -329,7 +332,12 @@ public class IBSubscriptionClient extends IBClient {
 
         validateContentType(response, MediaType.APPLICATION_JSON_TYPE);
 
-        PfmContractResponse entity = response.getEntity(PfmContractResponse.class);
+        // TODO -> Temporary changed below for debugging purpose
+        final String entityString = response.getEntity(String.class);
+        log.info("PfmContractResponse: {}", entityString);
+        // PfmContractResponse entity = response.getEntity(PfmContractResponse.class);
+        PfmContractResponse entity =
+                new ObjectMapper().readValue(entityString, PfmContractResponse.class);
 
         return Lists.newArrayList(entity);
     }
