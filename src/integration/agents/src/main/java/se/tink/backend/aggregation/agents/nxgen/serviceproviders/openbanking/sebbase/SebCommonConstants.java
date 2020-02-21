@@ -18,15 +18,32 @@ public class SebCommonConstants {
     }
 
     public static class Urls {
+        public static final String BASE_AUTH_URL = "https://tpp-auth.seb.se";
         public static final String BASE_URL = "https://tpp-api.sebgroup.com";
-        private static final String BASE_AUTH = "/mga/sps/oauth";
 
-        public static final String OAUTH = BASE_AUTH + "/oauth20/authorize";
-        public static final String TOKEN = BASE_AUTH + "/oauth20/token";
+        public static final String INIT_BANKID = BASE_AUTH_URL + "/auth/bid/v2/authentications";
+        private static final String BASE_OAUTH = BASE_AUTH_URL + "/mga/sps/oauth";
+        public static final String OAUTH = BASE_OAUTH + "/oauth20/dpsd2/authorize";
+        public static final String TOKEN = BASE_URL + "/mga/sps/oauth/oauth20/dpsd2/token";
+    }
+
+    public static class PollResponses {
+        public static final String COMPLETE = "complete";
+        public static final String PENDING = "pending";
+        public static final String FAILED = "failed";
+        public static final String USER_SIGN = "user_sign";
+        public static final String STARTED = "started";
+        public static final String NO_CLIENT = "no_client";
+        public static final String OUTSTANDING_TRANSACTION = "outstanding_transaction";
+        public static final String EXPIRED_TRANSACTION = "expired_transaction";
+        public static final String USER_CANCEL = "user_cancel";
+        public static final String CANCELLED = "cancelled";
+        public static final String START_FAILED = "start_failed";
     }
 
     public static class QueryKeys {
         public static final String CLIENT_ID = "client_id";
+        public static final String CONSENT_FORM_VERIFIER = "consent_form_verifier";
         public static final String RESPONSE_TYPE = "response_type";
         public static final String SCOPE = "scope";
         public static final String REDIRECT_URI = "redirect_uri";
@@ -35,6 +52,7 @@ public class SebCommonConstants {
         public static final String CLIENT_SECRET = "client_secret";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String GRANT_TYPE = "grant_type";
+        public static final String TRUST_LEVEL = "trust_level";
         public static final String WITH_BALANCE = "withBalance";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_FROM = "dateFrom";
@@ -49,11 +67,13 @@ public class SebCommonConstants {
         public static final String BOOKED_TRANSACTIONS = "booked";
         public static final String WITH_BALANCE = "true";
         public static final String PENDING_AND_BOOKED_TRANSACTIONS = "both";
+        public static final String PERMIT = "permit";
     }
 
     public static class HeaderKeys {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+        public static final String X_SEB_CSRF = "x-seb-csrf";
     }
 
     public static class StorageKeys {
@@ -75,14 +95,17 @@ public class SebCommonConstants {
         public static final String ACCOUNT_ID = "accountId";
     }
 
-    public static class ACCOUNT_TYPES {
+    public static class AccountTypes {
         public static final String SAVINGS = "sparkonto";
     }
 
-    public static class ERROR {
+    public static class ErrorMessages {
         public static final String PAGINATING_ERROR_CODE = "301";
         public static final String PAGINATING_ERROR_MESSAGE =
                 "Unhandeled HostRC code: 2000 Error message is available.";
         public static final String INVALID_GRANT_ERROR = "invalid_grant";
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 }
