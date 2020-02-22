@@ -8,7 +8,6 @@ java_library(
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
