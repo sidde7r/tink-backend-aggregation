@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.AccountPayloadKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Currency;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenPerformance;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.SecurityHoldingList;
@@ -17,10 +18,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CustodyAccountResponse extends BaseResponse {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustodyAccountResponse.class);
@@ -49,7 +52,18 @@ public class CustodyAccountResponse extends BaseResponse {
                                         AccountIdentifier.create(
                                                 Type.TINK, getAccountNumberBasedOnInvestmentType()))
                                 .build())
+                .putPayload(
+                        AccountPayloadKeys.FUND_ACCOUNT_NUMBER,
+                        SerializationUtils.serializeToString(getFundAccountMapping(client)))
                 .build();
+    }
+
+    private List<String> getFundAccountMapping(HandelsbankenSEApiClient client) {
+        final List<InstrumentModule> instruments = toInstrumentModules(client);
+        return instruments.stream()
+                .map(InstrumentModule::getInstrumentIdModule)
+                .map(InstrumentIdModule::getIsin)
+                .collect(Collectors.toList());
     }
 
     private double toMarketValue() {

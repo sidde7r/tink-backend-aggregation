@@ -59,7 +59,7 @@ public final class InstrumentModule {
         return new Builder();
     }
 
-    InstrumentIdModule getInstrumentIdModule() {
+    public InstrumentIdModule getInstrumentIdModule() {
         return instrumentIdModule;
     }
 
