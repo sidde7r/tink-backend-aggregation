@@ -21,10 +21,7 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/norwegian",
         "//src/integration/lib",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
