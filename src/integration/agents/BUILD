@@ -472,6 +472,7 @@ java_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sparebankenvest",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/dnb",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/nordea",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/norwegian",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/paypal",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/bancobpi",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/caixa",
