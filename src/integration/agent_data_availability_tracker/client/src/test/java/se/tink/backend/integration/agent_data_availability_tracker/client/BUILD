@@ -12,10 +12,15 @@ junit_test(
     deps = [
         "//src/integration/account:enums",
         "//src/integration/agent_data_availability_tracker/client",
+        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client/configuration",
+        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/module:agent-data-availability-tracker-module",
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
         "//src/integration/api",
         "//src/integration/models",
         "//src/libraries/account_identifier",
+        "//src/libraries/serialization",
+        "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
+        "@io_grpc_grpc_java//api",
     ],
 )
