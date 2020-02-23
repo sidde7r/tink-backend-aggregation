@@ -11,7 +11,6 @@ junit_test(
         "//etc:development",
     ],
     tags = [
-        "external",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
