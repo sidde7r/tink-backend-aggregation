@@ -9,7 +9,6 @@ junit_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/banks/ing/resources",
     ],
     tags = [
-        "external",
     ],
     visibility = ["//visibility:public"],
     deps = [
