@@ -29,6 +29,7 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -817,7 +818,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
     public RequestBuilder request(URL url) {
         final RequestBuilder builder =
                 new NextGenRequestBuilder(
-                        this.getFilters(),
+                        new ArrayList<>(this.getFilters()),
                         url,
                         getHeaderAggregatorIdentifier(),
                         responseStatusHandler);
