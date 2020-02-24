@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication.BPostBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.product.account.BPostBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.product.account.BPostBankTransactionsFetcher;
@@ -19,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class BPostBankAgent extends SubsequentProgressiveGenerationAgent
-        implements RefreshCheckingAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private BPostBankEntityManager entityManager;
     private BPostBankAuthenticator authenticator;
@@ -62,6 +63,16 @@ public class BPostBankAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return getTransactionalAccountRefreshController().fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return getTransactionalAccountRefreshController().fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return getTransactionalAccountRefreshController().fetchSavingsTransactions();
     }
 
     private BPostBankEntityManager getEntityManager() {

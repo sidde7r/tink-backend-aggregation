@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -14,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.WireMockIntegrati
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.entity.BPostBankAuthContext;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
-@Ignore
 public class TransactionalAccountRequestTest extends WireMockIntegrationTest {
 
     private static final String LOGIN = "12345678";
@@ -46,7 +44,7 @@ public class TransactionalAccountRequestTest extends WireMockIntegrationTest {
     public void executeShouldReturnProperResponseObject() throws RequestException {
         // given
         final String responseBody =
-                "{\"current-account\": [{\"accountIdentification\": [{\"scheme\": \"IBAN\",\"id\": \"BE68539007547034\"}],\"product\": \"b.compact rekening\",\"bankProduct\": \"300120\",\"currency\": \"EUR\",\"alias\": \"account alias\",\"availableBalance\": \"85.53\",\"bookedBalance\": \"84.53\",\"isSightAccount\": true,\"isAccountReadOnly\": false,\"clientShortNameHolder\": \"Name Surname\"}],\"deposit-account\": []}";
+                "{\"current-account\": [{\"accountIdentification\": [{\"scheme\": \"IBAN\",\"id\": \"BE22000457447047\"}],\"product\": \"b.compact rekening\",\"bankProduct\": \"300120\",\"currency\": \"EUR\",\"alias\": \"regular account\",\"availableBalance\": \"9.00\",\"bookedBalance\": \"9.15\",\"isSightAccount\": true,\"isAccountReadOnly\": false,\"clientShortNameHolder\": \"Name Surname\"}],\"deposit-account\": [{\"accountIdentification\": [{\"scheme\": \"IBAN\",\"id\": \"BE87299880825094\"}],\"product\": \"Gereglementeerde Spaarrekening\",\"bankProduct\": \"320101\",\"currency\": \"EUR\",\"alias\": \"savings account\",\"availableBalance\": \"3980.0\",\"bookedBalance\": \"3980.0\",\"isSightAccount\": false,\"isAccountReadOnly\": false,\"clientShortNameHolder\": \"Name Surname\"}]}";
         WireMock.stubFor(
                 WireMock.post(WireMock.urlPathEqualTo("/bpb/services/rest/v2/accounts"))
                         .willReturn(
@@ -61,12 +59,21 @@ public class TransactionalAccountRequestTest extends WireMockIntegrationTest {
         // then
         Assert.assertEquals(1, result.currentAccounts.size());
         BPostBankAccountDTO accountDTO = result.currentAccounts.get(0);
-        Assert.assertEquals("85.53", accountDTO.availableBalance);
-        Assert.assertEquals("84.53", accountDTO.bookedBalance);
+        Assert.assertEquals("9.00", accountDTO.availableBalance);
+        Assert.assertEquals("9.15", accountDTO.bookedBalance);
         Assert.assertEquals("EUR", accountDTO.currency);
         Assert.assertEquals("Name Surname", accountDTO.clientName);
         Assert.assertEquals("IBAN", accountDTO.accountIdentification.get(0).scheme);
-        Assert.assertEquals("BE68539007547034", accountDTO.accountIdentification.get(0).id);
-        Assert.assertEquals("account alias", accountDTO.alias);
+        Assert.assertEquals("BE22000457447047", accountDTO.accountIdentification.get(0).id);
+        Assert.assertEquals("regular account", accountDTO.alias);
+        Assert.assertEquals(1, result.savingsAccounts.size());
+        accountDTO = result.savingsAccounts.get(0);
+        Assert.assertEquals("3980.0", accountDTO.availableBalance);
+        Assert.assertEquals("3980.0", accountDTO.bookedBalance);
+        Assert.assertEquals("EUR", accountDTO.currency);
+        Assert.assertEquals("Name Surname", accountDTO.clientName);
+        Assert.assertEquals("IBAN", accountDTO.accountIdentification.get(0).scheme);
+        Assert.assertEquals("BE87299880825094", accountDTO.accountIdentification.get(0).id);
+        Assert.assertEquals("savings account", accountDTO.alias);
     }
 }

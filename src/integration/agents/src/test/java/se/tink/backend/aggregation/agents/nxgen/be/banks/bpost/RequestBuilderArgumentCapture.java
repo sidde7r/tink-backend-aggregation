@@ -163,7 +163,8 @@ public class RequestBuilderArgumentCapture implements RequestBuilder {
 
     @Override
     public RequestBuilder acceptLanguage(String... locales) {
-        return null;
+        headers.put("Accept-Language", String.join(",", locales));
+        return this;
     }
 
     @Override

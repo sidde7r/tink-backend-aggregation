@@ -9,4 +9,7 @@ public class BPostBankAccountsResponseDTO {
 
     @JsonProperty("current-account")
     List<BPostBankAccountDTO> currentAccounts;
+
+    @JsonProperty("deposit-account")
+    List<BPostBankAccountDTO> savingsAccounts;
 }

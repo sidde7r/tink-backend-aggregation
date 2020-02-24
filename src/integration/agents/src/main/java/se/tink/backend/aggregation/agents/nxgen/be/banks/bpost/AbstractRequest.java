@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost;
 
-import java.util.HashMap;
-import java.util.Map;
 import se.tink.backend.aggregation.agents.common.Request;
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.entity.BPostBankAuthContext;
@@ -29,12 +27,11 @@ public abstract class AbstractRequest<T> implements Request<T> {
     @Override
     public RequestBuilder withHeaders(RequestBuilder requestBuilder) throws RequestException {
         if (csrfToken != null) {
-            Map<String, Object> headers = new HashMap<>();
-            headers.put("X-Device-Type", "1");
-            headers.put("Accept-Language", "nl-be");
-            headers.put("lang", "nl-BE");
-            headers.put(BPostBankConstants.CSRF_TOKEN_HEADER_KEY, csrfToken);
-            return requestBuilder.headers(headers);
+            requestBuilder
+                    .acceptLanguage("nl-be")
+                    .header("X-Device-Type", "1")
+                    .header("lang", "nl-BE")
+                    .header(BPostBankConstants.CSRF_TOKEN_HEADER_KEY, csrfToken);
         }
         return requestBuilder;
     }

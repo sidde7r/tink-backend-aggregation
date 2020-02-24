@@ -97,8 +97,8 @@ public class BPostBankApiClient {
     public List<BPostBankTransactionDTO> fetchAccountTransactions(
             TransactionalAccount account, int page, int pageSize, BPostBankAuthContext authContext)
             throws RequestException {
-        int first = page * pageSize - pageSize;
         int last = page * pageSize;
+        int first = last - pageSize;
         return new AccountTransactionsRequest(authContext, first, last, account.getAccountNumber())
                 .call(httpClient);
     }

@@ -13,24 +13,13 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class AbstractRequestTest {
 
     @Test
-    public void withHeadersShouldSetRequiredHeaders() throws RequestException {
+    public void shouldSetRequiredHeaders() throws RequestException {
         // given
         final String csrfToken = "csrfToken";
         BPostBankAuthContext authContext = Mockito.mock(BPostBankAuthContext.class);
         RequestBuilderArgumentCapture requestBuilder = new RequestBuilderArgumentCapture();
         Mockito.when(authContext.getCsrfToken()).thenReturn(csrfToken);
-        AbstractRequest<Void> objectUnderTest =
-                new AbstractRequest<Void>("path", authContext) {
-                    @Override
-                    public RequestBuilder withBody(RequestBuilder requestBuilder) {
-                        return requestBuilder;
-                    }
-
-                    @Override
-                    public Void execute(RequestBuilder requestBuilder) throws RequestException {
-                        return null;
-                    }
-                };
+        AbstractRequest<Void> objectUnderTest = createDummyObjectUnderTest(authContext);
         // when
         Map<String, Object> result =
                 ((RequestBuilderArgumentCapture) objectUnderTest.withHeaders(requestBuilder))
@@ -43,7 +32,7 @@ public class AbstractRequestTest {
     }
 
     @Test
-    public void withUrlShouldSetBPostUrl() {
+    public void shouldSetBPostUrl() {
         // given
         final String path = "/bpb";
         final String url = "https://app.bpostbank.be" + path;
@@ -51,21 +40,38 @@ public class AbstractRequestTest {
         RequestBuilder requestBuilder = Mockito.mock(RequestBuilder.class);
         Mockito.when(httpClient.request(url)).thenReturn(requestBuilder);
         Mockito.when(httpClient.request(new URL(url))).thenReturn(requestBuilder);
-        AbstractRequest<Void> objectUnderTest =
-                new AbstractRequest<Void>(path) {
-                    @Override
-                    public RequestBuilder withBody(RequestBuilder requestBuilder) {
-                        return requestBuilder;
-                    }
-
-                    @Override
-                    public Void execute(RequestBuilder requestBuilder) throws RequestException {
-                        return null;
-                    }
-                };
+        AbstractRequest<Void> objectUnderTest = createDummyObjectUnderTest(path);
         // when
         RequestBuilder result = objectUnderTest.withUrl(httpClient);
         // then
         Assert.assertEquals(requestBuilder, result);
+    }
+
+    private AbstractRequest<Void> createDummyObjectUnderTest(BPostBankAuthContext authContext) {
+        return new AbstractRequest<Void>("path", authContext) {
+            @Override
+            public RequestBuilder withBody(RequestBuilder requestBuilder) {
+                return requestBuilder;
+            }
+
+            @Override
+            public Void execute(RequestBuilder requestBuilder) throws RequestException {
+                return null;
+            }
+        };
+    }
+
+    private AbstractRequest<Void> createDummyObjectUnderTest(String path) {
+        return new AbstractRequest<Void>(path) {
+            @Override
+            public RequestBuilder withBody(RequestBuilder requestBuilder) {
+                return requestBuilder;
+            }
+
+            @Override
+            public Void execute(RequestBuilder requestBuilder) throws RequestException {
+                return null;
+            }
+        };
     }
 }

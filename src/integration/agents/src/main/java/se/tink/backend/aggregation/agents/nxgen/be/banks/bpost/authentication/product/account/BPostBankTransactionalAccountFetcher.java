@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.product.account;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -29,18 +31,31 @@ public class BPostBankTransactionalAccountFetcher implements AccountFetcher<Tran
     public Collection<TransactionalAccount> fetchAccounts() {
         try {
             BPostBankAccountsResponseDTO response = apiClient.fetchAccounts(authContext);
-            return response.currentAccounts.stream()
-                    .map(a -> mapToTransactionalAccount(a))
-                    .collect(Collectors.toList());
+            List<TransactionalAccount> accounts = new LinkedList<>();
+            accounts.addAll(
+                    mapToTransactionalAccounts(
+                            response.currentAccounts, TransactionalAccountType.CHECKING));
+            accounts.addAll(
+                    mapToTransactionalAccounts(
+                            response.savingsAccounts, TransactionalAccountType.SAVINGS));
+            return accounts;
         } catch (RequestException ex) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception(ex.getMessage());
         }
     }
 
-    private TransactionalAccount mapToTransactionalAccount(BPostBankAccountDTO accountDTO) {
+    private List<TransactionalAccount> mapToTransactionalAccounts(
+            List<BPostBankAccountDTO> accountDTOs, TransactionalAccountType accountType) {
+        return accountDTOs.stream()
+                .map(a -> mapToTransactionalAccount(a, accountType))
+                .collect(Collectors.toList());
+    }
+
+    private TransactionalAccount mapToTransactionalAccount(
+            BPostBankAccountDTO accountDTO, TransactionalAccountType accountType) {
         final String iban = findIbanIdentifier(accountDTO);
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
+                .withType(accountType)
                 .withPaymentAccountFlag()
                 .withBalance(
                         BalanceModule.of(
@@ -66,7 +81,7 @@ public class BPostBankTransactionalAccountFetcher implements AccountFetcher<Tran
                 .orElseThrow(
                         () ->
                                 BankServiceError.BANK_SIDE_FAILURE.exception(
-                                        "IBAN identifier didn't be found"))
+                                        "IBAN identifier not found"))
                 .id;
     }
 }
