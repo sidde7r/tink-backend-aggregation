@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc;
 
 import java.util.Optional;
+import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEFundDetails;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 
 public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
 
+    private String accountFormatted;
     private String currency;
     private HandelsbankenAmount totalChange;
     private HandelsbankenSEFundDetails fundDetails;
@@ -37,7 +39,9 @@ public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
                                             .orElse(null);
                             return InstrumentModule.builder()
                                     .withType(InstrumentType.FUND)
-                                    .withId(InstrumentIdModule.of(isin, marketPlace, name, isin))
+                                    .withId(
+                                            InstrumentIdModule.of(
+                                                    isin, marketPlace, name, getUniqueIdentifier()))
                                     .withMarketPrice(0.0)
                                     .withMarketValue(extractedMarketValue)
                                     .withAverageAcquisitionPrice(
@@ -60,5 +64,15 @@ public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
                                                     .orElse(0.0))
                                     .build();
                         });
+    }
+
+    private String getUniqueIdentifier() {
+        return Optional.ofNullable(this)
+                .map(HandelsbankenSEFundAccountHoldingDetail::getAccountFormatted)
+                .orElse(isin);
+    }
+
+    public String getAccountFormatted() {
+        return StringUtils.deleteWhitespace(accountFormatted);
     }
 }

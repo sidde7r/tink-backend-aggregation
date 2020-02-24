@@ -62,7 +62,7 @@ public class CustodyAccountResponse extends BaseResponse {
         final List<InstrumentModule> instruments = toInstrumentModules(client);
         return instruments.stream()
                 .map(InstrumentModule::getInstrumentIdModule)
-                .map(InstrumentIdModule::getIsin)
+                .map(InstrumentIdModule::getUniqueIdentifier)
                 .collect(Collectors.toList());
     }
 
