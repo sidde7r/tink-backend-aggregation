@@ -3,9 +3,7 @@ java_library(
     srcs = glob(["src/main/java/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/grpc-services/proto:integration-proto",
-        "//src/integration/grpc-services/proto:java_grpc",
-        "//src/integration/grpc-services/proto:java_proto",
+        "//src/integration/grpc-services/proto:tink-grpc-integration",
         "//src/integration/lib",  # TODO: remove this dependency
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",
@@ -19,9 +17,6 @@ java_library(
         "//src/libraries/metrics:prometheus",
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",  # TODO: remove this dependency
-        "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
-        "@io_grpc_grpc_java//api",
-        "@io_grpc_grpc_java//stub",
     ],
 )
