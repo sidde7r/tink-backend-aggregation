@@ -14,7 +14,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 
 public class DemoAccountFactoryTest {
-    private static final Catalog catalog = new Catalog(Locale.ENGLISH);
+    private static final Catalog catalog = new Catalog(Locale.US);
     private static final DemoTransactionAccount demoTransactionAccount =
             DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
                     "tink", "uk-starling-oauth2");
