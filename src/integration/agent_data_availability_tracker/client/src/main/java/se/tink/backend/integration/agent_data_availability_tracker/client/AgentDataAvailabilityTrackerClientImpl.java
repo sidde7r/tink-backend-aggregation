@@ -1,15 +1,10 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
-import com.google.common.base.Strings;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
-import io.grpc.netty.GrpcSslContexts;
-import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import io.netty.handler.ssl.SslContext;
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +14,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
 import se.tink.backend.integration.agent_data_availability_tracker.api.AgentDataAvailabilityTrackerServiceGrpc;
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;
 import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
-import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.LoanTrackingSerializer;
@@ -40,27 +34,12 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
     private final AccountDeque accountDeque;
     private final AbstractExecutionThreadService service;
 
-    private final String host;
-    private final int port;
-    private final String caPath;
-
-    @Inject
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
-    public AgentDataAvailabilityTrackerClientImpl(
-            AgentDataAvailabilityTrackerConfiguration configuration) {
-        this(configuration.getHost(), configuration.getPort(), configuration.getCaPath());
-    }
-
-    public AgentDataAvailabilityTrackerClientImpl(String host, int port) {
-        this(host, port, null);
-    }
-
-    public AgentDataAvailabilityTrackerClientImpl(String host, int port, String caPath) {
-        this.host = host;
-        this.port = port;
-        this.caPath = caPath;
-        this.accountDeque = new AccountDeque();
-        this.service =
+    @Inject
+    private AgentDataAvailabilityTrackerClientImpl(final ManagedChannel channel) {
+        this.channel = channel;
+        accountDeque = new AccountDeque();
+        service =
                 new AbstractExecutionThreadService() {
                     @Override
                     protected void run() throws Exception {
@@ -216,21 +195,6 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
 
     @Override
     public void start() throws Exception {
-
-        NettyChannelBuilder channelBuilder = NettyChannelBuilder.forAddress(host, port);
-
-        if (Strings.isNullOrEmpty(caPath)) {
-            channelBuilder.usePlaintext();
-        } else {
-            SslContext sslContext =
-                    GrpcSslContexts.forClient().trustManager(new File(caPath)).build();
-
-            channelBuilder.useTransportSecurity().sslContext(sslContext).build();
-        }
-
-        channel = channelBuilder.build();
-
-        log.debug(String.format("Opening connection: %s:%d", host, port));
         agentctServiceStub = AgentDataAvailabilityTrackerServiceGrpc.newStub(channel);
 
         beginStream();

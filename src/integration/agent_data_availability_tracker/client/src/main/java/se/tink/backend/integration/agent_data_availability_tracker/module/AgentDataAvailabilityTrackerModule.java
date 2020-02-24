@@ -2,6 +2,7 @@ package se.tink.backend.integration.agent_data_availability_tracker.module;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import io.grpc.ManagedChannel;
 import java.util.Objects;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientImpl;
@@ -21,6 +22,7 @@ public class AgentDataAvailabilityTrackerModule extends AbstractModule {
     protected void configure() {
 
         bind(AgentDataAvailabilityTrackerConfiguration.class).toInstance(configuration);
+        bind(ManagedChannel.class).toProvider(TlsChannelProvider.class);
 
         if (Objects.nonNull(configuration) && configuration.isValid()) {
 

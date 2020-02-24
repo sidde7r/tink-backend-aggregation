@@ -1,5 +1,11 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client.grpc;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Scopes;
+import io.grpc.ManagedChannel;
+import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,8 +26,9 @@ public final class AgentDataAvailabilityTrackerClientGrpcTest {
         final GrpcServerService serverService = new GrpcServerService(future);
         serverService.start();
 
+        final Injector injector = Guice.createInjector(new TestModule(serverService));
         final AgentDataAvailabilityTrackerClient client =
-                new AgentDataAvailabilityTrackerClientImpl("127.0.0.1", serverService.getPort());
+                injector.getInstance(AgentDataAvailabilityTrackerClient.class);
         client.start();
 
         // when
@@ -29,5 +36,24 @@ public final class AgentDataAvailabilityTrackerClientGrpcTest {
 
         // then
         Assert.assertEquals("TestBank", future.get());
+    }
+
+    private static class TestModule extends AbstractModule {
+
+        private final GrpcServerService serverService;
+
+        private TestModule(GrpcServerService serverService) {
+            this.serverService = serverService;
+        }
+
+        @Override
+        protected void configure() {
+            bind(AgentDataAvailabilityTrackerClient.class)
+                    .to(AgentDataAvailabilityTrackerClientImpl.class)
+                    .in(Scopes.SINGLETON);
+            bind(ManagedChannel.class).toProvider(PlaintextChannelProvider.class);
+            bind(InetSocketAddress.class)
+                    .toInstance(new InetSocketAddress("127.0.0.1", serverService.getPort()));
+        }
     }
 }

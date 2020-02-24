@@ -1,5 +1,9 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import io.grpc.ManagedChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -11,19 +15,27 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
+import se.tink.backend.integration.agent_data_availability_tracker.module.TlsChannelProvider;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore
 public class AgentDataAvailabilityTrackerClientTest {
 
     private CountDownLatch latch;
 
-    private AgentDataAvailabilityTrackerClientImpl client;
+    private AgentDataAvailabilityTrackerClient client;
 
     @Before
     public void setup() throws Exception {
-        client = new AgentDataAvailabilityTrackerClientImpl("192.168.99.100", 30789);
+        String config = "{\"host\": \"192.168.99.100\", \"port\": 30789}";
+        AgentDataAvailabilityTrackerConfiguration configuration =
+                SerializationUtils.deserializeFromString(
+                        config, AgentDataAvailabilityTrackerConfiguration.class);
+        Injector injector = Guice.createInjector(new TestModule(configuration));
+        client = injector.getInstance(AgentDataAvailabilityTrackerClient.class);
         client.start();
     }
 
@@ -82,5 +94,22 @@ public class AgentDataAvailabilityTrackerClientTest {
         account.putFlag(AccountFlag.MANDATE);
 
         return account;
+    }
+
+    private static class TestModule extends AbstractModule {
+
+        private final AgentDataAvailabilityTrackerConfiguration configuration;
+
+        private TestModule(final AgentDataAvailabilityTrackerConfiguration configuration) {
+            this.configuration = configuration;
+        }
+
+        @Override
+        protected void configure() {
+            bind(AgentDataAvailabilityTrackerClient.class)
+                    .to(AgentDataAvailabilityTrackerClientImpl.class);
+            bind(ManagedChannel.class).toProvider(TlsChannelProvider.class);
+            bind(AgentDataAvailabilityTrackerConfiguration.class).toInstance(configuration);
+        }
     }
 }
