@@ -4,7 +4,6 @@ junit_test(
     name = "unicredit",
     srcs = glob(["**/*.java"]),
     tags = [
-        "external",
     ],
     visibility = ["//visibility:public"],
     deps = [

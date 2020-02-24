@@ -9,7 +9,6 @@ junit_test(
         "//etc:development",
     ],
     tags = [
-        "external",
     ],
     visibility = ["//visibility:public"],
     deps = [

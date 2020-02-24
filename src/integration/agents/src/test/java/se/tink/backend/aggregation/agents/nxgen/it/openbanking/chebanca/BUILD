@@ -10,7 +10,6 @@ junit_test(
         "//data/test/agents/it/ob/chebanca",
     ],
     tags = [
-        "external",
     ],
     visibility = ["//visibility:public"],
     deps = [

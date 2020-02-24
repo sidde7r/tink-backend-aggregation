@@ -7,7 +7,6 @@ junit_test(
         exclude = ["agent/**/*.java"],
     ),
     tags = [
-        "external",
     ],
     visibility = ["//visibility:public"],
     deps = [
