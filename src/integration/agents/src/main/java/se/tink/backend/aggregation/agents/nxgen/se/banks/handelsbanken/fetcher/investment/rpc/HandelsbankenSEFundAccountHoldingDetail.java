@@ -54,7 +54,8 @@ public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
                                                                     extractedMarketValue
                                                                             / navAmount)
                                                     .orElse(null))
-                                    .withProfit(totalChange.asDouble())
+                                    .withProfit(
+                                            Optional.ofNullable(totalChange.asDouble()).orElse(0.0))
                                     .build();
                         });
     }
