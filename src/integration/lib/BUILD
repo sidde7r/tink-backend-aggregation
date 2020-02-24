@@ -199,6 +199,7 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",

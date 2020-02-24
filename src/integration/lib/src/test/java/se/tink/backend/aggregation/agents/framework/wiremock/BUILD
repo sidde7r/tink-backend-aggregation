@@ -9,6 +9,7 @@ java_library(
     data = [],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules/parsingoperations",

@@ -43,6 +43,13 @@ public class AgentIntegrationMockServerTest {
             final HTTPResponse response = pair.second;
 
             final MappingBuilder builder = parseRequestType(request);
+
+            request.getQuery()
+                    .forEach(
+                            queryParam ->
+                                    builder.withQueryParam(
+                                            queryParam.getName(),
+                                            WireMock.equalTo(queryParam.getValue())));
             parseRequestHeaders(request, builder);
             parseRequestBody(request, builder);
 
@@ -59,7 +66,7 @@ public class AgentIntegrationMockServerTest {
     private MappingBuilder parseRequestType(final HTTPRequest request) {
 
         final String method = request.getMethod();
-        final UrlPathPattern urlPattern = WireMock.urlPathEqualTo(request.getUrl());
+        final UrlPathPattern urlPattern = WireMock.urlPathEqualTo(request.getPath());
 
         if ("get".equalsIgnoreCase(method)) {
             return WireMock.get(urlPattern);
