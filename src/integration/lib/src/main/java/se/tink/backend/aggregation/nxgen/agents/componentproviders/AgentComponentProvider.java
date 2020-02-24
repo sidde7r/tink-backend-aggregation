@@ -7,6 +7,9 @@ import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.UUIDSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -15,19 +18,25 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class AgentComponentProvider
-        implements TinkHttpClientProvider, SupplementalInformationProvider, AgentContextProvider {
+        implements TinkHttpClientProvider,
+                SupplementalInformationProvider,
+                AgentContextProvider,
+                GeneratedValueProvider {
 
     private final TinkHttpClientProvider tinkHttpClientProvider;
     private final SupplementalInformationProvider supplementalInformationProvider;
     private final AgentContextProvider agentContextProvider;
+    private final GeneratedValueProvider generatedValueProvider;
 
     public AgentComponentProvider(
             TinkHttpClientProvider tinkHttpClientProvider,
             SupplementalInformationProvider supplementalInformationProvider,
-            AgentContextProvider agentContextProvider) {
+            AgentContextProvider agentContextProvider,
+            GeneratedValueProvider generatedValueProvider) {
         this.tinkHttpClientProvider = tinkHttpClientProvider;
         this.supplementalInformationProvider = supplementalInformationProvider;
         this.agentContextProvider = agentContextProvider;
+        this.generatedValueProvider = generatedValueProvider;
     }
 
     @Override
@@ -78,5 +87,15 @@ public final class AgentComponentProvider
     @Override
     public SupplementalRequester getSupplementalRequester() {
         return agentContextProvider.getSupplementalRequester();
+    }
+
+    @Override
+    public LocalDateTimeSource getLocalDateTimeSource() {
+        return generatedValueProvider.getLocalDateTimeSource();
+    }
+
+    @Override
+    public UUIDSource getUuidSource() {
+        return generatedValueProvider.getUuidSource();
     }
 }

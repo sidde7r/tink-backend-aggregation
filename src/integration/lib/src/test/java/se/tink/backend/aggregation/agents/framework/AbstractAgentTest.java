@@ -30,6 +30,9 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapp
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
@@ -70,7 +73,9 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
                         configuration,
                         new NextGenTinkHttpClientProviderFactory(),
                         new SupplementalInformationProviderFactoryImpl(),
-                        new AgentContextProviderFactoryImpl());
+                        new AgentContextProviderFactoryImpl(),
+                        new GeneratedValueProviderImpl(
+                                new ActualLocalDateTimeSource(), new RandomUUIDSource()));
     }
 
     protected Provider constructProvider() {
