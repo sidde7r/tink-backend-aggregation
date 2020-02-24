@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.BarclaysConstants.Urls.V31;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.authenticator.BarclaysAuthenticator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
@@ -20,6 +21,7 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
     private final UkOpenBankingPisConfig pisConfig;
+    private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
@@ -35,13 +37,14 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
     }
 
     public BarclaysV31Agent(AgentComponentProvider componentProvider) {
-        super(componentProvider, aisConfig);
+        super(componentProvider, aisConfig, true);
         pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(aisConfig, persistentStorage);
+        return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
     }
 
     @Override

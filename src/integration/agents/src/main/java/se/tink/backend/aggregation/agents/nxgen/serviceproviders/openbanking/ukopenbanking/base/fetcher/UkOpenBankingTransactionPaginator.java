@@ -10,6 +10,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -43,6 +44,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     private int paginationCount;
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
     private final PersistentStorage persistentStorage;
+    private final LocalDateTimeSource localDateTimeSource;
 
     /**
      * @param apiClient Ukob api client
@@ -57,12 +59,14 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             PersistentStorage persistentStorage,
             UkOpenBankingApiClient apiClient,
             Class<ResponseType> responseType,
-            TransactionConverter<ResponseType, AccountType> transactionConverter) {
+            TransactionConverter<ResponseType, AccountType> transactionConverter,
+            LocalDateTimeSource localDateTimeSource) {
         this.apiClient = apiClient;
         this.responseType = responseType;
         this.transactionConverter = transactionConverter;
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
         this.persistentStorage = persistentStorage;
+        this.localDateTimeSource = localDateTimeSource;
     }
 
     @Override
@@ -134,7 +138,9 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                                         account.getApiIdentifier())
                                 + FROM_BOOKING_DATE_TIME
                                 + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
-                                        OffsetDateTime.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
+                                        localDateTimeSource
+                                                .now()
+                                                .minusDays(DEFAULT_MAX_ALLOWED_DAYS));
                 TransactionKeyPaginatorResponse<String> response =
                         transactionConverter.toPaginatorResponse(
                                 apiClient.fetchAccountTransactions(
@@ -187,12 +193,18 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         final Optional<OffsetDateTime> lastTransactionsFetchedDate =
                 fetchedTransactionsUntil(accountId);
         final OffsetDateTime defaultRefreshDate =
-                OffsetDateTime.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS);
+                localDateTimeSource
+                        .now()
+                        .minusDays(DEFAULT_MAX_ALLOWED_DAYS)
+                        .atOffset(ZoneOffset.UTC);
         if (lastTransactionsFetchedDate.isPresent()
                 && lastTransactionsFetchedDate.get().isAfter(defaultRefreshDate)) {
             return defaultRefreshDate;
         } else {
-            return OffsetDateTime.now().minusMonths(DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS);
+            return localDateTimeSource
+                    .now()
+                    .minusMonths(DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS)
+                    .atOffset(ZoneOffset.UTC);
         }
     }
 }

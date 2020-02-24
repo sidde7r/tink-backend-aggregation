@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.JWTSignatureHeaders.PAYLOAD;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.UUIDSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PersistentStorageKeys;
@@ -47,8 +48,15 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             SoftwareStatementAssertion softwareStatement,
             ProviderConfiguration providerConfiguration,
             URL wellKnownURL,
+            UUIDSource uuidSource,
             PersistentStorage persistentStorage) {
-        super(httpClient, signer, softwareStatement, providerConfiguration, wellKnownURL);
+        super(
+                httpClient,
+                signer,
+                softwareStatement,
+                providerConfiguration,
+                wellKnownURL,
+                uuidSource);
         this.persistentStorage = persistentStorage;
     }
 

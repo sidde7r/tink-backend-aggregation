@@ -4,8 +4,8 @@ import com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import javax.ws.rs.core.MultivaluedMap;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.UUIDSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -19,20 +19,19 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
     private final ProviderConfiguration providerConfiguration;
     private final String customerIp;
     private final String customerLastLoggedInTime;
+    private final UUIDSource uuidSource;
 
     public OpenIdAuthenticatedHttpFilter(
             OAuth2Token accessToken,
             ProviderConfiguration providerConfiguration,
             String customerIp,
-            String customerLastLoggedInTime) {
+            String customerLastLoggedInTime,
+            UUIDSource uuidSource) {
         this.accessToken = accessToken;
         this.providerConfiguration = providerConfiguration;
         this.customerIp = customerIp;
         this.customerLastLoggedInTime = customerLastLoggedInTime;
-    }
-
-    private static String generateInteractionId() {
-        return UUID.randomUUID().toString();
+        this.uuidSource = uuidSource;
     }
 
     private boolean verifyInteractionId(String interactionId, HttpResponse httpResponse) {
@@ -68,7 +67,7 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
 
-        String interactionId = generateInteractionId();
+        String interactionId = uuidSource.getUUID().toString();
 
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
         headers.add(OpenIdConstants.HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
