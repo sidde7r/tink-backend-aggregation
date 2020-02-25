@@ -7,8 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
+import java.util.UUID;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -132,7 +131,7 @@ public class DemoAccountFactory {
 
     private static AccountIdentifier createDefaultAccountIdentifier() {
         AccountIdentifier fakeIbanAccountIdentifier =
-                AccountIdentifier.create(Type.IBAN, Iban.random(CountryCode.SE).toString());
+                AccountIdentifier.create(Type.TINK, UUID.randomUUID().toString());
 
         return fakeIbanAccountIdentifier;
     }
