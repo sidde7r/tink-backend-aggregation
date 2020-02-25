@@ -749,6 +749,46 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
+    public void testGenericPaymentItalia(List<Payment> paymentList) throws Exception {
+        /**
+         * The italian flow is special, so we will have to run the AIS flow first and store the aggregated data to be
+         * used as the source account in the payment flow.
+         */
+        NewAgentTestContext newAgentTestContext = this.testRefresh();
+
+
+//        /**
+//         * Run the payment flow with account info retrieved above
+//         */
+//        initiateCredentials();
+//        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+//        readConfigurationFile();
+//        Agent agent = createAgent(credentialsRequest);
+//
+//        try {
+//            //todo: Look into this, currently authentication is done in RedirectDemoPaymentExecutor. Maybe can remove this
+//            //login(agent, credentialsRequest);
+//            if (agent instanceof PaymentControllerable) {
+//                doGenericPaymentBankTransfer(agent, paymentList);
+//            } else {
+//                throw new NotImplementedException(
+//                        String.format("%s", agent.getAgentClass().getSimpleName()));
+//            }
+//            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+//                printMaskedDebugLog(agent);
+//            }
+//            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+//
+//            if (doLogout) {
+//                logout(agent);
+//            }
+//        } finally {
+//            saveCredentials(agent);
+//        }
+//
+//        context.printCollectedData();
+    }
+
     public void testGenericPaymentUKOB(List<Payment> paymentList) throws Exception {
         initiateCredentials();
         readConfigurationFile();

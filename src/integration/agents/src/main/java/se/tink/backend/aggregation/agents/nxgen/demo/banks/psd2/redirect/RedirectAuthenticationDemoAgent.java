@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.Redirec
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.InvestmentAccounts;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.LoanAccount;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectOAuth2Authenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoTransferExecutor;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
@@ -38,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -130,6 +132,37 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                         thirdPartyAppAuthenticationController);
 
         return Optional.of(new TransferController(null, transferExecutor, null, null));
+    }
+
+    @Override
+        public Optional<PaymentController> constructPaymentController() {
+        String callbackUri = request.getCallbackUri();
+
+        RedirectOAuth2Authenticator redirectOAuth2Authenticator =
+                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri);
+
+        OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        redirectOAuth2Authenticator,
+                        credentials,
+                        strongAuthenticationState);
+
+        ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController =
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper);
+
+        RedirectDemoPaymentExecutor paymentExecutor =
+                new RedirectDemoPaymentExecutor(
+                        credentials,
+                        supplementalRequester,
+                        controller,
+                        supplementalInformationHelper,
+                        thirdPartyAppAuthenticationController,
+                        strongAuthenticationState);
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
     @Override
