@@ -67,7 +67,7 @@ steps:
         config: docker/docker-compose.bazel.yml
     branches: '!master'
     name: ':junit: System tests'
-    timeout_in_minutes: 30
+    timeout_in_minutes: 10
     agents:
       queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
