@@ -167,6 +167,7 @@ public final class ArgentaApiClient {
     public AccountResponse getAccounts() {
         return createRequestInSession(Urls.ACCOUNTS)
                 .header(HeaderKeys.DATE, getFormattedDate())
+                .removeAggregatorHeader()
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(AccountResponse.class);
     }
