@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET
 
 import com.google.common.collect.Lists;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -182,6 +183,59 @@ public class DemoAccountDefinitionGenerator {
                 AccountIdentifier identifier =
                         AccountIdentifier.create(type, getAccountId(), "testAccount");
                 return Lists.newArrayList(identifier);
+            }
+        };
+    }
+
+    public static DemoTransactionAccount getDemoTransactionalAccountWithoutIdentifiers(
+            String username, String providerName, int key) {
+        String deterministicKey =
+                createDeterministicKey(
+                        "Transaction" + (key != 0 ? key : "") + username + providerName);
+        String userDeterministicKey = createDeterministicKey(username + providerName);
+        return new DemoTransactionAccount() {
+            @Override
+            public String getAccountId() {
+                if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
+                    return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
+                } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
+                    return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
+                } else {
+                    return generateAccountNumbers(deterministicKey);
+                }
+            }
+
+            @Override
+            public String getAccountName() {
+                return "Checking Account " + username + (key != 0 ? " " + key : "");
+            }
+
+            @Override
+            public double getBalance() {
+                return generateDouble(deterministicKey, 5);
+            }
+
+            @Override
+            public Optional<Double> getAvailableBalance() {
+                return Optional.of(
+                        BigDecimal.valueOf(getBalance() * 0.9)
+                                .setScale(2, BigDecimal.ROUND_HALF_UP)
+                                .doubleValue());
+            }
+
+            @Override
+            public Optional<Double> getCreditLimit() {
+                int val = generateNumber(deterministicKey, 1);
+                if (val > 5) {
+                    return Optional.empty();
+                } else {
+                    return Optional.of(val * 1000.0);
+                }
+            }
+
+            @Override
+            public List<AccountIdentifier> getIdentifiers() {
+                return Collections.emptyList();
             }
         };
     }
