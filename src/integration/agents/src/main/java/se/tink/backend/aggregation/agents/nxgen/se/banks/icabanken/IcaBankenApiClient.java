@@ -50,6 +50,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.Icaba
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -70,6 +71,8 @@ public class IcaBankenApiClient {
         this.client = client;
         this.icaBankenSessionStorage = icaBankenSessionStorage;
         this.icabankenPersistentStorage = icabankenPersistentStorage;
+
+        this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
     }
 
     private RequestBuilder createPostRequest(URL url) {
