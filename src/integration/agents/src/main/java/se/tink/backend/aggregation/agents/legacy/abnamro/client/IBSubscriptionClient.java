@@ -330,6 +330,9 @@ public class IBSubscriptionClient extends IBClient {
 
         ClientResponse response = new IBClientRequestBuilder(url).build().get(ClientResponse.class);
 
+        log.info("Response Status: {}", response.getStatus());
+        log.info("Request: {}", new IBClientRequestBuilder(url).build().toString());
+
         validateContentType(response, MediaType.APPLICATION_JSON_TYPE);
 
         // TODO -> Temporary changed below for debugging purpose
