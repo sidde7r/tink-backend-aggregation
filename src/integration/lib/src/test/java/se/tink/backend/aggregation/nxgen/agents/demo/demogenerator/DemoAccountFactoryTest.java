@@ -18,6 +18,9 @@ public class DemoAccountFactoryTest {
     private static final DemoTransactionAccount demoTransactionAccount =
             DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
                     "tink", "uk-starling-oauth2");
+    private static final DemoTransactionAccount demoTransactionAccountWithoutIdentifiers =
+            DemoAccountDefinitionGenerator.getDemoTransactionalAccountWithoutIdentifiers(
+                    "tink", "uk-starling-oauth2", 0);
     private static final DemoSavingsAccount demoSavingsAccount =
             DemoAccountDefinitionGenerator.getDemoSavingsAccounts("tink", "uk-starling-oauth2");
 
@@ -76,5 +79,18 @@ public class DemoAccountFactoryTest {
 
         Assert.assertNull(savingsAccount.getExactAvailableBalance());
         Assert.assertNull(savingsAccount.getExactCreditLimit());
+    }
+
+    @Test
+    public void testFetchTransactionalAccountsWithoutIdentifiers() {
+        ArrayList<TransactionalAccount> transactionalAccounts =
+                Lists.newArrayList(
+                        DemoAccountFactory.fetchTransactionalAccounts(
+                                "GBP",
+                                catalog,
+                                Lists.newArrayList(demoTransactionAccountWithoutIdentifiers),
+                                demoSavingsAccount));
+
+        Assert.assertEquals(2, transactionalAccounts.size());
     }
 }

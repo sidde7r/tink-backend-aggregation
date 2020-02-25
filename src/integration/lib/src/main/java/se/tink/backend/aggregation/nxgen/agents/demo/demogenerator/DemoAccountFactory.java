@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.buil
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.i18n.Catalog;
@@ -108,12 +110,15 @@ public class DemoAccountFactory {
 
     private static IdModule getIdModule(
             List<AccountIdentifier> identifiers, String accountId, String accountName) {
+        AccountIdentifier firstAccountIdentifier =
+                identifiers.size() > 0 ? identifiers.get(0) : createDefaultAccountIdentifier();
+
         IdBuildStep idBuilder =
                 IdModule.builder()
                         .withUniqueIdentifier(accountId)
                         .withAccountNumber(accountId)
                         .withAccountName(accountName)
-                        .addIdentifier(identifiers.get(0));
+                        .addIdentifier(firstAccountIdentifier);
 
         if (identifiers.size() > 1) {
             // add the rest of identifiers
@@ -122,6 +127,13 @@ public class DemoAccountFactory {
             }
         }
         return idBuilder.build();
+    }
+
+    private static AccountIdentifier createDefaultAccountIdentifier() {
+        AccountIdentifier fakeIbanAccountIdentifier =
+                AccountIdentifier.create(Type.TINK, UUID.randomUUID().toString());
+
+        return fakeIbanAccountIdentifier;
     }
 
     public static List<CreditCardAccount> createCreditCardAccounts(
