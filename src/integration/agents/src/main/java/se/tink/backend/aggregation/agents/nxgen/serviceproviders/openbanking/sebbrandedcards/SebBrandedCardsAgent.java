@@ -5,9 +5,14 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.SebCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.SebCardTransactionsFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController;
@@ -23,6 +28,24 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
         super(request, context, signatureKeyPair);
         apiClient = new SebBrandedCardsApiClient(client, persistentStorage, brandId);
         creditCardRefreshController = getCreditCardRefreshController();
+    }
+
+    @Override
+    protected Authenticator constructAuthenticator() {
+        SebAuthenticator authenticator = new SebAuthenticator(apiClient, sebConfiguration);
+        OAuth2AuthenticationController oAuth2AuthenticationController =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        authenticator,
+                        credentials,
+                        strongAuthenticationState);
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
     }
 
     @Override

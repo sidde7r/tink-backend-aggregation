@@ -4,12 +4,15 @@ import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountsTransactions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbrandedcards.SebBrandedCardsConstants.Urls;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -29,7 +32,8 @@ public class SebBrandedCardsApiClient extends SebBaseApiClient {
     @Override
     public RequestBuilder getAuthorizeUrl() {
         return client.request(new URL(SebBrandedCardsConstants.Urls.AUTH))
-                .queryParam(SebBrandedCardsConstants.QueryKey.BRAND_ID, brandId);
+                .queryParam(SebBrandedCardsConstants.QueryKey.BRAND_ID, brandId)
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId());
     }
 
     @Override
@@ -54,11 +58,10 @@ public class SebBrandedCardsApiClient extends SebBaseApiClient {
 
     @Override
     public OAuth2Token getToken(TokenRequest request) {
-        return client.request(
-                        new URL(SebCommonConstants.Urls.BASE_URL)
-                                .concat(SebBrandedCardsConstants.Urls.TOKEN))
+        return client.request(new URL(SebCommonConstants.Urls.BASE_URL).concat(Urls.TOKEN))
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .post(TokenResponse.class, request.toData())
                 .toTinkToken();
     }

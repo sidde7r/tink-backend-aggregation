@@ -3,8 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 public abstract class SebBrandedCardsConstants {
 
     public static class Urls {
-        private static final String BASE_URL = "https://id.sebkort.com";
-        public static final String AUTH = BASE_URL + "/ath/tpp/tpplogin";
+
+        public static final String CARD_BASE_URL = "https://id.sebkort.com";
+        public static final String AUTH = CARD_BASE_URL + "/ath/tpp/tpplogin";
         public static final String TOKEN = "/mga4/sps/oauth/oauth20/token";
         private static final String BASE_CREDIT_CARD_ACCOUNTS = "/tpp/ais/v1/identified4";
 
