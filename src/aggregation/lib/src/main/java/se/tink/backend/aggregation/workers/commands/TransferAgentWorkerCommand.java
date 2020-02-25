@@ -42,6 +42,7 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerCommand
         implements MetricsCommand {
@@ -66,6 +67,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         Catalog catalog = context.getCatalog();
 
         Transfer transfer = transferRequest.getTransfer();
+        log.info(
+                String.format(
+                        "[ExecutionDateDebug][transferId: %s] Due date of transfer is %s",
+                        UUIDUtils.toTinkUUID(transfer.getId()), transfer.getDueDate().toString()));
         SignableOperation signableOperation = transferRequest.getSignableOperation();
 
         signableOperation.setStatus(SignableOperationStatuses.EXECUTING);
