@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.abnamro.client;
 
 import com.google.common.base.Strings;
 import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.api.client.filter.LoggingFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
@@ -46,7 +45,6 @@ public abstract class Client {
 
         this.client =
                 new BasicJerseyClientFactory().createCustomClient(sslContext, hostnameVerifier);
-        this.client.addFilter(new LoggingFilter());
     }
 
     protected Builder createClientRequest(String path) {
