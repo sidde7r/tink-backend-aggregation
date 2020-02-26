@@ -20,10 +20,10 @@ java_binary(
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
-        "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",
         "//third_party:commons_io_commons_io",
         "//third_party:org_apache_commons_commons_cli",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

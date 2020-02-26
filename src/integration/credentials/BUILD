@@ -8,7 +8,7 @@ java_library(
         "//src/libraries/social_security_number:__pkg__",
     ],
     deps = [
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
 
@@ -56,7 +56,7 @@ java_library(
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
 
@@ -73,8 +73,8 @@ java_library(
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",
+        "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/strings",
     ],
 )

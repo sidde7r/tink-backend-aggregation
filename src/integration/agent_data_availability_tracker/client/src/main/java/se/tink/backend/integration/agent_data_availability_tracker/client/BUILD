@@ -15,12 +15,12 @@ java_library(
         "//src/integration/api",
         "//src/integration/lib:annotations",
         "//src/integration/models",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:io_grpc_grpc_core",
         "//third_party:io_netty_netty_all",
         "//third_party:netty",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

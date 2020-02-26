@@ -17,7 +17,7 @@ java_library(
         "//third_party:com_google_code_findbugs_jsr305",
 
         # Guava
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
 
@@ -26,12 +26,12 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         "//src/libraries/date",
-        "//third_party:com_google_guava_guava",
         "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_pojava_pojava",
         "//third_party:pl_pragmatists_junitparams",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

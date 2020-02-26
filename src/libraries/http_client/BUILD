@@ -6,12 +6,12 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/request_tracing",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:com_sun_jersey_jersey_server",
         "//third_party:eu_geekplace_javapinning_java_pinning_jar",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
 

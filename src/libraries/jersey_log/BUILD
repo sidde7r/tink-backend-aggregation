@@ -29,7 +29,7 @@ java_library(
         "//src/libraries/metrics:timers",
 
         # Guava
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
 
         # Guice
         "//third_party:com_google_inject_guice",
@@ -60,8 +60,8 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         "//src/libraries/jersey_log",
-        "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

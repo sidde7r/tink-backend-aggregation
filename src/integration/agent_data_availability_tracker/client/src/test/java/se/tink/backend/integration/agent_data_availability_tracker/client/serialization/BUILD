@@ -15,6 +15,6 @@ junit_test(
         "//src/integration/api",
         "//src/integration/models",
         "//src/libraries/account_identifier",
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

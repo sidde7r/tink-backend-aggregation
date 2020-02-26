@@ -16,8 +16,8 @@ java_library(
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",
         "//src/libraries/serialization",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

@@ -16,11 +16,11 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/i18n",
         "//third_party:com_google_code_gson_gson",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_json_json",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

@@ -208,7 +208,6 @@ junit_test(
         "//third_party:com_fasterxml_jackson_datatype_jackson_datatype_joda",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_github_tomakehurst_wiremock",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:de_jollyday_jollyday",
@@ -231,6 +230,7 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:pl_pragmatists_junitparams",
+        "@aggregation//:com_google_guava_guava",
         "@selenium//:org_seleniumhq_selenium_selenium_firefox_driver",
     ],
 )

@@ -16,7 +16,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/openbanking/demofinancialinstitution",
         "//src/integration/api",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//third_party:com_google_guava_guava",
         "//third_party:org_hamcrest_hamcrest_library",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

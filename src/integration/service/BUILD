@@ -36,12 +36,12 @@ java_binary(
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",
         "//src/libraries/simple_http_server",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:io_grpc_grpc_core",
         "//third_party:log",
         "//third_party:org_yaml_snakeyaml",
         "//third_party:prometheus",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
 

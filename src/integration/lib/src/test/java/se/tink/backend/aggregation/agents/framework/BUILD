@@ -45,7 +45,6 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_code_findbugs_jsr305",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:junit_junit",
@@ -53,6 +52,7 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
     ],
 )

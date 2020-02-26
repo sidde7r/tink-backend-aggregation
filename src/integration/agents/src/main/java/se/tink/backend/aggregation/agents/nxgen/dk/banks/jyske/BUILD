@@ -28,11 +28,11 @@ java_library(
         "//src/libraries/date",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_codec_commons_codec",
         "//third_party:commons_io_commons_io",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

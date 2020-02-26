@@ -7,8 +7,8 @@ java_library(
     deps = [
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_guava_guava",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
 
@@ -18,8 +18,8 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/identity_data",
-        "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

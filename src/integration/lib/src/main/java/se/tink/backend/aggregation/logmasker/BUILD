@@ -5,7 +5,7 @@ java_library(
     deps = [
         "//src/integration/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/masker",
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
         "@io_reactivex_rxjava3_rxjava",
     ],
 )

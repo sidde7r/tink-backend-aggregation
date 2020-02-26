@@ -6,7 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         # Guava
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
 
         # javax.annotation
         "//third_party:com_google_code_findbugs_jsr305",

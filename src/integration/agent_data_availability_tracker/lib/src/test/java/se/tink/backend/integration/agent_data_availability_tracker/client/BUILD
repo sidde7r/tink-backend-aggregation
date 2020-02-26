@@ -8,6 +8,6 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

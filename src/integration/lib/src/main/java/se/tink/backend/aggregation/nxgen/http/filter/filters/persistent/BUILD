@@ -8,6 +8,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

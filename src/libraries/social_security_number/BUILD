@@ -7,10 +7,10 @@ java_library(
     deps = [
         "//src/integration/credentials:demo",
         "//src/libraries/date",
-        "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
 
@@ -20,9 +20,9 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/social_security_number",
-        "//third_party:com_google_guava_guava",
         "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

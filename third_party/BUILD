@@ -160,8 +160,8 @@ java_library(
         "@com_github_rholder_guava_retrying//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_google_guava_guava",
         "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_guava_guava//jar",
     ],
 )
 
@@ -172,12 +172,12 @@ java_library(
         "@com_github_tomakehurst_wiremock//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_google_guava_guava",
         "@asm_asm//jar",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_core_jackson_core//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
-        "@com_google_guava_guava//jar",
         "@com_jayway_jsonpath_json_path//jar",
         "@commons_codec_commons_codec//jar",
         "@commons_logging_commons_logging//jar",
@@ -231,14 +231,6 @@ java_library(
 )
 
 java_library(
-    name = "com_google_guava_guava",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_guava_guava//jar",
-    ],
-)
-
-java_library(
     name = "com_google_http_client_google_http_client",
     visibility = ["//visibility:public"],
     exports = [
@@ -268,8 +260,8 @@ java_library(
         "@com_google_inject_guice//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_google_guava_guava",
         "@aopalliance_aopalliance//jar",
-        "@com_google_guava_guava//jar",
         "@javax_inject_javax_inject//jar",
     ],
 )
@@ -481,6 +473,7 @@ java_library(
     ],
     runtime_deps = [
         ":io_dropwizard_dropwizard_jersey",
+        "@aggregation//:com_google_guava_guava",
         "@ch_qos_logback_logback_classic//jar",
         "@ch_qos_logback_logback_core//jar",
         "@com_codahale_metrics_metrics_annotation//jar",
@@ -504,7 +497,6 @@ java_library(
         "@com_fasterxml_jackson_module_jackson_module_afterburner//jar",
         "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
         "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_guava_guava//jar",
         "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
@@ -603,7 +595,7 @@ java_library(
         "@io_dropwizard_dropwizard_lifecycle//jar",
     ],
     runtime_deps = [
-        "@com_google_guava_guava//jar",
+        "@aggregation//:com_google_guava_guava",
         "@io_dropwizard_dropwizard_util//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",
@@ -636,8 +628,8 @@ java_library(
     name = "io_dropwizard_dropwizard_metrics",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:com_google_guava_guava",
         "@com_codahale_metrics_metrics_core//jar",
-        "@com_google_guava_guava//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_lifecycle//jar",
         "@io_dropwizard_dropwizard_metrics//jar",
@@ -669,8 +661,8 @@ java_library(
     name = "io_grpc_grpc_protobuf_lite",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:com_google_guava_guava",
         "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_guava_guava//jar",
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_core//jar",
         "@io_grpc_grpc_protobuf_lite//jar",
@@ -1013,7 +1005,7 @@ java_library(
     ],
     runtime_deps = [
         ":io_netty_netty_all",
-        "@com_google_guava_guava//jar",
+        "@aggregation//:com_google_guava_guava",
         "@jline_jline//jar",
         "@log4j_log4j//jar",
         "@org_apache_zookeeper_zookeeper//jar",
@@ -1029,7 +1021,7 @@ java_library(
     ],
     runtime_deps = [
         ":io_netty_netty_all",
-        "@com_google_guava_guava//jar",
+        "@aggregation//:com_google_guava_guava",
         "@jline_jline//jar",
         "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
@@ -1046,7 +1038,7 @@ java_library(
     ],
     runtime_deps = [
         ":io_netty_netty_all",
-        "@com_google_guava_guava//jar",
+        "@aggregation//:com_google_guava_guava",
         "@jline_jline//jar",
         "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
@@ -1064,7 +1056,7 @@ java_library(
     ],
     runtime_deps = [
         ":io_netty_netty_all",
-        "@com_google_guava_guava//jar",
+        "@aggregation//:com_google_guava_guava",
         "@jline_jline//jar",
         "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
@@ -1476,9 +1468,9 @@ java_library(
         "@org_reflections_reflections//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_google_guava_guava",
         "@com_google_code_findbugs_jsr305//jar",
         "@com_google_code_gson_gson//jar",
-        "@com_google_guava_guava//jar",
         "@dom4j_dom4j//jar",
         "@javax_servlet_javax_servlet_api//jar",
         "@junit_junit//jar",
@@ -1573,10 +1565,10 @@ java_library(
     name = "netty",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:com_google_guava_guava",
         "@com_google_api_grpc_proto_google_common_protos//jar",
         "@com_google_code_findbugs_jsr305//jar",
         "@com_google_code_gson_gson//jar",
-        "@com_google_guava_guava//jar",
         "@com_google_instrumentation_instrumentation_api//jar",
         "@com_google_protobuf_protobuf_java//jar",
         "@com_google_protobuf_protobuf_java_util//jar",

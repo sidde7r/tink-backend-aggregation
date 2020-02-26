@@ -22,7 +22,6 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_code_findbugs_jsr305",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_codec_commons_codec",
@@ -34,6 +33,7 @@ java_library(
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/strings",
     ],
 )
