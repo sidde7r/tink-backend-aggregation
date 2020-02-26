@@ -3,11 +3,9 @@ package se.tink.backend.aggregation.agents.framework.wiremock.entities;
 import java.util.List;
 import java.util.Optional;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import se.tink.libraries.pair.Pair;
 
 @EqualsAndHashCode
-@Getter
 public class HTTPResponse {
 
     private final List<Pair<String, String>> responseHeaders;
