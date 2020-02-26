@@ -154,6 +154,8 @@ public final class Xs2aDevelopersConstants {
         public static final String HREF = "href";
         public static final int ERROR_CODE_INTERNAL_SERVER = 500;
         public static final int ERROR_CODE_CONSENT_INVALID = 401;
+        public static final int DEFAULT_AMOUNT_TO_FETCH = 15;
+        public static final int DEFAULT_CONSECUTIVE_EMPTY_PAGES_LIMIT = 4;
     }
 
     public static class CredentialKeys {

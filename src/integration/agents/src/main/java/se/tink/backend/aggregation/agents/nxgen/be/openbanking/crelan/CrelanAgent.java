@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.crelan;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions.DEFAULT_AMOUNT_TO_FETCH;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions.DEFAULT_CONSECUTIVE_EMPTY_PAGES_LIMIT;
+
 import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersTransactionalAgent;
@@ -36,6 +39,9 @@ public final class CrelanAgent extends Xs2aDevelopersTransactionalAgent {
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                accountFetcher, 4, 15, ChronoUnit.DAYS)));
+                                accountFetcher,
+                                DEFAULT_CONSECUTIVE_EMPTY_PAGES_LIMIT,
+                                DEFAULT_AMOUNT_TO_FETCH,
+                                ChronoUnit.DAYS)));
     }
 }
