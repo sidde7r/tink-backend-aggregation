@@ -11,6 +11,11 @@ alias(
 )
 
 alias(
+    name = "convert_s3_to_aap",
+    actual = "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/converter",
+)
+
+alias(
     name = "ukob_register",
     actual = "//src/commands/ukob_register",
 )
