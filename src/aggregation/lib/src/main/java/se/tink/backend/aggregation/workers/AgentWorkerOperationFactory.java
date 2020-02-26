@@ -931,6 +931,15 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
+        commands.add(
+                new RefreshCommandChainEventTriggerCommand(
+                        credentialsEventProducer,
+                        context.getCorrelationId(),
+                        request.getCredentials(),
+                        clientInfo.getAppId(),
+                        request.getItemsToRefresh(),
+                        request.isManual(),
+                        clientInfo.getClusterId()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
@@ -1030,6 +1039,15 @@ public class AgentWorkerOperationFactory {
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
+        commands.add(
+                new RefreshCommandChainEventTriggerCommand(
+                        credentialsEventProducer,
+                        context.getCorrelationId(),
+                        request.getCredentials(),
+                        clientInfo.getAppId(),
+                        request.getItemsToRefresh(),
+                        request.isManual(),
+                        clientInfo.getClusterId()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
