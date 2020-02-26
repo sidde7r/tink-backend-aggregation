@@ -585,7 +585,7 @@
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
-            "name": "be-crelan-ob",
+            "name": "be-europabank-ob",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
             "payload": "tink",
             "popular": true,

@@ -660,10 +660,44 @@ agentsServiceConfiguration:
       username: TINKTESTIN
     crelan:
       tink:
-        baseUrl: https://api.crelan.be
-        certificateId: Tink
-        clientId: PSDSE-FINA-44059
-        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        baseUrl: "https://api.crelan.be"
+        clientId: "PSDSE-FINA-44059"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    delen:
+      tink:
+        baseUrl: "https://api.psd2.dsp-online.lu"
+        clientId: "PSDSE-FINA-44059"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    europabank:
+      tink:
+        baseUrl: "https://api.tpp.europabank.be"
+        clientId: "PSDSE-FINA-44059"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    keytradebank:
+      tink:
+        baseUrl: "https://psd2.api.keytradebank.be"
+        clientId: "PSDSE-FINA-44059"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    montepaschi:
+      tink:
+        baseUrl: "https://api.psd2.aion.be"
+        clientId: "PSDSE-FINA-44059"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    nagelmackers:
+      tink:
+        baseUrl: "https://openbankingapi.nagelmackers.be"
+        clientId: "PSDSE-FINA-44059"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    vanbreda:
+      tink:
+        baseUrl: "https://xs2a-api.bankvanbreda.be"
+        clientId: "PSDSE-FINA-44059"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    vdk:
+      tink:
+        baseUrl: "https://xs2a-api.vdk.be"
+        clientId: "PSDSE-FINA-44059"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     crosskey:
       tink:
         clientId: DummyID
@@ -725,7 +759,6 @@ agentsServiceConfiguration:
       tink:
         aspspCode: BIC
         baseUrl: https://site1.sibsapimarket.com:8444/sibs/apimarket
-        certificateId: Tink
         clientId: ''
         clientSecret: ''
         clientSigningCertificate: ''
