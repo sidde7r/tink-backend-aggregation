@@ -29,6 +29,9 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.LegacyTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -111,7 +114,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 new AgentComponentProvider(
                         new LegacyTinkHttpClientProvider(request, context, signatureKeyPair),
                         new SupplementalInformationProviderImpl(context, request),
-                        new AgentContextProviderImpl(request, context)),
+                        new AgentContextProviderImpl(request, context),
+                        new GeneratedValueProviderImpl(
+                                new ActualLocalDateTimeSource(), new RandomUUIDSource())),
                 aisConfig,
                 disableSslVerification);
     }

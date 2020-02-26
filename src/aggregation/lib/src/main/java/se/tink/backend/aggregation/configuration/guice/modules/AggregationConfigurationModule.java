@@ -11,6 +11,12 @@ import se.tink.backend.aggregation.configuration.models.ProviderConfigurationSer
 import se.tink.backend.aggregation.configuration.models.S3StorageConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.UUIDSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
@@ -63,6 +69,9 @@ public class AggregationConfigurationModule extends AbstractModule {
         bind(SupplementalInformationProviderFactory.class)
                 .to(SupplementalInformationProviderFactoryImpl.class);
         bind(AgentContextProviderFactory.class).to(AgentContextProviderFactoryImpl.class);
+        bind(UUIDSource.class).to(RandomUUIDSource.class);
+        bind(LocalDateTimeSource.class).to(ActualLocalDateTimeSource.class);
+        bind(GeneratedValueProvider.class).to(GeneratedValueProviderImpl.class);
         bind(TppSecretsServiceConfiguration.class)
                 .toInstance(
                         configuration

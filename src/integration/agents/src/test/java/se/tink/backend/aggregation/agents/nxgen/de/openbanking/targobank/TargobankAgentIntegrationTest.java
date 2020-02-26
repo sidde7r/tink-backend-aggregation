@@ -32,6 +32,9 @@ import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -139,7 +142,9 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
                             this.configuration,
                             new NextGenTinkHttpClientProviderFactory(),
                             new SupplementalInformationProviderFactoryImpl(),
-                            new AgentContextProviderFactoryImpl());
+                            new AgentContextProviderFactoryImpl(),
+                            new GeneratedValueProviderImpl(
+                                    new ActualLocalDateTimeSource(), new RandomUUIDSource()));
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(this.provider);
             return factory.create(cls, credentialsRequest, this.context);
         } catch (FileNotFoundException e) {

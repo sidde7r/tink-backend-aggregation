@@ -42,6 +42,11 @@ import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.ConstantUUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.MockSupplementalInformationProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
@@ -223,7 +228,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                 configuration,
                                 new WireMockTinkHttpClientProviderFactory(wireMockServerHost),
                                 new MockSupplementalInformationProviderFactory(mockCallbackData),
-                                new AgentContextProviderFactoryImpl());
+                                new AgentContextProviderFactoryImpl(),
+                                new GeneratedValueProviderImpl(
+                                        new ConstantLocalDateTimeSource(),
+                                        new ConstantUUIDSource()));
 
             } else {
                 // Provide AgentFactory with 'production' components.
@@ -232,7 +240,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                 configuration,
                                 new NextGenTinkHttpClientProviderFactory(),
                                 new SupplementalInformationProviderFactoryImpl(),
-                                new AgentContextProviderFactoryImpl());
+                                new AgentContextProviderFactoryImpl(),
+                                new GeneratedValueProviderImpl(
+                                        new ActualLocalDateTimeSource(), new RandomUUIDSource()));
             }
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);

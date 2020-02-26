@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.TinkHttpClientProviderFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -20,17 +21,20 @@ public class AgentFactory {
     private final TinkHttpClientProviderFactory tinkHttpClientProviderFactory;
     private final SupplementalInformationProviderFactory supplementalInformationProviderFactory;
     private final AgentContextProviderFactory agentContextProviderFactory;
+    private final GeneratedValueProvider generatedValueProvider;
 
     @Inject
     public AgentFactory(
             AgentsServiceConfiguration configuration,
             TinkHttpClientProviderFactory tinkHttpClientProviderFactory,
             SupplementalInformationProviderFactory supplementalInformationProviderFactory,
-            AgentContextProviderFactory agentContextProviderFactory) {
+            AgentContextProviderFactory agentContextProviderFactory,
+            GeneratedValueProvider generatedValueProvider) {
         this.configuration = configuration;
         this.tinkHttpClientProviderFactory = tinkHttpClientProviderFactory;
         this.supplementalInformationProviderFactory = supplementalInformationProviderFactory;
         this.agentContextProviderFactory = agentContextProviderFactory;
+        this.generatedValueProvider = generatedValueProvider;
     }
 
     public static Class<? extends Agent> getAgentClass(Credentials credentials, Provider provider)
@@ -104,7 +108,8 @@ public class AgentFactory {
                                                     .createSupplementalInformationProvider(
                                                             context, request),
                                             agentContextProviderFactory.createAgentContextProvider(
-                                                    request, context)));
+                                                    request, context),
+                                            generatedValueProvider));
 
         } else if (hasAgentsServiceConfigurationConstructor) {
             Constructor<?> agentConstructor =
