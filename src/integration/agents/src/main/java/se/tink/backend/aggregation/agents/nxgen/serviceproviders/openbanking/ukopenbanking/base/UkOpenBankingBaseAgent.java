@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -57,7 +56,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor {
 
-    private final Provider tinkProvider;
     private final URL wellKnownURL;
 
     protected UkOpenBankingApiClient apiClient;
@@ -75,6 +73,25 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> transactionalAccountFetcher;
 
     public UkOpenBankingBaseAgent(
+            AgentComponentProvider componentProvider, UkOpenBankingAisConfig agentConfig) {
+        this(componentProvider, agentConfig, false);
+    }
+
+    public UkOpenBankingBaseAgent(
+            AgentComponentProvider componentProvider,
+            UkOpenBankingAisConfig agentConfig,
+            boolean disableSslVerification) {
+        super(componentProvider);
+        this.wellKnownURL = agentConfig.getWellKnownURL();
+        this.disableSslVerification = disableSslVerification;
+        this.agentConfig = agentConfig;
+
+        client.addFilter(new BankServiceInternalErrorFilter());
+    }
+
+    /** @deprecated Use AgentComponentProvider constructor instead. */
+    @Deprecated
+    public UkOpenBankingBaseAgent(
             CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
@@ -82,24 +99,21 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this(request, context, signatureKeyPair, aisConfig, false);
     }
 
+    /** @deprecated Use AgentComponentProvider constructor instead. */
+    @Deprecated
     public UkOpenBankingBaseAgent(
             CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
             UkOpenBankingAisConfig aisConfig,
             boolean disableSslVerification) {
-        super(
+        this(
                 new AgentComponentProvider(
                         new LegacyTinkHttpClientProvider(request, context, signatureKeyPair),
                         new SupplementalInformationProviderImpl(context, request),
-                        new AgentContextProviderImpl(request, context)));
-        this.disableSslVerification = disableSslVerification;
-
-        tinkProvider = request.getProvider();
-        this.wellKnownURL = aisConfig.getWellKnownURL();
-        this.agentConfig = aisConfig;
-
-        client.addFilter(new BankServiceInternalErrorFilter());
+                        new AgentContextProviderImpl(request, context)),
+                aisConfig,
+                disableSslVerification);
     }
 
     // Different part between UkOpenBankingBaseAgent and this class
