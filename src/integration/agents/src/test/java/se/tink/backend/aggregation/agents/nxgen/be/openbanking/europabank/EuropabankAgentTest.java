@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.keytradebank;
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.europabank;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 
-public class KeyTradeBankAgentTest {
+public class EuropabankAgentTest {
 
     private final ArgumentManager<IbanArgumentEnum> manager =
             new ArgumentManager<>(IbanArgumentEnum.values());
@@ -24,12 +24,12 @@ public class KeyTradeBankAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("be", "be-keytradebank-ob")
+                new AgentIntegrationTest.Builder("be", "be-europabank-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("keytradebank")
+                        .setFinancialInstitutionId("europabank")
                         .setAppId("tink");
     }
 

@@ -13,11 +13,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class KeyTradeBankAgent extends Xs2aDevelopersTransactionalAgent {
+public final class KeytradeBankAgent extends Xs2aDevelopersTransactionalAgent {
 
     private static final String INTEGRATION_NAME = "keytradebank";
 
-    public KeyTradeBankAgent(
+    public KeytradeBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
