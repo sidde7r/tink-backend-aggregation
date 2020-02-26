@@ -734,8 +734,8 @@ maven_jar(
 
 maven_jar(
     name = "com_google_code_gson_gson",
-    artifact = "com.google.code.gson:gson:2.2.2",
-    sha1 = "1f96456ca233dec780aa224bff076d8e8bca3908",
+    artifact = "com.google.code.gson:gson:2.8.2",
+    sha1 = "3edcfe49d2c6053a70a2a47e4e1c2f94998a49cf",
 )
 
 maven_jar(
@@ -1760,8 +1760,8 @@ maven_jar(
 
 maven_jar(
     name = "com_google_guava_guava",
-    artifact = "com.google.guava:guava:21.0",
-    sha1 = "3a3d111be1be1b745edfa7d91678a12d7ed38709",
+    artifact = "com.google.guava:guava:23.1-jre",
+    sha1 = "23ed5a005f9289062224ddbe0d398e732c5efc36",
 )
 
 maven_jar(
@@ -2635,18 +2635,20 @@ maven_install(
 maven_install(
     name = "selenium",
     artifacts = [
-        "com.codeborne:phantomjsdriver:1.4.3",
-        "org.seleniumhq.selenium:selenium-support:3.4.0",
+        "com.codeborne:phantomjsdriver:1.4.4",
+        "org.seleniumhq.selenium:selenium-support:3.8.1",
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
-        "org.seleniumhq.selenium:selenium-api:3.4.0",
-        "org.seleniumhq.selenium:selenium-chrome-driver:3.4.0",
-        "org.seleniumhq.selenium:selenium-firefox-driver:3.4.0",
+        "org.seleniumhq.selenium:selenium-api:3.8.1",
+        "org.seleniumhq.selenium:selenium-chrome-driver:3.8.1",
+        "org.seleniumhq.selenium:selenium-firefox-driver:3.8.1",
         "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0",
-        "org.seleniumhq.selenium:selenium-ie-driver:3.4.0",
+        "org.seleniumhq.selenium:selenium-ie-driver:3.8.1",
         "org.seleniumhq.selenium:selenium-iphone-driver:2.39.0",
-        "org.seleniumhq.selenium:selenium-java:3.4.0",
-        "org.seleniumhq.selenium:selenium-remote-driver:3.4.0",
-        "org.seleniumhq.selenium:selenium-safari-driver:3.4.0",
+        "org.seleniumhq.selenium:selenium-java:3.8.1",
+        "org.seleniumhq.selenium:selenium-remote-driver:3.8.1",
+        "com.google.guava:guava:23.1-jre",
+        "org.seleniumhq.selenium:selenium-safari-driver:3.8.1",
+        "net.bytebuddy:byte-buddy:1.10.1",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:selenium_install.json",
