@@ -96,6 +96,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                         .header(HeaderKeys.X_CLIENT_SECRET, configuration.getClientSecret())
                         .header(HeaderKeys.ORIGINATING_HOST, HeaderValues.HOST)
                         .header(HeaderKeys.ORIGINATING_DATE, date)
+                        .header(HeaderKeys.MAX_TX_HISTORY, HeaderValues.FETCH_NUMBER_OF_MONTHS)
                         .header(
                                 HeaderKeys.SIGNATURE,
                                 createSignature(url, httpMethod, digest, date));

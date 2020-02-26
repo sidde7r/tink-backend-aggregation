@@ -28,7 +28,8 @@ public final class NordeaBaseConstants {
     }
 
     public static class Urls {
-        public static final String BASE_URL = "https://api.nordea.com/nordea-open-banking/obi";
+        // public static final String BASE_URL = "https://api.nordea.com/nordea-open-banking/obi";
+        public static final String BASE_URL = "https://open.nordea.com/personal";
         public static final URL AUTHORIZE = new URL(BASE_URL + ApiService.AUTHORIZE);
         public static final URL GET_TOKEN = new URL(BASE_URL + ApiService.GET_TOKEN);
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
@@ -101,10 +102,13 @@ public final class NordeaBaseConstants {
         public static final String DIGEST = "digest";
         public static final String ORIGINATING_DATE = "X-Nordea-Originating-Date";
         public static final String ORIGINATING_HOST = "X-Nordea-Originating-Host";
+        public static final String MAX_TX_HISTORY = "max_tx_history";
     }
 
     public static class HeaderValues {
-        public static final String HOST = "api.nordea.com";
+        public static final String HOST = "open.nordea.com";
+        // Default=2 months. range: 1 to 12 months
+        public static final Integer FETCH_NUMBER_OF_MONTHS = 12;
     }
 
     public static class Signature {

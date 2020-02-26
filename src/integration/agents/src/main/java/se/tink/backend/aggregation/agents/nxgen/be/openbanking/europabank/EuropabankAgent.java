@@ -13,11 +13,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class EuropaBankAgent extends Xs2aDevelopersTransactionalAgent {
+public final class EuropabankAgent extends Xs2aDevelopersTransactionalAgent {
 
     private static final String INTEGRATION_NAME = "europabank";
 
-    public EuropaBankAgent(
+    public EuropabankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }

@@ -572,9 +572,9 @@
         },
         {
             "accessType": "OPEN_BANKING",
-            "className": "nxgen.be.openbanking.europabank.EuropaBankAgent",
+            "className": "nxgen.be.openbanking.europabank.EuropabankAgent",
             "credentialsType": "PASSWORD",
-            "displayName": "EuropaBank",
+            "displayName": "Europabank",
             "fields": [
                 {
                     "description": "Iban",
@@ -596,9 +596,9 @@
         },
         {
             "accessType": "OPEN_BANKING",
-            "className": "nxgen.be.openbanking.keytradebank.KeyTradeBankAgent",
+            "className": "nxgen.be.openbanking.keytradebank.KeytradeBankAgent",
             "credentialsType": "PASSWORD",
-            "displayName": "KeyTrade Bank",
+            "displayName": "Keytrade Bank",
             "fields": [
                 {
                     "description": "Iban",
