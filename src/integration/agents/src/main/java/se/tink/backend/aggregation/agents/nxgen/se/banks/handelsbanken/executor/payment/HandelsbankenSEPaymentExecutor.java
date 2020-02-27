@@ -198,7 +198,7 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                         .orElseThrow(() -> paymentFailedException(PAYMENT_CREATE_FAILED));
 
         if (!transferSignResponse.getErrors().isEmpty()) {
-            paymentFailedException(PAYMENT_CREATE_FAILED);
+            throw paymentFailedException(PAYMENT_CREATE_FAILED);
         }
 
         confirmTransfer(transferSignResponse, null);
