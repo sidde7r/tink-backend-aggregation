@@ -25,6 +25,7 @@ public class SebCommonConstants {
         private static final String BASE_OAUTH = BASE_AUTH_URL + "/mga/sps/oauth";
         public static final String OAUTH = BASE_OAUTH + "/oauth20/dpsd2/authorize";
         public static final String TOKEN = BASE_URL + "/mga/sps/oauth/oauth20/dpsd2/token";
+        public static final String OAUTH2_TOKEN = BASE_URL + "/mga4/sps/oauth/oauth20/token";
     }
 
     public static class PollResponses {
