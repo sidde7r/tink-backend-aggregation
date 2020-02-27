@@ -29,6 +29,7 @@ java_library(
         "//third_party:commons_codec_commons_codec",
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:net_minidev_json_smart",
+        "//third_party:org_apache_commons_commons_collections4",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",
@@ -36,6 +37,7 @@ java_library(
         "//third_party:org_hibernate_hibernate_validator",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_slf4j_slf4j_api",
+        "//third_party:lombok_libs",
         "@aggregation//:com_google_guava_guava",
     ],
 )

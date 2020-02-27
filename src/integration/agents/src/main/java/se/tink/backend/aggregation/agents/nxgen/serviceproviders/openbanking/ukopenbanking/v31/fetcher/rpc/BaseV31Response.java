@@ -17,7 +17,7 @@ public class BaseV31Response<T> {
     @JsonProperty("Meta")
     private Map<String, String> meta;
 
-    protected Optional<T> getData() {
+    public Optional<T> getData() {
         return Optional.ofNullable(data);
     }
 

@@ -35,7 +35,7 @@ public class AccountBalanceEntity {
         return accountId;
     }
 
-    public ExactCurrencyAmount getBalance() {
+    public ExactCurrencyAmount calculateAccountSpecificBalance() {
 
         ExactCurrencyAmount total = getSignedAmount();
 
@@ -59,6 +59,10 @@ public class AccountBalanceEntity {
                 .orElse(total);
     }
 
+    public ExactCurrencyAmount getAsCurrencyAmount() {
+        return balance;
+    }
+
     public Optional<ExactCurrencyAmount> getAvailableCredit() {
         return ExternalLimitType.getPreferredCreditLineEntity(creditLine)
                 .map(CreditLineEntity::getAmount);
@@ -76,5 +80,9 @@ public class AccountBalanceEntity {
 
     public UkOpenBankingApiDefinitions.AccountBalanceType getType() {
         return type;
+    }
+
+    public List<CreditLineEntity> getCreditLine() {
+        return creditLine;
     }
 }

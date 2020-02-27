@@ -32,7 +32,7 @@ public class SantanderAccountIdentifierTest {
 
         String accountNumber = account.getUniqueIdentifier();
         String accountName = account.getDisplayName();
-        String holder = account.getDefaultIdentifier().getName();
+        String holder = account.getDefaultIdentifier().getOwnerName();
 
         HolderName holderName =
                 Objects.nonNull(holder) ? new HolderName(holder) : new HolderName(partyName);
@@ -43,7 +43,7 @@ public class SantanderAccountIdentifierTest {
          */
 
         Optional<String> revolutAccount =
-                account.getIdentifierEntity().stream()
+                account.getIdentifiers().stream()
                         .filter(
                                 e ->
                                         e.getIdentifierType()
@@ -71,7 +71,7 @@ public class SantanderAccountIdentifierTest {
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.from(account.getAccountType()).get())
                         .withoutFlags()
-                        .withBalance(BalanceModule.of(balance.getBalance()))
+                        .withBalance(BalanceModule.of(balance.calculateAccountSpecificBalance()))
                         .withId(idModuleBuilder.build())
                         .setApiIdentifier(account.getAccountId())
                         .addHolderName(holderName.toString())

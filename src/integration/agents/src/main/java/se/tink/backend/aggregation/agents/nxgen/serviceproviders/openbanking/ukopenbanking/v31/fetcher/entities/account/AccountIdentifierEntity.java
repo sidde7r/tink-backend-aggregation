@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
+import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
@@ -11,6 +12,7 @@ import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
 @JsonObject
+@Data
 public class AccountIdentifierEntity {
     @JsonProperty("SchemeName")
     private ExternalAccountIdentification4Code identifierType;
@@ -19,7 +21,7 @@ public class AccountIdentifierEntity {
     private String identification;
 
     @JsonProperty("Name")
-    private String name;
+    private String ownerName;
 
     @JsonProperty("SecondaryIdentification")
     private String secondaryIdentification;
@@ -27,22 +29,6 @@ public class AccountIdentifierEntity {
     // TODO: find OBBranchAndFinancialInstitutionIdentification5 definition
     @JsonProperty("Servicer")
     private String servicer;
-
-    public String getIdentification() {
-        return identification;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSecondaryIdentification() {
-        return secondaryIdentification;
-    }
-
-    public ExternalAccountIdentification4Code getIdentifierType() {
-        return identifierType;
-    }
 
     public Optional<AccountIdentifier> toAccountIdentifier(String accountName) {
         switch (identifierType) {
