@@ -109,4 +109,9 @@ public class SebCommonConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
+
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 5;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
+    }
 }
