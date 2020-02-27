@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -18,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
@@ -58,12 +59,20 @@ public class CustodyAccountResponse extends BaseResponse {
                 .build();
     }
 
-    private List<String> getFundAccountMapping(HandelsbankenSEApiClient client) {
+    private Map<String, String> getFundAccountMapping(HandelsbankenSEApiClient client) {
         final List<InstrumentModule> instruments = toInstrumentModules(client);
         return instruments.stream()
                 .map(InstrumentModule::getInstrumentIdModule)
-                .map(InstrumentIdModule::getUniqueIdentifier)
-                .collect(Collectors.toList());
+                .map(
+                        instrumentIdModule ->
+                                new SimpleEntry(
+                                        instrumentIdModule.getIsin(),
+                                        instrumentIdModule.getUniqueIdentifier()))
+                .collect(
+                        Collectors.toMap(
+                                SimpleEntry<String, String>::getKey,
+                                SimpleEntry<String, String>::getValue,
+                                ((oldVal, newVal) -> oldVal)));
     }
 
     private double toMarketValue() {
