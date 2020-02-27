@@ -38,7 +38,7 @@ public class InterClusterJerseyClientFactory {
     private final HttpClientBuilder internalHttpClientBuilder;
     private final SSLContextBuilder internalSslContextBuilder;
     private final RequestConfig.Builder internalRequestConfigBuilder;
-    private final ClientConfig internalClientConfig;
+    private ClientConfig internalClientConfig;
 
     private boolean doCompressRequests = true;
     private int readTimeoutMs = READ_TIMEOUT_MS;
@@ -63,6 +63,10 @@ public class InterClusterJerseyClientFactory {
         this.internalClientConfig
                 .getProperties()
                 .put(ClientConfig.PROPERTY_CHUNKED_ENCODING_SIZE, 0);
+    }
+
+    public void setInternalClientConfig(ClientConfig config) {
+        this.internalClientConfig = config;
     }
 
     public InterClusterJerseyClientFactory withClientCertificate(

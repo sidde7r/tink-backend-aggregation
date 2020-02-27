@@ -5,13 +5,12 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
-import java.util.Objects;
+import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.utils.jersey.filter.JerseyTimeoutRetryFilter;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.AggregationControllerService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.CredentialsService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.IdentityAggregatorService;
@@ -41,11 +40,17 @@ public class AggregationControllerAggregationClient {
             LoggerFactory.getLogger(AggregationControllerAggregationClient.class);
     private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
             ImmutableSet.of("oxford-staging", "oxford-production");
-
-    private boolean isRetryEnabled = false;
+    private final ApacheHttpClient4Config config;
+    private static final int MAXIMUM_RETRY_ATTEMPT = 5;
 
     @Inject
-    public AggregationControllerAggregationClient() {}
+    private AggregationControllerAggregationClient() {
+        this.config = null;
+    }
+
+    public AggregationControllerAggregationClient(ApacheHttpClient4Config custom) {
+        this.config = custom;
+    }
 
     private <T> T buildInterClusterServiceFromInterface(
             HostConfiguration hostConfiguration, Class<T> serviceInterface) {
@@ -53,16 +58,24 @@ public class AggregationControllerAggregationClient {
                 !Strings.isNullOrEmpty(hostConfiguration.getHost()),
                 "Aggregation controller host was not set.");
 
-        Client client =
-                JerseyUtils.getClusterClient(
-                        hostConfiguration.getClientCert(),
-                        EMPTY_PASSWORD,
-                        hostConfiguration.isDisablerequestcompression());
-
-        if (isRetryEnabled) {
-            log.info("Adding retry filter for AggregationController client");
-            client.addFilter(new JerseyTimeoutRetryFilter(5, 1000));
+        Client client;
+        if (this.config == null) {
+            client =
+                    JerseyUtils.getClusterClient(
+                            hostConfiguration.getClientCert(),
+                            EMPTY_PASSWORD,
+                            hostConfiguration.isDisablerequestcompression());
+        } else {
+            client =
+                    JerseyUtils.getClusterClient(
+                            hostConfiguration.getClientCert(),
+                            EMPTY_PASSWORD,
+                            hostConfiguration.isDisablerequestcompression(),
+                            this.config);
         }
+
+        log.info("Adding retry filter for AggregationController client");
+        // client.addFilter(new BadHttpStatusRetryFilter(2, 1000));
 
         JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 
@@ -139,14 +152,46 @@ public class AggregationControllerAggregationClient {
         return getUpdateService(hostConfiguration).optOutAccounts(request);
     }
 
+    private interface RequestOperation<T> {
+        T execute();
+
+        String name();
+    }
+
+    private <T> T requestExecuter(RequestOperation<T> operation) {
+        for (int i = 1; i <= MAXIMUM_RETRY_ATTEMPT; i++) {
+            try {
+                return operation.execute();
+            } catch (Exception e) {
+                if (i == MAXIMUM_RETRY_ATTEMPT) {
+                    log.error(
+                            "Tried "
+                                    + MAXIMUM_RETRY_ATTEMPT
+                                    + " times for "
+                                    + operation.name()
+                                    + " and stopping");
+                    throw e;
+                }
+            }
+        }
+        return null;
+    }
+
     public Response updateCredentials(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
-        if (Objects.equals(request.getCredentials().getProviderName(), "nl-rabobank-oauth2")) {
-            // AAP-121: Retry mechanism to mitigate failing refresh token behavior for Rabobank
-            log.info("Enabling retries for Aggregation Controller client");
-            isRetryEnabled = true;
-        }
-        return getUpdateService(hostConfiguration).updateCredentials(request);
+
+        return requestExecuter(
+                new RequestOperation<Response>() {
+                    @Override
+                    public Response execute() {
+                        return getUpdateService(hostConfiguration).updateCredentials(request);
+                    }
+
+                    @Override
+                    public String name() {
+                        return "Update Credentials";
+                    }
+                });
     }
 
     public Response updateSignableOperation(
@@ -166,6 +211,7 @@ public class AggregationControllerAggregationClient {
 
     public Response updateCredentialSensitive(
             HostConfiguration hostConfiguration, Credentials credentials, String sensitiveData) {
+
         UpdateCredentialsSensitiveRequest request =
                 new UpdateCredentialsSensitiveRequest()
                         .setUserId(credentials.getUserId())

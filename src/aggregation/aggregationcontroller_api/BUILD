@@ -1,3 +1,5 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
 java_library(
     name = "aggregationcontroller_api",
     srcs = glob(["src/main/**/*.java"]),
@@ -11,6 +13,7 @@ java_library(
         "//src/integration/credentials:rpc",
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/jersey/filter",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/models",
         "//src/integration/signableoperation:rpc",
         "//src/integration/transfer:rpc",
@@ -27,5 +30,38 @@ java_library(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",
+        "@com_sun_jersey_contribs_jersey_apache_client4//jar",
+    ],
+)
+
+junit_test(
+    name = "aggregationcontroller_api_test",
+    srcs = glob(["src/test/**/*.java"]),
+    data = [
+        "//src/aggregation/aggregationcontroller_api/src/test/java/se/tink/backend/aggregation/aggregationcontroller/resources",
+    ],
+    deps = [
+        ":aggregationcontroller_api",
+        "//src/integration/api",
+        "//src/integration/credentials:rpc",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
+        "//src/integration/models",
+        "//src/libraries/http_client",
+        "//src/libraries/jersey_utils",
+        "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
+        "//src/libraries/net/src/main/java/se/tink/libraries/net/client/handler",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
+        "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:com_sun_jersey_jersey_server",
+        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:org_codehaus_jackson_jackson",
     ],
 )
