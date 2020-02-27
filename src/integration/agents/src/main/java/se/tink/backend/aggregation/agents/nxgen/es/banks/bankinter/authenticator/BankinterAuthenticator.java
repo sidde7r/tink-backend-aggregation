@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -116,7 +117,8 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         // submit and wait for error or redirect
         loginForm.submit();
         final WebDriverWait wait = new WebDriverWait(driver, LoginForm.SUBMIT_TIMEOUT_SECONDS);
-        wait.until(didRedirectOrShowError(initialUrl));
+        wait.ignoring(StaleElementReferenceException.class)
+                .until(didRedirectOrShowError(initialUrl));
 
         // SCA
         if (getCurrentUrl(driver).toUri().getPath().equalsIgnoreCase(Paths.VERIFY_SCA)) {
