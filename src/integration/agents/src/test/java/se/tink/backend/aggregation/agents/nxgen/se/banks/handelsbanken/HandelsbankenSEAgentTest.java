@@ -10,11 +10,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentE
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class HandelsbankenSEAgentTest {
-    private AgentIntegrationTest.Builder builder =
-            new AgentIntegrationTest.Builder("se", "handelsbanken-bankid")
-                    .loadCredentialsBefore(false)
-                    .saveCredentialsAfter(false)
-                    .doLogout(true);
+
     private final ArgumentManager<SsnArgumentEnum> manager =
             new ArgumentManager<>(SsnArgumentEnum.values());
 
