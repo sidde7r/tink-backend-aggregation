@@ -7,7 +7,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
         "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
         "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",

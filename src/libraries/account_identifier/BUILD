@@ -12,7 +12,7 @@ java_library(
         "//src/libraries/social_security_number",
 
         # Guava
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
 
         # Jackson
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
@@ -35,8 +35,8 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account_identifier",
-        "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

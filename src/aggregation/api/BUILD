@@ -29,7 +29,6 @@ java_library(
         "//src/libraries/metrics:timers",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_codec_commons_codec",
@@ -38,6 +37,7 @@ java_library(
         "//third_party:joda_time_joda_time",
         "//third_party:org_hibernate_hibernate_annotations",
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
 
@@ -57,10 +57,10 @@ junit_test(
         "//src/libraries/api_annotations/testlib",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_javassist_javassist",
         "//third_party:org_reflections_reflections",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

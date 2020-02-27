@@ -8,7 +8,7 @@ java_library(
     ],
     deps = [
         "//src/libraries/account_identifier",
-        "//third_party:com_google_guava_guava",
         "//third_party:org_apache_commons_commons_lang3",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

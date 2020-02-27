@@ -11,10 +11,10 @@ java_library(
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:core",
         "//src/libraries/metrics:gauges",
-        "//third_party:com_google_guava_guava",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

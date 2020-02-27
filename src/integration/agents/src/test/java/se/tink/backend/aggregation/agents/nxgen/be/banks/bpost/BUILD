@@ -28,7 +28,6 @@ junit_test(
         "//src/libraries/i18n",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_code_gson_gson",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:net_bytebuddy_byte_buddy",
         "//third_party:org_apache_httpcomponents_httpclient",
@@ -38,5 +37,6 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:pl_pragmatists_junitparams",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

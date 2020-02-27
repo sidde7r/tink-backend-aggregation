@@ -28,7 +28,6 @@ java_binary(
         "//src/libraries/simple_http_server",
         "//src/nasa/metrics",
         "//third_party:com_google_code_gson_gson",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:java_spark",
         "//third_party:log",
@@ -36,6 +35,7 @@ java_binary(
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_yaml_snakeyaml",
         "//third_party:prometheus",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
 
@@ -51,7 +51,6 @@ junit_test(
         "//src/libraries/simple_http_server",
         "//src/nasa/service:nasa",
         "//third_party:com_google_code_gson_gson",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:java_spark",
         "//third_party:log",
@@ -60,6 +59,7 @@ junit_test(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_yaml_snakeyaml",
         "//third_party:prometheus",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
 

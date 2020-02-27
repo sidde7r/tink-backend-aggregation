@@ -16,7 +16,7 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_google_guava_guava",
         "//third_party:org_apache_commons_commons_lang3",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

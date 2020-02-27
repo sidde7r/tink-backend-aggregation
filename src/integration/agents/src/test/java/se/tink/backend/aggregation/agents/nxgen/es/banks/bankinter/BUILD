@@ -32,6 +32,6 @@ junit_test(
         "//src/libraries/date",
         "//src/libraries/serialization",
         "//third_party:org_mockito_mockito_core",
-        "@com_google_guava_guava//jar",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

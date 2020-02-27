@@ -9,6 +9,6 @@ java_library(
     runtime_deps = [
     ],
     deps = [
-        "//third_party:com_google_guava_guava",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

@@ -17,8 +17,8 @@ java_library(
         "//src/libraries/metrics:prometheus",
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",
-        "//third_party:com_google_guava_guava",
         "//third_party:net_spy_spymemcached",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

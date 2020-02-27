@@ -1759,7 +1759,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_guava_guava",
+    name = "com_google_guava_guava",  # Do not use, but do not remove
     artifact = "com.google.guava:guava:23.1-jre",
     sha1 = "23ed5a005f9289062224ddbe0d398e732c5efc36",
 )
@@ -2526,6 +2526,22 @@ maven_deps("@tink_backend//third_party/maven:maven_install.json")
 load("@maven//:defs.bzl", "pinned_maven_install")
 
 pinned_maven_install()
+
+maven_install(
+    name = "aggregation",
+    artifacts = [
+        "com.google.guava:guava:23.1-jre",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:aggregation_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+)
+
+load("@aggregation//:defs.bzl", aggregation_pin = "pinned_maven_install")
+
+aggregation_pin()
 
 maven_install(
     name = "java_uuid_generator",

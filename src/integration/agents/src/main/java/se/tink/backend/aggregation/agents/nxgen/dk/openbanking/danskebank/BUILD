@@ -12,7 +12,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid/jwt/signer/iface",
+        "@aggregation//:com_google_guava_guava",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_google_guava_guava//jar",
     ],
 )

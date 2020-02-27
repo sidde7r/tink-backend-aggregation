@@ -8,6 +8,6 @@ java_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock",
-        "@com_google_guava_guava//jar",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

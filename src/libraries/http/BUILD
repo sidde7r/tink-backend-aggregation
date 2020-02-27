@@ -13,7 +13,7 @@ java_library(
     srcs = glob(["src/main/java/se/tink/libraries/http/annotations/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_google_guava_guava",
         "//third_party:javax_validation_validation_api",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
