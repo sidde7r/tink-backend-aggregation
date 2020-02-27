@@ -733,7 +733,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_code_gson_gson",
+    name = "com_google_code_gson_gson",  # Do not use, but do not remove
     artifact = "com.google.code.gson:gson:2.8.2",
     sha1 = "3edcfe49d2c6053a70a2a47e4e1c2f94998a49cf",
 )
