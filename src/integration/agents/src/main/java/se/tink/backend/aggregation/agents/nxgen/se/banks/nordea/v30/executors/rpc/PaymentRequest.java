@@ -38,7 +38,7 @@ public class PaymentRequest {
     @JsonProperty private String type;
     @JsonProperty private String currency;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "CET")
     @JsonProperty
     private Date due;
 
