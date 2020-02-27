@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.ScreenUpdateResponseDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -46,7 +47,7 @@ public class ScreenUpdateResponse extends ResponseEntity {
                 .findFirst()
                 .orElseThrow(
                         () ->
-                                new IllegalStateException(
+                                BankServiceError.BANK_SIDE_FAILURE.exception(
                                         "Could not find widget with widgetId: " + widgetId));
     }
 
