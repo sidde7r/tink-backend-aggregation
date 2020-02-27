@@ -24,6 +24,10 @@ java_library(
 junit_test(
     name = "date_test",
     srcs = glob(["src/test/**/*.java"]),
+    tags = [
+        # These tests have been observed to be flaky. Making them external for now.
+        "external",
+    ],
     deps = [
         "//src/libraries/date",
         "//third_party:joda_time_joda_time",
