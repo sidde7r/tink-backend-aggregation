@@ -67,24 +67,4 @@ public class SupplementalFieldsAuthenticationStepTest {
         // then
         Mockito.verify(callbackProcessor).process(values);
     }
-
-    @Test
-    public void shouldCallbackWithFieldValueAndCredentials()
-            throws AuthenticationException, AuthorizationException {
-        // given
-        Field field = Mockito.mock(Field.class);
-        final String fieldKey = "testFieldKey";
-        final String fieldValue = "testFieldValue";
-        Map<String, String> values = new HashMap<>();
-        values.put(fieldKey, fieldValue);
-        authenticationRequest = authenticationRequest.withUserInputs(values);
-        CallbackProcessorMultiDataAndCredentials callbackProcessor =
-                Mockito.mock(CallbackProcessorMultiDataAndCredentials.class);
-        SupplementalFieldsAuthenticationStep objectUnderTest =
-                new SupplementalFieldsAuthenticationStep("stepId", callbackProcessor, field);
-        // when
-        AuthenticationStepResponse result = objectUnderTest.execute(authenticationRequest);
-        // then
-        Mockito.verify(callbackProcessor).process(values, credentials);
-    }
 }

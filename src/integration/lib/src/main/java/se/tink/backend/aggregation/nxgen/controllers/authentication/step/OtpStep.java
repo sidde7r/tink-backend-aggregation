@@ -13,13 +13,4 @@ public class OtpStep extends SingleSupplementalFieldAuthenticationStep {
                 callbackProcessor,
                 supplementalInformationFormer.getField(Key.OTP_INPUT));
     }
-
-    public OtpStep(
-            final CallbackProcessorSingleDataAndCredentials callbackProcessor,
-            final SupplementalInformationFormer supplementalInformationFormer) {
-        super(
-                OtpStep.class.getName(),
-                callbackProcessor,
-                supplementalInformationFormer.getField(Key.OTP_INPUT));
-    }
 }

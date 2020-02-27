@@ -54,7 +54,7 @@ public class BPostBankSigningAuthenticationStepTest {
     }
 
     @Test
-    public void executeShouldInitRegistrationAndRequestForSignCode()
+    public void shouldInitRegistrationAndRequestForSignCode()
             throws AuthenticationException, AuthorizationException {
         // given
         RegistrationResponseDTO responseDTO = Mockito.mock(RegistrationResponseDTO.class);
@@ -73,7 +73,7 @@ public class BPostBankSigningAuthenticationStepTest {
     }
 
     @Test
-    public void executeShouldCallSignRequestAndFinishItself()
+    public void shouldCallSignRequestAndFinishItself()
             throws AuthenticationException, AuthorizationException {
         // given
         final String signCode = "12345678";
@@ -93,5 +93,47 @@ public class BPostBankSigningAuthenticationStepTest {
         Assert.assertFalse(response.getSupplementInformationRequester().isPresent());
         Assert.assertFalse(response.getNextStepId().isPresent());
         Mockito.verify(apiClient).registrationAuthorize(authContext, signCode);
+    }
+
+    @Test
+    public void shouldRepeatRequestForSignCodeWhenPreviousWasIncorrect()
+            throws AuthenticationException, AuthorizationException {
+        // given
+        final String signCode = "12345678";
+        RegistrationResponseDTO responseDTO = Mockito.mock(RegistrationResponseDTO.class);
+        Mockito.when(responseDTO.isErrorChallengeResponseIncorrect()).thenReturn(true);
+        Mockito.when(apiClient.registrationAuthorize(authContext, signCode))
+                .thenReturn(responseDTO);
+        Mockito.when(authContext.isRegistrationInitialized()).thenReturn(true);
+        Credentials credentials = Mockito.mock(Credentials.class);
+        Map<String, String> callbackData = new HashMap<>();
+        callbackData.put(Field.Key.SIGN_CODE_INPUT.getFieldKey(), signCode);
+        AuthenticationRequest request =
+                new AuthenticationRequest(credentials).withUserInputs(callbackData);
+        // when
+        AuthenticationStepResponse response = objectUnderTest.execute(request);
+        // then
+        Assert.assertTrue(response.getNextStepId().isPresent());
+        Assert.assertEquals(
+                BPostBankSigningAuthenticationStep.STEP_ID, response.getNextStepId().get());
+    }
+
+    @Test(expected = AuthorizationException.class)
+    public void shouldThrowAuthorizationExceptionWhenAccountIsBlocked()
+            throws AuthenticationException, AuthorizationException {
+        // given
+        final String signCode = "12345678";
+        RegistrationResponseDTO responseDTO = Mockito.mock(RegistrationResponseDTO.class);
+        Mockito.when(responseDTO.isErrorAccountBlocked()).thenReturn(true);
+        Mockito.when(apiClient.registrationAuthorize(authContext, signCode))
+                .thenReturn(responseDTO);
+        Mockito.when(authContext.isRegistrationInitialized()).thenReturn(true);
+        Credentials credentials = Mockito.mock(Credentials.class);
+        Map<String, String> callbackData = new HashMap<>();
+        callbackData.put(Field.Key.SIGN_CODE_INPUT.getFieldKey(), signCode);
+        AuthenticationRequest request =
+                new AuthenticationRequest(credentials).withUserInputs(callbackData);
+        // when
+        objectUnderTest.execute(request);
     }
 }

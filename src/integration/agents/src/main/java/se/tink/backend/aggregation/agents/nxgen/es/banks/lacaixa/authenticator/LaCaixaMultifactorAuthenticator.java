@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
@@ -153,7 +152,7 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
         return handleScaResponse(response);
     }
 
-    private void processOtp(String otp, Credentials credentials) {
+    private AuthenticationStepResponse processOtp(String otp) {
         LOG.info("Sending OTP");
         final SmsEntity smsData =
                 authStorage
@@ -162,6 +161,7 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
         final String code =
                 LaCaixaPasswordHash.hash(smsData.getSeed(), smsData.getIterations(), otp);
         authStorage.put(TemporaryStorage.ENROLMENT_CODE, code);
+        return AuthenticationStepResponse.executeNextStep();
     }
 
     private AuthenticationStepResponse finalizeEnrolment() {

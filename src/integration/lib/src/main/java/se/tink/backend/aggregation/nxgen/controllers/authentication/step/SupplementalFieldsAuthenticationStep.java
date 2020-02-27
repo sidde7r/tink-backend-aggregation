@@ -14,7 +14,6 @@ public class SupplementalFieldsAuthenticationStep extends AbstractAuthentication
 
     protected final List<Field> fields = new LinkedList<>();
     private CallbackProcessorMultiData callbackProcessor;
-    private CallbackProcessorMultiDataAndCredentials callbackProcessorCredentials;
 
     public SupplementalFieldsAuthenticationStep(
             final String stepId,
@@ -22,14 +21,6 @@ public class SupplementalFieldsAuthenticationStep extends AbstractAuthentication
             final Field... fields) {
         this(stepId, fields);
         this.callbackProcessor = callbackProcessor;
-    }
-
-    public SupplementalFieldsAuthenticationStep(
-            final String stepId,
-            final CallbackProcessorMultiDataAndCredentials callbackProcessor,
-            final Field... fields) {
-        this(stepId, fields);
-        this.callbackProcessorCredentials = callbackProcessor;
     }
 
     private SupplementalFieldsAuthenticationStep(final String stepId, final Field... fields) {
@@ -48,16 +39,6 @@ public class SupplementalFieldsAuthenticationStep extends AbstractAuthentication
             return AuthenticationStepResponse.requestForSupplementInformation(
                     new SupplementInformationRequester.Builder().withFields(fields).build());
         }
-        callback(request);
-        return AuthenticationStepResponse.executeNextStep();
-    }
-
-    private void callback(AuthenticationRequest request)
-            throws AuthenticationException, AuthorizationException {
-        if (callbackProcessor != null) {
-            callbackProcessor.process(request.getUserInputs());
-        } else {
-            callbackProcessorCredentials.process(request.getUserInputs(), request.getCredentials());
-        }
+        return callbackProcessor.process(request.getUserInputs());
     }
 }

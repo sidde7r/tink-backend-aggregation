@@ -11,15 +11,4 @@ public class SingleSupplementalFieldAuthenticationStep
             final Field field) {
         super(stepId, (fields) -> callbackProcessor.process(fields.get(field.getName())), field);
     }
-
-    public SingleSupplementalFieldAuthenticationStep(
-            final String stepId,
-            final CallbackProcessorSingleDataAndCredentials callbackProcessor,
-            final Field field) {
-        super(
-                stepId,
-                (fields, credentials) ->
-                        callbackProcessor.process(fields.get(field.getName()), credentials),
-                field);
-    }
 }
