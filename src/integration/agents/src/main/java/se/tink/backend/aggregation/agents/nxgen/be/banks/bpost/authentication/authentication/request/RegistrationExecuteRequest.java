@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.a
 
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.AbstractRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication.BPostBankAuthContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication.request.dto.RegistrationResponseDTO;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.entity.BPostBankAuthContext;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
 public class RegistrationExecuteRequest extends AbstractRequest<RegistrationResponseDTO> {

@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.entity;
 
 import com.google.gson.Gson;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication.BPostBankAuthContext;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BPostBankEntityManager {

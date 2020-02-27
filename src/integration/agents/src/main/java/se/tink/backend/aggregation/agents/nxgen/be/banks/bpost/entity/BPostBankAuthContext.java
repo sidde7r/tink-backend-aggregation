@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.entity;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

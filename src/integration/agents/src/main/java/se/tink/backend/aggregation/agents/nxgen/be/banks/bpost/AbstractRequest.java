@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost;
 
 import se.tink.backend.aggregation.agents.common.Request;
 import se.tink.backend.aggregation.agents.common.RequestException;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.authentication.BPostBankAuthContext;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.entity.BPostBankAuthContext;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 
@@ -26,9 +26,14 @@ public abstract class AbstractRequest<T> implements Request<T> {
 
     @Override
     public RequestBuilder withHeaders(RequestBuilder requestBuilder) throws RequestException {
-        return csrfToken != null
-                ? requestBuilder.header(BPostBankConstants.CSRF_TOKEN_HEADER_KEY, csrfToken)
-                : requestBuilder;
+        if (csrfToken != null) {
+            requestBuilder
+                    .acceptLanguage("nl-be")
+                    .header("X-Device-Type", "1")
+                    .header("lang", "nl-BE")
+                    .header(BPostBankConstants.CSRF_TOKEN_HEADER_KEY, csrfToken);
+        }
+        return requestBuilder;
     }
 
     @Override
