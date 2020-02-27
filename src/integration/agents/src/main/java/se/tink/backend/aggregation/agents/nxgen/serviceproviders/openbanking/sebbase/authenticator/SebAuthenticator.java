@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
@@ -70,9 +71,7 @@ public class SebAuthenticator implements OAuth2Authenticator {
                         SebCommonConstants.QueryValues.REFRESH_TOKEN_GRANT);
 
         try {
-            return client.refreshToken(
-                    SebCommonConstants.Urls.BASE_URL.concat(SebCommonConstants.Urls.TOKEN),
-                    request);
+            return client.refreshToken(Urls.OAUTH2_TOKEN, request);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 ErrorResponse error = e.getResponse().getBody(ErrorResponse.class);
