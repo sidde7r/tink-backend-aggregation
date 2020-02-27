@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetch
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import com.fasterxml.jackson.annotation.Nulls;
 
 @JsonObject
 public class ResponseEntity {

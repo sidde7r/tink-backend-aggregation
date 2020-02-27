@@ -23,7 +23,6 @@ public class UpcomingTransactionsEntity {
     private DirectDebitInfoEntity directDebitInfo;
     // `statusInfo` is null - cannot define it!
 
-
     public String getDate() {
         return date;
     }

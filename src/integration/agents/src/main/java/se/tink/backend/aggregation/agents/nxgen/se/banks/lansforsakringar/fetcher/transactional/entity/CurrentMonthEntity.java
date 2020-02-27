@@ -4,8 +4,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CurrentMonthEntity {
-  private String year;
-  private String month;
-  private double sumUpcomingTransactions;
-  private String currentDate;
+    private String year;
+    private String month;
+    private double sumUpcomingTransactions;
+    private String currentDate;
 }

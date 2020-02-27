@@ -13,6 +13,6 @@ public class FetchUpcomingRequest {
 
     @JsonIgnore
     public static FetchUpcomingRequest of(String accountNumber) {
-      return new FetchUpcomingRequest(accountNumber);
+        return new FetchUpcomingRequest(accountNumber);
     }
 }

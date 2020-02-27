@@ -12,6 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authen
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.rpc.BankIdLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.creditcard.rpc.FetchCreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceAgreementRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceAgreementResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeinsuranceRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchTransactionRequest;
@@ -95,6 +97,13 @@ public class LansforsakringarApiClient {
                 .get(FetchCreditCardResponse.class);
     }
 
+    public FetchPensionResponse fetchPension() {
+        return getBaseRequest(Urls.FETCH_PENSION_OVERVIEW)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchPensionResponse.class);
+    }
+
     public FetchPensionWithLifeInsuranceResponse fetchPensionWithLifeInsurance() {
         return getBaseRequest(Urls.FETCH_PENSION_WITH_LIFE_INSURANCE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -107,11 +116,17 @@ public class LansforsakringarApiClient {
                 .post(FetchPensionWithLifeInsuranceResponse.class);
     }
 
-    public FetchPensionResponse fetchPension() {
-        return getBaseRequest(Urls.FETCH_PENSION_OVERVIEW)
+    public FetchPensionWithLifeInsuranceAgreementResponse fetchPensionWithLifeInsuranceAgreement(
+            String agreementId) {
+        return getBaseRequest(Urls.FETCH_PENSION_WITH_LIFE_INSURANCE_AGREEMENT)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .get(FetchPensionResponse.class);
+                .body(
+                        FetchPensionWithLifeInsuranceAgreementRequest.of(
+                                sessionStorage.get(StorageKeys.SSN),
+                                Fetcher.CUSTOMER_PROFILE_TYPE,
+                                agreementId),
+                        MediaType.APPLICATION_JSON_TYPE)
+                .post(FetchPensionWithLifeInsuranceAgreementResponse.class);
     }
 
     private RequestBuilder getBaseRequest(URL url) {

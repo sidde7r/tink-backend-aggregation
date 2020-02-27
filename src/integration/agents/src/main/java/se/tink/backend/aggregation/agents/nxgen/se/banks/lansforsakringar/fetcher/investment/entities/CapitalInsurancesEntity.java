@@ -3,6 +3,4 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetch
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CapitalInsurancesEntity {
-
-}
+public class CapitalInsurancesEntity {}

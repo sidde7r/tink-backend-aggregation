@@ -5,9 +5,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class OccupationalPensionsEntity {
-  private String name;
-  private String agreementId;
-  private double value;
-  private boolean hasDetails;
-  private List<FootNotesEntity> footNotes;
+    private String name;
+    private String agreementId;
+    private double value;
+    private boolean hasDetails;
+    private List<FootNotesEntity> footNotes;
 }

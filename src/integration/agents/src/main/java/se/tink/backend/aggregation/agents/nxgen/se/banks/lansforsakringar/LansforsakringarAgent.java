@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar;
 
+import java.util.Collections;
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.HeaderKeys;
@@ -14,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.Lansfo
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.LansforsakringarBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.creditcard.CreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.InvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.UpcomingTransactionFetcher;
@@ -24,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -34,12 +39,13 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 public class LansforsakringarAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshIdentityDataExecutor {
+                RefreshIdentityDataExecutor,
+                RefreshInvestmentAccountsExecutor {
 
     private final LansforsakringarApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
-    //    private final InvestmentRefreshController investmentRefreshController;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public LansforsakringarAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -49,8 +55,14 @@ public class LansforsakringarAgent extends NextGenerationAgent
         persistentStorage.put(HeaderKeys.DEVICE_ID, UUID.randomUUID().toString().toUpperCase());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
+        investmentRefreshController = constructInvestmentRefreshController();
 
         client.setDebugProxy("http://127.0.0.1:8888");
+    }
+
+    private InvestmentRefreshController constructInvestmentRefreshController() {
+        return new InvestmentRefreshController(
+                metricRefreshController, updateController, new InvestmentFetcher(apiClient));
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
@@ -114,5 +126,15 @@ public class LansforsakringarAgent extends NextGenerationAgent
                 SeIdentityData.of(
                         sessionStorage.get(StorageKeys.CUSTOMER_NAME),
                         sessionStorage.get(StorageKeys.SSN)));
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return new FetchTransactionsResponse(Collections.EMPTY_MAP);
     }
 }

@@ -5,11 +5,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AssetSummarysEntity {
-  private double marketValue;
-  private double performanceMarketValue;
-  private String calculatedAtDate;
-  private int numberOfFunds;
-  private String insuranceNumber;
-  private List<FinancialAssetsEntity> financialAssets;
-  private List<PortfoliosEntity> portfolios;
+    private double marketValue;
+    private double performanceMarketValue;
+    private String calculatedAtDate;
+    private int numberOfFunds;
+    private String insuranceNumber;
+    private List<FinancialAssetsEntity> financialAssets;
+    private List<PortfoliosEntity> portfolios;
 }

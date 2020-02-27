@@ -40,16 +40,11 @@ public class LansforsakringarBankIdAuthenticator implements BankIdAuthenticator<
         try {
             return apiClient.initBankIdLogin(ssn).getReference();
         } catch (HttpResponseException e) {
-            /*
-                         Tyvärr har det uppstått ett tekniskt fel. Försök igen och kontakta oss om problemet
-                         kvarstår. Error-Code=00012
-            */
+
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
             }
-            /**
-             * Todo handle cancel bankId response
-             */
+            /** Todo handle cancel bankId response */
             throw BankIdError.UNKNOWN.exception();
         }
     }

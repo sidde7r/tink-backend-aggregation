@@ -8,5 +8,17 @@ public class LivPensionsResponseModelEntity {
     private List<PrivatePensionsEntity> privatePensions;
     private List<OccupationalPensionsEntity> occupationalPensions;
     private List<CapitalInsurancesEntity> capitalInsurances;
-  // `error` is null - cannot define it!
+    // `error` is null - cannot define it!
+
+    public List<PrivatePensionsEntity> getPrivatePensions() {
+        return privatePensions;
+    }
+
+    public List<OccupationalPensionsEntity> getOccupationalPensions() {
+        return occupationalPensions;
+    }
+
+    public List<CapitalInsurancesEntity> getCapitalInsurances() {
+        return capitalInsurances;
+    }
 }

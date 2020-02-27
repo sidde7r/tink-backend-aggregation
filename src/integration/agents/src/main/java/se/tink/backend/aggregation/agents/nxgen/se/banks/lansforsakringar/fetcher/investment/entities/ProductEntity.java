@@ -6,4 +6,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ProductEntity {
     private String name;
     private String code;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCode() {
+        return code;
+    }
 }

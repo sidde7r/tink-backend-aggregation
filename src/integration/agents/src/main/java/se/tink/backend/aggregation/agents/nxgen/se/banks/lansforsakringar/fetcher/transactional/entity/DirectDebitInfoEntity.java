@@ -4,6 +4,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class DirectDebitInfoEntity {
-  private String bankGiroNumber;
-  private String creditorShortName;
+    private String bankGiroNumber;
+    private String creditorShortName;
 }

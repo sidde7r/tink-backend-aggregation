@@ -23,6 +23,8 @@ public class LansforsakringarConstants {
                 new URL(BASE + ApiService.PENSION_WITH_LIFE_INSURANCE);
         public static final URL FETCH_PENSION_OVERVIEW =
                 new URL(BASE + ApiService.PENSION_OVERVIEW);
+        public static final URL FETCH_PENSION_WITH_LIFE_INSURANCE_AGREEMENT =
+                new URL(BASE + ApiService.PENSION_WITH_LIFE_INSURANCE_AGREEMENT);
     }
 
     public static class ApiService {
@@ -34,6 +36,8 @@ public class LansforsakringarConstants {
         public static final String FETCH_CARDS = "appoutlet/card/list/3.0";
         public static final String PENSION_WITH_LIFE_INSURANCE =
                 "es/lifeinsurance/getengagements/1.0";
+        public static final String PENSION_WITH_LIFE_INSURANCE_AGREEMENT =
+                "es/lifeinsurance/getagreement/1.0";
         public static final String PENSION_OVERVIEW = "appoutlet/pension/overview/withtotal/2.0";
     }
 

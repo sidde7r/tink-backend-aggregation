@@ -13,7 +13,7 @@ public class FilterEntity {
 
     @JsonIgnore
     public static FilterEntity of(String transactionStatus) {
-      IncludeFilterEntity filterEntity = new IncludeFilterEntity(transactionStatus);
-      return new FilterEntity(filterEntity);
+        IncludeFilterEntity filterEntity = new IncludeFilterEntity(transactionStatus);
+        return new FilterEntity(filterEntity);
     }
 }

@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.entities;
 
-import java.util.List;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 @JsonObject
 public class EngagementsEntity {
@@ -11,7 +8,7 @@ public class EngagementsEntity {
     private String productName;
     private String id;
     private String type;
-    private List<RiskCoversEntity> riskCovers;
+    //    @JsonIgnore private List<RiskCoversEntity> riskCovers;
     private String status;
     private double investmentValue;
     // `agreedPremium` is null - cannot define it!
@@ -22,11 +19,47 @@ public class EngagementsEntity {
     private String productCategory;
     private boolean hasDetail;
 
-    @JsonIgnore
-    public InvestmentAccount toTinkInvestmentAccount() {
-//        return InvestmentAccount.nxBuilder().`withoutPortfolios().withCashBalance().withId().
-//        InvestmentAccount.nxBuilder().withPortfolios().
-//        PortfolioModule.builder().withType(PortfolioType.PENSION).withUniqueIdentifier("sdfsdf").withCashValue(23423).
-        return null;
+    public String getName() {
+        return name;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public double getInvestmentValue() {
+        return investmentValue;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public boolean isHasDetail() {
+        return hasDetail;
     }
 }

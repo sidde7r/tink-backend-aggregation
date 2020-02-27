@@ -28,12 +28,13 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
             return Collections.emptyList();
         }
 
-        Collection<TransactionalAccount> transAccounts = mainAndCoAccounts.stream()
-                .filter(MainAndCoAccountsEntity::isTransactionalAccount)
-                .map(MainAndCoAccountsEntity::toTinkAccount)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        Collection<TransactionalAccount> transAccounts =
+                mainAndCoAccounts.stream()
+                        .filter(MainAndCoAccountsEntity::isTransactionalAccount)
+                        .map(MainAndCoAccountsEntity::toTinkAccount)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
 
         return transAccounts;
     }

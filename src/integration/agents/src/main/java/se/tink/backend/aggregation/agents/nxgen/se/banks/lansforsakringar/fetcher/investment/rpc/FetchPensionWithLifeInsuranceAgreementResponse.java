@@ -5,5 +5,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FetchPensionWithLifeInsuranceAgreementResponse {
-    private AgreementResponseEntity agreementResponseEntity;
+    private AgreementResponseEntity response;
+
+    public AgreementResponseEntity getResponse() {
+        return response;
+    }
 }

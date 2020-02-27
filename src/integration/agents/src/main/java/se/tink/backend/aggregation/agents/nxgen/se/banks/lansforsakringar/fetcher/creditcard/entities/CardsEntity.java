@@ -25,11 +25,9 @@ public class CardsEntity {
     private CardAccountDetailsEntity cardAccountDetails;
     private boolean accountDetailsAvailable;
 
-
     @JsonIgnore
     public boolean isNotDebit() {
-        return !Accounts.ACCOUNT_TYPE_MAPPER
-            .isOf(cardTypeAsString, AccountTypes.CHECKING);
+        return !Accounts.ACCOUNT_TYPE_MAPPER.isOf(cardTypeAsString, AccountTypes.CHECKING);
     }
 
     @Override

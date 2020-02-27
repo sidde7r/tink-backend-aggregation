@@ -4,39 +4,39 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class SessionEntity {
-  private String ssn;
-  private String name;
-  private String ticket;
-  private String lfCompanyBelonging;
-  private int ticketLifetime;
-  private boolean pinPadAvailable;
-  private String enterpriseServicesPrimarySession;
+    private String ssn;
+    private String name;
+    private String ticket;
+    private String lfCompanyBelonging;
+    private int ticketLifetime;
+    private boolean pinPadAvailable;
+    private String enterpriseServicesPrimarySession;
 
-  public String getSsn() {
-    return ssn;
-  }
+    public String getSsn() {
+        return ssn;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public String getTicket() {
-    return ticket;
-  }
+    public String getTicket() {
+        return ticket;
+    }
 
-  public String getLfCompanyBelonging() {
-    return lfCompanyBelonging;
-  }
+    public String getLfCompanyBelonging() {
+        return lfCompanyBelonging;
+    }
 
-  public int getTicketLifetime() {
-    return ticketLifetime;
-  }
+    public int getTicketLifetime() {
+        return ticketLifetime;
+    }
 
-  public boolean isPinPadAvailable() {
-    return pinPadAvailable;
-  }
+    public boolean isPinPadAvailable() {
+        return pinPadAvailable;
+    }
 
-  public String getEnterpriseServicesPrimarySession() {
-    return enterpriseServicesPrimarySession;
-  }
+    public String getEnterpriseServicesPrimarySession() {
+        return enterpriseServicesPrimarySession;
+    }
 }

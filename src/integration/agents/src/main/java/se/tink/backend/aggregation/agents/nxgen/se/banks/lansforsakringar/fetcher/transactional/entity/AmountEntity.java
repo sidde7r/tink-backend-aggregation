@@ -5,14 +5,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AmountEntity {
-  private String currency;
-  private BigDecimal value;
+    private String currency;
+    private BigDecimal value;
 
-  public String getCurrency() {
-    return currency;
-  }
+    public String getCurrency() {
+        return currency;
+    }
 
-  public BigDecimal getValue() {
-    return value;
-  }
+    public BigDecimal getValue() {
+        return value;
+    }
 }

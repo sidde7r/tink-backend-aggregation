@@ -12,5 +12,20 @@ public class FetchPensionResponse {
     private FootNotesEntity footNotes;
     private double totalValue;
 
-    //Todo: add log for missing ips pension
+    public IpsPensionsResponseModelEntity getIpsPensionsResponseModel() {
+        return ipsPensionsResponseModel;
+    }
+
+    public LivPensionsResponseModelEntity getLivPensionsResponseModel() {
+        return livPensionsResponseModel;
+    }
+
+    public FootNotesEntity getFootNotes() {
+        return footNotes;
+    }
+
+    public double getTotalValue() {
+        return totalValue;
+    }
+
 }

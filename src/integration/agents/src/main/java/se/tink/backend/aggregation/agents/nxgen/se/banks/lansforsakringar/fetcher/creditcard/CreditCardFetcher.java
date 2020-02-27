@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
-public class CreditCardFetcher implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
+public class CreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
     private LansforsakringarApiClient apiClient;
     private static final AggregationLogger log = new AggregationLogger(CreditCardFetcher.class);
 
@@ -23,7 +24,8 @@ public class CreditCardFetcher implements AccountFetcher<CreditCardAccount>, Tra
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         FetchCreditCardResponse fetchCreditCardResponse = apiClient.fetchCreditCards();
-        log.info("FetchCardsListResponse:\n" + fetchCreditCardResponse.toString());
+        // Log credit cards if there exists any for this response
+        log.info(fetchCreditCardResponse.toString());
 
         return Collections.emptyList();
     }

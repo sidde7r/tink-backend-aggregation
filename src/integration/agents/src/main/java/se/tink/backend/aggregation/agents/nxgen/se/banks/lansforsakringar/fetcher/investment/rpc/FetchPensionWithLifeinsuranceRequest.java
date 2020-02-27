@@ -21,6 +21,7 @@ public class FetchPensionWithLifeinsuranceRequest {
             String customerId, String requestedView, String profileType) {
         ResponseControlEntity responseControlEntity =
                 new ResponseControlEntity(new ProfileEntity(profileType));
-        return new FetchPensionWithLifeinsuranceRequest(customerId, requestedView, responseControlEntity);
+        return new FetchPensionWithLifeinsuranceRequest(
+                customerId, requestedView, responseControlEntity);
     }
 }

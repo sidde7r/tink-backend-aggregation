@@ -4,6 +4,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AgeEntity {
-  private int year;
-  private int month;
+    private int year;
+    private int month;
 }

@@ -16,5 +16,4 @@ public class FetchUpcomingResponse {
     public List<UpcomingTransactionsEntity> getUpcomingTransactions() {
         return upcomingTransactions;
     }
-
 }

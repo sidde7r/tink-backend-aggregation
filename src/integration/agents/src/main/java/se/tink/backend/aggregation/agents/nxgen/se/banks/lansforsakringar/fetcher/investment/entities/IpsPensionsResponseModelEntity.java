@@ -5,6 +5,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class IpsPensionsResponseModelEntity {
-  private List<IpsPensionsEntity> ipsPensions;
-  // `error` is null - cannot define it!
+    private List<IpsPensionsEntity> ipsPensions;
+    // `error` is null - cannot define it!
 }

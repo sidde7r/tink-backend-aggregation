@@ -134,5 +134,4 @@ public class MainAndCoAccountsEntity {
         return ACCOUNT_TYPE_MAPPER.isOf(type, AccountTypes.CHECKING)
                 || ACCOUNT_TYPE_MAPPER.isOf(type, AccountTypes.SAVINGS);
     }
-
 }

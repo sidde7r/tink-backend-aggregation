@@ -12,14 +12,13 @@ public class ListAccountsResponse {
         return mainAndCoAccounts;
     }
 
-
-//    @JsonIgnore
-//    public Collection<Optional<TransactionalAccount>> toTinkAccounts() {
-//        return mainAndCoAccounts.stream()
-//                .map(MainAndCoAccountsEntity::toTinkAccount)
-//                .filter(Optional::isPresent)
-//                .collect(Collectors.toList());
-//    }
+    //    @JsonIgnore
+    //    public Collection<Optional<TransactionalAccount>> toTinkAccounts() {
+    //        return mainAndCoAccounts.stream()
+    //                .map(MainAndCoAccountsEntity::toTinkAccount)
+    //                .filter(Optional::isPresent)
+    //                .collect(Collectors.toList());
+    //    }
 
     //  private List<DispositionAccountsEntity> dispositionAccounts;
     //  private List<CardsEntity> cards;

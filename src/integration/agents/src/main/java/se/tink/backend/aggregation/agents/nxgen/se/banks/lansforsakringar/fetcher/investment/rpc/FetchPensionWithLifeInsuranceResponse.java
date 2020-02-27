@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.entities.ResponseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -14,11 +15,11 @@ public class FetchPensionWithLifeInsuranceResponse {
         return response;
     }
 
-    public InvestmentAccount toTinkInvestmentAccount() {
-      //Todo
-      return null;
+    @JsonIgnore
+    public InvestmentAccount getTinkInvestmentAccounts() {
+        return null;
     }
 
-    //todo log any pension that is not the same (type && productType)
+    // todo log any pension that is not the same (type && productType)
 
 }
