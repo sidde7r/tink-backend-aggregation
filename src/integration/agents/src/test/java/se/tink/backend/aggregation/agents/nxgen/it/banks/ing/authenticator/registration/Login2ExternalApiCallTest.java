@@ -23,13 +23,13 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.TestAsserts;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.TestFixtures;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.Login2ExternalApiCall.Arg;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.Login2ExternalApiCall.Result;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ExternalApiCallResult;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
 
 public class Login2ExternalApiCallTest {
 

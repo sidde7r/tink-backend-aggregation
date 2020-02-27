@@ -11,8 +11,6 @@ import lombok.experimental.Accessors;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.ConfigurationProvider;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.Login1ExternalApiCall.Arg;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.Login1ExternalApiCall.Result;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ExternalApiCallResult;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.SimpleExternalApiCall;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationSteppable;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -21,6 +19,8 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
+import se.tink.backend.aggregation.nxgen.scaffold.SimpleExternalApiCall;
 
 public class Login1ExternalApiCall extends SimpleExternalApiCall<Arg, Result>
         implements AuthenticationSteppable {

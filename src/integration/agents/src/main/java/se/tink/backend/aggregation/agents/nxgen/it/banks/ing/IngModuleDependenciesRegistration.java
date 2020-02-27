@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.regis
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.OtmlParser;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.PinKeyboardMapper;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.RegistrationProcess;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ModuleDependenciesRegistration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistration;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class IngModuleDependenciesRegistration extends ModuleDependenciesRegistration {

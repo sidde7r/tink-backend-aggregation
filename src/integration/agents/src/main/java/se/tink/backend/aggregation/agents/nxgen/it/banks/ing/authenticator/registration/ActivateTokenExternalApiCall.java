@@ -18,13 +18,13 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.Cryptor;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.EncryptedExternalApiCall;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.ActivateTokenExternalApiCall.Arg;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.ActivateTokenExternalApiCall.Result;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ExternalApiCallResult;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ActivateTokenExternalApiCall extends EncryptedExternalApiCall<Arg, Result> {
