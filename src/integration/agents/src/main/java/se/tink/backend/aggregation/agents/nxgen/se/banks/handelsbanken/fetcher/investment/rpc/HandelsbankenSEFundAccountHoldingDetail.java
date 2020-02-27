@@ -67,9 +67,10 @@ public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
     }
 
     private String getUniqueIdentifier() {
-        return Optional.ofNullable(this)
-                .map(HandelsbankenSEFundAccountHoldingDetail::getAccountFormatted)
-                .orElse(isin);
+        if (accountFormatted == null) {
+            return isin;
+        }
+        return getAccountFormatted();
     }
 
     public String getAccountFormatted() {
