@@ -7,18 +7,16 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.CreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.PrioritizedValueExtractor;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@RequiredArgsConstructor
 class SantanderCreditCardBalanceMapper implements CreditCardBalanceMapper {
 
     private final PrioritizedValueExtractor valueExtractor;
-
-    SantanderCreditCardBalanceMapper(PrioritizedValueExtractor valueExtractor) {
-        this.valueExtractor = valueExtractor;
-    }
 
     @Override
     public AccountBalanceEntity getAccountBalance(Collection<AccountBalanceEntity> balances) {

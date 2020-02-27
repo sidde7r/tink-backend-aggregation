@@ -20,7 +20,10 @@ public class PrioritizedValueExtractor {
         return input.stream()
                 .filter(b -> valuePriorities.contains(comparedValueExtractor.apply(b)))
                 .min(priorityComparator)
-                .orElseThrow(() -> constructMissingElementException(input, comparedValueExtractor, valuePriorities));
+                .orElseThrow(
+                        () ->
+                                constructMissingElementException(
+                                        input, comparedValueExtractor, valuePriorities));
     }
 
     private <T, VP> NoSuchElementException constructMissingElementException(

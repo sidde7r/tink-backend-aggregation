@@ -44,8 +44,9 @@ public class SantanderV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        CreditCardAccountMapper creditCardAccountMapper = new CreditCardAccountMapper(
-            new SantanderCreditCardBalanceMapper(new PrioritizedValueExtractor()));
+        CreditCardAccountMapper creditCardAccountMapper =
+                new CreditCardAccountMapper(
+                        new SantanderCreditCardBalanceMapper(new PrioritizedValueExtractor()));
 
         return new UkOpenBankingV31Ais(aisConfig, persistentStorage, creditCardAccountMapper);
     }

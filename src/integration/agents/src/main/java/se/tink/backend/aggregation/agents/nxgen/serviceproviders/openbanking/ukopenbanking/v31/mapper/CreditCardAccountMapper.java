@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper;
 
 import java.util.Collection;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountBalanceEntity;
@@ -12,13 +13,10 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 
+@RequiredArgsConstructor
 public class CreditCardAccountMapper {
 
     private final CreditCardBalanceMapper balanceMapper;
-
-    public CreditCardAccountMapper(CreditCardBalanceMapper balanceMapper) {
-        this.balanceMapper = balanceMapper;
-    }
 
     public CreditCardAccount map(
             AccountEntity account, Collection<AccountBalanceEntity> balances, String partyName) {
