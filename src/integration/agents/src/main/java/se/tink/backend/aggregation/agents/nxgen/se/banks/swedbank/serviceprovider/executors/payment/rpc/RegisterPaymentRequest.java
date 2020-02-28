@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ReferenceEntity;
@@ -42,11 +44,32 @@ public class RegisterPaymentRequest {
         this.amount = amount;
         this.reference = reference;
         this.ocrScanned = "NO";
-        this.date = date;
+        this.date = getDateOrNullIfDueDateIsToday(date);
         this.type = type;
         this.recipientId = recipientId;
         this.fromAccountId = fromAccountId;
         this.einvoiceReference = eInvoiceReference;
+    }
+
+    /**
+     * Swedbank reject today's date as a possible date. If the payment is suppose to be executed
+     * today the date field needs to be left blank (null).
+     *
+     * @return Input date if a future date, null if input date is today's date.
+     */
+    @JsonIgnore
+    private Date getDateOrNullIfDueDateIsToday(Date transferDate) {
+        LocalDate todayLocalDate = LocalDate.now(ZoneId.of("CET"));
+
+        LocalDate transferLocalDate =
+                transferDate.toInstant().atZone(ZoneId.of("CET")).toLocalDate();
+
+        // Use localdate for comparison as we don't care about time
+        if (todayLocalDate.equals(transferLocalDate)) {
+            return null;
+        }
+
+        return transferDate;
     }
 
     public static RegisterPaymentRequest createEinvoicePayment(
