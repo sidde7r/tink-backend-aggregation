@@ -13,11 +13,11 @@ java_binary(
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_github_tomakehurst_wiremock",
-        "//third_party:com_google_code_gson_gson",
         "//third_party:com_nimbusds_nimbus_jose_jwt",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:net_minidev_json_smart",
         "//third_party:org_apache_commons_commons_cli",
+        "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
     ],
 )

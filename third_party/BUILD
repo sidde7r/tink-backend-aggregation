@@ -223,14 +223,6 @@ java_library(
 )
 
 java_library(
-    name = "com_google_code_gson_gson",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_code_gson_gson//jar",
-    ],
-)
-
-java_library(
     name = "com_google_http_client_google_http_client",
     visibility = ["//visibility:public"],
     exports = [
@@ -1468,9 +1460,9 @@ java_library(
         "@org_reflections_reflections//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
         "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_code_gson_gson//jar",
         "@dom4j_dom4j//jar",
         "@javax_servlet_javax_servlet_api//jar",
         "@junit_junit//jar",
@@ -1565,10 +1557,10 @@ java_library(
     name = "netty",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
         "@com_google_api_grpc_proto_google_common_protos//jar",
         "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_code_gson_gson//jar",
         "@com_google_instrumentation_instrumentation_api//jar",
         "@com_google_protobuf_protobuf_java//jar",
         "@com_google_protobuf_protobuf_java_util//jar",
@@ -1745,7 +1737,7 @@ java_library(
         "@io_netty_netty_codec_http2//jar",
     ],
     runtime_deps = [
-        "@com_google_code_gson_gson//jar",
+        "@aggregation//:com_google_code_gson_gson",
         "@com_jcract_jzlib//jar",
         "@io_netty_netty_buffer//jar",
         "@io_netty_netty_codec//jar",
