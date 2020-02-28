@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.TestFixtures.givenBasedJson;
 import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.TestFixtures.givenDeviceId;
 import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.TestFixtures.givenJsonObject;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.RegistrationRequest.Payload;
 
@@ -21,7 +21,7 @@ public class DataEncoderTest {
         String result = tested.base64Encode(input);
 
         // then
-        Assertions.assertThat(result).isEqualTo(givenBasedJson());
+        assertThat(result).isEqualTo(givenBasedJson());
     }
 
     @Test
@@ -33,7 +33,7 @@ public class DataEncoderTest {
         String result = tested.base64UrlEncode(input);
 
         // then
-        Assertions.assertThat(result).isEqualTo(givenBasedJson());
+        assertThat(result).isEqualTo(givenBasedJson());
     }
 
     @Test
@@ -45,6 +45,6 @@ public class DataEncoderTest {
         String result = tested.serializeAndBase64(givenObj);
 
         // then
-        Assertions.assertThat(result).isEqualTo(givenBasedJson());
+        assertThat(result).isEqualTo(givenBasedJson());
     }
 }

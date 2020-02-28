@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.nxgen.scaffold;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistry.BeanNotFoundException;
 
@@ -23,10 +22,8 @@ public class SimpleModuleDependenciesRegistryTest {
         simpleModuleBeansRegistry.registerBean(TestBean2.class, givenTestBean2);
 
         // then
-        Assertions.assertThat(simpleModuleBeansRegistry.getBean(TestBean.class))
-                .isEqualTo(givenTestBean);
-        Assertions.assertThat(simpleModuleBeansRegistry.getBean(TestBean2.class))
-                .isEqualTo(givenTestBean2);
+        assertThat(simpleModuleBeansRegistry.getBean(TestBean.class)).isEqualTo(givenTestBean);
+        assertThat(simpleModuleBeansRegistry.getBean(TestBean2.class)).isEqualTo(givenTestBean2);
     }
 
     @Test

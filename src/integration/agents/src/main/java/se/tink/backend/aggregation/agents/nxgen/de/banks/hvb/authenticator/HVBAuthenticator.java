@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator;
 
+import static se.tink.backend.aggregation.agents.exceptions.errors.LoginError.INCORRECT_CREDENTIALS;
+import static se.tink.backend.aggregation.agents.exceptions.errors.LoginError.REGISTER_DEVICE_ERROR;
+
 import com.google.common.base.Strings;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateCrtKey;
@@ -53,7 +56,7 @@ public final class HVBAuthenticator implements Authenticator {
         String password = credentials.getField(Field.Key.PASSWORD);
 
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            throw INCORRECT_CREDENTIALS.exception();
         }
         authenticate(username, password);
     }
@@ -72,9 +75,8 @@ public final class HVBAuthenticator implements Authenticator {
     }
 
     private void register() throws AuthenticationException {
-
         AuthenticationData registrationData = prepareRegistrationData();
-        String clientId = executeCall(registrationRequest, registrationData);
+        String clientId = executeCall(registrationRequest, registrationData, REGISTER_DEVICE_ERROR);
         storage.setClientId(clientId);
         storage.setKeyPair(registrationData.getKeyPair());
     }
@@ -86,11 +88,12 @@ public final class HVBAuthenticator implements Authenticator {
                 configurationProvider.generateDeviceId(), keyPair, prepareJwkHeader(rsaPrivateKey));
     }
 
-    private <T, R> R executeCall(SimpleExternalApiCall<T, R> call, T arg) throws LoginException {
+    private <T, R> R executeCall(SimpleExternalApiCall<T, R> call, T arg, LoginError loginErrorType)
+            throws LoginException {
         return Optional.ofNullable(call.execute(arg))
                 .filter(ExternalApiCallResult::isSuccess)
                 .map(ExternalApiCallResult::getResult)
-                .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
+                .orElseThrow(loginErrorType::exception);
     }
 
     private void authenticateRegisteredClient(String username, String password)
@@ -106,18 +109,18 @@ public final class HVBAuthenticator implements Authenticator {
     private AccessToken getAccessToken(AuthenticationData authenticationData, String code)
             throws LoginException {
         enrichAuthorizationData(authenticationData, code, Instant.now());
-        return executeCall(accessTokenRequest, authenticationData);
+        return executeCall(accessTokenRequest, authenticationData, INCORRECT_CREDENTIALS);
     }
 
     private String getAuthorizationCode(AuthenticationData authenticationData)
             throws LoginException {
-        return executeCall(authorizationRequest, authenticationData);
+        return executeCall(authorizationRequest, authenticationData, INCORRECT_CREDENTIALS);
     }
 
     private AuthenticationData preAuthorize(String username, String password)
             throws LoginException {
         AuthenticationData authenticationData = prepareAuthorizationData(username, password);
-        executeCall(preAuthorizationRequest, authenticationData);
+        executeCall(preAuthorizationRequest, authenticationData, INCORRECT_CREDENTIALS);
         return authenticationData;
     }
 

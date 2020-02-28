@@ -56,9 +56,9 @@ public class AuthorizationRequestTest {
                         entry(
                                 ACCEPT,
                                 singletonList(
-                                        "text/javascript, text/html, application/xml, text/xml, */*")),
+                                        "text/javascript, text/html, "
+                                                + "application/xml, text/xml, */*")),
                         entry("x-wl-app-version", singletonList("4.1.0")));
-        assertThat(results.getHeaders().size()).isGreaterThan(3);
     }
 
     private URL expectedUrl() {

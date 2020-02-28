@@ -23,16 +23,23 @@ import java.security.interfaces.RSAPrivateKey;
 import java.time.Instant;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.AccessTokenRequest.Payload;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.AccessTokenRequest.ResponseBody;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.JwkHeader.Jwk;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
 
 public class AccessTokenRequestTest {
 
     private static final String SERIALIZED_HEADER = "serializedHeader";
     private static final String SERIALIZED_PAYLOAD = "serializedPayload";
     private static final String SIGNATURE = "signature";
+    private static final String ACCESS_TOKEN_VALUE = "accessToken";
+    private static final String ACCESS_TOKEN_TYPE = "accessTokenType";
+    private static final String ACCESS_TOKEN_SCOPE = "accessTokenScope";
+    private static final Long ACCESS_TOKEN_EXPIRES_IN = 1L;
 
     private TinkHttpClient httpClient = mock(TinkHttpClient.class);
     private ConfigurationProvider configurationProvider = mock(ConfigurationProvider.class);
@@ -87,7 +94,6 @@ public class AccessTokenRequestTest {
                 .contains(
                         entry(CONTENT_TYPE, singletonList(APPLICATION_FORM_URLENCODED)),
                         entry(ACCEPT, singletonList("*/*")));
-        assertThat(results.getHeaders().size()).isGreaterThan(2);
     }
 
     private JwkHeader dummyJwkHeader() {
@@ -109,5 +115,35 @@ public class AccessTokenRequestTest {
     }
 
     @Test
-    public void prepareResponseShouldReturnAccessTokenForValidResponse() {}
+    public void prepareResponseShouldReturnAccessTokenForValidResponse() {
+        // given
+        int givenStatus = 200;
+
+        HttpResponse givenResponse = mock(HttpResponse.class);
+        when(givenResponse.getBody(ResponseBody.class)).thenReturn(givenResponseBody());
+        when(givenResponse.getStatus()).thenReturn(givenStatus);
+
+        // when
+        ExternalApiCallResult<AccessToken> result = tested.parseResponse(givenResponse);
+
+        // then
+        assertThat(result.isSuccess()).isTrue();
+        assertThat(result.getResult()).isEqualTo(expectedAccessToken());
+    }
+
+    private static ResponseBody givenResponseBody() {
+        return new ResponseBody()
+                .setAccessToken(ACCESS_TOKEN_VALUE)
+                .setExpiresIn(ACCESS_TOKEN_EXPIRES_IN)
+                .setScope(ACCESS_TOKEN_SCOPE)
+                .setTokenType(ACCESS_TOKEN_TYPE);
+    }
+
+    private static AccessToken expectedAccessToken() {
+        return new AccessToken()
+                .setTokenValue(ACCESS_TOKEN_VALUE)
+                .setExpiresIn(ACCESS_TOKEN_EXPIRES_IN)
+                .setScope(ACCESS_TOKEN_SCOPE)
+                .setTokenType(ACCESS_TOKEN_TYPE);
+    }
 }

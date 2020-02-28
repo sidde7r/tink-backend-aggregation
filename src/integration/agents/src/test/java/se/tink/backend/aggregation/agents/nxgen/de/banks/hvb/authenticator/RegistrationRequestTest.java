@@ -73,7 +73,6 @@ public class RegistrationRequestTest {
         assertThat(results.getHeaders())
                 .isNotEmpty()
                 .contains(entry(CONTENT_TYPE, singletonList(APPLICATION_JSON)));
-        assertThat(results.getHeaders().size()).isGreaterThan(1);
     }
 
     private static RequestBody expectedBody() {

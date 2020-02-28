@@ -107,15 +107,6 @@ public class AccessTokenRequest extends SimpleExternalApiCall<AuthenticationData
     }
 
     @Data
-    @Accessors(chain = true)
-    static class Arg {
-        String clientId;
-        String code;
-        JwkHeader jwkHeader;
-        RSAPrivateKey privateKey;
-    }
-
-    @Data
     @JsonObject
     @Accessors(chain = true)
     static class ResponseBody {
@@ -135,19 +126,28 @@ public class AccessTokenRequest extends SimpleExternalApiCall<AuthenticationData
     @JsonObject
     @Accessors(chain = true)
     static class Payload {
-        private Long iat;
-        private Long exp;
+        @JsonProperty("iat")
+        private Long issuedAt;
+
+        @JsonProperty("exp")
+        private Long expiresAt;
+
         private String iss = "de.unicredit.apptan$ios$4.1.0";
-        private String jti;
+
+        @JsonProperty("jti")
+        private String accessCode;
+
         private String aud = "(null)az/v1/token";
-        private String sub;
+
+        @JsonProperty("sub")
+        private String clientId;
 
         static Payload of(String code, String clientId, Instant instant) {
             return new Payload()
-                    .setIat(instant.toEpochMilli())
-                    .setExp(instant.plusSeconds(TOKEN_LIFE_TIME).toEpochMilli())
-                    .setJti(code)
-                    .setSub(clientId);
+                    .setIssuedAt(instant.toEpochMilli())
+                    .setExpiresAt(instant.plusSeconds(TOKEN_LIFE_TIME).toEpochMilli())
+                    .setAccessCode(code)
+                    .setClientId(clientId);
         }
     }
 }

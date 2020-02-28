@@ -76,7 +76,8 @@ public class PreAuthorizationRequestTest {
                         entry(
                                 "AvantiSec",
                                 singletonList(
-                                        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")));
+                                        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                                                + "XXXXXXXXXXXXXXXXXXXXXXXXXXXX")));
         assertThat(results.getHeaders().size()).isGreaterThan(5);
     }
 
@@ -84,27 +85,31 @@ public class PreAuthorizationRequestTest {
         return new RequestBody()
                 .setClientId(givenClientId())
                 .setScope("RegisteredClient UCAuthenticatedUser")
-                .setChallengeResponse(
-                        new ChallengeResponse()
-                                .setUserLogin(
-                                        new UserLoginRequest()
-                                                .setUid(givenUsername())
-                                                .setPin(givenPin())
-                                                .setCheckType("login")
-                                                .setIp("127.0.0.1")
-                                                .setIpMsite("127.0.0.1")
-                                                .setPlatform("Avanti")
-                                                .setWlVersion("4.1.0")
-                                                .setEnvironment("HV")
-                                                .setApplicationSessionId(
-                                                        givenApplicationSessionId())
-                                                .setHttpAccept("*")
-                                                .setHttpAcceptEncoding("*")
-                                                .setHttpAcceptLanguage("*")
-                                                .setHttpReferrer("*")
-                                                .setUserAgent("Mozilla")
-                                                .setOperatingSystem("iOS")
-                                                .setOsVersion("12.4.3")));
+                .setChallengeResponse(expectedChallengeResponse());
+    }
+
+    private static ChallengeResponse expectedChallengeResponse() {
+        return new ChallengeResponse().setUserLogin(expectedUserLoginRequest());
+    }
+
+    private static UserLoginRequest expectedUserLoginRequest() {
+        return new UserLoginRequest()
+                .setUid(givenUsername())
+                .setPin(givenPin())
+                .setCheckType("login")
+                .setIp("127.0.0.1")
+                .setIpMsite("127.0.0.1")
+                .setPlatform("Avanti")
+                .setWlVersion("4.1.0")
+                .setEnvironment("HV")
+                .setApplicationSessionId(givenApplicationSessionId())
+                .setHttpAccept("*")
+                .setHttpAcceptEncoding("*")
+                .setHttpAcceptLanguage("*")
+                .setHttpReferrer("*")
+                .setUserAgent("Mozilla")
+                .setOperatingSystem("iOS")
+                .setOsVersion("12.4.3");
     }
 
     @Test

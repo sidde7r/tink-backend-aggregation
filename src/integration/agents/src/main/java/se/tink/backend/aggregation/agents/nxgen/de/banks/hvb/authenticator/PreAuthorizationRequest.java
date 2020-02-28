@@ -10,7 +10,6 @@ import java.util.Optional;
 import javax.ws.rs.core.MultivaluedMap;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.PreAuthorizationRequest.RequestBody.ChallengeResponse.UserLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.PreAuthorizationRequest.ResponseBody.Successes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.PreAuthorizationRequest.ResponseBody.Successes.UserLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.PreAuthorizationRequest.ResponseBody.Successes.UserLoginResponse.User;
@@ -90,18 +89,10 @@ public class PreAuthorizationRequest extends SimpleExternalApiCall<Authenticatio
         private String scope = "RegisteredClient UCAuthenticatedUser";
         private ChallengeResponse challengeResponse;
 
-        static RequestBody of(
-                String clientId, String uid, String pin, String applicationSessionId) {
+        static RequestBody of(String clientId, String uid, String pin, String appSessionId) {
             return new RequestBody()
                     .setClientId(clientId)
-                    .setChallengeResponse(
-                            new ChallengeResponse()
-                                    .setUserLogin(
-                                            new UserLoginRequest()
-                                                    .setUid(uid)
-                                                    .setPin(pin)
-                                                    .setApplicationSessionId(
-                                                            applicationSessionId)));
+                    .setChallengeResponse(ChallengeResponse.of(uid, pin, appSessionId));
         }
 
         @Data
@@ -111,6 +102,11 @@ public class PreAuthorizationRequest extends SimpleExternalApiCall<Authenticatio
 
             @JsonProperty("UCUserAvantiLoginSC")
             private UserLoginRequest userLogin;
+
+            static ChallengeResponse of(String uid, String pin, String appSessionId) {
+                return new ChallengeResponse()
+                        .setUserLogin(UserLoginRequest.of(uid, pin, appSessionId));
+            }
 
             @Data
             @JsonObject
@@ -132,6 +128,13 @@ public class PreAuthorizationRequest extends SimpleExternalApiCall<Authenticatio
                 private String userAgent = "Mozilla";
                 private String operatingSystem = "iOS";
                 private String osVersion = "12.4.3";
+
+                static UserLoginRequest of(String uid, String pin, String appSessionId) {
+                    return new UserLoginRequest()
+                            .setUid(uid)
+                            .setPin(pin)
+                            .setApplicationSessionId(appSessionId);
+                }
             }
         }
     }
