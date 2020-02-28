@@ -16,7 +16,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class NemIdAuthenticationController
         implements TypedAuthenticator, AuthenticationControllerType {
 
-    private static final String SUPPLEMENTAL_FIELD_ID = "online-banking-password";
+    private static final String NEMID_PASSWORD_FIELD_NAME = "nemid-password";
 
     private final NemIdIFrameController iFrameController;
     private final NemIdAuthenticatorV2 authenticator;
@@ -34,27 +34,13 @@ public class NemIdAuthenticationController
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
-    private Field getField() {
-        return Field.builder()
-                .name(SUPPLEMENTAL_FIELD_ID)
-                .description(
-                        "During your first login you will need to authenticate using the NemId app. Please enter your online banking password and then open the NemId app.")
-                .hint("Online Banking Password")
-                .masked(true)
-                .numeric(false)
-                .build();
-    }
-
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
 
         final String username = credentials.getField(Field.Key.USERNAME);
         final String pinCode = credentials.getField(Field.Key.ACCESS_PIN);
-        final String password =
-                supplementalInformationHelper
-                        .askSupplementalInformation(getField())
-                        .get(SUPPLEMENTAL_FIELD_ID);
+        final String password = credentials.getField(NEMID_PASSWORD_FIELD_NAME);
 
         if (Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
