@@ -789,3 +789,7 @@ msgstr "Överföringen nekades av banken"
 
 msgid "Source and destination account must not be the same."
 msgstr "Avsändarkonto och mottagarkonto kan inte vara samma."
+
+msgid "The transfer amount is larger than what is available on the account."
+msgstr "Överföringsbeloppet är större än vad som är tillgängligt på kontot."
+
