@@ -89,24 +89,18 @@ class Amazon:
             session = boto3.session.Session(region_name=self.config.region)
 
             sts = session.client('sts')
-            id = role.split(':')[4]
-            try:
-                saml = sts.assume_role_with_saml(RoleArn=role,
-                                                 PrincipalArn=principal,
-                                                 SAMLAssertion=self.base64_encoded_saml)
-            except:
-                aws_dict[id] = id
-                return
+            saml = sts.assume_role_with_saml(RoleArn=role,
+                                             PrincipalArn=principal,
+                                             SAMLAssertion=self.base64_encoded_saml)
 
             iam = session.client('iam',
                                  aws_access_key_id=saml['Credentials']['AccessKeyId'],
                                  aws_secret_access_key=saml['Credentials']['SecretAccessKey'],
                                  aws_session_token=saml['Credentials']['SessionToken'])
-
             try:
                 response = iam.list_account_aliases()
                 account_alias = response['AccountAliases'][0]
-                aws_dict[id] = account_alias
+                aws_dict[role.split(':')[4]] = account_alias
             except:
                 sts = session.client('sts',
                                      aws_access_key_id=saml['Credentials']['AccessKeyId'],
@@ -114,7 +108,7 @@ class Amazon:
                                      aws_session_token=saml['Credentials']['SessionToken'])
 
                 account_id = sts.get_caller_identity().get('Account')
-                aws_dict[id] = '{}'.format(account_id)
+                aws_dict[role.split(':')[4]] = '{}'.format(account_id)
 
         threads = []
         aws_id_alias = {}
