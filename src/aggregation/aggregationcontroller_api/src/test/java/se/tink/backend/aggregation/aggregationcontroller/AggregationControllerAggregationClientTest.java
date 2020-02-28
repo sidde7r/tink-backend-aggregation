@@ -98,7 +98,7 @@ public final class AggregationControllerAggregationClientTest
                                 AggregationControllerAggregationClient.class.getConstructor(
                                         ApacheHttpClient4Config.class));
             } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }

@@ -74,9 +74,6 @@ public class AggregationControllerAggregationClient {
                             this.config);
         }
 
-        log.info("Adding retry filter for AggregationController client");
-        // client.addFilter(new BadHttpStatusRetryFilter(2, 1000));
-
         JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 
         return WebResourceFactory.newResource(
@@ -211,7 +208,6 @@ public class AggregationControllerAggregationClient {
 
     public Response updateCredentialSensitive(
             HostConfiguration hostConfiguration, Credentials credentials, String sensitiveData) {
-
         UpdateCredentialsSensitiveRequest request =
                 new UpdateCredentialsSensitiveRequest()
                         .setUserId(credentials.getUserId())
