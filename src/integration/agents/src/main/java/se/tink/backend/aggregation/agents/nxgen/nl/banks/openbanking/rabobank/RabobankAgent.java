@@ -16,6 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.co
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.SandboxTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.filter.RabobankFailureFilter;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.filter.RabobankRetryFilter;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
@@ -108,6 +110,11 @@ public final class RabobankAgent
                         RabobankConstants.HttpClient.MAX_RETRIES,
                         HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new AccessExceededFilter());
+        client.addFilter(
+                new RabobankRetryFilter(
+                        RabobankConstants.HttpClient.MAX_RETRIES,
+                        HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new RabobankFailureFilter());
     }
 
     @Override

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
+import com.google.common.collect.ImmutableList;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 
 public class RabobankConstants {
@@ -16,6 +18,11 @@ public class RabobankConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String UNAVAILABLE_TRX_HISTORY = "date can't be further than";
+        public static final ImmutableList<Integer> ERROR_RESPONSES =
+                ImmutableList.of(
+                        HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                        HttpStatus.SC_BAD_GATEWAY,
+                        HttpStatus.SC_SERVICE_UNAVAILABLE);
     }
 
     public static class Consents {
