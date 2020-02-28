@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.upcomingtransaction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
 import java.time.ZonedDateTime;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.entities.AmountEntity;
@@ -8,22 +10,18 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class ScheduledPaymentEntity {
-    @JsonProperty("AccountId")
     private String accountId;
 
-    @JsonProperty("ScheduledPaymentId")
     private String scheduledPaymentId;
 
     private ZonedDateTime scheduledPaymentDateTime;
 
-    @JsonProperty("ScheduledType")
     private String scheduledType;
 
-    @JsonProperty("InstructedAmount")
     private AmountEntity instructedAmount;
 
-    @JsonProperty("CreditorAccount")
     private CreditorAccountEntity creditorAccount;
 
     public UpcomingTransaction toTinkUpcomingTransaction() {

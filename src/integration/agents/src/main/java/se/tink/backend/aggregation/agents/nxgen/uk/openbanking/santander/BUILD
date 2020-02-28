@@ -8,6 +8,7 @@ java_library(
         "//src/integration/amount",
         "//src/integration/credentials:service",
         "//src/integration/lib",
-        "//third_party:com_google_guava_guava",
+        "//third_party:lombok_libs",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

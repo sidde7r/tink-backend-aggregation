@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.transaction;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class BankTransactionCodeEntity {
-    @JsonProperty("Code")
     private String code;
 
-    @JsonProperty("SubCode")
     private String subCode;
 }
