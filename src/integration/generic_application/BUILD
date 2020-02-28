@@ -7,8 +7,8 @@ java_library(
     deps = [
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_google_guava_guava",
     ],
 )

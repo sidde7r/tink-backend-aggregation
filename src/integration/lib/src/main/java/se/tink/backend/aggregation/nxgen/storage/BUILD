@@ -4,8 +4,8 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/serialization",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_google_guava_guava",
         "@io_reactivex_rxjava3_rxjava",
     ],

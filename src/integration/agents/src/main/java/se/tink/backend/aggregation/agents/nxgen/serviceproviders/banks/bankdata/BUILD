@@ -33,7 +33,6 @@ java_library(
         "//src/libraries/strings",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_sun_jersey_jersey_core",
@@ -43,6 +42,7 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_codehaus_jackson_jackson_core_asl",
         "//third_party:org_jsoup_jsoup",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_google_guava_guava",
     ],
 )

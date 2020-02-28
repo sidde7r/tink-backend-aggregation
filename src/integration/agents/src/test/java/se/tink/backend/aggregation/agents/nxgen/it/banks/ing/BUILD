@@ -28,7 +28,6 @@ junit_test(
         "//src/integration/user:rpc",
         "//third_party:ch_qos_logback_logback_classic",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "//third_party:com_github_tomakehurst_wiremock",
@@ -37,6 +36,7 @@ junit_test(
         "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_google_guava_guava",
     ],
 )

@@ -30,7 +30,6 @@ junit_test(
         "//src/libraries/date",
         "//src/libraries/social_security_number:social_security_number_test",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_sun_jersey_jersey_client",
@@ -39,6 +38,7 @@ junit_test(
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_google_guava_guava",
     ],
 )

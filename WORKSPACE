@@ -569,7 +569,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_core_jackson_core",
+    name = "com_fasterxml_jackson_core_jackson_core",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.core:jackson-core:2.9.9",
     sha1 = "bfff5af9fb8347d26bbb7959cb9b4fe9a2b0ca5e",
 )

@@ -39,7 +39,7 @@ java_library(
 
         # Jackson
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
 
         # Dropwizard
         "//third_party:io_dropwizard_dropwizard_core",

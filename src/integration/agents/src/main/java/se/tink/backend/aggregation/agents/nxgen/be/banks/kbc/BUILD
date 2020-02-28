@@ -33,7 +33,6 @@ java_library(
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_sun_jersey_jersey_core",
@@ -44,6 +43,7 @@ java_library(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_google_guava_guava",
     ],
 )
