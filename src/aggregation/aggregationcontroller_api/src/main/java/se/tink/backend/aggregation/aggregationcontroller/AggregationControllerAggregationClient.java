@@ -44,7 +44,8 @@ public class AggregationControllerAggregationClient {
     private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
             ImmutableSet.of("oxford-staging", "oxford-production");
     private final ClientConfig config;
-    private static final int MAXIMUM_RETRY_ATTEMPT = 3;
+    private static final int MAXIMUM_RETRY_ATTEMPT = 5;
+    private static final int WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS = 2000;
 
     @Inject
     private AggregationControllerAggregationClient(ClientConfig custom) {
@@ -236,19 +237,26 @@ public class AggregationControllerAggregationClient {
     private <T> T requestExecuter(RequestOperation<T> operation, String name) {
         for (int i = 1; i <= MAXIMUM_RETRY_ATTEMPT; i++) {
             try {
-                if (i > 1) {
-                    log.warn("Retrying operation {} (attempt {})", name, i);
-                }
                 return operation.execute();
             } catch (UniformInterfaceException e) {
+                String errorMessage = e.getMessage();
                 if (i == MAXIMUM_RETRY_ATTEMPT) {
                     log.error(
-                            "Tried {} times for operation {} and stopping",
+                            "Tried the operation {} for {} times and stopping (error message: {})",
+                            name,
                             MAXIMUM_RETRY_ATTEMPT,
-                            name);
+                            errorMessage);
                     throw e;
+                } else {
+                    log.warn(
+                            "Error during attempt {}/{} for operation {}, will try again (error message: {})",
+                            i,
+                            MAXIMUM_RETRY_ATTEMPT,
+                            name,
+                            errorMessage);
                 }
-                Uninterruptibles.sleepUninterruptibly(1000, TimeUnit.MILLISECONDS);
+                Uninterruptibles.sleepUninterruptibly(
+                        WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS, TimeUnit.MILLISECONDS);
             }
         }
         throw new IllegalStateException("Unreachable code");
