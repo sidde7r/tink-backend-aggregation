@@ -379,10 +379,14 @@ public class SwedbankDefaultApiClient {
     }
 
     public RegisterTransferResponse registerTransfer(
-            double amount, String destinationAccountId, String sourceAccountId) {
+            double amount,
+            String destinationAccountId,
+            String destinationMessage,
+            String sourceAccountId) {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_TRANSFER,
-                RegisterTransferRequest.create(amount, destinationAccountId, sourceAccountId),
+                RegisterTransferRequest.create(
+                        amount, destinationAccountId, destinationMessage, sourceAccountId),
                 RegisterTransferResponse.class);
     }
 

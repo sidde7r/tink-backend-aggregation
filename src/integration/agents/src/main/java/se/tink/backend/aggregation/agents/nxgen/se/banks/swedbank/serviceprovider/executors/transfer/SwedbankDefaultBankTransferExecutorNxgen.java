@@ -82,6 +82,7 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
                 apiClient.registerTransfer(
                         item.getAmount().getValue(),
                         item.getDestination().getValueByKey(SwedbankBaseConstants.StorageKey.ID),
+                        "",
                         item.getSource().getValueByKey(SwedbankBaseConstants.StorageKey.ID));
 
         registeredTransfersResponse =

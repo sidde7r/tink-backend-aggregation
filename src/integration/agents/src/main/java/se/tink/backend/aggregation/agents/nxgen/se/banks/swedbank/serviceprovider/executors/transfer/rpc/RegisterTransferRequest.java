@@ -14,18 +14,21 @@ public class RegisterTransferRequest {
     private final double amount;
 
     private final String recipientId;
+    private final String noteToRecipient;
     private final String fromAccountId;
     private final String date;
 
-    private RegisterTransferRequest(double amount, String recipientId, String fromAccountId) {
+    private RegisterTransferRequest(
+            double amount, String recipientId, String noteToRecipient, String fromAccountId) {
         this.amount = amount;
         this.recipientId = recipientId;
+        this.noteToRecipient = noteToRecipient;
         this.fromAccountId = fromAccountId;
         this.date = EMPTY_DATE;
     }
 
     public static RegisterTransferRequest create(
-            double amount, String recipientId, String fromAccountId) {
-        return new RegisterTransferRequest(amount, recipientId, fromAccountId);
+            double amount, String recipientId, String noteToRecipient, String fromAccountId) {
+        return new RegisterTransferRequest(amount, recipientId, noteToRecipient, fromAccountId);
     }
 }
