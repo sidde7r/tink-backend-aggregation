@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.aggregationcontroller;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.config.ClientConfig;
+import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +44,7 @@ public class AggregationControllerAggregationClient {
     private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
             ImmutableSet.of("oxford-staging", "oxford-production");
     private final ClientConfig config;
-    private static final int MAXIMUM_RETRY_ATTEMPT = 5;
+    private static final int MAXIMUM_RETRY_ATTEMPT = 3;
 
     @Inject
     private AggregationControllerAggregationClient(ClientConfig custom) {
@@ -246,6 +248,7 @@ public class AggregationControllerAggregationClient {
                             name);
                     throw e;
                 }
+                Uninterruptibles.sleepUninterruptibly(1000, TimeUnit.MILLISECONDS);
             }
         }
         throw new IllegalStateException("Unreachable code");
