@@ -2,6 +2,8 @@ package se.tink.backend.integration.tpp_secrets_service.client;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import io.grpc.ConnectivityState;
@@ -25,6 +27,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -57,6 +60,31 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
     private ManagedChannel channel;
     private final boolean enabled;
     private SslContext sslContext;
+    private final boolean enabledRetryPolicy;
+
+    private static Map<String, ?> getServiceConfig() {
+        return ImmutableMap.of(
+                "methodConfig",
+                ImmutableList.of(
+                        ImmutableMap.of(
+                                "name",
+                                ImmutableList.of(
+                                        ImmutableMap.of(
+                                                "service", "InternalSecretsService",
+                                                "method", "GetAllSecrets")),
+                                "retryPolicy",
+                                ImmutableMap.of(
+                                        "maxAttempts",
+                                        5.0,
+                                        "initialBackoff",
+                                        "0.1s",
+                                        "maxBackoff",
+                                        "1s",
+                                        "backoffMultiplier",
+                                        1.2,
+                                        "retryableStatusCodes",
+                                        ImmutableList.of("UNAVAILABLE")))));
+    }
 
     @Inject
     public TppSecretsServiceClientImpl(
@@ -69,18 +97,13 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
         if (this.enabled) {
             sslContext = buildSslContext();
         }
+        enabledRetryPolicy = tppSecretsServiceConfiguration.isEnabledRetryPolicy();
     }
 
     @Override
     public void start() {
         if (enabled) {
-            this.channel =
-                    NettyChannelBuilder.forAddress(
-                                    tppSecretsServiceConfiguration.getHost(),
-                                    tppSecretsServiceConfiguration.getPort())
-                            .useTransportSecurity()
-                            .sslContext(sslContext)
-                            .build();
+            this.channel = buildChannel();
 
             internalSecretsServiceStub = InternalSecretsServiceGrpc.newBlockingStub(channel);
             log.info("Connection re-establish mechanism activates");
@@ -89,6 +112,24 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
             log.warn(
                     "Trying to start an instance of TppSecretsServiceClientImpl when the configuration says it is not enabled.");
         }
+    }
+
+    private ManagedChannel buildChannel() {
+        final NettyChannelBuilder channelBuilder =
+                NettyChannelBuilder.forAddress(
+                                tppSecretsServiceConfiguration.getHost(),
+                                tppSecretsServiceConfiguration.getPort())
+                        .useTransportSecurity()
+                        .sslContext(sslContext);
+
+        if (enabledRetryPolicy) {
+            channelBuilder
+                    .enableRetry()
+                    .maxRetryAttempts(5)
+                    .defaultServiceConfig(getServiceConfig());
+        }
+
+        return channelBuilder.build();
     }
 
     @Override
