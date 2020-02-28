@@ -28,6 +28,10 @@ public class AgentIntegrationMockServerTest {
         return wireMockRule.httpsPort();
     }
 
+    protected int getPort() {
+        return wireMockRule.port();
+    }
+
     protected void prepareMockServer(RequestResponseParser parser) {
         // TODO: Reset stub here
         // wireMockRule.reset();
@@ -59,6 +63,7 @@ public class AgentIntegrationMockServerTest {
             res.withStatus(response.getStatusCode());
             response.getResponseBody().ifPresent(res::withBody);
             builder.willReturn(res);
+            builder.inScenario("test");
             wireMockRule.stubFor(builder);
         }
     }

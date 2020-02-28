@@ -3,6 +3,7 @@ package se.tink.libraries.jersey.utils;
 import com.google.common.collect.ImmutableList;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.filter.Filterable;
 import java.util.List;
 import java.util.Objects;
@@ -16,9 +17,11 @@ public class JerseyUtils {
     public static Client getClusterClient(
             byte[] clientCertificate,
             String clientCertificatePassword,
-            boolean disableRequestCompression) {
+            boolean disableRequestCompression,
+            ClientConfig config) {
+
         InterClusterJerseyClientFactory interClusterJerseyClientFactory =
-                new InterClusterJerseyClientFactory();
+                new InterClusterJerseyClientFactory(config);
 
         if (disableRequestCompression) {
             interClusterJerseyClientFactory.disableRequestCompression();

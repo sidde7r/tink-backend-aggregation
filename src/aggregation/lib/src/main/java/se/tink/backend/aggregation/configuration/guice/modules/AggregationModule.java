@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.configuration.guice.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import java.util.Objects;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
@@ -48,6 +50,7 @@ public class AggregationModule extends AbstractModule {
         bind(ManagedTppSecretsServiceClient.class)
                 .to(TppSecretsServiceClientImpl.class)
                 .in(Scopes.SINGLETON);
+        bind(ClientConfig.class).toInstance(new DefaultApacheHttpClient4Config());
 
         if (Objects.nonNull(configuration.getS3StorageConfiguration())
                 && configuration.getS3StorageConfiguration().isEnabled()) {

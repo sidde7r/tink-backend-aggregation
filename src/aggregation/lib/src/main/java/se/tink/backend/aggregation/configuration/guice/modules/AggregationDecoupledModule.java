@@ -7,6 +7,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.dropwizard.setup.Environment;
 import java.util.Collections;
 import java.util.Map;
@@ -190,6 +192,7 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(ManagedTppSecretsServiceClient.class)
                 .to(TppSecretsServiceClientImpl.class)
                 .in(Scopes.SINGLETON);
+        bind(ClientConfig.class).toInstance(new DefaultApacheHttpClient4Config());
 
         bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
 

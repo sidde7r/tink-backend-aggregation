@@ -3,15 +3,17 @@ package se.tink.backend.aggregation.aggregationcontroller;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
-import java.util.Objects;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.api.client.config.ClientConfig;
+import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.utils.jersey.filter.JerseyTimeoutRetryFilter;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.AggregationControllerService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.CredentialsService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.IdentityAggregatorService;
@@ -41,11 +43,13 @@ public class AggregationControllerAggregationClient {
             LoggerFactory.getLogger(AggregationControllerAggregationClient.class);
     private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
             ImmutableSet.of("oxford-staging", "oxford-production");
-
-    private boolean isRetryEnabled = false;
+    private final ClientConfig config;
+    private static final int MAXIMUM_RETRY_ATTEMPT = 3;
 
     @Inject
-    public AggregationControllerAggregationClient() {}
+    private AggregationControllerAggregationClient(ClientConfig custom) {
+        this.config = custom;
+    }
 
     private <T> T buildInterClusterServiceFromInterface(
             HostConfiguration hostConfiguration, Class<T> serviceInterface) {
@@ -57,12 +61,8 @@ public class AggregationControllerAggregationClient {
                 JerseyUtils.getClusterClient(
                         hostConfiguration.getClientCert(),
                         EMPTY_PASSWORD,
-                        hostConfiguration.isDisablerequestcompression());
-
-        if (isRetryEnabled) {
-            log.info("Adding retry filter for AggregationController client");
-            client.addFilter(new JerseyTimeoutRetryFilter(5, 1000));
-        }
+                        hostConfiguration.isDisablerequestcompression(),
+                        this.config);
 
         JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 
@@ -96,72 +96,100 @@ public class AggregationControllerAggregationClient {
 
     public Response generateStatisticsAndActivityAsynchronously(
             HostConfiguration hostConfiguration, GenerateStatisticsAndActivitiesRequest request) {
-        return getProcessService(hostConfiguration)
-                .generateStatisticsAndActivityAsynchronously(request);
+        return requestExecuter(
+                () ->
+                        getProcessService(hostConfiguration)
+                                .generateStatisticsAndActivityAsynchronously(request),
+                "Generate Statistics and Activity Asynchronously");
     }
 
     public Response updateTransactionsAsynchronously(
             HostConfiguration hostConfiguration, UpdateTransactionsRequest request) {
-        return getProcessService(hostConfiguration).updateTransactionsAsynchronously(request);
+        return requestExecuter(
+                () ->
+                        getProcessService(hostConfiguration)
+                                .updateTransactionsAsynchronously(request),
+                "Update Transactions Asynchronously");
     }
 
     public String ping(HostConfiguration hostConfiguration) {
-        return getUpdateService(hostConfiguration).ping();
+        return requestExecuter(() -> getUpdateService(hostConfiguration).ping(), "Ping");
     }
 
     public SupplementalInformationResponse getSupplementalInformation(
             HostConfiguration hostConfiguration, SupplementalInformationRequest request) {
-        return getUpdateService(hostConfiguration).getSupplementalInformation(request);
+        return requestExecuter(
+                () -> getUpdateService(hostConfiguration).getSupplementalInformation(request),
+                "Get Supplemental Information");
     }
 
     public Account updateAccount(
             HostConfiguration hostConfiguration, UpdateAccountRequest request) {
-        return getUpdateService(hostConfiguration).updateAccount(request);
+        return requestExecuter(
+                () -> getUpdateService(hostConfiguration).updateAccount(request), "Update Account");
     }
 
     public Account updateAccountMetaData(
             HostConfiguration hostConfiguration, String accountId, String newBankId) {
-        return getUpdateService(hostConfiguration).updateAccountsBankId(accountId, newBankId);
+        return requestExecuter(
+                () ->
+                        getUpdateService(hostConfiguration)
+                                .updateAccountsBankId(accountId, newBankId),
+                "Update Account Metadata");
     }
 
     public Response updateTransferDestinationPatterns(
             HostConfiguration hostConfiguration, UpdateTransferDestinationPatternsRequest request) {
-        return getUpdateService(hostConfiguration).updateTransferDestinationPatterns(request);
+        return requestExecuter(
+                () ->
+                        getUpdateService(hostConfiguration)
+                                .updateTransferDestinationPatterns(request),
+                "Update Transfer Destination Patterns");
     }
 
     public Response processAccounts(
             HostConfiguration hostConfiguration, ProcessAccountsRequest request) {
-        return getUpdateService(hostConfiguration).processAccounts(request);
+        return requestExecuter(
+                () -> getUpdateService(hostConfiguration).processAccounts(request),
+                "Process Accounts");
     }
 
     public Response optOutAccounts(
             HostConfiguration hostConfiguration, OptOutAccountsRequest request) {
-        return getUpdateService(hostConfiguration).optOutAccounts(request);
+        return requestExecuter(
+                () -> getUpdateService(hostConfiguration).optOutAccounts(request),
+                "Opt Out Accounts");
     }
 
     public Response updateCredentials(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
-        if (Objects.equals(request.getCredentials().getProviderName(), "nl-rabobank-oauth2")) {
-            // AAP-121: Retry mechanism to mitigate failing refresh token behavior for Rabobank
-            log.info("Enabling retries for Aggregation Controller client");
-            isRetryEnabled = true;
-        }
-        return getUpdateService(hostConfiguration).updateCredentials(request);
+
+        return requestExecuter(
+                () -> getUpdateService(hostConfiguration).updateCredentials(request),
+                "Update Credentials");
     }
 
     public Response updateSignableOperation(
             HostConfiguration hostConfiguration, SignableOperation signableOperation) {
-        return getUpdateService(hostConfiguration).updateSignableOperation(signableOperation);
+        return requestExecuter(
+                () ->
+                        getUpdateService(hostConfiguration)
+                                .updateSignableOperation(signableOperation),
+                "Update Signable Operation");
     }
 
     public Response processEinvoices(
             HostConfiguration hostConfiguration, UpdateTransfersRequest request) {
-        return getUpdateService(hostConfiguration).processEinvoices(request);
+        return requestExecuter(
+                () -> getUpdateService(hostConfiguration).processEinvoices(request),
+                "Process Einvoices");
     }
 
     public Response updateFraudDetails(
             HostConfiguration hostConfiguration, UpdateFraudDetailsRequest request) {
-        return getUpdateService(hostConfiguration).updateFraudDetails(request);
+        return requestExecuter(
+                () -> getUpdateService(hostConfiguration).updateFraudDetails(request),
+                "Update Fraud Details");
     }
 
     public Response updateCredentialSensitive(
@@ -173,11 +201,15 @@ public class AggregationControllerAggregationClient {
                         .setCredentialsDataVersion(credentials.getDataVersion())
                         .setSensitiveData(sensitiveData);
 
-        return getCredentialsService(hostConfiguration).updateSensitive(request);
+        return requestExecuter(
+                () -> getCredentialsService(hostConfiguration).updateSensitive(request),
+                "Update Credentials Sensitive");
     }
 
     public Response checkConnectivity(HostConfiguration hostConfiguration) {
-        return getAggregationControllerService(hostConfiguration).connectivityCheck();
+        return requestExecuter(
+                () -> getAggregationControllerService(hostConfiguration).connectivityCheck(),
+                "Check Connectivity");
     }
 
     public Response updateIdentity(
@@ -186,9 +218,39 @@ public class AggregationControllerAggregationClient {
         // TODO: Remove this after identity service is fully implemented.
         if (IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS.contains(hostConfiguration.getClusterId())) {
             log.info("Updating identity temporarily disabled!");
-            return getIdentityAggregatorService(hostConfiguration).updateIdentityData(request);
+            return requestExecuter(
+                    () ->
+                            getIdentityAggregatorService(hostConfiguration)
+                                    .updateIdentityData(request),
+                    "Update Identity");
         }
 
         return Response.ok().build();
+    }
+
+    @FunctionalInterface
+    private interface RequestOperation<T> {
+        T execute();
+    }
+
+    private <T> T requestExecuter(RequestOperation<T> operation, String name) {
+        for (int i = 1; i <= MAXIMUM_RETRY_ATTEMPT; i++) {
+            try {
+                if (i > 1) {
+                    log.warn("Retrying operation {} (attempt {})", name, i);
+                }
+                return operation.execute();
+            } catch (UniformInterfaceException e) {
+                if (i == MAXIMUM_RETRY_ATTEMPT) {
+                    log.error(
+                            "Tried {} times for operation {} and stopping",
+                            MAXIMUM_RETRY_ATTEMPT,
+                            name);
+                    throw e;
+                }
+                Uninterruptibles.sleepUninterruptibly(1000, TimeUnit.MILLISECONDS);
+            }
+        }
+        throw new IllegalStateException("Unreachable code");
     }
 }
