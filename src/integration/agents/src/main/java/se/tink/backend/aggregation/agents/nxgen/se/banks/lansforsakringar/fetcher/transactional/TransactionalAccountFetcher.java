@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.entity.MainAndCoAccountsEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.entity.MainAndCoAccountsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
@@ -20,7 +20,7 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
     }
 
     public Collection<TransactionalAccount> fetchAccounts() {
-        final ListAccountsResponse accountsResponse = apiClient.fetchAccounts();
+        final FetchAccountsResponse accountsResponse = apiClient.fetchAccounts();
         final List<MainAndCoAccountsEntity> mainAndCoAccounts =
                 accountsResponse.getMainAndCoAccounts();
 

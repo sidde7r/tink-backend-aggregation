@@ -16,11 +16,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceAgreementResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeinsuranceRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchTransactionRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchUpcomingRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchUpcomingResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -64,10 +64,10 @@ public class LansforsakringarApiClient {
 
     public void keepAlive() throws SessionException {}
 
-    public ListAccountsResponse fetchAccounts() {
+    public FetchAccountsResponse fetchAccounts() {
         return getBaseRequest(Urls.FETCH_TRANSACTIONS)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .get(ListAccountsResponse.class);
+                .get(FetchAccountsResponse.class);
     }
 
     public FetchTransactionResponse fetchBookedTransactions(String accountNumber, int page) {

@@ -27,5 +27,4 @@ public class FetchPensionResponse {
     public double getTotalValue() {
         return totalValue;
     }
-
 }

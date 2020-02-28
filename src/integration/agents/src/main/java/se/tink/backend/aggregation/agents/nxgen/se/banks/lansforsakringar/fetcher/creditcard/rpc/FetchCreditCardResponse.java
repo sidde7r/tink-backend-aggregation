@@ -16,6 +16,6 @@ public class FetchCreditCardResponse {
         return cards.stream()
                 .filter(CardsEntity::isNotDebit)
                 .map(CardsEntity::toString)
-                .reduce("", (c1, c2) -> c1 + "\n" + c2);
+                .reduce("New entity found for credit card:", (c1, c2) -> c1 + "\n" + c2);
     }
 }

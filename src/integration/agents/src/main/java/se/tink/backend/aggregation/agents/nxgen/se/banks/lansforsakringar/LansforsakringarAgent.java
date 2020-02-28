@@ -52,12 +52,13 @@ public class LansforsakringarAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
         apiClient =
                 new LansforsakringarApiClient(client, sessionStorage, catalog, persistentStorage);
-        persistentStorage.put(HeaderKeys.DEVICE_ID, UUID.randomUUID().toString().toUpperCase());
+        persistentStorage.computeIfAbsent(
+                HeaderKeys.DEVICE_ID, k -> UUID.randomUUID().toString().toUpperCase());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
         investmentRefreshController = constructInvestmentRefreshController();
 
-        client.setDebugProxy("http://127.0.0.1:8888");
+        //        client.setDebugProxy("http://127.0.0.1:8888");
     }
 
     private InvestmentRefreshController constructInvestmentRefreshController() {

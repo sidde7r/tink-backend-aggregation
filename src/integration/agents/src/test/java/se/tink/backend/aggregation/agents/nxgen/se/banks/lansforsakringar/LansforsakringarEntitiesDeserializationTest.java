@@ -6,12 +6,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceAgreementResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchUpcomingResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.rpc.ListAccountsResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class LansforsakringarTransactionFetcherTest {
+public class LansforsakringarEntitiesDeserializationTest {
 
     private static final String TRANSACTIONS =
             "{\n"
@@ -758,8 +758,8 @@ public class LansforsakringarTransactionFetcherTest {
 
     @Test
     public void testAccountParsing() {
-        ListAccountsResponse lar =
-                SerializationUtils.deserializeFromString(ACCOUNTS, ListAccountsResponse.class);
+        FetchAccountsResponse lar =
+                SerializationUtils.deserializeFromString(ACCOUNTS, FetchAccountsResponse.class);
         Assert.assertNotNull(lar.getMainAndCoAccounts());
         Assert.assertEquals(lar.getMainAndCoAccounts().get(0).getAccountNumber(), "90239056657");
     }
@@ -808,10 +808,6 @@ public class LansforsakringarTransactionFetcherTest {
         Assert.assertNotNull(fpwlia.getResponse());
         Assert.assertNotNull(fpwlia.getResponse().getLifeInsuranceAgreement());
         Assert.assertFalse(
-                fpwlia.getResponse()
-                        .getLifeInsuranceAgreement()
-                        .getLifeInsurances()
-                        .isEmpty());
-        fpwlia.getResponse().getLifeInsuranceAgreement().toTinkInvestmentAccount();
+                fpwlia.getResponse().getLifeInsuranceAgreement().getLifeInsurances().isEmpty());
     }
 }

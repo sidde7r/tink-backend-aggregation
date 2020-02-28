@@ -19,7 +19,4 @@ public class FetchPensionWithLifeInsuranceResponse {
     public InvestmentAccount getTinkInvestmentAccounts() {
         return null;
     }
-
-    // todo log any pension that is not the same (type && productType)
-
 }

@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.Lansfo
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.rpc.BankIdLoginResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -22,8 +21,6 @@ public class LansforsakringarBankIdAuthenticator implements BankIdAuthenticator<
 
     private final LansforsakringarApiClient apiClient;
     private final SessionStorage sessionStorage;
-    private static final AggregationLogger log =
-            new AggregationLogger((LansforsakringarBankIdAuthenticator.class));
 
     public LansforsakringarBankIdAuthenticator(
             LansforsakringarApiClient apiClient, SessionStorage sessionStorage) {
@@ -62,8 +59,6 @@ public class LansforsakringarBankIdAuthenticator implements BankIdAuthenticator<
                     StorageKeys.ENTERPRISE_SERVICE_PRIMARY_SESSION,
                     response.getSession().getEnterpriseServicesPrimarySession());
             sessionStorage.put(StorageKeys.CUSTOMER_NAME, response.getSession().getName());
-            //            log.info("ticket="+response.getSession().getTicket()+"  ---
-            // enterprise="+response.getSession().getEnterpriseServicesPrimarySession());
             return BankIdStatus.DONE;
         } catch (HttpResponseException e) {
             String errorCode = e.getResponse().getHeaders().getFirst(HeaderKeys.ERROR_CODE);
@@ -79,13 +74,6 @@ public class LansforsakringarBankIdAuthenticator implements BankIdAuthenticator<
                         // Skriv in säkerhetskoden till ditt BankID och välj Legitimera.
                     case "00014":
                         return BankIdStatus.WAITING;
-                        // Legacy codes:
-                        //                    case "99312":
-                        //                        // Error-Message: Du behöver vara över 16 år för
-                        // att använda Mobilt BankID.
-                        //                        // Kontakta gärna oss om du har frågor.
-                        //                        throw
-                        // AuthorizationError.UNAUTHORIZED.exception(UserMessage.UNDERAGE.getKey());
                     case "99021":
                         // Error-Message: Dina inloggningsuppgifter stämmer inte. Kontrollera dem
                         // och försök igen. Kontakta oss om problemet kvarstår.
