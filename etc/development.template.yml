@@ -1308,13 +1308,13 @@ agentsServiceConfiguration:
         baseUrl: https://api.bankaustria.at
         eidasQwac: Tink
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        psuIdType: "ALL"
+        psuIdType: ""
     unicredit-de:
       tink:
         baseUrl: https://api.unicredit.de
         eidasQwac: Tink
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        psuIdType: "ALL"
+        psuIdType: ""
     unicredit-hu:
       tink:
         baseUrl: https://api.unicreditbank.hu
