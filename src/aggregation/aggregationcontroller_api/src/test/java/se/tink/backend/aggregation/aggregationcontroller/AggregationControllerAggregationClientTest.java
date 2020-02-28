@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.aggregationcontroller;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
-import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
+import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,19 +87,11 @@ public final class AggregationControllerAggregationClientTest
 
         @Override
         protected void configure() {
-            DefaultApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
+            ClientConfig config = new DefaultApacheHttpClient4Config();
             JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
             config.getSingletons().add(jsonProvider);
             config.getSingletons().add(new DummyResponseProvider());
-            bind(ApacheHttpClient4Config.class).toInstance(config);
-            try {
-                bind(AggregationControllerAggregationClient.class)
-                        .toConstructor(
-                                AggregationControllerAggregationClient.class.getConstructor(
-                                        ApacheHttpClient4Config.class));
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
+            bind(ClientConfig.class).toInstance(config);
         }
     }
 

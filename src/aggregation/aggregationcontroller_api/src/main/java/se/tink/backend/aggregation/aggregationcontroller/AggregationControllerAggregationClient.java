@@ -5,7 +5,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
+import com.sun.jersey.api.client.config.ClientConfig;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,15 +40,11 @@ public class AggregationControllerAggregationClient {
             LoggerFactory.getLogger(AggregationControllerAggregationClient.class);
     private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
             ImmutableSet.of("oxford-staging", "oxford-production");
-    private final ApacheHttpClient4Config config;
+    private final ClientConfig config;
     private static final int MAXIMUM_RETRY_ATTEMPT = 5;
 
     @Inject
-    private AggregationControllerAggregationClient() {
-        this.config = null;
-    }
-
-    public AggregationControllerAggregationClient(ApacheHttpClient4Config custom) {
+    private AggregationControllerAggregationClient(ClientConfig custom) {
         this.config = custom;
     }
 
@@ -58,21 +54,12 @@ public class AggregationControllerAggregationClient {
                 !Strings.isNullOrEmpty(hostConfiguration.getHost()),
                 "Aggregation controller host was not set.");
 
-        Client client;
-        if (this.config == null) {
-            client =
-                    JerseyUtils.getClusterClient(
-                            hostConfiguration.getClientCert(),
-                            EMPTY_PASSWORD,
-                            hostConfiguration.isDisablerequestcompression());
-        } else {
-            client =
-                    JerseyUtils.getClusterClient(
-                            hostConfiguration.getClientCert(),
-                            EMPTY_PASSWORD,
-                            hostConfiguration.isDisablerequestcompression(),
-                            this.config);
-        }
+        Client client =
+                JerseyUtils.getClusterClient(
+                        hostConfiguration.getClientCert(),
+                        EMPTY_PASSWORD,
+                        hostConfiguration.isDisablerequestcompression(),
+                        this.config);
 
         JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 

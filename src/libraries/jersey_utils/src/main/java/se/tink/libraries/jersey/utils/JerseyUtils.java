@@ -18,14 +18,10 @@ public class JerseyUtils {
             byte[] clientCertificate,
             String clientCertificatePassword,
             boolean disableRequestCompression,
-            ClientConfig customConfig) {
+            ClientConfig config) {
 
         InterClusterJerseyClientFactory interClusterJerseyClientFactory =
-                new InterClusterJerseyClientFactory();
-
-        if (customConfig != null) {
-            interClusterJerseyClientFactory.setInternalClientConfig(customConfig);
-        }
+                new InterClusterJerseyClientFactory(config);
 
         if (disableRequestCompression) {
             interClusterJerseyClientFactory.disableRequestCompression();
@@ -37,15 +33,6 @@ public class JerseyUtils {
         }
 
         return interClusterJerseyClientFactory.build();
-    }
-
-    public static Client getClusterClient(
-            byte[] clientCertificate,
-            String clientCertificatePassword,
-            boolean disableRequestCompression) {
-
-        return getClusterClient(
-                clientCertificate, clientCertificatePassword, disableRequestCompression, null);
     }
 
     public static WebResource getResource(List<String> pinnedCertificates, String url) {

@@ -3,7 +3,6 @@ package se.tink.libraries.jersey.utils;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.filter.GZIPContentEncodingFilter;
-import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import eu.geekplace.javapinning.pin.Pin;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,7 +37,7 @@ public class InterClusterJerseyClientFactory {
     private final HttpClientBuilder internalHttpClientBuilder;
     private final SSLContextBuilder internalSslContextBuilder;
     private final RequestConfig.Builder internalRequestConfigBuilder;
-    private ClientConfig internalClientConfig;
+    private final ClientConfig internalClientConfig;
 
     private boolean doCompressRequests = true;
     private int readTimeoutMs = READ_TIMEOUT_MS;
@@ -48,7 +47,7 @@ public class InterClusterJerseyClientFactory {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    public InterClusterJerseyClientFactory() {
+    public InterClusterJerseyClientFactory(final ClientConfig config) {
         this.internalHttpClientBuilder = HttpClientBuilder.create();
 
         this.internalSslContextBuilder =
@@ -56,17 +55,13 @@ public class InterClusterJerseyClientFactory {
 
         this.internalRequestConfigBuilder = RequestConfig.custom();
 
-        this.internalClientConfig = new DefaultApacheHttpClient4Config();
+        this.internalClientConfig = config;
 
         // `0` == Default chunk size
         // `null` == Don't use chunked encoding
         this.internalClientConfig
                 .getProperties()
                 .put(ClientConfig.PROPERTY_CHUNKED_ENCODING_SIZE, 0);
-    }
-
-    public void setInternalClientConfig(ClientConfig config) {
-        this.internalClientConfig = config;
     }
 
     public InterClusterJerseyClientFactory withClientCertificate(
