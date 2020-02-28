@@ -41,7 +41,10 @@ public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
                                     .withType(InstrumentType.FUND)
                                     .withId(
                                             InstrumentIdModule.of(
-                                                    isin, marketPlace, name, getUniqueIdentifier()))
+                                                    isin,
+                                                    marketPlace,
+                                                    name,
+                                                    getUniqueIdentifier(isin)))
                                     .withMarketPrice(0.0)
                                     .withMarketValue(extractedMarketValue)
                                     .withAverageAcquisitionPrice(
@@ -66,11 +69,8 @@ public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
                         });
     }
 
-    private String getUniqueIdentifier() {
-        if (accountFormatted == null) {
-            return isin;
-        }
-        return getAccountFormatted();
+    private String getUniqueIdentifier(final String isin) {
+        return Optional.ofNullable(accountFormatted).isPresent() ? getAccountFormatted() : isin;
     }
 
     public String getAccountFormatted() {
