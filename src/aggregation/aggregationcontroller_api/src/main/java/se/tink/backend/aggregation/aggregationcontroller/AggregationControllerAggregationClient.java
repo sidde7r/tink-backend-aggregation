@@ -95,215 +95,99 @@ public class AggregationControllerAggregationClient {
     public Response generateStatisticsAndActivityAsynchronously(
             HostConfiguration hostConfiguration, GenerateStatisticsAndActivitiesRequest request) {
         return requestExecuter(
-                new RequestOperation<Response>() {
-                    @Override
-                    public Response execute() {
-                        return getProcessService(hostConfiguration)
-                                .generateStatisticsAndActivityAsynchronously(request);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Generate Statistics and Activity Asynchronously";
-                    }
-                });
+                () ->
+                        getProcessService(hostConfiguration)
+                                .generateStatisticsAndActivityAsynchronously(request),
+                "Generate Statistics and Activity Asynchronously");
     }
 
     public Response updateTransactionsAsynchronously(
             HostConfiguration hostConfiguration, UpdateTransactionsRequest request) {
         return requestExecuter(
-                new RequestOperation<Response>() {
-                    @Override
-                    public Response execute() {
-                        return getProcessService(hostConfiguration)
-                                .updateTransactionsAsynchronously(request);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Update Transactions Asynchronously";
-                    }
-                });
+                () ->
+                        getProcessService(hostConfiguration)
+                                .updateTransactionsAsynchronously(request),
+                "Update Transactions Asynchronously");
     }
 
     public String ping(HostConfiguration hostConfiguration) {
-        return requestExecuter(
-                new RequestOperation<String>() {
-                    @Override
-                    public String execute() {
-                        return getUpdateService(hostConfiguration).ping();
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Ping";
-                    }
-                });
+        return requestExecuter(() -> getUpdateService(hostConfiguration).ping(), "Ping");
     }
 
     public SupplementalInformationResponse getSupplementalInformation(
             HostConfiguration hostConfiguration, SupplementalInformationRequest request) {
         return requestExecuter(
-                new RequestOperation<SupplementalInformationResponse>() {
-                    @Override
-                    public SupplementalInformationResponse execute() {
-                        return getUpdateService(hostConfiguration)
-                                .getSupplementalInformation(request);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Get Supplemental Information";
-                    }
-                });
+                () -> getUpdateService(hostConfiguration).getSupplementalInformation(request),
+                "Get Supplemental Information");
     }
 
     public Account updateAccount(
             HostConfiguration hostConfiguration, UpdateAccountRequest request) {
         return requestExecuter(
-                new RequestOperation<Account>() {
-                    @Override
-                    public Account execute() {
-                        return getUpdateService(hostConfiguration).updateAccount(request);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Update Account";
-                    }
-                });
+                () -> getUpdateService(hostConfiguration).updateAccount(request), "Update Account");
     }
 
     public Account updateAccountMetaData(
             HostConfiguration hostConfiguration, String accountId, String newBankId) {
         return requestExecuter(
-                new RequestOperation<Account>() {
-                    @Override
-                    public Account execute() {
-                        return getUpdateService(hostConfiguration)
-                                .updateAccountsBankId(accountId, newBankId);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Update Account Metadata";
-                    }
-                });
+                () ->
+                        getUpdateService(hostConfiguration)
+                                .updateAccountsBankId(accountId, newBankId),
+                "Update Account Metadata");
     }
 
     public Response updateTransferDestinationPatterns(
             HostConfiguration hostConfiguration, UpdateTransferDestinationPatternsRequest request) {
         return requestExecuter(
-                new RequestOperation<Response>() {
-                    @Override
-                    public Response execute() {
-                        return getUpdateService(hostConfiguration)
-                                .updateTransferDestinationPatterns(request);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Update Transfer Destination Patterns";
-                    }
-                });
+                () ->
+                        getUpdateService(hostConfiguration)
+                                .updateTransferDestinationPatterns(request),
+                "Update Transfer Destination Patterns");
     }
 
     public Response processAccounts(
             HostConfiguration hostConfiguration, ProcessAccountsRequest request) {
         return requestExecuter(
-                new RequestOperation<Response>() {
-                    @Override
-                    public Response execute() {
-                        return getUpdateService(hostConfiguration).processAccounts(request);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Process Accounts";
-                    }
-                });
+                () -> getUpdateService(hostConfiguration).processAccounts(request),
+                "Process Accounts");
     }
 
     public Response optOutAccounts(
             HostConfiguration hostConfiguration, OptOutAccountsRequest request) {
         return requestExecuter(
-                new RequestOperation<Response>() {
-                    @Override
-                    public Response execute() {
-                        return getUpdateService(hostConfiguration).optOutAccounts(request);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Opt Out Accounts";
-                    }
-                });
+                () -> getUpdateService(hostConfiguration).optOutAccounts(request),
+                "Opt Out Accounts");
     }
 
     public Response updateCredentials(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
 
         return requestExecuter(
-                new RequestOperation<Response>() {
-                    @Override
-                    public Response execute() {
-                        return getUpdateService(hostConfiguration).updateCredentials(request);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Update Credentials";
-                    }
-                });
+                () -> getUpdateService(hostConfiguration).updateCredentials(request),
+                "Update Credentials");
     }
 
     public Response updateSignableOperation(
             HostConfiguration hostConfiguration, SignableOperation signableOperation) {
         return requestExecuter(
-                new RequestOperation<Response>() {
-                    @Override
-                    public Response execute() {
-                        return getUpdateService(hostConfiguration)
-                                .updateSignableOperation(signableOperation);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Update Signable Operation";
-                    }
-                });
+                () ->
+                        getUpdateService(hostConfiguration)
+                                .updateSignableOperation(signableOperation),
+                "Update Signable Operation");
     }
 
     public Response processEinvoices(
             HostConfiguration hostConfiguration, UpdateTransfersRequest request) {
         return requestExecuter(
-                new RequestOperation<Response>() {
-                    @Override
-                    public Response execute() {
-                        return getUpdateService(hostConfiguration).processEinvoices(request);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Process Einvoices";
-                    }
-                });
+                () -> getUpdateService(hostConfiguration).processEinvoices(request),
+                "Process Einvoices");
     }
 
     public Response updateFraudDetails(
             HostConfiguration hostConfiguration, UpdateFraudDetailsRequest request) {
         return requestExecuter(
-                new RequestOperation<Response>() {
-                    @Override
-                    public Response execute() {
-                        return getUpdateService(hostConfiguration).updateFraudDetails(request);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Update Fraud Details";
-                    }
-                });
+                () -> getUpdateService(hostConfiguration).updateFraudDetails(request),
+                "Update Fraud Details");
     }
 
     public Response updateCredentialSensitive(
@@ -316,33 +200,14 @@ public class AggregationControllerAggregationClient {
                         .setSensitiveData(sensitiveData);
 
         return requestExecuter(
-                new RequestOperation<Response>() {
-                    @Override
-                    public Response execute() {
-                        return getCredentialsService(hostConfiguration).updateSensitive(request);
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Update Credentials Sensitive";
-                    }
-                });
+                () -> getCredentialsService(hostConfiguration).updateSensitive(request),
+                "Update Credentials Sensitive");
     }
 
     public Response checkConnectivity(HostConfiguration hostConfiguration) {
         return requestExecuter(
-                new RequestOperation<Response>() {
-                    @Override
-                    public Response execute() {
-                        return getAggregationControllerService(hostConfiguration)
-                                .connectivityCheck();
-                    }
-
-                    @Override
-                    public String name() {
-                        return "Check Connectivity";
-                    }
-                });
+                () -> getAggregationControllerService(hostConfiguration).connectivityCheck(),
+                "Check Connectivity");
     }
 
     public Response updateIdentity(
@@ -352,41 +217,33 @@ public class AggregationControllerAggregationClient {
         if (IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS.contains(hostConfiguration.getClusterId())) {
             log.info("Updating identity temporarily disabled!");
             return requestExecuter(
-                    new RequestOperation<Response>() {
-                        @Override
-                        public Response execute() {
-                            return getIdentityAggregatorService(hostConfiguration)
-                                    .updateIdentityData(request);
-                        }
-
-                        @Override
-                        public String name() {
-                            return "Update Identity";
-                        }
-                    });
+                    () ->
+                            getIdentityAggregatorService(hostConfiguration)
+                                    .updateIdentityData(request),
+                    "Update Identity");
         }
 
         return Response.ok().build();
     }
 
+    @FunctionalInterface
     private interface RequestOperation<T> {
         T execute();
-
-        String name();
     }
 
-    private <T> T requestExecuter(RequestOperation<T> operation) {
+    private <T> T requestExecuter(RequestOperation<T> operation, String name) {
         for (int i = 1; i <= MAXIMUM_RETRY_ATTEMPT; i++) {
             try {
+                if (i > 1) {
+                    log.warn("Retrying operation {} (attempt {})", name, i);
+                }
                 return operation.execute();
             } catch (UniformInterfaceException e) {
                 if (i == MAXIMUM_RETRY_ATTEMPT) {
                     log.error(
-                            "Tried "
-                                    + MAXIMUM_RETRY_ATTEMPT
-                                    + " times for "
-                                    + operation.name()
-                                    + " and stopping");
+                            "Tried {} times for operation {} and stopping",
+                            MAXIMUM_RETRY_ATTEMPT,
+                            name);
                     throw e;
                 }
             }
