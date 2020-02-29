@@ -2542,6 +2542,7 @@ maven_install(
         "joda-time:joda-time:2.9.9",
         "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
         "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9",
+        "javax.xml.stream:stax-api:1.0-2",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:aggregation_install.json",
