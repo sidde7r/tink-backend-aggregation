@@ -2573,11 +2573,16 @@ maven_install(
         "javax.xml.stream:stax-api:1.0-2",
         "org.codehaus.woodstox:stax2-api:3.1.1",
     ],
+    excluded_artifacts = [
+        # Keep this list empty please
+    ],
     fetch_sources = True,
+    generate_compat_repositories = False,  # Tempting, but provided that we depend on tink-backend, let's be explicit in our naming of deps
     maven_install_json = "//third_party:aggregation_install.json",
     repositories = [
         "https://repo.maven.apache.org/maven2/",
     ],
+    version_conflict_policy = "default",  # Let's stick to Coursier's algorithm and strive for NO CONFLICTS as far as possible
 )
 
 load("@aggregation//:defs.bzl", aggregation_pin = "pinned_maven_install")
