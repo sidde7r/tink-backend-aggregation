@@ -709,7 +709,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
+    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9",
     sha1 = "7deb5d0d335265ace2a9048c8d6e203b588a1724",
 )

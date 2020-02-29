@@ -27,7 +27,6 @@ java_library(
         "//src/libraries/social_security_number",
         "//src/libraries/strings",
         "//src/libraries/uuid",
-        "//third_party:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",
@@ -43,6 +42,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "@aggregation//:com_google_guava_guava",
     ],
 )

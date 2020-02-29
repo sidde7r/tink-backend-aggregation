@@ -21,12 +21,12 @@ java_library(
         "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//src/libraries/strings",
-        "//third_party:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "@aggregation//:com_google_guava_guava",
     ],
 )

@@ -71,22 +71,6 @@ java_library(
 )
 
 java_library(
-    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
-    visibility = ["//visibility:public"],
-    exports = [
-        # *base apparently needs to exported alongside *provider
-        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
-    ],
-    runtime_deps = [
-        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
-    ],
-)
-
-java_library(
     name = "com_fasterxml_jackson_dataformat_jackson_dataformat_smile",
     visibility = ["//visibility:public"],
     exports = [
@@ -441,6 +425,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
+        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@aggregation//:com_google_guava_guava",
         "@ch_qos_logback_logback_classic//jar",
@@ -458,7 +443,6 @@ java_library(
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@com_fasterxml_jackson_datatype_jackson_datatype_guava//jar",
         "@com_fasterxml_jackson_datatype_jackson_datatype_joda//jar",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
         "@com_fasterxml_jackson_module_jackson_module_afterburner//jar",
         "@com_google_code_findbugs_jsr305//jar",
         "@com_sun_jersey_jersey_core//jar",
@@ -537,11 +521,11 @@ java_import(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
+        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@com_codahale_metrics_metrics_annotation//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_jersey//jar",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
         "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
