@@ -2543,6 +2543,7 @@ maven_install(
         "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
         "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9",
         "javax.xml.stream:stax-api:1.0-2",
+        "org.codehaus.woodstox:stax2-api:3.1.1",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:aggregation_install.json",
