@@ -55,12 +55,12 @@ junit_test(
         "//src/integration/credentials:service",
         "//src/integration/user:rpc",
         "//src/libraries/api_annotations/testlib",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_javassist_javassist",
         "//third_party:org_reflections_reflections",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],
 )

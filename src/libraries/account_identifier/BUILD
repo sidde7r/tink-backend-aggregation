@@ -15,7 +15,7 @@ java_library(
         "@aggregation//:com_google_guava_guava",
 
         # Jackson
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
 
         # IBAN
         "//third_party:org_iban4j_iban4j",

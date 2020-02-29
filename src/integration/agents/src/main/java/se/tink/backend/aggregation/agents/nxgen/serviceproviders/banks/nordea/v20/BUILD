@@ -23,11 +23,11 @@ java_library(
         "//src/libraries/date",
         "//src/libraries/i18n",
         "//src/libraries/strings",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_commons_commons_lang3",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],
 )

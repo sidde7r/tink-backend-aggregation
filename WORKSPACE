@@ -557,7 +557,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_core_jackson_databind",
+    name = "com_fasterxml_jackson_core_jackson_databind",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.core:jackson-databind:2.9.9",
     sha1 = "d6eb9817d9c7289a91f043ac5ee02a6b3cc86238",
 )

@@ -26,7 +26,7 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/libraries/serialization",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:io_vavr",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

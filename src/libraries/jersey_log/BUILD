@@ -38,7 +38,7 @@ java_library(
         "//third_party:com_sun_jersey_jersey_client",
 
         # Jackson
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
 
         # Dropwizard

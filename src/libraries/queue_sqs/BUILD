@@ -18,7 +18,6 @@ java_library(
         "//src/libraries/metrics:timers",
         "//src/libraries/queue_lib",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
@@ -26,6 +25,7 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],
 )

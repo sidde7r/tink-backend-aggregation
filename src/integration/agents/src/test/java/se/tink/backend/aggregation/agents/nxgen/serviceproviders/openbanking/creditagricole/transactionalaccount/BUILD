@@ -17,8 +17,8 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:org_hamcrest_hamcrest_library",
         "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

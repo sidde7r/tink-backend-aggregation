@@ -29,9 +29,9 @@ junit_test(
     visibility = ["//src/integration:__subpackages__"],
     deps = [
         "//src/integration/credentials:service",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )
 
@@ -71,9 +71,9 @@ java_library(
         "//src/integration/api",
         "//src/integration/user:rpc",
         "//src/libraries/uuid",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:commons_codec_commons_codec",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/strings",
     ],

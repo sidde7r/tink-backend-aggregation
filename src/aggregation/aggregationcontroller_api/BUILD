@@ -21,7 +21,6 @@ java_library(
         "//src/libraries/http:http_annotations",
         "//src/libraries/http_client",
         "//src/libraries/jersey_utils",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
@@ -30,6 +29,7 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],
 )
@@ -53,7 +53,6 @@ junit_test(
         "//src/libraries/jersey_utils",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client/handler",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         "//third_party:com_sun_jersey_jersey_client",
@@ -63,5 +62,6 @@ junit_test(
         "//third_party:org_codehaus_jackson_jackson",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

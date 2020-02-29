@@ -11,7 +11,7 @@ java_library(
     deps = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_cbor//jar",
         "@commons_logging_commons_logging//jar",
         "@joda_time_joda_time//jar",

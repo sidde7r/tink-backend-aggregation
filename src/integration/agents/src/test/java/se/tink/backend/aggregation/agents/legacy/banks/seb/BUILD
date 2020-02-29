@@ -29,7 +29,6 @@ junit_test(
         "//src/libraries/account_identifier:account_identifier_test",
         "//src/libraries/date",
         "//src/libraries/social_security_number:social_security_number_test",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:joda_time_joda_time",
@@ -39,6 +38,7 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],
 )

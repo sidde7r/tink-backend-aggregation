@@ -27,7 +27,7 @@ junit_test(
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:org_assertj_assertj_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

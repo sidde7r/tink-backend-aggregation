@@ -4,7 +4,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client/handler",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_core",
@@ -13,5 +12,6 @@ java_library(
         "//third_party:org_json_json",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

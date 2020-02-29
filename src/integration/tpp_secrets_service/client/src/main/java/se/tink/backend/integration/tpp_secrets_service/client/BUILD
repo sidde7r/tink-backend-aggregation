@@ -12,7 +12,6 @@ java_library(
         "//src/integration/tpp_secrets_service/proto",
         "//src/integration/tpp_secrets_service/proto:java_grpc",
         "//src/integration/tpp_secrets_service/proto:java_proto",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:io_netty_netty_all",
@@ -20,6 +19,7 @@ java_library(
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],
 )
