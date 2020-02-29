@@ -1717,7 +1717,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
+    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.9",
     sha1 = "fc33bfa121b746db0f9fb8f36ed2e6682a1c1dd0",
 )
