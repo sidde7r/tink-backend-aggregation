@@ -757,7 +757,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_codehaus_woodstox_stax2_api",
+    name = "org_codehaus_woodstox_stax2_api",  # Do not use, but do not remove
     artifact = "org.codehaus.woodstox:stax2-api:3.1.1",
     sha1 = "0466eab062e9d1a3ce2c4631b6d09b5e5c0cbd1b",
 )

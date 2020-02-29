@@ -82,7 +82,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@aggregation//:javax_xml_stream_stax_api",
-        "@org_codehaus_woodstox_stax2_api//jar",
+        "@aggregation//:org_codehaus_woodstox_stax2_api",
     ],
 )
 
