@@ -21,7 +21,6 @@ java_library(
         "//src/libraries/http:http_annotations",
         "//src/libraries/http_client",
         "//src/libraries/jersey_utils",
-        "//third_party:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         "//third_party:com_sun_jersey_jersey_client",
@@ -30,6 +29,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@aggregation//:com_google_guava_guava",
     ],
 )

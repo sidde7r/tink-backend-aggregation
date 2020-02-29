@@ -2300,7 +2300,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
+    name = "com_fasterxml_jackson_datatype_jackson_datatype_jsr310",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9",
     sha1 = "a33df137557793b0404a486888dbe049f7abeeeb",
 )

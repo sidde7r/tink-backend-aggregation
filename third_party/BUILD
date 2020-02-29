@@ -1512,14 +1512,6 @@ java_library(
 )
 
 java_library(
-    name = "com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_datatype_jackson_datatype_jsr310//jar",
-    ],
-)
-
-java_library(
     name = "io_grpc_grpc_testing_proto",
     visibility = ["//visibility:public"],
     exports = [
