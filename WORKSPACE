@@ -2534,6 +2534,7 @@ maven_install(
         "com.google.code.gson:gson:2.8.2",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+        "com.fasterxml.jackson.core:jackson-databind:2.9.9",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:aggregation_install.json",
