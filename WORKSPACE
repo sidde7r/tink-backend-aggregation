@@ -659,7 +659,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+    name = "com_fasterxml_jackson_module_jackson_module_jaxb_annotations",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
     sha1 = "52fb643de81a60839750013a520f26b6259ddeff",
 )
