@@ -2527,6 +2527,34 @@ load("@maven//:defs.bzl", "pinned_maven_install")
 
 pinned_maven_install()
 
+# This aims become the singular place for specifying the full collection of direct and transitive
+# dependencies of the aggregation service monolith jar. All aggregation production code -- including
+# agent code -- shall ideally depend on artifacts provided by this maven_install and nothing else.
+# Artifacts only relevant for testing shall NOT be specified here, but shall instead ideally be put
+# in one or more separate maven_install(s).
+#
+# At the time of writing, aggregation production code mostly depends on artifacts via the maven_jar
+# rules in WORKSPACE. This is done either by referring to them directly using the "@artifact//jar"
+# syntax, or indirectly via the third_party java_library rules using the "//third_party:artifact"
+# syntax. Either way, any such dependency is to be replaced with a direct dependency on an artifact
+# in the list below. This is not a trivial task, and should be done in an incremental fashion. The
+# recommendation is to make one commit for adding the desired artifact to the list below + pinning
+# the JSON file. And then make a second commit that replaces all direct or indirect usages of the
+# corresponding maven_jar (if any) with a direct dependency on the newly added artifact.
+#
+# Adding a new artifact to the list below is a delicate process, and is not to be taken lightly.
+# It may be necessary to replace a few dependencies on other maven_jar rules before you are in a
+# safe position to add the artifact you desire. It may also be necessary to adjust the version of
+# a few existing artifacts to reconcile the versions of the artifacts specified here vs. the
+# artifacts that your desired artifact depends on transitively.
+#
+# The rule of thumb is to always add a new artifact in a way so that only two entries are added to
+# aggregation_install.json -- one for the jar itself and one for its sources. Furthermore, in this
+# JSON file, conflict_resolution should ideally remain as empty as possible. If it is non-empty,
+# this means that there exists at least one artifact, A, that has to use an incompatible version of
+# another artifact, B. This means that there is no guarantee that artifact A will be functioning
+# correctly in production. It is possible that certain pieces of code in A will crash with
+# NoSuchMethodError or the like.
 maven_install(
     name = "aggregation",
     artifacts = [
