@@ -1071,7 +1071,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",
+    name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
     sha1 = "a69b7eda6d0c422567c3ef9187510daeb97ef952",
 )

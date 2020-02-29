@@ -87,18 +87,6 @@ java_library(
 )
 
 java_library(
-    # TODO check is this used?
-    name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_datatype_jackson_datatype_joda//jar",
-    ],
-    runtime_deps = [
-        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
-    ],
-)
-
-java_library(
     name = "com_github_rholder_guava_retrying",
     visibility = ["//visibility:public"],
     exports = [
@@ -405,6 +393,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_joda",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
@@ -423,7 +412,6 @@ java_library(
         "@com_fasterxml_classmate//jar",
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@com_fasterxml_jackson_datatype_jackson_datatype_guava//jar",
-        "@com_fasterxml_jackson_datatype_jackson_datatype_joda//jar",
         "@com_fasterxml_jackson_module_jackson_module_afterburner//jar",
         "@com_google_code_findbugs_jsr305//jar",
         "@com_sun_jersey_jersey_core//jar",
