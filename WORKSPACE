@@ -2541,6 +2541,7 @@ maven_install(
         "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
         "joda-time:joda-time:2.9.9",
         "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:aggregation_install.json",
