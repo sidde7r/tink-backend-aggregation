@@ -257,14 +257,6 @@ java_library(
 )
 
 java_library(
-    name = "com_googlecode_libphonenumber_libphonenumber",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_googlecode_libphonenumber_libphonenumber//jar",
-    ],
-)
-
-java_library(
     name = "com_lambdaworks_scrypt",
     visibility = ["//visibility:public"],
     exports = [
@@ -610,15 +602,6 @@ java_library(
 )
 
 java_library(
-    name = "opencensus",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_opencensus_opencensus_api//jar",
-        "@io_opencensus_opencensus_contrib_grpc_metrics//jar",
-    ],
-)
-
-java_library(
     name = "io_netty_netty_codec",
     visibility = ["//visibility:public"],
     exports = [
@@ -664,32 +647,6 @@ java_library(
 )
 
 java_library(
-    name = "io_prometheus_simpleclient",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_prometheus_simpleclient//jar",
-    ],
-)
-
-java_library(
-    name = "io_prometheus_simpleclient_common",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_prometheus_simpleclient//jar",
-        "@io_prometheus_simpleclient_common//jar",
-    ],
-)
-
-java_library(
-    name = "io_prometheus_simpleclient_hotspot",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_prometheus_simpleclient//jar",
-        "@io_prometheus_simpleclient_hotspot//jar",
-    ],
-)
-
-java_library(
     name = "io_prometheus_simpleclient_servlet",
     visibility = ["//visibility:public"],
     exports = [
@@ -708,36 +665,10 @@ java_library(
 )
 
 java_library(
-    name = "io_protostuff_protostuff_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_protostuff_protostuff_core//jar",
-    ],
-)
-
-java_library(
-    name = "io_protostuff_protostuff_runtime",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_protostuff_protostuff_runtime//jar",
-    ],
-)
-
-java_library(
     name = "io_swagger_swagger_annotations",
     visibility = ["//visibility:public"],
     exports = [
         "@io_swagger_swagger_annotations//jar",
-    ],
-)
-
-java_library(
-    name = "io_swagger_swagger_jaxrs",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_swagger_swagger_core//jar",
-        "@io_swagger_swagger_jaxrs//jar",
-        "@io_swagger_swagger_models//jar",
     ],
 )
 
@@ -1102,18 +1033,6 @@ java_library(
 )
 
 java_library(
-    name = "org_apache_xmlgraphics_batik_css",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_xmlgraphics_batik_css//jar",
-        "@org_apache_xmlgraphics_batik_ext//jar",
-        "@org_apache_xmlgraphics_batik_util//jar",
-        "@xml_apis_xml_apis//jar",
-        "@xml_apis_xml_apis_ext//jar",
-    ],
-)
-
-java_library(
     name = "org_assertj_assertj_core",
     visibility = ["//visibility:public"],
     exports = [
@@ -1289,15 +1208,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@org_pojava_pojava//jar",
-    ],
-)
-
-java_library(
-    name = "org_slf4j_jul_to_slf4j",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_slf4j_jul_to_slf4j//jar",
-        "@org_slf4j_slf4j_api//jar",
     ],
 )
 
