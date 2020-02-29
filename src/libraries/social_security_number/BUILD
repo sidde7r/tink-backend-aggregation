@@ -20,9 +20,9 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/social_security_number",
-        "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:joda_time_joda_time",
     ],
 )

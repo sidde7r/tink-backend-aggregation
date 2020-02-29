@@ -348,8 +348,8 @@ java_library(
         "@de_jollyday_jollyday//jar",
     ],
     runtime_deps = [
+        "@aggregation//:joda_time_joda_time",
         "@javax_xml_bind_jaxb_api//jar",
-        "@joda_time_joda_time//jar",
     ],
 )
 
@@ -695,14 +695,6 @@ java_library(
     exports = [
         "@jfree_jcommon//jar",
         "@junit_junit//jar",
-    ],
-)
-
-java_library(
-    name = "joda_time_joda_time",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@joda_time_joda_time//jar",
     ],
 )
 

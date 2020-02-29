@@ -18,11 +18,11 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/strings",
         "//third_party:com_google_http_client_google_http_client",
-        "//third_party:joda_time_joda_time",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:joda_time_joda_time",
     ],
 )

@@ -24,7 +24,6 @@ java_library(
         "//third_party:commons_codec_commons_codec",
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:io_vavr",
-        "//third_party:joda_time_joda_time",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
@@ -35,5 +34,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:joda_time_joda_time",
     ],
 )

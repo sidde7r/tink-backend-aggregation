@@ -11,7 +11,7 @@ java_library(
         "//third_party:de_jollyday_jollyday",
         "//third_party:org_pojava_pojava",
         "//third_party:org_apache_commons_commons_lang3",
-        "//third_party:joda_time_joda_time",
+        "@aggregation//:joda_time_joda_time",
 
         # Annotations
         "//third_party:com_google_code_findbugs_jsr305",
@@ -30,12 +30,12 @@ junit_test(
     ],
     deps = [
         "//src/libraries/date",
-        "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_pojava_pojava",
         "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:joda_time_joda_time",
     ],
 )
