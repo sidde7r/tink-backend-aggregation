@@ -1089,7 +1089,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_xml_stream_stax_api",
+    name = "javax_xml_stream_stax_api",  # Do not use, but do not remove
     artifact = "javax.xml.stream:stax-api:1.0-2",
     sha1 = "d6337b0de8b25e53e81b922352fbea9f9f57ba0b",
 )
