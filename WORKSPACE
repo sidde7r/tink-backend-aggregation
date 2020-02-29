@@ -2538,6 +2538,7 @@ maven_install(
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.9",
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:aggregation_install.json",
