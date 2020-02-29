@@ -987,7 +987,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_smile",
+    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_smile",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
     sha1 = "85749406c69b08945d6059db679cc66990340ebc",
 )

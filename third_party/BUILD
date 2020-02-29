@@ -71,17 +71,6 @@ java_library(
 )
 
 java_library(
-    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_smile",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_dataformat_jackson_dataformat_smile//jar",
-    ],
-    runtime_deps = [
-        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
-    ],
-)
-
-java_library(
     name = "com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
     visibility = ["//visibility:public"],
     exports = [
