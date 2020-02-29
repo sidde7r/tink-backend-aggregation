@@ -7,7 +7,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
     ],
 )

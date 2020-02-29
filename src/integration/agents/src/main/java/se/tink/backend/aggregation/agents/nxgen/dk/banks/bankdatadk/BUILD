@@ -8,9 +8,9 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/libraries/strings",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:commons_codec_commons_codec",
         "//third_party:org_jsoup_jsoup",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
     ],
 )

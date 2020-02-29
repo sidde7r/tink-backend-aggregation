@@ -17,10 +17,10 @@ java_library(
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_commons_commons_lang",
         "//third_party:org_assertj_assertj_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
     ],
 )

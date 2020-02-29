@@ -16,9 +16,9 @@ java_library(
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:org_assertj_assertj_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
     ],
 )

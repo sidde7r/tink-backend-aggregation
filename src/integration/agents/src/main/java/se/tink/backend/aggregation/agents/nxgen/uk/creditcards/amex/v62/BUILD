@@ -7,6 +7,6 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/libraries/date",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
     ],
 )

@@ -15,7 +15,7 @@ java_library(
         "//src/integration/user:rpc",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
     ],
 )

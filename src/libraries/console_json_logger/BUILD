@@ -8,7 +8,7 @@ java_library(
         "//third_party:ch_qos_logback_contrib_logback_jackson",
         "//third_party:ch_qos_logback_contrib_logback_json_classic",
         "//third_party:ch_qos_logback_contrib_logback_json_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:io_dropwizard_dropwizard_logging",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
     ],
 )

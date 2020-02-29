@@ -21,11 +21,11 @@ java_binary(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:commons_io_commons_io",
         "//third_party:org_apache_commons_commons_cli",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
     ],
 )

@@ -7,6 +7,6 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
     ],
 )
