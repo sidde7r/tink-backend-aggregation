@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-01 14:23+0100\n"
+"POT-Creation-Date: 2020-03-03 13:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1151,4 +1151,159 @@ msgid "Recipient accounts missing from accounts ledger"
 msgstr ""
 
 msgid "Transfer rejected by the Bank"
+msgstr ""
+
+msgid "Could not validate the destination account."
+msgstr ""
+
+msgid "Could not validate the date you entered for the payment."
+msgstr ""
+
+msgid "Could not execute payment due insufficient funds."
+msgstr ""
+
+msgid "Could not validate the account, you are trying to pay from."
+msgstr ""
+
+msgid "The reference you provided for the payment is not valid."
+msgstr ""
+
+msgid "Payment authentication failed."
+msgstr ""
+
+msgid "Payment authorization failed."
+msgstr ""
+
+msgid "Payment validation failed."
+msgstr ""
+
+msgid "Payment failed."
+msgstr ""
+
+msgid "CodigoAlfa"
+msgstr ""
+
+msgid "CodigoFamilia"
+msgstr ""
+
+msgid "CodigoSubFamilia"
+msgstr ""
+
+msgid "Codigo"
+msgstr ""
+
+msgid "Valor"
+msgstr ""
+
+msgid "CodigoMoeda"
+msgstr ""
+
+msgid "DescricaoTitulo"
+msgstr ""
+
+msgid "NumeroOperacao"
+msgstr ""
+
+msgid "Nome"
+msgstr ""
+
+msgid "ValorLimite"
+msgstr ""
+
+msgid "DataInicio"
+msgstr ""
+
+msgid "DataFim"
+msgstr ""
+
+msgid "uuid"
+msgstr ""
+
+msgid "MontanteTransaccao"
+msgstr ""
+
+msgid "DataTransaccao"
+msgstr ""
+
+msgid "DescricaoTransaccao"
+msgstr ""
+
+msgid "saldoContabilisticoConta"
+msgstr ""
+
+msgid "dataMovimento"
+msgstr ""
+
+msgid "descricao"
+msgstr ""
+
+msgid "valorMoedaConta"
+msgstr ""
+
+msgid "moedaOperacao"
+msgstr ""
+
+msgid "NIP"
+msgstr ""
+
+msgid "ContaFormatada"
+msgstr ""
+
+msgid "ClienteContaId"
+msgstr ""
+
+msgid "Moeda"
+msgstr ""
+
+msgid "nuc"
+msgstr ""
+
+msgid "tipo"
+msgstr ""
+
+msgid "ordem"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "UUID"
+msgstr ""
+
+msgid "TokenDefinition"
+msgstr ""
+
+msgid "mobilePhoneNumber"
+msgstr ""
+
+msgid "processedOn"
+msgstr ""
+
+msgid "replywith"
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "versionToken"
+msgstr ""
+
+msgid "Could not initiate login session."
+msgstr ""
+
+msgid "Error message: "
+msgstr ""
+
+msgid ""
+"Another authentication attempt was initiated while authenticating. Please "
+"try again."
+msgstr ""
+
+msgid "Your session has been terminated by the bank."
+msgstr ""
+
+msgid "Please ensure that you have entered the correct mobile number"
+msgstr ""
+
+msgid "Source and destination account must not be the same."
 msgstr ""
