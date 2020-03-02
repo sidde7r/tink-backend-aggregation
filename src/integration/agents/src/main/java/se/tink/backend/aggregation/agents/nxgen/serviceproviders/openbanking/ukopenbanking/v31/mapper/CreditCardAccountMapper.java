@@ -53,7 +53,7 @@ public class CreditCardAccountMapper {
 
     private AccountIdentifierEntity extractCardIdentifier(AccountEntity account) {
         return account.getIdentifiers().stream()
-                .filter(i -> i.getIdentifierType().equals(ExternalAccountIdentification4Code.PAN))
+                .filter(i -> ExternalAccountIdentification4Code.PAN.equals(i.getIdentifierType()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Missing PAN card identifier"));
     }

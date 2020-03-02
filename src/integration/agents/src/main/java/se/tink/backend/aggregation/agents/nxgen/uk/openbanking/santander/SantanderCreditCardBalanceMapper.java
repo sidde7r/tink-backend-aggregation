@@ -29,9 +29,12 @@ class SantanderCreditCardBalanceMapper implements CreditCardBalanceMapper {
     @Override
     public ExactCurrencyAmount getAvailableCredit(Collection<AccountBalanceEntity> balances) {
         return balances.stream()
-                .filter(b -> b.getType().equals(FORWARD_AVAILABLE))
+                .filter(b -> FORWARD_AVAILABLE.equals(b.getType()))
                 .findAny()
                 .map(AccountBalanceEntity::getAsCurrencyAmount)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(
+                        () ->
+                                new NoSuchElementException(
+                                        "Unable to get available credit - no forward available balance found."));
     }
 }
