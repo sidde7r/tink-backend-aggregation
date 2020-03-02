@@ -210,10 +210,9 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                             .getOpenIdError()
                             .orElseThrow(UkOpenBankingV31PisUtils::createFailedTransferException);
 
-            String errorType = openIdError.getErrorType();
             String errorMessage = openIdError.getErrorMessage();
 
-            if (isKnownOpenIdError(errorType)) {
+            if (hasWellKnownOpenIdError(apiClient)) {
                 if (Strings.isNullOrEmpty(errorMessage)) {
                     throw new PaymentAuthorizationException();
                 } else if (PaymentAuthorizationCancelledByUserException.isFuzzyMatch(openIdError)) {
@@ -236,6 +235,15 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         }
 
         return paymentAuthenticator.getPaymentResponse();
+    }
+
+    private boolean hasWellKnownOpenIdError(UkOpenBankingApiClient apiClient) {
+        if (!apiClient.getOpenIdError().isPresent()) {
+            return false;
+        }
+
+        OpenIdError openIdError = apiClient.getOpenIdError().get();
+        return isKnownOpenIdError(openIdError.getErrorType());
     }
 
     /**
