@@ -28,17 +28,4 @@ public class IdentityDataV31Response {
     private void setData(Map<String, List<IdentityDataV31Entity>> dataWrapper) {
         data = dataWrapper.entrySet().stream().findAny().map(Map.Entry::getValue).orElse(null);
     }
-
-    protected boolean hasLink(String linkId) {
-        return links != null && links.containsKey(linkId);
-    }
-
-    protected String getLink(String linkId) {
-        return searchLink(linkId)
-                .orElseThrow(() -> new IllegalStateException("No link with id: " + linkId));
-    }
-
-    protected Optional<String> searchLink(String linkId) {
-        return links == null ? Optional.empty() : Optional.ofNullable(links.get(linkId));
-    }
 }

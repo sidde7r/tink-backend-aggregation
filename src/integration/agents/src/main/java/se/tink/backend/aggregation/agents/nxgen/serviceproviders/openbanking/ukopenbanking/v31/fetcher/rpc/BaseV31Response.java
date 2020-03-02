@@ -28,16 +28,12 @@ public class BaseV31Response<T> {
         data = dataWrapper.entrySet().stream().findAny().map(Map.Entry::getValue).orElse(null);
     }
 
-    protected boolean hasLink(String linkId) {
-        return links.containsKey(linkId);
-    }
-
     protected String getLink(String linkId) {
         return searchLink(linkId)
                 .orElseThrow(() -> new IllegalStateException("No link with id: " + linkId));
     }
 
     protected Optional<String> searchLink(String linkId) {
-        return links == null ? Optional.empty() : Optional.ofNullable(links.get(linkId));
+        return Optional.ofNullable(links).map(links -> links.get(linkId));
     }
 }

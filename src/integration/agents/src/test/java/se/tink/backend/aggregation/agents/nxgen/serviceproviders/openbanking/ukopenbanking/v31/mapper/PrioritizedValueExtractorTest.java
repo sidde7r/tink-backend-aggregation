@@ -21,7 +21,6 @@ public class PrioritizedValueExtractorTest {
     @Test
     public void shouldThrowException_whenNoMatchingValueIsFound() {
         // when
-
         Throwable thrown =
                 catchThrowable(
                         () ->

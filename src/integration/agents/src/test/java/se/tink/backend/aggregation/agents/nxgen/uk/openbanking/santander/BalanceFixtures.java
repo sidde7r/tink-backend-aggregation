@@ -22,7 +22,7 @@ public class BalanceFixtures {
                 BALANCE_PREVIOUSLY_CLOSED_BOOKED, AccountBalanceEntity.class);
     }
 
-    static AccountBalanceEntity forwardAvailableBalance() {
+    public static AccountBalanceEntity forwardAvailableBalance() {
         return SerializationUtils.deserializeFromString(
                 BALANCE_FORWARD_AVAILABLE, AccountBalanceEntity.class);
     }

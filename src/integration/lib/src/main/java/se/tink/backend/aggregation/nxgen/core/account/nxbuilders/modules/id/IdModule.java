@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -86,6 +87,14 @@ public final class IdModule {
             throw new IllegalArgumentException(
                     String.format(
                             "Identifier %s is already present in the set.", identifier.getType()));
+        }
+
+        @Override
+        public IdBuildStep addIdentifiers(@Nonnull Collection<AccountIdentifier> identifiers) {
+            Preconditions.checkArgument(
+                    !identifiers.isEmpty(), "Identifiers list must not be empty");
+            identifiers.forEach(this::addIdentifier);
+            return this;
         }
 
         @Override

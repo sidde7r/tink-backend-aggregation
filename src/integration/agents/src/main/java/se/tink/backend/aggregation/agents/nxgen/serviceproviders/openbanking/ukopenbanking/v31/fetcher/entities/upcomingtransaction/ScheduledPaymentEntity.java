@@ -5,9 +5,10 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
 import java.time.ZonedDateTime;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -26,7 +27,10 @@ public class ScheduledPaymentEntity {
 
     public UpcomingTransaction toTinkUpcomingTransaction() {
         return UpcomingTransaction.builder()
-                .setAmount(instructedAmount)
+                .setAmount(
+                        ExactCurrencyAmount.of(
+                                instructedAmount.getUnsignedAmount(),
+                                instructedAmount.getCurrency()))
                 .setDateTime(scheduledPaymentDateTime)
                 .setDescription(null) // No description available
                 .build();
