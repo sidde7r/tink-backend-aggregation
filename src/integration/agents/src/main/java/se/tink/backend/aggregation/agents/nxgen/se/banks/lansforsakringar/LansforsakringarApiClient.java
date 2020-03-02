@@ -16,6 +16,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceAgreementResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeinsuranceRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.rpc.FetchLoanDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.rpc.FetchLoanDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.rpc.FetchLoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchTransactionRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchTransactionResponse;
@@ -100,7 +103,6 @@ public class LansforsakringarApiClient {
     public FetchPensionResponse fetchPension() {
         return getBaseRequest(Urls.FETCH_PENSION_OVERVIEW)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(FetchPensionResponse.class);
     }
 
@@ -127,6 +129,19 @@ public class LansforsakringarApiClient {
                                 agreementId),
                         MediaType.APPLICATION_JSON_TYPE)
                 .post(FetchPensionWithLifeInsuranceAgreementResponse.class);
+    }
+
+    public FetchLoanOverviewResponse fetchLoanOverview() {
+        return getBaseRequest(Urls.FETCH_LOAN_OVERVIEW)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchLoanOverviewResponse.class);
+    }
+
+    public FetchLoanDetailsResponse fetchLoanDetails(String loanNumber) {
+        return getBaseRequest(Urls.FETCH_LOAN_DETAILS)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(FetchLoanDetailsRequest.of(loanNumber), MediaType.APPLICATION_JSON_TYPE)
+                .post(FetchLoanDetailsResponse.class);
     }
 
     private RequestBuilder getBaseRequest(URL url) {

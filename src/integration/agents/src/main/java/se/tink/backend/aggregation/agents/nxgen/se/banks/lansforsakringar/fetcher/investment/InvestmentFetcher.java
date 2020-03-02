@@ -21,7 +21,7 @@ public class InvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        List<InvestmentAccount> investmentAccounts = Lists.newArrayList();
+        final List<InvestmentAccount> investmentAccounts = Lists.newArrayList();
         for (EngagementsEntity engagementsEntity :
                 apiClient.fetchPensionWithLifeInsurance().getResponse().getEngagements()) {
             investmentAccounts.add(

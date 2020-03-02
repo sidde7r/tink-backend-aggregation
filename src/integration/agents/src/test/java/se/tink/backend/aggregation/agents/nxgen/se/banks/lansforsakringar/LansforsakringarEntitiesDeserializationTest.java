@@ -1,14 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar;
 
+import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.creditcard.rpc.FetchCreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceAgreementResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.rpc.FetchLoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchUpcomingResponse;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LansforsakringarEntitiesDeserializationTest {
@@ -745,6 +748,35 @@ public class LansforsakringarEntitiesDeserializationTest {
                     + "\t\"errors\": null\n"
                     + "}";
 
+    private final String MORTGAGE_LOAN_WITH_CO_APPLICANT =
+            "{\n"
+                    + "\t\"loanName\": \"Bolån Hypotek\",\n"
+                    + "\t\"loanNumber\": \"9029.74.794.33\",\n"
+                    + "\t\"originalDebt\": \"250 000,00\",\n"
+                    + "\t\"currentDebt\": \"250 000,00\",\n"
+                    + "\t\"currentInterestRate\": \"1,60 %\",\n"
+                    + "\t\"rateBoundUntil\": \"2020-06-30\",\n"
+                    + "\t\"rateBindingPeriodLength\": \"3 år\",\n"
+                    + "\t\"borrowers\": [{\n"
+                    + "\t\t\"name\": \"Maria Estefors Girard\",\n"
+                    + "\t\t\"debtOwnershipShare\": \"50,00 %\",\n"
+                    + "\t\t\"interestRateOwnershipShare\": \"50,00 %\"\n"
+                    + "\t}, {\n"
+                    + "\t\t\"name\": \"Pierre Girard\",\n"
+                    + "\t\t\"debtOwnershipShare\": \"50,00 %\",\n"
+                    + "\t\t\"interestRateOwnershipShare\": \"50,00 %\"\n"
+                    + "\t}],\n"
+                    + "\t\"securities\": [{\n"
+                    + "\t\t\"securityText\": \"STOCKHOLM RIKSBYGGENS BRF RUSTHÅLLAREN 311390000612\",\n"
+                    + "\t\t\"securityType\": \"Nyttjanderätt\"\n"
+                    + "\t}],\n"
+                    + "\t\"fixedRate\": true,\n"
+                    + "\t\"modificationStatus\": \"NONE\",\n"
+                    + "\t\"infoText\": null,\n"
+                    + "\t\"nearExpiryDate\": false,\n"
+                    + "\t\"bindingPeriodInfoModel\": null\n"
+                    + "}";
+
     @Test
     public void testTransactionParsing() {
         FetchTransactionResponse ftr =
@@ -809,5 +841,16 @@ public class LansforsakringarEntitiesDeserializationTest {
         Assert.assertNotNull(fpwlia.getResponse().getLifeInsuranceAgreement());
         Assert.assertFalse(
                 fpwlia.getResponse().getLifeInsuranceAgreement().getLifeInsurances().isEmpty());
+    }
+
+    @Test
+    public void testMortgaeLoanParsing() {
+        FetchLoanDetailsResponse fldr =
+                SerializationUtils.deserializeFromString(
+                        MORTGAGE_LOAN_WITH_CO_APPLICANT, FetchLoanDetailsResponse.class);
+        LoanAccount la = fldr.toTinkLoanAccount();
+        Assert.assertTrue(la.isUniqueIdentifierEqual("9029.74.794.33"));
+        Assert.assertTrue(la.getDetails().hasCoApplicant());
+        Assert.assertEquals(la.getExactBalance().getExactValue(), BigDecimal.valueOf(-250000.0));
     }
 }

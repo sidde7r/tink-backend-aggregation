@@ -25,6 +25,8 @@ public class LansforsakringarConstants {
                 new URL(BASE + ApiService.PENSION_OVERVIEW);
         public static final URL FETCH_PENSION_WITH_LIFE_INSURANCE_AGREEMENT =
                 new URL(BASE + ApiService.PENSION_WITH_LIFE_INSURANCE_AGREEMENT);
+        public static final URL FETCH_LOAN_OVERVIEW = new URL(BASE + ApiService.LOAN_OVERVIEW);
+        public static final URL FETCH_LOAN_DETAILS = new URL(BASE + ApiService.LOAN_DETAILS);
     }
 
     public static class ApiService {
@@ -39,6 +41,8 @@ public class LansforsakringarConstants {
         public static final String PENSION_WITH_LIFE_INSURANCE_AGREEMENT =
                 "es/lifeinsurance/getagreement/1.0";
         public static final String PENSION_OVERVIEW = "appoutlet/pension/overview/withtotal/2.0";
+        public static final String LOAN_OVERVIEW = "appoutlet/loan/loans/withtotal";
+        public static final String LOAN_DETAILS = "appoutlet/loan/details";
     }
 
     public static class StorageKeys {
@@ -65,6 +69,7 @@ public class LansforsakringarConstants {
                         .put(AccountTypes.CHECKING, "CHECKING", "DEBIT")
                         .put(AccountTypes.SAVINGS, "SAVINGS")
                         .put(AccountTypes.PENSION, "PENSION")
+                        .put(AccountTypes.MORTGAGE, "Bolån Hypotek")
                         .build();
         public static final String CURRENCY = "SEK";
     }
