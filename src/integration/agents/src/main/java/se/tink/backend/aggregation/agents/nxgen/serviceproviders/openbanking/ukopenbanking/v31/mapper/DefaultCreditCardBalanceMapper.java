@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.CLOSING_AVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.INTERIM_BOOKED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.PREVIOUSLY_CLOSED_BOOKED;
 
@@ -24,7 +25,7 @@ public class DefaultCreditCardBalanceMapper implements CreditCardBalanceMapper {
         return valueExtractor.pickByValuePriority(
                 balances,
                 AccountBalanceEntity::getType,
-                ImmutableList.of(INTERIM_BOOKED, PREVIOUSLY_CLOSED_BOOKED));
+                ImmutableList.of(INTERIM_BOOKED, PREVIOUSLY_CLOSED_BOOKED, CLOSING_AVAILABLE));
     }
 
     @Override
@@ -38,7 +39,10 @@ public class DefaultCreditCardBalanceMapper implements CreditCardBalanceMapper {
                 .pickByValuePriority(
                         creditLines,
                         CreditLineEntity::getType,
-                        ImmutableList.of(ExternalLimitType.AVAILABLE, ExternalLimitType.PRE_AGREED))
+                        ImmutableList.of(
+                                ExternalLimitType.AVAILABLE,
+                                ExternalLimitType.PRE_AGREED,
+                                ExternalLimitType.CREDIT))
                 .getAmount();
     }
 }

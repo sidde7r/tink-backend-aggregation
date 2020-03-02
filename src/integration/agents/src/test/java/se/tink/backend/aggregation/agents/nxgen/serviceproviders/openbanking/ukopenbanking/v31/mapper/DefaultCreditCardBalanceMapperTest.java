@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.CLOSING_AVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.INTERIM_BOOKED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.PREVIOUSLY_CLOSED_BOOKED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.CreditCardFixtures.interimAvailableBalance;
@@ -39,7 +40,7 @@ public class DefaultCreditCardBalanceMapperTest {
     public void shouldPickBalance_byDefinedPriority() {
         // given
         ImmutableList<AccountBalanceType> definedPriority =
-                ImmutableList.of(INTERIM_BOOKED, PREVIOUSLY_CLOSED_BOOKED);
+                ImmutableList.of(INTERIM_BOOKED, PREVIOUSLY_CLOSED_BOOKED, CLOSING_AVAILABLE);
 
         ImmutableList<AccountBalanceEntity> balances =
                 ImmutableList.of(
@@ -82,7 +83,9 @@ public class DefaultCreditCardBalanceMapperTest {
                 .asList()
                 .isEqualTo(
                         ImmutableList.of(
-                                ExternalLimitType.AVAILABLE, ExternalLimitType.PRE_AGREED));
+                                ExternalLimitType.AVAILABLE,
+                                ExternalLimitType.PRE_AGREED,
+                                ExternalLimitType.CREDIT));
         assertThat(result).isEqualTo(CreditCardFixtures.availableCreditLine().getAmount());
     }
 
