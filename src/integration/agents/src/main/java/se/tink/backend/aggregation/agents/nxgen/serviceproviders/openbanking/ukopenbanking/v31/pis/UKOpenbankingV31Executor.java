@@ -206,11 +206,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             }
 
             if (hasWellKnownOpenIdError(apiClient)) {
-                OpenIdError openIdError =
-                        apiClient
-                                .getOpenIdError()
-                                .orElseThrow(
-                                        UkOpenBankingV31PisUtils::createFailedTransferException);
+                OpenIdError openIdError = apiClient.getOpenIdError().get();
 
                 String errorMessage = openIdError.getErrorMessage();
                 if (Strings.isNullOrEmpty(errorMessage)) {
