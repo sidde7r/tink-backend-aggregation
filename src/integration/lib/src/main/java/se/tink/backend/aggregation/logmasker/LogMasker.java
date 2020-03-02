@@ -101,7 +101,7 @@ public class LogMasker {
         composite.dispose();
     }
 
-    private void addNewSensitiveValuesToMasker(Collection<String> newSensitiveValues) {
+    public void addNewSensitiveValuesToMasker(Collection<String> newSensitiveValues) {
         masker.addValuesToMask(
                 new SensitiveValuesCollectionStringMaskerBuilder(newSensitiveValues),
                 this::shouldMask);
