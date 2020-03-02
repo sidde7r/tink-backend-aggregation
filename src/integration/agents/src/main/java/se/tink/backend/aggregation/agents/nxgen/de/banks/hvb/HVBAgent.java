@@ -5,53 +5,48 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.HVBPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.HVBAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.HVBTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.HVBTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.session.HVBSessionHandler;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConfig;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistration;
+import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistry;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class HVBAgent extends NextGenerationAgent
+public final class HVBAgent extends SubsequentGenerationAgent<HVBAuthenticator>
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private static final WLConfig wlConfig =
-            new WLConfig(
-                    HVBConstants.Url.ENDPOINT,
-                    HVBPasswordAuthenticator.certificateStringToPublicKey(
-                            HVBConstants.SYMMETRIC_CERTIFICATE),
-                    HVBConstants.MODULE_NAME,
-                    HVBConstants.APP_ID);
-
-    private final WLApiClient apiClient;
-    private final HVBStorage storage;
-
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final ModuleDependenciesRegistry dependencyRegistry;
 
     public HVBAgent(
-            final CredentialsRequest request,
-            final AgentContext context,
-            final SignatureKeyPair keyPair) {
-        super(request, context, keyPair);
-        apiClient = new WLApiClient(client);
-        storage = new HVBStorage(sessionStorage, persistentStorage);
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        dependencyRegistry = initializeAgentDependencies(new HVBModuleDependenciesRegistration());
+        setupHttpClient();
     }
 
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(
-                new HVBPasswordAuthenticator(apiClient, storage, wlConfig));
+    private ModuleDependenciesRegistry initializeAgentDependencies(
+            ModuleDependenciesRegistration moduleDependenciesRegistration) {
+        moduleDependenciesRegistration.registerExternalDependencies(
+                client, sessionStorage, persistentStorage);
+        moduleDependenciesRegistration.registerInternalModuleDependencies();
+        return moduleDependenciesRegistration.createModuleDependenciesRegistry();
+    }
+
+    private void setupHttpClient() {
+        client.setFollowRedirects(false);
     }
 
     @Override
@@ -78,15 +73,26 @@ public final class HVBAgent extends NextGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new HVBTransactionalAccountFetcher(apiClient, storage, wlConfig),
+                new HVBTransactionalAccountFetcher(null, null, null),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
-                                new HVBTransactionFetcher(apiClient, storage, wlConfig))));
+                                new HVBTransactionFetcher(null, null, null))));
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new HVBSessionHandler(apiClient, storage, wlConfig);
+        return new HVBSessionHandler(null, null, null);
+    }
+
+    @Override
+    public HVBAuthenticator getAuthenticator() {
+        return dependencyRegistry.getBean(HVBAuthenticator.class);
+    }
+
+    @Override
+    public boolean login() throws AuthenticationException, AuthorizationException {
+        getAuthenticator().authenticate(credentials);
+        return true;
     }
 }

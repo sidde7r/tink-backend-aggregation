@@ -32,13 +32,13 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.EncryptedExternalAp
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.ActivateTokenExternalApiCall.Arg;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.ActivateTokenExternalApiCall.ResponseBody;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.ActivateTokenExternalApiCall.Result;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ExternalApiCallResult;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
 
 public class ActivateTokenExternalApiCallTest {
 

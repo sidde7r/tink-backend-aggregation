@@ -22,11 +22,11 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.RandomDataProvider;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.Login1ExternalApiCall.Result;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ExternalApiCallResult;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.SimpleExternalApiCall;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.UserInteractionStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
+import se.tink.backend.aggregation.nxgen.scaffold.SimpleExternalApiCall;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @Slf4j

@@ -5,11 +5,11 @@ import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ExternalApiCall;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ExternalApiCallResult;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCall;
+import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
 
 public abstract class EncryptedExternalApiCall<T, R> implements ExternalApiCall<T, R> {
 

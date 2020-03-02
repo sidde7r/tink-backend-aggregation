@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLApiClie
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConfig;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.session.WLSessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public final class HVBSessionHandler implements SessionHandler {
     private WLSessionHandler wlSessionHandler;
@@ -24,10 +23,6 @@ public final class HVBSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        try {
-            wlSessionHandler.heartbeat();
-        } catch (HttpResponseException e) {
-            throw SessionError.SESSION_EXPIRED.exception(e);
-        }
+        throw SessionError.SESSION_EXPIRED.exception();
     }
 }

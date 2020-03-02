@@ -7,14 +7,14 @@ import lombok.Value;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.ConfigurationProvider;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.TokenActivationSuccessExternalApiCall.Arg;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.TokenActivationSuccessExternalApiCall.Result;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ExternalApiCallResult;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.SimpleExternalApiCall;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
+import se.tink.backend.aggregation.nxgen.scaffold.SimpleExternalApiCall;
 
 public class TokenActivationSuccessExternalApiCall extends SimpleExternalApiCall<Arg, Result> {
 

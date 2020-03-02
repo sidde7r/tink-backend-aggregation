@@ -4,8 +4,6 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.login.LoginProcess;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.RegistrationProcess;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ModuleDependenciesRegistration;
-import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.ModuleDependenciesRegistry;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.scaffold.UserInteractionMultiStepsProcess;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
@@ -13,6 +11,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAge
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistration;
+import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistry;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IngAgent extends SubsequentGenerationAgent<IngAuthenticator>
@@ -41,7 +41,8 @@ public class IngAgent extends SubsequentGenerationAgent<IngAuthenticator>
     private void initializeAgentDependencies(
             ModuleDependenciesRegistration moduleDependenciesRegistration) {
         configureHttpClient();
-        moduleDependenciesRegistration.registerExternalDependencies(client, sessionStorage);
+        moduleDependenciesRegistration.registerExternalDependencies(
+                client, sessionStorage, persistentStorage);
         moduleDependenciesRegistration.registerInternalModuleDependencies();
         ModuleDependenciesRegistry moduleDependenciesRegistry =
                 moduleDependenciesRegistration.createModuleDependenciesRegistry();
