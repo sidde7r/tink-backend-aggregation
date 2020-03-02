@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 public class PaymentAuthorizationTimeOutException extends PaymentAuthorizationException {
     public static final String MESSAGE = "Authorisation of payment timed out. Please try again.";
+    private static final String searchString = "not completed in the allotted time";
 
     public PaymentAuthorizationTimeOutException(String message) {
         super(message);
@@ -19,7 +20,6 @@ public class PaymentAuthorizationTimeOutException extends PaymentAuthorizationEx
     }
 
     public static boolean isFuzzyMatch(OpenIdError error) {
-        return StringUtils.containsIgnoreCase(
-                error.getErrorMessage(), "not completed in the allotted time");
+        return StringUtils.containsIgnoreCase(error.getErrorMessage(), searchString);
     }
 }

@@ -5,13 +5,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 public class PaymentAuthorizationFailedByUserException extends PaymentAuthorizationException {
     public static final String MESSAGE = "Authorisation of payment failed. Please try again.";
+    private static final String searchString = "User failed to authenticate";
 
     public PaymentAuthorizationFailedByUserException(OpenIdError openIdError) {
         super(openIdError, MESSAGE);
     }
 
     public static boolean isFuzzyMatch(OpenIdError error) {
-        return StringUtils.containsIgnoreCase(
-                error.getErrorMessage(), "User failed to authenticate");
+        return StringUtils.containsIgnoreCase(error.getErrorMessage(), searchString);
     }
 }
