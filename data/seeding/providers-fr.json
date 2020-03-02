@@ -31,6 +31,23 @@
             "type": "CREDIT_CARD"
         },
         {
+            "name": "fr-amex-ob",
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.serviceproviders.openbanking.amex.AmericanExpressAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "American Express",
+            "fields": [],
+            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "multiFactor": true,
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "accessType": "OTHER",
             "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
             "credentialsType": "PASSWORD",

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.AccountReferenceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.entities.AddressEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.serializers.LocalDateSerializer;
+import se.tink.backend.aggregation.utils.json.serializers.LocalDateSerializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonInclude(Include.NON_NULL)
