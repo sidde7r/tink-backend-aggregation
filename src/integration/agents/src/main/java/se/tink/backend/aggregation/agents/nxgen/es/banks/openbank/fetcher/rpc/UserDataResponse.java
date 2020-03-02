@@ -35,6 +35,9 @@ public class UserDataResponse {
     }
 
     public List<CardEntity> getCards() {
+        if (cardsList == null) {
+            return List.empty();
+        }
         return cardsList.cards;
     }
 
