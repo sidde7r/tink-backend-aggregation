@@ -78,7 +78,8 @@ public class LaCaixaAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(new LaCaixaPasswordAuthenticator(apiClient));
+        return new PasswordAuthenticationController(
+                new LaCaixaPasswordAuthenticator(apiClient, context.getLogMasker()));
     }
 
     @Override
