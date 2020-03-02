@@ -28,7 +28,7 @@ public class TransactionsEntity {
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(ExactCurrencyAmount.of(amount.getValue(), amount.getCurrency()))
-                .setDescription(text)
+                .setDescription(unconstrainedText)
                 .setDate(LocalDate.parse(transactionDate))
                 .build();
     }
