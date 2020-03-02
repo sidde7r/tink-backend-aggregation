@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis;
 
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -52,6 +56,7 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePaymentExecutor {
+    private static Logger log = LoggerFactory.getLogger(UKOpenbankingV31Executor.class);
 
     private final UkOpenBankingPisConfig pisConfig;
     private final SoftwareStatementAssertion softwareStatement;
@@ -215,7 +220,27 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         String errorMessage = openIdError.getErrorMessage();
 
         if (isKnownOpenIdError(errorType)) {
-            String endUserMessage = UkOpenBankingV31PisUtils.convertToEndUserMessage(errorMessage);
+            String endUserMessage = EndUserMessage.PAYMENT_NOT_AUTHORISED_BY_USER;
+
+            if (Strings.isNullOrEmpty(errorMessage)) {
+                endUserMessage = EndUserMessage.PAYMENT_NOT_AUTHORISED_BY_USER;
+            } else if (StringUtils.containsIgnoreCase(errorMessage, "cancelled")) {
+                endUserMessage = EndUserMessage.PIS_AUTHORISATION_CANCELLED;
+            } else if (StringUtils.containsIgnoreCase(
+                    errorMessage, "not completed in the allotted time")) {
+                endUserMessage = EndUserMessage.PIS_AUTHORISATION_TIMEOUT;
+            } else if (StringUtils.containsIgnoreCase(
+                    errorMessage, "User failed to authenticate")) {
+                endUserMessage = EndUserMessage.PIS_AUTHORISATION_FAILED_USER_ERROR;
+            } else {
+                // Log unknown error message and return the generic end user message for when
+                // payment wasn't authorised.
+                log.warn(
+                        "Unknown error message from bank during payment authorisation: {}",
+                        errorMessage);
+                endUserMessage = EndUserMessage.PAYMENT_NOT_AUTHORISED_BY_USER;
+            }
+
             throw UkOpenBankingV31PisUtils.createCancelledTransferException(endUserMessage);
         }
 
