@@ -71,22 +71,6 @@ java_library(
 )
 
 java_library(
-    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_dataformat_jackson_dataformat_xml//jar",
-    ],
-    runtime_deps = [
-        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
-        "@aggregation//:javax_xml_stream_stax_api",
-        "@aggregation//:org_codehaus_woodstox_stax2_api",
-    ],
-)
-
-java_library(
     name = "com_github_rholder_guava_retrying",
     visibility = ["//visibility:public"],
     exports = [

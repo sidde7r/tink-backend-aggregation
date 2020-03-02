@@ -1243,7 +1243,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
+    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_xml",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.9",
     sha1 = "4b8a210f1102307ec66028f744a1ede73a40ed2d",
 )

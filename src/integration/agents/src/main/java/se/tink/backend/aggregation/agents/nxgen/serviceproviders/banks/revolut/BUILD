@@ -25,7 +25,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
         "//src/libraries/uuid",
-        "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_httpcomponents_httpclient",
@@ -34,6 +33,7 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "@aggregation//:com_google_guava_guava",
     ],
 )
