@@ -41,6 +41,11 @@ public class CustodyAccountResponse extends BaseResponse {
 
     public InvestmentAccount toInvestmentAccount(HandelsbankenSEApiClient client) {
 
+        final String instrumentsMap =
+                SerializationUtils.serializeToString(getFundAccountMapping(client));
+        /* TODO : Logging below for debugging purpose - CATS-379 */
+        LOGGER.info("Instrument serialized map size: " + instrumentsMap.length());
+
         return InvestmentAccount.nxBuilder()
                 .withPortfolios(Collections.singletonList(toPortfolioModule(client)))
                 .withZeroCashBalance(Currency.SEK)
@@ -53,14 +58,14 @@ public class CustodyAccountResponse extends BaseResponse {
                                         AccountIdentifier.create(
                                                 Type.TINK, getAccountNumberBasedOnInvestmentType()))
                                 .build())
-                .putPayload(
-                        AccountPayloadKeys.FUND_ACCOUNT_NUMBER,
-                        SerializationUtils.serializeToString(getFundAccountMapping(client)))
+                .putPayload(AccountPayloadKeys.FUND_ACCOUNT_NUMBER, instrumentsMap)
                 .build();
     }
 
     private Map<String, String> getFundAccountMapping(HandelsbankenSEApiClient client) {
         final List<InstrumentModule> instruments = toInstrumentModules(client);
+        /* TODO : Logging below for debugging purpose - CATS-379 */
+        LOGGER.info("Number of instruments: " + instruments.size());
         return instruments.stream()
                 .map(InstrumentModule::getInstrumentIdModule)
                 .map(
