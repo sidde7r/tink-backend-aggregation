@@ -2571,7 +2571,7 @@ maven_install(
         "com.google.guava:guava:23.1-jre",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
-        "org.codehaus.woodstox:stax2-api:3.1.1",
+        "org.codehaus.woodstox:stax2-api:4.1",
     ],
     excluded_artifacts = [
         # Keep this list empty please
