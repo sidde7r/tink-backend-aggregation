@@ -205,52 +205,37 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                 throw new PaymentAuthorizationTimeOutException();
             }
 
-            handlePaymentAuthorizationErrors();
+            OpenIdError openIdError =
+                    apiClient
+                            .getOpenIdError()
+                            .orElseThrow(UkOpenBankingV31PisUtils::createFailedTransferException);
+
+            String errorType = openIdError.getErrorType();
+            String errorMessage = openIdError.getErrorMessage();
+
+            if (isKnownOpenIdError(errorType)) {
+                if (Strings.isNullOrEmpty(errorMessage)) {
+                    throw new PaymentAuthorizationException();
+                } else if (PaymentAuthorizationCancelledByUserException.isFuzzyMatch(openIdError)) {
+                    throw new PaymentAuthorizationCancelledByUserException(openIdError);
+                } else if (PaymentAuthorizationTimeOutException.isFuzzyMatch(openIdError)) {
+                    throw new PaymentAuthorizationTimeOutException(openIdError);
+                } else if (PaymentAuthorizationFailedByUserException.isFuzzyMatch(openIdError)) {
+                    throw new PaymentAuthorizationFailedByUserException(openIdError);
+                } else {
+                    // Log unknown error message and return the generic end user message for when
+                    // payment wasn't authorised.
+                    log.warn(
+                            "Unknown error message from bank during payment authorisation: {}",
+                            errorMessage);
+                    throw new PaymentAuthorizationException();
+                }
+            }
+
+            throw UkOpenBankingV31PisUtils.createFailedTransferException();
         }
 
         return paymentAuthenticator.getPaymentResponse();
-    }
-
-    /**
-     * Handles known types of openID errors. If openID error type is not known a generic transfer
-     * failed exception is thrown.
-     */
-    private void handlePaymentAuthorizationErrors() throws PaymentAuthorizationException {
-        OpenIdError openIdError = getOpenIdErrorOrThrowTransferFailedException();
-
-        String errorType = openIdError.getErrorType();
-        String errorMessage = openIdError.getErrorMessage();
-
-        if (isKnownOpenIdError(errorType)) {
-            if (Strings.isNullOrEmpty(errorMessage)) {
-                throw new PaymentAuthorizationException();
-            } else if (PaymentAuthorizationCancelledByUserException.isFuzzyMatch(openIdError)) {
-                throw new PaymentAuthorizationCancelledByUserException(openIdError);
-            } else if (PaymentAuthorizationTimeOutException.isFuzzyMatch(openIdError)) {
-                throw new PaymentAuthorizationTimeOutException(openIdError);
-            } else if (PaymentAuthorizationFailedByUserException.isFuzzyMatch(openIdError)) {
-                throw new PaymentAuthorizationFailedByUserException(openIdError);
-            } else {
-                // Log unknown error message and return the generic end user message for when
-                // payment wasn't authorised.
-                log.warn(
-                        "Unknown error message from bank during payment authorisation: {}",
-                        errorMessage);
-                throw new PaymentAuthorizationException();
-            }
-        }
-
-        throw UkOpenBankingV31PisUtils.createFailedTransferException();
-    }
-
-    /**
-     * Returns an openIdError which contains information from the callback data. If not present
-     * throws a generic payment failed exception.
-     */
-    private OpenIdError getOpenIdErrorOrThrowTransferFailedException() {
-        return apiClient
-                .getOpenIdError()
-                .orElseThrow(UkOpenBankingV31PisUtils::createFailedTransferException);
     }
 
     /**
