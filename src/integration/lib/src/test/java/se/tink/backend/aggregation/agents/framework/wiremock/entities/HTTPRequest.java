@@ -18,13 +18,47 @@ public class HTTPRequest {
     private final String path;
     private final List<NameValuePair> query;
     private final List<Pair<String, String>> requestHeaders;
-    private final String requestBody;
+    private String requestBody;
+    private String expectedState;
 
-    public HTTPRequest(
-            String method,
-            String url,
-            List<Pair<String, String>> requestHeaders,
-            String requestBody) {
+    public static class Builder {
+        private final String method;
+        private final String url;
+        private final List<Pair<String, String>> requestHeaders;
+        private String requestBody;
+        private String expectedState;
+
+        public Builder(
+                final String method,
+                final String url,
+                final List<Pair<String, String>> requestHeaders) {
+            this.method = method;
+            this.url = url;
+            this.requestHeaders = requestHeaders;
+        }
+
+        public Builder withRequestBody(final String requestBody) {
+            this.requestBody = requestBody;
+            return this;
+        }
+
+        public Builder withExpectedState(final String expectedState) {
+            this.expectedState = expectedState;
+            return this;
+        }
+
+        public HTTPRequest build() {
+            HTTPRequest request = new HTTPRequest(method, url, requestHeaders);
+            request.requestBody = requestBody;
+            request.expectedState = expectedState;
+            return request;
+        }
+    }
+
+    private HTTPRequest(
+            final String method,
+            final String url,
+            final List<Pair<String, String>> requestHeaders) {
 
         URI uri = URI.create(url);
 
@@ -33,7 +67,10 @@ public class HTTPRequest {
 
         this.method = method;
         this.requestHeaders = requestHeaders;
-        this.requestBody = requestBody;
+    }
+
+    public Optional<String> getExpectedState() {
+        return Optional.ofNullable(expectedState);
     }
 
     private NameValuePair urlEncode(final NameValuePair pair) {
@@ -44,10 +81,6 @@ public class HTTPRequest {
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public HTTPRequest(String method, String url, List<Pair<String, String>> requestHeaders) {
-        this(method, url, requestHeaders, null);
     }
 
     public List<NameValuePair> getQuery() {

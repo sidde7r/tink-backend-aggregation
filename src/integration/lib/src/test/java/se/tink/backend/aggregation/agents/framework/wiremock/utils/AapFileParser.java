@@ -40,7 +40,7 @@ public class AapFileParser implements RequestResponseParser {
         for (int currentPairIndex = 0; currentPairIndex < totalPairAmount; currentPairIndex++) {
             List<String> requestLines =
                     lines.subList(
-                            requestStartIndices.get(currentPairIndex) + 1,
+                            requestStartIndices.get(currentPairIndex),
                             responseStartIndices.get(currentPairIndex));
             HTTPRequest request = parseRequest(requestLines);
             int responseDataEndLine =
@@ -48,8 +48,7 @@ public class AapFileParser implements RequestResponseParser {
                             ? lines.size()
                             : requestStartIndices.get(currentPairIndex + 1);
             List<String> responseLines =
-                    lines.subList(
-                            responseStartIndices.get(currentPairIndex) + 1, responseDataEndLine);
+                    lines.subList(responseStartIndices.get(currentPairIndex), responseDataEndLine);
             HTTPResponse response = parseResponse(responseLines);
             pairs.add(new Pair<>(request, response));
         }
@@ -64,33 +63,40 @@ public class AapFileParser implements RequestResponseParser {
                 .collect(Collectors.toList());
     }
 
-    private HTTPRequest parseRequest(List<String> requestLines) {
+    private HTTPRequest parseRequest(final List<String> requestLines) {
 
+        Optional<String> expectedState = parseExpectedState(requestLines);
         String requestMethod = parseRequestMethod(requestLines);
         String requestURL = removeHost(parseRequestURL(requestLines));
         List<Pair<String, String>> requestHeaders = parseHeaders(requestLines);
         Optional<String> requestBody = parseBody(requestLines);
-        return requestBody
-                .map(body -> new HTTPRequest(requestMethod, requestURL, requestHeaders, body))
-                .orElse(new HTTPRequest(requestMethod, requestURL, requestHeaders));
+
+        HTTPRequest.Builder httpRequestBuilder =
+                new HTTPRequest.Builder(requestMethod, requestURL, requestHeaders);
+        requestBody.ifPresent(body -> httpRequestBuilder.withRequestBody(body));
+        expectedState.ifPresent(state -> httpRequestBuilder.withExpectedState(state));
+        return httpRequestBuilder.build();
     }
 
     private HTTPResponse parseResponse(List<String> responseLines) {
 
+        Optional<String> toState = parseToState(responseLines);
         Integer statusCode = parseStatusCode(responseLines);
         List<Pair<String, String>> responseHeaders = parseHeaders(responseLines);
         Optional<String> responseBody = parseBody(responseLines);
-        return responseBody
-                .map(body -> new HTTPResponse(responseHeaders, statusCode, body))
-                .orElse(new HTTPResponse(responseHeaders, statusCode));
+        HTTPResponse.Builder httpResponseBuilder =
+                new HTTPResponse.Builder(responseHeaders, statusCode);
+        responseBody.ifPresent(body -> httpResponseBuilder.withResponseBody(body));
+        toState.ifPresent(state -> httpResponseBuilder.withToState(state));
+        return httpResponseBuilder.build();
     }
 
     private List<Pair<String, String>> parseHeaders(List<String> rawData) {
         /*
-         * Starting from second line, we have response headers. Headers continue until empty line
+         * Starting from third line, we have response headers. Headers continue until empty line
          */
         int firstEmptyLineIndex = rawData.indexOf("");
-        return rawData.subList(1, firstEmptyLineIndex).stream()
+        return rawData.subList(2, firstEmptyLineIndex).stream()
                 .map(this::parseHeader)
                 .collect(Collectors.toList());
     }
@@ -104,7 +110,7 @@ public class AapFileParser implements RequestResponseParser {
 
     private Optional<String> parseBody(List<String> rawData) {
         /*
-         * Starting from second line, we check where is the first empty line, after that if there is
+         * Starting from third line, we check where is the first empty line, after that if there is
          * a line which is not empty, it must be the body
          */
         int firstEmptyLineIndex = rawData.indexOf("");
@@ -114,15 +120,55 @@ public class AapFileParser implements RequestResponseParser {
     }
 
     private String parseRequestMethod(List<String> rawData) {
-        return rawData.get(0).trim().split(" ")[0];
+        return rawData.get(1).trim().split(" ")[0];
     }
 
     private String parseRequestURL(List<String> rawData) {
-        return rawData.get(0).trim().split(" ")[1];
+        return rawData.get(1).trim().split(" ")[1];
     }
 
     private Integer parseStatusCode(List<String> rawData) {
-        return new Integer(rawData.get(0).trim());
+        return new Integer(rawData.get(1).trim());
+    }
+
+    private Optional<String> parseToState(List<String> rawData) {
+        String[] firstLineWords = rawData.get(0).split(" ");
+        if (firstLineWords.length < 3) {
+            return Optional.empty();
+        }
+        if (firstLineWords.length == 3) {
+            throw new UnsupportedOperationException(
+                    String.format(
+                            "Invalid operation in line %s. An operation must have an argument",
+                            rawData.get(0)));
+        }
+        if (!firstLineWords[2].equalsIgnoreCase("SET")) {
+            throw new UnsupportedOperationException(
+                    String.format(
+                            "Invalid operation: %s in line %s. A response can only perform SET operation on state",
+                            firstLineWords, rawData.get(0)));
+        }
+        return Optional.of(firstLineWords[3]);
+    }
+
+    private Optional<String> parseExpectedState(List<String> rawData) {
+        String[] firstLineWords = rawData.get(0).split(" ");
+        if (firstLineWords.length < 3) {
+            return Optional.empty();
+        }
+        if (firstLineWords.length == 3) {
+            throw new UnsupportedOperationException(
+                    String.format(
+                            "Invalid operation in line %s. An operation must have an argument",
+                            rawData.get(0)));
+        }
+        if (!firstLineWords[2].equalsIgnoreCase("MATCH")) {
+            throw new UnsupportedOperationException(
+                    String.format(
+                            "Invalid operation: %s in line %s. A response can only perform MATCH operation on state",
+                            firstLineWords, rawData.get(0)));
+        }
+        return Optional.of(firstLineWords[3]);
     }
 
     private String removeHost(final String url) {

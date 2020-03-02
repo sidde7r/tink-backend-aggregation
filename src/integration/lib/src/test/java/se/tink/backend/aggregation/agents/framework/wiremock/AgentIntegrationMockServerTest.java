@@ -48,6 +48,8 @@ public class AgentIntegrationMockServerTest {
 
             final MappingBuilder builder = parseRequestType(request);
 
+            request.getExpectedState()
+                    .ifPresent(state -> builder.inScenario("test").whenScenarioStateIs(state));
             request.getQuery()
                     .forEach(
                             queryParam ->
@@ -63,7 +65,8 @@ public class AgentIntegrationMockServerTest {
             res.withStatus(response.getStatusCode());
             response.getResponseBody().ifPresent(res::withBody);
             builder.willReturn(res);
-            builder.inScenario("test");
+            response.getToState()
+                    .ifPresent(state -> builder.inScenario("test").willSetStateTo(state));
             wireMockRule.stubFor(builder);
         }
     }
