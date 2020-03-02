@@ -8,6 +8,7 @@ require_once('onesky.php');
 $apiKey="E8omlD3G9COIQJQFAsFivgtQuoqmgEsK";
 $apiSecret="oMUiSmpQvFIiJo4iY1M9RdLkuo5K11ng";
 $projectId = "154300";
+$poDir = dirname(__FILE__, 3) . '/po';
 $locales = array("de", "es", "fr", "it", "nl", "pt", "sv");
 
 // Init the client.
@@ -24,9 +25,9 @@ foreach ($locales as $locale) {
         'locale' => $locale
     ));
 
-    file_put_contents('../../po/'.$locale.'.po', $response);
+    file_put_contents($poDir.'/'.$locale.'.po', $response);
 
-    exec('msguniq --use-first --no-location ../../po/' .$locale.'.po' . ' -o ../../po/' .$locale.'.po');
+    exec('msguniq --use-first --no-location ' . $poDir.'/'.$locale.'.po' . ' -o ' .$poDir.'/'.$locale.'.po');
 }
 
 ?>

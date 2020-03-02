@@ -18,7 +18,7 @@ class OneSkyClient {
         echo "Uploading '" . $filename . "'..." . PHP_EOL;
         $response = $this->client->files('upload', array(
             'project_id'                => $projectId,
-            'file'                      => '../../po/' . $filename,
+            'file'                      => $filename,
             'file_format'               => 'GNU_PO',
             'locale'                    => $this->baseLocale,
             'is_keeping_all_strings'    => FALSE
