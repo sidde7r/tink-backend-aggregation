@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis.UkOpenBankingPisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.Step;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Pis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.DomesticPisConfig;
@@ -203,8 +202,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
             if (e.getError() instanceof ThirdPartyAppError
                     && ThirdPartyAppError.TIMED_OUT.equals(e.getError())) {
-                throw UkOpenBankingV31PisUtils.createCancelledTransferException(
-                        EndUserMessage.PIS_AUTHORISATION_TIMEOUT);
+                throw new PaymentAuthorizationTimeOutException();
             }
 
             handlePaymentAuthorizationErrors();

@@ -81,11 +81,6 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
                                         String.format("%s unknown paymentstatus!", consentStatus)));
     }
 
-    public static class EndUserMessage {
-        public static final String PIS_AUTHORISATION_TIMEOUT =
-                "Authorisation of payment timed out. Please try again.";
-    }
-
     public static AccountIdentifier toAccountIdentifier(String schemeName, String identification) {
 
         switch (schemeName) {
