@@ -73,7 +73,10 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
 
         RegisterTransferResponse registerTransfer =
                 apiClient.registerTransfer(
-                        transfer.getAmount().getValue(), recipientAccountId, sourceAccountId);
+                        transfer.getAmount().getValue(),
+                        recipientAccountId,
+                        transfer.getDestinationMessage(),
+                        sourceAccountId);
 
         RegisteredTransfersResponse registeredTransfers =
                 apiClient.registeredTransfers(registerTransfer.getLinks().getNextOrThrow());
