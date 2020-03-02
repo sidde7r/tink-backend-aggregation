@@ -2,7 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.entities.AmountEntity;
@@ -13,49 +14,36 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class TransactionEntity {
-    @JsonProperty("AccountId")
     private String accountId;
 
-    @JsonProperty("TransactionId")
     private String transactionId;
 
-    @JsonProperty("TransactionReference")
     private String transactionReference;
 
-    @JsonProperty("StatementReference")
     private String statementReference;
 
-    @JsonProperty("Amount")
     private AmountEntity amount;
 
-    @JsonProperty("ChargeAmount")
     private AmountEntity chargeAmount;
 
-    @JsonProperty("CreditDebitIndicator")
     private UkOpenBankingApiDefinitions.CreditDebitIndicator creditDebitIndicator;
 
-    @JsonProperty("Status")
     private UkOpenBankingApiDefinitions.EntryStatusCode status;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @JsonProperty("BookingDateTime")
     private Date bookingDateTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @JsonProperty("ValueDateTime")
     private Date valueDateTime;
 
-    @JsonProperty("TransactionInformation")
     private String transactionInformation;
 
-    @JsonProperty("BankTransactionCode")
     private BankTransactionCodeEntity bankTransactionCode;
 
-    @JsonProperty("ProprietaryBankTransactionCode")
     private ProprietaryBankTransactionCodeEntity proprietaryBankTransactionCode;
 
-    @JsonProperty("Balance")
     private BalanceEntity balance;
 
     /*
@@ -79,25 +67,18 @@ public class TransactionEntity {
 
     @JsonIgnore private String addressLine;
 
-    @JsonProperty("MerchantDetails")
     private Object merchantDetails;
 
-    @JsonProperty("CreditorAgent")
     private Object creditorAgent;
 
-    @JsonProperty("DebtorAgent")
     private Object debtorAgent;
 
-    @JsonProperty("CardInstrument")
     private Object cardInstrument;
 
-    @JsonProperty("SupplementaryData")
     private Object supplementaryData;
 
-    @JsonProperty("QuotationDate")
     private Object quotationDate;
 
-    @JsonProperty("ExchangeRate")
     private Object exchangeRate;
 
     public Transaction toTinkTransaction() {

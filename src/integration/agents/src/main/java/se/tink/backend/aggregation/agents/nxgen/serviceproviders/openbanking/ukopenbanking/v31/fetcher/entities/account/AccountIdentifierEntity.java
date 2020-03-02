@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Optional;
+import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
@@ -11,38 +14,21 @@ import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
 @JsonObject
+@Data
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccountIdentifierEntity {
     @JsonProperty("SchemeName")
     private ExternalAccountIdentification4Code identifierType;
 
-    @JsonProperty("Identification")
     private String identification;
 
     @JsonProperty("Name")
-    private String name;
+    private String ownerName;
 
-    @JsonProperty("SecondaryIdentification")
     private String secondaryIdentification;
 
     // TODO: find OBBranchAndFinancialInstitutionIdentification5 definition
-    @JsonProperty("Servicer")
     private String servicer;
-
-    public String getIdentification() {
-        return identification;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSecondaryIdentification() {
-        return secondaryIdentification;
-    }
-
-    public ExternalAccountIdentification4Code getIdentifierType() {
-        return identifierType;
-    }
 
     public Optional<AccountIdentifier> toAccountIdentifier(String accountName) {
         switch (identifierType) {

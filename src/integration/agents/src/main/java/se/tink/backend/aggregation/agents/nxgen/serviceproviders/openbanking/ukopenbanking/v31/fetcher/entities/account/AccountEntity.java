@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.Data;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.IdentifiableAccount;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
+@Data
 public class AccountEntity implements IdentifiableAccount {
     @JsonProperty("AccountId")
     private String accountId;
@@ -39,14 +41,14 @@ public class AccountEntity implements IdentifiableAccount {
     private String description;
 
     @JsonProperty("Account")
-    private List<AccountIdentifierEntity> identifierEntity;
+    private List<AccountIdentifierEntity> identifiers;
 
     public static TransactionalAccount toTransactionalAccount(
             AccountEntity account, AccountBalanceEntity balance, String partyName) {
 
         String accountNumber = account.getUniqueIdentifier();
         String accountName = account.getDisplayName();
-        String holder = account.getDefaultIdentifier().getName();
+        String holder = account.getDefaultIdentifier().getOwnerName();
 
         HolderName holderName =
                 Objects.nonNull(holder) ? new HolderName(holder) : new HolderName(partyName);
@@ -57,7 +59,7 @@ public class AccountEntity implements IdentifiableAccount {
          */
 
         Optional<String> revolutAccount =
-                account.getIdentifierEntity().stream()
+                account.getIdentifiers().stream()
                         .filter(
                                 e ->
                                         e.getIdentifierType()
@@ -85,7 +87,7 @@ public class AccountEntity implements IdentifiableAccount {
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.from(account.getAccountType()).get())
                         .withoutFlags()
-                        .withBalance(BalanceModule.of(balance.getBalance()))
+                        .withBalance(BalanceModule.of(balance.calculateAccountSpecificBalance()))
                         .withId(idModuleBuilder.build())
                         .setApiIdentifier(account.getAccountId())
                         .addHolderName(holderName.toString())
@@ -97,14 +99,14 @@ public class AccountEntity implements IdentifiableAccount {
 
     public static CreditCardAccount toCreditCardAccount(
             AccountEntity account, AccountBalanceEntity balance, String partyName) {
-        String holder = account.getDefaultIdentifier().getName();
+        String holder = account.getDefaultIdentifier().getOwnerName();
 
         HolderName creditCardHolderName =
                 Objects.nonNull(holder) ? new HolderName(holder) : new HolderName(partyName);
 
         return CreditCardAccount.builder(
                         account.getUniqueIdentifier(),
-                        balance.getBalance(),
+                        balance.calculateAccountSpecificBalance(),
                         balance.getAvailableCredit()
                                 .orElseThrow(
                                         () ->
@@ -122,7 +124,7 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     public AccountIdentifierEntity getDefaultIdentifier() {
-        return identifierEntity.stream()
+        return identifiers.stream()
                 .filter(
                         e ->
                                 e.getIdentifierType()
@@ -148,7 +150,7 @@ public class AccountEntity implements IdentifiableAccount {
 
     public String getUniqueIdentifier() {
 
-        if (identifierEntity == null || identifierEntity.size() == 0) {
+        if (identifiers == null || identifiers.size() == 0) {
             throw new IllegalStateException("Account details did not specify any identifier.");
         }
 
@@ -169,8 +171,8 @@ public class AccountEntity implements IdentifiableAccount {
             return nickname;
         }
 
-        if (getDefaultIdentifier().getName() != null) {
-            return getDefaultIdentifier().getName();
+        if (getDefaultIdentifier().getOwnerName() != null) {
+            return getDefaultIdentifier().getOwnerName();
         }
 
         return getDefaultIdentifier().getIdentification();
@@ -187,9 +189,5 @@ public class AccountEntity implements IdentifiableAccount {
     @Override
     public String getBankIdentifier() {
         return accountId;
-    }
-
-    public List<AccountIdentifierEntity> getIdentifierEntity() {
-        return identifierEntity;
     }
 }

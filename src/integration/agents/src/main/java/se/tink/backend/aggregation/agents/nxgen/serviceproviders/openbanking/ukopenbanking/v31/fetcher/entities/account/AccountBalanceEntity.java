@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalLimitType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.entities.CreditLineEntity;
@@ -12,30 +14,22 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Data
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccountBalanceEntity {
-    @JsonProperty("AccountId")
     private String accountId;
 
-    @JsonProperty("Amount")
-    private AmountEntity balance;
+    private AmountEntity amount;
 
-    @JsonProperty("CreditDebitIndicator")
     private UkOpenBankingApiDefinitions.CreditDebitIndicator creditDebitIndicator;
 
-    @JsonProperty("Type")
     private UkOpenBankingApiDefinitions.AccountBalanceType type;
 
-    @JsonProperty("DateTime")
     private String dateTime;
 
-    @JsonProperty("CreditLine")
     private List<CreditLineEntity> creditLine;
 
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public ExactCurrencyAmount getBalance() {
+    public ExactCurrencyAmount calculateAccountSpecificBalance() {
 
         ExactCurrencyAmount total = getSignedAmount();
 
@@ -59,6 +53,10 @@ public class AccountBalanceEntity {
                 .orElse(total);
     }
 
+    public ExactCurrencyAmount getAsCurrencyAmount() {
+        return amount;
+    }
+
     public Optional<ExactCurrencyAmount> getAvailableCredit() {
         return ExternalLimitType.getPreferredCreditLineEntity(creditLine)
                 .map(CreditLineEntity::getAmount);
@@ -66,15 +64,11 @@ public class AccountBalanceEntity {
 
     private ExactCurrencyAmount getSignedAmount() {
         // Remove sign included in balance value
-        ExactCurrencyAmount unsignedAmount = balance.abs();
+        ExactCurrencyAmount unsignedAmount = amount.abs();
 
         // Apply sign based on credit/debit indicator
         return creditDebitIndicator == UkOpenBankingApiDefinitions.CreditDebitIndicator.CREDIT
                 ? unsignedAmount
                 : unsignedAmount.negate();
-    }
-
-    public UkOpenBankingApiDefinitions.AccountBalanceType getType() {
-        return type;
     }
 }

@@ -2,22 +2,23 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class BaseV31Response<T> {
 
     private T data;
 
-    @JsonProperty("Links")
     private Map<String, String> links;
 
-    @JsonProperty("Meta")
     private Map<String, String> meta;
 
-    protected Optional<T> getData() {
+    public Optional<T> getData() {
         return Optional.ofNullable(data);
     }
 

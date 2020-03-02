@@ -11,6 +11,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.account.AccountBalanceV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.account.AccountsV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.CreditCardAccountExtractor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.CreditCardAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.DefaultCreditCardBalanceMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.PrioritizedValueExtractor;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -21,11 +25,22 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
 
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
     private final PersistentStorage persistentStorage;
+    private final CreditCardAccountMapper creditCardAccountMapper;
 
     public UkOpenBankingV31Ais(
             UkOpenBankingAisConfig ukOpenBankingAisConfig, PersistentStorage persistentStorage) {
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
         this.persistentStorage = persistentStorage;
+        this.creditCardAccountMapper = defaultCreditCardAccountMapper();
+    }
+
+    public UkOpenBankingV31Ais(
+            UkOpenBankingAisConfig ukOpenBankingAisConfig,
+            PersistentStorage persistentStorage,
+            CreditCardAccountMapper creditCardAccountMapper) {
+        this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
+        this.persistentStorage = persistentStorage;
+        this.creditCardAccountMapper = creditCardAccountMapper;
     }
 
     @Override
@@ -65,12 +80,15 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
     @Override
     public UkOpenBankingAccountFetcher<?, ?, CreditCardAccount> makeCreditCardAccountFetcher(
             UkOpenBankingApiClient apiClient) {
+        CreditCardAccountExtractor extractor =
+                new CreditCardAccountExtractor(creditCardAccountMapper);
+
         return new UkOpenBankingAccountFetcher<>(
                 ukOpenBankingAisConfig,
                 apiClient,
                 AccountsV31Response.class,
                 AccountBalanceV31Response.class,
-                AccountsV31Response::toCreditCardAccount,
+                extractor::toCreditCardAccount,
                 new IdentityDataV31Fetcher(apiClient));
     }
 
@@ -84,5 +102,10 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                         apiClient,
                         AccountTransactionsV31Response.class,
                         AccountTransactionsV31Response::toCreditCardPaginationResponse));
+    }
+
+    private CreditCardAccountMapper defaultCreditCardAccountMapper() {
+        return new CreditCardAccountMapper(
+                new DefaultCreditCardBalanceMapper(new PrioritizedValueExtractor()));
     }
 }
