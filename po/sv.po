@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2019-11-14 13:23+0000\n"
-"PO-Revision-Date: 2019-11-14 13:23+0000\n"
+"POT-Creation-Date: 2020-03-03 12:33+0000\n"
+"PO-Revision-Date: 2020-03-03 12:33+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: sv\n"
@@ -269,6 +269,9 @@ msgid ""
 msgstr ""
 "Du har osignerade överföringar sedan tidigare. Var god signera dessa i din "
 "bank-app innan du utför en ny överföring."
+
+msgid "The transfer amount is larger than what is available on the account."
+msgstr "Överföringsbeloppet är större än vad som finns på kontot."
 
 msgid "Invalid destination account"
 msgstr "Mottagarkontot är inte giltigt"
@@ -789,7 +792,3 @@ msgstr "Överföringen nekades av banken"
 
 msgid "Source and destination account must not be the same."
 msgstr "Avsändarkonto och mottagarkonto kan inte vara samma."
-
-msgid "The transfer amount is larger than what is available on the account."
-msgstr "Överföringsbeloppet är större än vad som är tillgängligt på kontot."
-
