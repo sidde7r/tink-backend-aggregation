@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -11,7 +10,10 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationFailedByUserException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
@@ -163,7 +165,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         return authenticateAndCreatePisConsent(paymentRequest);
     }
 
-    private PaymentResponse authenticateAndCreatePisConsent(PaymentRequest paymentRequest) {
+    private PaymentResponse authenticateAndCreatePisConsent(PaymentRequest paymentRequest)
+            throws PaymentAuthorizationException {
 
         UkOpenBankingPisAuthenticator paymentAuthenticator =
                 new UkOpenBankingPisAuthenticator(
@@ -213,35 +216,29 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
      * Handles known types of openID errors. If openID error type is not known a generic transfer
      * failed exception is thrown.
      */
-    private void handlePaymentAuthorizationErrors() {
+    private void handlePaymentAuthorizationErrors() throws PaymentAuthorizationException {
         OpenIdError openIdError = getOpenIdErrorOrThrowTransferFailedException();
 
         String errorType = openIdError.getErrorType();
         String errorMessage = openIdError.getErrorMessage();
 
         if (isKnownOpenIdError(errorType)) {
-            String endUserMessage = EndUserMessage.PAYMENT_NOT_AUTHORISED_BY_USER;
-
             if (Strings.isNullOrEmpty(errorMessage)) {
-                endUserMessage = EndUserMessage.PAYMENT_NOT_AUTHORISED_BY_USER;
-            } else if (StringUtils.containsIgnoreCase(errorMessage, "cancelled")) {
-                endUserMessage = EndUserMessage.PIS_AUTHORISATION_CANCELLED;
-            } else if (StringUtils.containsIgnoreCase(
-                    errorMessage, "not completed in the allotted time")) {
-                endUserMessage = EndUserMessage.PIS_AUTHORISATION_TIMEOUT;
-            } else if (StringUtils.containsIgnoreCase(
-                    errorMessage, "User failed to authenticate")) {
-                endUserMessage = EndUserMessage.PIS_AUTHORISATION_FAILED_USER_ERROR;
+                throw new PaymentAuthorizationException();
+            } else if (PaymentAuthorizationCancelledByUserException.isFuzzyMatch(openIdError)) {
+                throw new PaymentAuthorizationCancelledByUserException(openIdError);
+            } else if (PaymentAuthorizationTimeOutException.isFuzzyMatch(openIdError)) {
+                throw new PaymentAuthorizationTimeOutException(openIdError);
+            } else if (PaymentAuthorizationFailedByUserException.isFuzzyMatch(openIdError)) {
+                throw new PaymentAuthorizationFailedByUserException(openIdError);
             } else {
                 // Log unknown error message and return the generic end user message for when
                 // payment wasn't authorised.
                 log.warn(
                         "Unknown error message from bank during payment authorisation: {}",
                         errorMessage);
-                endUserMessage = EndUserMessage.PAYMENT_NOT_AUTHORISED_BY_USER;
+                throw new PaymentAuthorizationException();
             }
-
-            throw UkOpenBankingV31PisUtils.createCancelledTransferException(endUserMessage);
         }
 
         throw UkOpenBankingV31PisUtils.createFailedTransferException();
