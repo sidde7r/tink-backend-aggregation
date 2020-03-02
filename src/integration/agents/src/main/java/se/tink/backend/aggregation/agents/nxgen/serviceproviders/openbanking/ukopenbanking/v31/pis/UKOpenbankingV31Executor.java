@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationFailedByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
@@ -366,8 +367,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         // payment controller with TransferExecutionException usage. Ticket PAY2-188 will
         // address handling the REJECTED status, then we can remove the logic from here.
         if (PaymentStatus.REJECTED.equals(paymentResponse.getPayment().getStatus())) {
-            throw UkOpenBankingV31PisUtils.createCancelledTransferException(
-                    EndUserMessage.PAYMENT_REJECTED_BY_BANK);
+            throw new PaymentRejectedException();
         }
 
         return new PaymentMultiStepResponse(

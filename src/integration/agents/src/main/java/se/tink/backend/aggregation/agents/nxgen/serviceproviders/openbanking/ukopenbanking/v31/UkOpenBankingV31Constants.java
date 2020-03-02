@@ -84,9 +84,6 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
     public static class EndUserMessage {
         public static final String PIS_AUTHORISATION_TIMEOUT =
                 "Authorisation of payment timed out. Please try again.";
-
-        public static final String PAYMENT_REJECTED_BY_BANK =
-                "The payment was rejected by the bank.";
     }
 
     public static AccountIdentifier toAccountIdentifier(String schemeName, String identification) {
