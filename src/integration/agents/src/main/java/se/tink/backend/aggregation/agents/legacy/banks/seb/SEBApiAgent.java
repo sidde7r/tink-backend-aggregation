@@ -98,6 +98,7 @@ import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceHoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InvestmentDataRequest;
 import se.tink.backend.aggregation.agents.banks.seb.model.IpsHoldingEntity;
+import se.tink.backend.aggregation.agents.banks.seb.model.LoginErrorResponseEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.MatchableTransferRequestEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW2581;
 import se.tink.backend.aggregation.agents.banks.seb.model.PCBW2582;
@@ -802,7 +803,10 @@ public class SEBApiAgent extends AbstractAgent
         log.info("Initiating BankID");
         final ClientResponse response =
                 resource(AUTH_URL).accept(MediaType.APPLICATION_JSON).post(ClientResponse.class);
-
+        if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
+            throw BankServiceError.NO_BANK_SERVICE.exception(
+                    response.getEntity(LoginErrorResponseEntity.class).getInfoText());
+        }
         final AuthenticationResponse authenticationResponse =
                 response.getEntity(AuthenticationResponse.class);
         supplementalRequester.openBankId(authenticationResponse.getAutoStartToken(), false);
