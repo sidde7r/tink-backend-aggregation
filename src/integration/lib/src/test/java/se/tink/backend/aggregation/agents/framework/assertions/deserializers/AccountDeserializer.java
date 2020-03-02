@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.agents.rpc.Account;
@@ -32,17 +31,16 @@ public class AccountDeserializer extends JsonDeserializer<List<Account>> {
             objectNode.remove("exactBalance");
             objectNode.remove("exactAvailableCredit");
             Account account = new ObjectMapper().readValue(objectNode.toString(), Account.class);
-
             if (exactBalance != null) {
                 account.setExactBalance(
-                        new ExactCurrencyAmount(
-                                new BigDecimal(exactBalance.get("value").asDouble()),
+                        ExactCurrencyAmount.of(
+                                exactBalance.get("exactValue").asText(),
                                 exactBalance.get("currencyCode").asText()));
             }
             if (exactAvailableCredit != null) {
                 account.setExactAvailableCredit(
-                        new ExactCurrencyAmount(
-                                new BigDecimal(exactAvailableCredit.get("value").asDouble()),
+                        ExactCurrencyAmount.of(
+                                exactAvailableCredit.get("exactValue").asText(),
                                 exactAvailableCredit.get("currencyCode").asText()));
             }
             entities.add(account);
