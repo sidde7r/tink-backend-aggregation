@@ -7,8 +7,8 @@ java_library(
         "//src/integration:__subpackages__",
     ],
     deps = [
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_io_commons_io",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
     ],
 )

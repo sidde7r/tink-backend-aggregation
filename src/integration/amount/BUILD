@@ -5,8 +5,8 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//src/integration:__subpackages__"],
     deps = [
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],
 )

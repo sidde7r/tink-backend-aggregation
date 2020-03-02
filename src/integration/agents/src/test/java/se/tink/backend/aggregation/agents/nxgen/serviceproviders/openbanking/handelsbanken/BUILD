@@ -27,9 +27,9 @@ junit_test(
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],
 )

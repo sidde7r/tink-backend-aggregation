@@ -28,10 +28,10 @@ java_library(
         "//src/libraries/metrics:collection",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:io_dropwizard_dropwizard_metrics",
         "//third_party:javax_validation_validation_api",
         "//third_party:lombok_libs",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
     ],
 )

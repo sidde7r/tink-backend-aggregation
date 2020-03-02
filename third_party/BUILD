@@ -71,85 +71,18 @@ java_library(
 )
 
 java_library(
-    name = "com_fasterxml_jackson_core_jackson_annotations",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-    ],
-)
-
-java_library(
-    name = "com_fasterxml_jackson_core_jackson_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-    ],
-)
-
-java_library(
-    name = "com_fasterxml_jackson_core_jackson_databind",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-    ],
-    runtime_deps = [
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-    ],
-)
-
-java_library(
-    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
-    visibility = ["//visibility:public"],
-    exports = [
-        # *base apparently needs to exported alongside *provider
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_base//jar",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
-    ],
-    runtime_deps = [
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
-    ],
-)
-
-java_library(
-    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_smile",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_dataformat_jackson_dataformat_smile//jar",
-    ],
-    runtime_deps = [
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-    ],
-)
-
-java_library(
     name = "com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
     visibility = ["//visibility:public"],
     exports = [
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_xml//jar",
     ],
     runtime_deps = [
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
-        "@javax_xml_stream_stax_api//jar",
-        "@org_codehaus_woodstox_stax2_api//jar",
-    ],
-)
-
-java_library(
-    # TODO check is this used?
-    name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_datatype_jackson_datatype_joda//jar",
-    ],
-    runtime_deps = [
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+        "@aggregation//:javax_xml_stream_stax_api",
+        "@aggregation//:org_codehaus_woodstox_stax2_api",
     ],
 )
 
@@ -172,11 +105,11 @@ java_library(
         "@com_github_tomakehurst_wiremock//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@asm_asm//jar",
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
         "@com_jayway_jsonpath_json_path//jar",
         "@commons_codec_commons_codec//jar",
@@ -281,7 +214,7 @@ java_library(
         "@com_netflix_governator//jar",
     ],
     runtime_deps = [
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@com_google_inject_extensions_guice_assistedinject//jar",
         "@com_google_inject_extensions_guice_grapher//jar",
         "@com_google_inject_extensions_guice_multibindings//jar",
@@ -308,14 +241,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_googlecode_gettext_commons_gettext_commons//jar",
-    ],
-)
-
-java_library(
-    name = "com_googlecode_libphonenumber_libphonenumber",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_googlecode_libphonenumber_libphonenumber//jar",
     ],
 )
 
@@ -411,8 +336,8 @@ java_library(
         "@de_jollyday_jollyday//jar",
     ],
     runtime_deps = [
+        "@aggregation//:joda_time_joda_time",
         "@javax_xml_bind_jaxb_api//jar",
-        "@joda_time_joda_time//jar",
     ],
 )
 
@@ -449,7 +374,7 @@ java_library(
         "@io_dropwizard_dropwizard_configuration//jar",
     ],
     runtime_deps = [
-        "@com_fasterxml_jackson_core_jackson_core//jar",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@commons_lang_commons_lang//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
@@ -465,6 +390,13 @@ java_library(
     ],
     runtime_deps = [
         ":io_dropwizard_dropwizard_jersey",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_joda",
+        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
+        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
+        "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@aggregation//:com_google_guava_guava",
         "@ch_qos_logback_logback_classic//jar",
         "@ch_qos_logback_logback_core//jar",
@@ -478,16 +410,9 @@ java_library(
         "@com_codahale_metrics_metrics_logback//jar",
         "@com_codahale_metrics_metrics_servlets//jar",
         "@com_fasterxml_classmate//jar",
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@com_fasterxml_jackson_datatype_jackson_datatype_guava//jar",
-        "@com_fasterxml_jackson_datatype_jackson_datatype_joda//jar",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_base//jar",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
         "@com_fasterxml_jackson_module_jackson_module_afterburner//jar",
-        "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
         "@com_google_code_findbugs_jsr305//jar",
         "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
@@ -564,12 +489,12 @@ java_import(
     ],
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
+        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
+        "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@com_codahale_metrics_metrics_annotation//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_jersey//jar",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_base//jar",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
-        "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
         "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
@@ -665,15 +590,6 @@ java_library(
 )
 
 java_library(
-    name = "opencensus",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_opencensus_opencensus_api//jar",
-        "@io_opencensus_opencensus_contrib_grpc_metrics//jar",
-    ],
-)
-
-java_library(
     name = "io_netty_netty_codec",
     visibility = ["//visibility:public"],
     exports = [
@@ -719,32 +635,6 @@ java_library(
 )
 
 java_library(
-    name = "io_prometheus_simpleclient",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_prometheus_simpleclient//jar",
-    ],
-)
-
-java_library(
-    name = "io_prometheus_simpleclient_common",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_prometheus_simpleclient//jar",
-        "@io_prometheus_simpleclient_common//jar",
-    ],
-)
-
-java_library(
-    name = "io_prometheus_simpleclient_hotspot",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_prometheus_simpleclient//jar",
-        "@io_prometheus_simpleclient_hotspot//jar",
-    ],
-)
-
-java_library(
     name = "io_prometheus_simpleclient_servlet",
     visibility = ["//visibility:public"],
     exports = [
@@ -763,36 +653,10 @@ java_library(
 )
 
 java_library(
-    name = "io_protostuff_protostuff_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_protostuff_protostuff_core//jar",
-    ],
-)
-
-java_library(
-    name = "io_protostuff_protostuff_runtime",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_protostuff_protostuff_runtime//jar",
-    ],
-)
-
-java_library(
     name = "io_swagger_swagger_annotations",
     visibility = ["//visibility:public"],
     exports = [
         "@io_swagger_swagger_annotations//jar",
-    ],
-)
-
-java_library(
-    name = "io_swagger_swagger_jaxrs",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_swagger_swagger_core//jar",
-        "@io_swagger_swagger_jaxrs//jar",
-        "@io_swagger_swagger_models//jar",
     ],
 )
 
@@ -819,14 +683,6 @@ java_library(
     exports = [
         "@jfree_jcommon//jar",
         "@junit_junit//jar",
-    ],
-)
-
-java_library(
-    name = "joda_time_joda_time",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@joda_time_joda_time//jar",
     ],
 )
 
@@ -1105,7 +961,7 @@ java_library(
     name = "org_apache_kafka_kafka_streams",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@net_jpountz_lz4_lz4//jar",
         "@org_apache_kafka_connect_api//jar",
         "@org_apache_kafka_connect_json//jar",
@@ -1153,18 +1009,6 @@ java_library(
         "@commons_collections_commons_collections//jar",
         "@commons_lang_commons_lang//jar",
         "@org_apache_velocity_velocity//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_xmlgraphics_batik_css",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_xmlgraphics_batik_css//jar",
-        "@org_apache_xmlgraphics_batik_ext//jar",
-        "@org_apache_xmlgraphics_batik_util//jar",
-        "@xml_apis_xml_apis//jar",
-        "@xml_apis_xml_apis_ext//jar",
     ],
 )
 
@@ -1344,15 +1188,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@org_pojava_pojava//jar",
-    ],
-)
-
-java_library(
-    name = "org_slf4j_jul_to_slf4j",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_slf4j_jul_to_slf4j//jar",
-        "@org_slf4j_slf4j_api//jar",
     ],
 )
 
@@ -1547,7 +1382,7 @@ java_library(
     name = "log",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@org_apache_logging_log4j_log4j_api//jar",
         "@org_apache_logging_log4j_log4j_core//jar",
@@ -1558,8 +1393,8 @@ java_library(
     name = "log-runtime",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_fasterxml_jackson_core_jackson_core//jar",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@org_yaml_snakeyaml//jar",
     ],
 )
@@ -1673,14 +1508,6 @@ java_library(
         "@org_eclipse_jetty_websocket_websocket_server_spark_dep//jar",
         "@org_eclipse_jetty_websocket_websocket_servlet_spark_dep//jar",
         "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
-    name = "com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_datatype_jackson_datatype_jsr310//jar",
     ],
 )
 
@@ -1869,11 +1696,11 @@ java_library(
         "//third_party:com_google_protobuf_protobuf_java",
         "//third_party:lombok_plugin",
         "//third_party:netty",
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_base//jar",
-        "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
+        "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@commons_io_commons_io//jar",
         "@io_perfmark_perfmark_api//jar",
         "@lombok//:org_projectlombok_lombok",

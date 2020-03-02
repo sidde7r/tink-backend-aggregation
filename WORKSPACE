@@ -557,7 +557,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_core_jackson_databind",
+    name = "com_fasterxml_jackson_core_jackson_databind",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.core:jackson-databind:2.9.9",
     sha1 = "d6eb9817d9c7289a91f043ac5ee02a6b3cc86238",
 )
@@ -569,7 +569,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_core_jackson_core",
+    name = "com_fasterxml_jackson_core_jackson_core",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.core:jackson-core:2.9.9",
     sha1 = "bfff5af9fb8347d26bbb7959cb9b4fe9a2b0ca5e",
 )
@@ -659,7 +659,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+    name = "com_fasterxml_jackson_module_jackson_module_jaxb_annotations",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
     sha1 = "52fb643de81a60839750013a520f26b6259ddeff",
 )
@@ -709,7 +709,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
+    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9",
     sha1 = "7deb5d0d335265ace2a9048c8d6e203b588a1724",
 )
@@ -757,7 +757,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_codehaus_woodstox_stax2_api",
+    name = "org_codehaus_woodstox_stax2_api",  # Do not use, but do not remove
     artifact = "org.codehaus.woodstox:stax2-api:3.1.1",
     sha1 = "0466eab062e9d1a3ce2c4631b6d09b5e5c0cbd1b",
 )
@@ -987,7 +987,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_smile",
+    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_smile",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
     sha1 = "85749406c69b08945d6059db679cc66990340ebc",
 )
@@ -1071,7 +1071,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",
+    name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
     sha1 = "a69b7eda6d0c422567c3ef9187510daeb97ef952",
 )
@@ -1089,7 +1089,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_xml_stream_stax_api",
+    name = "javax_xml_stream_stax_api",  # Do not use, but do not remove
     artifact = "javax.xml.stream:stax-api:1.0-2",
     sha1 = "d6337b0de8b25e53e81b922352fbea9f9f57ba0b",
 )
@@ -1611,7 +1611,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "joda_time_joda_time",
+    name = "joda_time_joda_time",  # Do not use, but do not remove
     artifact = "joda-time:joda-time:2.9.9",
     sha1 = "f7b520c458572890807d143670c9b24f4de90897",
 )
@@ -1717,7 +1717,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
+    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.9",
     sha1 = "fc33bfa121b746db0f9fb8f36ed2e6682a1c1dd0",
 )
@@ -2300,7 +2300,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
+    name = "com_fasterxml_jackson_datatype_jackson_datatype_jsr310",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9",
     sha1 = "a33df137557793b0404a486888dbe049f7abeeeb",
 )
@@ -2527,17 +2527,62 @@ load("@maven//:defs.bzl", "pinned_maven_install")
 
 pinned_maven_install()
 
+# This aims become the singular place for specifying the full collection of direct and transitive
+# dependencies of the aggregation service monolith jar. All aggregation production code -- including
+# agent code -- shall ideally depend on artifacts provided by this maven_install and nothing else.
+# Artifacts only relevant for testing shall NOT be specified here, but shall instead ideally be put
+# in one or more separate maven_install(s).
+#
+# At the time of writing, aggregation production code mostly depends on artifacts via the maven_jar
+# rules in WORKSPACE. This is done either by referring to them directly using the "@artifact//jar"
+# syntax, or indirectly via the third_party java_library rules using the "//third_party:artifact"
+# syntax. Either way, any such dependency is to be replaced with a direct dependency on an artifact
+# in the list below. This is not a trivial task, and should be done in an incremental fashion. The
+# recommendation is to make one commit for adding the desired artifact to the list below + pinning
+# the JSON file. And then make a second commit that replaces all direct or indirect usages of the
+# corresponding maven_jar (if any) with a direct dependency on the newly added artifact.
+#
+# Adding a new artifact to the list below is a delicate process, and is not to be taken lightly.
+# It may be necessary to replace a few dependencies on other maven_jar rules before you are in a
+# safe position to add the artifact you desire. It may also be necessary to adjust the version of
+# a few existing artifacts to reconcile the versions of the artifacts specified here vs. the
+# artifacts that your desired artifact depends on transitively.
+#
+# The rule of thumb is to always add a new artifact in a way so that only two entries are added to
+# aggregation_install.json -- one for the jar itself and one for its sources. Furthermore, in this
+# JSON file, conflict_resolution should ideally remain as empty as possible. If it is non-empty,
+# this means that there exists at least one artifact, A, that has to use an incompatible version of
+# another artifact, B. This means that there is no guarantee that artifact A will be functioning
+# correctly in production. It is possible that certain pieces of code in A will crash with
+# NoSuchMethodError or the like.
 maven_install(
     name = "aggregation",
     artifacts = [
         "com.google.guava:guava:23.1-jre",
         "com.google.code.gson:gson:2.8.2",
+        "com.fasterxml.jackson.core:jackson-core:2.9.9",
+        "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+        "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+        "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
+        "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.9",
+        "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
+        "joda-time:joda-time:2.9.9",
+        "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9",
+        "javax.xml.stream:stax-api:1.0-2",
+        "org.codehaus.woodstox:stax2-api:3.1.1",
+    ],
+    excluded_artifacts = [
+        # Keep this list empty please
     ],
     fetch_sources = True,
+    generate_compat_repositories = False,  # Tempting, but provided that we depend on tink-backend, let's be explicit in our naming of deps
     maven_install_json = "//third_party:aggregation_install.json",
     repositories = [
         "https://repo.maven.apache.org/maven2/",
     ],
+    version_conflict_policy = "default",  # Let's stick to Coursier's algorithm and strive for NO CONFLICTS as far as possible
 )
 
 load("@aggregation//:defs.bzl", aggregation_pin = "pinned_maven_install")

@@ -10,8 +10,8 @@ java_library(
     visibility = ["//src/integration:__subpackages__"],
     deps = [
         "//src/libraries/date",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:joda_time_joda_time",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:joda_time_joda_time",
     ],
 )

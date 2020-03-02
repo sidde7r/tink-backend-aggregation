@@ -24,7 +24,6 @@ java_library(
         "//src/libraries/date",
         "//src/libraries/serialization",
         "//src/libraries/strings",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_nimbusds_srp6a",
         "//third_party:com_sun_jersey_jersey_core",
@@ -32,6 +31,7 @@ java_library(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
     ],
 )

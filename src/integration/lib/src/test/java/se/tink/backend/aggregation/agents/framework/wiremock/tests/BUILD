@@ -8,10 +8,10 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_hamcrest_hamcrest_library",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_google_guava_guava",
     ],
 )

@@ -4,8 +4,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/uuid",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:org_apache_curator_curator_client",
@@ -14,6 +12,8 @@ java_library(
         "//third_party:org_apache_curator_curator_x_discovery",
         "//third_party:org_apache_zookeeper_zookeeper",
         "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],
 )

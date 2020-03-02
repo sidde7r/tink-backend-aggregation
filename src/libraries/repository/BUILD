@@ -5,9 +5,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//third_party:c3p0_c3p0",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_inject_guice",
         "//third_party:javax_inject_javax_inject",
@@ -20,6 +17,9 @@ java_library(
         "//third_party:org_springframework_data_spring_data_jpa",
         "//third_party:org_springframework_spring_core",
         "//third_party:org_springframework_spring_expression",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],
 )

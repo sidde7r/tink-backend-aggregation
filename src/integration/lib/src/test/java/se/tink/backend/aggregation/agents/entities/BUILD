@@ -8,7 +8,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

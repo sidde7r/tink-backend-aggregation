@@ -13,11 +13,11 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
         "//third_party:pl_pragmatists_junitparams",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],
 )

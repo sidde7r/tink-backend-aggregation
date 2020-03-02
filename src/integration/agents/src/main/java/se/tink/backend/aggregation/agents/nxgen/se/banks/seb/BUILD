@@ -24,10 +24,10 @@ java_library(
         "//src/libraries/social_security_number",
         "//src/libraries/strings",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_httpcomponents_httpcore",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
     ],
 )
