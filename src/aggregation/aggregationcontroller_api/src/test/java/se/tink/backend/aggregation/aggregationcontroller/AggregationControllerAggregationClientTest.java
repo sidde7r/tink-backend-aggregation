@@ -115,25 +115,6 @@ public final class AggregationControllerAggregationClientTest
         hostConfiguration.setApiToken("devtoken");
         hostConfiguration.setClusterId("local-development");
 
-        /* Ugly workaround to have state support in WireMock server, we will get
-        rid of this when our WireMock test tool will support states in its own
-         */
-        wireMockRule.listAllStubMappings().getMappings().stream()
-                .filter(m -> m.getInsertionIndex() == 0)
-                .findFirst()
-                .get()
-                .setRequiredScenarioState("Started");
-        wireMockRule.listAllStubMappings().getMappings().stream()
-                .filter(m -> m.getInsertionIndex() == 0)
-                .findFirst()
-                .get()
-                .setNewScenarioState("ATTEMPT1");
-        wireMockRule.listAllStubMappings().getMappings().stream()
-                .filter(m -> m.getInsertionIndex() == 1)
-                .findFirst()
-                .get()
-                .setRequiredScenarioState("ATTEMPT1");
-
         UpdateCredentialsStatusRequest request = new UpdateCredentialsStatusRequest();
         Credentials credentials = new Credentials();
         credentials.setId("dummy_id");
