@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.investment.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.models.Instrument;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 
 @JsonObject
 public class HoldingEntity {
@@ -20,14 +21,8 @@ public class HoldingEntity {
 
     @JsonProperty private InstrumentEntity instrument;
 
-    public Instrument toTinkInstrument() {
-        Instrument tinkInstrument = instrument.toTinkInstrument();
-        tinkInstrument.setAverageAcquisitionPrice(avgPurchasePrice);
-        tinkInstrument.setQuantity(quantity);
-        tinkInstrument.setProfit(profitLoss);
-        tinkInstrument.setMarketValue(marketValue);
-
-        return tinkInstrument;
+    public Optional<InstrumentModule> toTinkInstrument() {
+        return Optional.of(instrument.applyTo(marketValue, profitLoss, quantity, avgPurchasePrice));
     }
 
     public boolean isInstrument() {

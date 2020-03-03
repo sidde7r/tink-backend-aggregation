@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
 
 @JsonObject
 public class InstrumentEntity {
@@ -24,27 +25,20 @@ public class InstrumentEntity {
     @JsonProperty private String isin;
 
     @JsonIgnore
-    public Instrument toTinkInstrument() {
+    public InstrumentModule applyTo(
+            double marketValue, double profitLoss, double quantity, double avgPurchasePrice) {
 
-        Instrument instrument = new Instrument();
-
-        instrument.setUniqueIdentifier(isin + getMarket());
-        instrument.setIsin(isin);
-        instrument.setMarketPlace(getMarket());
-        instrument.setCurrency(currency);
-        instrument.setName(instrumentName);
-        instrument.setPrice(price);
-        instrument.setType(
-                NordeaSEConstants.INSTRUMENT_TYPE_MAP
-                        .translate(rawType)
-                        .orElse(Instrument.Type.OTHER));
-        instrument.setRawType(rawType);
-        // The following fields are set in HoldingEntity since the can't be found here.
-        // AvgPurchasePrice
-        // Quantity
-        // Profit
-        // MarketValue
-        return instrument;
+        return InstrumentModule.builder()
+                .withType(InstrumentType.FUND)
+                .withId(InstrumentIdModule.of(isin, getMarket(), instrumentName, isin))
+                .withMarketPrice(price)
+                .withMarketValue(marketValue)
+                .withAverageAcquisitionPrice(avgPurchasePrice)
+                .withCurrency(currency)
+                .withQuantity(quantity)
+                .withProfit(profitLoss)
+                .setRawType(rawType)
+                .build();
     }
 
     @JsonIgnore

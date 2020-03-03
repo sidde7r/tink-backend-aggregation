@@ -1,17 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.investment.entities;
 
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.CURRENCY;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
+import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 
 @JsonObject
 public class InvestmentAccountEntity {
@@ -41,57 +46,58 @@ public class InvestmentAccountEntity {
     @JsonProperty private List<HoldingEntity> holdings;
 
     public InvestmentAccount toTinkInvestmentAccount() {
-        // TODO: create pension account builder
 
+        // TODO: create pension account builder
         // In some cases (e.g. some Pension accounts) the account doesn't have any holdings
         if (!hasInstruments()) {
-            return InvestmentAccount.builder(id)
-                    .setBalance(new Amount(NordeaSEConstants.CURRENCY, value))
-                    .setBankIdentifier(id)
-                    .setAccountNumber(accountNumber)
-                    .setName(name)
+            return InvestmentAccount.nxBuilder()
+                    .withoutPortfolios()
+                    .withZeroCashBalance(CURRENCY)
+                    .withId(
+                            IdModule.builder()
+                                    .withUniqueIdentifier(id)
+                                    .withAccountNumber(StringUtils.deleteWhitespace(accountNumber))
+                                    .withAccountName(name)
+                                    .addIdentifier(AccountIdentifier.create(Type.TINK, id))
+                                    .build())
                     .build();
         }
 
-        return InvestmentAccount.builder(id)
-                .setCashBalance(new Amount(NordeaSEConstants.CURRENCY, balance))
-                .setBankIdentifier(id)
-                .setAccountNumber(accountNumber)
-                .setName(name)
-                .setPortfolios(Collections.singletonList(getTinkPortfolio()))
+        return InvestmentAccount.nxBuilder()
+                .withPortfolios(Collections.singletonList(getTinkPortfolio()))
+                .withZeroCashBalance(CURRENCY)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(id)
+                                .withAccountNumber(StringUtils.deleteWhitespace(accountNumber))
+                                .withAccountName(name)
+                                .addIdentifier(AccountIdentifier.create(Type.TINK, id))
+                                .build())
                 .build();
     }
 
-    @JsonSetter(nulls = Nulls.AS_EMPTY)
-    public void setHoldings(List<HoldingEntity> holdings) {
-        this.holdings = holdings;
+    private PortfolioModule getTinkPortfolio() {
+
+        return PortfolioModule.builder()
+                .withType(getTinkPortfolioType())
+                .withUniqueIdentifier(id)
+                .withCashValue(balance)
+                .withTotalProfit(profitLoss)
+                .withTotalValue(value)
+                .withInstruments(getInstruments())
+                .setRawType(getRawType())
+                .build();
     }
 
-    public List<HoldingEntity> getHoldings() {
-        return holdings;
-    }
+    private List<InstrumentModule> getInstruments() {
+        if (holdings == null) {
+            return Collections.emptyList();
+        }
 
-    private Portfolio getTinkPortfolio() {
-
-        Portfolio portfolio = new Portfolio();
-        portfolio.setUniqueIdentifier(id);
-        portfolio.setRawType(getRawType());
-        portfolio.setType(
-                NordeaSEConstants.PORTFOLIO_TYPE_MAP
-                        .translate(getRawType())
-                        .orElse(Portfolio.Type.OTHER));
-        portfolio.setCashValue(balance);
-        portfolio.setTotalValue(value);
-        portfolio.setTotalProfit(profitLoss);
-        portfolio.setInstruments(getInstruments());
-
-        return portfolio;
-    }
-
-    private List<Instrument> getInstruments() {
-        return getHoldings().stream()
+        return holdings.stream()
                 .filter(HoldingEntity::isInstrument)
                 .map(HoldingEntity::toTinkInstrument)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
@@ -103,5 +109,11 @@ public class InvestmentAccountEntity {
 
         // id format: TYPE:ACCOUNT
         return id.split(":")[0];
+    }
+
+    private PortfolioType getTinkPortfolioType() {
+
+        final String type = id.substring(0, id.indexOf(":"));
+        return NordeaSEConstants.PORTFOLIO_TYPE_MAPPER.translate(type).orElse(PortfolioType.OTHER);
     }
 }
