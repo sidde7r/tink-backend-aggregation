@@ -5,6 +5,7 @@ import io.grpc.netty.GrpcSslContexts;
 import io.netty.handler.ssl.OpenSsl;
 import io.netty.handler.ssl.OpenSslX509KeyManagerFactory;
 import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslProvider;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -16,8 +17,6 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLException;
-
-import io.netty.handler.ssl.SslProvider;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 
 class SslContextProvider {
