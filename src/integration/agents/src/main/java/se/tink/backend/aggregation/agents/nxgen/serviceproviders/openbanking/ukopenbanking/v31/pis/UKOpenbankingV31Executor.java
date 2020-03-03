@@ -209,13 +209,14 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                 OpenIdError openIdError = apiClient.getOpenIdError().get();
 
                 String errorMessage = openIdError.getErrorMessage();
+                ExceptionFuzzyMatcher exceptionMatcher = new ExceptionFuzzyMatcher();
                 if (Strings.isNullOrEmpty(errorMessage)) {
                     throw new PaymentAuthorizationException();
-                } else if (PaymentAuthorizationCancelledByUserException.isFuzzyMatch(openIdError)) {
+                } else if (exceptionMatcher.isAuthorizationCancelledByUser(openIdError)) {
                     throw new PaymentAuthorizationCancelledByUserException(openIdError);
-                } else if (PaymentAuthorizationTimeOutException.isFuzzyMatch(openIdError)) {
+                } else if (exceptionMatcher.isAuthorizationTimeOut(openIdError)) {
                     throw new PaymentAuthorizationTimeOutException(openIdError);
-                } else if (PaymentAuthorizationFailedByUserException.isFuzzyMatch(openIdError)) {
+                } else if (exceptionMatcher.isAuthorizationFailedByUser(openIdError)) {
                     throw new PaymentAuthorizationFailedByUserException(openIdError);
                 } else {
                     // Log unknown error message and return the generic end user message for when
