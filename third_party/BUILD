@@ -359,7 +359,7 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
-        "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
+        "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
         "@commons_lang_commons_lang//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_validation//jar",
@@ -377,6 +377,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_joda",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
@@ -395,7 +396,6 @@ java_library(
         "@com_codahale_metrics_metrics_logback//jar",
         "@com_codahale_metrics_metrics_servlets//jar",
         "@com_fasterxml_classmate//jar",
-        "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@com_fasterxml_jackson_datatype_jackson_datatype_guava//jar",
         "@com_fasterxml_jackson_module_jackson_module_afterburner//jar",
         "@com_google_code_findbugs_jsr305//jar",
@@ -1359,7 +1359,7 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
+        "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
         "@org_apache_logging_log4j_log4j_api//jar",
         "@org_apache_logging_log4j_log4j_core//jar",
     ],
