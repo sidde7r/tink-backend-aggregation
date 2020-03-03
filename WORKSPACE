@@ -1581,7 +1581,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_classmate",
+    name = "com_fasterxml_classmate",  # Do not use, but do not remove
     artifact = "com.fasterxml:classmate:1.0.0",
     sha1 = "434efef28c81162b17c540e634cffa3bd9b09b4c",
 )

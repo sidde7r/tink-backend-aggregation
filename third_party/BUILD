@@ -374,6 +374,7 @@ java_library(
     ],
     runtime_deps = [
         ":io_dropwizard_dropwizard_jersey",
+        "@aggregation//:com_fasterxml_classmate",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
@@ -397,7 +398,6 @@ java_library(
         "@com_codahale_metrics_metrics_jvm//jar",
         "@com_codahale_metrics_metrics_logback//jar",
         "@com_codahale_metrics_metrics_servlets//jar",
-        "@com_fasterxml_classmate//jar",
         "@com_google_code_findbugs_jsr305//jar",
         "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
@@ -1104,7 +1104,7 @@ java_library(
     name = "org_hibernate_hibernate_validator",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_fasterxml_classmate//jar",
+        "@aggregation//:com_fasterxml_classmate",
         "@javax_validation_validation_api//jar",
         "@org_hibernate_hibernate_validator//jar",
         "@org_jboss_logging_jboss_logging//jar",
