@@ -10,6 +10,9 @@ spec:
     name: tink-internal-ca
     kind: ClusterIssuer
   commonName: aggregation-service.aggregation.svc.cluster.local
+  usages:
+    - server auth
+    - client auth
   organization:
     - aggregation
   dnsNames:
