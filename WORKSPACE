@@ -2573,7 +2573,7 @@ maven_install(
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
         "org.codehaus.woodstox:stax2-api:4.1",
-        "org.yaml:snakeyaml:1.13",
+        "org.yaml:snakeyaml:1.23",
     ],
     excluded_artifacts = [
         # Keep this list empty please
