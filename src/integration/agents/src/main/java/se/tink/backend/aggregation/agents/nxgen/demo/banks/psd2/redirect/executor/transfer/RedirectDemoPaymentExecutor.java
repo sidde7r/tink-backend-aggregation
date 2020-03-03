@@ -1,10 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer;
 
+import java.util.ArrayList;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -18,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -47,15 +53,23 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
         this.paymentResponse.getPayment().setStatus(PaymentStatus.SIGNED);
         return this.paymentResponse;
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) throws PaymentException {
-        PaymentListResponse paymentListResponse = new PaymentListResponse(this.paymentResponse);
-        return paymentListResponse;
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
+        this.paymentResponse.getPayment().setStatus(PaymentStatus.CREATED);
+        return new PaymentListResponse(this.paymentResponse);
+
+        // todo: fix or remove this!
+        // this.paymentResponse.getPayment().setStatus(PaymentStatus.CREATED);
+        //        return paymentListRequest.getPaymentRequestList().stream()
+        //                .map(this::fetch)
+        //                .collect(
+        //                        Collectors.collectingAndThen(
+        //                                Collectors.toList(), PaymentListResponse::new));
     }
 
     @Override
@@ -80,7 +94,22 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException, AuthenticationException {
-        return null;
+        switch (paymentMultiStepRequest.getStep()) {
+            case SigningStepConstants.STEP_INIT:
+                return init(paymentMultiStepRequest);
+
+            case RedirectAuthenticationDemoAgentConstants.Step.AUTHORIZE:
+                return authorized(paymentMultiStepRequest);
+
+            case RedirectAuthenticationDemoAgentConstants.Step.SUFFICIENT_FUNDS:
+                return sufficientFunds(paymentMultiStepRequest);
+
+            case RedirectAuthenticationDemoAgentConstants.Step.EXECUTE_PAYMENT:
+                return executePayment(paymentMultiStepRequest);
+            default:
+                throw new IllegalStateException(
+                        String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
+        }
     }
 
     @Override
@@ -92,5 +121,76 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
         return null;
+    }
+
+    private PaymentMultiStepResponse init(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentAuthorizationException {
+
+        switch (paymentMultiStepRequest.getPayment().getStatus()) {
+            case CREATED:
+                // Directly executing the payment after authorizing the payment consent
+                // successfully. Steps for funds check needs to be done before authorizing the
+                // consent.  Step.AUTHORIZE
+                return new PaymentMultiStepResponse(
+                        paymentMultiStepRequest,
+                        RedirectAuthenticationDemoAgentConstants.Step.EXECUTE_PAYMENT,
+                        new ArrayList<>());
+            case REJECTED:
+                throw new PaymentAuthorizationException(
+                        "Payment is rejected", new IllegalStateException("Payment is rejected"));
+            case PENDING:
+                return new PaymentMultiStepResponse(
+                        paymentMultiStepRequest,
+                        RedirectAuthenticationDemoAgentConstants.Step.SUFFICIENT_FUNDS,
+                        new ArrayList<>());
+            default:
+                throw new IllegalStateException(
+                        String.format(
+                                "Unknown status %s",
+                                paymentMultiStepRequest.getPayment().getStatus()));
+        }
+    }
+
+    private PaymentMultiStepResponse authorized(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentException {
+        String step =
+                Optional.of(fetch(paymentMultiStepRequest))
+                        .map(p -> p.getPayment().getStatus())
+                        .filter(s -> s == PaymentStatus.PENDING)
+                        .map(s -> RedirectAuthenticationDemoAgentConstants.Step.SUFFICIENT_FUNDS)
+                        .orElse(RedirectAuthenticationDemoAgentConstants.Step.AUTHORIZE);
+
+        return new PaymentMultiStepResponse(paymentMultiStepRequest, step, new ArrayList<>());
+    }
+
+    private PaymentMultiStepResponse sufficientFunds(
+            PaymentMultiStepRequest paymentMultiStepRequest) {
+        return new PaymentMultiStepResponse(
+                paymentMultiStepRequest,
+                RedirectAuthenticationDemoAgentConstants.Step.EXECUTE_PAYMENT,
+                new ArrayList<>());
+    }
+
+    private PaymentMultiStepResponse executePayment(
+            PaymentMultiStepRequest paymentMultiStepRequest) {
+        String providerName = credentials.getProviderName();
+        // This block handles PIS only business use case as source-account will be null in request
+        switch (providerName) {
+            case RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_SUCCESS_CASE:
+                break;
+            case RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_FAILURE_CASE:
+                throw RedirectAuthenticationDemoAgentConstants.FAILED_CASE_EXCEPTION;
+            case RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_CANCEL_CASE:
+                throw RedirectAuthenticationDemoAgentConstants.CANCELLED_CASE_EXCEPTION;
+        }
+
+        PaymentMultiStepResponse pmr =
+                new PaymentMultiStepResponse(
+                        paymentMultiStepRequest,
+                        AuthenticationStepConstants.STEP_FINALIZE,
+                        new ArrayList<>());
+        pmr.getPayment().setStatus(PaymentStatus.PAID);
+
+        return pmr;
     }
 }

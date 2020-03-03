@@ -135,7 +135,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
     }
 
     @Override
-        public Optional<PaymentController> constructPaymentController() {
+    public Optional<PaymentController> constructPaymentController() {
         String callbackUri = request.getCallbackUri();
 
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =

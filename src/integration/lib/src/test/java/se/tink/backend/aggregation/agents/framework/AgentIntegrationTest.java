@@ -8,6 +8,7 @@ import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,10 +17,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.assertj.core.util.Strings;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
@@ -35,6 +38,7 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
@@ -74,11 +78,16 @@ import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payment.rpc.Reference;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
@@ -749,44 +758,129 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
+    private List<Payment> createItalianPayments(List<Account> accounts, String desinationAccount) {
+
+        List<Payment> payments = new ArrayList<>();
+
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "EUR");
+        LocalDate executionDate = LocalDate.now();
+        String currency = "EUR";
+
+        payments =
+                accounts.stream()
+                        .map(
+                                a ->
+                                        new Payment.Builder()
+                                                .withDebtor(
+                                                        new Debtor(
+                                                                AccountIdentifier.create(
+                                                                        AccountIdentifier.Type
+                                                                                .SEPA_EUR,
+                                                                        a
+                                                                                .getAccountNumber()))) // source account
+                                                .withCreditor(
+                                                        new Creditor(
+                                                                AccountIdentifier.create(
+                                                                        AccountIdentifier.Type
+                                                                                .SEPA_EUR,
+                                                                        desinationAccount), // desination account
+                                                                "Unknown Person"))
+                                                .withExactCurrencyAmount(amount)
+                                                .withExecutionDate(executionDate)
+                                                .withCurrency(currency)
+                                                .withReference(
+                                                        new Reference("TRANSFER", "test Tink"))
+                                                .withUniqueId(
+                                                        RandomUtils.generateRandomHexEncoded(15))
+                                                .build())
+                        .collect(Collectors.toList());
+
+        return payments;
+    }
+
     public void testGenericPaymentItalia(List<Payment> paymentList) throws Exception {
+        initiateCredentials();
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        readConfigurationFile();
+        Agent agent = createAgent(credentialsRequest);
+
+        try {
+            // todo: Look into this, currently authentication is done in
+            // RedirectDemoPaymentExecutor. Maybe can remove this
+            // login(agent, credentialsRequest);
+            if (agent instanceof PaymentControllerable) {
+                doGenericPaymentBankTransfer(agent, paymentList);
+            } else {
+                throw new NotImplementedException(
+                        String.format("%s", agent.getAgentClass().getSimpleName()));
+            }
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
+    }
+
+    /**
+     * Todo: Remove this later
+     *
+     * @param destinationAccount
+     * @throws Exception
+     */
+    public void testGenericPaymentItalia(String destinationAccount) throws Exception {
         /**
-         * The italian flow is special, so we will have to run the AIS flow first and store the aggregated data to be
-         * used as the source account in the payment flow.
+         * The italian flow is special, so we will have to run the AIS flow first and store the
+         * aggregated accounts to be used as the source account in the payment flow.
          */
         NewAgentTestContext newAgentTestContext = this.testRefresh();
+        List<Account> accounts = newAgentTestContext.getUpdatedAccounts();
 
+        /**
+         * Todo: Somehow provide the fetched accounts to frontend, according to Gustaf Fredriksson
+         * they use TransferService in tink-backend to fetch source accounts, see @Path("accounts").
+         *
+         * <p>AccountRepository in tink-backend is responsible for fetching the list of accounts for
+         * a specific user. It's an interface and has two implementations, AccountRepositoryV2 and
+         * FakeAccountRepository.
+         */
+        List<Payment> paymentList = createItalianPayments(accounts, destinationAccount);
 
-//        /**
-//         * Run the payment flow with account info retrieved above
-//         */
-//        initiateCredentials();
-//        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
-//        readConfigurationFile();
-//        Agent agent = createAgent(credentialsRequest);
-//
-//        try {
-//            //todo: Look into this, currently authentication is done in RedirectDemoPaymentExecutor. Maybe can remove this
-//            //login(agent, credentialsRequest);
-//            if (agent instanceof PaymentControllerable) {
-//                doGenericPaymentBankTransfer(agent, paymentList);
-//            } else {
-//                throw new NotImplementedException(
-//                        String.format("%s", agent.getAgentClass().getSimpleName()));
-//            }
-//            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-//                printMaskedDebugLog(agent);
-//            }
-//            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
-//
-//            if (doLogout) {
-//                logout(agent);
-//            }
-//        } finally {
-//            saveCredentials(agent);
-//        }
-//
-//        context.printCollectedData();
+        initiateCredentials();
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        readConfigurationFile();
+        Agent agent = createAgent(credentialsRequest);
+
+        try {
+            // todo: Look into this, currently authentication is done in
+            // RedirectDemoPaymentExecutor. Maybe can remove this
+            // login(agent, credentialsRequest);
+            if (agent instanceof PaymentControllerable) {
+                doGenericPaymentBankTransfer(agent, paymentList);
+            } else {
+                throw new NotImplementedException(
+                        String.format("%s", agent.getAgentClass().getSimpleName()));
+            }
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
     }
 
     public void testGenericPaymentUKOB(List<Payment> paymentList) throws Exception {

@@ -54,5 +54,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@com_fasterxml_jackson_core_jackson_annotations//jar",
+        "//src/integration/amount"
     ],
 )

@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks;
 
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
@@ -15,15 +13,16 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 
 public class RedirectAuthenticationDemoAgentTest {
     private final String SOURCE_IDENTIFIER = "1234567891234";
     private final String DESTINATION_IDENTIFIER = "1434567891234";
     private final String SOURCE_ACCOUNT_NAME = "ha";
 
-    private final String ACCOUNT_NAME = "IT60X0542811101551254321800";
+    private final String SOURCE_ACCOUNT =
+            "IT60X0542811101727164886515"; // from ais flow, checking account
+    private final String DESTINATION_ACCOUNT =
+            "IT60X0542811101620104861584"; // from ais flow, savings account
 
     @Test
     public void testTransfer() throws Exception {
@@ -56,6 +55,16 @@ public class RedirectAuthenticationDemoAgentTest {
                 .testBankTransferUK(transfer, false);
     }
 
+    @Test
+    public void testAISIT() throws Exception {
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("it", "it-test-open-banking-redirect")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
+
+        builder.build().testRefresh();
+    }
 
     @Test
     public void testPaymentIT() throws Exception {
@@ -66,19 +75,21 @@ public class RedirectAuthenticationDemoAgentTest {
                         .saveCredentialsAfter(false);
 
         builder.build().testGenericPaymentItalia(createListMockedDomesticPayment(1));
+        // todo: Remove once we have the assumptions tested
+        // builder.build().testGenericPaymentItalia(DESTINATION_ACCOUNT);
     }
 
     private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
         List<Payment> listOfMockedPayments = new ArrayList<>();
-
         for (int i = 0; i < numberOfMockedPayments; ++i) {
-            Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.IT).toString()).when(creditor).getAccountNumber();
-
-            Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn("01551254321800").when(debtor).getAccountNumber();
+            Creditor creditor =
+                    new Creditor(
+                            AccountIdentifier.create(
+                                    AccountIdentifier.Type.SEPA_EUR, DESTINATION_ACCOUNT));
+            Debtor debtor =
+                    new Debtor(
+                            AccountIdentifier.create(
+                                    AccountIdentifier.Type.SEPA_EUR, SOURCE_ACCOUNT));
 
             Amount amount = Amount.inEUR(1.0);
             LocalDate executionDate = LocalDate.now();
