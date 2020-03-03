@@ -70,36 +70,6 @@
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.bankofireland.BankOfIrelandAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Bank of Ireland",
-            "fields": [
-                {
-                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true,
-                    "name": "info",
-                    "value": "Connecting your bank"
-                }
-            ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
-            "groupDisplayName": "",
-            "multiFactor": false,
-            "name": "uk-bankofireland-oauth2",
-            "passwordhelptext": "Authentication is done on external page",
-            "payload": "tink2:bankofireland",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "accessType": "OPEN_BANKING",
-            "capabilities": [
-                "TRANSFERS"
-            ],
             "className": "nxgen.uk.openbanking.bankofscotland.BankOfScotlandV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Bank of Scotland",
