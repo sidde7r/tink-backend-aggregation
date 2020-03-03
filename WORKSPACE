@@ -1155,7 +1155,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_module_jackson_module_afterburner",
+    name = "com_fasterxml_jackson_module_jackson_module_afterburner",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
     sha1 = "89ac043b711248ba512b98493d2266328d1f1045",
 )
