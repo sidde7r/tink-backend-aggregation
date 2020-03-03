@@ -81,23 +81,6 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
                                         String.format("%s unknown paymentstatus!", consentStatus)));
     }
 
-    public static class EndUserMessage {
-
-        public static final String PIS_AUTHORISATION_CANCELLED =
-                "Authorisation of payment was cancelled. Please try again.";
-        public static final String PIS_AUTHORISATION_TIMEOUT =
-                "Authorisation of payment timed out. Please try again.";
-        public static final String PIS_AUTHORISATION_FAILED_USER_ERROR =
-                "Authorisation of payment failed. Please try again.";
-        public static final String PAYMENT_REJECTED_BY_BANK =
-                "The payment was rejected by the bank.";
-
-        // Generic message for when we don't get an error description with details of why the
-        // payment wasn't authorised.
-        public static final String PAYMENT_NOT_AUTHORISED_BY_USER =
-                "Payment was not authorised. Please try again.";
-    }
-
     public static AccountIdentifier toAccountIdentifier(String schemeName, String identification) {
 
         switch (schemeName) {

@@ -1,20 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis;
 
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationFailedByUserException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.pis.UkOpenBankingPisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants.Step;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Pis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.DomesticPisConfig;
@@ -52,6 +58,7 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePaymentExecutor {
+    private static Logger log = LoggerFactory.getLogger(UKOpenbankingV31Executor.class);
 
     private final UkOpenBankingPisConfig pisConfig;
     private final SoftwareStatementAssertion softwareStatement;
@@ -158,7 +165,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         return authenticateAndCreatePisConsent(paymentRequest);
     }
 
-    private PaymentResponse authenticateAndCreatePisConsent(PaymentRequest paymentRequest) {
+    private PaymentResponse authenticateAndCreatePisConsent(PaymentRequest paymentRequest)
+            throws PaymentAuthorizationException {
 
         UkOpenBankingPisAuthenticator paymentAuthenticator =
                 new UkOpenBankingPisAuthenticator(
@@ -194,42 +202,45 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
 
             if (e.getError() instanceof ThirdPartyAppError
                     && ThirdPartyAppError.TIMED_OUT.equals(e.getError())) {
-                throw UkOpenBankingV31PisUtils.createCancelledTransferException(
-                        EndUserMessage.PIS_AUTHORISATION_TIMEOUT);
+                throw new PaymentAuthorizationTimeOutException();
             }
 
-            handlePaymentAuthorizationErrors();
+            if (hasWellKnownOpenIdError(apiClient)) {
+                OpenIdError openIdError = apiClient.getOpenIdError().get();
+
+                String errorMessage = openIdError.getErrorMessage();
+                ExceptionFuzzyMatcher exceptionMatcher = new ExceptionFuzzyMatcher();
+                if (Strings.isNullOrEmpty(errorMessage)) {
+                    throw new PaymentAuthorizationException();
+                } else if (exceptionMatcher.isAuthorizationCancelledByUser(openIdError)) {
+                    throw new PaymentAuthorizationCancelledByUserException(openIdError);
+                } else if (exceptionMatcher.isAuthorizationTimeOut(openIdError)) {
+                    throw new PaymentAuthorizationTimeOutException(openIdError);
+                } else if (exceptionMatcher.isAuthorizationFailedByUser(openIdError)) {
+                    throw new PaymentAuthorizationFailedByUserException(openIdError);
+                } else {
+                    // Log unknown error message and return the generic end user message for when
+                    // payment wasn't authorised.
+                    log.warn(
+                            "Unknown error message from bank during payment authorisation: {}",
+                            errorMessage);
+                    throw new PaymentAuthorizationException();
+                }
+            }
+
+            throw UkOpenBankingV31PisUtils.createFailedTransferException();
         }
 
         return paymentAuthenticator.getPaymentResponse();
     }
 
-    /**
-     * Handles known types of openID errors. If openID error type is not known a generic transfer
-     * failed exception is thrown.
-     */
-    private void handlePaymentAuthorizationErrors() {
-        OpenIdError openIdError = getOpenIdErrorOrThrowTransferFailedException();
-
-        String errorType = openIdError.getErrorType();
-        String errorMessage = openIdError.getErrorMessage();
-
-        if (isKnownOpenIdError(errorType)) {
-            String endUserMessage = UkOpenBankingV31PisUtils.convertToEndUserMessage(errorMessage);
-            throw UkOpenBankingV31PisUtils.createCancelledTransferException(endUserMessage);
+    private boolean hasWellKnownOpenIdError(UkOpenBankingApiClient apiClient) {
+        if (!apiClient.getOpenIdError().isPresent()) {
+            return false;
         }
 
-        throw UkOpenBankingV31PisUtils.createFailedTransferException();
-    }
-
-    /**
-     * Returns an openIdError which contains information from the callback data. If not present
-     * throws a generic payment failed exception.
-     */
-    private OpenIdError getOpenIdErrorOrThrowTransferFailedException() {
-        return apiClient
-                .getOpenIdError()
-                .orElseThrow(UkOpenBankingV31PisUtils::createFailedTransferException);
+        OpenIdError openIdError = apiClient.getOpenIdError().get();
+        return isKnownOpenIdError(openIdError.getErrorType());
     }
 
     /**
@@ -344,8 +355,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         // payment controller with TransferExecutionException usage. Ticket PAY2-188 will
         // address handling the REJECTED status, then we can remove the logic from here.
         if (PaymentStatus.REJECTED.equals(paymentResponse.getPayment().getStatus())) {
-            throw UkOpenBankingV31PisUtils.createCancelledTransferException(
-                    EndUserMessage.PAYMENT_REJECTED_BY_BANK);
+            throw new PaymentRejectedException();
         }
 
         return new PaymentMultiStepResponse(
