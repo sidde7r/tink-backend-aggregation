@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks;
 
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

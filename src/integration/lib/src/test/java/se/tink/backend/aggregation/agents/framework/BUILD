@@ -9,6 +9,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/api",
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/identity_data",
@@ -55,6 +56,5 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "//src/integration/amount"
     ],
 )
