@@ -42,25 +42,26 @@ public class NemIdIFrameController {
 
     private final WebdriverHelper webdriverHelper;
     private final Sleeper sleeper;
+    private final NemIdAuthenticatorV2 authenticator;
 
-    public NemIdIFrameController() {
-        this(new WebdriverHelper(), new Sleeper());
+    public NemIdIFrameController(final NemIdAuthenticatorV2 authenticator) {
+        this(new WebdriverHelper(), new Sleeper(), authenticator);
     }
 
-    NemIdIFrameController(final WebdriverHelper webdriverHelper, final Sleeper sleeper) {
+    NemIdIFrameController(
+            final WebdriverHelper webdriverHelper,
+            final Sleeper sleeper,
+            final NemIdAuthenticatorV2 authenticator) {
         this.webdriverHelper = webdriverHelper;
         this.sleeper = sleeper;
+        this.authenticator = authenticator;
     }
 
-    String doLoginWith(String username, String password, NemIdParametersV2 nemIdParameters)
-            throws AuthenticationException {
+    String doLoginWith(String username, String password) throws AuthenticationException {
         WebDriver driver = webdriverHelper.constructWebDriver(PHANTOMJS_TIMEOUT_SECONDS);
         try {
-            // this will setup browser with values specific to nemid page, like current url, etc.
-            driver.get(nemIdParameters.getInitialUrl().get());
-
             // inject nemId form into iframe
-            instantiateIFrameWithNemIdForm(driver, nemIdParameters);
+            instantiateIFrameWithNemIdForm(driver);
 
             // provide credentials and submit
             setUserName(driver, username);
@@ -82,36 +83,54 @@ public class NemIdIFrameController {
         }
     }
 
-    private void instantiateIFrameWithNemIdForm(
-            WebDriver driver, NemIdParametersV2 nemIdParameters) {
-        // create initial html to inject
-        String html = String.format(NemIdConstantsV2.BASE_HTML, nemIdParameters.getNemIdElements());
-        String b64Html = Base64.getEncoder().encodeToString(html.getBytes());
-
-        if (!isNemIdInitialized(driver, b64Html)) {
+    private void instantiateIFrameWithNemIdForm(WebDriver driver) throws AuthenticationException {
+        if (!isNemIdInitialized(driver)) {
             throw new IllegalStateException("Can't instantiate iframe element with NemId form.");
         }
     }
 
-    private boolean isNemIdInitialized(WebDriver driver, String b64Html) {
+    private boolean isNemIdInitialized(WebDriver driver) throws AuthenticationException {
         for (int i = 0; i < 5; i++) {
-            driver.switchTo().defaultContent();
+            NemIdParametersV2 nemIdParameters = authenticator.getNemIdParameters();
 
-            ((JavascriptExecutor) driver)
-                    .executeScript("document.write(atob(\"" + b64Html + "\"));");
+            // this will setup browser with values specific to nemid page, like current url, etc.
+            driver.get(nemIdParameters.getInitialUrl().get());
 
-            sleeper.sleepFor(5_000);
+            // create initial html to inject
+            String html =
+                    String.format(NemIdConstantsV2.BASE_HTML, nemIdParameters.getNemIdElements());
+            String b64Html = Base64.getEncoder().encodeToString(html.getBytes());
 
-            Optional<WebElement> element = webdriverHelper.waitForElement(driver, IFRAME);
-
-            if (element.isPresent()) {
-                driver.switchTo().frame(element.get());
-                if (webdriverHelper.waitForElement(driver, USERNAME_INPUT).isPresent()) {
-                    return true;
-                }
+            if (isNemIdInitialized(driver, b64Html)) {
+                return true;
             }
         }
         return false;
+    }
+
+    private boolean isNemIdInitialized(WebDriver driver, String b64Html) {
+        driver.switchTo().defaultContent();
+
+        ((JavascriptExecutor) driver).executeScript("document.write(atob(\"" + b64Html + "\"));");
+
+        sleeper.sleepFor(5_000);
+
+        try {
+            return webdriverHelper
+                    .waitForElement(driver, IFRAME)
+                    .map(
+                            element -> {
+                                driver.switchTo().frame(element);
+
+                                driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+                                return webdriverHelper
+                                        .waitForElement(driver, USERNAME_INPUT)
+                                        .isPresent();
+                            })
+                    .orElse(false);
+        } finally {
+            driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        }
     }
 
     private void validateCredentials(WebDriver driver) throws LoginException {

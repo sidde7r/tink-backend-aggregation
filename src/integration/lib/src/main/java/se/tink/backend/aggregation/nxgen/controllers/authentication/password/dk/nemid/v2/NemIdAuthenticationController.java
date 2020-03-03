@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -21,17 +20,14 @@ public class NemIdAuthenticationController
     private final NemIdIFrameController iFrameController;
     private final NemIdAuthenticatorV2 authenticator;
     private final Storage storage;
-    private final SupplementalInformationHelper supplementalInformationHelper;
 
     public NemIdAuthenticationController(
             NemIdIFrameController iFrameController,
             NemIdAuthenticatorV2 authenticator,
-            Storage storage,
-            SupplementalInformationHelper supplementalInformationHelper) {
+            Storage storage) {
         this.iFrameController = iFrameController;
         this.authenticator = authenticator;
         this.storage = storage;
-        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     @Override
@@ -46,8 +42,7 @@ public class NemIdAuthenticationController
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        final NemIdParametersV2 nemIdParameters = authenticator.getNemIdParameters();
-        final String token = iFrameController.doLoginWith(username, password, nemIdParameters);
+        final String token = iFrameController.doLoginWith(username, password);
         final String installId = authenticator.exchangeNemIdToken(token);
 
         authenticator.authenticateUsingInstallId(username, pinCode, installId);
