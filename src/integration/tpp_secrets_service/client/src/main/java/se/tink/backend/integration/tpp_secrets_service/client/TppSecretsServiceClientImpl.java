@@ -12,6 +12,7 @@ import io.netty.handler.ssl.OpenSsl;
 import io.netty.handler.ssl.OpenSslX509KeyManagerFactory;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.SslProvider;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -191,6 +192,7 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
         }
 
         try {
+            sslContextBuilder = GrpcSslContexts.configure(sslContextBuilder, SslProvider.OPENSSL);
             return sslContextBuilder.build();
         } catch (SSLException e) {
             throw new IllegalStateException(
