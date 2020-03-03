@@ -234,8 +234,8 @@ public class NemIdIFrameControllerTest {
                 Arrays.asList(
                         "incorrect user ---",
                         "incorrect password ---",
-                        "fejl bruger ---",
-                        "fejl adgangskode ---");
+                        "fejl i bruger ---",
+                        "fejl i adgangskode ---");
 
         for (String errorMsg : errorMessages) {
             // given

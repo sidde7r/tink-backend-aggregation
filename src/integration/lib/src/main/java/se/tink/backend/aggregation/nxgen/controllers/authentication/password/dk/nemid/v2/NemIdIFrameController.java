@@ -25,7 +25,7 @@ public class NemIdIFrameController {
             ImmutableList.<Pattern>builder()
                     .add(
                             Pattern.compile("^incorrect (user|password).*"),
-                            Pattern.compile("^fejl (bruger|adgangskode).*"))
+                            Pattern.compile("^fejl i (bruger|adgangskode).*"))
                     .build();
 
     private static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
