@@ -2569,6 +2569,7 @@ maven_install(
         "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9",
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.9",
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9",
+        "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
         "com.google.code.gson:gson:2.8.2",
         "com.google.guava:guava:23.1-jre",
