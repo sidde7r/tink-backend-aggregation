@@ -382,6 +382,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_yaml_snakeyaml",
         "@ch_qos_logback_logback_classic//jar",
         "@ch_qos_logback_logback_core//jar",
         "@com_codahale_metrics_metrics_annotation//jar",
@@ -430,7 +431,6 @@ java_library(
         "@org_slf4j_jcl_over_slf4j//jar",
         "@org_slf4j_jul_to_slf4j//jar",
         "@org_slf4j_slf4j_api//jar",
-        "@org_yaml_snakeyaml//jar",
     ],
 )
 
@@ -1253,14 +1253,6 @@ java_library(
 )
 
 java_library(
-    name = "org_yaml_snakeyaml",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_yaml_snakeyaml//jar",
-    ],
-)
-
-java_library(
     name = "pl_pragmatists_junitparams",
     visibility = ["//visibility:public"],
     exports = [
@@ -1379,7 +1371,7 @@ java_library(
     exports = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
-        "@org_yaml_snakeyaml//jar",
+        "@aggregation//:org_yaml_snakeyaml",
     ],
 )
 

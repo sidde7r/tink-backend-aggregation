@@ -11,9 +11,9 @@ java_library(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_reflections_reflections",
         "//third_party:org_slf4j_slf4j_api",
-        "//third_party:org_yaml_snakeyaml",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_yaml_snakeyaml",
     ],
 )
