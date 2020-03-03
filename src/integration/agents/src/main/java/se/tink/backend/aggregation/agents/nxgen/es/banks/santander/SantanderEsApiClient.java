@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
 import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.rpc.AuthenticateCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
@@ -30,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.TransactionPaginationRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -211,11 +213,18 @@ public class SantanderEsApiClient {
     }
 
     private String postSoapMessage(URL url, String soapAction, String body) {
-        return client.request(url)
-                .header(SantanderEsConstants.Headers.SOAP_ACTION, soapAction)
-                .type(SantanderEsConstants.Headers.TEXT_XML_UTF8)
-                .accept(MediaType.WILDCARD)
-                .post(String.class, body);
+        try {
+            return client.request(url)
+                    .header(SantanderEsConstants.Headers.SOAP_ACTION, soapAction)
+                    .type(SantanderEsConstants.Headers.TEXT_XML_UTF8)
+                    .accept(MediaType.WILDCARD)
+                    .post(String.class, body);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() >= 500) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw e;
+        }
     }
 
     private String getTransactionsRequestBody(
