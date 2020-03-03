@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 import com.google.common.collect.ImmutableMap;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 
@@ -43,11 +43,11 @@ public class NordeaSEConstants {
                     .put(Instrument.Type.STOCK, "EQUITY")
                     .build();
 
-    public static final TypeMapper<Portfolio.Type> PORTFOLIO_TYPE_MAP =
-            TypeMapper.<Portfolio.Type>builder()
-                    .put(Portfolio.Type.DEPOT, "FONDA", "ASBS")
-                    .put(Portfolio.Type.ISK, "ISK")
-                    .put(Portfolio.Type.PENSION, "ISP", "NLPV2")
+    public static TypeMapper<PortfolioType> PORTFOLIO_TYPE_MAPPER =
+            TypeMapper.<PortfolioType>builder()
+                    .put(PortfolioType.DEPOT, "FONDA", "ASBS", "PBI", "AKTIV")
+                    .put(PortfolioType.ISK, "ISK")
+                    .put(PortfolioType.PENSION, "ISP", "NLP", "IPS")
                     .build();
 
     public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
