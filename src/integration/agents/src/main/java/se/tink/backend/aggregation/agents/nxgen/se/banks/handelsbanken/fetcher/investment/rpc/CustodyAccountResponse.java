@@ -72,6 +72,11 @@ public class CustodyAccountResponse extends BaseResponse {
             if ((i + 1) % 5 == 0 || i == (map.size() - 1)) {
                 String key = AccountPayloadKeys.FUND_ACCOUNT_NUMBER + "_part_" + i + 1;
                 final String instrumentsMap = SerializationUtils.serializeToString(tempMap);
+                LOGGER.info(
+                        "# of instruments: "
+                                + tempMap.size()
+                                + " /Serialized length: "
+                                + instrumentsMap.length());
                 builder.putPayload(key, instrumentsMap);
                 tempMap.clear();
             }
