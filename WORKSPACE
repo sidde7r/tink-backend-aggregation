@@ -879,7 +879,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_datatype_jackson_datatype_guava",
+    name = "com_fasterxml_jackson_datatype_jackson_datatype_guava",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9",
     sha1 = "8ed2f11606b6f37c087a090e333b19273f6f48cb",
 )
