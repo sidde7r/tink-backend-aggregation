@@ -69,7 +69,6 @@ public class LansforsakringarConstants {
                         .put(AccountTypes.CHECKING, "CHECKING", "DEBIT")
                         .put(AccountTypes.SAVINGS, "SAVINGS")
                         .put(AccountTypes.PENSION, "PENSION")
-                        .put(AccountTypes.MORTGAGE, "Bolån Hypotek")
                         .build();
         public static final String CURRENCY = "SEK";
     }

@@ -13,10 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -42,33 +40,21 @@ public class FetchLoanDetailsResponse {
 
     @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
-        return LoanAccount.nxBuilder()
-                .withLoanDetails(getLoanModule())
-                .withId(getIdModule())
+        return LoanAccount.builder(loanNumber, ExactCurrencyAmount.of(getDebt(), Accounts.CURRENCY))
+                .setDetails(getLoanDetails())
+                .setAccountNumber(loanNumber)
+                .setInterestRate(getCurrentInterestrate())
+                .setName(loanName)
                 .build();
     }
 
-    private IdModule getIdModule() {
-        return IdModule.builder()
-                .withUniqueIdentifier(loanNumber)
-                .withAccountNumber(loanNumber)
-                .withAccountName(loanName)
-                .addIdentifier(new SwedishIdentifier(loanNumber))
+    private LoanDetails getLoanDetails() {
+        return LoanDetails.builder(getLoanType())
+                .setLoanNumber(loanNumber)
+                .setApplicants(getApplicants())
+                .setCoApplicant(hasCoapplicant())
+                .setSecurity(getSecurities())
                 .build();
-    }
-
-    private LoanModule getLoanModule() {
-        LoanModule loanModule =
-                LoanModule.builder()
-                        .withType(getLoanType())
-                        .withBalance(ExactCurrencyAmount.of(getDebt(), Accounts.CURRENCY))
-                        .withInterestRate(getCurrentInterestrate())
-                        .setLoanNumber(loanNumber)
-                        .setApplicants(getApplicants())
-                        .setCoApplicant(hasCoapplicant())
-                        .setSecurity(getSecurities())
-                        .build();
-        return loanModule;
     }
 
     private String getSecurities() {
@@ -77,7 +63,7 @@ public class FetchLoanDetailsResponse {
         }
         return securities.stream()
                 .map(SecuritiesEntity::toString)
-                .reduce("", (s1, s2) -> s1 + "\n" + s2);
+                .reduce("", (s1, s2) -> s1 + " - " + s2);
     }
 
     private boolean hasCoapplicant() {

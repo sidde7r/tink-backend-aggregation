@@ -153,7 +153,7 @@ public class LansforsakringarAgent extends NextGenerationAgent
 
     @Override
     public FetchLoanAccountsResponse fetchLoanAccounts() {
-        return null;
+        return loanRefreshController.fetchLoanAccounts();
     }
 
     @Override
