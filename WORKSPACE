@@ -1107,7 +1107,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_codec_commons_codec",
+    name = "commons_codec_commons_codec",  # Do not use, but do not remove
     artifact = "commons-codec:commons-codec:1.6",
     sha1 = "b7f0fc8f61ecadeb3695f0b9464755eee44374d4",
 )
