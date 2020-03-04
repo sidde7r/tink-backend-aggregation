@@ -1077,7 +1077,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_yaml_snakeyaml",
+    name = "org_yaml_snakeyaml",  # Do not use, but do not remove
     artifact = "org.yaml:snakeyaml:1.13",
     sha1 = "73cbb494a912866c4c831a178c3a2a9169f4eaad",
 )
@@ -2573,6 +2573,7 @@ maven_install(
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
         "org.codehaus.woodstox:stax2-api:4.1",
+        "org.yaml:snakeyaml:1.23",
     ],
     excluded_artifacts = [
         # Keep this list empty please

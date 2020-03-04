@@ -32,10 +32,10 @@ java_binary(
         "//third_party:log",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
-        "//third_party:org_yaml_snakeyaml",
         "//third_party:prometheus",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_yaml_snakeyaml",
     ],
 )
 
@@ -56,10 +56,10 @@ junit_test(
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",
-        "//third_party:org_yaml_snakeyaml",
         "//third_party:prometheus",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_yaml_snakeyaml",
     ],
 )
 

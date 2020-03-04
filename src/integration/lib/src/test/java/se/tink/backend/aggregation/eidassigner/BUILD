@@ -18,8 +18,8 @@ junit_test(
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
-        "//third_party:org_yaml_snakeyaml",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_yaml_snakeyaml",
     ],
 )
