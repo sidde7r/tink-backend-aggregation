@@ -66,8 +66,11 @@ public final class InstrumentIdModule {
      */
     public static InstrumentIdModule of(
             @Nonnull String isin, @Nonnull String marketPlace, @Nonnull String name) {
-        // marketPlace should not be null because it will be used to generate the unique identifier
+        // isin and marketPlace should not be null because it will be used to generate the unique
+        // identifier
         Preconditions.checkNotNull(marketPlace, "MarketPlace must not be null.");
+        Preconditions.checkArgument(
+                Objects.isNull(isin) || isin.matches("[A-Z]{2}[a-zA-Z0-9]{9}\\d"), "Invalid ISIN");
         return of(isin, marketPlace, name, isin + marketPlace);
     }
 
@@ -116,9 +119,6 @@ public final class InstrumentIdModule {
 
         @Override
         public InstrumentIdBuildStep setIsin(String isin) {
-            Preconditions.checkArgument(
-                    Objects.isNull(isin) || isin.matches("[A-Z]{2}[a-zA-Z0-9]{9}\\d"),
-                    "Invalid ISIN");
             this.isin = isin;
             return this;
         }
