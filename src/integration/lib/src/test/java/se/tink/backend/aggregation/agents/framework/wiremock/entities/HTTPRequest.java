@@ -6,7 +6,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -30,10 +29,7 @@ public class HTTPRequest {
         URI uri = URI.create(url);
 
         this.path = uri.getRawPath();
-        this.query =
-                URLEncodedUtils.parse(uri, StandardCharsets.UTF_8.name()).stream()
-                        .map(this::urlEncode)
-                        .collect(Collectors.toList());
+        this.query = URLEncodedUtils.parse(uri, StandardCharsets.UTF_8.name());
 
         this.method = method;
         this.requestHeaders = requestHeaders;

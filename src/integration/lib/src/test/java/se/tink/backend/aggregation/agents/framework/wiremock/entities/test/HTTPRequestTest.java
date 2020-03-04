@@ -24,7 +24,7 @@ public final class HTTPRequestTest {
     }
 
     @Test
-    public void ensureQuery_isParsed_butNotDecoded() {
+    public void ensureQuery_isParsed_andDecoded() {
 
         final String someEncodedUrl = "https://host.com/so%21meurl?k%21y=value&key2=value2";
 
@@ -32,7 +32,7 @@ public final class HTTPRequestTest {
         final List<NameValuePair> query = request.getQuery();
 
         Assert.assertEquals(2, query.size());
-        Assert.assertThat(query, hasItem(new BasicNameValuePair("k%21y", "value")));
+        Assert.assertThat(query, hasItem(new BasicNameValuePair("k!y", "value")));
         Assert.assertThat(query, hasItem(new BasicNameValuePair("key2", "value2")));
     }
 }
