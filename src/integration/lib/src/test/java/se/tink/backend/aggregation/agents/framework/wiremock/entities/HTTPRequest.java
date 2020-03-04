@@ -37,12 +37,12 @@ public class HTTPRequest {
             this.requestHeaders = requestHeaders;
         }
 
-        public Builder withRequestBody(final String requestBody) {
+        public Builder setRequestBody(final String requestBody) {
             this.requestBody = requestBody;
             return this;
         }
 
-        public Builder withExpectedState(final String expectedState) {
+        public Builder setExpectedState(final String expectedState) {
             this.expectedState = expectedState;
             return this;
         }

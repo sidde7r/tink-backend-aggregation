@@ -73,8 +73,8 @@ public class AapFileParser implements RequestResponseParser {
 
         HTTPRequest.Builder httpRequestBuilder =
                 new HTTPRequest.Builder(requestMethod, requestURL, requestHeaders);
-        requestBody.ifPresent(body -> httpRequestBuilder.withRequestBody(body));
-        expectedState.ifPresent(state -> httpRequestBuilder.withExpectedState(state));
+        requestBody.ifPresent(body -> httpRequestBuilder.setRequestBody(body));
+        expectedState.ifPresent(state -> httpRequestBuilder.setExpectedState(state));
         return httpRequestBuilder.build();
     }
 
@@ -86,8 +86,8 @@ public class AapFileParser implements RequestResponseParser {
         Optional<String> responseBody = parseBody(responseLines);
         HTTPResponse.Builder httpResponseBuilder =
                 new HTTPResponse.Builder(responseHeaders, statusCode);
-        responseBody.ifPresent(body -> httpResponseBuilder.withResponseBody(body));
-        toState.ifPresent(state -> httpResponseBuilder.withToState(state));
+        responseBody.ifPresent(body -> httpResponseBuilder.setResponseBody(body));
+        toState.ifPresent(state -> httpResponseBuilder.setToState(state));
         return httpResponseBuilder.build();
     }
 

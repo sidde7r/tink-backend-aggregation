@@ -35,22 +35,22 @@ public class AapFileParserTest {
                                                 "POST",
                                                 "/mobileone/msl/services/transactions/v1/getDetails",
                                                 expectedRequestHeaders)
-                                        .withRequestBody(
+                                        .setRequestBody(
                                                 "{\"billingIndexList\":[0],\"sortedIndex\":0}")
                                         .build(),
                                 new HTTPResponse.Builder(expectedResponseHeaders, 200)
-                                        .withResponseBody("{}")
-                                        .withToState("STATE1")
+                                        .setResponseBody("{}")
+                                        .setToState("STATE1")
                                         .build()),
                         new Pair<>(
                                 new HTTPRequest.Builder(
                                                 "POST",
                                                 "/mobileone/msl/services/accountservicing/v1/extendSession",
                                                 expectedRequestHeaders)
-                                        .withExpectedState("STATE1")
+                                        .setExpectedState("STATE1")
                                         .build(),
                                 new HTTPResponse.Builder(expectedResponseHeaders, 200)
-                                        .withResponseBody("{\"extendSession\":{\"status\":0}}")
+                                        .setResponseBody("{\"extendSession\":{\"status\":0}}")
                                         .build()));
 
         final String fileContent =

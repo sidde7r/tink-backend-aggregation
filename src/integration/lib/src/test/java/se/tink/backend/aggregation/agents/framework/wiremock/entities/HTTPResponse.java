@@ -24,12 +24,12 @@ public class HTTPResponse {
             this.statusCode = statusCode;
         }
 
-        public Builder withResponseBody(final String responseBody) {
+        public Builder setResponseBody(final String responseBody) {
             this.responseBody = responseBody;
             return this;
         }
 
-        public Builder withToState(final String toState) {
+        public Builder setToState(final String toState) {
             this.toState = toState;
             return this;
         }
