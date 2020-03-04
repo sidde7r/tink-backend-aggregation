@@ -160,8 +160,8 @@ java_library(
         "@com_github_rholder_guava_retrying//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
-        "@com_google_code_findbugs_jsr305//jar",
     ],
 )
 
@@ -218,7 +218,7 @@ java_library(
     name = "com_google_code_findbugs_jsr305",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_code_findbugs_jsr305//jar",
+        "@aggregation//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -245,7 +245,7 @@ java_library(
         "@com_google_http_client_google_http_client//jar",
     ],
     runtime_deps = [
-        "@com_google_code_findbugs_jsr305//jar",
+        "@aggregation//:com_google_code_findbugs_jsr305",
         "@org_apache_httpcomponents_httpclient//jar",
     ],
 )
@@ -315,7 +315,7 @@ java_library(
         "@com_google_instrumentation_instrumentation_api//jar",
     ],
     runtime_deps = [
-        "@com_google_code_findbugs_jsr305//jar",
+        "@aggregation//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -484,6 +484,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_afterburner",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+        "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:org_yaml_snakeyaml",
         "@ch_qos_logback_logback_classic//jar",
@@ -497,7 +498,6 @@ java_library(
         "@com_codahale_metrics_metrics_jvm//jar",
         "@com_codahale_metrics_metrics_logback//jar",
         "@com_codahale_metrics_metrics_servlets//jar",
-        "@com_google_code_findbugs_jsr305//jar",
         "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
@@ -661,8 +661,8 @@ java_library(
     name = "io_grpc_grpc_protobuf_lite",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
-        "@com_google_code_findbugs_jsr305//jar",
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_core//jar",
         "@io_grpc_grpc_protobuf_lite//jar",
@@ -1397,9 +1397,9 @@ java_library(
         "@org_reflections_reflections//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
-        "@com_google_code_findbugs_jsr305//jar",
         "@dom4j_dom4j//jar",
         "@javax_servlet_javax_servlet_api//jar",
         "@junit_junit//jar",
@@ -1494,10 +1494,10 @@ java_library(
     name = "netty",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
         "@com_google_api_grpc_proto_google_common_protos//jar",
-        "@com_google_code_findbugs_jsr305//jar",
         "@com_google_instrumentation_instrumentation_api//jar",
         "@com_google_protobuf_protobuf_java//jar",
         "@com_google_protobuf_protobuf_java_util//jar",

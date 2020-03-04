@@ -1459,7 +1459,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_code_findbugs_jsr305",
+    name = "com_google_code_findbugs_jsr305",  # Do not use, but do not remove
     artifact = "com.google.code.findbugs:jsr305:3.0.0",
     sha1 = "5871fb60dc68d67da54a663c3fd636a10a532948",
 )
