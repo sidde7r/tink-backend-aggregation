@@ -8,7 +8,6 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
-        "//src/integration/signableoperation:enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/hash",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/jersey/interceptor",
@@ -27,6 +26,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
+        "//src/integration/signableoperation:enums",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
@@ -38,6 +38,6 @@ java_library(
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",
-        "@org_assertj_assertj_core//jar"
+        "@org_assertj_assertj_core//jar",
     ],
 )
