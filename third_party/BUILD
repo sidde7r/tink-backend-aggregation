@@ -270,7 +270,7 @@ java_library(
     runtime_deps = [
         "@aggregation//:aopalliance_aopalliance",
         "@aggregation//:com_google_guava_guava",
-        "@javax_inject_javax_inject//jar",
+        "@aggregation//:javax_inject_javax_inject",
     ],
 )
 
@@ -278,7 +278,7 @@ java_library(
     name = "javax_inject_javax_inject",
     visibility = ["//visibility:public"],
     exports = [
-        "@javax_inject_javax_inject//jar",
+        "@aggregation//:javax_inject_javax_inject",
     ],
 )
 
@@ -298,13 +298,13 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:javax_inject_javax_inject",
         "@com_google_inject_extensions_guice_assistedinject//jar",
         "@com_google_inject_extensions_guice_grapher//jar",
         "@com_google_inject_extensions_guice_multibindings//jar",
         "@com_google_inject_guice//jar",
         "@com_netflix_governator_api//jar",
         "@com_netflix_governator_core//jar",
-        "@javax_inject_javax_inject//jar",
     ],
 )
 

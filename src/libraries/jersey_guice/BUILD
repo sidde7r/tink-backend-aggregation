@@ -21,7 +21,7 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpclient",
 
         # Javax inject
-        "//third_party:javax_inject_javax_inject",
+        "@aggregation//:javax_inject_javax_inject",
     ],
 )
 

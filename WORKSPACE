@@ -903,7 +903,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_inject_javax_inject",
+    name = "javax_inject_javax_inject",  # Do not use, but do not remove
     artifact = "javax.inject:javax.inject:1",
     sha1 = "6975da39a7040257bd51d21a231b76c915872d38",
 )
