@@ -11,17 +11,17 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @JsonObject
 public class UnicreditConfiguration implements ClientConfiguration {
 
-    private @Secret String baseUrl;
+    @Secret private String baseUrl;
 
-    private @AgentConfigParam String redirectUrl;
+    @AgentConfigParam private String redirectUrl;
 
     private String clientKeyStorePath;
 
     private String clientKeyStorePassword;
 
-    private String eidasQwac;
+    @Secret private String eidasQwac;
 
-    private String psuIdType;
+    @Secret private String psuIdType;
 
     public String getBaseUrl() {
         Preconditions.checkNotNull(
