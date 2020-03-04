@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.inv
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 
@@ -26,6 +27,6 @@ public class HoldingEntity {
     }
 
     public boolean isInstrument() {
-        return !instrument.getRawType().equalsIgnoreCase("CASH");
+        return NordeaSEConstants.INSTRUMENT_TYPE_MAP.translate(instrument.getRawType()).isPresent();
     }
 }
