@@ -329,7 +329,7 @@ maven_jar(
 # @aopalliance_aopalliance//jar:jar
 
 maven_jar(
-    name = "aopalliance_aopalliance",
+    name = "aopalliance_aopalliance",  # Do not use, but do not remove
     artifact = "aopalliance:aopalliance:1.0",
     sha1 = "0235ba8b489512805ac13a8f9ea77a1ca5ebe3e8",
 )

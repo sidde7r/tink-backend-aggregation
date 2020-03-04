@@ -268,8 +268,8 @@ java_library(
         "@com_google_inject_guice//jar",
     ],
     runtime_deps = [
+        "@aggregation//:aopalliance_aopalliance",
         "@aggregation//:com_google_guava_guava",
-        "@aopalliance_aopalliance//jar",
         "@javax_inject_javax_inject//jar",
     ],
 )
