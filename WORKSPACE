@@ -751,7 +751,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_httpcomponents_httpclient",
+    name = "org_apache_httpcomponents_httpclient",  # Do not use, but do not remove
     artifact = "org.apache.httpcomponents:httpclient:4.3.4",
     sha1 = "a9a1fef2faefed639ee0d0fba5b3b8e4eb2ff2d8",
 )
