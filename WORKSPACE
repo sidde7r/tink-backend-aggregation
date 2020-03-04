@@ -715,7 +715,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_slf4j_slf4j_api",
+    name = "org_slf4j_slf4j_api",  # Do not use, but do not remove
     artifact = "org.slf4j:slf4j-api:1.7.21",
     sha1 = "139535a69a4239db087de9bab0bee568bf8e0b70",
 )
