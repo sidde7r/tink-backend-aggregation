@@ -1661,7 +1661,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_github_rholder_guava_retrying",
+    name = "com_github_rholder_guava_retrying",  # Do not use, but do not remove
     artifact = "com.github.rholder:guava-retrying:2.0.0",
     sha1 = "974bc0a04a11cc4806f7c20a34703bd23c34e7f4",
 )

@@ -157,7 +157,7 @@ java_library(
     name = "com_github_rholder_guava_retrying",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_github_rholder_guava_retrying//jar",
+        "@aggregation//:com_github_rholder_guava_retrying",
     ],
     runtime_deps = [
         "@aggregation//:com_google_code_findbugs_jsr305",
