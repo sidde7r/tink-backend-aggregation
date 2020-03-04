@@ -2558,6 +2558,7 @@ pinned_maven_install()
 maven_install(
     name = "aggregation",
     artifacts = [
+        "ch.qos.logback:logback-core:1.1.11",
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
         "com.fasterxml.jackson.core:jackson-databind:2.9.9",
