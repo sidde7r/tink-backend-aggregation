@@ -93,6 +93,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_apache_commons_commons_lang3",
         "@asm_asm//jar",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
         "@com_jayway_jsonpath_json_path//jar",
@@ -104,7 +105,6 @@ java_library(
         "@net_minidev_json_smart//jar",
         "@net_sf_jopt_simple_jopt_simple//jar",
         "@org_apache_commons_commons_collections4//jar",
-        "@org_apache_commons_commons_lang3//jar",
         "@org_apache_httpcomponents_httpclient//jar",
         "@org_apache_httpcomponents_httpcore//jar",
         "@org_eclipse_jetty_jetty_continuation//jar",
@@ -727,6 +727,7 @@ java_library(
     name = "net_sourceforge_htmlunit_htmlunit",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:org_apache_commons_commons_lang3",
         "@commons_codec_commons_codec//jar",
         "@commons_collections_commons_collections//jar",
         "@commons_io_commons_io//jar",
@@ -735,7 +736,6 @@ java_library(
         "@net_sourceforge_htmlunit_htmlunit//jar",
         "@net_sourceforge_htmlunit_htmlunit_core_js//jar",
         "@net_sourceforge_nekohtml_nekohtml//jar",
-        "@org_apache_commons_commons_lang3//jar",
         "@org_apache_httpcomponents_httpclient//jar",
         "@org_apache_httpcomponents_httpcore//jar",
         "@org_apache_httpcomponents_httpmime//jar",
@@ -808,7 +808,7 @@ java_library(
     name = "org_apache_commons_commons_lang3",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_commons_commons_lang3//jar",
+        "@aggregation//:org_apache_commons_commons_lang3",
     ],
 )
 
@@ -970,8 +970,8 @@ java_library(
     name = "org_apache_mahout_mahout_core",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:org_apache_commons_commons_lang3",
         "@com_thoughtworks_xstream_xstream//jar",
-        "@org_apache_commons_commons_lang3//jar",
         "@org_apache_commons_commons_math3//jar",
         "@org_apache_lucene_lucene_analyzers_common//jar",
         "@org_apache_lucene_lucene_core//jar",
@@ -1677,11 +1677,11 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+        "@aggregation//:org_apache_commons_commons_lang3",
         "@commons_io_commons_io//jar",
         "@io_perfmark_perfmark_api//jar",
         "@lombok//:org_projectlombok_lombok",
         "@org_apache_commons_commons_collections4//jar",
-        "@org_apache_commons_commons_lang3//jar",
         "@standalone_agent_deps//:ch_qos_logback_logback_classic",
         "@standalone_agent_deps//:ch_qos_logback_logback_core",
         "@standalone_agent_deps//:commons_codec_commons_codec",

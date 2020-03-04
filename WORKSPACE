@@ -1753,7 +1753,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_commons_commons_lang3",
+    name = "org_apache_commons_commons_lang3",  # Do not use, but do not remove
     artifact = "org.apache.commons:commons-lang3:3.4",
     sha1 = "5fe28b9518e58819180a43a850fbc0dd24b7c050",
 )
