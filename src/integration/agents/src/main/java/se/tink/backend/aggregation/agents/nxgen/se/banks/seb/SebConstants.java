@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -14,9 +16,7 @@ public class SebConstants {
     public static class Urls {
         public static final String BASE = "https://mp.seb.se";
 
-        public static final URL FETCH_AUTOSTART_TOKEN =
-                new URL(BASE.concat(Endpoints.FETCH_AUTOSTART_TOKEN));
-        public static final URL COLLECT_BANKID = new URL(BASE.concat(Endpoints.COLLECT_BANKID));
+        public static final URL AUTHENTICATE = new URL(BASE.concat(Endpoints.AUTHENTICATIONS));
         public static final URL INITIATE_SESSION = new URL(BASE.concat(Endpoints.INITIATE_SESSION));
         public static final URL ACTIVATE_SESSION = new URL(BASE.concat(Endpoints.ACTIVATE_SESSION));
         public static final URL LIST_ACCOUNTS = new URL(BASE.concat(Endpoints.LIST_ACCOUNTS));
@@ -39,9 +39,7 @@ public class SebConstants {
     }
 
     public static class Endpoints {
-        public static final String FETCH_AUTOSTART_TOKEN = "/nauth2/Authentication/api/v1/bid/auth";
-        public static final String COLLECT_BANKID = "/nauth2/Authentication/api/v1/bid/";
-
+        public static final String AUTHENTICATIONS = "/auth/bid/v2/authentications";
         private static final String API_BASE = "/1000/ServiceFactory/PC_BANK/";
         public static final String LIST_INVESTMENT_ACCOUNTS =
                 API_BASE + "Tl_forsakringLista11Enga01.asmx/Execute";
@@ -71,23 +69,25 @@ public class SebConstants {
 
     public static class HeaderKeys {
         public static final String X_SEB_UUID = "x-seb-uuid";
+        public static final String X_SEB_CSRF = "x-seb-csrf";
     }
 
-    public static class RequestBody {
-        public static final String SEB_REFERER_VALUE = "/masp/mbid";
-    }
+    public static class Authentication {
+        public static final GenericTypeMapper<BankIdStatus, String> statusMapper =
+                GenericTypeMapper.<BankIdStatus, String>genericBuilder()
+                        .put(BankIdStatus.DONE, "complete")
+                        .put(BankIdStatus.WAITING, "pending")
+                        .put(BankIdStatus.FAILED_UNKNOWN, "failed")
+                        .setDefaultTranslationValue(BankIdStatus.FAILED_UNKNOWN)
+                        .build();
 
-    public static class LoginCodes {
-        // Strings for status comparison when logging in with BankID.
-        public static final String START_BANKID = "RFA1";
-        public static final String ALREADY_IN_PROGRESS = "RFA3";
-        public static final String USER_CANCELLED = "RFA6";
-        public static final String NO_CLIENT = "RFA8";
-        public static final String USER_SIGN = "RFA9";
-        public static final String AUTHENTICATED = "RFA100";
-        public static final String AUTHORIZATION_REQUIRED = "RFA101";
-        public static final String WAITING_FOR_BANKID = "RFA15A";
-        public static final String COLLECT_BANKID = "RFA102";
+        public static final GenericTypeMapper<BankIdStatus, String> hintCodeMapper =
+                GenericTypeMapper.<BankIdStatus, String>genericBuilder()
+                        .put(BankIdStatus.TIMEOUT, "expired_transaction")
+                        .put(BankIdStatus.EXPIRED_AUTOSTART_TOKEN, "start_failed")
+                        .put(BankIdStatus.CANCELLED, "cancelled", "user_cancel")
+                        .setDefaultTranslationValue(BankIdStatus.FAILED_UNKNOWN)
+                        .build();
     }
 
     public static class InitResult {

@@ -17,8 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.UserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.DeviceIdentification;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.entities.HardwareInformation;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.rpc.BankIdRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.rpc.BankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.SystemStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.entities.UserInformation;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionQuery;
@@ -26,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc.Request;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.rpc.Response;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -38,19 +38,23 @@ public class SebApiClient {
         sebUUID = UUID.randomUUID().toString().toUpperCase();
     }
 
-    public BankIdResponse fetchAutostartToken() {
-        return httpClient
-                .request(Urls.FETCH_AUTOSTART_TOKEN)
-                .header(HeaderKeys.X_SEB_UUID, sebUUID)
-                .body(new BankIdRequest(), MediaType.APPLICATION_JSON)
-                .post(BankIdResponse.class);
+    public AuthenticationResponse initiateBankId() {
+        return AuthenticationResponse.fromHttpResponse(
+                httpClient
+                        .request(Urls.AUTHENTICATE)
+                        .header(HeaderKeys.X_SEB_UUID, sebUUID)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
+                        .post(HttpResponse.class));
     }
 
-    public BankIdResponse collectBankId(final String reference) {
-        return httpClient
-                .request(Urls.COLLECT_BANKID.concat(reference))
-                .header(HeaderKeys.X_SEB_UUID, sebUUID)
-                .post(BankIdResponse.class);
+    public AuthenticationResponse collectBankId(final String csrfToken) {
+        return AuthenticationResponse.fromHttpResponse(
+                httpClient
+                        .request(Urls.AUTHENTICATE)
+                        .header(HeaderKeys.X_SEB_UUID, sebUUID)
+                        .header(HeaderKeys.X_SEB_CSRF, csrfToken)
+                        .get(HttpResponse.class));
     }
 
     private Response post(URL url, Request request) {
