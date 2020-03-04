@@ -32,14 +32,19 @@ public class AccountDeserializer extends JsonDeserializer<List<Account>> {
             objectNode.remove("exactBalance");
             objectNode.remove("exactAvailableCredit");
             Account account = new ObjectMapper().readValue(objectNode.toString(), Account.class);
-            account.setExactBalance(
-                    new ExactCurrencyAmount(
-                            new BigDecimal(exactBalance.get("value").asDouble()),
-                            exactBalance.get("currencyCode").asText()));
-            account.setExactAvailableCredit(
-                    new ExactCurrencyAmount(
-                            new BigDecimal(exactAvailableCredit.get("value").asDouble()),
-                            exactAvailableCredit.get("currencyCode").asText()));
+
+            if (exactBalance != null) {
+                account.setExactBalance(
+                        new ExactCurrencyAmount(
+                                new BigDecimal(exactBalance.get("value").asDouble()),
+                                exactBalance.get("currencyCode").asText()));
+            }
+            if (exactAvailableCredit != null) {
+                account.setExactAvailableCredit(
+                        new ExactCurrencyAmount(
+                                new BigDecimal(exactAvailableCredit.get("value").asDouble()),
+                                exactAvailableCredit.get("currencyCode").asText()));
+            }
             entities.add(account);
         }
         return entities;

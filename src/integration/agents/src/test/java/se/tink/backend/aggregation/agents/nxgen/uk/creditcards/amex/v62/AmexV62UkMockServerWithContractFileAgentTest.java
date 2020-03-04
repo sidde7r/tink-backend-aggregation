@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEnti
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.S3LogFormatAdapter;
@@ -40,6 +41,9 @@ public class AmexV62UkMockServerWithContractFileAgentTest extends AgentIntegrati
         List<Account> expectedAccounts = expected.getAccounts();
         List<Transaction> expectedTransactions = expected.getTransactions();
 
+        final WireMockConfiguration configuration =
+                new WireMockConfiguration("localhost:" + getWireMockPort());
+
         // When
         NewAgentTestContext context =
                 new AgentIntegrationTest.Builder("uk", "uk-americanexpress-password")
@@ -47,7 +51,7 @@ public class AmexV62UkMockServerWithContractFileAgentTest extends AgentIntegrati
                         .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .useWireMockServerHost("localhost:" + getWireMockPort())
+                        .setWireMockConfiguration(configuration)
                         .build()
                         .testRefresh();
 
