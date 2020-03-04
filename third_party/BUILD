@@ -94,6 +94,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:org_apache_commons_commons_lang3",
+        "@aggregation//:org_apache_httpcomponents_httpcore",
         "@asm_asm//jar",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
         "@com_jayway_jsonpath_json_path//jar",
@@ -106,7 +107,6 @@ java_library(
         "@net_sf_jopt_simple_jopt_simple//jar",
         "@org_apache_commons_commons_collections4//jar",
         "@org_apache_httpcomponents_httpclient//jar",
-        "@org_apache_httpcomponents_httpcore//jar",
         "@org_eclipse_jetty_jetty_continuation//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",
@@ -340,6 +340,7 @@ java_library(
         "@io_dropwizard_dropwizard_client//jar",
     ],
     runtime_deps = [
+        "@aggregation//:org_apache_httpcomponents_httpcore",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_httpclient//jar",
         "@com_sun_jersey_contribs_jersey_apache_client4//jar",
@@ -347,7 +348,6 @@ java_library(
         "@commons_codec_commons_codec//jar",
         "@io_dropwizard_dropwizard_core//jar",
         "@org_apache_httpcomponents_httpclient//jar",
-        "@org_apache_httpcomponents_httpcore//jar",
     ],
 )
 
@@ -728,6 +728,7 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:org_apache_commons_commons_lang3",
+        "@aggregation//:org_apache_httpcomponents_httpcore",
         "@commons_codec_commons_codec//jar",
         "@commons_collections_commons_collections//jar",
         "@commons_io_commons_io//jar",
@@ -737,7 +738,6 @@ java_library(
         "@net_sourceforge_htmlunit_htmlunit_core_js//jar",
         "@net_sourceforge_nekohtml_nekohtml//jar",
         "@org_apache_httpcomponents_httpclient//jar",
-        "@org_apache_httpcomponents_httpcore//jar",
         "@org_apache_httpcomponents_httpmime//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",
@@ -764,10 +764,10 @@ java_library(
     name = "oauth_signpost_signpost_commonshttp4",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:org_apache_httpcomponents_httpcore",
         "@oauth_signpost_signpost_commonshttp4//jar",
         "@oauth_signpost_signpost_core//jar",
         "@org_apache_httpcomponents_httpclient//jar",
-        "@org_apache_httpcomponents_httpcore//jar",
     ],
 )
 
@@ -907,8 +907,8 @@ java_library(
         "@org_apache_httpcomponents_httpclient//jar",
     ],
     runtime_deps = [
+        "@aggregation//:org_apache_httpcomponents_httpcore",
         "@commons_codec_commons_codec//jar",
-        "@org_apache_httpcomponents_httpcore//jar",
     ],
 )
 
@@ -936,7 +936,7 @@ java_library(
     name = "org_apache_httpcomponents_httpcore",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_httpcomponents_httpcore//jar",
+        "@aggregation//:org_apache_httpcomponents_httpcore",
     ],
 )
 

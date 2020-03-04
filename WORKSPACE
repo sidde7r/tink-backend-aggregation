@@ -1255,7 +1255,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_httpcomponents_httpcore",
+    name = "org_apache_httpcomponents_httpcore",  # Do not use, but do not remove
     artifact = "org.apache.httpcomponents:httpcore:4.3.2",
     sha1 = "31fbbff1ddbf98f3aa7377c94d33b0447c646b6e",
 )
