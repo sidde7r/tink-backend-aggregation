@@ -879,7 +879,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_datatype_jackson_datatype_guava",
+    name = "com_fasterxml_jackson_datatype_jackson_datatype_guava",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9",
     sha1 = "8ed2f11606b6f37c087a090e333b19273f6f48cb",
 )
@@ -1155,7 +1155,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_module_jackson_module_afterburner",
+    name = "com_fasterxml_jackson_module_jackson_module_afterburner",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
     sha1 = "89ac043b711248ba512b98493d2266328d1f1045",
 )
@@ -1219,7 +1219,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
+    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.9",
     sha1 = "0ccc00ed13e4d74f9c5cc30465b6fc4fe5ce5473",
 )
@@ -1581,7 +1581,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_classmate",
+    name = "com_fasterxml_classmate",  # Do not use, but do not remove
     artifact = "com.fasterxml:classmate:1.0.0",
     sha1 = "434efef28c81162b17c540e634cffa3bd9b09b4c",
 )
@@ -2563,11 +2563,15 @@ maven_install(
         "com.fasterxml.jackson.core:jackson-databind:2.9.9",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.9",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.9",
+        "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9",
         "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
         "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9",
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.9",
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9",
+        "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
+        "com.fasterxml:classmate:1.0.0",
         "com.google.code.gson:gson:2.8.2",
         "com.google.guava:guava:23.1-jre",
         "javax.xml.stream:stax-api:1.0-2",
