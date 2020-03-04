@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.OPENING_CLEARED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.PREVIOUSLY_CLOSED_BOOKED;
 import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.BalanceFixtures.forwardAvailableBalance;
@@ -12,6 +12,7 @@ import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.
 import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander.BalanceFixtures.previouslyClosedBookedBalance;
 
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,22 +37,20 @@ public class SantanderCreditCardBalanceMapperTest {
     @Test
     public void shouldPickBalance_byDefinedPriority() {
         // given
-        ImmutableList<AccountBalanceType> definedPriority =
-                ImmutableList.of(PREVIOUSLY_CLOSED_BOOKED, OPENING_CLEARED);
-        ImmutableList<AccountBalanceEntity> balances =
-                ImmutableList.of(
-                        forwardAvailableBalance(),
-                        previouslyClosedBookedBalance(),
-                        interimAvailableBalance());
+        List inputBalances = Mockito.mock(List.class);
+        AccountBalanceEntity balanceToReturn = forwardAvailableBalance();
 
         // when
-        balanceMapper.getAccountBalance(balances);
-        ArgumentCaptor<ImmutableList<AccountBalanceType>> argument =
-                ArgumentCaptor.forClass(ImmutableList.class);
-        verify(valueExtractor).pickByValuePriority(eq(balances), any(), argument.capture());
+        ArgumentCaptor<List<AccountBalanceType>> argument = ArgumentCaptor.forClass(List.class);
+        when(valueExtractor.pickByValuePriority(eq(inputBalances), any(), argument.capture()))
+                .thenReturn(balanceToReturn);
+        ExactCurrencyAmount returnedBalance = balanceMapper.getAccountBalance(inputBalances);
 
         // then
-        assertThat(argument.getValue()).asList().isEqualTo(definedPriority);
+        ImmutableList<AccountBalanceType> expectedPriority =
+                ImmutableList.of(PREVIOUSLY_CLOSED_BOOKED, OPENING_CLEARED);
+        assertThat(argument.getValue()).asList().isEqualTo(expectedPriority);
+        assertThat(returnedBalance).isEqualByComparingTo(balanceToReturn.getAmount());
     }
 
     @Test
@@ -67,7 +66,7 @@ public class SantanderCreditCardBalanceMapperTest {
         ExactCurrencyAmount availableCredit = balanceMapper.getAvailableCredit(balances);
 
         // then
-        assertThat(availableCredit).isEqualTo(forwardAvailableBalance().getAsCurrencyAmount());
+        assertThat(availableCredit).isEqualTo(forwardAvailableBalance().getAmount());
     }
 
     @Test

@@ -1,19 +1,22 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.CLOSING_AVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.INTERIM_BOOKED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.PREVIOUSLY_CLOSED_BOOKED;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.CreditCardFixtures.interimAvailableBalance;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.CreditCardFixtures.previouslyClosedBookedBalance;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures.closingBookedBalance;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures.interimAvailableBalance;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures.previouslyClosedBookedBalance;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.CreditCardFixtures.availableCreditLine;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.CreditCardFixtures.temporaryCreditLine;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalLimitType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.entities.CreditLineEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountBalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.PrioritizedValueExtractor;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class DefaultCreditCardBalanceMapperTest {
@@ -37,43 +42,40 @@ public class DefaultCreditCardBalanceMapperTest {
     }
 
     @Test
-    public void shouldPickBalance_byDefinedPriority() {
+    public void shouldPickBalance_byExpectedPriority() {
         // given
-        ImmutableList<AccountBalanceType> definedPriority =
-                ImmutableList.of(INTERIM_BOOKED, PREVIOUSLY_CLOSED_BOOKED, CLOSING_AVAILABLE);
-
-        ImmutableList<AccountBalanceEntity> balances =
-                ImmutableList.of(
-                        CreditCardFixtures.closingBookedBalance(),
-                        previouslyClosedBookedBalance(),
-                        interimAvailableBalance());
+        List inputBalances = Mockito.mock(List.class);
+        AccountBalanceEntity balanceToReturn = BalanceFixtures.closingBookedBalance();
 
         // when
-        balanceMapper.getAccountBalance(balances);
-        ArgumentCaptor<ImmutableList<AccountBalanceType>> argument =
-                ArgumentCaptor.forClass(ImmutableList.class);
-        verify(valueExtractor).pickByValuePriority(eq(balances), any(), argument.capture());
+        ArgumentCaptor<List<AccountBalanceType>> argument = ArgumentCaptor.forClass(List.class);
+        when(valueExtractor.pickByValuePriority(eq(inputBalances), any(), argument.capture()))
+                .thenReturn(balanceToReturn);
+        ExactCurrencyAmount returnedBalance = balanceMapper.getAccountBalance(inputBalances);
 
         // then
-        assertThat(argument.getValue()).asList().isEqualTo(definedPriority);
+        ImmutableList<AccountBalanceType> expectedPriority =
+                ImmutableList.of(INTERIM_BOOKED, PREVIOUSLY_CLOSED_BOOKED, CLOSING_AVAILABLE);
+        assertThat(argument.getValue()).asList().isEqualTo(expectedPriority);
+        assertThat(returnedBalance).isEqualByComparingTo(balanceToReturn.getAmount());
     }
 
     @Test
     public void shouldGetAvailableCredit_fromAvailableOrPreagreedCreditLine() {
         // given
         ImmutableList<CreditLineEntity> creditLines =
-                ImmutableList.of(
-                        CreditCardFixtures.availableCreditLine(),
-                        CreditCardFixtures.temporaryCreditLine());
-
-        AccountBalanceEntity balanceWithCreditLines = CreditCardFixtures.closingBookedBalance();
+                ImmutableList.of(availableCreditLine(), temporaryCreditLine());
+        AccountBalanceEntity balanceWithCreditLines = closingBookedBalance();
         balanceWithCreditLines.setCreditLine(creditLines);
+
+        CreditLineEntity returnedCreditLine = availableCreditLine();
 
         // when
         ArgumentCaptor<ImmutableList<AccountBalanceType>> argument =
                 ArgumentCaptor.forClass(ImmutableList.class);
         when(valueExtractor.pickByValuePriority(eq(creditLines), any(), argument.capture()))
-                .thenReturn(CreditCardFixtures.availableCreditLine());
+                .thenReturn(returnedCreditLine);
+
         ExactCurrencyAmount result =
                 balanceMapper.getAvailableCredit(
                         ImmutableList.of(balanceWithCreditLines, previouslyClosedBookedBalance()));
@@ -86,7 +88,12 @@ public class DefaultCreditCardBalanceMapperTest {
                                 ExternalLimitType.AVAILABLE,
                                 ExternalLimitType.PRE_AGREED,
                                 ExternalLimitType.CREDIT));
-        assertThat(result).isEqualTo(CreditCardFixtures.availableCreditLine().getAmount());
+
+        assertThat(result)
+                .isEqualTo(
+                        ExactCurrencyAmount.of(
+                                returnedCreditLine.getAmount().getUnsignedAmount(),
+                                returnedCreditLine.getAmount().getCurrency()));
     }
 
     @Test
@@ -95,7 +102,7 @@ public class DefaultCreditCardBalanceMapperTest {
         AccountBalanceEntity balance1 = previouslyClosedBookedBalance();
         balance1.setCreditLine(Collections.emptyList());
         AccountBalanceEntity balance2 = interimAvailableBalance();
-        balance2.setCreditLine(Collections.singletonList(CreditCardFixtures.temporaryCreditLine()));
+        balance2.setCreditLine(Collections.singletonList(temporaryCreditLine()));
 
         // when
         DefaultCreditCardBalanceMapper mapper =

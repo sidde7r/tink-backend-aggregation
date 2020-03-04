@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +16,17 @@ public class CreditCardAccountExtractor {
     public Optional<CreditCardAccount> toCreditCardAccount(
             AccountsV31Response accounts, AccountBalanceV31Response balance, String partyName) {
 
+        // todo refactor it: its "balance steered" - this method should accept 1 account and list of
+        // balances
+        String balanceAccountId = balance.getData().get().get(0).getAccountId();
+
         return accounts.stream()
-                .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
+                .filter(a -> a.getAccountId().equals(balanceAccountId))
                 .filter(
-                        e ->
+                        a ->
                                 UkOpenBankingV31Constants.ACCOUNT_TYPE_MAPPER.isOf(
-                                        e.getRawAccountSubType(), AccountTypes.CREDIT_CARD))
+                                        a.getRawAccountSubType(), AccountTypes.CREDIT_CARD))
                 .findFirst()
-                .map(e -> creditCardAccountMapper.map(e, balance.getData().get(), partyName));
+                .map(a -> creditCardAccountMapper.map(a, balance.getData().get(), partyName));
     }
 }

@@ -11,10 +11,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.account.AccountBalanceV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.account.AccountsV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.CreditCardAccountExtractor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.CreditCardAccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.DefaultCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.PrioritizedValueExtractor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.CreditCardAccountExtractor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.CreditCardAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountExtractor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -26,12 +30,14 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
     private final PersistentStorage persistentStorage;
     private final CreditCardAccountMapper creditCardAccountMapper;
+    private final TransactionalAccountMapper transactionalAccountMapper;
 
     public UkOpenBankingV31Ais(
             UkOpenBankingAisConfig ukOpenBankingAisConfig, PersistentStorage persistentStorage) {
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
         this.persistentStorage = persistentStorage;
         this.creditCardAccountMapper = defaultCreditCardAccountMapper();
+        this.transactionalAccountMapper = defaultTransactionalAccountMapper();
     }
 
     public UkOpenBankingV31Ais(
@@ -41,17 +47,22 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
         this.persistentStorage = persistentStorage;
         this.creditCardAccountMapper = creditCardAccountMapper;
+        this.transactionalAccountMapper = defaultTransactionalAccountMapper();
     }
 
     @Override
     public UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> makeTransactionalAccountFetcher(
             UkOpenBankingApiClient apiClient) {
+
+        TransactionalAccountExtractor extractor =
+                new TransactionalAccountExtractor(transactionalAccountMapper);
+
         return new UkOpenBankingAccountFetcher<>(
                 ukOpenBankingAisConfig,
                 apiClient,
                 AccountsV31Response.class,
                 AccountBalanceV31Response.class,
-                AccountsV31Response::toTransactionalAccount,
+                extractor::toTransactionalAccount,
                 new IdentityDataV31Fetcher(apiClient));
     }
 
@@ -107,5 +118,12 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
     private CreditCardAccountMapper defaultCreditCardAccountMapper() {
         return new CreditCardAccountMapper(
                 new DefaultCreditCardBalanceMapper(new PrioritizedValueExtractor()));
+    }
+
+    private TransactionalAccountMapper defaultTransactionalAccountMapper() {
+        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
+        return new TransactionalAccountMapper(
+                new TransactionalAccountBalanceMapper(valueExtractor),
+                new IdentifierMapper(valueExtractor));
     }
 }

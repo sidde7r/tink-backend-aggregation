@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder;
 
+import java.util.Collection;
 import javax.annotation.Nonnull;
 import se.tink.libraries.account.AccountIdentifier;
 
@@ -18,4 +19,6 @@ public interface IdentifierStep<T> {
      * @return The final step of the builder.
      */
     T addIdentifier(@Nonnull AccountIdentifier identifier);
+
+    T addIdentifiers(@Nonnull Collection<AccountIdentifier> identifiers);
 }

@@ -5,11 +5,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.entities.CreditLineEntity;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.strings.StringUtils;
 
@@ -78,27 +73,6 @@ public class UkOpenBankingApiDefinitions {
         OPENING_CLEARED,
         PREVIOUSLY_CLOSED_BOOKED;
 
-        private static final ImmutableList<AccountBalanceType> PREFERRED_TYPE_LIST =
-                ImmutableList.<AccountBalanceType>builder()
-                        .add(INTERIM_AVAILABLE)
-                        .add(EXPECTED)
-                        .add(INTERIM_BOOKED)
-                        .add(OPENING_AVAILABLE)
-                        .add(CLOSING_AVAILABLE)
-                        .add(OPENING_BOOKED)
-                        .add(CLOSING_BOOKED)
-                        .add(FORWARD_AVAILABLE)
-                        .build();
-
-        public static <T> Optional<T> getPreferredBalanceEntity(
-                Map<AccountBalanceType, T> typeMap) {
-
-            return Optional.ofNullable(PREFERRED_TYPE_LIST).orElseGet(ImmutableList::of).stream()
-                    .filter(typeMap::containsKey)
-                    .map(typeMap::get)
-                    .findFirst();
-        }
-
         @JsonCreator
         private static AccountBalanceType fromString(String key) {
             return (key != null)
@@ -124,21 +98,6 @@ public class UkOpenBankingApiDefinitions {
                         .add(TEMPORARY)
                         .build();
 
-        public static <T> Optional<CreditLineEntity> getPreferredCreditLineEntity(
-                List<CreditLineEntity> creditLineEntityList) {
-
-            Map<UkOpenBankingApiDefinitions.ExternalLimitType, CreditLineEntity>
-                    creditLineEntityMap = new HashMap<>();
-
-            creditLineEntityList.forEach(x -> creditLineEntityMap.put(x.getType(), x));
-
-            return Optional.ofNullable(PREFERRED_LIMIT_TYPE_LIST).orElseGet(ImmutableList::of)
-                    .stream()
-                    .filter(creditLineEntityMap::containsKey)
-                    .map(creditLineEntityMap::get)
-                    .findFirst();
-        }
-
         @JsonCreator
         private static ExternalLimitType fromString(String key) {
             return (key != null)
@@ -163,59 +122,15 @@ public class UkOpenBankingApiDefinitions {
         }
     }
 
-    public enum ExternalAccountIdentification2Code {
-        IBAN,
-        SORT_CODE_ACCOUNT_NUMBER;
-
-        @JsonCreator
-        public static ExternalAccountIdentification2Code fromString(String key) {
-            return (key != null)
-                    ? ExternalAccountIdentification2Code.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
-                    : null;
-        }
-
-        @JsonValue
-        public String toValue() {
-            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
-        }
-    }
-
-    public enum ExternalAccountIdentification3Code {
-        IBAN,
-        SORT_CODE_ACCOUNT_NUMBER,
-        PAN;
-
-        @JsonCreator
-        private static ExternalAccountIdentification3Code fromString(String key) {
-            return (key != null)
-                    ? ExternalAccountIdentification3Code.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
-                    : null;
-        }
-
-        @JsonValue
-        public String toValue() {
-            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
-        }
-    }
-
     /**
      * https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937623722/Namespaced+Enumerations+-+v3.1#NamespacedEnumerations-v3.1-OBExternalAccountIdentification4Code
      */
     public enum ExternalAccountIdentification4Code {
+        // todo remove unnecessary mapping
         BBAN,
         IBAN,
         PAYM,
         SORT_CODE_ACCOUNT_NUMBER,
-        /*
-        This identifier type is added for Santander. This bank sometimes sends identifier such as
-        {"SchemeName":"UK.Santander.SavingsRollNumber","Identification":"SAVINGRXXXXXXXX"}, to handle
-        such responses without crash, we needed that new type.
-        Although Santander is not following UKOB specifications by sending such identifiers, we
-        decided to make a fix in our side to support this bank.
-         */
-        SAVINGS_ROLL_NUMBER,
         PAN;
 
         private static final GenericTypeMapper<ExternalAccountIdentification4Code, String>
@@ -231,12 +146,6 @@ public class UkOpenBankingApiDefinitions {
                                 .put(
                                         ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER,
                                         "UK.OBIE.SortCodeAccountNumber")
-                                .put(
-                                        ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER,
-                                        "UK.Santander.SavingsRollNumber")
-                                // TODO: Remove the following mapping for PAN and
-                                // UK.Santander.SavingsRollNumber when Santander starts
-                                // sending UK.OBIE.PAN for Credit Card Accounts
                                 .put(ExternalAccountIdentification4Code.PAN, "UK.OBIE.PAN", "PAN")
                                 .build();
 
@@ -252,23 +161,6 @@ public class UkOpenBankingApiDefinitions {
                                                     String.format(
                                                             "%s unknown ExternalAccountIdentification4Code!",
                                                             key)))
-                    : null;
-        }
-
-        @JsonValue
-        public String toValue() {
-            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
-        }
-    }
-
-    public enum OBExternalFinancialInstitutionIdentification4Code {
-        BICFI;
-
-        @JsonCreator
-        private static ExternalAccountIdentification3Code fromString(String key) {
-            return (key != null)
-                    ? ExternalAccountIdentification3Code.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
                     : null;
         }
 

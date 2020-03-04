@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards;
 
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
 
 @RequiredArgsConstructor
 public class CreditCardAccountMapper {
@@ -28,10 +27,7 @@ public class CreditCardAccountMapper {
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(cardIdentifier.getIdentification())
-                                .withBalance(
-                                        balanceMapper
-                                                .getAccountBalance(balances)
-                                                .getAsCurrencyAmount())
+                                .withBalance(balanceMapper.getAccountBalance(balances))
                                 .withAvailableCredit(balanceMapper.getAvailableCredit(balances))
                                 .withCardAlias(displayName)
                                 .build())
@@ -42,9 +38,9 @@ public class CreditCardAccountMapper {
                                 .withAccountNumber(cardIdentifier.getIdentification())
                                 .withAccountName(displayName)
                                 .addIdentifier(
-                                        AccountIdentifier.create(
-                                                Type.PAYMENT_CARD_NUMBER,
-                                                cardIdentifier.getIdentification()))
+                                        new PaymentCardNumberIdentifier(
+                                                cardIdentifier
+                                                        .getIdentification())) // todo use id mapper
                                 .build())
                 .addHolderName(ObjectUtils.firstNonNull(cardIdentifier.getOwnerName(), partyName))
                 .setApiIdentifier(account.getAccountId())

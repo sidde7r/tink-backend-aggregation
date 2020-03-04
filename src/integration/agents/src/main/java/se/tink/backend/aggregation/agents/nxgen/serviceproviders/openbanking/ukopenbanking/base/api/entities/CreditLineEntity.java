@@ -1,30 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
+@Data
 public class CreditLineEntity {
-    @JsonProperty("Included")
     private boolean included;
 
-    @JsonProperty("Amount")
     private AmountEntity amount;
 
-    @JsonProperty("Type")
     private UkOpenBankingApiDefinitions.ExternalLimitType type;
-
-    public boolean isIncluded() {
-        return included;
-    }
-
-    public AmountEntity getAmount() {
-        return amount;
-    }
-
-    public UkOpenBankingApiDefinitions.ExternalLimitType getType() {
-        return type;
-    }
 }

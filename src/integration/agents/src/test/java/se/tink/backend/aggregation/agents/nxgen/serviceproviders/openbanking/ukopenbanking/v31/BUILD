@@ -8,6 +8,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/base",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/v31",
         "//src/integration/amount",
+        "//src/integration/api",
         "//src/integration/lib",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
