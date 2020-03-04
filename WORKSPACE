@@ -2572,6 +2572,7 @@ maven_install(
         "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
         "com.fasterxml:classmate:1.0.0",
+        "com.google.code.findbugs:jsr305:3.0.0",
         "com.google.code.gson:gson:2.8.2",
         "com.google.guava:guava:23.1-jre",
         "javax.xml.stream:stax-api:1.0-2",
