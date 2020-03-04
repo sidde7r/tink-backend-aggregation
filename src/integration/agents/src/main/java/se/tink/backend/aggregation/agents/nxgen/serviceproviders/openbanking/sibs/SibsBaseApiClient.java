@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.MediaType;
-
 import org.assertj.core.util.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
