@@ -217,7 +217,9 @@ public class TransferExecutionException extends RuntimeException {
                 new LocalizableKey(
                         "It's not possible to modify the source message of this payment")),
         MISSING_MESSAGE_TYPE(new LocalizableKey("Missing message type")),
-        INVALID_STRUCTURED_MESSAGE(new LocalizableKey("The entered structured message is invalid"));
+        INVALID_STRUCTURED_MESSAGE(new LocalizableKey("The entered structured message is invalid")),
+        END_USER_WRONG_PAYMENT_TYPE(
+                new LocalizableKey("This type of payment is unavailable for you"));
 
         private final LocalizableKey key;
 

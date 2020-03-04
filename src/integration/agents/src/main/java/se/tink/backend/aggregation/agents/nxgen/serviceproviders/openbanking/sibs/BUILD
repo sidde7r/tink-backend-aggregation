@@ -26,6 +26,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
+        "//src/integration/signableoperation:enums",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:com_github_rholder_guava_retrying",
@@ -37,5 +38,6 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
+        "@org_assertj_assertj_core//jar",
     ],
 )

@@ -4,6 +4,10 @@ import com.google.common.base.Preconditions;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.MediaType;
+import org.assertj.core.util.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
@@ -29,7 +33,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class SibsBaseApiClient {
 
@@ -42,6 +48,7 @@ public class SibsBaseApiClient {
     private final SibsUserState userState;
     private final TinkHttpClient client;
     private SibsConfiguration configuration;
+    private static final Logger log = LoggerFactory.getLogger(SibsBaseApiClient.class);
 
     /*
      * TODO: remove this section after full AIS and PIS test:
@@ -145,7 +152,8 @@ public class SibsBaseApiClient {
                 false);
     }
 
-    private URL createUrl(String path) {
+    @VisibleForTesting
+    public URL createUrl(String path) {
         String baseUrl = configuration.getBaseUrl();
         return new URL(baseUrl + path)
                 .parameter(PathParameterKeys.ASPSP_CDE, configuration.getAspspCode());
@@ -233,6 +241,19 @@ public class SibsBaseApiClient {
             String uniqueId, SibsPaymentType sibsPaymentType) {
         URL paymentStatusUrl = createUrl(SibsConstants.Urls.GET_PAYMENT_STATUS_REQUEST);
 
+        try {
+            return getSibsGetPaymentStatusResponse(uniqueId, sibsPaymentType, paymentStatusUrl);
+        } catch (HttpResponseException e) {
+            log.info(e.getMessage());
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.END_USER_WRONG_PAYMENT_TYPE)
+                    .build();
+        }
+    }
+
+    public SibsGetPaymentStatusResponse getSibsGetPaymentStatusResponse(
+            String uniqueId, SibsPaymentType sibsPaymentType, URL paymentStatusUrl) {
         return client.request(
                         paymentStatusUrl
                                 .parameter(
