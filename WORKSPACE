@@ -1331,7 +1331,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "ch_qos_logback_logback_core",
+    name = "ch_qos_logback_logback_core",  # Do not use, but do not remove
     artifact = "ch.qos.logback:logback-core:1.1.11",
     sha1 = "88b8df40340eed549fb07e2613879bf6b006704d",
 )

@@ -23,8 +23,8 @@ java_library(
         "@ch_qos_logback_logback_classic//jar",
     ],
     runtime_deps = [
+        "@aggregation//:ch_qos_logback_logback_core",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@ch_qos_logback_logback_core//jar",
     ],
 )
 
@@ -473,6 +473,7 @@ java_library(
     ],
     runtime_deps = [
         ":io_dropwizard_dropwizard_jersey",
+        "@aggregation//:ch_qos_logback_logback_core",
         "@aggregation//:com_fasterxml_classmate",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
@@ -489,7 +490,6 @@ java_library(
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
         "@ch_qos_logback_logback_classic//jar",
-        "@ch_qos_logback_logback_core//jar",
         "@com_codahale_metrics_metrics_annotation//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_healthchecks//jar",
@@ -610,9 +610,9 @@ java_library(
     name = "io_dropwizard_dropwizard_logging",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:ch_qos_logback_logback_core",
         "@aggregation//:org_slf4j_slf4j_api",
         "@ch_qos_logback_logback_classic//jar",
-        "@ch_qos_logback_logback_core//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_logback//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
