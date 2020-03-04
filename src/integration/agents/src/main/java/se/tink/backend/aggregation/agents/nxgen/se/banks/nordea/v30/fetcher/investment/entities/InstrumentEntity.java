@@ -30,7 +30,9 @@ public class InstrumentEntity {
 
         return InstrumentModule.builder()
                 .withType(InstrumentType.FUND)
-                .withId(InstrumentIdModule.of(isin, getMarket(), instrumentName, isin))
+                .withId(
+                        InstrumentIdModule.of(
+                                isin, getMarket(), instrumentName, isin + getMarket()))
                 .withMarketPrice(price)
                 .withMarketValue(marketValue)
                 .withAverageAcquisitionPrice(avgPurchasePrice)
