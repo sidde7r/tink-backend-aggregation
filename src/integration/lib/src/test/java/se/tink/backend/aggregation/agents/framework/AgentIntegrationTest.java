@@ -768,34 +768,33 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         payments =
                 accounts.stream()
-                        .map(
-                                a ->
-                                        new Payment.Builder()
-                                                .withDebtor(
-                                                        new Debtor(
-                                                                AccountIdentifier.create(
-                                                                        AccountIdentifier.Type
-                                                                                .SEPA_EUR,
-                                                                        a
-                                                                                .getAccountNumber()))) // source account
-                                                .withCreditor(
-                                                        new Creditor(
-                                                                AccountIdentifier.create(
-                                                                        AccountIdentifier.Type
-                                                                                .SEPA_EUR,
-                                                                        desinationAccount), // desination account
-                                                                "Unknown Person"))
-                                                .withExactCurrencyAmount(amount)
-                                                .withExecutionDate(executionDate)
-                                                .withCurrency(currency)
-                                                .withReference(
-                                                        new Reference("TRANSFER", "test Tink"))
-                                                .withUniqueId(
-                                                        RandomUtils.generateRandomHexEncoded(15))
-                                                .build())
+                        .map(a -> createPayment(a.getAccountNumber(), desinationAccount))
                         .collect(Collectors.toList());
 
         return payments;
+    }
+
+    private Payment createPayment(String sourceAccount, String desinationAccount) {
+        LocalDate executionDate = LocalDate.now();
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "EUR");
+        return new Payment.Builder()
+                .withDebtor(
+                        new Debtor(
+                                AccountIdentifier.create(
+                                        AccountIdentifier.Type.SEPA_EUR,
+                                        desinationAccount))) // source account
+                .withCreditor(
+                        new Creditor(
+                                AccountIdentifier.create(
+                                        AccountIdentifier.Type.SEPA_EUR,
+                                        desinationAccount), // desination account
+                                "Unknown Person"))
+                .withExactCurrencyAmount(amount)
+                .withExecutionDate(executionDate)
+                .withCurrency("EUR")
+                .withReference(new Reference("TRANSFER", "test Tink"))
+                .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
+                .build();
     }
 
     public void testGenericPaymentItalia(List<Payment> paymentList) throws Exception {
