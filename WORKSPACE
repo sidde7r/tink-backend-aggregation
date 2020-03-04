@@ -1243,7 +1243,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
+    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_xml",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.9",
     sha1 = "4b8a210f1102307ec66028f744a1ede73a40ed2d",
 )
@@ -2558,20 +2558,21 @@ pinned_maven_install()
 maven_install(
     name = "aggregation",
     artifacts = [
-        "com.google.guava:guava:23.1-jre",
-        "com.google.code.gson:gson:2.8.2",
-        "com.fasterxml.jackson.core:jackson-core:2.9.9",
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+        "com.fasterxml.jackson.core:jackson-core:2.9.9",
         "com.fasterxml.jackson.core:jackson-databind:2.9.9",
-        "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
-        "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.9",
-        "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
-        "joda-time:joda-time:2.9.9",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.9",
         "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
         "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9",
+        "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.9.9",
+        "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9",
+        "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
+        "com.google.code.gson:gson:2.8.2",
+        "com.google.guava:guava:23.1-jre",
         "javax.xml.stream:stax-api:1.0-2",
-        "org.codehaus.woodstox:stax2-api:3.1.1",
+        "joda-time:joda-time:2.9.9",
+        "org.codehaus.woodstox:stax2-api:4.1",
     ],
     excluded_artifacts = [
         # Keep this list empty please
