@@ -235,7 +235,9 @@ public class NemIdIFrameControllerTest {
                         "incorrect user ---",
                         "incorrect password ---",
                         "fejl i bruger ---",
-                        "fejl i adgangskode ---");
+                        "fejl i adgangskode ---",
+                        "indtast bruger ---",
+                        "indtast adgangskode ---");
 
         for (String errorMsg : errorMessages) {
             // given
