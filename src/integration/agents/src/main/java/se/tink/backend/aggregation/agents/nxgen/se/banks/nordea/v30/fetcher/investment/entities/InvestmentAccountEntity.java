@@ -102,7 +102,7 @@ public class InvestmentAccountEntity {
     }
 
     private boolean hasInstruments() {
-        return !getInstruments().isEmpty();
+        return !getInstruments().isEmpty() || classification.equalsIgnoreCase("PENSION");
     }
 
     private String getRawType() {
