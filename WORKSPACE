@@ -2581,6 +2581,7 @@ maven_install(
         "org.apache.commons:commons-lang3:3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.codehaus.woodstox:stax2-api:4.1",
+        "org.slf4j:slf4j-api:1.7.21",
         "org.yaml:snakeyaml:1.23",
     ],
     excluded_artifacts = [
