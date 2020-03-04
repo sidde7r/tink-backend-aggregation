@@ -41,6 +41,7 @@ public class NordeaSEConstants {
             TypeMapper.<Instrument.Type>builder()
                     .put(Instrument.Type.FUND, "FUND")
                     .put(Instrument.Type.STOCK, "EQUITY")
+                    .ignoreKeys("CASH", "OTHER")
                     .build();
 
     public static TypeMapper<PortfolioType> PORTFOLIO_TYPE_MAPPER =
