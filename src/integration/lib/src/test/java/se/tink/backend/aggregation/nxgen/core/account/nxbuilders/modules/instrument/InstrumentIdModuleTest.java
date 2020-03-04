@@ -19,7 +19,7 @@ public class InstrumentIdModuleTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void invalidIsin() {
-        InstrumentIdModule.of("34566", "SE", "name", "12345");
+        InstrumentIdModule.of("34566", "SE", "name");
     }
 
     @Test(expected = NullPointerException.class)
