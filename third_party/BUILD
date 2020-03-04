@@ -177,13 +177,13 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:commons_codec_commons_codec",
+        "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:org_apache_commons_commons_lang3",
         "@aggregation//:org_apache_httpcomponents_httpcore",
         "@aggregation//:org_slf4j_slf4j_api",
         "@asm_asm//jar",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
         "@com_jayway_jsonpath_json_path//jar",
-        "@commons_logging_commons_logging//jar",
         "@javax_servlet_javax_servlet_api//jar",
         "@junit_junit//jar",
         "@net_minidev_asm//jar",
@@ -835,11 +835,11 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:commons_codec_commons_codec",
+        "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:org_apache_commons_commons_lang3",
         "@aggregation//:org_apache_httpcomponents_httpcore",
         "@commons_collections_commons_collections//jar",
         "@commons_io_commons_io//jar",
-        "@commons_logging_commons_logging//jar",
         "@net_sourceforge_cssparser_cssparser//jar",
         "@net_sourceforge_htmlunit_htmlunit//jar",
         "@net_sourceforge_htmlunit_htmlunit_core_js//jar",
@@ -1336,7 +1336,7 @@ java_library(
         "@org_springframework_spring_core//jar",
     ],
     runtime_deps = [
-        "@commons_logging_commons_logging//jar",
+        "@aggregation//:commons_logging_commons_logging",
     ],
 )
 
@@ -1581,9 +1581,9 @@ java_library(
     name = "java_spark",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_sparkjava_spark_core//jar",
-        "@commons_logging_commons_logging//jar",
         "@javax_servlet_javax_servlet_api_spark_dep//jar",
         "@org_eclipse_jetty_jetty_client_spark_dep//jar",
         "@org_eclipse_jetty_jetty_http_spark_dep//jar",
@@ -1693,9 +1693,9 @@ java_library(
         "@io_netty_netty_common//jar",
     ],
     runtime_deps = [
+        "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_oracle_substratevm_svm//jar",
-        "@commons_logging_commons_logging//jar",
         "@io_netty_netty_dev_tools//jar",
         "@log4j_log4j//jar",
         "@org_apache_logging_log4j_log4j_api//jar",

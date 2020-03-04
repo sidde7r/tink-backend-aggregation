@@ -1685,7 +1685,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_logging_commons_logging",
+    name = "commons_logging_commons_logging",  # Do not use, but do not remove
     artifact = "commons-logging:commons-logging:1.1.3",
     sha1 = "f6f66e966c70a83ffbdb6f17a0919eaf7c8aca7f",
 )
