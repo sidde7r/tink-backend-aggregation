@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell;
 
+import java.math.BigInteger;
 import java.security.interfaces.RSAPublicKey;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Crypto;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
@@ -13,9 +15,9 @@ public class SabadellCryptoUtils {
     }
 
     private static byte[] encryptData(byte[] input) {
-        byte[] pubKeyBytes =
-                EncodingUtils.decodeBase64String(SabadellConstants.Authentication.PUBLIC_KEY_B64);
-        RSAPublicKey publicKey = RSA.getPubKeyFromBytes(pubKeyBytes);
+        final BigInteger modulus = new BigInteger(Crypto.RSA_MODULUS, 10);
+        final BigInteger exponent = BigInteger.valueOf(Crypto.RSA_EXPONENT);
+        RSAPublicKey publicKey = RSA.getPublicKeyFromModulusAndExponent(modulus, exponent);
         return RSA.encryptEcbPkcs1(publicKey, input);
     }
 }
