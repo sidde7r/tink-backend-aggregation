@@ -36,9 +36,7 @@ public class InstrumentEntity {
         log.info("Instrument type: " + getRawType() + " - ISIN : " + isin);
         return InstrumentModule.builder()
                 .withType(InstrumentType.FUND)
-                .withId(
-                        InstrumentIdModule.of(
-                                isin, getMarket(), instrumentName, isin + getMarket()))
+                .withId(InstrumentIdModule.of(isin, getMarket(), instrumentName, id))
                 .withMarketPrice(price)
                 .withMarketValue(marketValue)
                 .withAverageAcquisitionPrice(avgPurchasePrice)
