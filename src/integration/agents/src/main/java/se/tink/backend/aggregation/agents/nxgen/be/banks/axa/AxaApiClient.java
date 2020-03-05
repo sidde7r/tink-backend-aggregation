@@ -1,154 +1,61 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
-import java.util.UUID;
+import java.net.URI;
+import java.security.KeyPair;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateChallengeRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateChallengeResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateOtpChallengeRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateOtpChallengeResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants.Request;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants.Url;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.AnonymousInvokeRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.AnonymousInvokeResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.AssertFormRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.AssertFormResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.BaseRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.BindRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.BindResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LogonResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.RegisterUserRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.RegisterUserResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.StoreRegistrationCdRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.StoreRegistrationCdResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.rpc.PendingRequestsRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.rpc.PendingRequestsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.utils.AxaCryptoUtil;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class AxaApiClient {
 
     private final TinkHttpClient httpClient;
+    private final AxaStorage storage;
 
-    public AxaApiClient(TinkHttpClient httpClient) {
+    public AxaApiClient(TinkHttpClient httpClient, AxaStorage storage) {
         this.httpClient = httpClient;
+        this.storage = storage;
     }
 
-    public GenerateChallengeResponse postGenerateChallenge(
-            final String basicAuth, final String ucrid) {
-        GenerateChallengeRequest request =
-                GenerateChallengeRequest.builder()
-                        .setUcrid(ucrid)
-                        .setApplcd(AxaConstants.Request.APPL_CD)
-                        .setLanguage(AxaConstants.Request.LANGUAGE)
-                        .build();
-        return httpClient
-                .request(AxaConstants.Url.GENERATE_CHALLENGE)
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", basicAuth))
-                .headers(AxaConstants.HEADERS_JSON)
-                .post(GenerateChallengeResponse.class, request);
-    }
-
-    public RegisterUserResponse postRegisterUser(
-            final String basicAuth,
-            final String ucrid,
-            final UUID deviceId,
-            final String pan,
-            final String challenge,
-            final String challengeResponse,
-            final String clientInitialVector,
-            final String encryptedClientPublicKeyAndNonce) {
-        final RegisterUserRequest request =
-                RegisterUserRequest.builder()
-                        .setUcrid(ucrid)
-                        .setPanNumberFull(pan)
-                        .setChallenge(challenge)
-                        .setResponse(challengeResponse)
-                        .setClientInitialVector(clientInitialVector)
-                        .setEncryptedClientPublicKeyAndNonce(encryptedClientPublicKeyAndNonce)
-                        .setApplcd(AxaConstants.Request.APPL_CD)
-                        .setDeviceBrand(AxaConstants.Request.BRAND)
-                        .setLanguage(AxaConstants.Request.LANGUAGE)
-                        .setDeviceId(deviceId)
-                        .setModel(AxaConstants.Request.MODEL)
-                        .setVersionNumber(AxaConstants.Request.VERSION_NUMBER)
-                        .setOperatingSystem(AxaConstants.Request.OPERATING_SYSTEM)
-                        .setJailBrokenOrRooted(AxaConstants.Request.JAILBROKEN_OR_ROOTED)
-                        .build();
-        return httpClient
-                .request(AxaConstants.Url.REGISTER_USER)
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", basicAuth))
-                .headers(AxaConstants.HEADERS_JSON)
-                .post(RegisterUserResponse.class, request);
-    }
-
-    public StoreRegistrationCdResponse postStoreDerivation(
-            final String basicAuth,
-            final String clientInitialVector,
-            final String derivationCd,
-            final String encryptedServerNonce,
-            final String serialNo) {
-        final StoreRegistrationCdRequest request =
-                StoreRegistrationCdRequest.builder()
-                        .setApplcd(AxaConstants.Request.APPL_CD)
-                        .setLanguage(AxaConstants.Request.LANGUAGE)
-                        .setClientInitialVector(clientInitialVector)
-                        .setDerivationCd(derivationCd)
-                        .setEncryptedServerNonce(encryptedServerNonce)
-                        .setSerialNo(serialNo)
-                        .build();
-        return httpClient
-                .request(AxaConstants.Url.STORE_DERIVATION_CD)
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", basicAuth))
-                .headers(AxaConstants.HEADERS_JSON)
-                .body(request)
-                .post(StoreRegistrationCdResponse.class);
-    }
-
-    public GenerateOtpChallengeResponse postGenerateOtpChallenge(
-            final String basicAuth, final String serialNo) {
-        final GenerateOtpChallengeRequest request =
-                GenerateOtpChallengeRequest.builder()
-                        .setSerialNo(serialNo)
-                        .setApplcd(AxaConstants.Request.APPL_CD)
-                        .setLanguage(AxaConstants.Request.LANGUAGE)
+    public LogonResponse postLogon() {
+        Form body =
+                Form.builder()
+                        .put("grant_type", "password")
+                        .put("scope", "mobilebanking")
+                        .put("username", storage.getParamsSessionId())
+                        .put("jwt", storage.getToken())
+                        .put("language", "nl")
+                        .put("applCd", "MOBILEBANK")
+                        .put("batchInstallationId", storage.getBatchInstallationId())
                         .build();
 
-        return httpClient
-                .request(AxaConstants.Url.GENERATE_OTP_CHALLENGE)
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", basicAuth))
-                .headers(AxaConstants.HEADERS_JSON)
-                .post(GenerateOtpChallengeResponse.class, request);
-    }
-
-    public LogonResponse postLogon(
-            final String basicAuth,
-            final String deviceId,
-            final String username,
-            final String password) {
-        final Form request =
-                AxaConstants.Request.LOGON_BODY
-                        .rebuilder()
-                        .put(AxaConstants.Request.USERNAME_KEY, username)
-                        .put(AxaConstants.Request.PASSWORD_KEY, password)
-                        .put(AxaConstants.Request.DEVICEID_KEY, deviceId)
-                        .build();
         return httpClient
                 .request(AxaConstants.Url.LOGON)
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", basicAuth))
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        String.format("Basic %s", AxaConstants.Request.BASIC_AUTH))
                 .headers(AxaConstants.HEADERS_FORM)
-                .body(request.serialize())
+                .body(body.serialize())
                 .post(LogonResponse.class);
-    }
-
-    public PendingRequestsResponse postPendingRequests(
-            final int customerId, final String accessToken) {
-        final PendingRequestsRequest body =
-                PendingRequestsRequest.builder()
-                        .setApplCd(AxaConstants.Request.APPL_CD)
-                        .setLanguage(AxaConstants.Request.LANGUAGE)
-                        .setCustomerId(customerId)
-                        .build();
-        return httpClient
-                .request(AxaConstants.Url.PENDING_PRODUCT_REQUESTS)
-                .headers(AxaConstants.HEADERS_JSON)
-                .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", accessToken))
-                .body(body)
-                .post(PendingRequestsResponse.class);
     }
 
     public GetAccountsResponse postGetAccounts(
@@ -189,5 +96,88 @@ public final class AxaApiClient {
                 .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", accessToken))
                 .body(body)
                 .post(GetTransactionsResponse.class);
+    }
+
+    public AnonymousInvokeResponse anonymousInvoke(AnonymousInvokeRequest request) {
+        return createRequest(AxaConstants.Url.ANONYMOUS_INVOKE, request)
+                .post(AnonymousInvokeResponse.class);
+    }
+
+    public AssertFormResponse assertForm(AssertFormRequest request) {
+        return createAssertRequest(request).post(AssertFormResponse.class);
+    }
+
+    public AssertFormResponse assertFormWithSignature(AssertFormRequest request) {
+        String requestBody = request.toJson();
+        URL url =
+                new URL(Url.ASSERT)
+                        .queryParam("did", storage.getDeviceIdFromHeader())
+                        .queryParam("sid", storage.getSessionIdFromHeader());
+
+        return createRequestWithSignature(url, requestBody).post(AssertFormResponse.class);
+    }
+
+    public BindResponse bind(BindRequest request) {
+        return createRequest(AxaConstants.Url.BIND, request).post(BindResponse.class);
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        String requestBody = request.toJson();
+        URL url = new URL(Url.LOGIN).queryParam("did", storage.getDeviceIdFromHeader());
+
+        return createRequestWithSignature(url, requestBody).post(LoginResponse.class);
+    }
+
+    private RequestBuilder createAssertRequest(BaseRequest body) {
+        URL url =
+                new URL(Url.ASSERT)
+                        .queryParam("did", storage.getDeviceIdFromHeader())
+                        .queryParam("sid", storage.getSessionIdFromHeader());
+
+        return createRequest(url, body);
+    }
+
+    private RequestBuilder createRequest(URL url, BaseRequest body) {
+        return httpClient.request(url).headers(AxaConstants.AUTH_HEADERS_JSON).body(body);
+    }
+
+    private RequestBuilder createRequest(String url, BaseRequest body) {
+        return httpClient.request(url).headers(AxaConstants.AUTH_HEADERS_JSON).body(body);
+    }
+
+    private RequestBuilder createRequestWithSignature(URL url, String body) {
+        String contentSignatureValue = createContentSignature(url, body);
+        return httpClient
+                .request(url)
+                .headers(AxaConstants.AUTH_HEADERS_JSON)
+                .header("Content-Signature", contentSignatureValue)
+                .body(body);
+    }
+
+    private String createContentSignature(URL url, String requestBody) {
+        KeyPair keyPair = storage.getRequestSignatureECKeyPair();
+        String pathWithQuery = extractPathWithQuery(url);
+        String signature =
+                AxaCryptoUtil.createHeaderSignature(
+                        keyPair, pathWithQuery, Request.TS_CLIENT_VERSION, requestBody);
+        return new StringBuilder()
+                .append("data:")
+                .append(signature)
+                .append(";key-id:")
+                .append(storage.getDeviceIdFromHeader())
+                .append(";scheme:3")
+                .toString();
+    }
+
+    private String extractPathWithQuery(URL url) {
+        URI uri = url.toUri();
+        String rawQuery = uri.getRawQuery();
+        String result = uri.getPath();
+
+        if (StringUtils.isNotBlank(rawQuery)) {
+            result += "?" + rawQuery;
+        }
+
+        return result.replace("/AXA_BANK_TransmitApi", StringUtils.EMPTY);
     }
 }

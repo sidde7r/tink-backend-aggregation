@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;

@@ -12,6 +12,8 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.KeyAgreement;
@@ -66,8 +68,18 @@ public class EllipticCurve {
             kpg.initialize(ecSpec, new SecureRandom());
             return kpg.generateKeyPair();
         } catch (NoSuchAlgorithmException
-                | InvalidAlgorithmParameterException
-                | NoSuchProviderException e) {
+                | NoSuchProviderException
+                | InvalidAlgorithmParameterException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    public static KeyPair generateKeyPair(int keySize) {
+        try {
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC", "BC");
+            kpg.initialize(keySize, new SecureRandom());
+            return kpg.generateKeyPair();
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
@@ -149,6 +161,37 @@ public class EllipticCurve {
             return kf.generatePublic(publicKeySpec);
         } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    public static byte[] signSha256(PrivateKey privateKey, byte[] input) {
+        return sign("SHA256withECDSA", privateKey, input);
+    }
+
+    public static boolean verifySignSha256(PublicKey publicKey, byte[] input, byte[] signature) {
+        return verify("SHA256withECDSA", publicKey, input, signature);
+    }
+
+    private static byte[] sign(String type, PrivateKey privateKey, byte[] input) {
+        try {
+            Signature signature = Signature.getInstance(type);
+            signature.initSign(privateKey);
+            signature.update(input);
+            return signature.sign();
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    private static boolean verify(
+            String type, PublicKey publicKey, byte[] input, byte[] signature) {
+        try {
+            Signature sigVerify = Signature.getInstance(type);
+            sigVerify.initVerify(publicKey);
+            sigVerify.update(input);
+            return sigVerify.verify(signature);
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+            throw new IllegalStateException(e.getMessage(), e);
         }
     }
 

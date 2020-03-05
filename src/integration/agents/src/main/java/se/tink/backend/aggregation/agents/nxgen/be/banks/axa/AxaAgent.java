@@ -1,34 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
 import java.util.Locale;
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.AxaAutoAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.AxaManualAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.AxaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.AxaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.AxaTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.AxaSessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationProgressiveController;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class AxaAgent
-        extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
+public final class AxaAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
@@ -36,43 +28,17 @@ public final class AxaAgent
     private final AxaApiClient apiClient;
     private final AxaStorage storage;
     private final CredentialsRequest request;
-
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final AutoAuthenticationProgressiveController authenticator;
+    private AxaAuthenticator authenticator;
 
-    public AxaAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
-        configureHttpClient(client);
-        this.apiClient = new AxaApiClient(client);
-        this.storage = makeStorage();
-        this.request = request;
-
+    public AxaAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider);
+        this.storage = new AxaStorage(sessionStorage, persistentStorage);
+        this.apiClient = new AxaApiClient(client, storage);
+        this.request = agentComponentProvider.getCredentialsRequest();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-        this.authenticator =
-                new AutoAuthenticationProgressiveController(
-                        request,
-                        systemUpdater,
-                        new AxaManualAuthenticator(
-                                apiClient, storage, supplementalInformationFormer),
-                        new AxaAutoAuthenticator(apiClient, storage));
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.setUserAgent(AxaConstants.Request.USER_AGENT);
-        client.setCipherSuites(AxaConstants.CIPHER_SUITES);
-    }
-
-    private AxaStorage makeStorage() {
-        return new AxaStorage(sessionStorage, persistentStorage);
-    }
-
-    private void initRefresh() {
-        // Should be updated prior to every refresh
-        final String locale = request.getUser().getLocale().replace('_', '-');
-        final String language = Locale.forLanguageTag(locale).getLanguage();
-        storage.persistLanguage(language);
+        storage.persistCardNumber(request.getCredentials().getField(Key.USERNAME));
     }
 
     @Override
@@ -95,6 +61,20 @@ public final class AxaAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    public StatelessProgressiveAuthenticator getAuthenticator() {
+        if (authenticator == null) {
+            authenticator = new AxaAuthenticator(storage, apiClient, supplementalInformationFormer);
+        }
+
+        return authenticator;
+    }
+
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         initRefresh();
 
@@ -106,24 +86,10 @@ public final class AxaAgent
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
     }
 
-    @Override
-    protected SessionHandler constructSessionHandler() {
-        return new AxaSessionHandler(apiClient, storage);
-    }
-
-    @Override
-    public AutoAuthenticationProgressiveController getAuthenticator() {
-        return authenticator;
-    }
-
-    @Override
-    public SteppableAuthenticationResponse login(final SteppableAuthenticationRequest request)
-            throws Exception {
-        return ProgressiveAuthController.of(authenticator, credentials).login(request);
-    }
-
-    @Override
-    public boolean login() {
-        throw new AssertionError(); // ProgressiveAuthAgent::login should always be used
+    private void initRefresh() {
+        // Should be updated prior to every refresh
+        final String locale = request.getUser().getLocale().replace('_', '-');
+        final String language = Locale.forLanguageTag(locale).getLanguage();
+        storage.persistLanguage(language);
     }
 }
