@@ -17,6 +17,7 @@ import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.ConfigurationProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBStorage;
 import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
 
@@ -26,10 +27,10 @@ public class HVBAuthenticatorTest {
     private ConfigurationProvider configurationProvider = mock(ConfigurationProvider.class);
     private DataEncoder dataEncoder = mock(DataEncoder.class);
 
-    private RegistrationRequest registrationRequest = mock(RegistrationRequest.class);
-    private PreAuthorizationRequest preAuthorizationRequest = mock(PreAuthorizationRequest.class);
-    private AuthorizationRequest authorizationRequest = mock(AuthorizationRequest.class);
-    private AccessTokenRequest accessTokenRequest = mock(AccessTokenRequest.class);
+    private RegistrationCall registrationRequest = mock(RegistrationCall.class);
+    private PreAuthorizationCall preAuthorizationRequest = mock(PreAuthorizationCall.class);
+    private AuthorizationCall authorizationRequest = mock(AuthorizationCall.class);
+    private AccessTokenCall accessTokenCall = mock(AccessTokenCall.class);
 
     private HVBAuthenticator tested =
             new HVBAuthenticator(
@@ -39,7 +40,7 @@ public class HVBAuthenticatorTest {
                     registrationRequest,
                     preAuthorizationRequest,
                     authorizationRequest,
-                    accessTokenRequest);
+                    accessTokenCall);
 
     @Test
     public void authenticateShouldPerformThrowExceptionForMissingCredentialFields() {
@@ -75,8 +76,8 @@ public class HVBAuthenticatorTest {
         when(registrationRequest.execute(any())).thenReturn(ExternalApiCallResult.of("", 200));
         when(preAuthorizationRequest.execute(any())).thenReturn(ExternalApiCallResult.of("", 200));
         when(authorizationRequest.execute(any())).thenReturn(ExternalApiCallResult.of("", 200));
-        when(accessTokenRequest.execute(any()))
-                .thenReturn(ExternalApiCallResult.of(new AccessToken(), 200));
+        when(accessTokenCall.execute(any()))
+                .thenReturn(ExternalApiCallResult.of(new AccessTokenResponse(), 200));
 
         // when
         tested.authenticate(givenCredentials);
@@ -85,7 +86,7 @@ public class HVBAuthenticatorTest {
         verify(registrationRequest).execute(any());
         verify(preAuthorizationRequest).execute(any());
         verify(authorizationRequest).execute(any());
-        verify(accessTokenRequest).execute(any());
+        verify(accessTokenCall).execute(any());
         verify(storage).setAccessToken(any());
     }
 
@@ -118,7 +119,7 @@ public class HVBAuthenticatorTest {
         verify(registrationRequest).execute(any());
         verify(preAuthorizationRequest, never()).execute(any());
         verify(authorizationRequest, never()).execute(any());
-        verify(accessTokenRequest, never()).execute(any());
+        verify(accessTokenCall, never()).execute(any());
         verify(storage, never()).setAccessToken(any());
     }
 
@@ -139,8 +140,8 @@ public class HVBAuthenticatorTest {
 
         when(preAuthorizationRequest.execute(any())).thenReturn(ExternalApiCallResult.of("", 200));
         when(authorizationRequest.execute(any())).thenReturn(ExternalApiCallResult.of("", 200));
-        when(accessTokenRequest.execute(any()))
-                .thenReturn(ExternalApiCallResult.of(new AccessToken(), 200));
+        when(accessTokenCall.execute(any()))
+                .thenReturn(ExternalApiCallResult.of(new AccessTokenResponse(), 200));
 
         // when
         tested.authenticate(givenCredentials);
@@ -150,7 +151,7 @@ public class HVBAuthenticatorTest {
 
         verify(preAuthorizationRequest).execute(any());
         verify(authorizationRequest).execute(any());
-        verify(accessTokenRequest).execute(any());
+        verify(accessTokenCall).execute(any());
         verify(storage).setAccessToken(any());
     }
 
@@ -170,8 +171,8 @@ public class HVBAuthenticatorTest {
 
         when(preAuthorizationRequest.execute(any())).thenReturn(ExternalApiCallResult.of("", 200));
         when(authorizationRequest.execute(any())).thenReturn(ExternalApiCallResult.of("", 400));
-        when(accessTokenRequest.execute(any()))
-                .thenReturn(ExternalApiCallResult.of(new AccessToken(), 200));
+        when(accessTokenCall.execute(any()))
+                .thenReturn(ExternalApiCallResult.of(new AccessTokenResponse(), 200));
 
         // when
         Throwable throwable = catchThrowable(() -> tested.authenticate(givenCredentials));
@@ -185,7 +186,7 @@ public class HVBAuthenticatorTest {
 
         verify(preAuthorizationRequest).execute(any());
         verify(authorizationRequest).execute(any());
-        verify(accessTokenRequest, never()).execute(any());
+        verify(accessTokenCall, never()).execute(any());
         verify(storage, never()).setAccessToken(any());
     }
 }

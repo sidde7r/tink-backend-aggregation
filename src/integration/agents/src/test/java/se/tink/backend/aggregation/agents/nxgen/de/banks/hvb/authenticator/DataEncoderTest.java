@@ -6,7 +6,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.TestFixtures
 import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.TestFixtures.givenJsonObject;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.RegistrationRequest.Payload;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.RegistrationCall.Payload;
 
 public class DataEncoderTest {
 

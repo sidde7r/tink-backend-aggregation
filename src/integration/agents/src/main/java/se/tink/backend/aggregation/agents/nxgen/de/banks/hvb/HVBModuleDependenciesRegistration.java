@@ -1,12 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb;
 
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.AccessTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.AuthorizationRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.ConfigurationProvider;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.AccessTokenCall;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.AuthorizationCall;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.DataEncoder;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.HVBAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.PreAuthorizationRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.RegistrationRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.PreAuthorizationCall;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.RegistrationCall;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.AccountsCall;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.AccountsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.AccountsMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.TransactionsCall;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.TransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.TransactionsMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.UserDataCall;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistration;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -21,18 +27,18 @@ public class HVBModuleDependenciesRegistration extends ModuleDependenciesRegistr
         registerBean(
                 new HVBStorage(getBean(SessionStorage.class), getBean(PersistentStorage.class)));
         registerBean(
-                new RegistrationRequest(
+                new RegistrationCall(
                         getBean(TinkHttpClient.class),
                         getBean(ConfigurationProvider.class),
                         getBean(DataEncoder.class)));
         registerBean(
-                new PreAuthorizationRequest(
+                new PreAuthorizationCall(
                         getBean(TinkHttpClient.class), getBean(ConfigurationProvider.class)));
         registerBean(
-                new AuthorizationRequest(
+                new AuthorizationCall(
                         getBean(TinkHttpClient.class), getBean(ConfigurationProvider.class)));
         registerBean(
-                new AccessTokenRequest(
+                new AccessTokenCall(
                         getBean(TinkHttpClient.class),
                         getBean(ConfigurationProvider.class),
                         getBean(DataEncoder.class)));
@@ -42,10 +48,42 @@ public class HVBModuleDependenciesRegistration extends ModuleDependenciesRegistr
                         getBean(HVBStorage.class),
                         getBean(ConfigurationProvider.class),
                         getBean(DataEncoder.class),
-                        getBean(RegistrationRequest.class),
-                        getBean(PreAuthorizationRequest.class),
-                        getBean(AuthorizationRequest.class),
-                        getBean(AccessTokenRequest.class)));
+                        getBean(RegistrationCall.class),
+                        getBean(PreAuthorizationCall.class),
+                        getBean(AuthorizationCall.class),
+                        getBean(AccessTokenCall.class)));
+        registerBean(
+                new UserDataCall(
+                        getBean(TinkHttpClient.class), getBean(ConfigurationProvider.class)));
+
+        registerBean(
+                new AccountsCall(
+                        getBean(TinkHttpClient.class),
+                        getBean(ConfigurationProvider.class),
+                        getBean(HVBStorage.class)));
+
+        registerBean(new AccountsMapper());
+
+        registerBean(
+                new AccountsFetcher(
+                        getBean(HVBStorage.class),
+                        getBean(AccountsCall.class),
+                        getBean(AccountsMapper.class)));
+
+        registerBean(
+                new TransactionsCall(
+                        getBean(TinkHttpClient.class),
+                        getBean(ConfigurationProvider.class),
+                        getBean(HVBStorage.class)));
+
+        registerBean(new TransactionsMapper());
+
+        registerBean(
+                new TransactionsFetcher(
+                        getBean(HVBStorage.class),
+                        getBean(ConfigurationProvider.class),
+                        getBean(TransactionsCall.class),
+                        getBean(TransactionsMapper.class)));
     }
 
     protected ConfigurationProvider configurationProvider() {

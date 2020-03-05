@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.ConfigurationProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.JwkHeader.Jwk;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -23,30 +24,31 @@ import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
 import se.tink.backend.aggregation.nxgen.scaffold.SimpleExternalApiCall;
 
 public final class HVBAuthenticator implements Authenticator {
+
     private final HVBStorage storage;
     private final ConfigurationProvider configurationProvider;
     private final DataEncoder dataEncoder;
 
-    private final RegistrationRequest registrationRequest;
-    private final PreAuthorizationRequest preAuthorizationRequest;
-    private final AuthorizationRequest authorizationRequest;
-    private final AccessTokenRequest accessTokenRequest;
+    private final RegistrationCall registrationRequest;
+    private final PreAuthorizationCall preAuthorizationRequest;
+    private final AuthorizationCall authorizationRequest;
+    private final AccessTokenCall accessTokenCall;
 
     public HVBAuthenticator(
             final HVBStorage storage,
             ConfigurationProvider configurationProvider,
             DataEncoder dataEncoder,
-            RegistrationRequest registrationRequest,
-            PreAuthorizationRequest preAuthorizationRequest,
-            AuthorizationRequest authorizationRequest,
-            AccessTokenRequest accessTokenRequest) {
+            RegistrationCall registrationRequest,
+            PreAuthorizationCall preAuthorizationRequest,
+            AuthorizationCall authorizationRequest,
+            AccessTokenCall accessTokenCall) {
         this.configurationProvider = configurationProvider;
         this.storage = storage;
         this.dataEncoder = dataEncoder;
         this.registrationRequest = registrationRequest;
         this.preAuthorizationRequest = preAuthorizationRequest;
         this.authorizationRequest = authorizationRequest;
-        this.accessTokenRequest = accessTokenRequest;
+        this.accessTokenCall = accessTokenCall;
     }
 
     @Override
@@ -101,15 +103,16 @@ public final class HVBAuthenticator implements Authenticator {
 
         AuthenticationData authenticationData = preAuthorize(username, password);
         String code = getAuthorizationCode(authenticationData);
-        AccessToken accessToken = getAccessToken(authenticationData, code);
+        AccessTokenResponse accessToken = getAccessToken(authenticationData, code);
 
-        storage.setAccessToken(accessToken);
+        storage.setAccessToken(accessToken.getValue());
+        storage.setDirectBankingNumber(username);
     }
 
-    private AccessToken getAccessToken(AuthenticationData authenticationData, String code)
+    private AccessTokenResponse getAccessToken(AuthenticationData authenticationData, String code)
             throws LoginException {
-        enrichAuthorizationData(authenticationData, code, Instant.now());
-        return executeCall(accessTokenRequest, authenticationData, INCORRECT_CREDENTIALS);
+        enrichAuthorizationData(authenticationData, code, configurationProvider.getInstantNow());
+        return executeCall(accessTokenCall, authenticationData, INCORRECT_CREDENTIALS);
     }
 
     private String getAuthorizationCode(AuthenticationData authenticationData)
@@ -143,13 +146,12 @@ public final class HVBAuthenticator implements Authenticator {
     }
 
     private JwkHeader prepareJwkHeader(RSAPrivateKey rsaPrivateKey) {
-        return new JwkHeader().setAlg("RS256").setJwk(prepareJwk((RSAPrivateCrtKey) rsaPrivateKey));
+        return new JwkHeader().setJwk(prepareJwk((RSAPrivateCrtKey) rsaPrivateKey));
     }
 
-    private Jwk prepareJwk(RSAPrivateCrtKey rsaPrivateCrtKey) {
+    private Jwk prepareJwk(RSAPrivateCrtKey key) {
         return new Jwk()
-                .setKty("RSA")
-                .setE(dataEncoder.base64Encode(rsaPrivateCrtKey.getPublicExponent().toByteArray()))
-                .setN(dataEncoder.base64Encode(rsaPrivateCrtKey.getModulus().toByteArray()));
+                .setExponent(dataEncoder.base64Encode(key.getPublicExponent().toByteArray()))
+                .setModulus(dataEncoder.base64Encode(key.getModulus().toByteArray()));
     }
 }
