@@ -6,7 +6,9 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.PrioritizedValueExtractor;
@@ -17,7 +19,9 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 @RequiredArgsConstructor
 public class IdentifierMapper {
 
-    private final PrioritizedValueExtractor valueExtractor;
+    private static final List<ExternalAccountIdentification4Code>
+            ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS =
+                    ImmutableList.of(SORT_CODE_ACCOUNT_NUMBER, IBAN, BBAN);
 
     private static final GenericTypeMapper<Type, ExternalAccountIdentification4Code> typeMapper =
             GenericTypeMapper.<Type, ExternalAccountIdentification4Code>genericBuilder()
@@ -28,6 +32,8 @@ public class IdentifierMapper {
                     .put(Type.BBAN, ExternalAccountIdentification4Code.BBAN)
                     .put(Type.PAYMENT_CARD_NUMBER, ExternalAccountIdentification4Code.PAN)
                     .build();
+
+    private final PrioritizedValueExtractor valueExtractor;
 
     public AccountIdentifier mapIdentifier(AccountIdentifierEntity id) {
         Type type =
@@ -43,9 +49,18 @@ public class IdentifierMapper {
 
     public AccountIdentifierEntity getTransactionalAccountPrimaryIdentifier(
             List<AccountIdentifierEntity> identifiers) {
-        return valueExtractor.pickByValuePriority(
-                identifiers,
-                AccountIdentifierEntity::getIdentifierType,
-                ImmutableList.of(SORT_CODE_ACCOUNT_NUMBER, IBAN, BBAN));
+
+        return valueExtractor
+                .pickByValuePriority(
+                        identifiers,
+                        AccountIdentifierEntity::getIdentifierType,
+                        ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS)
+                .orElseThrow(
+                        () ->
+                                new NoSuchElementException(
+                                        "Could not extract account identifier. No available identifier with type of: "
+                                                + StringUtils.join(
+                                                        ',',
+                                                        ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS)));
     }
 }

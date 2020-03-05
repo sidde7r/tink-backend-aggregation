@@ -7,12 +7,14 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalLimitType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.entities.CreditLineEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.PrioritizedValueExtractor;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -20,17 +22,28 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @RequiredArgsConstructor
 public class DefaultCreditCardBalanceMapper implements CreditCardBalanceMapper {
 
+    private static final List<AccountBalanceType> PREFERRED_BALANCE_TYPES =
+            ImmutableList.of(INTERIM_BOOKED, PREVIOUSLY_CLOSED_BOOKED, CLOSING_AVAILABLE);
+
+    private static final List<ExternalLimitType> PREFERRED_AVAILABLE_CREDIT_LINES =
+            ImmutableList.of(
+                    ExternalLimitType.AVAILABLE,
+                    ExternalLimitType.PRE_AGREED,
+                    ExternalLimitType.CREDIT);
+
     private final PrioritizedValueExtractor valueExtractor;
 
     @Override
     public ExactCurrencyAmount getAccountBalance(Collection<AccountBalanceEntity> balances) {
         return valueExtractor
                 .pickByValuePriority(
-                        balances,
-                        AccountBalanceEntity::getType,
-                        ImmutableList.of(
-                                INTERIM_BOOKED, PREVIOUSLY_CLOSED_BOOKED, CLOSING_AVAILABLE))
-                .getAmount();
+                        balances, AccountBalanceEntity::getType, PREFERRED_BALANCE_TYPES)
+                .map(AccountBalanceEntity::getAmount)
+                .orElseThrow(
+                        () ->
+                                new NoSuchElementException(
+                                        "Could not extract credit card account balance. No available balance with type of: "
+                                                + StringUtils.join(',', PREFERRED_BALANCE_TYPES)));
     }
 
     @Override
@@ -40,17 +53,19 @@ public class DefaultCreditCardBalanceMapper implements CreditCardBalanceMapper {
                         .flatMap(b -> CollectionUtils.emptyIfNull(b.getCreditLine()).stream())
                         .collect(Collectors.toList());
 
-        AmountEntity amount =
-                valueExtractor
-                        .pickByValuePriority(
-                                creditLines,
-                                CreditLineEntity::getType,
-                                ImmutableList.of(
-                                        ExternalLimitType.AVAILABLE,
-                                        ExternalLimitType.PRE_AGREED,
-                                        ExternalLimitType.CREDIT))
-                        .getAmount();
-
-        return ExactCurrencyAmount.of(amount.getUnsignedAmount(), amount.getCurrency());
+        return valueExtractor
+                .pickByValuePriority(
+                        creditLines, CreditLineEntity::getType, PREFERRED_AVAILABLE_CREDIT_LINES)
+                .map(CreditLineEntity::getAmount)
+                .map(
+                        amount ->
+                                ExactCurrencyAmount.of(
+                                        amount.getUnsignedAmount(), amount.getCurrency()))
+                .orElseThrow(
+                        () ->
+                                new NoSuchElementException(
+                                        "Could not extract available credit. No available credit line with type of: "
+                                                + StringUtils.join(
+                                                        ',', PREFERRED_AVAILABLE_CREDIT_LINES)));
     }
 }

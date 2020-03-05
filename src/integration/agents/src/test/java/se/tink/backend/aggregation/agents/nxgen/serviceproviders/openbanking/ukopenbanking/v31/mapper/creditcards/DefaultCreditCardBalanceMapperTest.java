@@ -8,16 +8,17 @@ import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.CLOSING_AVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.INTERIM_BOOKED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.PREVIOUSLY_CLOSED_BOOKED;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures.availableCreditLine;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures.closingBookedBalance;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures.interimAvailableBalance;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures.previouslyClosedBookedBalance;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.CreditCardFixtures.availableCreditLine;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.CreditCardFixtures.temporaryCreditLine;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures.temporaryCreditLine;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -50,7 +51,7 @@ public class DefaultCreditCardBalanceMapperTest {
         // when
         ArgumentCaptor<List<AccountBalanceType>> argument = ArgumentCaptor.forClass(List.class);
         when(valueExtractor.pickByValuePriority(eq(inputBalances), any(), argument.capture()))
-                .thenReturn(balanceToReturn);
+                .thenReturn(Optional.of(balanceToReturn));
         ExactCurrencyAmount returnedBalance = balanceMapper.getAccountBalance(inputBalances);
 
         // then
@@ -74,7 +75,7 @@ public class DefaultCreditCardBalanceMapperTest {
         ArgumentCaptor<ImmutableList<AccountBalanceType>> argument =
                 ArgumentCaptor.forClass(ImmutableList.class);
         when(valueExtractor.pickByValuePriority(eq(creditLines), any(), argument.capture()))
-                .thenReturn(returnedCreditLine);
+                .thenReturn(Optional.of(returnedCreditLine));
 
         ExactCurrencyAmount result =
                 balanceMapper.getAvailableCredit(
