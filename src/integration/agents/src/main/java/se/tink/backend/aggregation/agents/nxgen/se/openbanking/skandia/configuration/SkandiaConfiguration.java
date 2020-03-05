@@ -3,15 +3,18 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.configur
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
+import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @JsonObject
 public class SkandiaConfiguration implements ClientConfiguration {
-    private String redirectUrl;
-    private String clientId;
-    private String clientSecret;
-    private String xClientCertificate;
+    @AgentConfigParam private String redirectUrl;
+    @Secret private String clientId;
+    @SensitiveSecret private String clientSecret;
+    @Secret private String xClientCertificate;
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
