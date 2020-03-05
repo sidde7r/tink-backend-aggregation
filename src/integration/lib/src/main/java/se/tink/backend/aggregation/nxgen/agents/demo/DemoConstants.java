@@ -35,6 +35,9 @@ public class DemoConstants {
     }
 
     public static String IT_ACCOUNT_NUMBER_PREFIX = "IT60X";
+    public static String IT_IBAN_SAVINGS_ACCOUNT = "IT52X0300203280728575573739";
+    public static String IT_IBAN_TRANSACTION_ACCOUNT = "IT53X0300203280882749129712";
+    public static String IT_IBAN_TRANSACTION_ACCOUNT_ZERO_BALANCE = "IT05X0300203280756657461615";
 
     public static class MARKET_CODES {
         public static List<Integer> UK_SORT_CODES =
