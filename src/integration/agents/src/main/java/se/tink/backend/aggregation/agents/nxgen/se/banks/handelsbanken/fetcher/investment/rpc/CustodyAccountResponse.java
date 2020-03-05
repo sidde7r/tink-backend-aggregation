@@ -85,7 +85,7 @@ public class CustodyAccountResponse extends BaseResponse {
         return PortfolioModule.builder()
                 .withType(PortfolioType.ISK) // TODO
                 .withUniqueIdentifier(getAccountNumberBasedOnInvestmentType())
-                .withCashValue(toMarketValue())
+                .withCashValue(mainDepositAccountBalance.getAmount())
                 .withTotalProfit(
                         Optional.ofNullable(performance)
                                 .flatMap(HandelsbankenPerformance::asDouble)
