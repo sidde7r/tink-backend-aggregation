@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
+import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET_CODES;
+import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET_REGEX;
+
 import com.google.common.collect.Lists;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -8,8 +11,6 @@ import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET_CODES;
-import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET_REGEX;
 
 /** Deterministic account generator based on user-name and provider */
 public class DemoAccountDefinitionGenerator {
@@ -71,7 +72,7 @@ public class DemoAccountDefinitionGenerator {
                 + String.format("%05d", branchIdentifier)
                 + ("" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 7));
     }
-    
+
     public static DemoSavingsAccount getDemoSavingsAccounts(String username, String providerName) {
         return getDemoSavingsAccounts(username, providerName, 0);
     }
@@ -88,7 +89,9 @@ public class DemoAccountDefinitionGenerator {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
                 } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
                     return DemoConstants.IT_IBAN_SAVINGS_ACCOUNT;
-                    //return generateAccountNumbersIT(userDeterministicKey, deterministicKey); //Skipping account generation as random account generation doesn't follow IBAN creation rules.
+                    // return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
+                    // //Skipping account generation as random account generation doesn't follow
+                    // IBAN creation rules.
                 } else {
                     return generateAccountNumbers(deterministicKey);
                 }
@@ -138,7 +141,7 @@ public class DemoAccountDefinitionGenerator {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
                 } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
                     return DemoConstants.IT_IBAN_TRANSACTION_ACCOUNT;
-                    //return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
+                    // return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
                 }
@@ -262,7 +265,7 @@ public class DemoAccountDefinitionGenerator {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
                 } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
                     return DemoConstants.IT_IBAN_TRANSACTION_ACCOUNT_ZERO_BALANCE;
-                    //return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
+                    // return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
                 }

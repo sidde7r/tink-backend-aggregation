@@ -17,10 +17,10 @@ public class ItDemoAccountGeneratorTest {
                 DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider);
         System.out.println(savingsAccount.getAccountId());
 
-        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT60X0542811101633604257792");
+        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT52X0300203280728575573739");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.IBAN, expectedRecipientAccount.toString());
+                        AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
         Assert.assertEquals("Savings Account Tink", savingsAccount.getAccountName());
         Assert.assertTrue(savingsAccount.getIdentifiers().contains(expectedIdentifier));
 
@@ -34,10 +34,10 @@ public class ItDemoAccountGeneratorTest {
                         testUserName, testProvider);
         System.out.println(transactionAccount.getAccountId());
 
-        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT60X0542811101551254321800");
+        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT53X0300203280882749129712");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
-                        AccountIdentifier.Type.IBAN, expectedRecipientAccount.toString());
+                        AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
         Assert.assertEquals("Checking Account Tink", transactionAccount.getAccountName());
         Assert.assertTrue(transactionAccount.getIdentifiers().contains(expectedIdentifier));
 
