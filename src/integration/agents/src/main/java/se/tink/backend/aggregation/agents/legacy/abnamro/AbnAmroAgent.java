@@ -197,8 +197,11 @@ public class AbnAmroAgent extends AbstractAgent
         Preconditions.checkState(AbnAmroUtils.isValidBcNumberFormat(bcNumber));
         try {
             List<PfmContractEntity> contracts = subscriptionClient.getContracts(bcNumber);
-            accounts = new AccountConverter().convert(contracts);
-            return accounts;
+            if (Optional.ofNullable(contracts).isPresent()) {
+                accounts = new AccountConverter().convert(contracts);
+                return accounts;
+            }
+            return Collections.emptyList();
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

@@ -8,6 +8,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,7 +31,6 @@ import se.tink.backend.aggregation.agents.abnamro.client.rpc.SubscriptionAccount
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.SubscriptionAccountsResponse;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.SubscriptionResponse;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroInternetBankingConfiguration;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -331,7 +331,11 @@ public class IBSubscriptionClient extends IBClient {
         ClientResponse response = new IBClientRequestBuilder(url).build().get(ClientResponse.class);
 
         if (response.getStatus() == 403) {
-            throw SessionError.SESSION_EXPIRED.exception();
+
+            // TODO Temporary log to investigate the bcNumber that fails to fetch account.
+            log.info("bcNumber: {}", bcNumber);
+
+            return Collections.emptyList();
         }
 
         validateContentType(response, MediaType.APPLICATION_JSON_TYPE);
