@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.entities.payments.PaymentEntity;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -62,6 +63,7 @@ public class NordeaV17Constants {
                     .put("MAS0031", LoginError.INCORRECT_CREDENTIALS.exception())
                     .put("MAS0030", LoginError.INCORRECT_CREDENTIALS.exception())
                     .put("MAS0004", LoginError.INCORRECT_CREDENTIALS.exception())
+                    .put("MBS9001", BankIdError.TIMEOUT.exception())
                     .build();
 
     public static final Map<String, BankServiceException> BANKSERVICE_EXCEPTIONS_BY_CODE =
