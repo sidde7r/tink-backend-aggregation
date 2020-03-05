@@ -19,6 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountExtractor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -29,25 +31,55 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
 
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
     private final PersistentStorage persistentStorage;
+    private final LocalDateTimeSource localDateTimeSource;
     private final CreditCardAccountMapper creditCardAccountMapper;
     private final TransactionalAccountMapper transactionalAccountMapper;
 
     public UkOpenBankingV31Ais(
             UkOpenBankingAisConfig ukOpenBankingAisConfig, PersistentStorage persistentStorage) {
-        this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
-        this.persistentStorage = persistentStorage;
-        this.creditCardAccountMapper = defaultCreditCardAccountMapper();
-        this.transactionalAccountMapper = defaultTransactionalAccountMapper();
+        this(
+                ukOpenBankingAisConfig,
+                persistentStorage,
+                new ActualLocalDateTimeSource(),
+                defaultCreditCardAccountMapper(),
+                defaultTransactionalAccountMapper());
+    }
+
+    public UkOpenBankingV31Ais(
+            UkOpenBankingAisConfig ukOpenBankingAisConfig,
+            PersistentStorage persistentStorage,
+            LocalDateTimeSource localDateTimeSource) {
+        this(
+                ukOpenBankingAisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                defaultCreditCardAccountMapper(),
+                defaultTransactionalAccountMapper());
     }
 
     public UkOpenBankingV31Ais(
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
             PersistentStorage persistentStorage,
             CreditCardAccountMapper creditCardAccountMapper) {
+        this(
+                ukOpenBankingAisConfig,
+                persistentStorage,
+                new ActualLocalDateTimeSource(),
+                creditCardAccountMapper,
+                defaultTransactionalAccountMapper());
+    }
+
+    public UkOpenBankingV31Ais(
+            UkOpenBankingAisConfig ukOpenBankingAisConfig,
+            PersistentStorage persistentStorage,
+            LocalDateTimeSource localDateTimeSource,
+            CreditCardAccountMapper creditCardAccountMapper,
+            TransactionalAccountMapper transactionalAccountMapper) {
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
         this.persistentStorage = persistentStorage;
+        this.localDateTimeSource = localDateTimeSource;
         this.creditCardAccountMapper = creditCardAccountMapper;
-        this.transactionalAccountMapper = defaultTransactionalAccountMapper();
+        this.transactionalAccountMapper = transactionalAccountMapper;
     }
 
     @Override
@@ -75,7 +107,8 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                         persistentStorage,
                         apiClient,
                         AccountTransactionsV31Response.class,
-                        AccountTransactionsV31Response::toAccountTransactionPaginationResponse));
+                        AccountTransactionsV31Response::toAccountTransactionPaginationResponse,
+                        localDateTimeSource));
     }
 
     @Override
@@ -112,15 +145,16 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                         persistentStorage,
                         apiClient,
                         AccountTransactionsV31Response.class,
-                        AccountTransactionsV31Response::toCreditCardPaginationResponse));
+                        AccountTransactionsV31Response::toCreditCardPaginationResponse,
+                        localDateTimeSource));
     }
 
-    private CreditCardAccountMapper defaultCreditCardAccountMapper() {
+    private static CreditCardAccountMapper defaultCreditCardAccountMapper() {
         return new CreditCardAccountMapper(
                 new DefaultCreditCardBalanceMapper(new PrioritizedValueExtractor()));
     }
 
-    private TransactionalAccountMapper defaultTransactionalAccountMapper() {
+    private static TransactionalAccountMapper defaultTransactionalAccountMapper() {
         PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         return new TransactionalAccountMapper(
                 new TransactionalAccountBalanceMapper(valueExtractor),

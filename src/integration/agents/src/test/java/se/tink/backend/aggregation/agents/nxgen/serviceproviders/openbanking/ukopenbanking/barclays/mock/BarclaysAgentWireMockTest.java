@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.creditcards.amex.v62;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.barclays.mock;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
@@ -13,44 +13,45 @@ import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMoc
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
-import se.tink.backend.aggregation.agents.framework.wiremock.utils.S3LogFormatAdapter;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
-public class AmexV62UkMockServerWithContractFileAgentTest extends AgentIntegrationMockServerTest {
-
-    private final String USERNAME = "testUser";
-    private final String PASSWORD = "testPassword";
+public class BarclaysAgentWireMockTest extends AgentIntegrationMockServerTest {
 
     @Test
-    public void testRefreshWithJSONContractFile() throws Exception {
+    public void test() throws Exception {
+
         // Given
         prepareMockServer(
                 new AapFileParser(
-                        new S3LogFormatAdapter()
-                                .toMockFileFormat(
-                                        new ResourceFileReader()
-                                                .read(
-                                                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.s3"))));
+                        new ResourceFileReader()
+                                .read(
+                                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/barclays_mock_log.aap")));
+
+        final WireMockConfiguration configuration =
+                new WireMockConfiguration(
+                        "localhost:" + getWireMockPort(),
+                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml",
+                        ImmutableMap.<String, String>builder()
+                                .put("code", "DUMMY_AUTH_CODE")
+                                .build());
 
         AgentContractEntitiesJsonFileParser contractParser =
                 new AgentContractEntitiesJsonFileParser();
         AgentContractEntity expected =
                 contractParser.parseContractOnBasisOfFile(
-                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/agent-contract.json");
+                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/agent-contract.json");
 
         List<Account> expectedAccounts = expected.getAccounts();
         List<Transaction> expectedTransactions = expected.getTransactions();
 
-        final WireMockConfiguration configuration =
-                new WireMockConfiguration("localhost:" + getWireMockPort());
-
         // When
         NewAgentTestContext context =
-                new AgentIntegrationTest.Builder("uk", "uk-americanexpress-password")
-                        .addCredentialField(Field.Key.USERNAME, USERNAME)
-                        .addCredentialField(Field.Key.PASSWORD, PASSWORD)
+                new AgentIntegrationTest.Builder("uk", "uk-barclays-oauth2")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
+                        .expectLoggedIn(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("barclays")
                         .setWireMockConfiguration(configuration)
                         .build()
                         .testRefresh();

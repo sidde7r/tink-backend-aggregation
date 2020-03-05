@@ -150,12 +150,12 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
 
     @Override
     public void setSslClientCertificate(byte[] clientCertificateBytes, String password) {
-        tinkHttpClient.setSslClientCertificate(clientCertificateBytes, password);
+        // NOOP
     }
 
     @Override
     public void trustRootCaCertificate(byte[] jksData, String password) {
-        tinkHttpClient.trustRootCaCertificate(jksData, password);
+        // NOOP
     }
 
     @Override
@@ -190,9 +190,7 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     }
 
     @Override
-    public void setDebugOutput(boolean debugOutput) {
-        tinkHttpClient.setDebugOutput(debugOutput);
-    }
+    public void setDebugOutput(boolean debugOutput) {}
 
     @Override
     public void setCensorSensitiveHeaders(boolean censorSensitiveHeadersEnabled) {

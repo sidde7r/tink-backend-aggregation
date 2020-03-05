@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -114,8 +115,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
 
-    private String wireMockServerHost;
-    private final Map<String, String> mockCallbackData;
+    private WireMockConfiguration wireMockConfiguration;
 
     protected AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
@@ -131,8 +131,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
-        this.wireMockServerHost = builder.getWireMockServerHost();
-        this.mockCallbackData = builder.getMockSupplementalCallbackData();
+        this.wireMockConfiguration = builder.getWireMockConfiguration();
+
         this.clusterIdForSecretsService =
                 MoreObjects.firstNonNull(
                         builder.getClusterIdForSecretsService(),
@@ -230,13 +230,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             context.setAgentConfigurationController(agentConfigurationController);
 
             AgentFactory factory;
-            if (wireMockServerHost != null) {
+            if (wireMockConfiguration != null) {
                 // Provide AgentFactory with mocked http client and supplemental information.
                 factory =
                         new AgentFactory(
                                 configuration,
-                                new WireMockTinkHttpClientProviderFactory(wireMockServerHost),
-                                new MockSupplementalInformationProviderFactory(mockCallbackData),
+                                new WireMockTinkHttpClientProviderFactory(
+                                        wireMockConfiguration.getServerUrl()),
+                                new MockSupplementalInformationProviderFactory(
+                                        wireMockConfiguration.getCallbackData()),
                                 new AgentContextProviderFactoryImpl(),
                                 new GeneratedValueProviderImpl(
                                         new ConstantLocalDateTimeSource(),
@@ -601,8 +603,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     private void readConfigurationFile() throws ConfigurationException, IOException {
-        if (wireMockServerHost != null) {
-            configuration = readConfiguration("etc/test.yml");
+        if (wireMockConfiguration != null) {
+
+            final String configurationPath = wireMockConfiguration.getAgentConfigurationPath();
+            if (configurationPath != null) {
+                configuration = readConfiguration(configurationPath);
+            } else {
+                configuration = new AgentsServiceConfiguration();
+            }
+
         } else {
             try {
                 configuration = readConfiguration("etc/development.yml");
@@ -944,18 +953,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String redirectUrl;
         private String clusterIdForSecretsService = null;
 
-        private String wireMockServerHost;
-        private Map<String, String> mockCallbackData;
+        private WireMockConfiguration wireMockConfiguration;
 
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
             this.provider.setMarket(marketProviders.getMarket());
             this.provider.setCurrency(marketProviders.getCurrency());
-        }
-
-        public String getWireMockServerHost() {
-            return this.wireMockServerHost;
         }
 
         private static String escapeMarket(String market) {
@@ -1006,21 +1010,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         public Builder setUser(User user) {
             this.user = user;
             return this;
-        }
-
-        public Builder useWireMockServerHost(final String wireMockServerHost) {
-            this.wireMockServerHost = wireMockServerHost;
-            return this;
-        }
-
-        public Builder withMockSupplementalCallbackData(
-                final Map<String, String> mockCallbackData) {
-            this.mockCallbackData = mockCallbackData;
-            return this;
-        }
-
-        public Map<String, String> getMockSupplementalCallbackData() {
-            return mockCallbackData;
         }
 
         public Credentials getCredential() {
@@ -1202,6 +1191,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             }
 
             return new AgentIntegrationTest(this);
+        }
+
+        public WireMockConfiguration getWireMockConfiguration() {
+            return wireMockConfiguration;
+        }
+
+        public Builder setWireMockConfiguration(WireMockConfiguration wireMockConfiguration) {
+            this.wireMockConfiguration = wireMockConfiguration;
+            return this;
         }
     }
 }

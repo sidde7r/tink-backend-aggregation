@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.UUIDSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.LegacyTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -75,6 +76,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     private final UkOpenBankingAisConfig agentConfig;
     private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> transactionalAccountFetcher;
 
+    private final UUIDSource uuidSource;
+
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider, UkOpenBankingAisConfig agentConfig) {
         this(componentProvider, agentConfig, false);
@@ -88,6 +91,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.wellKnownURL = agentConfig.getWellKnownURL();
         this.disableSslVerification = disableSslVerification;
         this.agentConfig = agentConfig;
+        this.uuidSource = componentProvider.getUuidSource();
 
         client.addFilter(new BankServiceInternalErrorFilter());
     }
@@ -185,6 +189,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 softwareStatement,
                 providerConfiguration,
                 wellKnownURL,
+                uuidSource,
                 persistentStorage);
     }
 

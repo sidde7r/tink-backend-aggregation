@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.UUIDSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -32,6 +33,7 @@ public class OpenIdApiClient {
     protected final ProviderConfiguration providerConfiguration;
     protected final JwtSigner signer;
     private final URL wellKnownURL;
+    private final UUIDSource uuidSource;
 
     // Internal caching. Do not use these fields directly, always use the getters!
     private WellKnownResponse cachedWellKnownResponse;
@@ -46,12 +48,14 @@ public class OpenIdApiClient {
             JwtSigner signer,
             SoftwareStatementAssertion softwareStatement,
             ProviderConfiguration providerConfiguration,
-            URL wellKnownURL) {
+            URL wellKnownURL,
+            UUIDSource uuidSource) {
         this.httpClient = httpClient;
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
         this.wellKnownURL = wellKnownURL;
         this.signer = signer;
+        this.uuidSource = uuidSource;
     }
 
     public WellKnownResponse getWellKnownConfiguration() {
@@ -270,12 +274,16 @@ public class OpenIdApiClient {
 
     public void instantiateAisAuthFilter(OAuth2Token token) {
         log.debug("Instantiating the Ais Auth Filter.");
-        aisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, providerConfiguration, null, null);
+        aisAuthFilter =
+                new OpenIdAuthenticatedHttpFilter(
+                        token, providerConfiguration, null, null, uuidSource);
     }
 
     public void instantiatePisAuthFilter(OAuth2Token token) {
         log.debug("Instantiating the Pis Auth Filter.");
-        pisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, providerConfiguration, null, null);
+        pisAuthFilter =
+                new OpenIdAuthenticatedHttpFilter(
+                        token, providerConfiguration, null, null, uuidSource);
     }
 
     public void storeOpenIdError(OpenIdError error) {
