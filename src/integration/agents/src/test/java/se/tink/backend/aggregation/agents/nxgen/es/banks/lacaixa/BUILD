@@ -2,7 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "lacaixa",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(["LaCaixaAgentTest.java"]),
     data = [
         "//data:aggregation_test",
         "//etc:development",
@@ -21,6 +21,46 @@ junit_test(
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/models",
         "//third_party:org_mockito_mockito_core",
+    ],
+)
+
+junit_test(
+    name = "caixa_mockServer",
+    srcs = glob([
+        "LaCaixaMockServerAgentTest.java",
+    ]),
+    data = [
+        "//data:agent_unit_tests",
+        "//data:agents",
+        "//data:aggregation_test",
+        "//data:cryptography_test",
+        "//data:security",
+        "//data:tesseract_training_set",
+        "//etc:development",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa/resources",
+        "//tools:libkbc_wbaes_linux",
+        "//tools:libkbc_wbaes_mac",
+        "//tools:phantomjs_linux",
+        "//tools:phantomjs_mac",
+    ],
+    resources = [
+        "//src/integration/agents/src/main/resources:config-templates",
+    ],
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys",
+    ],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys",
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
+        "//src/integration/models",
     ],
 )

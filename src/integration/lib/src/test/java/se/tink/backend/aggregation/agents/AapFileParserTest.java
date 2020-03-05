@@ -31,26 +31,32 @@ public class AapFileParserTest {
         List<Pair<HTTPRequest, HTTPResponse>> expectedResult =
                 Arrays.asList(
                         new Pair<>(
-                                new HTTPRequest(
-                                        "POST",
-                                        "/mobileone/msl/services/transactions/v1/getDetails",
-                                        expectedRequestHeaders,
-                                        "{\"billingIndexList\":[0],\"sortedIndex\":0}"),
-                                new HTTPResponse(expectedResponseHeaders, 200, "{}")),
+                                new HTTPRequest.Builder(
+                                                "POST",
+                                                "/mobileone/msl/services/transactions/v1/getDetails",
+                                                expectedRequestHeaders)
+                                        .setRequestBody(
+                                                "{\"billingIndexList\":[0],\"sortedIndex\":0}")
+                                        .build(),
+                                new HTTPResponse.Builder(expectedResponseHeaders, 200)
+                                        .setResponseBody("{}")
+                                        .setToState("STATE1")
+                                        .build()),
                         new Pair<>(
-                                new HTTPRequest(
-                                        "POST",
-                                        "/mobileone/msl/services/accountservicing/v1/extendSession",
-                                        expectedRequestHeaders),
-                                new HTTPResponse(
-                                        expectedResponseHeaders,
-                                        200,
-                                        "{\"extendSession\":{\"status\":0}}")));
+                                new HTTPRequest.Builder(
+                                                "POST",
+                                                "/mobileone/msl/services/accountservicing/v1/extendSession",
+                                                expectedRequestHeaders)
+                                        .setExpectedState("STATE1")
+                                        .build(),
+                                new HTTPResponse.Builder(expectedResponseHeaders, 200)
+                                        .setResponseBody("{\"extendSession\":{\"status\":0}}")
+                                        .build()));
 
         final String fileContent =
                 new ResourceFileReader()
                         .read(
-                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/resources/amex-refresh-traffic.aap");
+                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/resources/test-refresh-traffic.aap");
 
         AapFileParser parser = new AapFileParser(fileContent);
 

@@ -17,7 +17,8 @@ public final class HTTPRequestTest {
 
         final String someEncodedUrl = "https://host.com/so%21meurl?k%21y=value&key2=value2";
 
-        final HTTPRequest request = new HTTPRequest("", someEncodedUrl, Collections.emptyList());
+        final HTTPRequest request =
+                new HTTPRequest.Builder("", someEncodedUrl, Collections.emptyList()).build();
         final String path = request.getPath();
 
         Assert.assertEquals("/so%21meurl", path);
@@ -28,7 +29,8 @@ public final class HTTPRequestTest {
 
         final String someEncodedUrl = "https://host.com/so%21meurl?k%21y=value&key2=value2";
 
-        final HTTPRequest request = new HTTPRequest("", someEncodedUrl, Collections.emptyList());
+        final HTTPRequest request =
+                new HTTPRequest.Builder("", someEncodedUrl, Collections.emptyList()).build();
         final List<NameValuePair> query = request.getQuery();
 
         Assert.assertEquals(2, query.size());

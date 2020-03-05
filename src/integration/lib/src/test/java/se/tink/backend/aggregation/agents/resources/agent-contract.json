@@ -4,11 +4,17 @@
             "accountNumber": "XXX-11111",
             "exactAvailableCredit": {
                 "currencyCode": "GBP",
-                "value": 0.0
+                "exactValue": 0.0,
+                "scale": 2,
+                "doubleValue": 0.00,
+                "unscaledValue": 0
             },
             "exactBalance": {
                 "currencyCode": "GBP",
-                "value": 0.0
+                "exactValue": 0.0,
+                "scale": 2,
+                "doubleValue": 0.00,
+                "unscaledValue": 0
             },
             "accountExclusion": "NONE",
             "currencyCode": "GBP",

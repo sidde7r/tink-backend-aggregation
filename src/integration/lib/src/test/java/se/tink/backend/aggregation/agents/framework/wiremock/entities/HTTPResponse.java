@@ -9,20 +9,46 @@ import se.tink.libraries.pair.Pair;
 public class HTTPResponse {
 
     private final List<Pair<String, String>> responseHeaders;
-    private final String responseBody;
+    private String responseBody;
     private final int statusCode;
+    private String toState;
 
-    public HTTPResponse(
-            List<Pair<String, String>> responseHeaders, int statusCode, String responseBody) {
+    public static class Builder {
+        private final List<Pair<String, String>> responseHeaders;
+        private final int statusCode;
+        private String responseBody;
+        private String toState;
+
+        public Builder(final List<Pair<String, String>> responseHeaders, final int statusCode) {
+            this.responseHeaders = responseHeaders;
+            this.statusCode = statusCode;
+        }
+
+        public Builder setResponseBody(final String responseBody) {
+            this.responseBody = responseBody;
+            return this;
+        }
+
+        public Builder setToState(final String toState) {
+            this.toState = toState;
+            return this;
+        }
+
+        public HTTPResponse build() {
+            HTTPResponse response = new HTTPResponse(responseHeaders, statusCode);
+            response.responseBody = responseBody;
+            response.toState = toState;
+            return response;
+        }
+    }
+
+    private HTTPResponse(final List<Pair<String, String>> responseHeaders, final int statusCode) {
         this.responseHeaders = responseHeaders;
-        this.responseBody = responseBody;
         this.statusCode = statusCode;
     }
 
-    public HTTPResponse(List<Pair<String, String>> responseHeaders, int statusCode) {
-        this.responseHeaders = responseHeaders;
-        this.statusCode = statusCode;
-        this.responseBody = null;
+    public Optional<String> getToState() {
+        return Optional.ofNullable(toState);
     }
 
     public Optional<String> getResponseBody() {
