@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
@@ -13,9 +11,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 
 @JsonObject
 public class InstrumentEntity {
-
-    private static final Logger log = LoggerFactory.getLogger(InstrumentEntity.class);
-
     @JsonProperty private String id;
     @JsonProperty private double price;
     @JsonProperty private String currency;
@@ -33,7 +28,6 @@ public class InstrumentEntity {
     public InstrumentModule applyTo(
             double marketValue, double profitLoss, double quantity, double avgPurchasePrice) {
 
-        log.info("Instrument type: " + getRawType() + " - ISIN : " + isin);
         return InstrumentModule.builder()
                 .withType(InstrumentType.FUND)
                 .withId(InstrumentIdModule.of(isin, getMarket(), instrumentName, id))
