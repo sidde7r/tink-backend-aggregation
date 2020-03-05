@@ -3,7 +3,7 @@ java_library(
     licenses = ["notice"],
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_code_findbugs_jsr305//jar",
+        "@aggregation//:com_google_code_findbugs_jsr305",
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_core//jar",
         "@io_grpc_grpc_services//jar",

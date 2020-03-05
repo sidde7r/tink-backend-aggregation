@@ -329,7 +329,7 @@ maven_jar(
 # @aopalliance_aopalliance//jar:jar
 
 maven_jar(
-    name = "aopalliance_aopalliance",
+    name = "aopalliance_aopalliance",  # Do not use, but do not remove
     artifact = "aopalliance:aopalliance:1.0",
     sha1 = "0235ba8b489512805ac13a8f9ea77a1ca5ebe3e8",
 )
@@ -715,7 +715,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_slf4j_slf4j_api",
+    name = "org_slf4j_slf4j_api",  # Do not use, but do not remove
     artifact = "org.slf4j:slf4j-api:1.7.21",
     sha1 = "139535a69a4239db087de9bab0bee568bf8e0b70",
 )
@@ -751,7 +751,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_httpcomponents_httpclient",
+    name = "org_apache_httpcomponents_httpclient",  # Do not use, but do not remove
     artifact = "org.apache.httpcomponents:httpclient:4.3.4",
     sha1 = "a9a1fef2faefed639ee0d0fba5b3b8e4eb2ff2d8",
 )
@@ -903,7 +903,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_inject_javax_inject",
+    name = "javax_inject_javax_inject",  # Do not use, but do not remove
     artifact = "javax.inject:javax.inject:1",
     sha1 = "6975da39a7040257bd51d21a231b76c915872d38",
 )
@@ -1107,7 +1107,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_codec_commons_codec",
+    name = "commons_codec_commons_codec",  # Do not use, but do not remove
     artifact = "commons-codec:commons-codec:1.6",
     sha1 = "b7f0fc8f61ecadeb3695f0b9464755eee44374d4",
 )
@@ -1255,7 +1255,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_httpcomponents_httpcore",
+    name = "org_apache_httpcomponents_httpcore",  # Do not use, but do not remove
     artifact = "org.apache.httpcomponents:httpcore:4.3.2",
     sha1 = "31fbbff1ddbf98f3aa7377c94d33b0447c646b6e",
 )
@@ -1331,7 +1331,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "ch_qos_logback_logback_core",
+    name = "ch_qos_logback_logback_core",  # Do not use, but do not remove
     artifact = "ch.qos.logback:logback-core:1.1.11",
     sha1 = "88b8df40340eed549fb07e2613879bf6b006704d",
 )
@@ -1459,7 +1459,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_code_findbugs_jsr305",
+    name = "com_google_code_findbugs_jsr305",  # Do not use, but do not remove
     artifact = "com.google.code.findbugs:jsr305:3.0.0",
     sha1 = "5871fb60dc68d67da54a663c3fd636a10a532948",
 )
@@ -1661,7 +1661,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_github_rholder_guava_retrying",
+    name = "com_github_rholder_guava_retrying",  # Do not use, but do not remove
     artifact = "com.github.rholder:guava-retrying:2.0.0",
     sha1 = "974bc0a04a11cc4806f7c20a34703bd23c34e7f4",
 )
@@ -1685,7 +1685,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_logging_commons_logging",
+    name = "commons_logging_commons_logging",  # Do not use, but do not remove
     artifact = "commons-logging:commons-logging:1.1.3",
     sha1 = "f6f66e966c70a83ffbdb6f17a0919eaf7c8aca7f",
 )
@@ -1753,7 +1753,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_commons_commons_lang3",
+    name = "org_apache_commons_commons_lang3",  # Do not use, but do not remove
     artifact = "org.apache.commons:commons-lang3:3.4",
     sha1 = "5fe28b9518e58819180a43a850fbc0dd24b7c050",
 )
@@ -2558,6 +2558,8 @@ pinned_maven_install()
 maven_install(
     name = "aggregation",
     artifacts = [
+        "aopalliance:aopalliance:1.0",
+        "ch.qos.logback:logback-core:1.1.11",
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
         "com.fasterxml.jackson.core:jackson-databind:2.9.9",
@@ -2572,11 +2574,20 @@ maven_install(
         "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
         "com.fasterxml:classmate:1.0.0",
+        "com.github.rholder:guava-retrying:2.0.0",
+        "com.google.code.findbugs:jsr305:3.0.0",
         "com.google.code.gson:gson:2.8.2",
         "com.google.guava:guava:23.1-jre",
+        "commons-codec:commons-codec:1.6",
+        "commons-logging:commons-logging:1.1.3",
+        "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
+        "org.apache.commons:commons-lang3:3.4",
+        "org.apache.httpcomponents:httpclient:4.3.4",
+        "org.apache.httpcomponents:httpcore:4.3.2",
         "org.codehaus.woodstox:stax2-api:4.1",
+        "org.slf4j:slf4j-api:1.7.21",
         "org.yaml:snakeyaml:1.23",
     ],
     excluded_artifacts = [

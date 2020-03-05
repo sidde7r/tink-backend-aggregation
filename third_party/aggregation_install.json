@@ -3,6 +3,50 @@
         "conflict_resolution": {},
         "dependencies": [
             {
+                "coord": "aopalliance:aopalliance:1.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.jar"
+                ],
+                "sha256": "0addec670fedcd3f113c5c8091d783280d23f75e3acb841b61a9cdb079376a08"
+            },
+            {
+                "coord": "aopalliance:aopalliance:jar:sources:1.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar"
+                ],
+                "sha256": "e6ef91d439ada9045f419c77543ebe0416c3cdfc5b063448343417a3e4a72123"
+            },
+            {
+                "coord": "ch.qos.logback:logback-core:1.1.11",
+                "file": "v1/https/repo.maven.apache.org/maven2/ch/qos/logback/logback-core/1.1.11/logback-core-1.1.11.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/ch/qos/logback/logback-core/1.1.11/logback-core-1.1.11.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/ch/qos/logback/logback-core/1.1.11/logback-core-1.1.11.jar"
+                ],
+                "sha256": "58738067842476feeae5768e832cd36a0e40ce41576ba5739c3632d376bd8c86"
+            },
+            {
+                "coord": "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                "file": "v1/https/repo.maven.apache.org/maven2/ch/qos/logback/logback-core/1.1.11/logback-core-1.1.11-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/ch/qos/logback/logback-core/1.1.11/logback-core-1.1.11-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/ch/qos/logback/logback-core/1.1.11/logback-core-1.1.11-sources.jar"
+                ],
+                "sha256": "045a7f572b8432062ce735451930569824bc1bec53a6cb51c73cf8ee1985f5a8"
+            },
+            {
                 "coord": "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
                 "file": "v1/https/repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.9.9/jackson-annotations-2.9.9.jar",
                 "directDependencies": [],
@@ -204,12 +248,12 @@
                 ],
                 "dependencies": [
                     "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
-                    "com.google.code.findbugs:jsr305:1.3.9",
                     "com.google.errorprone:error_prone_annotations:2.0.18",
                     "com.google.guava:guava:23.1-jre",
                     "com.fasterxml.jackson.core:jackson-databind:2.9.9",
                     "org.codehaus.mojo:animal-sniffer-annotations:1.14",
                     "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.google.code.findbugs:jsr305:3.0.0",
                     "com.fasterxml.jackson.core:jackson-core:2.9.9"
                 ],
                 "url": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-guava/2.9.9/jackson-datatype-guava-2.9.9.jar",
@@ -231,8 +275,8 @@
                     "com.google.errorprone:error_prone_annotations:jar:sources:2.0.18",
                     "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
                     "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.0",
                     "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
-                    "com.google.code.findbugs:jsr305:jar:sources:1.3.9",
                     "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
                     "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9"
                 ],
@@ -525,21 +569,66 @@
                 "sha256": "1b386664e686694150be8163dc87662cb6ec13cd7104e936fa121a24d3747521"
             },
             {
-                "coord": "com.google.code.findbugs:jsr305:1.3.9",
-                "file": "v1/https/repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar",
-                "directDependencies": [],
-                "dependencies": [],
-                "url": "https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar",
-                "mirror_urls": [
-                    "https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar"
+                "coord": "com.github.rholder:guava-retrying:2.0.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/rholder/guava-retrying/2.0.0/guava-retrying-2.0.0.jar",
+                "directDependencies": [
+                    "com.google.code.findbugs:jsr305:3.0.0",
+                    "com.google.guava:guava:23.1-jre"
                 ],
-                "sha256": "905721a0eea90a81534abb7ee6ef4ea2e5e645fa1def0a5cd88402df1b46c9ed"
+                "dependencies": [
+                    "com.google.errorprone:error_prone_annotations:2.0.18",
+                    "com.google.guava:guava:23.1-jre",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.google.code.findbugs:jsr305:3.0.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/github/rholder/guava-retrying/2.0.0/guava-retrying-2.0.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/github/rholder/guava-retrying/2.0.0/guava-retrying-2.0.0.jar"
+                ],
+                "sha256": "5f6049a70c6c2fb56a5f3a3e1350ce1e853b5c6ccaba01fbf9c6835d72ac9484"
             },
             {
-                "coord": "com.google.code.findbugs:jsr305:jar:sources:1.3.9",
-                "file": null,
+                "coord": "com.github.rholder:guava-retrying:jar:sources:2.0.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/rholder/guava-retrying/2.0.0/guava-retrying-2.0.0-sources.jar",
+                "directDependencies": [
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.0",
+                    "com.google.guava:guava:jar:sources:23.1-jre"
+                ],
+                "dependencies": [
+                    "com.google.guava:guava:jar:sources:23.1-jre",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.0.18",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.0",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/github/rholder/guava-retrying/2.0.0/guava-retrying-2.0.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/github/rholder/guava-retrying/2.0.0/guava-retrying-2.0.0-sources.jar"
+                ],
+                "sha256": "3e1e871288340a2cf5af6b8caf747cce17fc496451968e665d66d71a5da987a9"
+            },
+            {
+                "coord": "com.google.code.findbugs:jsr305:3.0.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0.jar",
                 "directDependencies": [],
-                "dependencies": []
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0.jar"
+                ],
+                "sha256": "bec0b24dcb23f9670172724826584802b80ae6cbdaba03bdebdef9327b962f6a"
+            },
+            {
+                "coord": "com.google.code.findbugs:jsr305:jar:sources:3.0.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0-sources.jar"
+                ],
+                "sha256": "4de55af3c2a78d1df2a14fb5db64b23110f74ea462c5f56db443a96df431fad5"
             },
             {
                 "coord": "com.google.code.gson:gson:2.8.2",
@@ -589,7 +678,7 @@
                 "coord": "com.google.guava:guava:23.1-jre",
                 "file": "v1/https/repo.maven.apache.org/maven2/com/google/guava/guava/23.1-jre/guava-23.1-jre.jar",
                 "directDependencies": [
-                    "com.google.code.findbugs:jsr305:1.3.9",
+                    "com.google.code.findbugs:jsr305:3.0.0",
                     "com.google.errorprone:error_prone_annotations:2.0.18",
                     "com.google.j2objc:j2objc-annotations:1.1",
                     "org.codehaus.mojo:animal-sniffer-annotations:1.14"
@@ -597,7 +686,7 @@
                 "dependencies": [
                     "com.google.errorprone:error_prone_annotations:2.0.18",
                     "com.google.j2objc:j2objc-annotations:1.1",
-                    "com.google.code.findbugs:jsr305:1.3.9",
+                    "com.google.code.findbugs:jsr305:3.0.0",
                     "org.codehaus.mojo:animal-sniffer-annotations:1.14"
                 ],
                 "url": "https://repo.maven.apache.org/maven2/com/google/guava/guava/23.1-jre/guava-23.1-jre.jar",
@@ -610,7 +699,7 @@
                 "coord": "com.google.guava:guava:jar:sources:23.1-jre",
                 "file": "v1/https/repo.maven.apache.org/maven2/com/google/guava/guava/23.1-jre/guava-23.1-jre-sources.jar",
                 "directDependencies": [
-                    "com.google.code.findbugs:jsr305:jar:sources:1.3.9",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.0",
                     "com.google.errorprone:error_prone_annotations:jar:sources:2.0.18",
                     "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
                     "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14"
@@ -618,8 +707,8 @@
                 "dependencies": [
                     "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
                     "com.google.errorprone:error_prone_annotations:jar:sources:2.0.18",
-                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
-                    "com.google.code.findbugs:jsr305:jar:sources:1.3.9"
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.0",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14"
                 ],
                 "url": "https://repo.maven.apache.org/maven2/com/google/guava/guava/23.1-jre/guava-23.1-jre-sources.jar",
                 "mirror_urls": [
@@ -648,6 +737,72 @@
                     "https://repo.maven.apache.org/maven2/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1-sources.jar"
                 ],
                 "sha256": "2cd9022a77151d0b574887635cdfcdf3b78155b602abc89d7f8e62aba55cfb4f"
+            },
+            {
+                "coord": "commons-codec:commons-codec:1.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/commons-codec/commons-codec/1.6/commons-codec-1.6.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.6/commons-codec-1.6.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.6/commons-codec-1.6.jar"
+                ],
+                "sha256": "54b34e941b8e1414bd3e40d736efd3481772dc26db3296f6aa45cec9f6203d86"
+            },
+            {
+                "coord": "commons-codec:commons-codec:jar:sources:1.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/commons-codec/commons-codec/1.6/commons-codec-1.6-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.6/commons-codec-1.6-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.6/commons-codec-1.6-sources.jar"
+                ],
+                "sha256": "cff6a3db12b91f0fa3484d928d7863f162b0ae2789eaa3fb21604f2487611558"
+            },
+            {
+                "coord": "commons-logging:commons-logging:1.1.3",
+                "file": "v1/https/repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar"
+                ],
+                "sha256": "70903f6fc82e9908c8da9f20443f61d90f0870a312642991fe8462a0b9391784"
+            },
+            {
+                "coord": "commons-logging:commons-logging:jar:sources:1.1.3",
+                "file": "v1/https/repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3-sources.jar"
+                ],
+                "sha256": "3196a32bfcc6d397243f01f670cb5d17390a8facde972c2f94cb53a4705126aa"
+            },
+            {
+                "coord": "javax.inject:javax.inject:1",
+                "file": "v1/https/repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar"
+                ],
+                "sha256": "91c77044a50c481636c32d916fd89c9118a72195390452c81065080f957de7ff"
+            },
+            {
+                "coord": "javax.inject:javax.inject:jar:sources:1",
+                "file": "v1/https/repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1-sources.jar"
+                ],
+                "sha256": "c4b87ee2911c139c3daf498a781967f1eb2e75bc1a8529a2e7b328a15d0e433e"
             },
             {
                 "coord": "javax.xml.stream:stax-api:1.0-2",
@@ -694,6 +849,88 @@
                 "sha256": "facba3aeb0c0d842d545bf7e732ea19869e2b18916adaa4eeda395c946c22991"
             },
             {
+                "coord": "org.apache.commons:commons-lang3:3.4",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar"
+                ],
+                "sha256": "734c8356420cc8e30c795d64fd1fcd5d44ea9d90342a2cc3262c5158fbc6d98b"
+            },
+            {
+                "coord": "org.apache.commons:commons-lang3:jar:sources:3.4",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4-sources.jar"
+                ],
+                "sha256": "4709f16a9e0f8fd83ae155083d63044e23045aac8f6f0183a2db09f492491b12"
+            },
+            {
+                "coord": "org.apache.httpcomponents:httpclient:4.3.4",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar",
+                "directDependencies": [
+                    "commons-codec:commons-codec:1.6",
+                    "commons-logging:commons-logging:1.1.3",
+                    "org.apache.httpcomponents:httpcore:4.3.2"
+                ],
+                "dependencies": [
+                    "commons-logging:commons-logging:1.1.3",
+                    "org.apache.httpcomponents:httpcore:4.3.2",
+                    "commons-codec:commons-codec:1.6"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar"
+                ],
+                "sha256": "a77f2bbc346af46028d63e8807eacac3fbe8478e3d2f039f9f6053248a743cf6"
+            },
+            {
+                "coord": "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar",
+                "directDependencies": [
+                    "commons-codec:commons-codec:jar:sources:1.6",
+                    "commons-logging:commons-logging:jar:sources:1.1.3",
+                    "org.apache.httpcomponents:httpcore:jar:sources:4.3.2"
+                ],
+                "dependencies": [
+                    "commons-logging:commons-logging:jar:sources:1.1.3",
+                    "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
+                    "commons-codec:commons-codec:jar:sources:1.6"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar"
+                ],
+                "sha256": "67fd2d124e3aa166b97b6dd4e55f3b34ac4000289cef8d870b72337f44f4c0ea"
+            },
+            {
+                "coord": "org.apache.httpcomponents:httpcore:4.3.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2.jar"
+                ],
+                "sha256": "abd02320e2356f89d054dae4cf02306bef20a9cf7865b3ac94ec7552b4f1528b"
+            },
+            {
+                "coord": "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2-sources.jar"
+                ],
+                "sha256": "947b7078b3ff3dfa21d9fc2a3e451feacd30fa6f5df8e699c508b24845886c5b"
+            },
+            {
                 "coord": "org.codehaus.mojo:animal-sniffer-annotations:1.14",
                 "file": "v1/https/repo.maven.apache.org/maven2/org/codehaus/mojo/animal-sniffer-annotations/1.14/animal-sniffer-annotations-1.14.jar",
                 "directDependencies": [],
@@ -738,6 +975,28 @@
                 "sha256": "ec9015aa86d73cbd1c2426e38e7c71e888f4908637cb626278a8376ef7239f17"
             },
             {
+                "coord": "org.slf4j:slf4j-api:1.7.21",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar"
+                ],
+                "sha256": "1d5aeb6bd98b0fdd151269eae941c05f6468a791ea0f1e68d8e7fe518af3e7df"
+            },
+            {
+                "coord": "org.slf4j:slf4j-api:jar:sources:1.7.21",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21-sources.jar"
+                ],
+                "sha256": "3d68eb11e27819d6a999b603d104566d8cdd93fd37efa2c02e12a99809f49c86"
+            },
+            {
                 "coord": "org.yaml:snakeyaml:1.23",
                 "file": "v1/https/repo.maven.apache.org/maven2/org/yaml/snakeyaml/1.23/snakeyaml-1.23.jar",
                 "directDependencies": [],
@@ -761,6 +1020,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 128994105
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -1693725120
     }
 }

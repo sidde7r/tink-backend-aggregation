@@ -7,7 +7,6 @@ java_library(
         "//third_party:c3p0_c3p0",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_inject_guice",
-        "//third_party:javax_inject_javax_inject",
         "//third_party:javax_validation_validation_api",
         "//third_party:org_hibernate_hibernate_annotations",
         "//third_party:org_hibernate_hibernate_entitymanager",
@@ -21,5 +20,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:javax_inject_javax_inject",
     ],
 )
