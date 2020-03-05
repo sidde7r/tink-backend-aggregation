@@ -324,6 +324,12 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                 destinations.add(
                         TransferDestinationPattern.createForMultiMatch(
                                 AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL));
+                destinations.add(
+                        TransferDestinationPattern.createForMultiMatch(
+                                AccountIdentifier.Type.IBAN, TransferDestinationPattern.ALL));
+                destinations.add(
+                        TransferDestinationPattern.createForMultiMatch(
+                                AccountIdentifier.Type.SEPA_EUR, TransferDestinationPattern.ALL));
                 transferDestinations.put(account, destinations);
             }
         }
