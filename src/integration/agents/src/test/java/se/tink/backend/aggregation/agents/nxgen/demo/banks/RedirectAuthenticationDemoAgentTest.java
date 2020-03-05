@@ -19,9 +19,9 @@ public class RedirectAuthenticationDemoAgentTest {
     private final String SOURCE_ACCOUNT_NAME = "ha";
 
     private final String SOURCE_ACCOUNT =
-            "IT60X0542811101727164886515"; // from ais flow, checking account
+            "IT52X0300203280728575573739"; // from ais flow, checking account
     private final String DESTINATION_ACCOUNT =
-            "IT60X0542811101620104861584"; // from ais flow, savings account
+            "IT53X0300203280882749129712"; // from ais flow, savings account
 
     @Test
     public void testTransfer() throws Exception {
@@ -59,6 +59,8 @@ public class RedirectAuthenticationDemoAgentTest {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("it", "it-test-open-banking-redirect")
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("dummy")
+                        .setAppId("dummy")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
@@ -70,6 +72,8 @@ public class RedirectAuthenticationDemoAgentTest {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("it", "it-test-open-banking-redirect")
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("dummy")
+                        .setAppId("dummy")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
