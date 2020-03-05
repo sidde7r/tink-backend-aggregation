@@ -34,7 +34,6 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
                         .setProvider(credentialsRequest.getProvider())
                         .build();
 
-        httpClient.setDebugOutput(true);
         httpClient.setCensorSensitiveHeaders(false);
         httpClient.disableSslVerification();
 
