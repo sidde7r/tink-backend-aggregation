@@ -10,7 +10,7 @@ public final class SkandiaConstants {
     public static final String INTEGRATION_NAME = "skandia";
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
-                    .put(TransactionalAccountType.CHECKING, "Altt-i-ett-konto")
+                    .put(TransactionalAccountType.CHECKING, "Allt-i-Ett konto")
                     .put(TransactionalAccountType.SAVINGS, "Sparkonto")
                     .build();
 
