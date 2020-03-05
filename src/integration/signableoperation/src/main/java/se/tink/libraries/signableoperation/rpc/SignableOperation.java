@@ -32,6 +32,7 @@ public class SignableOperation {
     private UUID userId;
     private UUID credentialsId;
     private String signableObject;
+    private String internalStatus;
 
     public SignableOperation() {}
 
@@ -174,6 +175,14 @@ public class SignableOperation {
 
     public void setSignableObject(String signableObject) {
         this.signableObject = signableObject;
+    }
+
+    public String getInternalStatus() {
+        return internalStatus;
+    }
+
+    public void setInternalStatus(String internalStatus) {
+        this.internalStatus = internalStatus;
     }
 
     public static SignableOperation create(Transfer transfer, SignableOperationStatuses status) {
