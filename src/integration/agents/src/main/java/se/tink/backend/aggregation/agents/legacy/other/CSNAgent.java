@@ -4,14 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
@@ -41,9 +34,6 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
     private static final String CONNECT_TIMEOUT = "connect timed out";
     private static final String READ_TIMEOUT = "read timed out";
 
-    private static final File TRUST_STORE = new File("data/security/csn.truststore");
-    private static final char[] TRUST_STORE_PASSWORD = "changeme".toCharArray();
-
     private final Pattern reBalance =
             Pattern.compile(
                     "aktuellStudieskuld\\.do\\?metod=init&(?:amp;)?SpecNr=(\\d{1,})\">([^<]+)</a>\\s*</td>\\s*<td[^>]+>([^<]+)</td>",
@@ -71,28 +61,8 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
                         request.getProvider(),
                         context.getLogMasker(),
                         LogMasker.shouldLog(request.getProvider()));
-        // When Java trusted certificates are updated this is probably no longer necessary:
-        this.client.loadTrustMaterial(loadCustomTrustStore(), null);
         this.client.addMessageReader(
                 new CharacterEncodedMessageBodyReader(StandardCharsets.ISO_8859_1));
-    }
-
-    private KeyStore loadCustomTrustStore() {
-        if (!TRUST_STORE.exists()) {
-            throw new IllegalStateException(
-                    "Cannot find necessary trust store file. Cannot complete SSL handshake "
-                            + "without it.");
-        }
-        try (FileInputStream fileInputStream = new FileInputStream(TRUST_STORE)) {
-            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            trustStore.load(fileInputStream, TRUST_STORE_PASSWORD);
-            return trustStore;
-        } catch (KeyStoreException
-                | CertificateException
-                | NoSuchAlgorithmException
-                | IOException e) {
-            throw new IllegalStateException(e);
-        }
     }
 
     @Override
