@@ -13,6 +13,9 @@ public class PrioritizedValueExtractor {
 
     public <T, VP> T pickByValuePriority(
             Collection<T> input, Function<T, VP> comparedValueExtractor, List<VP> valuePriorities) {
+
+        assertNoDuplicatesInComparedValues(input, comparedValueExtractor);
+
         Comparator<T> priorityComparator =
                 ComparatorUtils.transformedComparator(
                         Ordering.explicit(valuePriorities), comparedValueExtractor::apply);
@@ -24,6 +27,17 @@ public class PrioritizedValueExtractor {
                         () ->
                                 constructMissingElementException(
                                         input, comparedValueExtractor, valuePriorities));
+    }
+
+    private <T, VP> void assertNoDuplicatesInComparedValues(
+            Collection<T> input, Function<T, VP> comparedValueExtractor) {
+
+        long distinctComparedValuesCount =
+                input.stream().map(comparedValueExtractor).distinct().count();
+        if (distinctComparedValuesCount != input.size()) {
+            throw new IllegalArgumentException(
+                    "Duplicate values extracted from objects in input collection. Unable to prioritize them.");
+        }
     }
 
     private <T, VP> NoSuchElementException constructMissingElementException(
