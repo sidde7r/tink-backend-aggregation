@@ -29,5 +29,6 @@ junit_test(
         "//src/libraries/serialization",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
