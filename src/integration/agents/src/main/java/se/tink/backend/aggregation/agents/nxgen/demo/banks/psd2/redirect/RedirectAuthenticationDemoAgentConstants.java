@@ -4,10 +4,16 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class RedirectAuthenticationDemoAgentConstants {
-    public static final String DEMO_PROVIDER_SUCCESS_CASE = "it-test-open-banking-redirect";
-    public static final String DEMO_PROVIDER_FAILURE_CASE = "it-test-open-banking-redirect-failed";
-    public static final String DEMO_PROVIDER_CANCEL_CASE =
+    public static final String IT_DEMO_PROVIDER_SUCCESS_CASE = "it-test-open-banking-redirect";
+    public static final String IT_DEMO_PROVIDER_FAILURE_CASE =
+            "it-test-open-banking-redirect-failed";
+    public static final String IT_DEMO_PROVIDER_CANCEL_CASE =
             "it-test-open-banking-redirect-cancelled";
+    public static final String UK_DEMO_PROVIDER_SUCCESS_CASE = "uk-test-open-banking-redirect";
+    public static final String UK_DEMO_PROVIDER_FAILURE_CASE =
+            "uk-test-open-banking-redirect-failed";
+    public static final String UK_DEMO_PROVIDER_CANCEL_CASE =
+            "uk-test-open-banking-redirect-cancelled";
 
     public static final TransferExecutionException FAILED_CASE_EXCEPTION =
             TransferExecutionException.builder(SignableOperationStatuses.FAILED)
