@@ -176,11 +176,16 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
         String providerName = credentials.getProviderName();
         // This block handles PIS only business use case as source-account will be null in request
         switch (providerName) {
-            case RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_SUCCESS_CASE:
+            case RedirectAuthenticationDemoAgentConstants.IT_DEMO_PROVIDER_SUCCESS_CASE:
+            case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_SUCCESS_CASE:
                 break;
-            case RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_FAILURE_CASE:
+
+            case RedirectAuthenticationDemoAgentConstants.IT_DEMO_PROVIDER_FAILURE_CASE:
+            case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_FAILURE_CASE:
                 throw RedirectAuthenticationDemoAgentConstants.FAILED_CASE_EXCEPTION;
-            case RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_CANCEL_CASE:
+
+            case RedirectAuthenticationDemoAgentConstants.IT_DEMO_PROVIDER_CANCEL_CASE:
+            case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_CANCEL_CASE:
                 throw RedirectAuthenticationDemoAgentConstants.CANCELLED_CASE_EXCEPTION;
         }
 
