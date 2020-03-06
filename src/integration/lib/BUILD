@@ -139,6 +139,7 @@ java_library(
         "@aggregation//:joda_time_joda_time",
         "@com_sun_jersey_jersey_client//jar",
         "@io_reactivex_rxjava3_rxjava",
+        "@org_iban4j_iban4j//jar",
     ],
 )
 
