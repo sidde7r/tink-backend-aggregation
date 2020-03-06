@@ -14,14 +14,16 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
     private static final String CODE = "1234";
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
     private static final long THIRTY_DAYS_IN_SECONDS = 2592000;
-
+    private static final long TEN_MINUTES_IN_SECONDS = 600;
+    private final String providerName;
     private final boolean redirectToOxfordStaging;
     private final String preferredCallbackUri;
 
     public RedirectOAuth2Authenticator(
-            boolean redirectToOxfordStaging, String preferredCallbackUri) {
+            boolean redirectToOxfordStaging, String preferredCallbackUri, String providerName) {
         this.redirectToOxfordStaging = redirectToOxfordStaging;
         this.preferredCallbackUri = preferredCallbackUri;
+        this.providerName = providerName;
     }
 
     @Override
@@ -46,19 +48,25 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
             // we sent.
             throw BankServiceError.CONSENT_REVOKED.exception("No code present.");
         }
-
+        long accessExpiresInSeconds = THIRTY_DAYS_IN_SECONDS;
+        if (providerName.equals("uk-test-open-banking-redirect-credentialExpireInTenMinutes")) {
+            accessExpiresInSeconds = TEN_MINUTES_IN_SECONDS;
+        }
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());
         String refreshToken = BASE64_ENCODER.encodeToString("fakeRefreshToken".getBytes());
 
-        return OAuth2Token.createBearer(accessToken, refreshToken, THIRTY_DAYS_IN_SECONDS);
+        return OAuth2Token.createBearer(accessToken, refreshToken, accessExpiresInSeconds);
     }
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());
-
-        return OAuth2Token.createBearer(accessToken, refreshToken, THIRTY_DAYS_IN_SECONDS);
+        long accessExpiresInSeconds = THIRTY_DAYS_IN_SECONDS;
+        if (providerName.equals("uk-test-open-banking-redirect-credentialExpireInTenMinutes")) {
+            accessExpiresInSeconds = TEN_MINUTES_IN_SECONDS;
+        }
+        return OAuth2Token.createBearer(accessToken, refreshToken, accessExpiresInSeconds);
     }
 
     @Override

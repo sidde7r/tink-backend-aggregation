@@ -71,7 +71,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         String callbackUri = request.getCallbackUri();
 
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
-                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri);
+                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, provider);
 
         final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
@@ -109,7 +109,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         String callbackUri = request.getCallbackUri();
 
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
-                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri);
+                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, provider);
 
         OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
@@ -139,7 +139,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         String callbackUri = request.getCallbackUri();
 
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
-                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri);
+                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, provider);
 
         OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
