@@ -26,7 +26,6 @@ public class DeutscheBankAuthenticator {
 
     public URL authenticate(String state) {
         ConsentBaseResponse consent = apiClient.getConsent(state, iban, psuId);
-
         sessionStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
         return new URL(consent.getLinks().getScaRedirect().getHref());
     }
