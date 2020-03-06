@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -9,6 +10,7 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class ItDemoAccountGeneratorTest {
     String testUserName = "Tink";
+    String otherTestUserName = "NotTink";
     String testProvider = "it-test-open-banking-redirect";
 
     @Test
@@ -17,7 +19,7 @@ public class ItDemoAccountGeneratorTest {
                 DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider);
         System.out.println(savingsAccount.getAccountId());
 
-        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT52X0300203280728575573739");
+        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT18X8930893000000202985435");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
                         AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
@@ -34,13 +36,39 @@ public class ItDemoAccountGeneratorTest {
                         testUserName, testProvider);
         System.out.println(transactionAccount.getAccountId());
 
-        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT53X0300203280882749129712");
+        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT20X0723072300000202985435");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
                         AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
         Assert.assertEquals("Checking Account Tink", transactionAccount.getAccountName());
         Assert.assertTrue(transactionAccount.getIdentifiers().contains(expectedIdentifier));
 
-        Assert.assertEquals(551.25, transactionAccount.getBalance(), 0.0001);
+        Assert.assertEquals(686.0, transactionAccount.getBalance(), 0.0001);
+    }
+
+    @Test
+    public void testIban4jRandomizer() {
+        DemoSavingsAccount savingsAccount =
+                DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider);
+        List<AccountIdentifier> ids = savingsAccount.getIdentifiers();
+        Assert.assertFalse(ids.isEmpty());
+        ids.addAll(
+                DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider)
+                        .getIdentifiers());
+        ids.addAll(
+                DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider)
+                        .getIdentifiers());
+        Assert.assertEquals(
+                1, ids.stream().map(AccountIdentifier::getIdentifier).distinct().count());
+        ids.addAll(
+                DemoAccountDefinitionGenerator.getDemoSavingsAccounts(
+                                otherTestUserName, testProvider)
+                        .getIdentifiers());
+        ids.addAll(
+                DemoAccountDefinitionGenerator.getDemoSavingsAccounts(
+                                otherTestUserName, testProvider)
+                        .getIdentifiers());
+        Assert.assertEquals(
+                2, ids.stream().map(AccountIdentifier::getIdentifier).distinct().count());
     }
 }

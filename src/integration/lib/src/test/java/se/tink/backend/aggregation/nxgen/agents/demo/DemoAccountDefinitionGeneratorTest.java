@@ -20,23 +20,22 @@ public class DemoAccountDefinitionGeneratorTest {
                 DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
                         testUserName, testProvider);
 
-        SwedishIdentifier expectedRecipientAccount = new SwedishIdentifier("4950-618754677750");
+        SwedishIdentifier expectedRecipientAccount = new SwedishIdentifier("1100-742505197500");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(URI.create(expectedRecipientAccount.toUriAsString()));
 
-        Assert.assertTrue(transactionalAccountAccounts.getBalance() == 618.75);
-        Assert.assertTrue(transactionalAccountAccounts.getAccountId().equals("4950-618754677750"));
-        Assert.assertTrue(
-                transactionalAccountAccounts.getAccountName().equals("Checking Account Tink"));
+        Assert.assertEquals(742.5, transactionalAccountAccounts.getBalance(), 0.0);
+        Assert.assertEquals("1100-742505197500", transactionalAccountAccounts.getAccountId());
+        Assert.assertEquals("Checking Account Tink", transactionalAccountAccounts.getAccountName());
         Assert.assertTrue(
                 transactionalAccountAccounts.getIdentifiers().contains(expectedIdentifier));
 
         Assert.assertTrue(transactionalAccountAccounts.getAvailableBalance().isPresent());
         Assert.assertEquals(
-                556.88, transactionalAccountAccounts.getAvailableBalance().get(), 0.001);
+                668.25, transactionalAccountAccounts.getAvailableBalance().get(), 0.001);
 
         Assert.assertTrue(transactionalAccountAccounts.getCreditLimit().isPresent());
-        Assert.assertEquals(4000.0, transactionalAccountAccounts.getCreditLimit().get(), 0.001);
+        Assert.assertEquals(5000.0, transactionalAccountAccounts.getCreditLimit().get(), 0.001);
     }
 
     @Test
@@ -69,13 +68,13 @@ public class DemoAccountDefinitionGeneratorTest {
         DemoSavingsAccount savingsAccount =
                 DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider);
 
-        SwedishIdentifier expectedRecipientAccount = new SwedishIdentifier("4410-551254244625");
+        SwedishIdentifier expectedRecipientAccount = new SwedishIdentifier("5390-673754904900");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(URI.create(expectedRecipientAccount.toUriAsString()));
 
-        Assert.assertTrue(savingsAccount.getAccountBalance() == 42446.25);
-        Assert.assertTrue(savingsAccount.getAccountId().equals("4410-551254244625"));
-        Assert.assertTrue(savingsAccount.getAccountName().equals("Savings Account Tink"));
+        Assert.assertEquals(49049.0, savingsAccount.getAccountBalance(), 0.0);
+        Assert.assertEquals("5390-673754904900", savingsAccount.getAccountId());
+        Assert.assertEquals("Savings Account Tink", savingsAccount.getAccountName());
         Assert.assertTrue(savingsAccount.getIdentifiers().contains(expectedIdentifier));
     }
 
@@ -88,13 +87,13 @@ public class DemoAccountDefinitionGeneratorTest {
                 DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
                         testUserName, testProvider, 1);
 
-        AccountIdentifier expectedIdentifier1 = new SwedishIdentifier("4950-618754677750");
+        AccountIdentifier expectedIdentifier1 = new SwedishIdentifier("1100-742505197500");
         AccountIdentifier expectedIdentifier2 = new SwedishIdentifier("1097-699724898040");
 
         Assert.assertNotEquals(
                 transactionalAccount1.getAccountId(), transactionalAccount2.getAccountId());
-        Assert.assertEquals(618.75, transactionalAccount1.getBalance(), 0.0001);
-        Assert.assertEquals("4950-618754677750", transactionalAccount1.getAccountId());
+        Assert.assertEquals(742.5, transactionalAccount1.getBalance(), 0.0001);
+        Assert.assertEquals("1100-742505197500", transactionalAccount1.getAccountId());
         Assert.assertEquals("Checking Account Tink", transactionalAccount1.getAccountName());
         Assert.assertTrue(transactionalAccount1.getIdentifiers().contains(expectedIdentifier1));
 
@@ -113,17 +112,17 @@ public class DemoAccountDefinitionGeneratorTest {
                 DemoAccountDefinitionGenerator.getDemoSavingsAccounts(
                         testUserName, testProvider, 1);
 
-        SwedishIdentifier expectedIdentifier1 = new SwedishIdentifier("4410-551254244625");
-        AccountIdentifier expectedIdentifier2 = new SwedishIdentifier("4957-619654944807");
+        SwedishIdentifier expectedIdentifier1 = new SwedishIdentifier("5390-673754904900");
+        AccountIdentifier expectedIdentifier2 = new SwedishIdentifier("1101-784896153537");
 
         Assert.assertNotEquals(savingsAccount1.getAccountId(), savingsAccount2.getAccountId());
-        Assert.assertEquals(42446.25, savingsAccount1.getAccountBalance(), 0.0001);
-        Assert.assertEquals("4410-551254244625", savingsAccount1.getAccountId());
+        Assert.assertEquals(49049.0, savingsAccount1.getAccountBalance(), 0.0001);
+        Assert.assertEquals("5390-673754904900", savingsAccount1.getAccountId());
         Assert.assertEquals("Savings Account Tink", savingsAccount1.getAccountName());
         Assert.assertTrue(savingsAccount1.getIdentifiers().contains(expectedIdentifier1));
 
-        Assert.assertEquals(49448.07, savingsAccount2.getAccountBalance(), 0.0001);
-        Assert.assertEquals("4957-619654944807", savingsAccount2.getAccountId());
+        Assert.assertEquals(61535.37, savingsAccount2.getAccountBalance(), 0.0001);
+        Assert.assertEquals("1101-784896153537", savingsAccount2.getAccountId());
         Assert.assertEquals("Savings Account Tink 1", savingsAccount2.getAccountName());
         Assert.assertTrue(savingsAccount2.getIdentifiers().contains(expectedIdentifier2));
     }

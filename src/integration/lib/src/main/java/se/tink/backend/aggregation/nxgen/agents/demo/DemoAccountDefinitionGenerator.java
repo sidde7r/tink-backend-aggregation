@@ -3,11 +3,14 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET_CODES;
 import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET_REGEX;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import org.iban4j.CountryCode;
+import org.iban4j.Iban;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.libraries.account.AccountIdentifier;
@@ -16,7 +19,7 @@ import se.tink.libraries.account.AccountIdentifier;
 public class DemoAccountDefinitionGenerator {
 
     private static String createDeterministicKey(String combination) {
-        return Integer.toString(combination.hashCode());
+        return Integer.toString(Math.abs(combination.hashCode()));
     }
 
     private static int generateNumber(String deterministicKey, int digits) {
@@ -58,19 +61,36 @@ public class DemoAccountDefinitionGenerator {
 
     private static String generateAccountNumbersIT(
             String userDeterministicKey, String deterministicKey) {
-        Integer bankIdentifier =
-                MARKET_CODES.IT_BANK_IDENTIFIERS.get(
-                        generateNumber(userDeterministicKey, 2)
-                                % MARKET_CODES.IT_BANK_IDENTIFIERS.size());
-        Integer branchIdentifier =
-                MARKET_CODES.IT_BANK_ACCOUNT_IDENTIFIER.get(
-                        generateNumber(userDeterministicKey, 2)
-                                % MARKET_CODES.IT_BANK_ACCOUNT_IDENTIFIER.size());
+        String number = getAccountNumber(userDeterministicKey);
+        String code = getCode(deterministicKey);
+        Iban iban =
+                new Iban.Builder()
+                        .countryCode(CountryCode.IT)
+                        .nationalCheckDigit("X")
+                        .branchCode(code)
+                        .accountNumber(number)
+                        .bankCode(code)
+                        .build();
+        // IT 18 X 8930 8930 00000202985435
+        // IT 21 X 70723 70723 00000 202985435
+        return iban.toString();
+    }
 
-        return DemoConstants.IT_ACCOUNT_NUMBER_PREFIX
-                + String.format("%05d", bankIdentifier)
-                + String.format("%05d", branchIdentifier)
-                + ("" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 7));
+    private static String getCode(String deterministicKey) {
+        if (deterministicKey.length() < 4) {
+            return Strings.padStart(deterministicKey, 4, '0');
+        } else {
+            return deterministicKey.substring(
+                    deterministicKey.length() - 4, deterministicKey.length());
+        }
+    }
+
+    private static String getAccountNumber(String userDeterministicKey) {
+        if (userDeterministicKey.length() < 14) {
+            return Strings.padStart(userDeterministicKey, 14, '0');
+        } else {
+            return userDeterministicKey.substring(14);
+        }
     }
 
     public static DemoSavingsAccount getDemoSavingsAccounts(String username, String providerName) {
@@ -88,10 +108,7 @@ public class DemoAccountDefinitionGenerator {
                 if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
                 } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
-                    return DemoConstants.IT_IBAN_SAVINGS_ACCOUNT;
-                    // return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
-                    // //Skipping account generation as random account generation doesn't follow
-                    // IBAN creation rules.
+                    return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
                 }
@@ -140,8 +157,7 @@ public class DemoAccountDefinitionGenerator {
                 if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
                 } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
-                    return DemoConstants.IT_IBAN_TRANSACTION_ACCOUNT;
-                    // return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
+                    return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
                 }
@@ -264,8 +280,7 @@ public class DemoAccountDefinitionGenerator {
                 if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
                 } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
-                    return DemoConstants.IT_IBAN_TRANSACTION_ACCOUNT_ZERO_BALANCE;
-                    // return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
+                    return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
                 }
