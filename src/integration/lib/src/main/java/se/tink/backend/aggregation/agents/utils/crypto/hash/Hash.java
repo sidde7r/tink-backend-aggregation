@@ -24,6 +24,11 @@ public class Hash {
         return Hex.encodeHexString(digest);
     }
 
+    public static String hmacSha256AsBase64(byte[] key, byte[] data) {
+        byte[] digest = hmacSha256(key, data);
+        return BASE64.encodeToString(digest);
+    }
+
     public static String sha1AsHex(final byte[]... datas) {
         return Hex.encodeHexString(hashFunction("SHA-1", datas));
     }

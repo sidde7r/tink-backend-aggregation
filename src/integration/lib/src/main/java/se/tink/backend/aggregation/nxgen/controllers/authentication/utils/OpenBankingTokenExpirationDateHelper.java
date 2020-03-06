@@ -8,6 +8,7 @@ import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 
 /**
  * This class should only be used in Open Banking agents. The intention of the class is to return
@@ -87,7 +88,9 @@ public class OpenBankingTokenExpirationDateHelper {
      *     are null.
      */
     public static Date getExpirationDateFrom(
-            @Nullable OAuth2Token token, Integer tokenLifetime, TemporalUnit tokenLifetimeUnit) {
+            @Nullable OAuth2TokenBase token,
+            Integer tokenLifetime,
+            TemporalUnit tokenLifetimeUnit) {
         if (token == null) {
             return getExpirationDateFrom(tokenLifetime, tokenLifetimeUnit);
         }

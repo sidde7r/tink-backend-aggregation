@@ -89,6 +89,13 @@ agentsServiceConfiguration:
         baseUrl: https://sandbox-api-gw.almbrand.dk
         clientId: PSDSE-FINA-44059
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    amex:
+      tink:
+        clientId: f552867f-96df-4400-9513-739bf7c4aa84 #qa
+        clientSecret: 95d2959d-690a-4583-afd9-11846e0993fc #qa
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback #qa
+        serverUrl: https://api.qa.americanexpress.com #qa
+        grantAccessJourneyUrl: https://global.americanexpress.com/authentication/oauth/enrollment
     argenta:
       tink:
         apiKey: ''

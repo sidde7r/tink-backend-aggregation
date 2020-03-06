@@ -116,6 +116,7 @@ java_library(
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:commons_io_commons_io",
         "//third_party:io_vavr",
+        "//third_party:lombok_libs",
         "//third_party:net_minidev_json_smart",
         "//third_party:net_sourceforge_tess4j",
         "//third_party:org_apache_commons_commons_collections4",

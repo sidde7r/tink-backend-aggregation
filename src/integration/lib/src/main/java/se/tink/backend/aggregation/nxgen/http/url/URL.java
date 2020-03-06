@@ -25,7 +25,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * parameters are separated with '&'.
  */
 public final class URL {
-    public static final Pattern URL_PARAMETER_PATTERN = Pattern.compile("\\{[^{}]{2,}}");
+    private static final Pattern URL_PARAMETER_PATTERN = Pattern.compile("\\{[^{}]{2,}}");
     public static final String URL_SEPARATOR = "/";
 
     private final String url;
@@ -52,7 +52,7 @@ public final class URL {
         return Strings.isNullOrEmpty(query) ? queryParam : query + "&" + queryParam;
     }
 
-    private String urlEncode(String value) {
+    public static String urlEncode(String value) {
         try {
             return URLEncoder.encode(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
