@@ -22,6 +22,14 @@ public class AES {
         return aesEcb(false, key, data, "PKCS5Padding");
     }
 
+    public static byte[] encryptEcbPkcs7(byte[] key, byte[] data) {
+        return aesEcb(true, key, data, "PKCS7Padding");
+    }
+
+    public static byte[] decryptEcbPkcs7(byte[] key, byte[] data) {
+        return aesEcb(false, key, data, "PKCS7Padding");
+    }
+
     public static byte[] encryptEcbNoPadding(byte[] key, byte[] data) {
         return aesEcb(true, key, data, "NoPadding");
     }
