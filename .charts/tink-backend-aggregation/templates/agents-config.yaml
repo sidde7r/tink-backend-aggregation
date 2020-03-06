@@ -65,6 +65,7 @@ data:
         certificatesLocation: {{ $tppSecretsServiceConfig.certificatesLocation }}
         enabled: {{ $tppSecretsServiceConfig.enabled }}
         environment: {{ .Values.Environment }}
+        enabledRetryPolicy: {{ $tppSecretsServiceConfig.enabledRetryPolicy | default false }}
       {{- end }}
 
       {{- if $agentsConfig.mountCallbackJwtSignaturePair }}

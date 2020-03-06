@@ -20,6 +20,7 @@ public class TppSecretsServiceConfiguration {
     private CertificatesLocation certificatesLocation;
     private boolean enabled;
     private String environment;
+    private boolean enabledRetryPolicy;
 
     public boolean isEnabled() {
         return enabled;
@@ -58,5 +59,9 @@ public class TppSecretsServiceConfiguration {
             Preconditions.checkArgument(port != 0, String.format(INVALID_CONFIGURATION, "port"));
         }
         return port;
+    }
+
+    public boolean isEnabledRetryPolicy() {
+        return enabledRetryPolicy;
     }
 }
