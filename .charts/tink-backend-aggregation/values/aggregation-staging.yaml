@@ -59,6 +59,7 @@ clients:
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
+  enabledRetryPolicy: true
 
 debugLogFrequencyPercent: 100
 
