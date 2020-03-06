@@ -1,8 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell;
 
 import java.util.Map;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.InitiateSessionRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SecurityInputEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.CreditCardTransactionsRequest;
@@ -24,11 +29,13 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transa
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SabadellApiClient {
@@ -50,13 +57,38 @@ public class SabadellApiClient {
                 .accept(SabadellConstants.Headers.SABADELL_ACCEPT);
     }
 
-    public SessionResponse initiateSession(String username, String password) {
-        InitiateSessionRequestEntity requestEntity =
-                InitiateSessionRequestEntity.build(username, password);
+    public SessionResponse initiateSession(
+            String username,
+            String password,
+            String csid,
+            @Nullable SecurityInputEntity securityInput)
+            throws LoginException {
+        final InitiateSessionRequestEntity requestEntity =
+                InitiateSessionRequestEntity.build(username, password, csid);
+        if (Objects.nonNull(securityInput)) {
+            requestEntity.setSecurityInput(securityInput);
+        }
 
-        return createRequest(SabadellConstants.Urls.INITIATE_SESSION)
-                .removeFilter(bankServiceErrorFilter)
-                .post(SessionResponse.class, requestEntity);
+        try {
+            return createRequest(SabadellConstants.Urls.INITIATE_SESSION)
+                    .removeFilter(bankServiceErrorFilter)
+                    .post(SessionResponse.class, requestEntity);
+        } catch (HttpResponseException e) {
+            ErrorResponse response = e.getResponse().getBody(ErrorResponse.class);
+            String errorCode = response.getErrorCode();
+
+            if (SabadellConstants.ErrorCodes.INCORRECT_CREDENTIALS.equalsIgnoreCase(errorCode)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            }
+
+            throw new IllegalStateException(
+                    String.format(
+                            "%s: Login failed with error code: %s, error message: %s",
+                            SabadellConstants.Tags.LOGIN_ERROR,
+                            response.getErrorCode(),
+                            response.getErrorMessage()),
+                    e);
+        }
     }
 
     public AccountsResponse fetchAccounts() {

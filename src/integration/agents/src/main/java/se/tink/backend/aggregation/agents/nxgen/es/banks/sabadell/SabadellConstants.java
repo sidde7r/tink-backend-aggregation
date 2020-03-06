@@ -73,7 +73,7 @@ public final class SabadellConstants {
 
     public static final class InitiateSessionRequest {
         public static final String DEVICE_INFO =
-                "es-ES GEO() IOS 10.2 iPhone8,1 NATIVE_APP 18.3.0 STANDARD";
+                "en-US GEO() IOS 13.3.1 iPhone9,3 NATIVE_APP 20.1.0 STANDARD";
         public static final String LAST_REQUEST_DATE = "";
         public static final String BRAND = "SAB";
         public static final String GEO_LOCATION_DATA = "";
@@ -87,6 +87,16 @@ public final class SabadellConstants {
         public static final String TRUSTEER = "";
         public static final String USERNAME_BS_KEY = "userName";
         public static final String PASSWORD_BS_KEY = "password";
+        public static final String ARXAN_BS_KEY = "arxan";
+        public static final String ARXAN_DATA =
+                "{csid} DebuggerOK RootKO SwizzlingOK VerifyCertificatesOK | ";
+        public static final String FLOATING_KEYBOARD_KEY_PREFIX = "@0#";
+        public static final String FLOATING_KEYBOARD_ENABLED = "N";
+    }
+
+    public static final class Authentication {
+        public static final String TYPE_SCA = "indSca";
+        public static final String SIGNATURE_TYPE_TPC = "tpc";
     }
 
     public static final class FetcherRequest {
@@ -157,6 +167,7 @@ public final class SabadellConstants {
     }
 
     public static final class Storage {
+        public static final String CSID_KEY = "csid";
         public static final String SESSION_KEY = "sabadell-session-data";
     }
 
