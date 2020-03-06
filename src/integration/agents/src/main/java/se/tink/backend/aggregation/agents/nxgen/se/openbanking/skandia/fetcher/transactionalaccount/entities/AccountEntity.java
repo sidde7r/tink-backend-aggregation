@@ -44,7 +44,7 @@ public class AccountEntity {
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(getUniqueId())
+                                .withUniqueIdentifier(bban)
                                 .withAccountNumber(iban)
                                 .withAccountName(Optional.ofNullable(productName).orElse(""))
                                 .addIdentifier(getIdentifier())
@@ -70,12 +70,6 @@ public class AccountEntity {
 
     public String getResourceId() {
         return resourceId;
-    }
-
-    @JsonIgnore
-    public String getUniqueId() {
-        String clearingNumber = iban.substring(4, 8);
-        return clearingNumber + bban + "-" + clearingNumber + bban;
     }
 
     public void setBalances(List<BalanceEntity> balances) {
