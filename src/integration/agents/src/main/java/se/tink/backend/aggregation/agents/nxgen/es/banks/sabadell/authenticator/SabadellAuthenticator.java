@@ -79,8 +79,7 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
                         .findFirst()
                         .map(KeyValueEntity::getValue)
                         .orElseThrow(() -> new IllegalStateException(("Invalid SCA key")));
-        final SecurityInputEntity securityInput =
-                SecurityInputEntity.fromIndSca(keyboardKey, scaPassword);
+        final SecurityInputEntity securityInput = SecurityInputEntity.of(keyboardKey, scaPassword);
 
         final SessionResponse response =
                 apiClient.initiateSession(username, password, csid, securityInput);

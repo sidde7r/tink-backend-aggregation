@@ -22,7 +22,7 @@ public class SecurityInputEntity {
     private String signText = "";
     private String timeStamp = "";
 
-    public static SecurityInputEntity fromIndSca(String keyboardKey, String scaPassword) {
+    public static SecurityInputEntity of(String keyboardKey, String scaPassword) {
         final SecurityInputEntity entity = new SecurityInputEntity();
         entity.authenticationType = Authentication.TYPE_SCA;
         entity.password = scaPassword;
