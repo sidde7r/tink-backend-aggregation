@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -50,13 +49,9 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        try {
-            ConsentBaseResponse consent = getConsent(strongAuthenticationState.getState());
-            deutscheBankRedirectHandler.handleRedirect();
-            poll(consent);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        ConsentBaseResponse consent = getConsent(strongAuthenticationState.getState());
+        deutscheBankRedirectHandler.handleRedirect();
+        poll(consent);
     }
 
     @Override
@@ -64,7 +59,7 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
         return CredentialsTypes.THIRD_PARTY_APP;
     }
 
-    public ConsentBaseResponse getConsent(String state) throws MalformedURLException {
+    public ConsentBaseResponse getConsent(String state) {
         ConsentBaseResponse consent = apiClient.getConsent(state, iban, psuId);
         sessionStorage.put(DeutscheBankConstants.StorageKeys.CONSENT_ID, consent.getConsentId());
         return consent;

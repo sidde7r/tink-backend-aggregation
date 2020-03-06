@@ -20,7 +20,7 @@ public class DeutscheBankRedirectHandler {
 
         ThirdPartyAppAuthenticationPayload.Android androidPayload =
                 new ThirdPartyAppAuthenticationPayload.Android();
-        androidPayload.setIntent(Urls.MYBANK_BELGIUM_ANDRORID);
+        androidPayload.setIntent(Urls.MYBANK_BELGIUM_ANDROID);
         payload.setAndroid(androidPayload);
 
         ThirdPartyAppAuthenticationPayload.Ios iOsPayload =

@@ -40,7 +40,6 @@ public final class DeutscheBankConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
-        public static final String MISSING_BALANCE = "Missing account balance.";
     }
 
     public static class Urls {
@@ -51,12 +50,8 @@ public final class DeutscheBankConstants {
         public static final String MYBANK_BELGIUM = "https://www.deutschebank.be/mybank/index.html";
         public static final String MYBANK_BELGIUM_IOS =
                 "https://apps.apple.com/be/app/mybank-belgium/id1082668633";
-        public static final String MYBANK_BELGIUM_ANDRORID =
+        public static final String MYBANK_BELGIUM_ANDROID =
                 "https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.db.pbc.mybankbelgium&ddl=1&pcampaignid=web_ddl_1";
-    }
-
-    public static class IdTags {
-        public static final String REGION_ID = "regionId";
     }
 
     public static class StorageKeys {
@@ -115,8 +110,5 @@ public final class DeutscheBankConstants {
     public static class FormValues {
         public static final int MAX_POLLS_COUNTER = 50;
         public static final String CURRENCY_TYPE = "EUR";
-        // If the account does not have transactions for the requested period of time, DeutscheBank
-        // BE is just rejecting the request.
-        public static final String TRANSACTION_REQUEST_REJECTED = "RJCT";
     }
 }
