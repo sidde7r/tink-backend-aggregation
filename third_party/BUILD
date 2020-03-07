@@ -178,6 +178,7 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:commons_logging_commons_logging",
+        "@aggregation//:org_apache_commons_commons_collections4",
         "@aggregation//:org_apache_commons_commons_lang3",
         "@aggregation//:org_apache_httpcomponents_httpclient",
         "@aggregation//:org_apache_httpcomponents_httpcore",
@@ -190,7 +191,6 @@ java_library(
         "@net_minidev_asm//jar",
         "@net_minidev_json_smart//jar",
         "@net_sf_jopt_simple_jopt_simple//jar",
-        "@org_apache_commons_commons_collections4//jar",
         "@org_eclipse_jetty_jetty_continuation//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",
@@ -210,7 +210,7 @@ java_library(
     name = "org_apache_commons_commons_collections4",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_commons_commons_collections4//jar",
+        "@aggregation//:org_apache_commons_commons_collections4",
     ],
 )
 
@@ -1800,11 +1800,11 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+        "@aggregation//:org_apache_commons_commons_collections4",
         "@aggregation//:org_apache_commons_commons_lang3",
         "@commons_io_commons_io//jar",
         "@io_perfmark_perfmark_api//jar",
         "@lombok//:org_projectlombok_lombok",
-        "@org_apache_commons_commons_collections4//jar",
         "@standalone_agent_deps//:ch_qos_logback_logback_classic",
         "@standalone_agent_deps//:ch_qos_logback_logback_core",
         "@standalone_agent_deps//:commons_codec_commons_codec",

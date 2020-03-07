@@ -920,7 +920,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_commons_commons_collections4",
+    name = "org_apache_commons_commons_collections4",  # Do not use, but do not remove
     artifact = "org.apache.commons:commons-collections4:4.0",
     sha1 = "da217367fd25e88df52ba79e47658d4cf928b0d1",
 )
