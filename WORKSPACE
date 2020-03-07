@@ -2583,6 +2583,7 @@ maven_install(
         "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
         "com.netflix.governator:governator-api:1.17.2",
+        "com.netflix.governator:governator-core:1.17.2",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-logging:commons-logging:1.2",
