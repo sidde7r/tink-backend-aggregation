@@ -550,7 +550,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_inject_extensions_guice_multibindings",
+    name = "com_google_inject_extensions_guice_multibindings",  # Do not use, but do not remove
     artifact = "com.google.inject.extensions:guice-multibindings:4.1.0",
     sha1 = "3b27257997ac51b0f8d19676f1ea170427e86d51",
 )
