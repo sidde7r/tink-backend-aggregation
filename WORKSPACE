@@ -1667,7 +1667,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_collections_commons_collections",
+    name = "commons_collections_commons_collections",  # Do not use, but do not remove
     artifact = "commons-collections:commons-collections:3.2.2",
     sha1 = "8ad72fe39fa8c91eaaf12aadb21e0c3661fe26d5",
 )
