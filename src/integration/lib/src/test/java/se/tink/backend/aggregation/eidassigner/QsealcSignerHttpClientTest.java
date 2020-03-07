@@ -77,39 +77,33 @@ public class QsealcSignerHttpClientTest {
 
     @Ignore // TODO https://tinkab.atlassian.net/browse/AAP-147
     @Test
-    public void qsealcSignerHttpClientTest() {
-        try {
-            Assert.assertEquals("development", configuration.getEnvironment());
-            Assert.assertNull(QsealcSignerHttpClient.httpClient);
-            Assert.assertNotNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
+    public void qsealcSignerHttpClientTest() throws IOException {
+        Assert.assertEquals("development", configuration.getEnvironment());
+        Assert.assertNull(QsealcSignerHttpClient.httpClient);
+        Assert.assertNotNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
 
-            QsealcSignerHttpClient httpClient_first_get =
-                    QsealcSignerHttpClient.create(configuration);
-            QsealcSignerHttpClient httpClient_second_get =
-                    QsealcSignerHttpClient.create(configuration);
-            Assert.assertEquals(httpClient_first_get, httpClient_second_get);
-            Assert.assertNotNull(QsealcSignerHttpClient.httpClient);
-            Assert.assertNotNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
+        QsealcSignerHttpClient httpClient_first_get = QsealcSignerHttpClient.create(configuration);
+        QsealcSignerHttpClient httpClient_second_get = QsealcSignerHttpClient.create(configuration);
+        Assert.assertEquals(httpClient_first_get, httpClient_second_get);
+        Assert.assertNotNull(QsealcSignerHttpClient.httpClient);
+        Assert.assertNotNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
 
-            QsealcSignerHttpClient httpClient = QsealcSignerHttpClient.create(configuration);
-            HttpPost post = new HttpPost("http://127.0.0.1:11111/test/");
-            CloseableHttpResponse response = httpClient.execute(post);
-            Assert.assertEquals(200, response.getStatusLine().getStatusCode());
+        QsealcSignerHttpClient httpClient = QsealcSignerHttpClient.create(configuration);
+        HttpPost post = new HttpPost("http://127.0.0.1:11111/test/");
+        CloseableHttpResponse response = httpClient.execute(post);
+        Assert.assertEquals(200, response.getStatusLine().getStatusCode());
 
-            HttpPost postHttps = new HttpPost("https://127.0.0.1:12345/test/");
-            HttpResponse responseHttps = httpClient.execute(postHttps);
-            Assert.assertEquals(200, responseHttps.getStatusLine().getStatusCode());
+        HttpPost postHttps = new HttpPost("https://127.0.0.1:12345/test/");
+        HttpResponse responseHttps = httpClient.execute(postHttps);
+        Assert.assertEquals(200, responseHttps.getStatusLine().getStatusCode());
 
-            QsealcSigner signer =
-                    QsealcSigner.build(
-                            configuration,
-                            QsealcAlg.EIDAS_JWT_RSA_SHA256,
-                            new EidasIdentity("", "", ""));
-            String result = signer.getJWSToken("".getBytes());
-            Assert.assertEquals("signature", result);
-        } catch (Exception e) {
-            Assert.fail("Exception occurred");
-        }
+        QsealcSigner signer =
+                QsealcSigner.build(
+                        configuration,
+                        QsealcAlg.EIDAS_JWT_RSA_SHA256,
+                        new EidasIdentity("", "", ""));
+        String result = signer.getJWSToken("".getBytes());
+        Assert.assertEquals("signature", result);
     }
 
     private static class ProxyServerHandler extends AbstractHandler {
