@@ -1496,7 +1496,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_w3c_css_sac",
+    name = "org_w3c_css_sac",  # Do not use, but do not remove
     artifact = "org.w3c.css:sac:1.3",
     sha1 = "cdb2dcb4e22b83d6b32b93095f644c3462739e82",
 )

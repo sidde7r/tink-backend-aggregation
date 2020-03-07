@@ -805,8 +805,8 @@ java_library(
     name = "net_sourceforge_cssparser_cssparser",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:org_w3c_css_sac",
         "@net_sourceforge_cssparser_cssparser//jar",
-        "@org_w3c_css_sac//jar",
     ],
 )
 
@@ -840,6 +840,7 @@ java_library(
         "@aggregation//:org_apache_commons_commons_lang3",
         "@aggregation//:org_apache_httpcomponents_httpclient",
         "@aggregation//:org_apache_httpcomponents_httpcore",
+        "@aggregation//:org_w3c_css_sac",
         "@commons_io_commons_io//jar",
         "@net_sourceforge_cssparser_cssparser//jar",
         "@net_sourceforge_htmlunit_htmlunit//jar",
@@ -850,7 +851,6 @@ java_library(
         "@org_eclipse_jetty_jetty_io//jar",
         "@org_eclipse_jetty_jetty_util//jar",
         "@org_eclipse_jetty_jetty_websocket//jar",
-        "@org_w3c_css_sac//jar",
         "@xalan_serializer//jar",
         "@xalan_xalan//jar",
         "@xerces_xercesImpl//jar",
