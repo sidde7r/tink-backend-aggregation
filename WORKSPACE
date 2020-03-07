@@ -430,7 +430,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_inject_extensions_guice_grapher",
+    name = "com_google_inject_extensions_guice_grapher",  # Do not use, but do not remove
     artifact = "com.google.inject.extensions:guice-grapher:4.1.0",
     sha1 = "5b5e42aef1d8990bed1617eeaf1f3854dec677e2",
 )
