@@ -1089,8 +1089,8 @@
                 "file": "v1/https/repo.maven.apache.org/maven2/com/netflix/governator/governator-core/1.17.2/governator-core-1.17.2.jar",
                 "directDependencies": [
                     "com.google.inject.extensions:guice-multibindings:4.1.0",
-                    "org.slf4j:slf4j-api:1.7.21",
                     "com.google.inject.extensions:guice-grapher:4.1.0",
+                    "org.slf4j:slf4j-api:1.7.22",
                     "com.google.inject:guice:4.1.0",
                     "com.netflix.governator:governator-api:1.17.2",
                     "javax.inject:javax.inject:1"
@@ -1102,8 +1102,8 @@
                     "com.google.inject.extensions:guice-multibindings:4.1.0",
                     "com.google.inject.extensions:guice-assistedinject:4.1.0",
                     "org.codehaus.mojo:animal-sniffer-annotations:1.14",
-                    "org.slf4j:slf4j-api:1.7.21",
                     "com.google.inject.extensions:guice-grapher:4.1.0",
+                    "org.slf4j:slf4j-api:1.7.22",
                     "com.google.j2objc:j2objc-annotations:1.1",
                     "com.google.inject:guice:4.1.0",
                     "com.google.code.findbugs:jsr305:3.0.0",
@@ -1123,7 +1123,7 @@
                     "javax.inject:javax.inject:jar:sources:1",
                     "com.google.inject.extensions:guice-grapher:jar:sources:4.1.0",
                     "com.google.inject:guice:jar:sources:4.1.0",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.21",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
                     "com.google.inject.extensions:guice-multibindings:jar:sources:4.1.0",
                     "com.netflix.governator:governator-api:jar:sources:1.17.2"
                 ],
@@ -1138,7 +1138,7 @@
                     "com.google.inject.extensions:guice-grapher:jar:sources:4.1.0",
                     "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
                     "com.google.inject:guice:jar:sources:4.1.0",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.21",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
                     "com.google.inject.extensions:guice-multibindings:jar:sources:4.1.0",
                     "com.netflix.governator:governator-api:jar:sources:1.17.2"
                 ],
@@ -1167,8 +1167,8 @@
                     "com.google.inject.extensions:guice-multibindings:4.1.0",
                     "com.google.inject.extensions:guice-assistedinject:4.1.0",
                     "org.codehaus.mojo:animal-sniffer-annotations:1.14",
-                    "org.slf4j:slf4j-api:1.7.21",
                     "com.google.inject.extensions:guice-grapher:4.1.0",
+                    "org.slf4j:slf4j-api:1.7.22",
                     "com.google.j2objc:j2objc-annotations:1.1",
                     "com.google.inject:guice:4.1.0",
                     "com.google.code.findbugs:jsr305:3.0.0",
@@ -1207,8 +1207,8 @@
                     "com.google.inject:guice:jar:sources:4.1.0",
                     "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
                     "com.netflix.governator:governator-core:jar:sources:1.17.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
                     "org.ow2.asm:asm:jar:sources:5.0.4",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.21",
                     "com.google.inject.extensions:guice-multibindings:jar:sources:4.1.0",
                     "com.netflix.governator:governator-api:jar:sources:1.17.2"
                 ],
@@ -1603,26 +1603,26 @@
                 "sha256": "d5b4070a22c9b1ca5b9b5aa668466bcca391dbe5d5fe8311c300765c1621feba"
             },
             {
-                "coord": "org.slf4j:slf4j-api:1.7.21",
-                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar",
+                "coord": "org.slf4j:slf4j-api:1.7.22",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.22/slf4j-api-1.7.22.jar",
                 "directDependencies": [],
                 "dependencies": [],
-                "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar",
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.22/slf4j-api-1.7.22.jar",
                 "mirror_urls": [
-                    "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar"
+                    "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.22/slf4j-api-1.7.22.jar"
                 ],
-                "sha256": "1d5aeb6bd98b0fdd151269eae941c05f6468a791ea0f1e68d8e7fe518af3e7df"
+                "sha256": "3a4cd4969015f3beb4b5b4d81dbafc01765fb60b8a439955ca64d8476fef553e"
             },
             {
-                "coord": "org.slf4j:slf4j-api:jar:sources:1.7.21",
-                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21-sources.jar",
+                "coord": "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.22/slf4j-api-1.7.22-sources.jar",
                 "directDependencies": [],
                 "dependencies": [],
-                "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21-sources.jar",
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.22/slf4j-api-1.7.22-sources.jar",
                 "mirror_urls": [
-                    "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21-sources.jar"
+                    "https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.22/slf4j-api-1.7.22-sources.jar"
                 ],
-                "sha256": "3d68eb11e27819d6a999b603d104566d8cdd93fd37efa2c02e12a99809f49c86"
+                "sha256": "cc9cab7ff7660a6612e304fc298d7afb9719b7159ee03e37a325259548871a01"
             },
             {
                 "coord": "org.w3c.css:sac:1.3",
@@ -1670,6 +1670,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 880291043
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -1934841360
     }
 }

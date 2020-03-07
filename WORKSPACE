@@ -715,8 +715,8 @@ maven_jar(
 
 maven_jar(
     name = "org_slf4j_slf4j_api",  # Do not use, but do not remove
-    artifact = "org.slf4j:slf4j-api:1.7.21",
-    sha1 = "139535a69a4239db087de9bab0bee568bf8e0b70",
+    artifact = "org.slf4j:slf4j-api:1.7.22",
+    sha1 = "a1c83373863cec7ae8d89dc1c5722d8cb6ec0309",
 )
 
 maven_jar(
@@ -2603,7 +2603,7 @@ maven_install(
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.ow2.asm:asm:5.0.4",
         "org.reactivestreams:reactive-streams:1.0.3",
-        "org.slf4j:slf4j-api:1.7.21",
+        "org.slf4j:slf4j-api:1.7.22",
         "org.w3c.css:sac:1.3",
         "org.yaml:snakeyaml:1.23",
     ],
