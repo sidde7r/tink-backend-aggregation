@@ -2592,6 +2592,7 @@ maven_install(
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.reactivestreams:reactive-streams:1.0.3",
         "org.slf4j:slf4j-api:1.7.21",
+        "org.w3c.css:sac:1.3",
         "org.yaml:snakeyaml:1.23",
     ],
     excluded_artifacts = [
