@@ -1041,6 +1041,76 @@
                 "sha256": "e00ad90bb8e8f7e14c68fcc939bb1cf5c12d36ea6393d9aba26cf6e4d7bb3ac9"
             },
             {
+                "coord": "com.netflix.governator:governator:1.17.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/netflix/governator/governator/1.17.2/governator-1.17.2.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "com.netflix.governator:governator-api:1.17.2",
+                    "com.netflix.governator:governator-core:1.17.2",
+                    "org.ow2.asm:asm:5.0.4"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "org.ow2.asm:asm:5.0.4",
+                    "com.google.errorprone:error_prone_annotations:2.0.18",
+                    "com.google.guava:guava:23.1-jre",
+                    "aopalliance:aopalliance:1.0",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "com.google.inject.extensions:guice-multibindings:4.1.0",
+                    "com.google.inject.extensions:guice-assistedinject:4.1.0",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "org.slf4j:slf4j-api:1.7.21",
+                    "com.google.inject.extensions:guice-grapher:4.1.0",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.google.inject:guice:4.1.0",
+                    "com.google.code.findbugs:jsr305:3.0.0",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9",
+                    "com.netflix.governator:governator-api:1.17.2",
+                    "javax.inject:javax.inject:1",
+                    "com.netflix.governator:governator-core:1.17.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/netflix/governator/governator/1.17.2/governator-1.17.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/netflix/governator/governator/1.17.2/governator-1.17.2.jar"
+                ],
+                "sha256": "51d2cf094a7700b7ee9cda39bd0237c41d3f5e8a4acc0bdc6fbe246281f92e87"
+            },
+            {
+                "coord": "com.netflix.governator:governator:jar:sources:1.17.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/netflix/governator/governator/1.17.2/governator-1.17.2-sources.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.netflix.governator:governator-api:jar:sources:1.17.2",
+                    "com.netflix.governator:governator-core:jar:sources:1.17.2",
+                    "org.ow2.asm:asm:jar:sources:5.0.4"
+                ],
+                "dependencies": [
+                    "com.google.guava:guava:jar:sources:23.1-jre",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.0.18",
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "aopalliance:aopalliance:jar:sources:1.0",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.0",
+                    "com.google.inject.extensions:guice-assistedinject:jar:sources:4.1.0",
+                    "javax.inject:javax.inject:jar:sources:1",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.google.inject.extensions:guice-grapher:jar:sources:4.1.0",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "com.google.inject:guice:jar:sources:4.1.0",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "com.netflix.governator:governator-core:jar:sources:1.17.2",
+                    "org.ow2.asm:asm:jar:sources:5.0.4",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.21",
+                    "com.google.inject.extensions:guice-multibindings:jar:sources:4.1.0",
+                    "com.netflix.governator:governator-api:jar:sources:1.17.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/netflix/governator/governator/1.17.2/governator-1.17.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/netflix/governator/governator/1.17.2/governator-1.17.2-sources.jar"
+                ],
+                "sha256": "9fd88c6d8283eca292a25b51d4087604aa17d77dc2ab3064cae3b5bab60b4e55"
+            },
+            {
                 "coord": "commons-codec:commons-codec:1.10",
                 "file": "v1/https/repo.maven.apache.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10.jar",
                 "directDependencies": [],
@@ -1470,6 +1540,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1632086012
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1424491785
     }
 }
