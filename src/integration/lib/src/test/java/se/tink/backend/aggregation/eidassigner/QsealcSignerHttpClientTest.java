@@ -82,9 +82,9 @@ public class QsealcSignerHttpClientTest {
         Assert.assertNull(QsealcSignerHttpClient.httpClient);
         Assert.assertNotNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
 
-        QsealcSignerHttpClient httpClient_first_get = QsealcSignerHttpClient.create(configuration);
-        QsealcSignerHttpClient httpClient_second_get = QsealcSignerHttpClient.create(configuration);
-        Assert.assertEquals(httpClient_first_get, httpClient_second_get);
+        QsealcSignerHttpClient httpClientGetFirst = QsealcSignerHttpClient.create(configuration);
+        QsealcSignerHttpClient httpClientGetSecond = QsealcSignerHttpClient.create(configuration);
+        Assert.assertEquals(httpClientGetFirst, httpClientGetSecond);
         Assert.assertNotNull(QsealcSignerHttpClient.httpClient);
         Assert.assertNotNull(QsealcSignerHttpClient.qsealcSignerHttpClient);
 
