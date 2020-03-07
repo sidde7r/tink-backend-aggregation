@@ -2634,7 +2634,7 @@ maven_install(
         "org.eclipse.jetty:jetty-util:9.4.15.v20190215",
         "org.eclipse.jetty:jetty-server:9.4.15.v20190215",
         "org.eclipse.jetty:jetty-http:9.4.15.v20190215",
-        "javax.servlet:javax.servlet-api:3.1.0",
+        "javax.servlet:javax.servlet-api:4.0.1",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:jetty_server9_install.json",
