@@ -1308,7 +1308,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_sourceforge_cssparser_cssparser",
+    name = "net_sourceforge_cssparser_cssparser",  # Do not use, but do not remove
     artifact = "net.sourceforge.cssparser:cssparser:0.9.8",
     sha1 = "f05d7c249dfe8b884e72d614531630a9992bb037",
 )
