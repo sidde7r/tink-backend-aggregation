@@ -20,7 +20,7 @@ java_library(
     name = "ch_qos_logback_logback_classic",
     visibility = ["//visibility:public"],
     exports = [
-        "@ch_qos_logback_logback_classic//jar",
+        "@aggregation//:ch_qos_logback_logback_classic",
     ],
     runtime_deps = [
         "@aggregation//:ch_qos_logback_logback_core",
@@ -473,6 +473,7 @@ java_library(
     ],
     runtime_deps = [
         ":io_dropwizard_dropwizard_jersey",
+        "@aggregation//:ch_qos_logback_logback_classic",
         "@aggregation//:ch_qos_logback_logback_core",
         "@aggregation//:com_fasterxml_classmate",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
@@ -489,7 +490,6 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@ch_qos_logback_logback_classic//jar",
         "@com_codahale_metrics_metrics_annotation//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_healthchecks//jar",
@@ -540,7 +540,7 @@ java_library(
         "@io_dropwizard_dropwizard_servlets//jar",
     ],
     runtime_deps = [
-        "@ch_qos_logback_logback_classic//jar",
+        "@aggregation//:ch_qos_logback_logback_classic",
         "@com_codahale_metrics_metrics_core//jar",
         "@org_eclipse_jetty_jetty_servlet//jar",
         "@org_eclipse_jetty_orbit_javax_servlet//jar",
@@ -610,9 +610,9 @@ java_library(
     name = "io_dropwizard_dropwizard_logging",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:ch_qos_logback_logback_classic",
         "@aggregation//:ch_qos_logback_logback_core",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@ch_qos_logback_logback_classic//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_logback//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
