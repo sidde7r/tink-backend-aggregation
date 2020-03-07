@@ -466,7 +466,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_netflix_governator_core",
+    name = "com_netflix_governator_core",  # Do not use, but do not remove
     artifact = "com.netflix.governator:governator-core:1.17.2",
     sha1 = "c9e0129f8526b8f0b44ffcae0d74feb6b7b71b55",
 )
