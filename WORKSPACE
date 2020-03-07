@@ -604,7 +604,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "ch_qos_logback_contrib_logback_jackson",
+    name = "ch_qos_logback_contrib_logback_jackson",  # Do not use, but do not remove
     artifact = "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
     sha1 = "0e8b202a23691048a01e6322dd040f75e08e9ca2",
 )
