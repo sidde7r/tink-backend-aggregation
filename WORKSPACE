@@ -314,9 +314,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_errorprone_error_prone_annotations",
-    artifact = "com.google.errorprone:error_prone_annotations:2.0.11",
-    sha1 = "3624d81fca4e93c67f43bafc222b06e1b1e3b260",
+    name = "com_google_errorprone_error_prone_annotations",  # Do not use, but do not remove
+    artifact = "com.google.errorprone:error_prone_annotations:2.0.18",
+    sha1 = "5f65affce1684999e2f4024983835efc3504012e",
 )
 
 ## Maven jar imports
