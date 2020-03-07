@@ -2609,22 +2609,6 @@ load("@aggregation//:defs.bzl", aggregation_pin = "pinned_maven_install")
 aggregation_pin()
 
 maven_install(
-    name = "java_uuid_generator",
-    artifacts = [
-        "com.fasterxml.uuid:java-uuid-generator:3.1.5",
-    ],
-    fetch_sources = True,
-    maven_install_json = "//third_party:java_uuid_generator_install.json",
-    repositories = [
-        "https://repo.maven.apache.org/maven2/",
-    ],
-)
-
-load("@java_uuid_generator//:defs.bzl", java_uuid_generator_pin = "pinned_maven_install")
-
-java_uuid_generator_pin()
-
-maven_install(
     name = "io_reactivex_rxjava3_rxjava",
     artifacts = [
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
