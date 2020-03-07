@@ -2558,6 +2558,7 @@ maven_install(
     name = "aggregation",
     artifacts = [
         "aopalliance:aopalliance:1.0",
+        "ch.qos.logback.contrib:logback-json-core:jar:0.1.5",
         "ch.qos.logback:logback-core:1.1.11",
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
