@@ -1309,8 +1309,8 @@ maven_jar(
 
 maven_jar(
     name = "net_sourceforge_cssparser_cssparser",  # Do not use, but do not remove
-    artifact = "net.sourceforge.cssparser:cssparser:0.9.8",
-    sha1 = "f05d7c249dfe8b884e72d614531630a9992bb037",
+    artifact = "net.sourceforge.cssparser:cssparser:0.9.16",
+    sha1 = "3f751904d467537b8ee99c612e69d4e79d6271cf",
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
@@ -2586,7 +2586,7 @@ maven_install(
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
-        "net.sourceforge.cssparser:cssparser:0.9.8",
+        "net.sourceforge.cssparser:cssparser:0.9.16",
         "org.apache.commons:commons-lang3:3.4",
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
