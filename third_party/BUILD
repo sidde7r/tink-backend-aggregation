@@ -298,10 +298,10 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_google_inject_extensions_guice_assistedinject",
         "@aggregation//:com_google_inject_extensions_guice_multibindings",
         "@aggregation//:com_google_inject_guice",
         "@aggregation//:javax_inject_javax_inject",
-        "@com_google_inject_extensions_guice_assistedinject//jar",
         "@com_google_inject_extensions_guice_grapher//jar",
         "@com_netflix_governator_api//jar",
         "@com_netflix_governator_core//jar",
