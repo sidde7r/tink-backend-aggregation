@@ -302,8 +302,8 @@ java_library(
         "@aggregation//:com_google_inject_extensions_guice_grapher",
         "@aggregation//:com_google_inject_extensions_guice_multibindings",
         "@aggregation//:com_google_inject_guice",
+        "@aggregation//:com_netflix_governator_governator_api",
         "@aggregation//:javax_inject_javax_inject",
-        "@com_netflix_governator_api//jar",
         "@com_netflix_governator_core//jar",
     ],
 )
