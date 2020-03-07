@@ -294,7 +294,7 @@ java_library(
     name = "com_netflix_governator",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_netflix_governator//jar",
+        "@aggregation//:com_netflix_governator_governator",
     ],
     runtime_deps = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",

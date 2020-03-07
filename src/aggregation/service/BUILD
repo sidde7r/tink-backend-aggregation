@@ -18,9 +18,9 @@ java_library(
         "//src/libraries/dropwizard_utils",
         "//third_party:com_codahale_metrics_metrics_healthchecks",
         "//third_party:com_google_inject_guice",
-        "//third_party:com_netflix_governator",
         "//third_party:io_dropwizard_dropwizard_core",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_netflix_governator_governator",
     ],
 )
 
