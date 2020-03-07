@@ -1428,7 +1428,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_http",
+    name = "org_eclipse_jetty_jetty_http",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
     sha1 = "67060a59b426c76a2788ea5f4e19c1d3170ac562",
 )
