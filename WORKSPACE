@@ -1668,8 +1668,8 @@ maven_jar(
 
 maven_jar(
     name = "commons_collections_commons_collections",
-    artifact = "commons-collections:commons-collections:3.1",
-    sha1 = "40fb048097caeacdb11dbb33b5755854d89efdeb",
+    artifact = "commons-collections:commons-collections:3.2.2",
+    sha1 = "8ad72fe39fa8c91eaaf12aadb21e0c3661fe26d5",
 )
 
 maven_jar(
