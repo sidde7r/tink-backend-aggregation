@@ -424,7 +424,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_inject_guice",
+    name = "com_google_inject_guice",  # Do not use, but do not remove
     artifact = "com.google.inject:guice:4.1.0",
     sha1 = "eeb69005da379a10071aa4948c48d89250febb07",
 )
