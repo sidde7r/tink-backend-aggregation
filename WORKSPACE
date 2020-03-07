@@ -2579,6 +2579,7 @@ maven_install(
         "com.google.code.gson:gson:2.8.2",
         "com.google.guava:guava:23.1-jre",
         "commons-codec:commons-codec:1.6",
+        "commons-collections:commons-collections:3.2.2",
         "commons-logging:commons-logging:1.1.3",
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
