@@ -2582,6 +2582,7 @@ maven_install(
         "com.google.inject.extensions:guice-grapher:4.1.0",
         "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
+        "com.google.instrumentation:instrumentation-api:0.4.3",
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
         "com.netflix.governator:governator:1.17.2",
