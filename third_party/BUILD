@@ -1497,13 +1497,13 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_grpc_grpc_context",
         "@com_google_api_grpc_proto_google_common_protos//jar",
         "@com_google_instrumentation_instrumentation_api//jar",
         "@com_google_protobuf_protobuf_java//jar",
         "@com_google_protobuf_protobuf_java_util//jar",
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_auth//jar",
-        "@io_grpc_grpc_context//jar",
         "@io_grpc_grpc_core//jar",
         "@io_grpc_grpc_netty//jar",
         "@io_grpc_grpc_protobuf//jar",
@@ -1639,7 +1639,7 @@ java_library(
     name = "io_grpc_grpc_context",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_grpc_grpc_context//jar",
+        "@aggregation//:io_grpc_grpc_context",
     ],
 )
 

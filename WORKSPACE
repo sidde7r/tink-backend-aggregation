@@ -2078,7 +2078,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_grpc_grpc_context",
+    name = "io_grpc_grpc_context",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
     sha1 = "94aedfbfeebc5a32bdfe6984289bb18abf93cf20",
 )
