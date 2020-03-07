@@ -353,7 +353,7 @@ java_library(
         "@com_sun_jersey_jersey_client//jar",
     ],
     runtime_deps = [
-        "@com_sun_jersey_jersey_core//jar",
+        "@aggregation//:com_sun_jersey_jersey_core",
     ],
 )
 
@@ -361,7 +361,7 @@ java_library(
     name = "com_sun_jersey_jersey_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_sun_jersey_jersey_core//jar",
+        "@aggregation//:com_sun_jersey_jersey_core",
     ],
 )
 
@@ -372,7 +372,7 @@ java_library(
         "@com_sun_jersey_jersey_server//jar",
     ],
     runtime_deps = [
-        "@com_sun_jersey_jersey_core//jar",
+        "@aggregation//:com_sun_jersey_jersey_core",
     ],
 )
 
@@ -488,6 +488,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_sun_jersey_jersey_core",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
         "@com_codahale_metrics_metrics_annotation//jar",
@@ -499,7 +500,6 @@ java_library(
         "@com_codahale_metrics_metrics_jvm//jar",
         "@com_codahale_metrics_metrics_logback//jar",
         "@com_codahale_metrics_metrics_servlets//jar",
-        "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
         "@commons_lang_commons_lang//jar",
@@ -575,10 +575,10 @@ java_import(
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+        "@aggregation//:com_sun_jersey_jersey_core",
         "@com_codahale_metrics_metrics_annotation//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_jersey//jar",
-        "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
         "@io_dropwizard_dropwizard_jackson//jar",

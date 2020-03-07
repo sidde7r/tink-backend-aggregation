@@ -1124,7 +1124,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_jersey_jersey_core",
+    name = "com_sun_jersey_jersey_core",  # Do not use, but do not remove
     artifact = "com.sun.jersey:jersey-core:1.18.1",
     sha1 = "4f97b0f85a881d3b3478f99a17df7bd258b9d626",
 )
