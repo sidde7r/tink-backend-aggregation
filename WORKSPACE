@@ -2610,22 +2610,6 @@ load("@aggregation//:defs.bzl", aggregation_pin = "pinned_maven_install")
 
 aggregation_pin()
 
-maven_install(
-    name = "io_reactivex_rxjava3_rxjava",
-    artifacts = [
-        "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
-    ],
-    fetch_sources = True,
-    maven_install_json = "//third_party:io_reactivex_rxjava3_rxjava_install.json",
-    repositories = [
-        "https://repo.maven.apache.org/maven2/",
-    ],
-)
-
-load("@io_reactivex_rxjava3_rxjava//:defs.bzl", io_reactivex_rxjava3_rxjava_pin = "pinned_maven_install")
-
-io_reactivex_rxjava3_rxjava_pin()
-
 # Use via //third_party/jetty_server9
 maven_install(
     name = "jetty_server9",
