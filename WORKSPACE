@@ -1636,7 +1636,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_jersey_jersey_client",
+    name = "com_sun_jersey_jersey_client",  # Do not use, but do not remove
     artifact = "com.sun.jersey:jersey-client:1.18.1",
     sha1 = "60e85d4f638fb444bcbbd9f8da83414fbdf731c3",
 )

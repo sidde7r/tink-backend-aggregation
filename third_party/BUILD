@@ -342,7 +342,7 @@ java_library(
         "@com_sun_jersey_contribs_jersey_apache_client4//jar",
     ],
     runtime_deps = [
-        "@com_sun_jersey_jersey_client//jar",
+        "@aggregation//:com_sun_jersey_jersey_client",
     ],
 )
 
@@ -350,7 +350,7 @@ java_library(
     name = "com_sun_jersey_jersey_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_sun_jersey_jersey_client//jar",
+        "@aggregation//:com_sun_jersey_jersey_client",
     ],
     runtime_deps = [
         "@aggregation//:com_sun_jersey_jersey_core",
@@ -439,13 +439,13 @@ java_library(
         "@io_dropwizard_dropwizard_client//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_sun_jersey_jersey_client",
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:org_apache_httpcomponents_httpclient",
         "@aggregation//:org_apache_httpcomponents_httpcore",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_httpclient//jar",
         "@com_sun_jersey_contribs_jersey_apache_client4//jar",
-        "@com_sun_jersey_jersey_client//jar",
         "@io_dropwizard_dropwizard_core//jar",
     ],
 )
