@@ -2589,6 +2589,7 @@ maven_install(
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
         "com.netflix.governator:governator:1.17.2",
+        "com.sun.jersey:jersey-client:1.18.1",
         "com.sun.jersey:jersey-core:1.18.1",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
