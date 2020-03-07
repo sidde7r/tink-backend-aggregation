@@ -2578,6 +2578,7 @@ maven_install(
         "com.google.code.findbugs:jsr305:3.0.0",
         "com.google.code.gson:gson:2.8.2",
         "com.google.guava:guava:23.1-jre",
+        "com.google.inject.extensions:guice-assistedinject:4.1.0",
         "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
         "commons-codec:commons-codec:1.10",
