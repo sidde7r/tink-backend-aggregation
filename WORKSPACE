@@ -1685,8 +1685,8 @@ maven_jar(
 
 maven_jar(
     name = "commons_logging_commons_logging",  # Do not use, but do not remove
-    artifact = "commons-logging:commons-logging:1.1.3",
-    sha1 = "f6f66e966c70a83ffbdb6f17a0919eaf7c8aca7f",
+    artifact = "commons-logging:commons-logging:1.2",
+    sha1 = "4bfc12adfe4842bf07b657f0369c4cb522955686",
 )
 
 maven_jar(
@@ -2581,7 +2581,7 @@ maven_install(
         "com.google.inject:guice:4.1.0",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
-        "commons-logging:commons-logging:1.1.3",
+        "commons-logging:commons-logging:1.2",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
