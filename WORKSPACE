@@ -2582,6 +2582,7 @@ maven_install(
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-logging:commons-logging:1.1.3",
+        "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
