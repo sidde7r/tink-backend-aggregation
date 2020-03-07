@@ -2138,7 +2138,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_instrumentation_instrumentation_api",
+    name = "com_google_instrumentation_instrumentation_api",  # Do not use, but do not remove
     artifact = "com.google.instrumentation:instrumentation-api:0.4.3",
     sha1 = "41614af3429573dc02645d541638929d877945a2",
 )
