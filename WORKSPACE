@@ -2046,9 +2046,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_ow2_asm_asm",
-    artifact = "org.ow2.asm:asm:5.0.3",
-    sha1 = "dcc2193db20e19e1feca8b1240dbbc4e190824fa",
+    name = "org_ow2_asm_asm",  # Do not use, but do not remove
+    artifact = "org.ow2.asm:asm:5.0.4",
+    sha1 = "0da08b8cce7bbf903602a25a3a163ae252435795",
 )
 
 maven_jar(
@@ -2596,7 +2596,7 @@ maven_install(
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.codehaus.woodstox:stax2-api:4.1",
-        "org.ow2.asm:asm:5.0.3",
+        "org.ow2.asm:asm:5.0.4",
         "org.reactivestreams:reactive-streams:1.0.3",
         "org.slf4j:slf4j-api:1.7.21",
         "org.w3c.css:sac:1.3",
