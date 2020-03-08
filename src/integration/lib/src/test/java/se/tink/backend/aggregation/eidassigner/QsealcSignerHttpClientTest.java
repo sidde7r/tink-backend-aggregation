@@ -39,7 +39,6 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -75,7 +74,6 @@ public class QsealcSignerHttpClientTest {
         proxyServer.stop(new CountDownLatch(1));
     }
 
-    @Ignore // TODO https://tinkab.atlassian.net/browse/AAP-147
     @Test
     public void qsealcSignerHttpClientTest() throws IOException {
         Assert.assertEquals("development", configuration.getEnvironment());
