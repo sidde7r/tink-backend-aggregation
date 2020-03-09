@@ -24,6 +24,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchUpcomingRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchUpcomingResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transfer.rpc.FetchPaymentAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transfer.rpc.FetchSavedPaymentRecipientsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transfer.rpc.FetchSavedTransferRecipientsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -142,6 +145,24 @@ public class LansforsakringarApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(FetchLoanDetailsRequest.of(loanNumber), MediaType.APPLICATION_JSON_TYPE)
                 .post(FetchLoanDetailsResponse.class);
+    }
+
+    public FetchSavedPaymentRecipientsResponse fetchSavedPaymentRecipients() {
+        return getBaseRequest(Urls.FETCH_PAYMENT_SAVED_RECEPIENTS)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchSavedPaymentRecipientsResponse.class);
+    }
+
+    public FetchSavedTransferRecipientsResponse fetchSavedTransferRecipients() {
+        return getBaseRequest(Urls.FETCH_TRANSFER_SAVED_RECEPIENTS)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchSavedTransferRecipientsResponse.class);
+    }
+
+    public FetchPaymentAccountResponse fetchPaymentAccounts() {
+        return getBaseRequest(Urls.FETCH_PAYMENT_ACCOUNTS)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchPaymentAccountResponse.class);
     }
 
     private RequestBuilder getBaseRequest(URL url) {

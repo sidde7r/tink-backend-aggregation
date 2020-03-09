@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar;
 
+import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -27,6 +28,12 @@ public class LansforsakringarConstants {
                 new URL(BASE + ApiService.PENSION_WITH_LIFE_INSURANCE_AGREEMENT);
         public static final URL FETCH_LOAN_OVERVIEW = new URL(BASE + ApiService.LOAN_OVERVIEW);
         public static final URL FETCH_LOAN_DETAILS = new URL(BASE + ApiService.LOAN_DETAILS);
+        public static final URL FETCH_PAYMENT_SAVED_RECEPIENTS =
+                new URL(BASE + ApiService.PAYMENT_SAVED_RECEPIENTS);
+        public static final URL FETCH_TRANSFER_SAVED_RECEPIENTS =
+                new URL(BASE + ApiService.TRANSFER_SAVED_RECEPIENTS);
+        public static final URL FETCH_PAYMENT_ACCOUNTS =
+                new URL(BASE + ApiService.PAYMENT_ACCOUNTS);
     }
 
     public static class ApiService {
@@ -43,6 +50,10 @@ public class LansforsakringarConstants {
         public static final String PENSION_OVERVIEW = "appoutlet/pension/overview/withtotal/2.0";
         public static final String LOAN_OVERVIEW = "appoutlet/loan/loans/withtotal";
         public static final String LOAN_DETAILS = "appoutlet/loan/details";
+        public static final String PAYMENT_SAVED_RECEPIENTS = "appoutlet/payment/savedrecipients";
+        public static final String TRANSFER_SAVED_RECEPIENTS =
+                "appoutlet/account/transferrablewithsavedrecipients";
+        public static final String PAYMENT_ACCOUNTS = "appoutlet/payment/paymentaccount";
     }
 
     public static class StorageKeys {
@@ -71,6 +82,8 @@ public class LansforsakringarConstants {
                         .put(AccountTypes.PENSION, "PENSION")
                         .build();
         public static final String CURRENCY = "SEK";
+        public static final Pattern PATTERN_BG_RECIPIENT = Pattern.compile("^\\d{3,4}-\\d{4}");
+        public static final Pattern PATTERN_PG_RECIPIENT = Pattern.compile("^\\d{1,7}-\\d");
     }
 
     public static final class Fetcher {

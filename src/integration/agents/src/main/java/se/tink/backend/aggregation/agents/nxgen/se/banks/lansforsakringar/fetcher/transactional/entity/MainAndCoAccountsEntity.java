@@ -6,16 +6,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.Accounts;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-public class MainAndCoAccountsEntity {
+public class MainAndCoAccountsEntity implements GeneralAccountEntity {
     private String accountNumber;
     private BigDecimal balance;
     private String accountName;
@@ -133,5 +135,23 @@ public class MainAndCoAccountsEntity {
     public boolean isTransactionalAccount() {
         return ACCOUNT_TYPE_MAPPER.isOf(type, AccountTypes.CHECKING)
                 || ACCOUNT_TYPE_MAPPER.isOf(type, AccountTypes.SAVINGS);
+    }
+
+    @JsonIgnore
+    @Override
+    public AccountIdentifier generalGetAccountIdentifier() {
+        return new SwedishIdentifier(accountNumber);
+    }
+
+    @JsonIgnore
+    @Override
+    public String generalGetBank() {
+        return bankName;
+    }
+
+    @JsonIgnore
+    @Override
+    public String generalGetName() {
+        return accountName;
     }
 }
