@@ -1,17 +1,332 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class NordeaDkConstants {
+    private static final String VERSION = "V2.0";
+
+    public static class Service {
+        private static final String SERVICE_VERSION = "Service" + VERSION;
+        public static final String BANKING = "Banking" + SERVICE_VERSION;
+        public static final String SAVINGS = "Savings" + SERVICE_VERSION;
+        public static final String AUTHENTICATION = "Authentication" + SERVICE_VERSION;
+    }
+
+    public static class URLs {
+        public static final String NEM_ID_AUTHENTICATION =
+                "api/dbf/ca/nemid-v1/nemid/authentications/";
+        public static final String AUTHORIZATION =
+                "api/dbf/ca/user-accounts-service-v1/user-accounts/primary/authorization";
+        public static final String NORDEA_AUTH_BASE_URL = "https://identify.nordea.com/";
+        public static final String NORDEA_PRIVATE_BASE_URL = "https://private.nordea.dk/";
+        public static final String FETCH_ACCOUNTS =
+                NORDEA_PRIVATE_BASE_URL + "api/dbf/ca/accounts-v3/accounts";
+        public static final String EXCHANGE_TOKEN =
+                NORDEA_AUTH_BASE_URL + "api/dbf/ca/token-service-v3/oauth/token";
+        public static final String FETCH_ACCOUNT_TRANSACTIONS_FORMAT =
+                FETCH_ACCOUNTS + "/%s/transactions";
+        public static final String FETCH_CARDS =
+                NORDEA_PRIVATE_BASE_URL + "api/dbf/ca/cards-v4/cards";
+        public static final String FETCH_CARD_DETAILS_FORMAT = FETCH_CARDS + "/%s";
+        public static final String FETCH_CARD_TRANSACTIONS_FORMAT =
+                FETCH_CARDS + "/%s/transactions";
+        public static final String FETCH_INVESTMENTS =
+                NORDEA_PRIVATE_BASE_URL + "/api/dbf/ca/savings-v1/savings/custodies";
+    }
+
+    public static class QueryParamKeys {
+        public static final String CLIENT_ID = "client_id";
+        public static final String CODE_CHALLENGE = "code_challenge";
+        public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
+        public static final String STATE = "state";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String RESPONSE_TYPE = "response_type";
+        public static final String UI_LOCALES = "ui_locales";
+        public static final String AV = "av";
+        public static final String DM = "dm";
+        public static final String INSTALLED_APPS = "installed_apps";
+        public static final String SCOPE = "scope";
+        public static final String LOGIN_HINT = "login_hint";
+        public static final String APP_CHANNEL = "app_channel";
+        public static final String ADOBE_MC = "adobe_mc";
+        public static final String NONCE = "nonce";
+    }
+
+    public static class QueryParamValues {
+
+        public static final String CLIENT_ID = "CDi170IiCEmvEbxWn3Hk";
+        public static final String CODE_CHALLENGE_METHOD = "S256";
+        public static final String REDIRECT_URI = "com.nordea.MobileBankDK://auth-callback";
+        public static final String RESPONSE_TYPE = "code";
+        public static final String UI_LOCALES = "en";
+        public static final String AV = "3.10.0.922";
+        public static final String DM = "iPhone7,2";
+        public static final String INSTALLED_APPS = "bankid";
+        public static final String SCOPE = "openid ndf agreement";
+        public static final String LOGIN_HINT = "nemid_2f";
+        public static final String APP_CHANNEL = "NDM_DK_IOS";
+        public static final String ADOBE_MC =
+                "06154807650644269292603132926226903218|MCORGID=9D193D565A0AFF460A495E66%40AdobeOrg|TS=1582024036";
+    }
+
+    public static class HeaderKeys {
+        public static final String HOST = "Host";
+        public static final String ACCEPT_ENCODING = "Accept-Encoding";
+        public static final String REFERER = "Referer";
+        public static final String APP_VERSION = "x-app-version";
+        public static final String DEVICE_MODEL = "x-device-model";
+        public static final String APP_COUNTRY = "x-app-country";
+        public static final String PLATFORM_TYPE = "x-platform-type";
+        public static final String ORIGIN = "Origin";
+        public static final String ACCEPT_LANGUAGE = "Accept-Language";
+        public static final String APP_LANGUAGE = "x-app-language";
+        public static final String PLATFORM_VERSION = "x-platform-version";
+        public static final String APP_SEGMENT = "x-app-segment";
+        public static final String DEVICE_ID = "x-Device-Id";
+        public static final String AUTHORIZATION = "Authorization";
+        public static final String X_AUTHORIZATION = "x-Authorization";
+    }
+
+    public static class HeaderValues {
+        public static final String NORDEA_AUTH_HOST = "identify.nordea.com";
+        public static final String NORDEA_PRIVATE_HOST = "private.nordea.dk";
+        public static final String TEXT_HTML =
+                "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        public static final String BR_GZIP_ENCODING = "br, gzip, deflate";
+        public static final String APP_VERSION = "3.10.0.922 -> 1.13.0";
+        public static final String DEVICE_MODEL = "iPhone7,2";
+        public static final String COUNTRY = "DK";
+        public static final String PLATFORM_TYPE = "iOS";
+        public static final String APP_LANGUAGE = "en_DK";
+        public static final String APP_COUNTRY = "DK";
+        public static final String HOUSEHOLD_APP_SEGMENT = "household";
+        public static final String PLATFORM_VERSION = "12.4.3";
+        public static final String ACCEPT_LANGUAGE = "en-DK";
+    }
+
+    public static class StorageKeys {
+        public static final String OAUTH_TOKEN = "token";
+        public static final String NEMID_TOKEN = "nemIdToken";
+        public static final String SESSION_ID = "sessionId";
+        public static final String REFERER = "referer";
+        public static final String CODE_VERIFIER = "codeVerifier";
+        public static final String NONCE = "nonce";
+        public static final String STATE = "state";
+        public static final String DEVICE_ID = "deviceId";
+        public static final String PRODUCT_CODE = "product_code";
+    }
+
+    public static class FormKeys {
+        public static final String COUNTRY = "country";
+        public static final String STATE = "state";
+        public static final String CODE = "code";
+        public static final String LOGIN_HINT = "login_hint";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String CLIENT_ID = "client_id";
+        public static final String CODE_VERIFIER = "code_verifier";
+        public static final String AUTH_METHOD = "auth_method";
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String SCOPE = "scope";
+        public static final String REFRESH_TOKEN = "refresh_token";
+    }
+
+    public static class FormValues {
+        public static final String COUNTRY = "DK";
+        public static final String CLIENT_ID = "CDi170IiCEmvEbxWn3Hk";
+        public static final String REDIRECT_URI = "com.nordea.MobileBankDK://auth-callback";
+        public static final String AUTH_METHOD = "nasa";
+        public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String SCOPE = "ndf";
+    }
+
+    public static final Map<String, String> GENERAL_ERROR_MESSAGES_BY_CODE =
+            ImmutableMap.<String, String>builder()
+                    .put(
+                            "MAS9001",
+                            "Unknown error (found occurrence--and frequently occurring--during LightLoginRequest)")
+                    .put(
+                            "MAS9098",
+                            "You are using an outdated version of the application. Please update your application in order to login")
+                    .put("MAS9099", "Technical error, please try again")
+                    .put("MBS9099", "A temporary error occurred")
+                    .put(
+                            "MBS0110",
+                            "Your holdings can't be displayed at the moment, please try again later")
+                    .build();
+
+    public static final Map<String, AuthorizationException> AUTHORIZATION_EXCEPTIONS_BY_CODE =
+            ImmutableMap.<String, AuthorizationException>builder()
+                    .put(
+                            "MAS0010",
+                            AuthorizationError.ACCOUNT_BLOCKED.exception(
+                                    UserMessage.CODE_BLOCKED.getKey()))
+                    .put(
+                            "MAS0002",
+                            AuthorizationError.ACCOUNT_BLOCKED.exception(
+                                    UserMessage.CODE_BLOCKED.getKey()))
+                    .put(
+                            "MBS0908",
+                            AuthorizationError.ACCOUNT_BLOCKED.exception(
+                                    UserMessage.NO_VALID_AGREEMENT.getKey()))
+                    .build();
+
+    public static final Map<String, AuthenticationException> AUTHENTICATION_EXCEPTIONS_BY_CODE =
+            ImmutableMap.<String, AuthenticationException>builder()
+                    .put("MAS0031", LoginError.INCORRECT_CREDENTIALS.exception())
+                    .put("MAS0030", LoginError.INCORRECT_CREDENTIALS.exception())
+                    .put("MAS0004", LoginError.INCORRECT_CREDENTIALS.exception())
+                    .build();
+
+    public static final LogTag HTTP_REQUEST_LOG_TAG = LogTag.from("#nordea_v20_http_request");
+
+    public enum UserMessage implements LocalizableEnum {
+        CODE_BLOCKED(
+                new LocalizableKey(
+                        "Your personal code has been locked. Contact Nordea customer services (0771-42 15 16) to order a new code, or contact your local Nordea office.")),
+        NO_VALID_BANKID(
+                new LocalizableKey(
+                        "You're missing a valid Mobilt BankID. Download the BankID app and login to Internetbanken to order and connect to Mobil BankID.")),
+        NO_VALID_AGREEMENT(
+                new LocalizableKey(
+                        "We could not find a valid internet banking agreement. If you login to Nordea's internetbank with e-code (card reader) you may sign an agreement for internet and telephone banking"));
+
+        private LocalizableKey userMessage;
+
+        UserMessage(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return userMessage;
+        }
+    }
+
+    public static class UrlParameter {
+        public static final String CARD_NUMBER = "cardNumber";
+        public static final String ACCOUNT_ID = "accountId";
+        public static final String PAYMENT_ID = "paymendId";
+        public static final String CONTINUE_KEY = "continueKey";
+        public static final String CONTINUATION_KEY =
+                "continuationKey"; // For credit card transaction paging
+        public static final String MARKET_CODE = "marketCode";
+        public static final String LOWER_CASE_MARKET_CODE = "lowerCaseMarketCode";
+    }
+
+    public enum Url implements UrlEnum {
+        NEMID_LOGIN(NordeaDkConstants.Url.getAuthenticationEndpoint("/SecurityToken")),
+        AGREEMENT_AUTHORIZATION(NordeaDkConstants.Url.getAuthenticationEndpoint("/SecurityToken")),
+        INITIAL_PARAMETERS(NordeaDkConstants.Url.getAuthenticationEndpoint("/InitialParameters")),
+        INITIAL_CONTEXT(getBankingEndpoint("/initialContext")),
+        CARDS(getBankingEndpoint("/Cards/{" + UrlParameter.CARD_NUMBER + "}")),
+        LOANS(getBankingEndpoint("/Loans/Details/{" + UrlParameter.ACCOUNT_ID + "}")),
+        TRANSACTIONS(getBankingEndpoint("/Transactions")),
+        PAYMENTS(getBankingEndpoint("/Payments")),
+        PAYMENT_DETAILS(getBankingEndpoint("/Payments/{" + UrlParameter.PAYMENT_ID + "}")),
+        LIGHT_LOGIN(getAuthenticationEndpoint("/Security§Token")),
+        REGISTER_DEVICE(getAuthenticationEndpoint("/RegisterDevice")),
+        CUSTODY_ACCOUNTS(getSavingsEndpoint("/Savings/CustodyAccounts"));
+
+        public static final String BASE_URL =
+                "https://{" + UrlParameter.LOWER_CASE_MARKET_CODE + "}.mobilebank.prod.nordea.com/";
+        private final URL url;
+
+        Url(String url) {
+            this.url = new URL(url);
+        }
+
+        public static String constructServiceEndpoint(String service, String path) {
+            return BASE_URL + "{" + UrlParameter.MARKET_CODE + "}/" + service + path;
+        }
+
+        public static String getBankingEndpoint(String path) {
+            return constructServiceEndpoint(Service.BANKING, path);
+        }
+
+        public static String getAuthenticationEndpoint(String path) {
+            return constructServiceEndpoint(Service.AUTHENTICATION, path);
+        }
+
+        public static String getSavingsEndpoint(String path) {
+            return constructServiceEndpoint(Service.SAVINGS, path);
+        }
+
+        @Override
+        public URL get() {
+            return url;
+        }
+
+        @Override
+        public URL parameter(String key, String value) {
+            return url.parameter(key, value);
+        }
+
+        @Override
+        public URL queryParam(String key, String value) {
+            return url.queryParam(key, value);
+        }
+    }
+
+    public static class HeaderKey {
+        public static final String REQUEST_ID = "x-Request-Id";
+        public static final String APP_COUNTRY = "x-App-Country";
+        public static final String APP_VERSION = "x-App-Version";
+        public static final String SECURITY_TOKEN = "x-Security-Token";
+    }
+
+    public enum Header {
+        PLATFORM_VERSION("x-Platform-Version", "10.2"),
+        APP_LANGUAGE("x-App-Language", "en"),
+        APP_NAME("x-App-Name", "MBA"),
+        DEVICE_MAKE("x-Device-Make", "Tink"),
+        DEVICE_MODEL("x-Device-Model", "Tink"),
+        PLATFORM_TYPE("x-Platform-Type", "iOS");
+
+        private final String key;
+        private final String value;
+
+        Header(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public static class ProductType {
+        public static final String ACCOUNT = "Account";
+        public static final String CARD = "Card";
+        public static final String LOAN = "Loan";
+        public static final String MORTGAGE = "MtgLoan";
+    }
+
+    public static class Investments {
+
+        public static class InstrumentTypes {}
+    }
+
     public static final String MARKET_CODE = "DK";
     public static final String CURRENCY = "DKK";
 
@@ -211,6 +526,7 @@ public class NordeaDkConstants {
             addAccountType("SE3297", "Premiepension 1975-79", AccountTypes.INVESTMENT);
             addAccountType("SE3298", "Premiepension 1980-84", AccountTypes.INVESTMENT);
             addAccountType("SE3299", "European Hedge", AccountTypes.INVESTMENT);
+            addAccountType("SE3800", "Vinnarkonto", AccountTypes.INVESTMENT);
             addAccountType("SE3800", "Vinnarkonto", AccountTypes.INVESTMENT);
             addAccountType("SE3900", "Återvinningskonto", AccountTypes.INVESTMENT);
             addAccountType("SE500", "Depålikvidkonto", AccountTypes.INVESTMENT);
@@ -550,41 +866,14 @@ public class NordeaDkConstants {
         }
     }
 
-    public enum Url implements UrlEnum {
-        NEMID_LOGIN(NordeaV20Constants.Url.getAuthenticationEndpoint("/SecurityToken")),
-        AGREEMENT_AUTHORIZATION(NordeaV20Constants.Url.getAuthenticationEndpoint("/SecurityToken")),
-        INITIAL_PARAMETERS(NordeaV20Constants.Url.getAuthenticationEndpoint("/InitialParameters"));
-
-        private URL url;
-
-        Url(String url) {
-            this.url = new URL(url);
-        }
-
-        @Override
-        public URL get() {
-            return url;
-        }
-
-        @Override
-        public URL parameter(String key, String value) {
-            return url.parameter(key, value);
-        }
-
-        @Override
-        public URL queryParam(String key, String value) {
-            return url.queryParam(key, value);
-        }
-    }
-
     public static class Authentication {
         public static final String DEFAULT_AUTH_LEVEL = "1";
         public static final String LOGIN_TYPE_NEMID = "MNEMID-LOGON";
     }
 
     public static class ErrorCode {
-        public static final String NO_ACCESS_TO_MOBILBANK = "MAS0019";
         public static final String TEMPORARY_TECHNICAL_ERROR = "MAS9001";
+        public static final String NO_ACCESS_TO_MOBILBANK = "MAS0019";
         public static final String MOBILBANK_IS_CLOSED = "MAS0018";
 
         public static final List<String> BANK_IS_DOWN_ERRORS_LIST =

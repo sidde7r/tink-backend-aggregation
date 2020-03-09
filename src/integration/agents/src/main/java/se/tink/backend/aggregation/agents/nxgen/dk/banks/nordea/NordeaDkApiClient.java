@@ -1,62 +1,244 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.InitialParametersRequestEntity;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.AuthorizeAgreementRequest;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.AuthorizeAgreementRequestBody;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.AuthorizeAgreementResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.InitialParametersRequest;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.InitialParametersRequestBody;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.InitialParametersResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemIdAuthenticateUserRequest;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemIdAuthenticateUserRequestBody;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemidAuthenticateUserResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20ApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.HeaderValues.TEXT_HTML;
 
-public class NordeaDkApiClient extends NordeaV20ApiClient {
-    private final NordeaDkSessionStorage sessionStorage;
+import java.util.UUID;
+import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.FormKeys;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.QueryParamKeys;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.QueryParamValues;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.URLs;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.AuthenticationsPatchRequest;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.AuthenticationsPatchResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.CodeExchangeRequest;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.CodeExchangeResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemIdParamsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemidParamsRequest;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.OauthCallbackResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.investment.rpc.CustodyAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+
+public class NordeaDkApiClient {
+
+    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
+    protected final TinkHttpClient client;
 
     public NordeaDkApiClient(
-            NordeaDkSessionStorage sessionStorage,
+            SessionStorage sessionStorage,
             TinkHttpClient client,
-            Credentials credentials,
-            String marketCode) {
-        super(client, credentials, marketCode);
-
+            PersistentStorage persistentStorage) {
         this.sessionStorage = sessionStorage;
+        this.client = client;
+
+        this.persistentStorage = persistentStorage;
     }
 
-    public InitialParametersResponse fetchInitialParameters() {
-        InitialParametersRequestBody requestBody =
-                new InitialParametersRequestBody()
-                        .setInitialParametersRequest(
-                                new InitialParametersRequestEntity()
-                                        .setAuthLevel(
-                                                NordeaDkConstants.Authentication.DEFAULT_AUTH_LEVEL)
-                                        .setRemeberUserId(""));
-
-        return request(new InitialParametersRequest(requestBody), InitialParametersResponse.class);
+    /**
+     * This method returns the String representation of the url used in this call, so it can later
+     * be used as Referer header in subsequent requests.
+     */
+    public String initOauth(String codeChallenge, String state, String nonce) {
+        RequestBuilder request =
+                client.request(URLs.NORDEA_AUTH_BASE_URL)
+                        .queryParam(QueryParamKeys.CLIENT_ID, QueryParamValues.CLIENT_ID)
+                        .queryParam(QueryParamKeys.CODE_CHALLENGE, codeChallenge)
+                        .queryParam(
+                                QueryParamKeys.CODE_CHALLENGE_METHOD,
+                                QueryParamValues.CODE_CHALLENGE_METHOD)
+                        .queryParam(QueryParamKeys.STATE, state)
+                        .queryParam(QueryParamKeys.REDIRECT_URI, QueryParamValues.REDIRECT_URI)
+                        .queryParam(QueryParamKeys.RESPONSE_TYPE, QueryParamValues.RESPONSE_TYPE)
+                        .queryParam(QueryParamKeys.UI_LOCALES, QueryParamValues.UI_LOCALES)
+                        .queryParam(QueryParamKeys.AV, QueryParamValues.AV)
+                        .queryParam(QueryParamKeys.DM, QueryParamValues.DM)
+                        .queryParam(QueryParamKeys.INSTALLED_APPS, QueryParamValues.INSTALLED_APPS)
+                        .queryParam(QueryParamKeys.SCOPE, QueryParamValues.SCOPE)
+                        .queryParam(QueryParamKeys.LOGIN_HINT, QueryParamValues.LOGIN_HINT)
+                        .queryParam(QueryParamKeys.APP_CHANNEL, QueryParamValues.APP_CHANNEL)
+                        .queryParam(QueryParamKeys.ADOBE_MC, QueryParamValues.ADOBE_MC)
+                        .queryParam(QueryParamKeys.NONCE, nonce);
+        String res = request.toString();
+        request.header(HeaderKeys.HOST, HeaderValues.NORDEA_AUTH_HOST)
+                .accept(TEXT_HTML)
+                .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
+                .header(HeaderKeys.ACCEPT_ENCODING, HeaderValues.BR_GZIP_ENCODING)
+                .get(String.class);
+        return res;
     }
 
-    public NemidAuthenticateUserResponse nemIdAuthenticateUser(
-            NemIdAuthenticateUserRequestBody requestBody)
-            throws AuthorizationException, AuthenticationException {
-        NemIdAuthenticateUserRequest request = new NemIdAuthenticateUserRequest(requestBody);
-
-        return authRequest(request, NemidAuthenticateUserResponse.class);
+    public NemIdParamsResponse getNemIdParams(String codeChallenge, String state, String nonce) {
+        NemidParamsRequest request =
+                NemidParamsRequest.builder()
+                        .withNonce(nonce)
+                        .withState(state)
+                        .withCodeChallenge(codeChallenge)
+                        .build();
+        return baseIdentifyRequest(URLs.NORDEA_AUTH_BASE_URL + URLs.NEM_ID_AUTHENTICATION)
+                .type(MediaType.APPLICATION_JSON)
+                .post(NemIdParamsResponse.class, request);
     }
 
-    public AuthorizeAgreementResponse authorizeAgreement(AuthorizeAgreementRequestBody requestBody)
-            throws AuthorizationException, AuthenticationException {
-        String token = sessionStorage.getToken();
+    public AuthenticationsPatchResponse authenticationsPatch(
+            String response, String sessionId, String referer) {
+        AuthenticationsPatchRequest request = new AuthenticationsPatchRequest(response);
+        return baseIdentifyRequest(
+                        URLs.NORDEA_AUTH_BASE_URL + URLs.NEM_ID_AUTHENTICATION + sessionId)
+                .header(HeaderKeys.REFERER, referer)
+                .header(HeaderKeys.APP_VERSION, HeaderValues.APP_VERSION)
+                .header(HeaderKeys.DEVICE_MODEL, HeaderValues.DEVICE_MODEL)
+                .type(MediaType.APPLICATION_JSON)
+                .patch(AuthenticationsPatchResponse.class, request);
+    }
 
-        AuthorizeAgreementRequest request = new AuthorizeAgreementRequest(requestBody);
-        request.getHeaders().add(NordeaV20Constants.HeaderKey.SECURITY_TOKEN, token);
+    public CodeExchangeResponse codeExchange(String code, String referer) {
+        CodeExchangeRequest request = new CodeExchangeRequest(code);
+        return baseIdentifyRequest(URLs.NORDEA_AUTH_BASE_URL + URLs.AUTHORIZATION)
+                .header(HeaderKeys.REFERER, referer)
+                .type(MediaType.APPLICATION_JSON)
+                .post(CodeExchangeResponse.class, request);
+    }
 
-        return authRequest(request, AuthorizeAgreementResponse.class);
+    public void redirect(String state, String code, String loginHint, String referer) {
+        String body =
+                Form.builder()
+                        .put(FormKeys.CLIENT_ID, FormValues.CLIENT_ID)
+                        .put(FormKeys.REDIRECT_URI, FormValues.REDIRECT_URI)
+                        .put(FormKeys.STATE, state)
+                        .put(FormKeys.CODE, code)
+                        .put(FormKeys.LOGIN_HINT, loginHint)
+                        .build()
+                        .serialize();
+        baseIdentifyRequest(URLs.NORDEA_AUTH_BASE_URL + "redirect")
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .header(HeaderKeys.REFERER, referer)
+                .post(body);
+    }
+
+    public OauthCallbackResponse oauthCallback(String code, String codeVerifier) {
+        String body =
+                Form.builder()
+                        .put(FormKeys.AUTH_METHOD, FormValues.AUTH_METHOD)
+                        .put(FormKeys.CLIENT_ID, FormValues.CLIENT_ID)
+                        .put(FormKeys.CODE, code)
+                        .put(FormKeys.CODE_VERIFIER, codeVerifier)
+                        .put(FormKeys.COUNTRY, FormValues.COUNTRY)
+                        .put(FormKeys.GRANT_TYPE, FormValues.AUTHORIZATION_CODE)
+                        .put(FormKeys.REDIRECT_URI, FormValues.REDIRECT_URI)
+                        .put(FormKeys.SCOPE, FormValues.SCOPE)
+                        .build()
+                        .serialize();
+        return basePrivateRequest(URLs.EXCHANGE_TOKEN).post(OauthCallbackResponse.class, body);
+    }
+
+    public OauthCallbackResponse exchangeRefreshToken(String refreshToken) {
+
+        String body =
+                Form.builder()
+                        .put(FormKeys.CLIENT_ID, "NDHMDK")
+                        .put(FormKeys.GRANT_TYPE, FormValues.REFRESH_TOKEN)
+                        .put(FormKeys.REFRESH_TOKEN, refreshToken)
+                        .build()
+                        .serialize();
+
+        return basePrivateRequest(URLs.EXCHANGE_TOKEN).post(OauthCallbackResponse.class, body);
+    }
+
+    private RequestBuilder baseIdentifyRequest(String url) {
+        return client.request(url)
+                .header(HeaderKeys.ACCEPT_ENCODING, HeaderValues.BR_GZIP_ENCODING)
+                .header(HeaderKeys.PLATFORM_TYPE, HeaderKeys.PLATFORM_TYPE)
+                .header(HeaderKeys.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
+                .header(HeaderKeys.ORIGIN, "https://identify.nordea.com")
+                .accept(MediaType.WILDCARD)
+                .header(HeaderKeys.HOST, HeaderValues.NORDEA_AUTH_HOST)
+                .header("x-device-ec", "0");
+    }
+
+    private RequestBuilder basePrivateRequest(String url) {
+        return client.request(url)
+                .header(HeaderKeys.ACCEPT_ENCODING, HeaderValues.BR_GZIP_ENCODING)
+                .header(HeaderKeys.PLATFORM_TYPE, HeaderValues.PLATFORM_TYPE)
+                .header(HeaderKeys.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.HOST, HeaderValues.NORDEA_PRIVATE_HOST)
+                .header(HeaderKeys.APP_LANGUAGE, HeaderValues.APP_LANGUAGE)
+                .header(HeaderKeys.PLATFORM_VERSION, HeaderValues.PLATFORM_VERSION)
+                .header(HeaderKeys.APP_SEGMENT, HeaderValues.HOUSEHOLD_APP_SEGMENT)
+                .header(HeaderKeys.DEVICE_ID, getOrGenerateDeviceId())
+                .header(HeaderKeys.DEVICE_MODEL, HeaderValues.DEVICE_MODEL)
+                .header(HeaderKeys.APP_COUNTRY, HeaderValues.APP_COUNTRY)
+                .type(MediaType.APPLICATION_FORM_URLENCODED);
+    }
+
+    private String getOrGenerateDeviceId() {
+        String deviceId = persistentStorage.get(StorageKeys.DEVICE_ID);
+        if (deviceId == null) {
+            deviceId = UUID.randomUUID().toString().toUpperCase();
+            persistentStorage.put(StorageKeys.DEVICE_ID, deviceId);
+        }
+        return deviceId;
+    }
+
+    public AccountsResponse getAccounts() {
+
+        return baseAuthorizedRequest(URLs.FETCH_ACCOUNTS).get(AccountsResponse.class);
+    }
+
+    public TransactionsResponse getAccountTransactions(
+            String accountId, String productCode, String continuationKey) {
+        String url = String.format(URLs.FETCH_ACCOUNT_TRANSACTIONS_FORMAT, accountId);
+        RequestBuilder request = baseAuthorizedRequest(url).queryParam("product_code", productCode);
+        if (continuationKey != null) {
+            request.queryParam("continuation_key", continuationKey);
+        }
+        return request.get(TransactionsResponse.class);
+    }
+
+    public CreditCardsResponse fetchCreditCards() {
+        return baseAuthorizedRequest(URLs.FETCH_CARDS).get(CreditCardsResponse.class);
+    }
+
+    public CreditCardDetailsResponse fetchCreditCardDetails(String cardId) {
+        return baseAuthorizedRequest(String.format(URLs.FETCH_CARD_DETAILS_FORMAT, cardId))
+                .get(CreditCardDetailsResponse.class);
+    }
+
+    public CreditCardTransactionsResponse fetchCreditCardTransactions(String cardId, int page) {
+        return baseAuthorizedRequest(String.format(URLs.FETCH_CARD_TRANSACTIONS_FORMAT, cardId))
+                .queryParam("page", String.valueOf(page))
+                .queryParam("page_size", String.valueOf(100))
+                .get(CreditCardTransactionsResponse.class);
+    }
+
+    public CustodyAccountsResponse fetchInvestments() {
+        return baseAuthorizedRequest(URLs.FETCH_INVESTMENTS).get(CustodyAccountsResponse.class);
+    }
+
+    private RequestBuilder baseAuthorizedRequest(String url) {
+        OAuth2Token token =
+                sessionStorage
+                        .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                        .orElseThrow(BankServiceError.SESSION_TERMINATED::exception);
+
+        String bearerToken = "Bearer " + token.getAccessToken();
+        return basePrivateRequest(url)
+                .header(HeaderKeys.AUTHORIZATION, bearerToken)
+                .header(HeaderKeys.X_AUTHORIZATION, bearerToken);
     }
 }

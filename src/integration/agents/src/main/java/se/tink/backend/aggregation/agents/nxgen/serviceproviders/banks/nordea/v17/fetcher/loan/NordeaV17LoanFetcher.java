@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 import java.util.Collection;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17ApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.parsers.NordeaV17Parser;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
@@ -19,7 +19,7 @@ public class NordeaV17LoanFetcher implements AccountFetcher<LoanAccount> {
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        return client.getAccountProductsOfTypes(NordeaV20Constants.ProductType.LOAN).stream()
+        return client.getAccountProductsOfTypes(NordeaV17Constants.ProductType.LOAN).stream()
                 .map(
                         pe ->
                                 parser.parseLoanAccount(

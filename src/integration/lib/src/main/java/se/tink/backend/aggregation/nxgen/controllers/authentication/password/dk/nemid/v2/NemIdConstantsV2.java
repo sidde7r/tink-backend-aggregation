@@ -4,7 +4,10 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class NemIdConstantsV2 {
 
+    public static final String NEM_ID_INIT_URL = "https://applet.danid.dk/launcher/lmt/";
     public static final URL BASE_URL = new URL("https://applet.danid.dk");
+    public static final String NEM_ID_IFRAME =
+            "<iframe id=\"nemid_iframe\" allowTransparency=\"true\" name=\"nemid_iframe\" scrolling=\"no\" style=\"z-index: 100; position: relative; width: 275px; height: 350px; border: 0\" src=\"%s\"></iframe>";
 
     public static class ErrorStrings {
         public static final String INVALID_CREDENTIALS = "Incorrect user ID or password";
