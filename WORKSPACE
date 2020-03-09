@@ -424,7 +424,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_inject_guice",
+    name = "com_google_inject_guice",  # Do not use, but do not remove
     artifact = "com.google.inject:guice:4.1.0",
     sha1 = "eeb69005da379a10071aa4948c48d89250febb07",
 )
@@ -1107,8 +1107,8 @@ maven_jar(
 
 maven_jar(
     name = "commons_codec_commons_codec",  # Do not use, but do not remove
-    artifact = "commons-codec:commons-codec:1.6",
-    sha1 = "b7f0fc8f61ecadeb3695f0b9464755eee44374d4",
+    artifact = "commons-codec:commons-codec:1.10",
+    sha1 = "4b95f4897fa13f2cd904aee711aeafc0c5295cd8",
 )
 
 maven_jar(
@@ -2577,7 +2577,8 @@ maven_install(
         "com.google.code.findbugs:jsr305:3.0.0",
         "com.google.code.gson:gson:2.8.2",
         "com.google.guava:guava:23.1-jre",
-        "commons-codec:commons-codec:1.6",
+        "com.google.inject:guice:4.1.0",
+        "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-logging:commons-logging:1.1.3",
         "javax.inject:javax.inject:1",
