@@ -6,7 +6,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
-public class AccountsEntity implements GeneralAccountEntity {
+public class TransferAccountsEntity implements GeneralAccountEntity {
     private String accountNumber;
     private double balance;
     private String accountName;

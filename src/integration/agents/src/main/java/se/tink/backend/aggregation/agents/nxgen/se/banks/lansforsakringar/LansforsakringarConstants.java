@@ -34,6 +34,8 @@ public class LansforsakringarConstants {
                 new URL(BASE + ApiService.TRANSFER_SAVED_RECEPIENTS);
         public static final URL FETCH_PAYMENT_ACCOUNTS =
                 new URL(BASE + ApiService.PAYMENT_ACCOUNTS);
+        public static final URL FETCH_TRANSFER_SOURCE_ACCOUNTS =
+                new URL(BASE + ApiService.TRANSFER_SOURCE_ACCOUNTS);
     }
 
     public static class ApiService {
@@ -54,6 +56,8 @@ public class LansforsakringarConstants {
         public static final String TRANSFER_SAVED_RECEPIENTS =
                 "appoutlet/account/transferrablewithsavedrecipients";
         public static final String PAYMENT_ACCOUNTS = "appoutlet/payment/paymentaccount";
+        public static final String TRANSFER_SOURCE_ACCOUNTS =
+                "appoutlet/account/transferrable/2.0?direction=from";
     }
 
     public static class StorageKeys {

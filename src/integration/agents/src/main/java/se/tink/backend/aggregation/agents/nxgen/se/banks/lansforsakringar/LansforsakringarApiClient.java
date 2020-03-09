@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.rpc.FetchUpcomingResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transfer.rpc.FetchPaymentAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transfer.rpc.FetchSavedPaymentRecipientsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transfer.rpc.FetchSavedTransferRecipientsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transfer.rpc.FetchTransferrableResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -153,10 +153,16 @@ public class LansforsakringarApiClient {
                 .get(FetchSavedPaymentRecipientsResponse.class);
     }
 
-    public FetchSavedTransferRecipientsResponse fetchSavedTransferRecipients() {
+    public FetchTransferrableResponse fetchTransferDestinationAccounts() {
         return getBaseRequest(Urls.FETCH_TRANSFER_SAVED_RECEPIENTS)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .get(FetchSavedTransferRecipientsResponse.class);
+                .get(FetchTransferrableResponse.class);
+    }
+
+    public FetchTransferrableResponse fetchTransferSourceAccounts() {
+        return getBaseRequest(Urls.FETCH_TRANSFER_SOURCE_ACCOUNTS)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchTransferrableResponse.class);
     }
 
     public FetchPaymentAccountResponse fetchPaymentAccounts() {
