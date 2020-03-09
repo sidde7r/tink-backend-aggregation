@@ -90,6 +90,15 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum> & Arg
         }
     }
 
+    public enum CorporateIdArgumentEnum implements ArgumentManagerEnum {
+        CPI;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
     public enum ToAccountFromAccountArgumentEnum implements ArgumentManagerEnum {
         TO_ACCOUNT,
         FROM_ACCOUNT;
