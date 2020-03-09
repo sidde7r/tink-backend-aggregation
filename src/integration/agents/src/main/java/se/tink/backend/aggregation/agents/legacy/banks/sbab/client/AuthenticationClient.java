@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnacceptedTermsAndConditionsException;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.PollBankIdResponse;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class AuthenticationClient extends SBABClient {
@@ -52,7 +53,7 @@ public class AuthenticationClient extends SBABClient {
         return BANKID_STATUS.getOrDefault(response.getStatus(), BankIdStatus.FAILED_UNKNOWN);
     }
 
-    public String getBearerToken() {
+    public String getBearerToken() throws AuthorizationException {
         Document overview = getJsoupDocument(OVERVIEW_URL);
         if (hasKYCPopup(overview)) {
             log.info("Found KYC popup, giving up");
