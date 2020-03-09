@@ -2,18 +2,18 @@ package se.tink.backend.aggregation.nxgen.agents.componentproviders.generated;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.UUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 
 public final class GeneratedValueProviderImpl implements GeneratedValueProvider {
 
     private final LocalDateTimeSource localDateTimeSource;
-    private final UUIDSource uuidSource;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public GeneratedValueProviderImpl(
-            LocalDateTimeSource localDateTimeSource, UUIDSource uuidSource) {
+            LocalDateTimeSource localDateTimeSource, RandomValueGenerator randomValueGenerator) {
         this.localDateTimeSource = localDateTimeSource;
-        this.uuidSource = uuidSource;
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     @Override
@@ -22,7 +22,7 @@ public final class GeneratedValueProviderImpl implements GeneratedValueProvider 
     }
 
     @Override
-    public UUIDSource getUuidSource() {
-        return uuidSource;
+    public RandomValueGenerator getRandomValueGenerator() {
+        return randomValueGenerator;
     }
 }

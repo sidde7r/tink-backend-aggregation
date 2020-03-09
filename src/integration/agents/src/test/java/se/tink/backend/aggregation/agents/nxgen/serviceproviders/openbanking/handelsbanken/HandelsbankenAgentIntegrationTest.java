@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
@@ -195,8 +195,8 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
                             new SupplementalInformationProviderFactoryImpl(),
                             new AgentContextProviderFactoryImpl(),
                             new GeneratedValueProviderImpl(
-                                    new ActualLocalDateTimeSource(), new RandomUUIDSource()));
-
+                                    new ActualLocalDateTimeSource(),
+                                    new RandomValueGeneratorImpl()));
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
             return factory.create(cls, credentialsRequest, context);
         } catch (FileNotFoundException e) {

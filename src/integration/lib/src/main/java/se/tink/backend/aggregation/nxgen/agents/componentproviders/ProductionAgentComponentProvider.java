@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.NextGenTinkHttpClientProvider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -27,6 +27,6 @@ public final class ProductionAgentComponentProvider {
                 new SupplementalInformationProviderImpl(context, request),
                 new AgentContextProviderImpl(request, context),
                 new GeneratedValueProviderImpl(
-                        new ActualLocalDateTimeSource(), new RandomUUIDSource()));
+                        new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()));
     }
 }

@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.JWTSignatureHeaders.PAYLOAD;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.UUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PersistentStorageKeys;
@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     private final PersistentStorage persistentStorage;
+    private final RandomValueGenerator randomValueGenerator;
 
     public UkOpenBankingApiClient(
             TinkHttpClient httpClient,
@@ -48,7 +49,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             SoftwareStatementAssertion softwareStatement,
             ProviderConfiguration providerConfiguration,
             URL wellKnownURL,
-            UUIDSource uuidSource,
+            RandomValueGenerator randomValueGenerator,
             PersistentStorage persistentStorage) {
         super(
                 httpClient,
@@ -56,8 +57,9 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 softwareStatement,
                 providerConfiguration,
                 wellKnownURL,
-                uuidSource);
+                randomValueGenerator);
         this.persistentStorage = persistentStorage;
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     public <T> T createPaymentIntentId(

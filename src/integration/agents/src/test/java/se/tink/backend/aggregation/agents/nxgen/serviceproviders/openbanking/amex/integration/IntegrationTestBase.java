@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
@@ -75,7 +75,7 @@ public abstract class IntegrationTestBase {
                 agentContextProviderFactory.createAgentContextProvider(
                         credentialsRequest, agentContext),
                 new GeneratedValueProviderImpl(
-                        new ActualLocalDateTimeSource(), new RandomUUIDSource()));
+                        new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()));
     }
 
     CredentialsRequest createCredentialsRequest() {
