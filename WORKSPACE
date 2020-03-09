@@ -1308,7 +1308,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_sourceforge_cssparser_cssparser",
+    name = "net_sourceforge_cssparser_cssparser",  # Do not use, but do not remove
     artifact = "net.sourceforge.cssparser:cssparser:0.9.8",
     sha1 = "f05d7c249dfe8b884e72d614531630a9992bb037",
 )
@@ -1496,7 +1496,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_w3c_css_sac",
+    name = "org_w3c_css_sac",  # Do not use, but do not remove
     artifact = "org.w3c.css:sac:1.3",
     sha1 = "cdb2dcb4e22b83d6b32b93095f644c3462739e82",
 )
@@ -2586,12 +2586,14 @@ maven_install(
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
+        "net.sourceforge.cssparser:cssparser:0.9.8",
         "org.apache.commons:commons-lang3:3.4",
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.reactivestreams:reactive-streams:1.0.3",
         "org.slf4j:slf4j-api:1.7.21",
+        "org.w3c.css:sac:1.3",
         "org.yaml:snakeyaml:1.23",
     ],
     excluded_artifacts = [
@@ -2686,6 +2688,7 @@ maven_install(
     name = "selenium",
     artifacts = [
         "com.codeborne:phantomjsdriver:1.4.4",
+        "commons-io:commons-io:2.5",
         "org.seleniumhq.selenium:selenium-support:3.8.1",
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
         "org.seleniumhq.selenium:selenium-api:3.8.1",
