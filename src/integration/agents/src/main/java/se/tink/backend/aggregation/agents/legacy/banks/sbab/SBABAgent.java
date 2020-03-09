@@ -193,7 +193,7 @@ public class SBABAgent extends AbstractAgent
         throw new UnsupportedTransferException(transfer.getType());
     }
 
-    private BankIdStatus loginWithMobileBankId() throws BankIdException {
+    private BankIdStatus loginWithMobileBankId() throws BankIdException, AuthorizationException {
         final InitBankIdResponse initBankIdResponse = authenticationClient.initiateBankIdLogin();
         final String pendingAuthCode = initBankIdResponse.getPendingAuthorizationCode();
         final String autostartToken = initBankIdResponse.getAutostartToken();
@@ -228,7 +228,7 @@ public class SBABAgent extends AbstractAgent
      * Some requests need Bearer authentication. This method makes sure that the clients which need
      * it have it.
      */
-    private void fetchAndSetBearerToken() {
+    private void fetchAndSetBearerToken() throws AuthorizationException {
         String token = authenticationClient.getBearerToken();
         userDataClient.setBearerToken(token);
         transferClient.setBearerToken(token);
