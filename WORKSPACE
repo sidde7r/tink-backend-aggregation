@@ -264,11 +264,10 @@ http_file(
 # prepare us for that, and use the out-ot-repo version
 http_archive(
     name = "rules_proto",
-    sha256 = "57001a3b33ec690a175cdf0698243431ef27233017b9bed23f96d44b9c98242f",
-    strip_prefix = "rules_proto-9cd4f8f1ede19d81c6d48910429fe96776e567b1",
+    sha256 = "4d421d51f9ecfe9bf96ab23b55c6f2b809cbaf0eea24952683e397decfbd0dd0",
+    strip_prefix = "rules_proto-f6b8d89b90a7956f6782a4a3609b2f0eee3ce965",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_proto/archive/9cd4f8f1ede19d81c6d48910429fe96776e567b1.tar.gz",
-        "https://github.com/bazelbuild/rules_proto/archive/9cd4f8f1ede19d81c6d48910429fe96776e567b1.tar.gz",
+        "https://github.com/bazelbuild/rules_proto/archive/f6b8d89b90a7956f6782a4a3609b2f0eee3ce965.tar.gz",
     ],
 )
 
@@ -1667,9 +1666,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_collections_commons_collections",
-    artifact = "commons-collections:commons-collections:3.1",
-    sha1 = "40fb048097caeacdb11dbb33b5755854d89efdeb",
+    name = "commons_collections_commons_collections",  # Do not use, but do not remove
+    artifact = "commons-collections:commons-collections:3.2.2",
+    sha1 = "8ad72fe39fa8c91eaaf12aadb21e0c3661fe26d5",
 )
 
 maven_jar(
@@ -2579,6 +2578,7 @@ maven_install(
         "com.google.code.gson:gson:2.8.2",
         "com.google.guava:guava:23.1-jre",
         "commons-codec:commons-codec:1.6",
+        "commons-collections:commons-collections:3.2.2",
         "commons-logging:commons-logging:1.1.3",
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",

@@ -835,11 +835,11 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:commons_codec_commons_codec",
+        "@aggregation//:commons_collections_commons_collections",
         "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:org_apache_commons_commons_lang3",
         "@aggregation//:org_apache_httpcomponents_httpclient",
         "@aggregation//:org_apache_httpcomponents_httpcore",
-        "@commons_collections_commons_collections//jar",
         "@commons_io_commons_io//jar",
         "@net_sourceforge_cssparser_cssparser//jar",
         "@net_sourceforge_htmlunit_htmlunit//jar",
@@ -1097,7 +1097,7 @@ java_library(
     name = "org_apache_velocity_velocity",
     visibility = ["//visibility:public"],
     exports = [
-        "@commons_collections_commons_collections//jar",
+        "@aggregation//:commons_collections_commons_collections",
         "@commons_lang_commons_lang//jar",
         "@org_apache_velocity_velocity//jar",
     ],
@@ -1179,9 +1179,9 @@ java_library(
     name = "org_hibernate_hibernate_annotations",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:commons_collections_commons_collections",
         "@aggregation//:org_slf4j_slf4j_api",
         "@antlr_antlr//jar",
-        "@commons_collections_commons_collections//jar",
         "@dom4j_dom4j//jar",
         "@javax_transaction_jta//jar",
         "@org_hibernate_hibernate_annotations//jar",
