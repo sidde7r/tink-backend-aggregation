@@ -53,7 +53,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
-        "//src/integration/sa_agent/sa_grpc_api:sa-grpc-api",
+        "//src/integration/sa_agent/sa_grpc_api:java_grpc",
         "//third_party/sa_agent:grpc_client_libs",
         "@junit_junit//jar",
         "@org_slf4j_slf4j_api//jar",
