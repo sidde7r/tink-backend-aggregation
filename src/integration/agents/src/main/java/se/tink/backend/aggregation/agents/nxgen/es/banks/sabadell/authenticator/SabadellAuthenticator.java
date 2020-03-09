@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -24,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
+    private static final Logger LOG = LoggerFactory.getLogger(SabadellAuthenticator.class);
     private final SabadellApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
@@ -59,8 +62,10 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
         final SessionResponse initResponse = getStoredSessionResponse();
         if (Authentication.TYPE_SCA.equalsIgnoreCase(
                 initResponse.getUser().getAuthenticationType())) {
+            LOG.info("SCA: required");
             return AuthenticationStepResponse.executeNextStep();
         } else {
+            LOG.info("SCA: not required");
             return AuthenticationStepResponse.authenticationSucceeded();
         }
     }
@@ -81,6 +86,7 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
                         .orElseThrow(() -> new IllegalStateException(("Invalid SCA key")));
         final SecurityInputEntity securityInput = SecurityInputEntity.of(keyboardKey, scaPassword);
 
+        LOG.info("SCA: entering OTP");
         final SessionResponse response =
                 apiClient.initiateSession(username, password, csid, securityInput);
 
