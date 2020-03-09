@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.utils;
 
 import com.google.common.base.Preconditions;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
@@ -57,9 +57,8 @@ public class OpenBankingTokenExpirationDateHelper {
                 "If you don't want to set the tokenLifeTimeUnit, use the default implementation.");
 
         return Date.from(
-                LocalDate.now()
+                LocalDateTime.now()
                         .plus(tokenLifetime, tokenLifetimeUnit)
-                        .atStartOfDay()
                         .atOffset(ZoneOffset.UTC)
                         .toInstant());
     }

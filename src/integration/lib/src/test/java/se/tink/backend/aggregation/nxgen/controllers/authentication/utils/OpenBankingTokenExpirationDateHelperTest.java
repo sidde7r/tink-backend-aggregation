@@ -24,6 +24,13 @@ public class OpenBankingTokenExpirationDateHelperTest {
     }
 
     @Test
+    public void when_token_lifetime_do_not_return_null_and_token_lifetime_unit_set_in_minutes() {
+        Date expirationDateFrom =
+                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(0, ChronoUnit.MINUTES);
+        Assertions.assertThat(expirationDateFrom).isNotNull();
+    }
+
+    @Test
     public void when_token_null_but_lifetime_and_token_lifetime_unit_set_do_not_return_null() {
         Date expirationDateFrom =
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
@@ -35,9 +42,13 @@ public class OpenBankingTokenExpirationDateHelperTest {
     public void when_token_expires_in_ninety_days_date_must_be_after_token_expiring_in_zero_days() {
         Date expiresInZeroDays =
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(0, ChronoUnit.DAYS);
+        Date expiresInTenMinutes =
+                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(10, ChronoUnit.MINUTES);
         Date expiredInNinetyDays =
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(90, ChronoUnit.DAYS);
 
-        Assertions.assertThat(expiredInNinetyDays).isAfter(expiresInZeroDays);
+        Assertions.assertThat(expiredInNinetyDays)
+                .isAfter(expiresInTenMinutes)
+                .isAfter(expiresInZeroDays);
     }
 }
