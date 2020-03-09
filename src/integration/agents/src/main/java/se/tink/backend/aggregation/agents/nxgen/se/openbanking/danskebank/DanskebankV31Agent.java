@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.danskebank;
 
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankV31Constant.Url.V31;
@@ -9,14 +8,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.enums.MarketCode;
 
 public class DanskebankV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
+    private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
@@ -27,9 +27,9 @@ public class DanskebankV31Agent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
-    public DanskebankV31Agent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, aisConfig, true);
+    public DanskebankV31Agent(AgentComponentProvider componentProvider) {
+        super(componentProvider, aisConfig, true);
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class DanskebankV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(aisConfig, persistentStorage);
+        return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
     }
 
     @Override

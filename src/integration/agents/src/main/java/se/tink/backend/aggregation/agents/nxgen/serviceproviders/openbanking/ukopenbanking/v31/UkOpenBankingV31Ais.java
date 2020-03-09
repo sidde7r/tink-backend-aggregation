@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountExtractor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -36,16 +35,6 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
     private final TransactionalAccountMapper transactionalAccountMapper;
 
     public UkOpenBankingV31Ais(
-            UkOpenBankingAisConfig ukOpenBankingAisConfig, PersistentStorage persistentStorage) {
-        this(
-                ukOpenBankingAisConfig,
-                persistentStorage,
-                new ActualLocalDateTimeSource(),
-                defaultCreditCardAccountMapper(),
-                defaultTransactionalAccountMapper());
-    }
-
-    public UkOpenBankingV31Ais(
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource) {
@@ -60,11 +49,12 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
     public UkOpenBankingV31Ais(
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
             PersistentStorage persistentStorage,
-            CreditCardAccountMapper creditCardAccountMapper) {
+            CreditCardAccountMapper creditCardAccountMapper,
+            LocalDateTimeSource localDateTimeSource) {
         this(
                 ukOpenBankingAisConfig,
                 persistentStorage,
-                new ActualLocalDateTimeSource(),
+                localDateTimeSource,
                 creditCardAccountMapper,
                 defaultTransactionalAccountMapper());
     }
