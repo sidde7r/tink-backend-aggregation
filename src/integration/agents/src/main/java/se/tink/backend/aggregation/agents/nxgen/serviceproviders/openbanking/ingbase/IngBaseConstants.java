@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
+import com.google.common.collect.ImmutableList;
+import org.apache.http.HttpStatus;
+
 public final class IngBaseConstants {
 
     private IngBaseConstants() {
@@ -101,15 +104,12 @@ public final class IngBaseConstants {
         public static final String MISSING_TOKEN = "Cannot find Token!";
         public static final String MISSING_CLIENT_ID = "Cannot find client id!";
         public static final String INVALID_GRANT_ERROR = "invalid_grant";
-        public static final String NOT_FOUND = "NOT_FOUND";
-    }
-
-    public static class Retry {
-        public static final int MAX_ATTEMPTS = 3;
+        public static final ImmutableList<Integer> ERROR_CODES =
+                ImmutableList.of(HttpStatus.SC_UNAUTHORIZED, HttpStatus.SC_NOT_FOUND);
     }
 
     static class HttpClient {
-        public static final int MAX_ATTEMPTS = 4;
+        public static final int MAX_ATTEMPTS = 5;
         public static final int RETRY_SLEEP_MILLISECONDS = 2000;
     }
 }
