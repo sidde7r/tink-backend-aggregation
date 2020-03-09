@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.JWTSignatureHeaders.HEADERS;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.JWTSignatureHeaders.PAYLOAD;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
@@ -68,7 +67,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
-                        RandomUtils.generateRandomHexEncoded(8))
+                        randomValueGenerator.generateRandomHexEncoded(8))
                 .body(request)
                 .post(responseType);
     }
@@ -79,7 +78,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
-                        RandomUtils.generateRandomHexEncoded(8))
+                        randomValueGenerator.generateRandomHexEncoded(8))
                 .body(request)
                 .post(responseType);
     }
@@ -161,7 +160,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
-                        RandomUtils.generateRandomHexEncoded(8));
+                        randomValueGenerator.generateRandomHexEncoded(8));
     }
 
     private RequestBuilder createPISRequestWithJWSHeader(URL url, Object request) {
@@ -169,7 +168,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
-                        RandomUtils.generateRandomHexEncoded(8))
+                        randomValueGenerator.generateRandomHexEncoded(8))
                 .header(HttpHeaders.X_JWS_SIGNATURE, createJWTSignature(request));
     }
 

@@ -108,7 +108,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
         this.apiClient = apiClient;
-        this.ukOpenBankingPis = new UkOpenBankingV31Pis(pisConfig);
+        this.ukOpenBankingPis = new UkOpenBankingV31Pis(pisConfig, randomValueGenerator);
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.credentials = credentials;
         this.appToAppRedirectURL = appToAppRedirectURL;
@@ -195,7 +195,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                         credentials,
                         strongAuthenticationState,
                         null,
-                        appToAppRedirectURL);
+                        appToAppRedirectURL,
+                        randomValueGenerator);
 
         ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(

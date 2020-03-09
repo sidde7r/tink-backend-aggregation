@@ -170,7 +170,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 apiClient,
                 credentials,
                 strongAuthenticationState,
-                appToAppRedirectURL);
+                appToAppRedirectURL,
+                randomValueGenerator);
     }
 
     @Override

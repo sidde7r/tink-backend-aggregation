@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentResponse;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.AccountIdentifier;
@@ -24,11 +24,15 @@ public class UkOpenBankingV31Pis implements UkOpenBankingPis {
     private final UkOpenBankingPisConfig ukOpenBankingPisConfig;
     private final boolean mustNotHaveSourceAccountSpecified;
     private final String internalTransferId;
+    private final RandomValueGenerator randomValueGenerator;
 
-    public UkOpenBankingV31Pis(UkOpenBankingPisConfig ukOpenBankingPisConfig) {
+    public UkOpenBankingV31Pis(
+            UkOpenBankingPisConfig ukOpenBankingPisConfig,
+            RandomValueGenerator randomValueGenerator) {
         this.ukOpenBankingPisConfig = ukOpenBankingPisConfig;
         this.mustNotHaveSourceAccountSpecified = false;
-        this.internalTransferId = RandomUtils.generateRandomHexEncoded(15);
+        this.randomValueGenerator = randomValueGenerator;
+        this.internalTransferId = randomValueGenerator.generateRandomHexEncoded(15);
     }
 
     @Override
