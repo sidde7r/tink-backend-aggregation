@@ -739,6 +739,146 @@
                 "sha256": "b3b8d8871723ce070c73cc22d3e261bdcd76bba30a731ab7875fafe660fba562"
             },
             {
+                "coord": "com.google.inject.extensions:guice-assistedinject:4.1.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/google/inject/extensions/guice-assistedinject/4.1.0/guice-assistedinject-4.1.0.jar",
+                "directDependencies": [
+                    "com.google.inject:guice:4.1.0"
+                ],
+                "dependencies": [
+                    "com.google.errorprone:error_prone_annotations:2.0.18",
+                    "com.google.guava:guava:23.1-jre",
+                    "aopalliance:aopalliance:1.0",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.google.inject:guice:4.1.0",
+                    "com.google.code.findbugs:jsr305:3.0.0",
+                    "javax.inject:javax.inject:1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-assistedinject/4.1.0/guice-assistedinject-4.1.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-assistedinject/4.1.0/guice-assistedinject-4.1.0.jar"
+                ],
+                "sha256": "663728123fb9a6b79ea39ae289e5d56b4113e1b8e9413eb792f91e53a6dd5868"
+            },
+            {
+                "coord": "com.google.inject.extensions:guice-assistedinject:jar:sources:4.1.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/google/inject/extensions/guice-assistedinject/4.1.0/guice-assistedinject-4.1.0-sources.jar",
+                "directDependencies": [
+                    "com.google.inject:guice:jar:sources:4.1.0"
+                ],
+                "dependencies": [
+                    "com.google.guava:guava:jar:sources:23.1-jre",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.0.18",
+                    "aopalliance:aopalliance:jar:sources:1.0",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.0",
+                    "javax.inject:javax.inject:jar:sources:1",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "com.google.inject:guice:jar:sources:4.1.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-assistedinject/4.1.0/guice-assistedinject-4.1.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-assistedinject/4.1.0/guice-assistedinject-4.1.0-sources.jar"
+                ],
+                "sha256": "8ee270f3c3f8cc6cb7a967472b5e0ee7db1db519d3afb2f04573278ca6071df0"
+            },
+            {
+                "coord": "com.google.inject.extensions:guice-grapher:4.1.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/google/inject/extensions/guice-grapher/4.1.0/guice-grapher-4.1.0.jar",
+                "directDependencies": [
+                    "com.google.inject:guice:4.1.0",
+                    "com.google.inject.extensions:guice-assistedinject:4.1.0",
+                    "com.google.inject.extensions:guice-multibindings:4.1.0"
+                ],
+                "dependencies": [
+                    "com.google.errorprone:error_prone_annotations:2.0.18",
+                    "com.google.guava:guava:23.1-jre",
+                    "aopalliance:aopalliance:1.0",
+                    "com.google.inject.extensions:guice-multibindings:4.1.0",
+                    "com.google.inject.extensions:guice-assistedinject:4.1.0",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.google.inject:guice:4.1.0",
+                    "com.google.code.findbugs:jsr305:3.0.0",
+                    "javax.inject:javax.inject:1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-grapher/4.1.0/guice-grapher-4.1.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-grapher/4.1.0/guice-grapher-4.1.0.jar"
+                ],
+                "sha256": "75eb30ef7bdc633505c628ddf407e32c204f9eea0e545d5f4ef6a5c9b331b505"
+            },
+            {
+                "coord": "com.google.inject.extensions:guice-grapher:jar:sources:4.1.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/google/inject/extensions/guice-grapher/4.1.0/guice-grapher-4.1.0-sources.jar",
+                "directDependencies": [
+                    "com.google.inject:guice:jar:sources:4.1.0",
+                    "com.google.inject.extensions:guice-assistedinject:jar:sources:4.1.0",
+                    "com.google.inject.extensions:guice-multibindings:jar:sources:4.1.0"
+                ],
+                "dependencies": [
+                    "com.google.guava:guava:jar:sources:23.1-jre",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.0.18",
+                    "aopalliance:aopalliance:jar:sources:1.0",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.0",
+                    "com.google.inject.extensions:guice-assistedinject:jar:sources:4.1.0",
+                    "javax.inject:javax.inject:jar:sources:1",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "com.google.inject:guice:jar:sources:4.1.0",
+                    "com.google.inject.extensions:guice-multibindings:jar:sources:4.1.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-grapher/4.1.0/guice-grapher-4.1.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-grapher/4.1.0/guice-grapher-4.1.0-sources.jar"
+                ],
+                "sha256": "9d35744a0b641e6792348505bfd2a99c9ffe731d2a4c122c2c33d978534dd210"
+            },
+            {
+                "coord": "com.google.inject.extensions:guice-multibindings:4.1.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/google/inject/extensions/guice-multibindings/4.1.0/guice-multibindings-4.1.0.jar",
+                "directDependencies": [
+                    "com.google.inject:guice:4.1.0"
+                ],
+                "dependencies": [
+                    "com.google.errorprone:error_prone_annotations:2.0.18",
+                    "com.google.guava:guava:23.1-jre",
+                    "aopalliance:aopalliance:1.0",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.google.inject:guice:4.1.0",
+                    "com.google.code.findbugs:jsr305:3.0.0",
+                    "javax.inject:javax.inject:1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-multibindings/4.1.0/guice-multibindings-4.1.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-multibindings/4.1.0/guice-multibindings-4.1.0.jar"
+                ],
+                "sha256": "592773a4c745cc87ba37fa0647fed8126c7e474349c603c9f229aa25d3ef5448"
+            },
+            {
+                "coord": "com.google.inject.extensions:guice-multibindings:jar:sources:4.1.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/google/inject/extensions/guice-multibindings/4.1.0/guice-multibindings-4.1.0-sources.jar",
+                "directDependencies": [
+                    "com.google.inject:guice:jar:sources:4.1.0"
+                ],
+                "dependencies": [
+                    "com.google.guava:guava:jar:sources:23.1-jre",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.0.18",
+                    "aopalliance:aopalliance:jar:sources:1.0",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.0",
+                    "javax.inject:javax.inject:jar:sources:1",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "com.google.inject:guice:jar:sources:4.1.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-multibindings/4.1.0/guice-multibindings-4.1.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/google/inject/extensions/guice-multibindings/4.1.0/guice-multibindings-4.1.0-sources.jar"
+                ],
+                "sha256": "7cbc1e6f2b66d17848856d3e7b62ef8297c5f23548190bc7a9026f0cd07b0ea7"
+            },
+            {
                 "coord": "com.google.inject:guice:4.1.0",
                 "file": "v1/https/repo.maven.apache.org/maven2/com/google/inject/guice/4.1.0/guice-4.1.0.jar",
                 "directDependencies": [
@@ -805,6 +945,100 @@
                     "https://repo.maven.apache.org/maven2/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1-sources.jar"
                 ],
                 "sha256": "2cd9022a77151d0b574887635cdfcdf3b78155b602abc89d7f8e62aba55cfb4f"
+            },
+            {
+                "coord": "com.netflix.governator:governator-api:1.17.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/netflix/governator/governator-api/1.17.2/governator-api-1.17.2.jar",
+                "directDependencies": [
+                    "javax.inject:javax.inject:1"
+                ],
+                "dependencies": [
+                    "javax.inject:javax.inject:1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/netflix/governator/governator-api/1.17.2/governator-api-1.17.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/netflix/governator/governator-api/1.17.2/governator-api-1.17.2.jar"
+                ],
+                "sha256": "bea78045131804842affcb197a209a63099d36388e704969e87c1172f6b2aa89"
+            },
+            {
+                "coord": "com.netflix.governator:governator-api:jar:sources:1.17.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/netflix/governator/governator-api/1.17.2/governator-api-1.17.2-sources.jar",
+                "directDependencies": [
+                    "javax.inject:javax.inject:jar:sources:1"
+                ],
+                "dependencies": [
+                    "javax.inject:javax.inject:jar:sources:1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/netflix/governator/governator-api/1.17.2/governator-api-1.17.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/netflix/governator/governator-api/1.17.2/governator-api-1.17.2-sources.jar"
+                ],
+                "sha256": "1cd83783486f27f397118f9535d1c7fc5cb377681fec231d541f0b722d68e82c"
+            },
+            {
+                "coord": "com.netflix.governator:governator-core:1.17.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/netflix/governator/governator-core/1.17.2/governator-core-1.17.2.jar",
+                "directDependencies": [
+                    "com.google.inject.extensions:guice-multibindings:4.1.0",
+                    "org.slf4j:slf4j-api:1.7.21",
+                    "com.google.inject.extensions:guice-grapher:4.1.0",
+                    "com.google.inject:guice:4.1.0",
+                    "com.netflix.governator:governator-api:1.17.2",
+                    "javax.inject:javax.inject:1"
+                ],
+                "dependencies": [
+                    "com.google.errorprone:error_prone_annotations:2.0.18",
+                    "com.google.guava:guava:23.1-jre",
+                    "aopalliance:aopalliance:1.0",
+                    "com.google.inject.extensions:guice-multibindings:4.1.0",
+                    "com.google.inject.extensions:guice-assistedinject:4.1.0",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "org.slf4j:slf4j-api:1.7.21",
+                    "com.google.inject.extensions:guice-grapher:4.1.0",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.google.inject:guice:4.1.0",
+                    "com.google.code.findbugs:jsr305:3.0.0",
+                    "com.netflix.governator:governator-api:1.17.2",
+                    "javax.inject:javax.inject:1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/netflix/governator/governator-core/1.17.2/governator-core-1.17.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/netflix/governator/governator-core/1.17.2/governator-core-1.17.2.jar"
+                ],
+                "sha256": "9ec98e3ddb5fcdabd9ba478187174ab999d10efff7294b510af06071261bd9b7"
+            },
+            {
+                "coord": "com.netflix.governator:governator-core:jar:sources:1.17.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/netflix/governator/governator-core/1.17.2/governator-core-1.17.2-sources.jar",
+                "directDependencies": [
+                    "javax.inject:javax.inject:jar:sources:1",
+                    "com.google.inject.extensions:guice-grapher:jar:sources:4.1.0",
+                    "com.google.inject:guice:jar:sources:4.1.0",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.21",
+                    "com.google.inject.extensions:guice-multibindings:jar:sources:4.1.0",
+                    "com.netflix.governator:governator-api:jar:sources:1.17.2"
+                ],
+                "dependencies": [
+                    "com.google.guava:guava:jar:sources:23.1-jre",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.0.18",
+                    "aopalliance:aopalliance:jar:sources:1.0",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.0",
+                    "com.google.inject.extensions:guice-assistedinject:jar:sources:4.1.0",
+                    "javax.inject:javax.inject:jar:sources:1",
+                    "com.google.inject.extensions:guice-grapher:jar:sources:4.1.0",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "com.google.inject:guice:jar:sources:4.1.0",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.21",
+                    "com.google.inject.extensions:guice-multibindings:jar:sources:4.1.0",
+                    "com.netflix.governator:governator-api:jar:sources:1.17.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/netflix/governator/governator-core/1.17.2/governator-core-1.17.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/netflix/governator/governator-core/1.17.2/governator-core-1.17.2-sources.jar"
+                ],
+                "sha256": "e00ad90bb8e8f7e14c68fcc939bb1cf5c12d36ea6393d9aba26cf6e4d7bb3ac9"
             },
             {
                 "coord": "commons-codec:commons-codec:1.10",
@@ -969,34 +1203,34 @@
                 "sha256": "facba3aeb0c0d842d545bf7e732ea19869e2b18916adaa4eeda395c946c22991"
             },
             {
-                "coord": "net.sourceforge.cssparser:cssparser:0.9.8",
-                "file": "v1/https/repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.8/cssparser-0.9.8.jar",
+                "coord": "net.sourceforge.cssparser:cssparser:0.9.16",
+                "file": "v1/https/repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.16/cssparser-0.9.16.jar",
                 "directDependencies": [
                     "org.w3c.css:sac:1.3"
                 ],
                 "dependencies": [
                     "org.w3c.css:sac:1.3"
                 ],
-                "url": "https://repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.8/cssparser-0.9.8.jar",
+                "url": "https://repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.16/cssparser-0.9.16.jar",
                 "mirror_urls": [
-                    "https://repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.8/cssparser-0.9.8.jar"
+                    "https://repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.16/cssparser-0.9.16.jar"
                 ],
-                "sha256": "cc270c8f6fcfcd7fb3853740493af599c0b6f6c456094427740fe958974fb3d2"
+                "sha256": "2627c940a33f2f94f7240cbcdea5cd0efb1eebd4c3dbd7b4b8381f2ac8a2e920"
             },
             {
-                "coord": "net.sourceforge.cssparser:cssparser:jar:sources:0.9.8",
-                "file": "v1/https/repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.8/cssparser-0.9.8-sources.jar",
+                "coord": "net.sourceforge.cssparser:cssparser:jar:sources:0.9.16",
+                "file": "v1/https/repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.16/cssparser-0.9.16-sources.jar",
                 "directDependencies": [
                     "org.w3c.css:sac:jar:sources:1.3"
                 ],
                 "dependencies": [
                     "org.w3c.css:sac:jar:sources:1.3"
                 ],
-                "url": "https://repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.8/cssparser-0.9.8-sources.jar",
+                "url": "https://repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.16/cssparser-0.9.16-sources.jar",
                 "mirror_urls": [
-                    "https://repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.8/cssparser-0.9.8-sources.jar"
+                    "https://repo.maven.apache.org/maven2/net/sourceforge/cssparser/cssparser/0.9.16/cssparser-0.9.16-sources.jar"
                 ],
-                "sha256": "665ff1f4a6bff20bdc61304d4fa9cbc58a4ce5263d99aba5ee133cac546403cf"
+                "sha256": "e21b075401a7a17fd3316a392631b77c245f8217d9da90e89fd926436098f151"
             },
             {
                 "coord": "org.apache.commons:commons-lang3:3.4",
@@ -1125,6 +1359,28 @@
                 "sha256": "ec9015aa86d73cbd1c2426e38e7c71e888f4908637cb626278a8376ef7239f17"
             },
             {
+                "coord": "org.ow2.asm:asm:5.0.3",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar"
+                ],
+                "sha256": "71c4f78e437b8fdcd9cc0dfd2abea8c089eb677005a6a5cff320206cc52b46cc"
+            },
+            {
+                "coord": "org.ow2.asm:asm:jar:sources:5.0.3",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/ow2/asm/asm/5.0.3/asm-5.0.3-sources.jar"
+                ],
+                "sha256": "1e9ee309d909b3dbf33291fcfd36c76adba4ed1215b8156c3ac61a774cc86bf1"
+            },
+            {
                 "coord": "org.reactivestreams:reactive-streams:1.0.3",
                 "file": "v1/https/repo.maven.apache.org/maven2/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar",
                 "directDependencies": [],
@@ -1214,6 +1470,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -26041734
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1434586086
     }
 }

@@ -314,9 +314,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_errorprone_error_prone_annotations",
-    artifact = "com.google.errorprone:error_prone_annotations:2.0.11",
-    sha1 = "3624d81fca4e93c67f43bafc222b06e1b1e3b260",
+    name = "com_google_errorprone_error_prone_annotations",  # Do not use, but do not remove
+    artifact = "com.google.errorprone:error_prone_annotations:2.0.18",
+    sha1 = "5f65affce1684999e2f4024983835efc3504012e",
 )
 
 ## Maven jar imports
@@ -430,13 +430,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_inject_extensions_guice_grapher",
+    name = "com_google_inject_extensions_guice_grapher",  # Do not use, but do not remove
     artifact = "com.google.inject.extensions:guice-grapher:4.1.0",
     sha1 = "5b5e42aef1d8990bed1617eeaf1f3854dec677e2",
 )
 
 maven_jar(
-    name = "com_google_inject_extensions_guice_assistedinject",
+    name = "com_google_inject_extensions_guice_assistedinject",  # Do not use, but do not remove
     artifact = "com.google.inject.extensions:guice-assistedinject:4.1.0",
     sha1 = "af799dd7e23e6fe8c988da12314582072b07edcb",
 )
@@ -460,13 +460,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_netflix_governator_api",
+    name = "com_netflix_governator_api",  # Do not use, but do not remove
     artifact = "com.netflix.governator:governator-api:1.17.2",
     sha1 = "72eb81c0449dc7ca5ed24fb200e16b3228f6dd91",
 )
 
 maven_jar(
-    name = "com_netflix_governator_core",
+    name = "com_netflix_governator_core",  # Do not use, but do not remove
     artifact = "com.netflix.governator:governator-core:1.17.2",
     sha1 = "c9e0129f8526b8f0b44ffcae0d74feb6b7b71b55",
 )
@@ -550,7 +550,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_inject_extensions_guice_multibindings",
+    name = "com_google_inject_extensions_guice_multibindings",  # Do not use, but do not remove
     artifact = "com.google.inject.extensions:guice-multibindings:4.1.0",
     sha1 = "3b27257997ac51b0f8d19676f1ea170427e86d51",
 )
@@ -1309,8 +1309,8 @@ maven_jar(
 
 maven_jar(
     name = "net_sourceforge_cssparser_cssparser",  # Do not use, but do not remove
-    artifact = "net.sourceforge.cssparser:cssparser:0.9.8",
-    sha1 = "f05d7c249dfe8b884e72d614531630a9992bb037",
+    artifact = "net.sourceforge.cssparser:cssparser:0.9.16",
+    sha1 = "3f751904d467537b8ee99c612e69d4e79d6271cf",
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
@@ -2578,7 +2578,12 @@ maven_install(
         "com.google.code.findbugs:jsr305:3.0.0",
         "com.google.code.gson:gson:2.8.2",
         "com.google.guava:guava:23.1-jre",
+        "com.google.inject.extensions:guice-assistedinject:4.1.0",
+        "com.google.inject.extensions:guice-grapher:4.1.0",
+        "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
+        "com.netflix.governator:governator-api:1.17.2",
+        "com.netflix.governator:governator-core:1.17.2",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-logging:commons-logging:1.2",
@@ -2586,11 +2591,12 @@ maven_install(
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
-        "net.sourceforge.cssparser:cssparser:0.9.8",
+        "net.sourceforge.cssparser:cssparser:0.9.16",
         "org.apache.commons:commons-lang3:3.4",
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.codehaus.woodstox:stax2-api:4.1",
+        "org.ow2.asm:asm:5.0.3",
         "org.reactivestreams:reactive-streams:1.0.3",
         "org.slf4j:slf4j-api:1.7.21",
         "org.w3c.css:sac:1.3",
