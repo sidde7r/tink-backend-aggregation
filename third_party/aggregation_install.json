@@ -517,6 +517,28 @@
                 "sha256": "5a1eb13111f420236d60a4f34535cc2c68eaa34427bf21ef495172c8bc5da680"
             },
             {
+                "coord": "com.fasterxml.uuid:java-uuid-generator:3.1.5",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/fasterxml/uuid/java-uuid-generator/3.1.5/java-uuid-generator-3.1.5.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/com/fasterxml/uuid/java-uuid-generator/3.1.5/java-uuid-generator-3.1.5.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/fasterxml/uuid/java-uuid-generator/3.1.5/java-uuid-generator-3.1.5.jar"
+                ],
+                "sha256": "974b6636b8b615e5764b3cd81b711e3cf0d758dadd014a02d018cfa305f5b79b"
+            },
+            {
+                "coord": "com.fasterxml.uuid:java-uuid-generator:jar:sources:3.1.5",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/fasterxml/uuid/java-uuid-generator/3.1.5/java-uuid-generator-3.1.5-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/com/fasterxml/uuid/java-uuid-generator/3.1.5/java-uuid-generator-3.1.5-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/fasterxml/uuid/java-uuid-generator/3.1.5/java-uuid-generator-3.1.5-sources.jar"
+                ],
+                "sha256": "f44a85f8858d45ff69ac363d32812b1f1d18d07c64136ffa4781746c8114932d"
+            },
+            {
                 "coord": "com.fasterxml.woodstox:woodstox-core:5.1.0",
                 "file": "v1/https/repo.maven.apache.org/maven2/com/fasterxml/woodstox/woodstox-core/5.1.0/woodstox-core-5.1.0.jar",
                 "directDependencies": [
@@ -829,26 +851,56 @@
                 "sha256": "a5b5ee16a02edadf7fe637f250217c19878bc6134f15eb55635c48996f6fed1d"
             },
             {
-                "coord": "commons-logging:commons-logging:1.1.3",
-                "file": "v1/https/repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar",
+                "coord": "commons-logging:commons-logging:1.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar",
                 "directDependencies": [],
                 "dependencies": [],
-                "url": "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar",
+                "url": "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar",
                 "mirror_urls": [
-                    "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar"
+                    "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar"
                 ],
-                "sha256": "70903f6fc82e9908c8da9f20443f61d90f0870a312642991fe8462a0b9391784"
+                "sha256": "daddea1ea0be0f56978ab3006b8ac92834afeefbd9b7e4e6316fca57df0fa636"
             },
             {
-                "coord": "commons-logging:commons-logging:jar:sources:1.1.3",
-                "file": "v1/https/repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3-sources.jar",
+                "coord": "commons-logging:commons-logging:jar:sources:1.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar",
                 "directDependencies": [],
                 "dependencies": [],
-                "url": "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3-sources.jar",
+                "url": "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar",
                 "mirror_urls": [
-                    "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3-sources.jar"
+                    "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar"
                 ],
-                "sha256": "3196a32bfcc6d397243f01f670cb5d17390a8facde972c2f94cb53a4705126aa"
+                "sha256": "44347acfe5860461728e9cb33251e97345be36f8a0dfd5c5130c172559455f41"
+            },
+            {
+                "coord": "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/reactivex/rxjava3/rxjava/3.0.0-RC4/rxjava-3.0.0-RC4.jar",
+                "directDependencies": [
+                    "org.reactivestreams:reactive-streams:1.0.3"
+                ],
+                "dependencies": [
+                    "org.reactivestreams:reactive-streams:1.0.3"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/reactivex/rxjava3/rxjava/3.0.0-RC4/rxjava-3.0.0-RC4.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/reactivex/rxjava3/rxjava/3.0.0-RC4/rxjava-3.0.0-RC4.jar"
+                ],
+                "sha256": "6e7623803eac1bff82cfef42ec8309669ffe309749004ca2af60b26e1b836ffb"
+            },
+            {
+                "coord": "io.reactivex.rxjava3:rxjava:jar:sources:3.0.0-RC4",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/reactivex/rxjava3/rxjava/3.0.0-RC4/rxjava-3.0.0-RC4-sources.jar",
+                "directDependencies": [
+                    "org.reactivestreams:reactive-streams:jar:sources:1.0.3"
+                ],
+                "dependencies": [
+                    "org.reactivestreams:reactive-streams:jar:sources:1.0.3"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/reactivex/rxjava3/rxjava/3.0.0-RC4/rxjava-3.0.0-RC4-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/reactivex/rxjava3/rxjava/3.0.0-RC4/rxjava-3.0.0-RC4-sources.jar"
+                ],
+                "sha256": "b6a75c2987869ffdf44e3e10f7a6068db783b14b7b29a3c89e911a5cae67860f"
             },
             {
                 "coord": "javax.inject:javax.inject:1",
@@ -943,13 +995,13 @@
                 "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar",
                 "directDependencies": [
                     "commons-codec:commons-codec:1.10",
-                    "commons-logging:commons-logging:1.1.3",
+                    "commons-logging:commons-logging:1.2",
                     "org.apache.httpcomponents:httpcore:4.3.2"
                 ],
                 "dependencies": [
                     "commons-codec:commons-codec:1.10",
-                    "commons-logging:commons-logging:1.1.3",
-                    "org.apache.httpcomponents:httpcore:4.3.2"
+                    "org.apache.httpcomponents:httpcore:4.3.2",
+                    "commons-logging:commons-logging:1.2"
                 ],
                 "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar",
                 "mirror_urls": [
@@ -962,12 +1014,12 @@
                 "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar",
                 "directDependencies": [
                     "commons-codec:commons-codec:jar:sources:1.10",
-                    "commons-logging:commons-logging:jar:sources:1.1.3",
+                    "commons-logging:commons-logging:jar:sources:1.2",
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2"
                 ],
                 "dependencies": [
-                    "commons-logging:commons-logging:jar:sources:1.1.3",
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
+                    "commons-logging:commons-logging:jar:sources:1.2",
                     "commons-codec:commons-codec:jar:sources:1.10"
                 ],
                 "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar",
@@ -1043,6 +1095,28 @@
                 "sha256": "ec9015aa86d73cbd1c2426e38e7c71e888f4908637cb626278a8376ef7239f17"
             },
             {
+                "coord": "org.reactivestreams:reactive-streams:1.0.3",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar"
+                ],
+                "sha256": "1dee0481072d19c929b623e155e14d2f6085dc011529a0a0dbefc84cf571d865"
+            },
+            {
+                "coord": "org.reactivestreams:reactive-streams:jar:sources:1.0.3",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3-sources.jar"
+                ],
+                "sha256": "d5b4070a22c9b1ca5b9b5aa668466bcca391dbe5d5fe8311c300765c1621feba"
+            },
+            {
                 "coord": "org.slf4j:slf4j-api:1.7.21",
                 "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar",
                 "directDependencies": [],
@@ -1088,6 +1162,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -1777557918
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -107382769
     }
 }

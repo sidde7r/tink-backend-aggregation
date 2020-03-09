@@ -4,6 +4,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
-        "@io_reactivex_rxjava3_rxjava",
+        "@aggregation//:io_reactivex_rxjava3_rxjava",
     ],
 )

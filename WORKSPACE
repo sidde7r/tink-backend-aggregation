@@ -1685,8 +1685,8 @@ maven_jar(
 
 maven_jar(
     name = "commons_logging_commons_logging",  # Do not use, but do not remove
-    artifact = "commons-logging:commons-logging:1.1.3",
-    sha1 = "f6f66e966c70a83ffbdb6f17a0919eaf7c8aca7f",
+    artifact = "commons-logging:commons-logging:1.2",
+    sha1 = "4bfc12adfe4842bf07b657f0369c4cb522955686",
 )
 
 maven_jar(
@@ -2572,6 +2572,7 @@ maven_install(
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9",
         "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
+        "com.fasterxml.uuid:java-uuid-generator:3.1.5",
         "com.fasterxml:classmate:1.0.0",
         "com.github.rholder:guava-retrying:2.0.0",
         "com.google.code.findbugs:jsr305:3.0.0",
@@ -2580,7 +2581,8 @@ maven_install(
         "com.google.inject:guice:4.1.0",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
-        "commons-logging:commons-logging:1.1.3",
+        "commons-logging:commons-logging:1.2",
+        "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
@@ -2588,6 +2590,7 @@ maven_install(
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.codehaus.woodstox:stax2-api:4.1",
+        "org.reactivestreams:reactive-streams:1.0.3",
         "org.slf4j:slf4j-api:1.7.21",
         "org.yaml:snakeyaml:1.23",
     ],
@@ -2606,38 +2609,6 @@ maven_install(
 load("@aggregation//:defs.bzl", aggregation_pin = "pinned_maven_install")
 
 aggregation_pin()
-
-maven_install(
-    name = "java_uuid_generator",
-    artifacts = [
-        "com.fasterxml.uuid:java-uuid-generator:3.1.5",
-    ],
-    fetch_sources = True,
-    maven_install_json = "//third_party:java_uuid_generator_install.json",
-    repositories = [
-        "https://repo.maven.apache.org/maven2/",
-    ],
-)
-
-load("@java_uuid_generator//:defs.bzl", java_uuid_generator_pin = "pinned_maven_install")
-
-java_uuid_generator_pin()
-
-maven_install(
-    name = "io_reactivex_rxjava3_rxjava",
-    artifacts = [
-        "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
-    ],
-    fetch_sources = True,
-    maven_install_json = "//third_party:io_reactivex_rxjava3_rxjava_install.json",
-    repositories = [
-        "https://repo.maven.apache.org/maven2/",
-    ],
-)
-
-load("@io_reactivex_rxjava3_rxjava//:defs.bzl", io_reactivex_rxjava3_rxjava_pin = "pinned_maven_install")
-
-io_reactivex_rxjava3_rxjava_pin()
 
 # Use via //third_party/jetty_server9
 maven_install(

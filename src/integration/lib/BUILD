@@ -137,9 +137,9 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_reactivex_rxjava3_rxjava",
         "@aggregation//:joda_time_joda_time",
         "@com_sun_jersey_jersey_client//jar",
-        "@io_reactivex_rxjava3_rxjava",
         "@org_iban4j_iban4j//jar",
     ],
 )
@@ -270,8 +270,8 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_reactivex_rxjava3_rxjava",
         "@aggregation//:joda_time_joda_time",
-        "@io_reactivex_rxjava3_rxjava",
     ],
 )
 
