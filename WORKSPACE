@@ -454,7 +454,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_netflix_governator",
+    name = "com_netflix_governator",  # Do not use, but do not remove
     artifact = "com.netflix.governator:governator:1.17.2",
     sha1 = "0738b9a37389339f86ad68f4d74fc59fa69e0fb6",
 )
@@ -604,13 +604,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "ch_qos_logback_contrib_logback_jackson",
+    name = "ch_qos_logback_contrib_logback_jackson",  # Do not use, but do not remove
     artifact = "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
     sha1 = "0e8b202a23691048a01e6322dd040f75e08e9ca2",
 )
 
 maven_jar(
-    name = "ch_qos_logback_contrib_logback_json_core",
+    name = "ch_qos_logback_contrib_logback_json_core",  # Do not use, but do not remove
     artifact = "ch.qos.logback.contrib:logback-json-core:jar:0.1.5",
     sha1 = "90bdb547819957fc940188f5830b7b59375f6fdd",
 )
@@ -2046,9 +2046,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_ow2_asm_asm",
-    artifact = "org.ow2.asm:asm:5.0.3",
-    sha1 = "dcc2193db20e19e1feca8b1240dbbc4e190824fa",
+    name = "org_ow2_asm_asm",  # Do not use, but do not remove
+    artifact = "org.ow2.asm:asm:5.0.4",
+    sha1 = "0da08b8cce7bbf903602a25a3a163ae252435795",
 )
 
 maven_jar(
@@ -2078,7 +2078,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_grpc_grpc_context",
+    name = "io_grpc_grpc_context",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
     sha1 = "94aedfbfeebc5a32bdfe6984289bb18abf93cf20",
 )
@@ -2138,7 +2138,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_instrumentation_instrumentation_api",
+    name = "com_google_instrumentation_instrumentation_api",  # Do not use, but do not remove
     artifact = "com.google.instrumentation:instrumentation-api:0.4.3",
     sha1 = "41614af3429573dc02645d541638929d877945a2",
 )
@@ -2558,6 +2558,8 @@ maven_install(
     name = "aggregation",
     artifacts = [
         "aopalliance:aopalliance:1.0",
+        "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
+        "ch.qos.logback.contrib:logback-json-core:jar:0.1.5",
         "ch.qos.logback:logback-core:1.1.11",
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
@@ -2582,11 +2584,14 @@ maven_install(
         "com.google.inject.extensions:guice-grapher:4.1.0",
         "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
+        "com.google.instrumentation:instrumentation-api:0.4.3",
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
+        "com.netflix.governator:governator:1.17.2",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-logging:commons-logging:1.2",
+        "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
@@ -2596,7 +2601,7 @@ maven_install(
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.codehaus.woodstox:stax2-api:4.1",
-        "org.ow2.asm:asm:5.0.3",
+        "org.ow2.asm:asm:5.0.4",
         "org.reactivestreams:reactive-streams:1.0.3",
         "org.slf4j:slf4j-api:1.7.21",
         "org.w3c.css:sac:1.3",

@@ -32,7 +32,7 @@ java_library(
     name = "ch_qos_logback_contrib_logback_jackson",
     visibility = ["//visibility:public"],
     exports = [
-        "@ch_qos_logback_contrib_logback_jackson//jar",
+        "@aggregation//:ch_qos_logback_contrib_logback_jackson",
     ],
 )
 
@@ -43,8 +43,8 @@ java_library(
         "@ch_qos_logback_contrib_logback_json_classic//jar",
     ],
     runtime_deps = [
-        "@ch_qos_logback_contrib_logback_jackson//jar",
-        "@ch_qos_logback_contrib_logback_json_core//jar",
+        "@aggregation//:ch_qos_logback_contrib_logback_jackson",
+        "@aggregation//:ch_qos_logback_contrib_logback_json_core",
     ],
 )
 
@@ -52,7 +52,7 @@ java_library(
     name = "ch_qos_logback_contrib_logback_json_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@ch_qos_logback_contrib_logback_json_core//jar",
+        "@aggregation//:ch_qos_logback_contrib_logback_json_core",
     ],
 )
 
@@ -294,7 +294,7 @@ java_library(
     name = "com_netflix_governator",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_netflix_governator//jar",
+        "@aggregation//:com_netflix_governator_governator",
     ],
     runtime_deps = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
@@ -312,7 +312,7 @@ java_library(
     name = "com_google_instrumentation_instrumentation_api",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_instrumentation_instrumentation_api//jar",
+        "@aggregation//:com_google_instrumentation_instrumentation_api",
     ],
     runtime_deps = [
         "@aggregation//:com_google_code_findbugs_jsr305",
@@ -1497,13 +1497,13 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_google_instrumentation_instrumentation_api",
+        "@aggregation//:io_grpc_grpc_context",
         "@com_google_api_grpc_proto_google_common_protos//jar",
-        "@com_google_instrumentation_instrumentation_api//jar",
         "@com_google_protobuf_protobuf_java//jar",
         "@com_google_protobuf_protobuf_java_util//jar",
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_auth//jar",
-        "@io_grpc_grpc_context//jar",
         "@io_grpc_grpc_core//jar",
         "@io_grpc_grpc_netty//jar",
         "@io_grpc_grpc_protobuf//jar",
@@ -1639,7 +1639,7 @@ java_library(
     name = "io_grpc_grpc_context",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_grpc_grpc_context//jar",
+        "@aggregation//:io_grpc_grpc_context",
     ],
 )
 
