@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE;
+
 import com.google.common.base.Strings;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -49,7 +51,7 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
             throw BankServiceError.CONSENT_REVOKED.exception("No code present.");
         }
         long accessExpiresInSeconds = THIRTY_DAYS_IN_SECONDS;
-        if (providerName.equals("uk-test-open-banking-redirect-credentialExpireInTenMinutes")) {
+        if (providerName.equals(DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE)) {
             accessExpiresInSeconds = TEN_MINUTES_IN_SECONDS;
         }
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());
@@ -63,7 +65,7 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
             throws SessionException, BankServiceException {
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());
         long accessExpiresInSeconds = THIRTY_DAYS_IN_SECONDS;
-        if (providerName.equals("uk-test-open-banking-redirect-credentialExpireInTenMinutes")) {
+        if (providerName.equals(DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE)) {
             accessExpiresInSeconds = TEN_MINUTES_IN_SECONDS;
         }
         return OAuth2Token.createBearer(accessToken, refreshToken, accessExpiresInSeconds);

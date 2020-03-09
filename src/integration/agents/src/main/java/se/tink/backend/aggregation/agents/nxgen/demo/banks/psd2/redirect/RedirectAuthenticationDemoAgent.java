@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
 
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE;
+
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -73,13 +76,27 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
                 new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, provider);
 
-        final OAuth2AuthenticationController controller =
-                new OAuth2AuthenticationController(
-                        persistentStorage,
-                        supplementalInformationHelper,
-                        redirectOAuth2Authenticator,
-                        credentials,
-                        strongAuthenticationState);
+        final OAuth2AuthenticationController controller;
+
+        if (provider.equals(DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE)) {
+            controller =
+                    new OAuth2AuthenticationController(
+                            persistentStorage,
+                            supplementalInformationHelper,
+                            redirectOAuth2Authenticator,
+                            credentials,
+                            strongAuthenticationState,
+                            10,
+                            ChronoUnit.MINUTES);
+        } else {
+            controller =
+                    new OAuth2AuthenticationController(
+                            persistentStorage,
+                            supplementalInformationHelper,
+                            redirectOAuth2Authenticator,
+                            credentials,
+                            strongAuthenticationState);
+        }
 
         return new AutoAuthenticationController(
                 request,
