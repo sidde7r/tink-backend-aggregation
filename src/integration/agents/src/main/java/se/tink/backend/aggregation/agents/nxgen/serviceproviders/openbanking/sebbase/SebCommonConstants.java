@@ -75,6 +75,7 @@ public class SebCommonConstants {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String X_SEB_CSRF = "x-seb-csrf";
+        public static final String PSU_CORPORATE_ID = "PSU-CORPORATE-ID";
     }
 
     public static class StorageKeys {
