@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.banks.sbab.exception.UnacceptedTermsAndConditionsException;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -53,6 +54,10 @@ public class AuthenticationClient extends SBABClient {
 
     public String getBearerToken() {
         Document overview = getJsoupDocument(OVERVIEW_URL);
+        if (hasKYCPopup(overview)) {
+            log.info("Found KYC popup, giving up");
+            throw new UnacceptedTermsAndConditionsException(OVERVIEW_URL, null);
+        }
         Elements scriptTags = overview.select("script");
         Optional<String> token = parseBearerToken(scriptTags.html());
 
@@ -73,5 +78,13 @@ public class AuthenticationClient extends SBABClient {
         }
 
         return Optional.empty();
+    }
+
+    private static final String KYC_ELEMENT_QUERY = "div#aml-reminder-popup";
+    private static final String KYC_TEXT =
+            "För att komma vidare måste du uppdatera dina kundkännedomsuppgifter";
+
+    public static boolean hasKYCPopup(Document document) {
+        return document.select(KYC_ELEMENT_QUERY).text().contains(KYC_TEXT);
     }
 }
