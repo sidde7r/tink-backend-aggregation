@@ -43,7 +43,9 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/account:enums",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/hvb",
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
@@ -53,6 +55,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/scaffold",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/libraries/account_identifier",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_hamcrest_hamcrest_core",

@@ -51,8 +51,8 @@ public class TestFixtures {
         return "e7a14a8a-e61b-4e76-a84c-f714417a6c9f";
     }
 
-    public static String givenUsername() {
-        return "username";
+    public static String givenDirectBankingNumber() {
+        return "12345678";
     }
 
     public static String givenPin() {
@@ -76,5 +76,21 @@ public class TestFixtures {
         when(rsaPrivateKeyMock.getPublicExponent()).thenReturn(new BigInteger("1"));
         when(rsaPrivateKeyMock.getModulus()).thenReturn(new BigInteger("1"));
         return new KeyPair(null, rsaPrivateKeyMock);
+    }
+
+    public static String givenAuthorization() {
+        return "Bearer eyJhbGciOiJSUzI1NiIsImp3ayI6eyJrdHkiOiJSU0EiLCJlIjoiQV";
+    }
+
+    public static String givenIban() {
+        return "DE26760200700023281111";
+    }
+
+    public static String givenBranchId() {
+        return "0460";
+    }
+
+    public static String givenCurrency() {
+        return "EUR";
     }
 }

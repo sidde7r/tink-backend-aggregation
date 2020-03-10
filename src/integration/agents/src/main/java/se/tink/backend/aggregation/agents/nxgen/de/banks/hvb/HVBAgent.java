@@ -8,9 +8,8 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.HVBAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.HVBTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.HVBTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.session.HVBSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.AccountsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.TransactionsFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
@@ -32,8 +31,8 @@ public final class HVBAgent extends SubsequentGenerationAgent<HVBAuthenticator>
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
 
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         dependencyRegistry = initializeAgentDependencies(new HVBModuleDependenciesRegistration());
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         setupHttpClient();
     }
 
@@ -73,16 +72,16 @@ public final class HVBAgent extends SubsequentGenerationAgent<HVBAuthenticator>
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new HVBTransactionalAccountFetcher(null, null, null),
+                dependencyRegistry.getBean(AccountsFetcher.class),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
-                                new HVBTransactionFetcher(null, null, null))));
+                                dependencyRegistry.getBean(TransactionsFetcher.class))));
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new HVBSessionHandler(null, null, null);
+        return SessionHandler.alwaysFail();
     }
 
     @Override
