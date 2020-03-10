@@ -187,7 +187,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
         Transfer transfer =
                 createLessThan1SEKTestTransferWithMessage(
                         TestAccount.SEB_DL, TestAccount.SEB_ANOTHER_DL, "tink test", "tink test");
-        testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
+        testTransfer(TestSSN.DL, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
