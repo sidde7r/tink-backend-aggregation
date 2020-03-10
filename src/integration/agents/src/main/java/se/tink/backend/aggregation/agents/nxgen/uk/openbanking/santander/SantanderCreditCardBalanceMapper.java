@@ -8,6 +8,8 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.PrioritizedValueExtractor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.CreditCardBalanceMapper;
@@ -16,16 +18,21 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @RequiredArgsConstructor
 class SantanderCreditCardBalanceMapper implements CreditCardBalanceMapper {
 
+    private static final ImmutableList<AccountBalanceType> ALLOWED_BALANCE_TYPES =
+            ImmutableList.of(PREVIOUSLY_CLOSED_BOOKED, OPENING_CLEARED);
+
     private final PrioritizedValueExtractor valueExtractor;
 
     @Override
     public ExactCurrencyAmount getAccountBalance(Collection<AccountBalanceEntity> balances) {
         return valueExtractor
-                .pickByValuePriority(
-                        balances,
-                        AccountBalanceEntity::getType,
-                        ImmutableList.of(PREVIOUSLY_CLOSED_BOOKED, OPENING_CLEARED))
-                .getAmount();
+                .pickByValuePriority(balances, AccountBalanceEntity::getType, ALLOWED_BALANCE_TYPES)
+                .map(AccountBalanceEntity::getAmount)
+                .orElseThrow(
+                        () ->
+                                new NoSuchElementException(
+                                        "Could not extract credit card account balance. No available balance with type of: "
+                                                + StringUtils.join(',', ALLOWED_BALANCE_TYPES)));
     }
 
     @Override

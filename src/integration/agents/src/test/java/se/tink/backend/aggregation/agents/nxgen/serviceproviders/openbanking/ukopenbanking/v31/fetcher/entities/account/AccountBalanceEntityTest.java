@@ -15,7 +15,7 @@ public class AccountBalanceEntityTest {
 
         // then
         assertThat(creditBalance.getAmount().getExactValue())
-                .isEqualByComparingTo(BigDecimal.valueOf(123.05d));
+                .isEqualByComparingTo(BigDecimal.valueOf(111.05d));
         assertThat(creditBalance.getAmount().getCurrencyCode()).isEqualTo("GBP");
     }
 
@@ -26,7 +26,7 @@ public class AccountBalanceEntityTest {
 
         // then
         assertThat(debitBalance.getAmount().getExactValue())
-                .isEqualByComparingTo(BigDecimal.valueOf(-456.051234d));
+                .isEqualByComparingTo(BigDecimal.valueOf(-222.051234d));
         assertThat(debitBalance.getAmount().getCurrencyCode()).isEqualTo("EUR");
     }
 }

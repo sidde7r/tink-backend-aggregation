@@ -9,6 +9,7 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//third_party:lombok_libs",
+        "//third_party:org_apache_commons_commons_lang3",
         "@aggregation//:com_google_guava_guava",
     ],
 )

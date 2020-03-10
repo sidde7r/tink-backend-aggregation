@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.IdentifierFixtures.ibanIdentifier;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.IdentifierFixtures.sortCodeIdentifier;
@@ -13,15 +11,14 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.TransactionalAccountFixtures.savingsAccount;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountIdentifierEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.TransactionalAccountFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
@@ -49,18 +46,39 @@ public class TransactionalAccountMapperTest {
     @Test
     public void shouldMapBalances_usingBalanceMapper() {
         // given
-        List<AccountBalanceEntity> balances = mock(List.class);
-        ExactCurrencyAmount expectedBalance = ExactCurrencyAmount.of(123.22d, "GBP");
+        ExactCurrencyAmount accBalance = ExactCurrencyAmount.of(-123.22d, "GBP");
+        ExactCurrencyAmount availableBalance = ExactCurrencyAmount.of(432.44, "EUR");
+        ExactCurrencyAmount availableCredit = ExactCurrencyAmount.of(888d, "GBP");
+        ExactCurrencyAmount creditLimit = ExactCurrencyAmount.of(11.888d, "PLN");
 
         // when
-        when(balanceMapper.getAccountBalance(balances)).thenReturn(expectedBalance);
+        when(balanceMapper.getAccountBalance(anyCollection())).thenReturn(accBalance);
+        when(balanceMapper.getAvailableBalance(anyCollection()))
+                .thenReturn(Optional.of(availableBalance), Optional.empty());
+        when(balanceMapper.calculateAvailableCredit(anyCollection()))
+                .thenReturn(Optional.of(availableCredit), Optional.empty());
+        when(balanceMapper.calculateCreditLimit(anyCollection()))
+                .thenReturn(Optional.of(creditLimit), Optional.empty());
 
-        TransactionalAccount mappingResult =
-                mapper.map(TransactionalAccountFixtures.currentAccount(), balances, anyString())
-                        .get();
+        TransactionalAccount result1 = mapper.map(currentAccount(), anyCollection(), "").get();
+
+        TransactionalAccount result2 = mapper.map(currentAccount(), anyCollection(), "").get();
 
         // then
-        assertThat(mappingResult.getExactBalance()).isEqualByComparingTo(expectedBalance);
+        assertBalance(result1, accBalance, availableBalance, availableCredit, creditLimit);
+        assertBalance(result2, accBalance, null, null, null);
+    }
+
+    private void assertBalance(
+            TransactionalAccount resultBalance,
+            ExactCurrencyAmount accBalance,
+            ExactCurrencyAmount availableBalance,
+            ExactCurrencyAmount availableCredit,
+            ExactCurrencyAmount creditLimit) {
+        assertThat(resultBalance.getExactBalance()).isEqualTo(accBalance);
+        assertThat(resultBalance.getExactAvailableBalance()).isEqualTo(availableBalance);
+        assertThat(resultBalance.getExactAvailableCredit()).isEqualTo(availableCredit);
+        assertThat(resultBalance.getExactCreditLimit()).isEqualTo(creditLimit);
     }
 
     @Test
@@ -72,8 +90,7 @@ public class TransactionalAccountMapperTest {
         when(identifierMapper.getTransactionalAccountPrimaryIdentifier(anyList()))
                 .thenReturn(expectedIdentifier);
         TransactionalAccount mappingResult =
-                mapper.map(TransactionalAccountFixtures.currentAccount(), anyCollection(), "")
-                        .get();
+                mapper.map(currentAccount(), anyCollection(), "").get();
 
         // then
         assertThat(mappingResult.getAccountNumber())
@@ -87,7 +104,7 @@ public class TransactionalAccountMapperTest {
     @Test
     public void shouldCorrectlyPickAccountType() {
         // given
-        AccountEntity currentAccount = TransactionalAccountFixtures.currentAccount();
+        AccountEntity currentAccount = currentAccount();
         AccountEntity savingsAccount = savingsAccount();
 
         // when
@@ -104,7 +121,7 @@ public class TransactionalAccountMapperTest {
     @Test
     public void shouldCorrectlyMapRemainingApiIdentifier() {
         // given
-        AccountEntity input = TransactionalAccountFixtures.currentAccount();
+        AccountEntity input = currentAccount();
 
         // when
         TransactionalAccount result = mapper.map(input, anyCollection(), "").get();

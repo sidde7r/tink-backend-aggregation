@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -46,7 +47,7 @@ public class TransactionalAccountMapper {
                                 .translate(account.getRawAccountSubType())
                                 .orElseThrow(IllegalArgumentException::new))
                 .withInferredAccountFlags()
-                .withBalance(BalanceModule.of(balanceMapper.getAccountBalance(balances)))
+                .withBalance(buildBalanceModule(balances))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(uniqueIdentifier)
@@ -61,6 +62,17 @@ public class TransactionalAccountMapper {
                 .addHolderName(
                         ObjectUtils.firstNonNull(primaryIdentifier.getOwnerName(), partyName))
                 .build();
+    }
+
+    private BalanceModule buildBalanceModule(Collection<AccountBalanceEntity> balances) {
+        BalanceBuilderStep builder =
+                BalanceModule.builder().withBalance(balanceMapper.getAccountBalance(balances));
+
+        balanceMapper.calculateAvailableCredit(balances).ifPresent(builder::setAvailableCredit);
+        balanceMapper.calculateCreditLimit(balances).ifPresent(builder::setCreditLimit);
+        balanceMapper.getAvailableBalance(balances).ifPresent(builder::setAvailableBalance);
+
+        return builder.build();
     }
 
     private boolean isRevolutAccount(AccountEntity account) {
