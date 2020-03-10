@@ -11856,13 +11856,13 @@
                 }
             ],
             "supplementalFields": [
-              {
-                "description": "OTP",
-                "helpText": "Please enter OTP code",
-                "immutable": true,
-                "masked": false,
-                "name": "otpinput"
-              }
+                {
+                    "description": "OTP",
+                    "helpText": "Please enter OTP code",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "otpinput"
+                }
             ],
             "financialInstitutionId": "9a38fd46559f4133a0fa1943ab77dafe",
             "financialInstitutionName": "Raiffeisenbank",
