@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.entities.TransactionResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.rpc.AccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.rpc.RefreshTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormValues;
@@ -20,9 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenRequestPost;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.enums.BerlinGroupPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.executor.payment.rpc.CreatePaymentResponse;
@@ -114,18 +114,16 @@ public final class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
     @Override
     public OAuth2Token getToken(final String code) {
-        final TokenRequestPost tokenRequest =
-                new TokenRequestPost(
+        final TokenRequest tokenRequest =
+                new TokenRequest(
                         FormValues.AUTHORIZATION_CODE,
                         code,
                         getConfiguration().getRedirectUrl(),
                         getConfiguration().getClientId(),
-                        getConfiguration().getClientSecret(),
                         sessionStorage.get(StorageKeys.CODE_VERIFIER));
 
         return client.request(getConfiguration().getBaseUrl() + Urls.TOKEN)
-                .addBasicAuth(
-                        getConfiguration().getClientId(), getConfiguration().getClientSecret())
+                .addBasicAuth(getConfiguration().getClientId())
                 .body(tokenRequest.toData(), MediaType.APPLICATION_FORM_URLENCODED)
                 .header(
                         BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
@@ -140,12 +138,10 @@ public final class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
                 new RefreshTokenRequest(
                         FormValues.REFRESH_TOKEN_GRANT_TYPE,
                         token,
-                        getConfiguration().getClientId(),
-                        getConfiguration().getClientSecret());
+                        getConfiguration().getClientId());
 
         return client.request(getConfiguration().getBaseUrl() + Urls.TOKEN)
-                .addBasicAuth(
-                        getConfiguration().getClientId(), getConfiguration().getClientSecret())
+                .addBasicAuth(getConfiguration().getClientId())
                 .header(
                         BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
                         getConfiguration().getPsuIpAddress())
@@ -171,9 +167,6 @@ public final class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
         return client.request(getConfiguration().getBaseUrl() + Urls.CONSENT)
                 .body(consentsRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
-                .header(
-                        BerlinGroupConstants.HeaderKeys.AUTHORIZATION,
-                        KbcConstants.HeaderKeys.BEARER.concat(getConfiguration().getClientId()))
                 .header(BerlinGroupConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .header(
                         BerlinGroupConstants.HeaderKeys.TPP_REDIRECT_URI,

@@ -892,10 +892,7 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     kbc:
       tink:
-        baseUrl: https://openapi.kbc-group.com
-        clientId: dummyId
-        clientSecret: dummySecret
-        eidasQwac: Tink
+        clientId: PSDSE-FINA-44059
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     kreditbanken:
       tink:
