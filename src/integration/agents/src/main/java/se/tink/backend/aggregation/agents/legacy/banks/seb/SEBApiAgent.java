@@ -1758,7 +1758,7 @@ public class SEBApiAgent extends AbstractAgent
         List<AccountEntity> accounts = listAccounts(customerId);
 
         ensureIsValidSourceAccount(accounts, transfer);
-
+        ensureIsValidTransferAmount(transfer);
         if (Objects.equal(transfer.getType(), TransferType.EINVOICE)) {
             throw new IllegalStateException(
                     "Should never happen, since eInvoices are run through update call");
@@ -1774,6 +1774,14 @@ public class SEBApiAgent extends AbstractAgent
         // refresh comes
         // to fast. This would make use try to parse an a date that is an empty string.
         Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
+    }
+
+    public void ensureIsValidTransferAmount(Transfer transfer) throws TransferExecutionException {
+        if (transfer.getAmount().isLessThan(1.00)) {
+            cancelTransfer(
+                    catalog.getString(
+                            TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT));
+        }
     }
 
     @Override

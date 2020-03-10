@@ -137,6 +137,8 @@ public class TransferExecutionException extends RuntimeException {
         EXCESS_AMOUNT(
                 new LocalizableKey(
                         "The transfer amount is larger than what is available on the account.")),
+        INVALID_MINIMUM_AMOUNT(
+                new LocalizableKey("The transfer amount, less than 1 SEK is not supported.")),
         EXCESS_AMOUNT_FOR_BENEFICIARY(
                 new LocalizableKey(
                         "The transfer amount will exceed the total allowed weekly limit for the beneficiary.")),

@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.banks.seb.model.HoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.Session;
 import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
@@ -173,6 +174,22 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
         testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
+    @Test(expected = TransferExecutionException.class)
+    public void testTransferExternal_LessThan_1SEK() throws Exception {
+        Transfer transfer =
+                createLessThan1SEKTestTransferWithMessage(
+                        TestAccount.SEB_JR, TestAccount.NORDEASSN_EP, "tink test", "tink test");
+        testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
+    }
+
+    @Test(expected = TransferExecutionException.class)
+    public void testTransferInternal_LessThan_1SEK() throws Exception {
+        Transfer transfer =
+                createLessThan1SEKTestTransferWithMessage(
+                        TestAccount.SEB_DL, TestAccount.SEB_ANOTHER_DL, "tink test", "tink test");
+        testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
+    }
+
     @Test
     public void testTransferInvoiceBankIdOcrLvl1() throws Exception {
         String sourceMessageIdentifier = "Lvl1";
@@ -312,6 +329,23 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
         transfer.setSource(sourceAccount);
         transfer.setSourceMessage(sourceMessage);
         transfer.setDestination(destinationAccount);
+        transfer.setDestinationMessage(destinationMessage);
+        transfer.setType(TransferType.BANK_TRANSFER);
+
+        return transfer;
+    }
+
+    private Transfer createLessThan1SEKTestTransferWithMessage(
+            String sourceAccount,
+            String destinationAccount,
+            String sourceMessage,
+            String destinationMessage) {
+        Transfer transfer = new Transfer();
+
+        transfer.setAmount(Amount.inSEK(0.01));
+        transfer.setSource(new SwedishIdentifier(sourceAccount));
+        transfer.setSourceMessage(sourceMessage);
+        transfer.setDestination(new SwedishIdentifier(destinationAccount));
         transfer.setDestinationMessage(destinationMessage);
         transfer.setType(TransferType.BANK_TRANSFER);
 
