@@ -3435,7 +3435,7 @@
             "multiFactor": false,
             "name": "no-personellservice-trondelag",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
-            "payload": "3075",
+            "payload": "0010",
             "popular": false,
             "status": "ENABLED",
             "transactional": true,

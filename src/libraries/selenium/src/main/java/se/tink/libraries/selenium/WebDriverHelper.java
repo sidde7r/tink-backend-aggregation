@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.openqa.selenium.By;
-import org.openqa.selenium.InvalidElementStateException;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,6 +15,8 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
+import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
 
 public class WebDriverHelper {
     private static final long WAIT_FOR_RENDER_MILLIS = 2000;
@@ -31,11 +33,11 @@ public class WebDriverHelper {
         }
     }
 
-    public static WebDriver constructPhantomJsWebDriver(String userAgent) {
+    public WebDriver constructPhantomJsWebDriver(String userAgent) {
         return constructPhantomJsWebDriver(userAgent, false, "");
     }
 
-    public static WebDriver constructPhantomJsWebDriver(
+    public WebDriver constructPhantomJsWebDriver(
             String userAgent, boolean withDebugLogs, String proxyServer) {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(
@@ -71,7 +73,7 @@ public class WebDriverHelper {
         return new PhantomJSDriver(capabilities);
     }
 
-    public static void sleep(long waitTime) {
+    public void sleep(long waitTime) {
         try {
             Thread.sleep(waitTime);
         } catch (InterruptedException e) {
@@ -79,7 +81,7 @@ public class WebDriverHelper {
         }
     }
 
-    public static Stream<WebElement> waitForElements(WebDriver driver, By by) {
+    public Stream<WebElement> waitForElements(WebDriver driver, By by) {
         for (int i = 0; i < 5; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {
             List<WebElement> elements = driver.findElements(by);
             if (!elements.isEmpty()) {
@@ -89,11 +91,11 @@ public class WebDriverHelper {
         return Stream.empty();
     }
 
-    public static Optional<WebElement> waitForElement(WebDriver driver, By by) {
+    public Optional<WebElement> waitForElement(WebDriver driver, By by) {
         return waitForElements(driver, by).findFirst();
     }
 
-    public static Optional<String> waitForElementWithAttribute(
+    public Optional<String> waitForElementWithAttribute(
             WebDriver driver, By elementPath, String attributeKey) {
         for (int i = 0; i < 10; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {
             Optional<String> attributeValue =
@@ -108,54 +110,71 @@ public class WebDriverHelper {
         return Optional.empty();
     }
 
-    public static void switchToIframe(WebDriver driver) {
+    public void switchToIframe(WebDriver driver) {
         driver.switchTo().defaultContent();
         Optional<WebElement> iframeElement = waitForElement(driver, IFRAME_TAG);
         if (!iframeElement.isPresent()) {
-            throw new IllegalStateException("Can't find iframe element.");
+            throw new HtmlElementNotFoundException("Can't find iframe element");
         }
-
         iframeElement.ifPresent(iframe -> driver.switchTo().frame(iframe));
     }
 
-    public static void sendInputValue(WebElement element, String value) {
+    public void sendInputValue(WebElement element, String value) {
         for (int i = 0; i < 10; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {
             try {
                 element.sendKeys(value);
                 break;
-            } catch (InvalidElementStateException exception) {
+            } catch (StaleElementReferenceException exception) {
                 // NOOP, try again.
                 // This can handle if the element is not ready for input yet.
             }
         }
     }
 
-    public static void setInputValue(WebDriver driver, By by, String value) {
-        WebElement element =
-                waitForElement(driver, by)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Could not find element for: " + by));
+    public void setInputValue(WebDriver driver, By by, String value) {
+        WebElement element = getElement(driver, by);
 
         sendInputValue(element, value);
     }
 
-    public static boolean submitForm(WebDriver driver, By by) {
+    public boolean submitForm(WebDriver driver, By by) {
         // It can happen that the element goes stale (i.e. the page has reloaded) between
         // waitForElement() and submit().
         for (int i = 0; i < 10; i++) {
             try {
                 // Can be the form itself or an element in the form, e.g. the submit button.
-                waitForElement(driver, by)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Could not find button element for: " + by))
-                        .submit();
+                getElement(driver, by).submit();
                 return true;
             } catch (StaleElementReferenceException exception) {
                 // NOOP; try again.
+            }
+        }
+        return false;
+    }
+
+    public WebElement getElement(WebDriver driver, By by) {
+        return waitForElement(driver, by)
+                .orElseThrow(
+                        () ->
+                                new HtmlElementNotFoundException(
+                                        String.format("Can't find element %s", by.toString())));
+    }
+
+    public void clickButton(WebElement submitButton) {
+        if (!checkIfElementEnabledIfNotWait(submitButton)) {
+            throw new ScreenScrapingException(
+                    String.format("Button %s is not interactable", submitButton.toString()));
+        }
+        submitButton.sendKeys(Keys.ENTER);
+    }
+
+    public boolean checkIfElementEnabledIfNotWait(WebElement element) {
+        for (int i = 0; i < 10; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {
+            try {
+                if (element.isEnabled()) {
+                    return true;
+                }
+            } catch (StaleElementReferenceException e) {
             }
         }
         return false;

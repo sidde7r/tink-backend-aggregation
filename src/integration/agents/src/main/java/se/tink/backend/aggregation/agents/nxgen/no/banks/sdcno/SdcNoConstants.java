@@ -17,8 +17,15 @@ public class SdcNoConstants {
     }
 
     public static class Authentication {
+        private static final String CULTURA_BANK = "1254";
+        private static final String EASY_BANK = "9791";
+        private static final String PERSONELLSERVICE_TRONDELAG = "0010";
+
         // test Storebrand does not support SMS pinning of devices
-        public static final ImmutableList<String> BANKS_WITH_PIN_AUTHENTICATION =
-                ImmutableList.of("9680");
+        public static final ImmutableList<String> BANKS_WITH_IFRAME_BANKID_AUTHENTICATION =
+                ImmutableList.of(CULTURA_BANK, EASY_BANK, PERSONELLSERVICE_TRONDELAG);
+
+        public static final String IFRAME_BANKID_LOGIN_URL =
+                "https://www.nettbankportal.no/{bankcode}/nettbank2/logon/bankidjs/";
     }
 }

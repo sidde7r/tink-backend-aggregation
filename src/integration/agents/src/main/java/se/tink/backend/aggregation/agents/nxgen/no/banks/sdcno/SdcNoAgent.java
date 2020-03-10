@@ -1,29 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno;
 
-import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoConstants.Authentication.BANKS_WITH_PIN_AUTHENTICATION;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoConstants.Authentication;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.SdcNoBankIdIFrameSSAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.parser.SdcNoTransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcAutoAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcPinAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcSmsOtpAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationPasswordController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.BankIdIframeSSAuthenticationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.selenium.WebDriverHelper;
 
 /*
  * Configure market specific client, this is NO
  */
 public class SdcNoAgent extends SdcAgent {
-    private static Logger LOG = LoggerFactory.getLogger(SdcNoAgent.class);
+    private static final Pattern PATTERN = Pattern.compile("\\{bankcode}");
+    private static final Matcher NETTBANK_MATCHER =
+            PATTERN.matcher(Authentication.IFRAME_BANKID_LOGIN_URL);
 
     public SdcNoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -37,47 +35,18 @@ public class SdcNoAgent extends SdcAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        if (BANKS_WITH_PIN_AUTHENTICATION.contains(agentConfiguration.getBankCode())) {
-            return constructPinAuthenticator();
-        }
-        return constructSmsAuthenticator();
-    }
-
-    private Authenticator constructSmsAuthenticator() {
-        LOG.info("SDC bank using SMS authentication");
-        SdcAutoAuthenticator noAutoAuthenticator =
-                new SdcAutoAuthenticator(
-                        bankClient,
-                        sdcSessionStorage,
-                        agentConfiguration,
-                        credentials,
-                        sdcPersistentStorage);
-        SdcSmsOtpAuthenticator noSmsOtpAuthenticator =
-                new SdcSmsOtpAuthenticator(
-                        bankClient,
-                        sdcSessionStorage,
-                        agentConfiguration,
-                        credentials,
-                        sdcPersistentStorage);
-
-        SmsOtpAuthenticationPasswordController smsOtpController =
-                new SmsOtpAuthenticationPasswordController(
-                        catalog, supplementalInformationHelper, noSmsOtpAuthenticator);
-
-        return new AutoAuthenticationController(
-                request, context, smsOtpController, noAutoAuthenticator);
-    }
-
-    private Authenticator constructPinAuthenticator() {
-        LOG.info("SDC bank using pin authentication");
-
-        SdcPinAuthenticator dkAuthenticator =
-                new SdcPinAuthenticator(bankClient, sdcSessionStorage, agentConfiguration);
-        return new PasswordAuthenticationController(dkAuthenticator);
+        BankIdIframeSSAuthenticationController controller =
+                new BankIdIframeSSAuthenticationController(getLoginUrl(), new WebDriverHelper());
+        return new SdcNoBankIdIFrameSSAuthenticator(controller);
     }
 
     @Override
     protected SdcApiClient createApiClient(SdcConfiguration agentConfiguration) {
         return new SdcApiClient(client, agentConfiguration);
+    }
+
+    private String getLoginUrl() {
+        String bankCode = agentConfiguration.getBankCode();
+        return NETTBANK_MATCHER.replaceAll(bankCode);
     }
 }

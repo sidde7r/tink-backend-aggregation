@@ -8,8 +8,11 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/bankid/screenscraping",
         "//src/libraries/date",
+        "//src/libraries/selenium",
         "//src/libraries/strings",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_codec_commons_codec",
@@ -23,6 +26,5 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
-        "@selenium//:org_seleniumhq_selenium_selenium_api",
     ],
 )

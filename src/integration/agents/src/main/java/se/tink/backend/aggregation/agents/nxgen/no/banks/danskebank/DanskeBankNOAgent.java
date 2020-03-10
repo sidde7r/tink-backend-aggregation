@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.selenium.WebDriverHelper;
 
 public class DanskeBankNOAgent extends DanskeBankAgent {
     public DanskeBankNOAgent(
@@ -32,7 +33,8 @@ public class DanskeBankNOAgent extends DanskeBankAgent {
                         persistentStorage,
                         credentials,
                         deviceId,
-                        configuration);
+                        configuration,
+                        new WebDriverHelper());
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,

@@ -53,18 +53,21 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
     private final Credentials credentials;
     private final String deviceId;
     private final DanskeBankConfiguration configuration;
+    private final WebDriverHelper webDriverHelper;
 
     public DanskeBankNOBankIdAuthenticator(
             DanskeBankNOApiClient apiClient,
             PersistentStorage persistentStorage,
             Credentials credentials,
             String deviceId,
-            DanskeBankConfiguration configuration) {
+            DanskeBankConfiguration configuration,
+            WebDriverHelper webDriverHelper) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
         this.deviceId = deviceId;
         this.configuration = configuration;
+        this.webDriverHelper = webDriverHelper;
     }
 
     @Override
@@ -135,7 +138,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         WebDriver driver = null;
         try {
             driver =
-                    WebDriverHelper.constructPhantomJsWebDriver(
+                    webDriverHelper.constructPhantomJsWebDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
 
@@ -146,7 +149,8 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
 
             // Extract key card entity to get challenge for next Js execution
             String challengeInfo =
-                    WebDriverHelper.waitForElementWithAttribute(
+                    webDriverHelper
+                            .waitForElementWithAttribute(
                                     driver, By.tagName("body"), "trustedChallengeInfo")
                             .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
@@ -168,7 +172,8 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
                             generateResponseInput));
 
             String responseData =
-                    WebDriverHelper.waitForElementWithAttribute(
+                    webDriverHelper
+                            .waitForElementWithAttribute(
                                     driver, By.tagName("body"), "trustedChallengeResponse")
                             .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
@@ -188,7 +193,8 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
                             validateStepUpTrustedDeviceInput));
 
             String trustedStepUpToken =
-                    WebDriverHelper.waitForElementWithAttribute(
+                    webDriverHelper
+                            .waitForElementWithAttribute(
                                     driver, By.tagName("body"), "trustedStepUpToken")
                             .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
@@ -309,7 +315,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         WebDriver driver = null;
         try {
             driver =
-                    WebDriverHelper.constructPhantomJsWebDriver(
+                    webDriverHelper.constructPhantomJsWebDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
 
@@ -318,7 +324,8 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
                             stepupDynamicJs, bindDeviceResponse.getSharedSecret()));
 
             String decryptedDeviceSecret =
-                    WebDriverHelper.waitForElementWithAttribute(
+                    webDriverHelper
+                            .waitForElementWithAttribute(
                                     driver, By.tagName("body"), "decryptedDeviceSecret")
                             .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
 
@@ -338,26 +345,25 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
     private void setUserName(WebDriver driver, String username) {
         // The <input> for userName has a randomized `id`. Therefore we search for an input with
         // maxlength 11.
-        WebDriverHelper.setInputValue(driver, By.xpath("//form//input[@maxlength='11']"), username);
+        webDriverHelper.setInputValue(driver, By.xpath("//form//input[@maxlength='11']"), username);
     }
 
     private boolean submitForm(WebDriver driver) {
-        return WebDriverHelper.submitForm(driver, By.xpath("//form"));
+        return webDriverHelper.submitForm(driver, By.xpath("//form"));
     }
 
     private Optional<WebElement> waitForBankIdPasswordInputElement(WebDriver driver) {
         // Wait for the user to sign the BankId authentication.
         for (int i = 0; i < 90; i++) {
             log.debug("[{}] Waiting for bankId sign.", i);
-            WebDriverHelper.sleep(2000);
-            WebDriverHelper.switchToIframe(driver);
+            webDriverHelper.sleep(2000);
+            webDriverHelper.switchToIframe(driver);
 
             List<WebElement> elements =
                     driver.findElements(By.xpath("//form//input[@type='password'][@maxlength]"));
             if (elements.isEmpty()) {
                 continue;
             }
-
             return Optional.ofNullable(elements.get(0));
         }
 
@@ -368,7 +374,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         // Look for the logonPackage in the main dom.
         // `logonPackage` is assigned in the dom by the JavaScript snippet we constructed.
         driver.switchTo().defaultContent();
-        return WebDriverHelper.waitForElementWithAttribute(
+        return webDriverHelper.waitForElementWithAttribute(
                 driver, By.tagName("body"), "logonPackage");
     }
 
@@ -382,7 +388,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         WebDriver driver = null;
         try {
             driver =
-                    WebDriverHelper.constructPhantomJsWebDriver(
+                    webDriverHelper.constructPhantomJsWebDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
 
             String epochInSeconds = Long.toString(System.currentTimeMillis() / 1000);
@@ -394,7 +400,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
             js.executeScript(formattedJs);
 
             // NoBankId runs inside an iframe (there's only one).
-            WebDriverHelper.switchToIframe(driver);
+            webDriverHelper.switchToIframe(driver);
             // Page load (`loading BankId...`)
 
             setUserName(driver, username);
@@ -403,11 +409,11 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
             }
 
             // Must reference the iframe every page reload.
-            WebDriverHelper.switchToIframe(driver);
+            webDriverHelper.switchToIframe(driver);
 
             WebElement passwordInputElement =
-                    WebDriverHelper.waitForElement(
-                                    driver, By.xpath("//form//input[@type='password']"))
+                    webDriverHelper
+                            .waitForElement(driver, By.xpath("//form//input[@type='password']"))
                             .orElseThrow(LoginError.NOT_SUPPORTED::exception);
             if (passwordInputElement.isEnabled()) {
                 // The element should be disabled for Mobile BankId.
@@ -427,7 +433,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
 
             // Once the user has signed the authentication, the page will reload and contain a form
             // asking for the BankId password.
-            WebDriverHelper.sendInputValue(bankIdPasswordInputElement, bankIdPassword);
+            webDriverHelper.sendInputValue(bankIdPasswordInputElement, bankIdPassword);
 
             // Submit the form to finalize the auth.
             if (!submitForm(driver)) {
@@ -477,7 +483,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         WebDriver driver = null;
         try {
             driver =
-                    WebDriverHelper.constructPhantomJsWebDriver(
+                    webDriverHelper.constructPhantomJsWebDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
 
