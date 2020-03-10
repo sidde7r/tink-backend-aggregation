@@ -2,11 +2,36 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "amex",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(["agents/*.java"]),
     data = [
         "//data:aggregation_test",
         "//data:cryptography_test",
         "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/amex",
+        "//third_party:asm_asm",
+    ],
+    deps = [
+        "//src/integration/api",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//third_party:org_mockito_mockito_core",
+    ],
+)
+
+junit_test(
+    name = "amex_unit_tests",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["agents/**/*.java"],
+    ),
+    data = [
+        "//data:aggregation_test",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
@@ -28,7 +53,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//src/integration/user:rpc",
