@@ -5,9 +5,11 @@ java_library(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sebbase",
         "//src/integration/amount",
+        "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
@@ -23,7 +25,5 @@ java_library(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpcore",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
-        "//src/integration/api",
     ],
 )
