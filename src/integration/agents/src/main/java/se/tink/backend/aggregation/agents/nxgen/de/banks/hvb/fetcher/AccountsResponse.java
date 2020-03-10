@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher;
 
+import static java.lang.String.format;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,6 +37,7 @@ public class AccountsResponse {
             private String type;
             private Iban ibanInfo;
             private String branch;
+            private LoginInfo loginInfo;
 
             @Data
             @Accessors(chain = true)
@@ -43,10 +46,29 @@ public class AccountsResponse {
                 private String iban;
             }
 
+            String getHolderName() {
+                return Optional.ofNullable(getLoginInfo())
+                        .map(
+                                login ->
+                                        format(
+                                                "%s %s",
+                                                login.getHolderName(), login.getHolderSurname()))
+                        .orElse("");
+            }
+
             String getIban() {
                 return Optional.ofNullable(getIbanInfo())
                         .map(Iban::getIban)
                         .orElseThrow(() -> new IllegalArgumentException("Can't obtain IBAN."));
+            }
+
+            @Data
+            @Accessors(chain = true)
+            @JsonObject
+            static class LoginInfo {
+
+                private String holderName;
+                private String holderSurname;
             }
         }
     }

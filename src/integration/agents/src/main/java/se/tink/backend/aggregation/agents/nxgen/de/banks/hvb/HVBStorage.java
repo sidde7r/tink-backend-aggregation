@@ -32,7 +32,7 @@ public class HVBStorage {
     public KeyPair getKeyPair() {
         return Optional.ofNullable(persistentStorage.get(KEY_PAIR))
                 .map(SerializationUtils::deserializeKeyPair)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("Can't obtain stored key pair."));
     }
 
     public void setKeyPair(@Nonnull final KeyPair keyPair) {

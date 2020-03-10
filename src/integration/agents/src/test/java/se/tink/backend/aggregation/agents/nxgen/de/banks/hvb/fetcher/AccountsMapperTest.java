@@ -17,6 +17,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.AccountsResponse.Response;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.AccountsResponse.Response.Account;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.AccountsResponse.Response.Account.Iban;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.AccountsResponse.Response.Account.LoginInfo;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class AccountsMapperTest {
@@ -24,6 +25,8 @@ public class AccountsMapperTest {
     private static final BigDecimal GIVEN_AMOUNT = ONE;
     private static final String GIVEN_ACCOUNT_ID = "account id";
     private static final String GIVEN_ACCOUNT_NAME = "account name";
+    private static final String GIVEN_HOLDER_NAME = "holder name";
+    private static final String GIVEN_HOLDER_SURNAME = "holder surname";
 
     private AccountsMapper tested = new AccountsMapper();
 
@@ -55,7 +58,11 @@ public class AccountsMapperTest {
                 .setCurrency(givenCurrency())
                 .setName(GIVEN_ACCOUNT_NAME)
                 .setType(type)
-                .setIbanInfo(new Iban().setIban(givenIban()));
+                .setIbanInfo(new Iban().setIban(givenIban()))
+                .setLoginInfo(
+                        new LoginInfo()
+                                .setHolderName(GIVEN_HOLDER_NAME)
+                                .setHolderSurname(GIVEN_HOLDER_SURNAME));
     }
 
     private void assertTransactionalCheckingAccount(TransactionalAccount account) {
@@ -71,6 +78,8 @@ public class AccountsMapperTest {
         assertThat(account.getType()).isEqualTo(type);
         assertThat(account.getAccountNumber()).isEqualTo(givenIban());
         assertThat(account.getApiIdentifier()).isEqualTo(GIVEN_ACCOUNT_ID);
+        assertThat(account.getHolderName())
+                .hasToString(GIVEN_HOLDER_NAME + " " + GIVEN_HOLDER_SURNAME);
 
         assertThat(account.getExactBalance().getExactValue()).isEqualByComparingTo(GIVEN_AMOUNT);
         assertThat(account.getExactBalance().getCurrencyCode()).isEqualTo(givenCurrency());

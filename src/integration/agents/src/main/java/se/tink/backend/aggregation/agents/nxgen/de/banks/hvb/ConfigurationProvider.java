@@ -10,8 +10,6 @@ import com.sun.jersey.core.header.OutBoundHeaders;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Random;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -54,13 +52,5 @@ public class ConfigurationProvider {
         }
         keyPairGenerator.initialize(RSA_KEY_SIZE);
         return keyPairGenerator.genKeyPair();
-    }
-
-    public Instant getInstantNow() {
-        return Instant.now();
-    }
-
-    public LocalDate getDateNow() {
-        return LocalDate.now();
     }
 }

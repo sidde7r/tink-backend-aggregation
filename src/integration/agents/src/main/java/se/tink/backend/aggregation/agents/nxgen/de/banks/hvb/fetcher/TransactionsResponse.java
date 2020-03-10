@@ -5,8 +5,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -43,7 +46,8 @@ public class TransactionsResponse {
                 @JsonDeserialize(using = LocalDateDeserializer.class)
                 private LocalDate bookDate;
 
-                private String description;
+                @JsonProperty("accordionData")
+                private List<String> descriptionLines;
 
                 @JsonProperty("postingEntryAmount")
                 private AmountEntry amountEntry;
@@ -72,6 +76,13 @@ public class TransactionsResponse {
 
                 boolean isPending() {
                     return getBookDate() == null;
+                }
+
+                String getDescription() {
+                    return Optional.ofNullable(descriptionLines)
+                            .map(Collection::stream)
+                            .orElseGet(Stream::empty)
+                            .collect(Collectors.joining(" "));
                 }
             }
         }

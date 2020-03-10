@@ -54,6 +54,7 @@ public class AccountsMapper {
                                 .build())
                 .setApiIdentifier(account.getId())
                 .setBankIdentifier(account.getId())
+                .addHolderName(account.getHolderName())
                 .putInTemporaryStorage(BRANCH_NUMBER, account.getBranch())
                 .build();
     }

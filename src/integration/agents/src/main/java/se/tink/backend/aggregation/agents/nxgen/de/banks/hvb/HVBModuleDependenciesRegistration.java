@@ -24,6 +24,7 @@ public class HVBModuleDependenciesRegistration extends ModuleDependenciesRegistr
     public void registerInternalModuleDependencies() {
         registerBean(DataEncoder.class, new DataEncoder());
         registerBean(ConfigurationProvider.class, configurationProvider());
+        registerBean(new DateTimeProvider());
         registerBean(
                 new HVBStorage(getBean(SessionStorage.class), getBean(PersistentStorage.class)));
         registerBean(
@@ -48,6 +49,7 @@ public class HVBModuleDependenciesRegistration extends ModuleDependenciesRegistr
                         getBean(HVBStorage.class),
                         getBean(ConfigurationProvider.class),
                         getBean(DataEncoder.class),
+                        getBean(DateTimeProvider.class),
                         getBean(RegistrationCall.class),
                         getBean(PreAuthorizationCall.class),
                         getBean(AuthorizationCall.class),
@@ -82,6 +84,7 @@ public class HVBModuleDependenciesRegistration extends ModuleDependenciesRegistr
                 new TransactionsFetcher(
                         getBean(HVBStorage.class),
                         getBean(ConfigurationProvider.class),
+                        getBean(DateTimeProvider.class),
                         getBean(TransactionsCall.class),
                         getBean(TransactionsMapper.class)));
     }

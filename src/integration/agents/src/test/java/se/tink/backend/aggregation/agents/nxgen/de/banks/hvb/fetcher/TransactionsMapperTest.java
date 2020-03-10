@@ -27,9 +27,13 @@ public class TransactionsMapperTest {
     private static final String EXPECTED_DATE_1 = "2020-02-01T11:00:00.000>";
     private static final String EXPECTED_DATE_2 = "2020-02-02T11:00:00.000>";
 
-    private static final String GIVEN_DESC_1 = "desc1";
-    private static final String GIVEN_DESC_2 = "desc2";
-    private static final String GIVEN_DESC_3 = "desc3";
+    private static final List<String> GIVEN_DESC_1 = asList("desc1.1", "desc1.2");
+    private static final List<String> GIVEN_DESC_2 = asList("desc2.1", "desc2.2");
+    private static final List<String> GIVEN_DESC_3 = asList("desc3.1", "desc3.2");
+
+    private static final String EXPECTED_DESC_1 = "desc1.1 desc1.2";
+    private static final String EXPECTED_DESC_2 = "desc2.1 desc2.2";
+    private static final String EXPECTED_DESC_3 = "desc3.1 desc3.2";
 
     private static final String GIVEN_CURRENCY = "EUR";
 
@@ -45,9 +49,11 @@ public class TransactionsMapperTest {
 
         // then
         assertThat(result).hasSize(3);
-        assertNotPendingTransaction(result.get(0), EXPECTED_DATE_1, GIVEN_DESC_1, GIVEN_AMOUNT_1);
-        assertNotPendingTransaction(result.get(1), EXPECTED_DATE_2, GIVEN_DESC_2, GIVEN_AMOUNT_2);
-        assertPendingTransaction(result.get(2), GIVEN_DESC_3, GIVEN_AMOUNT_3);
+        assertNotPendingTransaction(
+                result.get(0), EXPECTED_DATE_1, EXPECTED_DESC_1, GIVEN_AMOUNT_1);
+        assertNotPendingTransaction(
+                result.get(1), EXPECTED_DATE_2, EXPECTED_DESC_2, GIVEN_AMOUNT_2);
+        assertPendingTransaction(result.get(2), EXPECTED_DESC_3, GIVEN_AMOUNT_3);
     }
 
     private TransactionsResponse givenTransactionsResponse() {
@@ -78,10 +84,11 @@ public class TransactionsMapperTest {
         return new ItemContainer().setItems(items);
     }
 
-    private Item givenTransactionItem(LocalDate bookDate, String description, BigDecimal amount) {
+    private Item givenTransactionItem(
+            LocalDate bookDate, List<String> description, BigDecimal amount) {
         return new Item()
                 .setBookDate(bookDate)
-                .setDescription(description)
+                .setDescriptionLines(description)
                 .setAmountEntry(new AmountEntry().setAmount(amount).setCurrency(GIVEN_CURRENCY));
     }
 
