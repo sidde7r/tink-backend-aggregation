@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
 public class BnpParibasFortisAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -14,6 +12,8 @@ public class BnpParibasFortisAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("be", "be-bnpparibasfortis-ob")
+                        .setFinancialInstitutionId("bnpparibasfortis")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(false);
