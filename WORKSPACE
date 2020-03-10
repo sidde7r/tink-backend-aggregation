@@ -592,7 +592,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "ch_qos_logback_logback_classic",
+    name = "ch_qos_logback_logback_classic",  # Do not use, but do not remove
     artifact = "ch.qos.logback:logback-classic:1.1.11",
     sha1 = "ccedfbacef4a6515d2983e3f89ed753d5d4fb665",
 )
@@ -715,8 +715,8 @@ maven_jar(
 
 maven_jar(
     name = "org_slf4j_slf4j_api",  # Do not use, but do not remove
-    artifact = "org.slf4j:slf4j-api:1.7.21",
-    sha1 = "139535a69a4239db087de9bab0bee568bf8e0b70",
+    artifact = "org.slf4j:slf4j-api:1.7.22",
+    sha1 = "a1c83373863cec7ae8d89dc1c5722d8cb6ec0309",
 )
 
 maven_jar(
@@ -920,7 +920,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_commons_commons_collections4",
+    name = "org_apache_commons_commons_collections4",  # Do not use, but do not remove
     artifact = "org.apache.commons:commons-collections4:4.0",
     sha1 = "da217367fd25e88df52ba79e47658d4cf928b0d1",
 )
@@ -1124,7 +1124,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_jersey_jersey_core",
+    name = "com_sun_jersey_jersey_core",  # Do not use, but do not remove
     artifact = "com.sun.jersey:jersey-core:1.18.1",
     sha1 = "4f97b0f85a881d3b3478f99a17df7bd258b9d626",
 )
@@ -1636,7 +1636,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_jersey_jersey_client",
+    name = "com_sun_jersey_jersey_client",  # Do not use, but do not remove
     artifact = "com.sun.jersey:jersey-client:1.18.1",
     sha1 = "60e85d4f638fb444bcbbd9f8da83414fbdf731c3",
 )
@@ -2560,6 +2560,7 @@ maven_install(
         "aopalliance:aopalliance:1.0",
         "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
         "ch.qos.logback.contrib:logback-json-core:jar:0.1.5",
+        "ch.qos.logback:logback-classic:1.1.11",
         "ch.qos.logback:logback-core:1.1.11",
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
@@ -2588,6 +2589,8 @@ maven_install(
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
         "com.netflix.governator:governator:1.17.2",
+        "com.sun.jersey:jersey-client:1.18.1",
+        "com.sun.jersey:jersey-core:1.18.1",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-logging:commons-logging:1.2",
@@ -2597,13 +2600,14 @@ maven_install(
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
         "net.sourceforge.cssparser:cssparser:0.9.16",
+        "org.apache.commons:commons-collections4:4.0",
         "org.apache.commons:commons-lang3:3.4",
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.ow2.asm:asm:5.0.4",
         "org.reactivestreams:reactive-streams:1.0.3",
-        "org.slf4j:slf4j-api:1.7.21",
+        "org.slf4j:slf4j-api:1.7.22",
         "org.w3c.css:sac:1.3",
         "org.yaml:snakeyaml:1.23",
     ],

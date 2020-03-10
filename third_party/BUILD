@@ -20,7 +20,7 @@ java_library(
     name = "ch_qos_logback_logback_classic",
     visibility = ["//visibility:public"],
     exports = [
-        "@ch_qos_logback_logback_classic//jar",
+        "@aggregation//:ch_qos_logback_logback_classic",
     ],
     runtime_deps = [
         "@aggregation//:ch_qos_logback_logback_core",
@@ -178,6 +178,7 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:commons_logging_commons_logging",
+        "@aggregation//:org_apache_commons_commons_collections4",
         "@aggregation//:org_apache_commons_commons_lang3",
         "@aggregation//:org_apache_httpcomponents_httpclient",
         "@aggregation//:org_apache_httpcomponents_httpcore",
@@ -190,7 +191,6 @@ java_library(
         "@net_minidev_asm//jar",
         "@net_minidev_json_smart//jar",
         "@net_sf_jopt_simple_jopt_simple//jar",
-        "@org_apache_commons_commons_collections4//jar",
         "@org_eclipse_jetty_jetty_continuation//jar",
         "@org_eclipse_jetty_jetty_http//jar",
         "@org_eclipse_jetty_jetty_io//jar",
@@ -210,7 +210,7 @@ java_library(
     name = "org_apache_commons_commons_collections4",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_commons_commons_collections4//jar",
+        "@aggregation//:org_apache_commons_commons_collections4",
     ],
 )
 
@@ -342,7 +342,7 @@ java_library(
         "@com_sun_jersey_contribs_jersey_apache_client4//jar",
     ],
     runtime_deps = [
-        "@com_sun_jersey_jersey_client//jar",
+        "@aggregation//:com_sun_jersey_jersey_client",
     ],
 )
 
@@ -350,10 +350,10 @@ java_library(
     name = "com_sun_jersey_jersey_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_sun_jersey_jersey_client//jar",
+        "@aggregation//:com_sun_jersey_jersey_client",
     ],
     runtime_deps = [
-        "@com_sun_jersey_jersey_core//jar",
+        "@aggregation//:com_sun_jersey_jersey_core",
     ],
 )
 
@@ -361,7 +361,7 @@ java_library(
     name = "com_sun_jersey_jersey_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_sun_jersey_jersey_core//jar",
+        "@aggregation//:com_sun_jersey_jersey_core",
     ],
 )
 
@@ -372,7 +372,7 @@ java_library(
         "@com_sun_jersey_jersey_server//jar",
     ],
     runtime_deps = [
-        "@com_sun_jersey_jersey_core//jar",
+        "@aggregation//:com_sun_jersey_jersey_core",
     ],
 )
 
@@ -439,13 +439,13 @@ java_library(
         "@io_dropwizard_dropwizard_client//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_sun_jersey_jersey_client",
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:org_apache_httpcomponents_httpclient",
         "@aggregation//:org_apache_httpcomponents_httpcore",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_httpclient//jar",
         "@com_sun_jersey_contribs_jersey_apache_client4//jar",
-        "@com_sun_jersey_jersey_client//jar",
         "@io_dropwizard_dropwizard_core//jar",
     ],
 )
@@ -473,6 +473,7 @@ java_library(
     ],
     runtime_deps = [
         ":io_dropwizard_dropwizard_jersey",
+        "@aggregation//:ch_qos_logback_logback_classic",
         "@aggregation//:ch_qos_logback_logback_core",
         "@aggregation//:com_fasterxml_classmate",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
@@ -487,9 +488,9 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_sun_jersey_jersey_core",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@ch_qos_logback_logback_classic//jar",
         "@com_codahale_metrics_metrics_annotation//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_healthchecks//jar",
@@ -499,7 +500,6 @@ java_library(
         "@com_codahale_metrics_metrics_jvm//jar",
         "@com_codahale_metrics_metrics_logback//jar",
         "@com_codahale_metrics_metrics_servlets//jar",
-        "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
         "@commons_lang_commons_lang//jar",
@@ -540,7 +540,7 @@ java_library(
         "@io_dropwizard_dropwizard_servlets//jar",
     ],
     runtime_deps = [
-        "@ch_qos_logback_logback_classic//jar",
+        "@aggregation//:ch_qos_logback_logback_classic",
         "@com_codahale_metrics_metrics_core//jar",
         "@org_eclipse_jetty_jetty_servlet//jar",
         "@org_eclipse_jetty_orbit_javax_servlet//jar",
@@ -575,10 +575,10 @@ java_import(
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+        "@aggregation//:com_sun_jersey_jersey_core",
         "@com_codahale_metrics_metrics_annotation//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_jersey//jar",
-        "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
@@ -610,9 +610,9 @@ java_library(
     name = "io_dropwizard_dropwizard_logging",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:ch_qos_logback_logback_classic",
         "@aggregation//:ch_qos_logback_logback_core",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@ch_qos_logback_logback_classic//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_logback//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
@@ -1800,11 +1800,11 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+        "@aggregation//:org_apache_commons_commons_collections4",
         "@aggregation//:org_apache_commons_commons_lang3",
         "@commons_io_commons_io//jar",
         "@io_perfmark_perfmark_api//jar",
         "@lombok//:org_projectlombok_lombok",
-        "@org_apache_commons_commons_collections4//jar",
         "@standalone_agent_deps//:ch_qos_logback_logback_classic",
         "@standalone_agent_deps//:ch_qos_logback_logback_core",
         "@standalone_agent_deps//:commons_codec_commons_codec",
