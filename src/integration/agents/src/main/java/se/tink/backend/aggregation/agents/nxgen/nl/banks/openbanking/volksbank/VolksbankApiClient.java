@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TransactionFetcherParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.entities.accounts.AccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount.rpc.AccountsResponse;
@@ -154,7 +155,8 @@ public class VolksbankApiClient {
                 .toOauthToken();
     }
 
-    public String consentStatusRequest(final String clientId, final String consentId) {
+    public ConsentStatusResponse consentStatusRequest(
+            final String clientId, final String consentId) {
         final URL url = urlFactory.buildURL(Paths.CONSENT + "/" + consentId + "/status");
 
         return client.request(url)
@@ -162,7 +164,7 @@ public class VolksbankApiClient {
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON_TYPE)
                 .header(HeaderKeys.REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.AUTHORIZATION, clientId)
-                .get(String.class);
+                .get(ConsentStatusResponse.class);
     }
 
     private <E> E getResponse(String response, Class<E> contentClass) {
