@@ -3,24 +3,25 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountIdentifierEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
 
 @RequiredArgsConstructor
 public class CreditCardAccountMapper {
 
     private final CreditCardBalanceMapper balanceMapper;
+    private final IdentifierMapper identifierMapper;
 
     public CreditCardAccount map(
             AccountEntity account, Collection<AccountBalanceEntity> balances, String partyName) {
 
-        AccountIdentifierEntity cardIdentifier = extractCardIdentifier(account);
+        AccountIdentifierEntity cardIdentifier =
+                identifierMapper.getCreditCardIdentifier(account.getIdentifiers());
         String displayName = pickDisplayName(account, cardIdentifier);
 
         return CreditCardAccount.nxBuilder()
@@ -37,21 +38,11 @@ public class CreditCardAccountMapper {
                                 .withUniqueIdentifier(cardIdentifier.getIdentification())
                                 .withAccountNumber(cardIdentifier.getIdentification())
                                 .withAccountName(displayName)
-                                .addIdentifier(
-                                        new PaymentCardNumberIdentifier(
-                                                cardIdentifier
-                                                        .getIdentification())) // todo use id mapper
+                                .addIdentifier(identifierMapper.mapIdentifier(cardIdentifier))
                                 .build())
                 .addHolderName(ObjectUtils.firstNonNull(cardIdentifier.getOwnerName(), partyName))
                 .setApiIdentifier(account.getAccountId())
                 .build();
-    }
-
-    private AccountIdentifierEntity extractCardIdentifier(AccountEntity account) {
-        return account.getIdentifiers().stream()
-                .filter(i -> ExternalAccountIdentification4Code.PAN.equals(i.getIdentifierType()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Missing PAN card identifier"));
     }
 
     private String pickDisplayName(

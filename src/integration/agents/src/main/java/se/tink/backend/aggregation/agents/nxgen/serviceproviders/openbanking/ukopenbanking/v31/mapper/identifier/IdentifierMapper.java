@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ public class IdentifierMapper {
     }
 
     public AccountIdentifierEntity getTransactionalAccountPrimaryIdentifier(
-            List<AccountIdentifierEntity> identifiers) {
+            Collection<AccountIdentifierEntity> identifiers) {
 
         return valueExtractor
                 .pickByValuePriority(
@@ -62,5 +63,13 @@ public class IdentifierMapper {
                                                 + StringUtils.join(
                                                         ',',
                                                         ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS)));
+    }
+
+    public AccountIdentifierEntity getCreditCardIdentifier(
+            Collection<AccountIdentifierEntity> identifiers) {
+        return identifiers.stream()
+                .filter(i -> ExternalAccountIdentification4Code.PAN.equals(i.getIdentifierType()))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Missing PAN card identifier"));
     }
 }

@@ -150,8 +150,10 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
     }
 
     private static CreditCardAccountMapper defaultCreditCardAccountMapper() {
+        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         return new CreditCardAccountMapper(
-                new DefaultCreditCardBalanceMapper(new PrioritizedValueExtractor()));
+                new DefaultCreditCardBalanceMapper(valueExtractor),
+                new IdentifierMapper(valueExtractor));
     }
 
     private static TransactionalAccountMapper defaultTransactionalAccountMapper() {
