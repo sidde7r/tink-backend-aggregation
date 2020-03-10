@@ -382,11 +382,16 @@ public class SwedbankDefaultApiClient {
             double amount,
             String destinationAccountId,
             String destinationMessage,
-            String sourceAccountId) {
+            String sourceAccountId,
+            Date transferDueDate) {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_TRANSFER,
                 RegisterTransferRequest.create(
-                        amount, destinationAccountId, destinationMessage, sourceAccountId),
+                        amount,
+                        destinationAccountId,
+                        destinationMessage,
+                        sourceAccountId,
+                        transferDueDate),
                 RegisterTransferResponse.class);
     }
 
