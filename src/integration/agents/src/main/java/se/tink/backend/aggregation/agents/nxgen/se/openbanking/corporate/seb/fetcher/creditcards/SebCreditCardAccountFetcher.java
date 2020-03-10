@@ -38,6 +38,12 @@ public class SebCreditCardAccountFetcher<A extends Account>
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return Collections.EMPTY_LIST;
+
+        //  apiClient.fetchCardAccounts().toTinkAccounts().stream()
+        //          .forEach(
+        //                  creditCardAccount ->
+        // fetchAndSaveCreditCardTransactions(creditCardAccount));
+        // return accountNumberAccountMap.values();
     }
 
     /**

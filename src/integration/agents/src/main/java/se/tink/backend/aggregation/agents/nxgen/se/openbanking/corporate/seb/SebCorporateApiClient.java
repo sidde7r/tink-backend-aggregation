@@ -3,20 +3,25 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.corporate.seb;
 import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.corporate.seb.fetcher.transactionalaccount.entities.TransactionDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.corporate.seb.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.corporate.seb.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountsTransactions;
-import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -31,14 +36,54 @@ public class SebCorporateApiClient extends SebBaseApiClient {
 
     @Override
     public RequestBuilder getAuthorizeUrl() {
-        return client.request(new URL(SebConstants.Urls.BASE_AUTH_URL));
+        return client.request(new URL(Urls.OAUTH));
+    }
+
+    @Override
+    public AuthResponse initBankId() {
+        final HttpResponse response =
+                client.request(new URL(SebCommonConstants.Urls.INIT_BANKID))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .post(HttpResponse.class);
+
+        final String csrfToken = response.getHeaders().getFirst(HeaderKeys.X_SEB_CSRF);
+        return response.getBody(AuthResponse.class).withCsrfToken(csrfToken);
+    }
+
+    @Override
+    public AuthResponse collectBankId(final String csrfToken) {
+        final HttpResponse response =
+                client.request(new URL(SebCommonConstants.Urls.INIT_BANKID))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(HeaderKeys.X_SEB_CSRF, csrfToken)
+                        .get(HttpResponse.class);
+
+        final String newCsrfToken = response.getHeaders().getFirst(HeaderKeys.X_SEB_CSRF);
+        return response.getBody(AuthResponse.class).withCsrfToken(newCsrfToken);
+    }
+
+    @Override
+    public AuthorizeResponse getAuthorization(String clientId, String redirectUri) {
+        return client.request(getAuthorizeUrl().getUrl())
+                .accept(MediaType.APPLICATION_JSON)
+                .queryParam(QueryKeys.CLIENT_ID, clientId)
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE_TOKEN)
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+                .get(AuthorizeResponse.class);
+    }
+
+    public AuthorizeResponse postAuthorization(final String requestForm) {
+        return client.request(Urls.OAUTH)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .body(requestForm)
+                .post(AuthorizeResponse.class);
     }
 
     @Override
     public OAuth2Token getToken(TokenRequest request) {
-        return client.request(
-                        new URL(SebCommonConstants.Urls.BASE_URL)
-                                .concat(SebCommonConstants.Urls.TOKEN))
+        return client.request(new URL(Urls.TOKEN))
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, request.toData())
@@ -46,27 +91,20 @@ public class SebCorporateApiClient extends SebBaseApiClient {
     }
 
     public FetchAccountResponse fetchAccounts() {
-
-        return createRequestInSession(
-                        new URL(SebCommonConstants.Urls.BASE_URL)
-                                .concat(SebConstants.Urls.ACCOUNTS))
-                .queryParam(
-                        SebCommonConstants.QueryKeys.WITH_BALANCE,
-                        SebCommonConstants.QueryValues.WITH_BALANCE)
+        return createRequestInSession(new URL(Urls.BASE_URL).concat(SebConstants.Urls.ACCOUNTS))
+                .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
                 .get(FetchAccountResponse.class);
     }
 
     public FetchTransactionsResponse fetchTransactions(
             String urlAddress, boolean appendQueryParams) {
 
-        URL url = new URL(SebCommonConstants.Urls.BASE_URL).concat(urlAddress);
+        URL url = new URL(Urls.BASE_URL).concat(urlAddress);
 
         RequestBuilder requestBuilder = createRequestInSession(url);
 
         if (appendQueryParams) {
-            requestBuilder.queryParam(
-                    SebCommonConstants.QueryKeys.BOOKING_STATUS,
-                    SebCommonConstants.QueryValues.BOOKED_TRANSACTIONS);
+            requestBuilder.queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED_TRANSACTIONS);
         }
 
         FetchTransactionsResponse response = requestBuilder.get(FetchTransactionsResponse.class);
@@ -98,18 +136,5 @@ public class SebCorporateApiClient extends SebBaseApiClient {
 
         return buildCardTransactionsFetch(url, fromDate, toDate)
                 .get(FetchCardAccountsTransactions.class);
-    }
-
-    @Override
-    protected RequestBuilder createRequestInSession(URL url) {
-        return createRequest(url)
-                .header(SebCommonConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(
-                        SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        SebCommonConstants.getPsuIpAddress())
-                .header(
-                        SebCommonConstants.HeaderKeys.PSU_CORPORATE_ID,
-                        credentials.getField(Key.CORPORATE_ID))
-                .addBearerToken(getTokenFromStorage());
     }
 }
