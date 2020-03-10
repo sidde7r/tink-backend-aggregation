@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator;
 
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
@@ -11,19 +10,16 @@ public final class ConsentFetcher {
 
     private final VolksbankApiClient client;
     private final PersistentStorage persistentStorage;
-    private final boolean isSandbox;
     private final URL redirectUrl;
     private final String clientId;
 
     public ConsentFetcher(
             final VolksbankApiClient client,
             final PersistentStorage persistentStorage,
-            final boolean isSandbox,
             final URL redirectUrl,
             final String clientId) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.isSandbox = isSandbox;
         this.redirectUrl = redirectUrl;
         this.clientId = clientId;
     }
@@ -34,19 +30,10 @@ public final class ConsentFetcher {
         if (persistentStorage.containsKey(Storage.CONSENT)) {
             consentId = persistentStorage.get(Storage.CONSENT);
         } else {
-            if (isSandbox) {
-                // Sandbox behaves a bit differently
-                // TODO SNS-specific behavior; won't work with ASN, RegioBank sandboxes
-                final String consentResponseString =
-                        client.consentRequestString(redirectUrl, clientId);
-                consentId =
-                        "SNS" + StringUtils.substringBetween(consentResponseString, "\"SNS", "\"");
-            } else {
-                final ConsentResponse consent = client.consentRequest(redirectUrl, clientId);
-                consentId = consent.getConsentId();
-            }
-            persistentStorage.put(Storage.CONSENT, consentId);
+            final ConsentResponse consent = client.consentRequest(redirectUrl, clientId);
+            consentId = consent.getConsentId();
         }
+        persistentStorage.put(Storage.CONSENT, consentId);
         return consentId;
     }
 

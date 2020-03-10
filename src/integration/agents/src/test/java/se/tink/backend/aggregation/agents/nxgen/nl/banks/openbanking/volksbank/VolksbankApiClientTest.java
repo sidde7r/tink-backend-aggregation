@@ -61,7 +61,7 @@ public final class VolksbankApiClientTest {
     public void testRefreshToken() {
         TinkHttpClient tinkHttpClient = createHttpClient();
 
-        VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(Urls.HOST, "snsbank", false);
+        VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(Urls.HOST, "snsbank");
 
         VolksbankApiClient apiClient = new VolksbankApiClient(tinkHttpClient, urlFactory);
 
@@ -78,7 +78,7 @@ public final class VolksbankApiClientTest {
     public void testConsentStatus() {
         TinkHttpClient tinkHttpClient = createHttpClient();
 
-        VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(Urls.HOST, "snsbank", false);
+        VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(Urls.HOST, "snsbank");
 
         VolksbankApiClient apiClient = new VolksbankApiClient(tinkHttpClient, urlFactory);
 
@@ -114,7 +114,7 @@ public final class VolksbankApiClientTest {
     public void test() {
         TinkHttpClient tinkHttpClient = createHttpClient();
 
-        VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(Urls.HOST, "snsbank", false);
+        VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(Urls.HOST, "snsbank");
 
         VolksbankApiClient apiClient = new VolksbankApiClient(tinkHttpClient, urlFactory);
 
