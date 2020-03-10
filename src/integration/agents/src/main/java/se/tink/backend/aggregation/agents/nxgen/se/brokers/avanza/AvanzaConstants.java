@@ -89,6 +89,7 @@ public class AvanzaConstants {
         public static final String PENSIONSFORSAKRING = "pensionsforsakring";
         public static final String IPS = "ips";
         public static final String KAPITALFORSAKRING = "kapitalforsakring";
+        public static final String KAPITALFORSAKRING_BARN = "kapitalforsakringbarn";
     }
 
     public static class Urls {
