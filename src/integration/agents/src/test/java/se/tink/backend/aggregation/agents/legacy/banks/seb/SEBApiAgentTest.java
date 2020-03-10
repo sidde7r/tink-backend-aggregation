@@ -342,7 +342,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
             String destinationMessage) {
         Transfer transfer = new Transfer();
 
-        transfer.setAmount(Amount.inSEK(0.01));
+        transfer.setAmount(Amount.inSEK(0.9999999999999999));
         transfer.setSource(new SwedishIdentifier(sourceAccount));
         transfer.setSourceMessage(sourceMessage);
         transfer.setDestination(new SwedishIdentifier(destinationAccount));
