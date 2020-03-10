@@ -121,6 +121,7 @@ public class PortfolioEntity {
             case PortfolioTypes.IPS:
                 return Portfolio.Type.PENSION;
             case PortfolioTypes.KAPITALFORSAKRING:
+            case PortfolioTypes.KAPITALFORSAKRING_BARN:
                 return Portfolio.Type.KF;
             default:
                 return Portfolio.Type.OTHER;
