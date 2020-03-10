@@ -43,22 +43,22 @@ public class NemIdIFrameController {
 
     private final WebdriverHelper webdriverHelper;
     private final Sleeper sleeper;
-    private final NemIdAuthenticatorV2 authenticator;
+    private final NemIdParametersFetcher nemIdParametersFetcher;
 
-    public NemIdIFrameController(final NemIdAuthenticatorV2 authenticator) {
-        this(new WebdriverHelper(), new Sleeper(), authenticator);
+    public NemIdIFrameController(final NemIdParametersFetcher nemIdParametersFetcher) {
+        this(new WebdriverHelper(), new Sleeper(), nemIdParametersFetcher);
     }
 
     NemIdIFrameController(
             final WebdriverHelper webdriverHelper,
             final Sleeper sleeper,
-            final NemIdAuthenticatorV2 authenticator) {
+            final NemIdParametersFetcher nemIdParametersFetcher) {
         this.webdriverHelper = webdriverHelper;
         this.sleeper = sleeper;
-        this.authenticator = authenticator;
+        this.nemIdParametersFetcher = nemIdParametersFetcher;
     }
 
-    String doLoginWith(String username, String password) throws AuthenticationException {
+    public String doLoginWith(String username, String password) throws AuthenticationException {
         WebDriver driver = webdriverHelper.constructWebDriver(PHANTOMJS_TIMEOUT_SECONDS);
         try {
             // inject nemId form into iframe
@@ -92,7 +92,7 @@ public class NemIdIFrameController {
 
     private boolean isNemIdInitialized(WebDriver driver) throws AuthenticationException {
         for (int i = 0; i < 5; i++) {
-            NemIdParametersV2 nemIdParameters = authenticator.getNemIdParameters();
+            NemIdParametersV2 nemIdParameters = nemIdParametersFetcher.getNemIdParameters();
 
             // this will setup browser with values specific to nemid page, like current url, etc.
             driver.get(nemIdParameters.getInitialUrl().get());

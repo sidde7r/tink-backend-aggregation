@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.PoolAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.filter.RuntimeErrorFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdParametersV2;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -205,8 +206,7 @@ public class BankdataApiClient {
                         .getElementsByAttribute("src")
                         .attr("src");
 
-        String iframeTemplate =
-                "<iframe id=\"nemid_iframe\" allowTransparency=\"true\" name=\"nemid_iframe\" scrolling=\"no\" style=\"z-index: 100; position: relative; width: 275px; height: 350px; border: 0\" src=\"%s\"></iframe>";
+        String iframeTemplate = NemIdConstantsV2.NEM_ID_IFRAME;
         String formattedIframe = String.format(iframeTemplate, launcher);
 
         String nemidParametersScriptTag =

@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.workers.commands.migrations.implementations.b
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.ics.ICSSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.jyskebank.JyskebankSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordea.NordeaSanitizingMigration;
+import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.nordeadk.NordeaDkAccountMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.skandiabanken.SkandiaBankenSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.brokers.avanza.AvanzaStripClearingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.creditcards.norwegian.NorwegianSanitizingMigration;
@@ -74,6 +75,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
                     .put("nordea-bankid", new NordeaSanitizingMigration())
                     .put("norwegian-bankid", new NorwegianSanitizingMigration())
                     .put("dk-jyskebank-codecard", new JyskebankSanitizingMigration())
+                    .put("dk-nordea-nemid", new NordeaDkAccountMigration())
                     .build();
 
     public MigrateCredentialsAndAccountsWorkerCommand(
