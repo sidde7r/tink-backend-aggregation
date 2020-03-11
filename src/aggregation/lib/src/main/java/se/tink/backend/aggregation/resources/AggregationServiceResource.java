@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
+import se.tink.backend.aggregation.startupchecks.StartupChecksHandlerImpl;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
@@ -43,8 +44,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWra
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
-import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
-import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.credentials.service.BatchMigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
@@ -66,12 +65,8 @@ public class AggregationServiceResource implements AggregationService {
     private ProviderSessionCacheController providerSessionCacheController;
     private ApplicationDrainMode applicationDrainMode;
     private ProviderConfigurationService providerConfigurationService;
-    private TppSecretsServiceClient tppSecretsServiceClient;
+    private StartupChecksHandlerImpl startupChecksHandler;
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
-
-    // Used to fake a startup probe, we wait for this to be true one first time and then we do not
-    // check again
-    public static boolean firstCheckPassed = false;
 
     @Inject
     public AggregationServiceResource(
@@ -82,7 +77,7 @@ public class AggregationServiceResource implements AggregationService {
             ProviderSessionCacheController providerSessionCacheController,
             ApplicationDrainMode applicationDrainMode,
             ProviderConfigurationService providerConfigurationService,
-            ManagedTppSecretsServiceClient tppSecretsServiceClient) {
+            StartupChecksHandlerImpl startupChecksHandler) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;
@@ -90,7 +85,7 @@ public class AggregationServiceResource implements AggregationService {
         this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
         this.providerConfigurationService = providerConfigurationService;
-        this.tppSecretsServiceClient = tppSecretsServiceClient;
+        this.startupChecksHandler = startupChecksHandler;
     }
 
     @Override
@@ -115,21 +110,8 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public void started() {
-        if (!firstCheckPassed) {
-            if (applicationDrainMode.isEnabled()) {
-                HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
-            }
-
-            try {
-                tppSecretsServiceClient.ping();
-            } catch (Exception e) {
-                HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
-            }
-            firstCheckPassed = true;
-            logger.info(
-                    "StartupProbe emulation by readiness probe succeeded, SecretsServiceHealth check will not be checked again.");
-        }
+    public String started() {
+        return startupChecksHandler.handle();
     }
 
     @Override

@@ -54,10 +54,10 @@ public interface AggregationService {
 
     @GET
     @Path("started")
-    @TeamOwnership(Team.AGGREGATION)
+    @TeamOwnership(Team.AGGREGATION_AGENT_PLATFORM)
     @Produces(MediaType.TEXT_PLAIN)
     @AllowAnonymous
-    void started();
+    String started();
 
     @POST
     @Path("configure/whitelist")
