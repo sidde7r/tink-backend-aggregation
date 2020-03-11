@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class OauthCallbackResponse {
 
     private String accessToken;
