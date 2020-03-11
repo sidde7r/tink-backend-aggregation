@@ -14,6 +14,6 @@ public class TransactionPaginationLinksEntity {
     }
 
     public String getNext() {
-        return (hasMore()) ? next.href : null;
+        return hasMore() ? next.href : null;
     }
 }
