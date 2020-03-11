@@ -357,13 +357,16 @@ spec:
         # is working or not
         readinessProbe:
           httpGet:
-            path: /aggregation/ping
+            # This is named start as this is emulating a startupProbe which will not be ready until
+            # we upgrade to k8s 1.17+
+            path: /aggregation/started
             port: 8443
             scheme: HTTPS
-          periodSeconds: 3
+          periodSeconds: 10
           failureThreshold: 3
+          successThreshold: 3
           timeoutSeconds: 1
-          initialDelaySeconds: {{ default 60 .Values.initialDelaySeconds }}
+          initialDelaySeconds: 300
 
         volumeMounts:
         - name: tmp

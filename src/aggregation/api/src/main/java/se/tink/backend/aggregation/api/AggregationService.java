@@ -52,6 +52,13 @@ public interface AggregationService {
     @AllowAnonymous
     String ping();
 
+    @GET
+    @Path("started")
+    @TeamOwnership(Team.AGGREGATION)
+    @Produces(MediaType.TEXT_PLAIN)
+    @AllowAnonymous
+    void started();
+
     @POST
     @Path("configure/whitelist")
     @TeamOwnership(Team.AGGREGATION)

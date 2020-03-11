@@ -102,6 +102,11 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
     }
 
     @Override
+    public void ping() {
+        this.internalSecretsServiceStub.ping(PingMessage.newBuilder().build());
+    }
+
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
