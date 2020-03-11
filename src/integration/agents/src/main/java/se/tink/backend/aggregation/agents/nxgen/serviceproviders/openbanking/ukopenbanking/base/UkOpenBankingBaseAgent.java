@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -25,16 +24,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.UUIDSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.LegacyTinkHttpClientProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -51,7 +43,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
@@ -76,12 +67,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     private final UkOpenBankingAisConfig agentConfig;
     private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> transactionalAccountFetcher;
 
-    private final UUIDSource uuidSource;
-
-    public UkOpenBankingBaseAgent(
-            AgentComponentProvider componentProvider, UkOpenBankingAisConfig agentConfig) {
-        this(componentProvider, agentConfig, false);
-    }
+    private final RandomValueGenerator randomValueGenerator;
 
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
@@ -91,38 +77,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.wellKnownURL = agentConfig.getWellKnownURL();
         this.disableSslVerification = disableSslVerification;
         this.agentConfig = agentConfig;
-        this.uuidSource = componentProvider.getUuidSource();
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
 
         client.addFilter(new BankServiceInternalErrorFilter());
-    }
-
-    /** @deprecated Use AgentComponentProvider constructor instead. */
-    @Deprecated
-    public UkOpenBankingBaseAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            UkOpenBankingAisConfig aisConfig) {
-        this(request, context, signatureKeyPair, aisConfig, false);
-    }
-
-    /** @deprecated Use AgentComponentProvider constructor instead. */
-    @Deprecated
-    public UkOpenBankingBaseAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            UkOpenBankingAisConfig aisConfig,
-            boolean disableSslVerification) {
-        this(
-                new AgentComponentProvider(
-                        new LegacyTinkHttpClientProvider(request, context, signatureKeyPair),
-                        new SupplementalInformationProviderImpl(context, request),
-                        new AgentContextProviderImpl(request, context),
-                        new GeneratedValueProviderImpl(
-                                new ActualLocalDateTimeSource(), new RandomUUIDSource())),
-                aisConfig,
-                disableSslVerification);
     }
 
     // Different part between UkOpenBankingBaseAgent and this class
@@ -189,7 +146,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 softwareStatement,
                 providerConfiguration,
                 wellKnownURL,
-                uuidSource,
+                randomValueGenerator,
                 persistentStorage);
     }
 
@@ -213,7 +170,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 apiClient,
                 credentials,
                 strongAuthenticationState,
-                appToAppRedirectURL);
+                appToAppRedirectURL,
+                randomValueGenerator);
     }
 
     @Override

@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.LegacyTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -56,7 +56,7 @@ public class BoursoramaAgent extends NextGenerationAgent
                         new SupplementalInformationProviderImpl(context, request),
                         new AgentContextProviderImpl(request, context),
                         new GeneratedValueProviderImpl(
-                                new ActualLocalDateTimeSource(), new RandomUUIDSource())));
+                                new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl())));
 
         BoursoramaConfiguration agentConfiguration = getAgentConfiguration();
 

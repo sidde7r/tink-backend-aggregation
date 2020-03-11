@@ -50,8 +50,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.ConstantUUIDSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.RandomUUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.MockSupplementalInformationProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
@@ -242,7 +242,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                 new AgentContextProviderFactoryImpl(),
                                 new GeneratedValueProviderImpl(
                                         new ConstantLocalDateTimeSource(),
-                                        new ConstantUUIDSource()));
+                                        new MockRandomValueGenerator()));
 
             } else {
                 // Provide AgentFactory with 'production' components.
@@ -253,7 +253,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                 new SupplementalInformationProviderFactoryImpl(),
                                 new AgentContextProviderFactoryImpl(),
                                 new GeneratedValueProviderImpl(
-                                        new ActualLocalDateTimeSource(), new RandomUUIDSource()));
+                                        new ActualLocalDateTimeSource(),
+                                        new RandomValueGeneratorImpl()));
             }
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);

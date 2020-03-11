@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.InternationalPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.UKPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.FundsConfirmationResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
@@ -69,6 +70,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
     private final Credentials credentials;
     private final URL appToAppRedirectURL;
     private final StrongAuthenticationState strongAuthenticationState;
+    private final RandomValueGenerator randomValueGenerator;
 
     public UKOpenbankingV31Executor(
             UkOpenBankingPisConfig pisConfig,
@@ -77,7 +79,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             UkOpenBankingApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
             Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState) {
+            StrongAuthenticationState strongAuthenticationState,
+            RandomValueGenerator randomValueGenerator) {
 
         this(
                 pisConfig,
@@ -87,6 +90,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                 supplementalInformationHelper,
                 credentials,
                 strongAuthenticationState,
+                randomValueGenerator,
                 null);
     }
 
@@ -98,16 +102,18 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
             SupplementalInformationHelper supplementalInformationHelper,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
+            RandomValueGenerator randomValueGenerator,
             URL appToAppRedirectURL) {
         this.pisConfig = pisConfig;
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
         this.apiClient = apiClient;
-        this.ukOpenBankingPis = new UkOpenBankingV31Pis(pisConfig);
+        this.ukOpenBankingPis = new UkOpenBankingV31Pis(pisConfig, randomValueGenerator);
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.credentials = credentials;
         this.appToAppRedirectURL = appToAppRedirectURL;
         this.strongAuthenticationState = strongAuthenticationState;
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     private UKPisConfig getConfig(Payment payment) {
@@ -189,7 +195,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                         credentials,
                         strongAuthenticationState,
                         null,
-                        appToAppRedirectURL);
+                        appToAppRedirectURL,
+                        randomValueGenerator);
 
         ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(

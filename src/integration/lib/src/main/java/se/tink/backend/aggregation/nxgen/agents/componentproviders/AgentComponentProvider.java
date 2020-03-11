@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.UUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -95,7 +95,7 @@ public final class AgentComponentProvider
     }
 
     @Override
-    public UUIDSource getUuidSource() {
-        return generatedValueProvider.getUuidSource();
+    public RandomValueGenerator getRandomValueGenerator() {
+        return generatedValueProvider.getRandomValueGenerator();
     }
 }

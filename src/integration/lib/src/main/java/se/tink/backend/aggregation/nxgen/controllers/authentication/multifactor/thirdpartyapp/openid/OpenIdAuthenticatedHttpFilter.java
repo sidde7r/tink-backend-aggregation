@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import javax.ws.rs.core.MultivaluedMap;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.uuid.UUIDSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -19,19 +19,19 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
     private final ProviderConfiguration providerConfiguration;
     private final String customerIp;
     private final String customerLastLoggedInTime;
-    private final UUIDSource uuidSource;
+    private final RandomValueGenerator randomValueGenerator;
 
     public OpenIdAuthenticatedHttpFilter(
             OAuth2Token accessToken,
             ProviderConfiguration providerConfiguration,
             String customerIp,
             String customerLastLoggedInTime,
-            UUIDSource uuidSource) {
+            RandomValueGenerator randomValueGenerator) {
         this.accessToken = accessToken;
         this.providerConfiguration = providerConfiguration;
         this.customerIp = customerIp;
         this.customerLastLoggedInTime = customerLastLoggedInTime;
-        this.uuidSource = uuidSource;
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     private boolean verifyInteractionId(String interactionId, HttpResponse httpResponse) {
@@ -67,7 +67,7 @@ public class OpenIdAuthenticatedHttpFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
 
-        String interactionId = uuidSource.getUUID().toString();
+        String interactionId = randomValueGenerator.getUUID().toString();
 
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
         headers.add(OpenIdConstants.HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());

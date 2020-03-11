@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
@@ -63,6 +63,7 @@ public class OpenIdAuthenticationController
     private final String callbackUri;
     private OAuth2Token clientOAuth2Token;
     private final URL appToAppRedirectURL;
+    private final RandomValueGenerator randomValueGenerator;
 
     public OpenIdAuthenticationController(
             PersistentStorage persistentStorage,
@@ -72,7 +73,8 @@ public class OpenIdAuthenticationController
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
-            URL appToAppRedirectURL) {
+            URL appToAppRedirectURL,
+            RandomValueGenerator randomValueGenerator) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -83,7 +85,8 @@ public class OpenIdAuthenticationController
                 callbackUri,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT,
-                appToAppRedirectURL);
+                appToAppRedirectURL,
+                randomValueGenerator);
     }
 
     public OpenIdAuthenticationController(
@@ -96,7 +99,8 @@ public class OpenIdAuthenticationController
             String callbackUri,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit,
-            URL appToAppRedirectURL) {
+            URL appToAppRedirectURL,
+            RandomValueGenerator randomValueGenerator) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
@@ -109,8 +113,9 @@ public class OpenIdAuthenticationController
         this.strongAuthenticationStateSupplementalKey =
                 strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
+        this.randomValueGenerator = randomValueGenerator;
 
-        this.nonce = RandomUtils.generateRandomHexEncoded(8);
+        this.nonce = randomValueGenerator.generateRandomHexEncoded(8);
         this.appToAppRedirectURL = appToAppRedirectURL;
     }
 

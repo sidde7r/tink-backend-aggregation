@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -22,7 +23,8 @@ public class OpenIdAuthenticationFlow {
             OpenIdApiClient apiClient,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
-            URL appToAppRedirectURL) {
+            URL appToAppRedirectURL,
+            RandomValueGenerator randomValueGenerator) {
 
         OpenIdAuthenticationController openIdAuthenticationController =
                 new OpenIdAuthenticationController(
@@ -33,7 +35,8 @@ public class OpenIdAuthenticationFlow {
                         credentials,
                         strongAuthenticationState,
                         request.getCallbackUri(),
-                        appToAppRedirectURL);
+                        appToAppRedirectURL,
+                        randomValueGenerator);
 
         return new AutoAuthenticationController(
                 request,
