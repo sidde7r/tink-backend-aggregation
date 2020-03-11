@@ -194,9 +194,9 @@ public class SBABAgent extends AbstractAgent
     }
 
     private BankIdStatus loginWithMobileBankId() throws BankIdException, AuthorizationException {
-        final InitBankIdResponse initBankIdResponse = authenticationClient.initiateBankIdLogin();
-        final String pendingAuthCode = initBankIdResponse.getPendingAuthorizationCode();
-        final String autostartToken = initBankIdResponse.getAutostartToken();
+        InitBankIdResponse initBankIdResponse = authenticationClient.initiateBankIdLogin();
+        String pendingAuthCode = initBankIdResponse.getPendingAuthorizationCode();
+        String autostartToken = initBankIdResponse.getAutostartToken();
 
         credentials.setSupplementalInformation(null);
         supplementalRequester.openBankId(autostartToken, false);
@@ -211,7 +211,11 @@ public class SBABAgent extends AbstractAgent
                 case CANCELLED:
                     throw BankIdError.CANCELLED.exception();
                 case TIMEOUT:
-                    throw BankIdError.TIMEOUT.exception();
+                    initBankIdResponse = authenticationClient.initiateBankIdLogin();
+                    pendingAuthCode = initBankIdResponse.getPendingAuthorizationCode();
+                    autostartToken = initBankIdResponse.getAutostartToken();
+                    supplementalRequester.openBankId(autostartToken, false);
+                    break;
                 case FAILED_UNKNOWN:
                     throw new IllegalStateException("[SBAB - BankId failed with unknown error]");
                 default:
