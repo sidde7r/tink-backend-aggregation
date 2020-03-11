@@ -77,7 +77,7 @@ public class OpenbankAuthenticator implements Authenticator, AuthenticationContr
                         Case(
                                 $(HAS_INVALID_LOGIN_USERNAME_TYPE),
                                 LoginError.INCORRECT_CREDENTIALS.exception(
-                                        LocalizableKey.of("Invalid username type"), hre)));
+                                        new LocalizableKey("Invalid username type"), hre)));
     }
 
     private void putAuthTokenInSessionStorage(LoginResponse loginResponse) {
