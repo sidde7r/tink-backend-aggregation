@@ -1028,7 +1028,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_util",
+    name = "org_eclipse_jetty_jetty_util",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
     sha1 = "93a606c83b047e8855eb3af68c335e60fa757367",
 )
@@ -1302,7 +1302,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_io",
+    name = "org_eclipse_jetty_jetty_io",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
     sha1 = "512e9d2e088ae7c70c4a68381423cb68b9ed42d6",
 )
@@ -1428,7 +1428,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_http",
+    name = "org_eclipse_jetty_jetty_http",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
     sha1 = "67060a59b426c76a2788ea5f4e19c1d3170ac562",
 )
@@ -2605,6 +2605,9 @@ maven_install(
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.codehaus.woodstox:stax2-api:4.1",
+        "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
+        "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+        "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
         "org.ow2.asm:asm:5.0.4",
         "org.reactivestreams:reactive-streams:1.0.3",
         "org.slf4j:slf4j-api:1.7.22",
@@ -2634,7 +2637,7 @@ maven_install(
         "org.eclipse.jetty:jetty-util:9.4.15.v20190215",
         "org.eclipse.jetty:jetty-server:9.4.15.v20190215",
         "org.eclipse.jetty:jetty-http:9.4.15.v20190215",
-        "javax.servlet:javax.servlet-api:3.1.0",
+        "javax.servlet:javax.servlet-api:4.0.1",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:jetty_server9_install.json",
