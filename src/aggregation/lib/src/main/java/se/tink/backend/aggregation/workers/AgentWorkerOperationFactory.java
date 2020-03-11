@@ -64,6 +64,7 @@ import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
@@ -108,6 +109,7 @@ public class AgentWorkerOperationFactory {
     private ProviderSessionCacheController providerSessionCacheController;
     private AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private TppSecretsServiceClient tppSecretsServiceClient;
+    private InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
 
     @Inject
     public AgentWorkerOperationFactory(
@@ -132,7 +134,8 @@ public class AgentWorkerOperationFactory {
             DataTrackerEventProducer dataTrackerEventProducer,
             LoginAgentEventProducer loginAgentEventProducer,
             AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
-            ManagedTppSecretsServiceClient tppSecretsServiceClient) {
+            ManagedTppSecretsServiceClient tppSecretsServiceClient,
+            InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory) {
         this.cacheClient = cacheClient;
 
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
@@ -159,6 +162,7 @@ public class AgentWorkerOperationFactory {
         this.loginAgentEventProducer = loginAgentEventProducer;
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.tppSecretsServiceClient = tppSecretsServiceClient;
+        this.interProcessSemaphoreMutexFactory = interProcessSemaphoreMutexFactory;
     }
 
     /**
@@ -337,7 +341,9 @@ public class AgentWorkerOperationFactory {
                         request.getProvider()));
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new LockAgentWorkerCommand(context, metricsName));
+        commands.add(
+                new LockAgentWorkerCommand(
+                        context, metricsName, interProcessSemaphoreMutexFactory));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -433,7 +439,9 @@ public class AgentWorkerOperationFactory {
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new LockAgentWorkerCommand(context, metricsName));
+        commands.add(
+                new LockAgentWorkerCommand(
+                        context, metricsName, interProcessSemaphoreMutexFactory));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -602,7 +610,8 @@ public class AgentWorkerOperationFactory {
                         request.getCredentials(),
                         request.getProvider()),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
-                new LockAgentWorkerCommand(context, operationName),
+                new LockAgentWorkerCommand(
+                        context, operationName, interProcessSemaphoreMutexFactory),
                 new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper, clientInfo),
@@ -666,7 +675,8 @@ public class AgentWorkerOperationFactory {
                         request.getCredentials(),
                         request.getProvider()),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
-                new LockAgentWorkerCommand(context, operationName),
+                new LockAgentWorkerCommand(
+                        context, operationName, interProcessSemaphoreMutexFactory),
                 new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
                 new UpdateCredentialsStatusAgentWorkerCommand(
                         controllerWrapper,
@@ -725,7 +735,8 @@ public class AgentWorkerOperationFactory {
         commands.add(new ClearSensitiveInformationCommand(context));
         String operation = "create-credentials";
         // acquire lock to avoid encryption/decryption race conditions
-        commands.add(new LockAgentWorkerCommand(context, operation));
+        commands.add(
+                new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
         commands.add(new EncryptCredentialsWorkerCommand(context, false, credentialsCrypto));
 
         return new AgentWorkerOperation(
@@ -762,7 +773,8 @@ public class AgentWorkerOperationFactory {
         commands.add(new ClearSensitiveInformationCommand(context));
         String operation = "update-credentials";
         // acquire lock to avoid encryption/decryption race conditions
-        commands.add(new LockAgentWorkerCommand(context, operation));
+        commands.add(
+                new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
         commands.add(new EncryptCredentialsWorkerCommand(context, false, credentialsCrypto));
 
         return new AgentWorkerOperation(
@@ -798,7 +810,8 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         String operation = "keep-alive";
-        commands.add(new LockAgentWorkerCommand(context, operation));
+        commands.add(
+                new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
@@ -849,7 +862,8 @@ public class AgentWorkerOperationFactory {
         String operation = "reencrypt-credentials";
         ImmutableList<AgentWorkerCommand> commands =
                 ImmutableList.of(
-                        new LockAgentWorkerCommand(context, operation),
+                        new LockAgentWorkerCommand(
+                                context, operation, interProcessSemaphoreMutexFactory),
                         new DecryptCredentialsWorkerCommand(
                                 context,
                                 new CredentialsCrypto(
@@ -949,7 +963,9 @@ public class AgentWorkerOperationFactory {
                         request.getProvider()));
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new LockAgentWorkerCommand(context, metricsName));
+        commands.add(
+                new LockAgentWorkerCommand(
+                        context, metricsName, interProcessSemaphoreMutexFactory));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
@@ -1057,7 +1073,9 @@ public class AgentWorkerOperationFactory {
                         request.getProvider()));
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new LockAgentWorkerCommand(context, operationMetricName));
+        commands.add(
+                new LockAgentWorkerCommand(
+                        context, operationMetricName, interProcessSemaphoreMutexFactory));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -1208,7 +1226,9 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = "batch-migrate";
 
-        commands.add(new LockAgentWorkerCommand(context, metricsName));
+        commands.add(
+                new LockAgentWorkerCommand(
+                        context, metricsName, interProcessSemaphoreMutexFactory));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,

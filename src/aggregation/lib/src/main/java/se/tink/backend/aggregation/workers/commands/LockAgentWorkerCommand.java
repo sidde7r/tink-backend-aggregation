@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.workers.commands;
 
 import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.recipes.locks.InterProcessLock;
-import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /*
@@ -22,10 +22,15 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
     private AgentWorkerCommandContext context;
     private boolean hasAcquiredLock;
     private final String operation;
+    private final InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
 
-    public LockAgentWorkerCommand(AgentWorkerCommandContext context, String operation) {
+    public LockAgentWorkerCommand(
+            AgentWorkerCommandContext context,
+            String operation,
+            InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory) {
         this.context = context;
         this.operation = operation;
+        this.interProcessSemaphoreMutexFactory = interProcessSemaphoreMutexFactory;
     }
 
     @Override
@@ -36,7 +41,7 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
         String credentialsId = request.getCredentials().getId();
 
         lock =
-                new InterProcessSemaphoreMutex(
+                interProcessSemaphoreMutexFactory.createLock(
                         context.getCoordinationClient(),
                         String.format(LOCK_FORMAT, userId, credentialsId));
 

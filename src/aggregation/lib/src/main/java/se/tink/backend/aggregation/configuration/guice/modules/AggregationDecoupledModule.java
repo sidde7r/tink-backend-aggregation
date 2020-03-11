@@ -60,6 +60,8 @@ import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
+import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactoryStub;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientMockImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
@@ -193,7 +195,8 @@ public class AggregationDecoupledModule extends AbstractModule {
                 .to(TppSecretsServiceClientImpl.class)
                 .in(Scopes.SINGLETON);
         bind(ClientConfig.class).toInstance(new DefaultApacheHttpClient4Config());
-
+        bind(InterProcessSemaphoreMutexFactory.class)
+                .to(InterProcessSemaphoreMutexFactoryStub.class);
         bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
 
         bind(CryptoConfigurationsRepository.class)
