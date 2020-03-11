@@ -7,6 +7,7 @@ import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import java.util.Objects;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClientImpl;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.api.MonitoringService;
@@ -45,7 +46,8 @@ public class AggregationModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(AggregationControllerAggregationClient.class).in(Scopes.SINGLETON);
+        bind(AggregationControllerAggregationClient.class)
+                .to(AggregationControllerAggregationClientImpl.class);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
         bind(ManagedTppSecretsServiceClient.class)
                 .to(TppSecretsServiceClientImpl.class)
