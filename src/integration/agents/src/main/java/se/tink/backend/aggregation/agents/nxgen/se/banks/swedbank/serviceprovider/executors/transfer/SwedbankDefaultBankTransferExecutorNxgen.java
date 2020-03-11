@@ -4,6 +4,7 @@ import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -83,7 +84,8 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
                         item.getAmount().getValue(),
                         item.getDestination().getValueByKey(SwedbankBaseConstants.StorageKey.ID),
                         "",
-                        item.getSource().getValueByKey(SwedbankBaseConstants.StorageKey.ID));
+                        item.getSource().getValueByKey(SwedbankBaseConstants.StorageKey.ID),
+                        new Date());
 
         registeredTransfersResponse =
                 apiClient.registeredTransfers(registerTransfer.getLinks().getNextOrThrow());

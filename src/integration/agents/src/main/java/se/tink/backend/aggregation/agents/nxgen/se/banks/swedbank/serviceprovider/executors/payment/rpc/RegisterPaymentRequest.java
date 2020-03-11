@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonDouble.JsonType;
@@ -14,7 +12,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class RegisterPaymentRequest {
-    @JsonIgnore private static final String EMPTY_STRING = "";
 
     @JsonDouble(outputType = JsonType.STRING, decimalSeparator = ',')
     private final double amount;
@@ -44,32 +41,11 @@ public class RegisterPaymentRequest {
         this.amount = amount;
         this.reference = reference;
         this.ocrScanned = "NO";
-        this.date = getDateOrNullIfDueDateIsToday(date);
+        this.date = SwedbankTransferHelper.getDateOrNullIfDueDateIsToday(date);
         this.type = type;
         this.recipientId = recipientId;
         this.fromAccountId = fromAccountId;
         this.einvoiceReference = eInvoiceReference;
-    }
-
-    /**
-     * Swedbank reject today's date as a possible date. If the payment is suppose to be executed
-     * today the date field needs to be left blank (null).
-     *
-     * @return Input date if a future date, null if input date is today's date.
-     */
-    @JsonIgnore
-    private Date getDateOrNullIfDueDateIsToday(Date transferDate) {
-        LocalDate todayLocalDate = LocalDate.now(ZoneId.of("CET"));
-
-        LocalDate transferLocalDate =
-                transferDate.toInstant().atZone(ZoneId.of("CET")).toLocalDate();
-
-        // Use localdate for comparison as we don't care about time
-        if (todayLocalDate.equals(transferLocalDate)) {
-            return null;
-        }
-
-        return transferDate;
     }
 
     public static RegisterPaymentRequest createEinvoicePayment(
